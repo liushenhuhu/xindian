@@ -9,12 +9,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="年龄
-" prop="age">
+      <el-form-item label="年龄" prop="age">
         <el-input
           v-model="queryParams.age"
-          placeholder="请输入年龄
-"
+          placeholder="请输入年龄"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -161,7 +159,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -227,7 +225,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: true,
+      showSearch: false,
       // 总条数
       total: 0,
       // 患者管理表格数据
