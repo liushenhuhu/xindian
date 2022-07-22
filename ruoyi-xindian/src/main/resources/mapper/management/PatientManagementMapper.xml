@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.management.mapper.PatientManagementMapper">
+    
+    <resultMap type="PatientManagement" id="PatientManagementResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="age"    column="age"    />
+        <result property="sex"    column="sex"    />
+        <result property="source"    column="source"    />
+        <result property="phone"    column="phone"    />
+        <result property="hostReleaseTime"    column="host_release_time"    />
+        <result property="hospitalName"    column="hospital_name"    />
+        <result property="hospitalCode"    column="hospital_code"    />
+        <result property="hostId"    column="host_id"    />
+        <result property="hostMac"    column="host_mac"    />
+        <result property="monitoringStatus"    column="monitoring_status"    />
+    </resultMap>
+
+    <sql id="selectPatientManagementVo">
+        select id, name, age, sex, source, phone, host_release_time, hospital_name, hospital_code, host_id, host_mac, monitoring_status from patient_management
+    </sql>
+
+    <select id="selectPatientManagementList" parameterType="PatientManagement" resultMap="PatientManagementResult">
+        <include refid="selectPatientManagementVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="age != null  and age != ''"> and age = #{age}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="source != null  and source != ''"> and source = #{source}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="hostReleaseTime != null  and hostReleaseTime != ''"> and host_release_time = #{hostReleaseTime}</if>
+            <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code = #{hospitalCode}</if>
+            <if test="hostId != null  and hostId != ''"> and host_id = #{hostId}</if>
+            <if test="hostMac != null  and hostMac != ''"> and host_mac = #{hostMac}</if>
+            <if test="monitoringStatus != null  and monitoringStatus != ''"> and monitoring_status = #{monitoringStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectPatientManagementById" parameterType="String" resultMap="PatientManagementResult">
+        <include refid="selectPatientManagementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPatientManagement" parameterType="PatientManagement">
+        insert into patient_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="age != null">age,</if>
+            <if test="sex != null">sex,</if>
+            <if test="source != null">source,</if>
+            <if test="phone != null">phone,</if>
+            <if test="hostReleaseTime != null">host_release_time,</if>
+            <if test="hospitalName != null">hospital_name,</if>
+            <if test="hospitalCode != null">hospital_code,</if>
+            <if test="hostId != null">host_id,</if>
+            <if test="hostMac != null">host_mac,</if>
+            <if test="monitoringStatus != null">monitoring_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="age != null">#{age},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="source != null">#{source},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="hostReleaseTime != null">#{hostReleaseTime},</if>
+            <if test="hospitalName != null">#{hospitalName},</if>
+            <if test="hospitalCode != null">#{hospitalCode},</if>
+            <if test="hostId != null">#{hostId},</if>
+            <if test="hostMac != null">#{hostMac},</if>
+            <if test="monitoringStatus != null">#{monitoringStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePatientManagement" parameterType="PatientManagement">
+        update patient_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="hostReleaseTime != null">host_release_time = #{hostReleaseTime},</if>
+            <if test="hospitalName != null">hospital_name = #{hospitalName},</if>
+            <if test="hospitalCode != null">hospital_code = #{hospitalCode},</if>
+            <if test="hostId != null">host_id = #{hostId},</if>
+            <if test="hostMac != null">host_mac = #{hostMac},</if>
+            <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePatientManagementById" parameterType="String">
+        delete from patient_management where id = #{id}
+    </delete>
+
+    <delete id="deletePatientManagementByIds" parameterType="String">
+        delete from patient_management where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
