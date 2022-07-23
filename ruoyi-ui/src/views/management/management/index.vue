@@ -179,7 +179,15 @@
             v-hasPermi="['management:management:remove']"
           >删除
           </el-button>
-          <el-link href="http://47.110.32.83:5006/screen">查看大屏<i class="el-icon-view el-icon--right"></i></el-link>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="bigScreen()"
+          >
+            查看大屏
+          </el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -408,6 +416,10 @@ export default {
       this.download('management/management/export', {
         ...this.queryParams
       }, `management_${new Date().getTime()}.xlsx`)
+    },
+    /** 查看大屏*/
+    bigScreen(){
+      window.open("http://47.110.32.83:5006/","_blank")
     }
   }
 };

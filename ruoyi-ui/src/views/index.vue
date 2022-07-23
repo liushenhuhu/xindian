@@ -1,5 +1,9 @@
 <template>
-
+  <iframe
+          width="100%"
+          height="850px"
+          src="http://47.110.32.83:5006/">
+  </iframe>
 </template>
 
 <script>
