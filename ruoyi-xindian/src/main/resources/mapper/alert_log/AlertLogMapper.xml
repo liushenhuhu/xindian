@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.alert_log.mapper.AlertLogMapper">
+    
+    <resultMap type="AlertLog" id="AlertLogResult">
+        <result property="id"    column="id"    />
+        <result property="time"    column="time"    />
+        <result property="type"    column="type"    />
+        <result property="eventName"    column="event_name"    />
+        <result property="eventDescription"    column="event_description"    />
+        <result property="patientInfo"    column="patient_info"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="familyPhone"    column="family_phone"    />
+        <result property="belongHospital"    column="belong_hospital"    />
+    </resultMap>
+
+    <sql id="selectAlertLogVo">
+        select id, time, type, event_name, event_description, patient_info, patient_phone, family_phone, belong_hospital from alert_log
+    </sql>
+
+    <select id="selectAlertLogList" parameterType="AlertLog" resultMap="AlertLogResult">
+        <include refid="selectAlertLogVo"/>
+        <where>  
+            <if test="time != null "> and time like concat('%', #{time}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="familyPhone != null  and familyPhone != ''"> and family_phone = #{familyPhone}</if>
+            <if test="belongHospital != null  and belongHospital != ''"> and belong_hospital = #{belongHospital}</if>
+        </where>
+    </select>
+    
+    <select id="selectAlertLogById" parameterType="Long" resultMap="AlertLogResult">
+        <include refid="selectAlertLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAlertLog" parameterType="AlertLog" useGeneratedKeys="true" keyProperty="id">
+        insert into alert_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="time != null">time,</if>
+            <if test="type != null">type,</if>
+            <if test="eventName != null">event_name,</if>
+            <if test="eventDescription != null">event_description,</if>
+            <if test="patientInfo != null">patient_info,</if>
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="familyPhone != null">family_phone,</if>
+            <if test="belongHospital != null">belong_hospital,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="time != null">#{time},</if>
+            <if test="type != null">#{type},</if>
+            <if test="eventName != null">#{eventName},</if>
+            <if test="eventDescription != null">#{eventDescription},</if>
+            <if test="patientInfo != null">#{patientInfo},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="familyPhone != null">#{familyPhone},</if>
+            <if test="belongHospital != null">#{belongHospital},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAlertLog" parameterType="AlertLog">
+        update alert_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="time != null">time = #{time},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="eventName != null">event_name = #{eventName},</if>
+            <if test="eventDescription != null">event_description = #{eventDescription},</if>
+            <if test="patientInfo != null">patient_info = #{patientInfo},</if>
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="familyPhone != null">family_phone = #{familyPhone},</if>
+            <if test="belongHospital != null">belong_hospital = #{belongHospital},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlertLogById" parameterType="Long">
+        delete from alert_log where id = #{id}
+    </delete>
+
+    <delete id="deleteAlertLogByIds" parameterType="String">
+        delete from alert_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

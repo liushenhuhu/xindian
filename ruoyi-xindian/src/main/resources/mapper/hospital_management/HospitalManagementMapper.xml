@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital_management.mapper.HospitalManagementMapper">
+    
+    <resultMap type="HospitalManagement" id="HospitalManagementResult">
+        <result property="id"    column="id"    />
+        <result property="provience"    column="provience"    />
+        <result property="hospitalName"    column="hospital_name"    />
+        <result property="hospitalCode"    column="hospital_code"    />
+        <result property="hospitalAccount"    column="hospital_account"    />
+        <result property="hospitalPassword"    column="hospital_password"    />
+        <result property="firstEcgTime"    column="first_ecg_time"    />
+        <result property="hostNumber"    column="host_number"    />
+        <result property="patientNumber"    column="patient_number"    />
+        <result property="monitoringPatientNumber"    column="monitoring_patient_number"    />
+        <result property="accountNumber"    column="account_number"    />
+        <result property="state"    column="state"    />
+    </resultMap>
+
+    <sql id="selectHospitalManagementVo">
+        select id, provience, hospital_name, hospital_code, hospital_account, hospital_password, first_ecg_time, host_number, patient_number, monitoring_patient_number, account_number, state from hospital_management
+    </sql>
+
+    <select id="selectHospitalManagementList" parameterType="HospitalManagement" resultMap="HospitalManagementResult">
+        <include refid="selectHospitalManagementVo"/>
+        <where>  
+            <if test="provience != null  and provience != ''"> and provience = #{provience}</if>
+            <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code = #{hospitalCode}</if>
+            <if test="hospitalAccount != null  and hospitalAccount != ''"> and hospital_account = #{hospitalAccount}</if>
+            <if test="firstEcgTime != null "> and first_ecg_time = #{firstEcgTime}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+        </where>
+    </select>
+    
+    <select id="selectHospitalManagementById" parameterType="Long" resultMap="HospitalManagementResult">
+        <include refid="selectHospitalManagementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHospitalManagement" parameterType="HospitalManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into hospital_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provience != null">provience,</if>
+            <if test="hospitalName != null">hospital_name,</if>
+            <if test="hospitalCode != null">hospital_code,</if>
+            <if test="hospitalAccount != null">hospital_account,</if>
+            <if test="hospitalPassword != null">hospital_password,</if>
+            <if test="firstEcgTime != null">first_ecg_time,</if>
+            <if test="hostNumber != null">host_number,</if>
+            <if test="patientNumber != null">patient_number,</if>
+            <if test="monitoringPatientNumber != null">monitoring_patient_number,</if>
+            <if test="accountNumber != null">account_number,</if>
+            <if test="state != null">state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provience != null">#{provience},</if>
+            <if test="hospitalName != null">#{hospitalName},</if>
+            <if test="hospitalCode != null">#{hospitalCode},</if>
+            <if test="hospitalAccount != null">#{hospitalAccount},</if>
+            <if test="hospitalPassword != null">#{hospitalPassword},</if>
+            <if test="firstEcgTime != null">#{firstEcgTime},</if>
+            <if test="hostNumber != null">#{hostNumber},</if>
+            <if test="patientNumber != null">#{patientNumber},</if>
+            <if test="monitoringPatientNumber != null">#{monitoringPatientNumber},</if>
+            <if test="accountNumber != null">#{accountNumber},</if>
+            <if test="state != null">#{state},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHospitalManagement" parameterType="HospitalManagement">
+        update hospital_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provience != null">provience = #{provience},</if>
+            <if test="hospitalName != null">hospital_name = #{hospitalName},</if>
+            <if test="hospitalCode != null">hospital_code = #{hospitalCode},</if>
+            <if test="hospitalAccount != null">hospital_account = #{hospitalAccount},</if>
+            <if test="hospitalPassword != null">hospital_password = #{hospitalPassword},</if>
+            <if test="firstEcgTime != null">first_ecg_time = #{firstEcgTime},</if>
+            <if test="hostNumber != null">host_number = #{hostNumber},</if>
+            <if test="patientNumber != null">patient_number = #{patientNumber},</if>
+            <if test="monitoringPatientNumber != null">monitoring_patient_number = #{monitoringPatientNumber},</if>
+            <if test="accountNumber != null">account_number = #{accountNumber},</if>
+            <if test="state != null">state = #{state},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHospitalManagementById" parameterType="Long">
+        delete from hospital_management where id = #{id}
+    </delete>
+
+    <delete id="deleteHospitalManagementByIds" parameterType="String">
+        delete from hospital_management where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

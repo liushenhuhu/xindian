@@ -1,0 +1,44 @@
+import request from '@/utils/request'
+
+// 查询预警日志列表
+export function listAlert_log(query) {
+  return request({
+    url: '/alert_log/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询预警日志详细
+export function getAlert_log(id) {
+  return request({
+    url: '/alert_log/' + id,
+    method: 'get'
+  })
+}
+
+// 新增预警日志
+export function addAlert_log(data) {
+  return request({
+    url: '/alert_log',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改预警日志
+export function updateAlert_log(data) {
+  return request({
+    url: '/alert_log',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除预警日志
+export function delAlert_log(id) {
+  return request({
+    url: '/alert_log/' + id,
+    method: 'delete'
+  })
+}
