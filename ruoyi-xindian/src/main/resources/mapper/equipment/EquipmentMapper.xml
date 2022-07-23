@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.equipment.mapper.EquipmentMapper">
-
+    
     <resultMap type="Equipment" id="EquipmentResult">
         <result property="id"    column="id"    />
         <result property="hostId"    column="host_id"    />
@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
         <include refid="selectEquipmentVo"/>
-        <where>
+        <where>  
             <if test="hostId != null  and hostId != ''"> and host_id = #{hostId}</if>
             <if test="hostMac != null  and hostMac != ''"> and host_mac = #{hostMac}</if>
             <if test="hostVersion != null  and hostVersion != ''"> and host_version = #{hostVersion}</if>
@@ -37,17 +37,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
         </where>
     </select>
-
-    <select id="selectEquipmentById" parameterType="String" resultMap="EquipmentResult">
+    
+    <select id="selectEquipmentById" parameterType="Long" resultMap="EquipmentResult">
         <include refid="selectEquipmentVo"/>
         where id = #{id}
     </select>
-
+        
     <insert id="insertEquipment" parameterType="Equipment">
         insert into equipment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="hostId != null">host_id,</if>
+            <if test="hostId != null and hostId != ''">host_id,</if>
             <if test="hostMac != null">host_mac,</if>
             <if test="hostVersion != null">host_version,</if>
             <if test="hospitalName != null">hospital_name,</if>
@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="hostId != null">#{hostId},</if>
+            <if test="hostId != null and hostId != ''">#{hostId},</if>
             <if test="hostMac != null">#{hostMac},</if>
             <if test="hostVersion != null">#{hostVersion},</if>
             <if test="hospitalName != null">#{hospitalName},</if>
@@ -76,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateEquipment" parameterType="Equipment">
         update equipment
         <trim prefix="SET" suffixOverrides=",">
-            <if test="hostId != null">host_id = #{hostId},</if>
+            <if test="hostId != null and hostId != ''">host_id = #{hostId},</if>
             <if test="hostMac != null">host_mac = #{hostMac},</if>
             <if test="hostVersion != null">host_version = #{hostVersion},</if>
             <if test="hospitalName != null">hospital_name = #{hospitalName},</if>
@@ -90,12 +90,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteEquipmentById" parameterType="String">
+    <delete id="deleteEquipmentById" parameterType="Long">
         delete from equipment where id = #{id}
     </delete>
 
     <delete id="deleteEquipmentByIds" parameterType="String">
-        delete from equipment where id in
+        delete from equipment where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

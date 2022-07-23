@@ -1,5 +1,7 @@
 package com.ruoyi.xindian.management.domain;
 
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -16,7 +18,7 @@ public class PatientManagement extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 序号 */
-    private String id;
+    private Long id;
 
     /** 姓名 */
     @Excel(name = "姓名")
@@ -40,8 +42,9 @@ public class PatientManagement extends BaseEntity
     private String phone;
 
     /** 主机发放时间 */
-    @Excel(name = "主机发放时间")
-    private String hostReleaseTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "主机发放时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date hostReleaseTime;
 
     /** 医院名称 */
     @Excel(name = "医院名称")
@@ -63,12 +66,12 @@ public class PatientManagement extends BaseEntity
     @Excel(name = "监测状态")
     private String monitoringStatus;
 
-    public void setId(String id)
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public String getId()
+    public Long getId()
     {
         return id;
     }
@@ -117,12 +120,12 @@ public class PatientManagement extends BaseEntity
     {
         return phone;
     }
-    public void setHostReleaseTime(String hostReleaseTime)
+    public void setHostReleaseTime(Date hostReleaseTime)
     {
         this.hostReleaseTime = hostReleaseTime;
     }
 
-    public String getHostReleaseTime()
+    public Date getHostReleaseTime()
     {
         return hostReleaseTime;
     }

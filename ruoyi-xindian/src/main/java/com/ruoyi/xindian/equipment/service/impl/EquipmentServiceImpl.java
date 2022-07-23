@@ -26,7 +26,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 设备管理
      */
     @Override
-    public Equipment selectEquipmentById(String id)
+    public Equipment selectEquipmentById(Long id)
     {
         return equipmentMapper.selectEquipmentById(id);
     }
@@ -74,7 +74,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 结果
      */
     @Override
-    public int deleteEquipmentByIds(String[] ids)
+    public int deleteEquipmentByIds(Long[] ids)
     {
         return equipmentMapper.deleteEquipmentByIds(ids);
     }
@@ -86,7 +86,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 结果
      */
     @Override
-    public int deleteEquipmentById(String id)
+    public int deleteEquipmentById(Long id)
     {
         return equipmentMapper.deleteEquipmentById(id);
     }

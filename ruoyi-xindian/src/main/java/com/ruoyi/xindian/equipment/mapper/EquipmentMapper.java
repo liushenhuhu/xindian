@@ -17,7 +17,7 @@ public interface EquipmentMapper
      * @param id 设备管理主键
      * @return 设备管理
      */
-    public Equipment selectEquipmentById(String id);
+    public Equipment selectEquipmentById(Long id);
 
     /**
      * 查询设备管理列表
@@ -49,7 +49,7 @@ public interface EquipmentMapper
      * @param id 设备管理主键
      * @return 结果
      */
-    public int deleteEquipmentById(String id);
+    public int deleteEquipmentById(Long id);
 
     /**
      * 批量删除设备管理
@@ -57,5 +57,5 @@ public interface EquipmentMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteEquipmentByIds(String[] ids);
+    public int deleteEquipmentByIds(Long[] ids);
 }

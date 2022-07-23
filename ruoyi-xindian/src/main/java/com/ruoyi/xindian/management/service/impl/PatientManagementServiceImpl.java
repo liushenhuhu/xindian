@@ -26,7 +26,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 患者管理
      */
     @Override
-    public PatientManagement selectPatientManagementById(String id)
+    public PatientManagement selectPatientManagementById(Long id)
     {
         return patientManagementMapper.selectPatientManagementById(id);
     }
@@ -74,7 +74,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 结果
      */
     @Override
-    public int deletePatientManagementByIds(String[] ids)
+    public int deletePatientManagementByIds(Long[] ids)
     {
         return patientManagementMapper.deletePatientManagementByIds(ids);
     }
@@ -86,7 +86,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 结果
      */
     @Override
-    public int deletePatientManagementById(String id)
+    public int deletePatientManagementById(Long id)
     {
         return patientManagementMapper.deletePatientManagementById(id);
     }

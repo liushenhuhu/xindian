@@ -31,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
             <if test="source != null  and source != ''"> and source = #{source}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="hostReleaseTime != null  and hostReleaseTime != ''"> and host_release_time = #{hostReleaseTime}</if>
+            <if test="hostReleaseTime != null "> and host_release_time = #{hostReleaseTime}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code = #{hospitalCode}</if>
             <if test="hostId != null  and hostId != ''"> and host_id = #{hostId}</if>
@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectPatientManagementById" parameterType="String" resultMap="PatientManagementResult">
+    <select id="selectPatientManagementById" parameterType="Long" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         where id = #{id}
     </select>
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into patient_management
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="name != null">name,</if>
+            <if test="name != null and name != ''">name,</if>
             <if test="age != null">age,</if>
             <if test="sex != null">sex,</if>
             <if test="source != null">source,</if>
@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="name != null">#{name},</if>
+            <if test="name != null and name != ''">#{name},</if>
             <if test="age != null">#{age},</if>
             <if test="sex != null">#{sex},</if>
             <if test="source != null">#{source},</if>
@@ -80,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updatePatientManagement" parameterType="PatientManagement">
         update patient_management
         <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null">name = #{name},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
             <if test="age != null">age = #{age},</if>
             <if test="sex != null">sex = #{sex},</if>
             <if test="source != null">source = #{source},</if>
@@ -95,7 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deletePatientManagementById" parameterType="String">
+    <delete id="deletePatientManagementById" parameterType="Long">
         delete from patient_management where id = #{id}
     </delete>
 

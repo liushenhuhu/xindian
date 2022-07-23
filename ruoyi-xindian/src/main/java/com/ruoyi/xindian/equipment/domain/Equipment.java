@@ -18,7 +18,7 @@ public class Equipment extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 序号 */
-    private String id;
+    private Long id;
 
     /** 主机序列号 */
     @Excel(name = "主机序列号")
@@ -61,12 +61,12 @@ public class Equipment extends BaseEntity
     @Excel(name = "手机号")
     private String phone;
 
-    public void setId(String id) 
+    public void setId(Long id) 
     {
         this.id = id;
     }
 
-    public String getId() 
+    public Long getId() 
     {
         return id;
     }

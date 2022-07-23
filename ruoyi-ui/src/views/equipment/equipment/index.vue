@@ -43,10 +43,10 @@
       </el-form-item>
       <el-form-item label="连接时间" prop="connectionTime">
         <el-date-picker clearable
-          v-model="queryParams.connectionTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择连接时间">
+                        v-model="queryParams.connectionTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择连接时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="最近使用患者姓名" prop="recentlyUsername">
@@ -64,6 +64,16 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="性别" prop="sex">
+        <el-select v-model="queryParams.sex" placeholder="请选择性别" clearable>
+          <el-option
+            v-for="dict in dict.type.sex"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input
@@ -88,7 +98,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['equipment:equipment:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -99,7 +110,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['equipment:equipment:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -110,7 +122,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['equipment:equipment:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -120,28 +133,33 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['equipment:equipment:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="id" />
-      <el-table-column label="主机序列号" align="center" prop="hostId" />
-      <el-table-column label="主机MAC地址" align="center" prop="hostMac" />
-      <el-table-column label="主机版本号" align="center" prop="hostVersion" />
-      <el-table-column label="医院名称" align="center" prop="hospitalName" />
-      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="序号" align="center" prop="id"/>
+      <el-table-column label="主机序列号" align="center" prop="hostId"/>
+      <el-table-column label="主机MAC地址" align="center" prop="hostMac"/>
+      <el-table-column label="主机版本号" align="center" prop="hostVersion"/>
+      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
       <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="最近使用患者姓名" align="center" prop="recentlyUsername" />
-      <el-table-column label="年龄" align="center" prop="age" />
-      <el-table-column label="性别" align="center" prop="sex" />
-      <el-table-column label="手机号" align="center" prop="phone" />
+      <el-table-column label="最近使用患者姓名" align="center" prop="recentlyUsername"/>
+      <el-table-column label="年龄" align="center" prop="age"/>
+      <el-table-column label="性别" align="center" prop="sex">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sex" :value="scope.row.sex"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="手机号" align="center" prop="phone"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -150,14 +168,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['equipment:equipment:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['equipment:equipment:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -174,36 +194,46 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="主机序列号" prop="hostId">
-          <el-input v-model="form.hostId" placeholder="请输入主机序列号" />
+          <el-input v-model="form.hostId" placeholder="请输入主机序列号"/>
         </el-form-item>
         <el-form-item label="主机MAC地址" prop="hostMac">
-          <el-input v-model="form.hostMac" placeholder="请输入主机MAC地址" />
+          <el-input v-model="form.hostMac" placeholder="请输入主机MAC地址"/>
         </el-form-item>
         <el-form-item label="主机版本号" prop="hostVersion">
-          <el-input v-model="form.hostVersion" placeholder="请输入主机版本号" />
+          <el-input v-model="form.hostVersion" placeholder="请输入主机版本号"/>
         </el-form-item>
         <el-form-item label="医院名称" prop="hospitalName">
-          <el-input v-model="form.hospitalName" placeholder="请输入医院名称" />
+          <el-input v-model="form.hospitalName" placeholder="请输入医院名称"/>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
+          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
         </el-form-item>
         <el-form-item label="连接时间" prop="connectionTime">
           <el-date-picker clearable
-            v-model="form.connectionTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择连接时间">
+                          v-model="form.connectionTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择连接时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="最近使用患者姓名" prop="recentlyUsername">
-          <el-input v-model="form.recentlyUsername" placeholder="请输入最近使用患者姓名" />
+          <el-input v-model="form.recentlyUsername" placeholder="请输入最近使用患者姓名"/>
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" placeholder="请输入年龄" />
+          <el-input v-model="form.age" placeholder="请输入年龄"/>
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-select v-model="form.sex" placeholder="请选择性别">
+            <el-option
+              v-for="dict in dict.type.sex"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号" />
+          <el-input v-model="form.phone" placeholder="请输入手机号"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -215,10 +245,11 @@
 </template>
 
 <script>
-import { listEquipment, getEquipment, delEquipment, addEquipment, updateEquipment } from "@/api/equipment/equipment";
+import {listEquipment, getEquipment, delEquipment, addEquipment, updateEquipment} from "@/api/equipment/equipment";
 
 export default {
   name: "Equipment",
+  dicts: ['sex'],
   data() {
     return {
       // 遮罩层
@@ -258,6 +289,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        hostId: [
+          {required: true, message: "主机序列号不能为空", trigger: "blur"}
+        ],
       }
     };
   },
@@ -309,7 +343,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -351,12 +385,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除设备管理编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除设备管理编号为"' + ids + '"的数据项？').then(function () {
         return delEquipment(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

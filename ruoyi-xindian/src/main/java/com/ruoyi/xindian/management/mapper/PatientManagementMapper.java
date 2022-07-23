@@ -17,7 +17,7 @@ public interface PatientManagementMapper
      * @param id 患者管理主键
      * @return 患者管理
      */
-    public PatientManagement selectPatientManagementById(String id);
+    public PatientManagement selectPatientManagementById(Long id);
 
     /**
      * 查询患者管理列表
@@ -49,7 +49,7 @@ public interface PatientManagementMapper
      * @param id 患者管理主键
      * @return 结果
      */
-    public int deletePatientManagementById(String id);
+    public int deletePatientManagementById(Long id);
 
     /**
      * 批量删除患者管理
@@ -57,5 +57,5 @@ public interface PatientManagementMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePatientManagementByIds(String[] ids);
+    public int deletePatientManagementByIds(Long[] ids);
 }

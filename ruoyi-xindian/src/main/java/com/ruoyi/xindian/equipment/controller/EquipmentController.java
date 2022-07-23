@@ -64,7 +64,7 @@ public class EquipmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
+    public AjaxResult getInfo(@PathVariable("id") Long id)
     {
         return AjaxResult.success(equipmentService.selectEquipmentById(id));
     }
@@ -97,7 +97,7 @@ public class EquipmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('equipment:equipment:remove')")
     @Log(title = "设备管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
+    public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(equipmentService.deleteEquipmentByIds(ids));
     }
