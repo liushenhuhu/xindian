@@ -184,8 +184,7 @@
             type="text"
             icon="el-icon-view"
             @click="bigScreen()"
-          >
-            查看大屏
+          >查看大屏
           </el-button>
 
         </template>
