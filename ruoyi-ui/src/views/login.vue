@@ -55,9 +55,9 @@
       </el-form-item>
     </el-form>
     <!--  底部  -->
-    <div class="el-login-footer">
-      <span>Copyright © 2018-2022 ruoyi.vip All Rights Reserved.</span>
-    </div>
+<!--    <div class="el-login-footer">-->
+<!--      <span>Copyright © 2018-2022 ruoyi.vip All Rights Reserved.</span>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -89,9 +89,9 @@ export default {
       },
       loading: false,
       // 验证码开关
-      captchaOnOff: true,
+      captchaOnOff: false,
       // 注册开关
-      register: false,
+      register: true,
       redirect: undefined
     };
   },
