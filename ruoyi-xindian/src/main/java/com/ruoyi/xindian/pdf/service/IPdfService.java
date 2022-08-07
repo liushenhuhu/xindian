@@ -4,6 +4,7 @@ import com.ruoyi.xindian.pdf.domain.AdmissionCard;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 public interface IPdfService {

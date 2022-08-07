@@ -1,20 +1,27 @@
 <template>
   <iframe
-          width="100%"
-          :height="TableHeight"
-          allowfullscreen="true"
-          src="http://47.110.32.83:5006/">
+    width="100%"
+    :height="TableHeight"
+    allowfullscreen="true"
+    src="http://47.110.32.83:6006/">
   </iframe>
 </template>
 
 <script>
+let windowHeight;
 export default {
   name: "Index",
   data() {
     return {
       // 版本号
       version: "3.8.3",
+      TableHeight: 100,
     };
+  },
+  created() {
+    //动态计算表格高度
+    let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
+    this.TableHeight = windowHeight + 180;
   },
   methods: {
     goTarget(href) {
@@ -32,12 +39,14 @@ export default {
     font-size: 17.5px;
     border-left: 5px solid #eee;
   }
+
   hr {
     margin-top: 20px;
     margin-bottom: 20px;
     border: 0;
     border-top: 1px solid #eee;
   }
+
   .col-item {
     margin-bottom: 20px;
   }

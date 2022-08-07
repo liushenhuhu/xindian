@@ -42,3 +42,13 @@ export function delManagement(id) {
     method: 'delete'
   })
 }
+
+// pdf下载
+export function pdfDown(data) {
+  return request({
+    url: '/pdf/download',
+    method: 'post',
+    data: data,
+    // responseType:'blob'
+  })
+}

@@ -3,10 +3,7 @@ package com.ruoyi.xindian.pdf.controller;
 import com.ruoyi.xindian.pdf.domain.AdmissionCard;
 import com.ruoyi.xindian.pdf.service.IPdfService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
@@ -23,6 +20,9 @@ public class PdfController {
     @Autowired
     private IPdfService pdfService;
 
+    @Autowired
+    private HttpServletResponse response;
+
     @PostMapping("/download")
     public void pdfDownload(@RequestBody AdmissionCard admissionCard, HttpServletResponse response){
         try {
@@ -31,5 +31,13 @@ public class PdfController {
             e.printStackTrace();
         }
     }
+
+//    @GetMapping
+//    public void Test() {
+//        AdmissionCard admissionCard = new AdmissionCard("韩涵", "23",
+//                "郑大医院", "001", "1.png");
+//
+//        pdfDownload(admissionCard, response);
+//    }
 
 }

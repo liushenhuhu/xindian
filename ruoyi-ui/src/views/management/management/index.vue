@@ -186,6 +186,14 @@
             @click="bigScreen()"
           >查看大屏
           </el-button>
+          <!--          TODO-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-download"-->
+<!--            @click="pdfDownload()"-->
+<!--          >导出为PDF-->
+<!--          </el-button>-->
 
         </template>
       </el-table-column>
@@ -259,7 +267,8 @@ import {
   getManagement,
   delManagement,
   addManagement,
-  updateManagement
+  updateManagement,
+  pdfDown
 } from "@/api/management/management";
 
 export default {
@@ -300,6 +309,13 @@ export default {
         hostId: null,
         hostMac: null,
         monitoringStatus: null
+      },
+      pdfMessage: {
+        name: '韩涵',
+        age: '23',
+        hospital: '郑大医院',
+        equipment: '001',
+        image: '1.png',
       },
       // 表单参数
       form: {},
@@ -416,9 +432,44 @@ export default {
         ...this.queryParams
       }, `management_${new Date().getTime()}.xlsx`)
     },
+    // TODO
+    pdfDownload() {
+
+      pdfDown(this.pdfMessage)
+        //   .then(resp=>{
+        //   this.loadingInstance.close();
+        //   let data = resp.data;
+        //   if (!data) {
+        //     return;
+        //   }
+        //   let url = window.URL.createObjectURL(new Blob([data]));
+        //   let link = document.createElement('a');
+        //   link.style.display = 'none';
+        //   link.href = url;
+        //   link.setAttribute('download', '测试文件.pdf');
+        //   document.body.appendChild(link);
+        //   link.click();
+        // });
+    },
+
+//     downloadFileRequest("/file/exportReport",param).then(resp=> {
+//   this.loadingInstance.close();
+//   let data = resp.data;
+//   if (!data) {
+//     return;
+//   }
+//   let url = window.URL.createObjectURL(new Blob([data]));
+//   let link = document.createElement('a');
+//   link.style.display = 'none';
+//   link.href = url;
+//   link.setAttribute('download', '测试文件.pdf');
+//   document.body.appendChild(link);
+//   link.click();
+// });
+
     /** 查看大屏*/
-    bigScreen(){
-      window.open("http://47.110.32.83:5006/","_blank")
+    bigScreen() {
+      window.open("http://47.110.32.83:5006/", "_blank")
     }
   }
 };

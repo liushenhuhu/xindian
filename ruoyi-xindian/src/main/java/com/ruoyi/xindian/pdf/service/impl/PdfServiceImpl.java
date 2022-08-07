@@ -29,17 +29,18 @@ public class PdfServiceImpl implements IPdfService {
 //        String templateName = "准考证-模板.pdf";
         String path = "";
 
-        path = "E:\\java\\xindian\\ruoyi-xindian\\src\\main\\resources\\doc\\table.pdf";
+//        path = "E:\\java\\xindian\\ruoyi-xindian\\src\\main\\resources\\doc\\table.pdf";
         // 获取操作系统名称，根据系统名称确定模板存放的路径
-//        String systemName = System.getProperty("os.name");
-//        if(systemName.toUpperCase().startsWith("WIN")){
-//            path = "D:/pdf/";
-//        }else {
-//            path = "/usr/local/pdf/";
-//        }
+        String systemName = System.getProperty("os.name");
+        if (systemName.toUpperCase().startsWith("WIN")) {
+//            path = "E:\\java\\xindian\\ruoyi-xindian\\src\\main\\resources\\doc\\table.pdf";
+            path = "doc/table.pdf";
+        } else {
+            path = "/usr/local/pdf/";
+        }
         // 生成导出PDF的文件名称
         String fileName = admissionCard.getName() + "-硕士准考证.pdf";
-        fileName = URLEncoder.encode(fileName, "UTF-8");
+//        fileName = URLEncoder.encode(fileName, "UTF-8");
         // 设置响应头
         response.setContentType("application/force-download");
 //        response.setHeader("Content-Disposition",
@@ -51,9 +52,9 @@ public class PdfServiceImpl implements IPdfService {
         PdfReader reader = null;
         try {
             // 保存到本地
-            // out = new FileOutputStream(fileName);
+            out = new FileOutputStream(new File("C:\\Users\\h\\Desktop\\" + fileName + ".pdf"));
             // 输出到浏览器端
-            out = response.getOutputStream();
+//            out = response.getOutputStream();
             // 读取PDF模板表单
             reader = new PdfReader(path);
             // 字节数组流，用来缓存文件流
@@ -98,7 +99,7 @@ public class PdfServiceImpl implements IPdfService {
                 }
             }
             // 表明该PDF不可修改
-            stamper.setFormFlattening(true);
+            stamper.setFormFlattening(false);
             // 关闭资源
             stamper.close();
             // 将ByteArray字节数组中的流输出到out中（即输出到浏览器）
@@ -109,6 +110,7 @@ public class PdfServiceImpl implements IPdfService {
             copy.addPage(importPage);
             doc.close();
             log.info("*****************************PDF导出成功*********************************");
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
