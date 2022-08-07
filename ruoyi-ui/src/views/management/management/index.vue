@@ -433,24 +433,24 @@ export default {
       }, `management_${new Date().getTime()}.xlsx`)
     },
     // TODO
-    pdfDownload() {
-
-      pdfDown(this.pdfMessage)
-        //   .then(resp=>{
-        //   this.loadingInstance.close();
-        //   let data = resp.data;
-        //   if (!data) {
-        //     return;
-        //   }
-        //   let url = window.URL.createObjectURL(new Blob([data]));
-        //   let link = document.createElement('a');
-        //   link.style.display = 'none';
-        //   link.href = url;
-        //   link.setAttribute('download', '测试文件.pdf');
-        //   document.body.appendChild(link);
-        //   link.click();
-        // });
-    },
+    // pdfDownload() {
+    //
+    //   pdfDown(this.pdfMessage)
+    //     //   .then(resp=>{
+    //     //   this.loadingInstance.close();
+    //     //   let data = resp.data;
+    //     //   if (!data) {
+    //     //     return;
+    //     //   }
+    //     //   let url = window.URL.createObjectURL(new Blob([data]));
+    //     //   let link = document.createElement('a');
+    //     //   link.style.display = 'none';
+    //     //   link.href = url;
+    //     //   link.setAttribute('download', '测试文件.pdf');
+    //     //   document.body.appendChild(link);
+    //     //   link.click();
+    //     // });
+    // },
 
 //     downloadFileRequest("/file/exportReport",param).then(resp=> {
 //   this.loadingInstance.close();
@@ -469,7 +469,7 @@ export default {
 
     /** 查看大屏*/
     bigScreen() {
-      window.open("http://47.110.32.83:5006/", "_blank")
+      window.open("http://47.110.32.83:6006/", "_blank")
     }
   }
 };
