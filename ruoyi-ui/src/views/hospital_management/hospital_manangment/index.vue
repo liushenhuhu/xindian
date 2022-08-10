@@ -138,7 +138,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -195,6 +195,8 @@
       </div>
     </el-dialog>
   </div>
+
+
 </template>
 
 <script>
@@ -243,6 +245,7 @@ export default {
   created() {
     this.getList();
   },
+
   methods: {
     /** 查询医院管理列表 */
     getList() {

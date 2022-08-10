@@ -1,33 +1,9 @@
 <template>
   <div class="wrap"  style="background: #8c939d">
     <div id="pdfDom" style="padding: 10px;width: 800px ;background: #00afff">
-      <h2>郑州大学测试医院</h2>
-      <el-table
-        :data="tableData"
-        border>
-        <el-table-column prop="date" label="日期" width="250"></el-table-column>
-        <el-table-column prop="name" label="姓名" width="250"></el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
-      </el-table>
-      <el-image :src="logo"></el-image>
-      <h2>郑州大学测试医院</h2>
-      <el-table
-        :data="tableData"
-        border>
-        <el-table-column prop="date" label="日期" width="250"></el-table-column>
-        <el-table-column prop="name" label="姓名" width="250"></el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
-      </el-table>
-      <el-image :src="logo"></el-image>
-      <h2>郑州大学测试医院</h2>
-      <el-table
-        :data="tableData"
-        border>
-        <el-table-column prop="date" label="日期" width="250"></el-table-column>
-        <el-table-column prop="name" label="姓名" width="250"></el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
-      </el-table>
-      <el-image :src="logo"></el-image>
+      <div class="view-content">
+        <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
+      </div>
       <h2>郑州大学测试医院</h2>
       <el-table
         :data="tableData"
@@ -47,6 +23,7 @@
 import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 import logoImg from '@/assets/logo/logo.png'
+
 export default {
   name: "ExportPDF",
   data() {
@@ -95,9 +72,36 @@ export default {
     };
   },
   mounted() {
-
+    this.drawLine()
   },
   methods: {
+
+    //echarts测试
+    drawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById('myChart'))
+      // 绘制图表配置
+      let option = {
+        tooltip: {},
+        xAxis: {
+          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+        },
+        yAxis: {},
+        series: [{
+          name: '销量',
+          type: 'bar',
+          data: [5, 20, 36, 10, 10, 20]
+        }]
+      };
+      // 窗口大小自适应方案
+      myChart.setOption(option);
+      setTimeout(function () {
+        window.onresize = function () {
+          myChart.resize();
+        }
+      }, 200)
+    },
+
     btnClick(){
       // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
       let top = document.getElementById('pdfDom');
