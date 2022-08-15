@@ -2,6 +2,11 @@ package com.ruoyi.xindian.alert_log.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.xindian.hospital.domain.HospitalManagement;
+import com.ruoyi.xindian.hospital.service.IHospitalManagementService;
+import com.ruoyi.xindian.patient.domain.PatientManagement;
+import com.ruoyi.xindian.patient.service.IPatientManagementService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,15 +29,21 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 预警日志Controller
  *
- * @author ruoyi
- * @date 2022-07-23
+ * @author hanhan
+ * @date 2022-08-15
  */
 @RestController
-@RequestMapping("/alert_log")
+@RequestMapping("/alert_log/alert_log")
 public class AlertLogController extends BaseController
 {
     @Autowired
     private IAlertLogService alertLogService;
+
+    @Autowired
+    private IPatientManagementService patientManagementService;
+
+    @Autowired
+    private IHospitalManagementService hospitalManagementService;
 
     /**
      * 查询预警日志列表
@@ -43,6 +54,16 @@ public class AlertLogController extends BaseController
     {
         startPage();
         List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
+        TableDataInfo dataTable = getDataTable(list);
+        List<AlertLog> rows = (List<AlertLog>) dataTable.getRows();
+        for (AlertLog row : rows) {
+            PatientManagement patient = patientManagementService.selectPatientManagementByPatientNumber(row.getPatientNumber());
+            HospitalManagement hospital = hospitalManagementService.selectHospitalManagementByHospitalId(row.getHospitalCode());
+            row.setPatientName(patient.getPatientName());
+            row.setPatientPhone(patient.getPatientPhone());
+            row.setFamilyPhone(patient.getFamilyPhone());
+            row.setHospitalName(hospital.getHospitalName());
+        }
         return getDataTable(list);
     }
 
@@ -63,10 +84,10 @@ public class AlertLogController extends BaseController
      * 获取预警日志详细信息
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    @GetMapping(value = "/{logId}")
+    public AjaxResult getInfo(@PathVariable("logId") String logId)
     {
-        return AjaxResult.success(alertLogService.selectAlertLogById(id));
+        return AjaxResult.success(alertLogService.selectAlertLogByLogId(logId));
     }
 
     /**
@@ -96,9 +117,9 @@ public class AlertLogController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:remove')")
     @Log(title = "预警日志", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    @DeleteMapping("/{logIds}")
+    public AjaxResult remove(@PathVariable String[] logIds)
     {
-        return toAjax(alertLogService.deleteAlertLogByIds(ids));
+        return toAjax(alertLogService.deleteAlertLogByLogIds(logIds));
     }
 }

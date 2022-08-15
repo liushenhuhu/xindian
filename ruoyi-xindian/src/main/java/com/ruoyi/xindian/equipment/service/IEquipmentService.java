@@ -6,18 +6,18 @@ import com.ruoyi.xindian.equipment.domain.Equipment;
 /**
  * 设备管理Service接口
  * 
- * @author Han
- * @date 2022-07-22
+ * @author hanhan
+ * @date 2022-08-14
  */
 public interface IEquipmentService 
 {
     /**
      * 查询设备管理
      * 
-     * @param id 设备管理主键
+     * @param equipmentId 设备管理主键
      * @return 设备管理
      */
-    public Equipment selectEquipmentById(Long id);
+    public Equipment selectEquipmentByEquipmentId(String equipmentId);
 
     /**
      * 查询设备管理列表
@@ -46,16 +46,16 @@ public interface IEquipmentService
     /**
      * 批量删除设备管理
      * 
-     * @param ids 需要删除的设备管理主键集合
+     * @param equipmentIds 需要删除的设备管理主键集合
      * @return 结果
      */
-    public int deleteEquipmentByIds(Long[] ids);
+    public int deleteEquipmentByEquipmentIds(String[] equipmentIds);
 
     /**
      * 删除设备管理信息
      * 
-     * @param id 设备管理主键
+     * @param equipmentId 设备管理主键
      * @return 结果
      */
-    public int deleteEquipmentById(Long id);
+    public int deleteEquipmentByEquipmentId(String equipmentId);
 }

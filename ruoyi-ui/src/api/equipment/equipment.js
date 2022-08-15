@@ -10,9 +10,9 @@ export function listEquipment(query) {
 }
 
 // 查询设备管理详细
-export function getEquipment(id) {
+export function getEquipment(equipmentId) {
   return request({
-    url: '/equipment/equipment/' + id,
+    url: '/equipment/equipment/' + equipmentId,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateEquipment(data) {
 }
 
 // 删除设备管理
-export function delEquipment(id) {
+export function delEquipment(equipmentId) {
   return request({
-    url: '/equipment/equipment/' + id,
+    url: '/equipment/equipment/' + equipmentId,
     method: 'delete'
   })
 }

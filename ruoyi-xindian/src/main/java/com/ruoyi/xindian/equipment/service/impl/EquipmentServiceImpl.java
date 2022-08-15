@@ -10,8 +10,8 @@ import com.ruoyi.xindian.equipment.service.IEquipmentService;
 /**
  * 设备管理Service业务层处理
  * 
- * @author Han
- * @date 2022-07-22
+ * @author hanhan
+ * @date 2022-08-14
  */
 @Service
 public class EquipmentServiceImpl implements IEquipmentService 
@@ -22,13 +22,13 @@ public class EquipmentServiceImpl implements IEquipmentService
     /**
      * 查询设备管理
      * 
-     * @param id 设备管理主键
+     * @param equipmentId 设备管理主键
      * @return 设备管理
      */
     @Override
-    public Equipment selectEquipmentById(Long id)
+    public Equipment selectEquipmentByEquipmentId(String equipmentId)
     {
-        return equipmentMapper.selectEquipmentById(id);
+        return equipmentMapper.selectEquipmentByEquipmentId(equipmentId);
     }
 
     /**
@@ -70,24 +70,24 @@ public class EquipmentServiceImpl implements IEquipmentService
     /**
      * 批量删除设备管理
      * 
-     * @param ids 需要删除的设备管理主键
+     * @param equipmentIds 需要删除的设备管理主键
      * @return 结果
      */
     @Override
-    public int deleteEquipmentByIds(Long[] ids)
+    public int deleteEquipmentByEquipmentIds(String[] equipmentIds)
     {
-        return equipmentMapper.deleteEquipmentByIds(ids);
+        return equipmentMapper.deleteEquipmentByEquipmentIds(equipmentIds);
     }
 
     /**
      * 删除设备管理信息
      * 
-     * @param id 设备管理主键
+     * @param equipmentId 设备管理主键
      * @return 结果
      */
     @Override
-    public int deleteEquipmentById(Long id)
+    public int deleteEquipmentByEquipmentId(String equipmentId)
     {
-        return equipmentMapper.deleteEquipmentById(id);
+        return equipmentMapper.deleteEquipmentByEquipmentId(equipmentId);
     }
 }

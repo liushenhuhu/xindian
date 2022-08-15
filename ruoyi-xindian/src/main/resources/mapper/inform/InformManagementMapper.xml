@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.inform.mapper.InformManagementMapper">
+    
+    <resultMap type="InformManagement" id="InformManagementResult">
+        <result property="informId"    column="inform_id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="hospitalName"    column="hospital_name"    />
+        <result property="hospitalCode"    column="hospital_code"    />
+        <result property="informTime"    column="inform_time"    />
+        <result property="startTelemetryTime"    column="start_telemetry_time"    />
+        <result property="informStatus"    column="inform_status"    />
+    </resultMap>
+
+    <sql id="selectInformManagementVo">
+        select inform_id, patient_id, hospital_name, hospital_code, inform_time, start_telemetry_time, inform_status from inform_management
+    </sql>
+
+    <select id="selectInformManagementList" parameterType="InformManagement" resultMap="InformManagementResult">
+        <include refid="selectInformManagementVo"/>
+        <where>  
+            <if test="patientId != null  and patientId != ''"> and patient_id like concat('%', #{patientId}, '%')</if>
+            <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
+            <if test="informTime != null "> and inform_time like concat('%', #{informTime}, '%')</if>
+            <if test="startTelemetryTime != null "> and start_telemetry_time like concat('%', #{startTelemetryTime}, '%')</if>
+            <if test="informStatus != null  and informStatus != ''"> and inform_status like concat('%', #{informStatus}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectInformManagementByInformId" parameterType="String" resultMap="InformManagementResult">
+        <include refid="selectInformManagementVo"/>
+        where inform_id = #{informId}
+    </select>
+        
+    <insert id="insertInformManagement" parameterType="InformManagement">
+        insert into inform_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="informId != null and informId != ''">inform_id,</if>
+            <if test="patientId != null">patient_id,</if>
+            <if test="hospitalName != null">hospital_name,</if>
+            <if test="hospitalCode != null">hospital_code,</if>
+            <if test="informTime != null">inform_time,</if>
+            <if test="startTelemetryTime != null">start_telemetry_time,</if>
+            <if test="informStatus != null">inform_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="informId != null and informId != ''">#{informId},</if>
+            <if test="patientId != null">#{patientId},</if>
+            <if test="hospitalName != null">#{hospitalName},</if>
+            <if test="hospitalCode != null">#{hospitalCode},</if>
+            <if test="informTime != null">#{informTime},</if>
+            <if test="startTelemetryTime != null">#{startTelemetryTime},</if>
+            <if test="informStatus != null">#{informStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInformManagement" parameterType="InformManagement">
+        update inform_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null">patient_id = #{patientId},</if>
+            <if test="hospitalName != null">hospital_name = #{hospitalName},</if>
+            <if test="hospitalCode != null">hospital_code = #{hospitalCode},</if>
+            <if test="informTime != null">inform_time = #{informTime},</if>
+            <if test="startTelemetryTime != null">start_telemetry_time = #{startTelemetryTime},</if>
+            <if test="informStatus != null">inform_status = #{informStatus},</if>
+        </trim>
+        where inform_id = #{informId}
+    </update>
+
+    <delete id="deleteInformManagementByInformId" parameterType="String">
+        delete from inform_management where inform_id = #{informId}
+    </delete>
+
+    <delete id="deleteInformManagementByInformIds" parameterType="String">
+        delete from inform_management where inform_id in 
+        <foreach item="informId" collection="array" open="(" separator="," close=")">
+            #{informId}
+        </foreach>
+    </delete>
+</mapper>

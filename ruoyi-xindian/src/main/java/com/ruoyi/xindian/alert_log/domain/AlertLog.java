@@ -9,25 +9,29 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 预警日志对象 alert_log
- * 
- * @author ruoyi
- * @date 2022-07-23
+ *
+ * @author hanhan
+ * @date 2022-08-15
  */
 public class AlertLog extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 序号 */
-    private Long id;
+    /** 日志id */
+    private String logId;
+
+    /** 日志号 */
+    @Excel(name = "日志号")
+    private String logNumber;
 
     /** 发生时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "发生时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date time;
+    private Date logTime;
 
     /** 预警类型 */
     @Excel(name = "预警类型")
-    private String type;
+    private String logType;
 
     /** 事件名称 */
     @Excel(name = "事件名称")
@@ -37,116 +41,159 @@ public class AlertLog extends BaseEntity
     @Excel(name = "事件说明")
     private String eventDescription;
 
-    /** 患者信息 */
-    @Excel(name = "患者信息")
-    private String patientInfo;
+    /** 患者身份证号 */
+    @Excel(name = "患者身份证号")
+    private String patientNumber;
 
-    /** 患者电话 */
+    /**
+     * 患者姓名
+     */
+    @Excel(name = "患者姓名")
+    private String patientName;
+
+
+    /**
+     * 患者电话
+     */
     @Excel(name = "患者电话")
     private String patientPhone;
 
-    /** 家属电话 */
+    /**
+     * 家属电话
+     */
     @Excel(name = "家属电话")
     private String familyPhone;
 
-    /** 所属医院 */
-    @Excel(name = "所属医院")
-    private String belongHospital;
+    /** 医院代号 */
+    @Excel(name = "医院代号")
+    private String hospitalCode;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
+    /** 医院名称 */
+    @Excel(name = "医院名称")
+    private String hospitalName;
 
-    public Long getId() 
+
+
+    public void setLogId(String logId)
     {
-        return id;
-    }
-    public void setTime(Date time) 
-    {
-        this.time = time;
+        this.logId = logId;
     }
 
-    public Date getTime() 
+    public String getLogId()
     {
-        return time;
+        return logId;
     }
-    public void setType(String type) 
+    public void setLogNumber(String logNumber)
     {
-        this.type = type;
+        this.logNumber = logNumber;
     }
 
-    public String getType() 
+    public String getLogNumber()
     {
-        return type;
+        return logNumber;
     }
-    public void setEventName(String eventName) 
+    public void setLogTime(Date logTime)
+    {
+        this.logTime = logTime;
+    }
+
+    public Date getLogTime()
+    {
+        return logTime;
+    }
+    public void setLogType(String logType)
+    {
+        this.logType = logType;
+    }
+
+    public String getLogType()
+    {
+        return logType;
+    }
+    public void setEventName(String eventName)
     {
         this.eventName = eventName;
     }
 
-    public String getEventName() 
+    public String getEventName()
     {
         return eventName;
     }
-    public void setEventDescription(String eventDescription) 
+    public void setEventDescription(String eventDescription)
     {
         this.eventDescription = eventDescription;
     }
 
-    public String getEventDescription() 
+    public String getEventDescription()
     {
         return eventDescription;
     }
-    public void setPatientInfo(String patientInfo) 
+    public void setPatientNumber(String patientNumber)
     {
-        this.patientInfo = patientInfo;
+        this.patientNumber = patientNumber;
     }
 
-    public String getPatientInfo() 
+    public String getPatientNumber()
     {
-        return patientInfo;
+        return patientNumber;
     }
-    public void setPatientPhone(String patientPhone) 
+    public void setHospitalCode(String hospitalCode)
     {
+        this.hospitalCode = hospitalCode;
+    }
+
+    public String getHospitalCode()
+    {
+        return hospitalCode;
+    }
+
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
+    public String getPatientPhone() {
+        return patientPhone;
+    }
+
+    public void setPatientPhone(String patientPhone) {
         this.patientPhone = patientPhone;
     }
 
-    public String getPatientPhone() 
-    {
-        return patientPhone;
+    public String getFamilyPhone() {
+        return familyPhone;
     }
-    public void setFamilyPhone(String familyPhone) 
-    {
+
+    public void setFamilyPhone(String familyPhone) {
         this.familyPhone = familyPhone;
     }
 
-    public String getFamilyPhone() 
-    {
-        return familyPhone;
-    }
-    public void setBelongHospital(String belongHospital) 
-    {
-        this.belongHospital = belongHospital;
+    public String getHospitalName() {
+        return hospitalName;
     }
 
-    public String getBelongHospital() 
-    {
-        return belongHospital;
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("time", getTime())
-            .append("type", getType())
-            .append("eventName", getEventName())
-            .append("eventDescription", getEventDescription())
-            .append("patientInfo", getPatientInfo())
-            .append("patientPhone", getPatientPhone())
-            .append("familyPhone", getFamilyPhone())
-            .append("belongHospital", getBelongHospital())
-            .toString();
+                .append("logId", getLogId())
+                .append("logNumber", getLogNumber())
+                .append("logTime", getLogTime())
+                .append("logType", getLogType())
+                .append("eventName", getEventName())
+                .append("eventDescription", getEventDescription())
+                .append("patientNumber", getPatientNumber())
+                .append("patientName", getPatientName())
+                .append("patientPhone", getPatientPhone())
+                .append("familyPhone", getFamilyPhone())
+                .append("hospitalCode", getHospitalCode())
+                .append("hospitalName", getHospitalName())
+                .toString();
     }
 }

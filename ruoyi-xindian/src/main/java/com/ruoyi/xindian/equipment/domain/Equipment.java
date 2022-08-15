@@ -10,27 +10,19 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 设备管理对象 equipment
  * 
- * @author Han
- * @date 2022-07-22
+ * @author hanhan
+ * @date 2022-08-14
  */
 public class Equipment extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 序号 */
-    private Long id;
+    /** 设备号 */
+    private String equipmentId;
 
-    /** 主机序列号 */
-    @Excel(name = "主机序列号")
-    private String hostId;
-
-    /** 主机MAC地址 */
-    @Excel(name = "主机MAC地址")
-    private String hostMac;
-
-    /** 主机版本号 */
-    @Excel(name = "主机版本号")
-    private String hostVersion;
+    /** 设备版本号 */
+    @Excel(name = "设备版本号")
+    private String equipmentVersion;
 
     /** 医院名称 */
     @Excel(name = "医院名称")
@@ -45,57 +37,27 @@ public class Equipment extends BaseEntity
     @Excel(name = "连接时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date connectionTime;
 
-    /** 最近使用患者姓名 */
-    @Excel(name = "最近使用患者姓名")
-    private String recentlyUsername;
+    /** 患者ID */
+    @Excel(name = "患者ID")
+    private String patientId;
 
-    /** 年龄 */
-    @Excel(name = "年龄")
-    private String age;
-
-    /** 性别 */
-    @Excel(name = "性别")
-    private String sex;
-
-    /** 手机号 */
-    @Excel(name = "手机号")
-    private String phone;
-
-    public void setId(Long id) 
+    public void setEquipmentId(String equipmentId) 
     {
-        this.id = id;
+        this.equipmentId = equipmentId;
     }
 
-    public Long getId() 
+    public String getEquipmentId() 
     {
-        return id;
+        return equipmentId;
     }
-    public void setHostId(String hostId) 
+    public void setEquipmentVersion(String equipmentVersion) 
     {
-        this.hostId = hostId;
-    }
-
-    public String getHostId() 
-    {
-        return hostId;
-    }
-    public void setHostMac(String hostMac) 
-    {
-        this.hostMac = hostMac;
+        this.equipmentVersion = equipmentVersion;
     }
 
-    public String getHostMac() 
+    public String getEquipmentVersion() 
     {
-        return hostMac;
-    }
-    public void setHostVersion(String hostVersion) 
-    {
-        this.hostVersion = hostVersion;
-    }
-
-    public String getHostVersion() 
-    {
-        return hostVersion;
+        return equipmentVersion;
     }
     public void setHospitalName(String hospitalName) 
     {
@@ -124,57 +86,25 @@ public class Equipment extends BaseEntity
     {
         return connectionTime;
     }
-    public void setRecentlyUsername(String recentlyUsername) 
+    public void setPatientId(String patientId) 
     {
-        this.recentlyUsername = recentlyUsername;
+        this.patientId = patientId;
     }
 
-    public String getRecentlyUsername() 
+    public String getPatientId() 
     {
-        return recentlyUsername;
-    }
-    public void setAge(String age) 
-    {
-        this.age = age;
-    }
-
-    public String getAge() 
-    {
-        return age;
-    }
-    public void setSex(String sex) 
-    {
-        this.sex = sex;
-    }
-
-    public String getSex() 
-    {
-        return sex;
-    }
-    public void setPhone(String phone) 
-    {
-        this.phone = phone;
-    }
-
-    public String getPhone() 
-    {
-        return phone;
+        return patientId;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("hostId", getHostId())
-            .append("hostMac", getHostMac())
-            .append("hostVersion", getHostVersion())
+            .append("equipmentId", getEquipmentId())
+            .append("equipmentVersion", getEquipmentVersion())
             .append("hospitalName", getHospitalName())
             .append("hospitalCode", getHospitalCode())
             .append("connectionTime", getConnectionTime())
-            .append("recentlyUsername", getRecentlyUsername())
-            .append("age", getAge())
-            .append("sex", getSex())
-            .append("phone", getPhone())
+            .append("patientId", getPatientId())
             .toString();
     }
 }

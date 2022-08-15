@@ -3,16 +3,16 @@ import request from '@/utils/request'
 // 查询预警日志列表
 export function listAlert_log(query) {
   return request({
-    url: '/alert_log/list',
+    url: '/alert_log/alert_log/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询预警日志详细
-export function getAlert_log(id) {
+export function getAlert_log(logId) {
   return request({
-    url: '/alert_log/' + id,
+    url: '/alert_log/alert_log/' + logId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getAlert_log(id) {
 // 新增预警日志
 export function addAlert_log(data) {
   return request({
-    url: '/alert_log',
+    url: '/alert_log/alert_log',
     method: 'post',
     data: data
   })
@@ -29,16 +29,16 @@ export function addAlert_log(data) {
 // 修改预警日志
 export function updateAlert_log(data) {
   return request({
-    url: '/alert_log',
+    url: '/alert_log/alert_log',
     method: 'put',
     data: data
   })
 }
 
 // 删除预警日志
-export function delAlert_log(id) {
+export function delAlert_log(logId) {
   return request({
-    url: '/alert_log/' + id,
+    url: '/alert_log/alert_log/' + logId,
     method: 'delete'
   })
 }

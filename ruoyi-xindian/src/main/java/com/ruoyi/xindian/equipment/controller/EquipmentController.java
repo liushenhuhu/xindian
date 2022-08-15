@@ -24,8 +24,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 设备管理Controller
  * 
- * @author Han
- * @date 2022-07-22
+ * @author hanhan
+ * @date 2022-08-14
  */
 @RestController
 @RequestMapping("/equipment/equipment")
@@ -63,10 +63,10 @@ public class EquipmentController extends BaseController
      * 获取设备管理详细信息
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    @GetMapping(value = "/{equipmentId}")
+    public AjaxResult getInfo(@PathVariable("equipmentId") String equipmentId)
     {
-        return AjaxResult.success(equipmentService.selectEquipmentById(id));
+        return AjaxResult.success(equipmentService.selectEquipmentByEquipmentId(equipmentId));
     }
 
     /**
@@ -96,9 +96,9 @@ public class EquipmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:remove')")
     @Log(title = "设备管理", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{equipmentIds}")
+    public AjaxResult remove(@PathVariable String[] equipmentIds)
     {
-        return toAjax(equipmentService.deleteEquipmentByIds(ids));
+        return toAjax(equipmentService.deleteEquipmentByEquipmentIds(equipmentIds));
     }
 }

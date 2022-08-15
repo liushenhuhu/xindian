@@ -1,13 +1,29 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="发生时间" prop="time">
+      <el-form-item label="日志号" prop="logNumber">
+        <el-input
+          v-model="queryParams.logNumber"
+          placeholder="请输入日志号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="发生时间" prop="logTime">
         <el-date-picker clearable
-          v-model="queryParams.time"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择发生时间">
+                        v-model="queryParams.logTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择发生时间">
         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="预警类型" prop="logType">
+        <el-input
+          v-model="queryParams.logType"
+          placeholder="请输入预警类型"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="事件名称" prop="eventName">
         <el-input
@@ -17,26 +33,26 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者电话" prop="patientPhone">
+      <el-form-item label="事件说明" prop="eventDescription">
         <el-input
-          v-model="queryParams.patientPhone"
-          placeholder="请输入患者电话"
+          v-model="queryParams.eventDescription"
+          placeholder="请输入事件说明"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="家属电话" prop="familyPhone">
+      <el-form-item label="患者身份证号" prop="patientNumber">
         <el-input
-          v-model="queryParams.familyPhone"
-          placeholder="请输入家属电话"
+          v-model="queryParams.patientNumber"
+          placeholder="请输入患者身份证号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所属医院" prop="belongHospital">
+      <el-form-item label="医院代号" prop="hospitalCode">
         <el-input
-          v-model="queryParams.belongHospital"
-          placeholder="请输入所属医院"
+          v-model="queryParams.hospitalCode"
+          placeholder="请输入医院代号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -56,7 +72,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['alert_log:alert_log:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -67,7 +84,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['alert_log:alert_log:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -78,7 +96,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['alert_log:alert_log:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -88,26 +107,30 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['alert_log:alert_log:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="alert_logList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="id" />
-      <el-table-column label="发生时间" align="center" prop="time" width="180">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="日志id" align="center" prop="logId"/>
+      <el-table-column label="日志号" align="center" prop="logNumber"/>
+      <el-table-column label="发生时间" align="center" prop="logTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.time, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="预警类型" align="center" prop="type" />
-      <el-table-column label="事件名称" align="center" prop="eventName" />
-      <el-table-column label="事件说明" align="center" prop="eventDescription" />
-      <el-table-column label="患者信息" align="center" prop="patientInfo" />
-      <el-table-column label="患者电话" align="center" prop="patientPhone" />
-      <el-table-column label="家属电话" align="center" prop="familyPhone" />
-      <el-table-column label="所属医院" align="center" prop="belongHospital" />
+      <el-table-column label="预警类型" align="center" prop="logType"/>
+      <el-table-column label="事件名称" align="center" prop="eventName"/>
+      <el-table-column label="事件说明" align="center" prop="eventDescription"/>
+      <el-table-column label="患者身份证号" align="center" prop="patientNumber"/>
+      <el-table-column label="患者姓名" align="center" prop="patientName"/>
+      <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+      <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -116,18 +139,20 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['alert_log:alert_log:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['alert_log:alert_log:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -139,31 +164,31 @@
     <!-- 添加或修改预警日志对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="发生时间" prop="time">
+        <el-form-item label="日志号" prop="logNumber">
+          <el-input v-model="form.logNumber" placeholder="请输入日志号"/>
+        </el-form-item>
+        <el-form-item label="发生时间" prop="logTime">
           <el-date-picker clearable
-            v-model="form.time"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择发生时间">
+                          v-model="form.logTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择发生时间">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="预警类型" prop="logType">
+          <el-input v-model="form.logType" placeholder="请输入预警类型"/>
+        </el-form-item>
         <el-form-item label="事件名称" prop="eventName">
-          <el-input v-model="form.eventName" placeholder="请输入事件名称" />
+          <el-input v-model="form.eventName" placeholder="请输入事件名称"/>
         </el-form-item>
         <el-form-item label="事件说明" prop="eventDescription">
-          <el-input v-model="form.eventDescription" placeholder="请输入事件说明" />
+          <el-input v-model="form.eventDescription" placeholder="请输入事件说明"/>
         </el-form-item>
-        <el-form-item label="患者信息" prop="patientInfo">
-          <el-input v-model="form.patientInfo" placeholder="请输入患者信息" />
+        <el-form-item label="患者身份证号" prop="patientNumber">
+          <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号"/>
         </el-form-item>
-        <el-form-item label="患者电话" prop="patientPhone">
-          <el-input v-model="form.patientPhone" placeholder="请输入患者电话" />
-        </el-form-item>
-        <el-form-item label="家属电话" prop="familyPhone">
-          <el-input v-model="form.familyPhone" placeholder="请输入家属电话" />
-        </el-form-item>
-        <el-form-item label="所属医院" prop="belongHospital">
-          <el-input v-model="form.belongHospital" placeholder="请输入所属医院" />
+        <el-form-item label="医院代号" prop="hospitalCode">
+          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -175,7 +200,7 @@
 </template>
 
 <script>
-import { listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log } from "@/api/alert_log/alert_log";
+import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
 
 export default {
   name: "Alert_log",
@@ -203,17 +228,27 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        time: null,
-        type: null,
+        logNumber: null,
+        logTime: null,
+        logType: null,
         eventName: null,
-        patientPhone: null,
-        familyPhone: null,
-        belongHospital: null
+        eventDescription: null,
+        patientNumber: null,
+        hospitalCode: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        logNumber: [
+          {required: true, message: "日志号不能为空", trigger: "blur"}
+        ],
+        patientNumber: [
+          {required: true, message: "患者身份证号不能为空", trigger: "blur"}
+        ],
+        hospitalCode: [
+          {required: true, message: "医院代号不能为空", trigger: "blur"}
+        ]
       }
     };
   },
@@ -238,15 +273,14 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
-        time: null,
-        type: null,
+        logId: null,
+        logNumber: null,
+        logTime: null,
+        logType: null,
         eventName: null,
         eventDescription: null,
-        patientInfo: null,
-        patientPhone: null,
-        familyPhone: null,
-        belongHospital: null
+        patientNumber: null,
+        hospitalCode: null
       };
       this.resetForm("form");
     },
@@ -262,8 +296,8 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
+      this.ids = selection.map(item => item.logId)
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -275,8 +309,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getAlert_log(id).then(response => {
+      const logId = row.logId || this.ids
+      getAlert_log(logId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改预警日志";
@@ -286,13 +320,14 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != null) {
+          if (this.form.logId != null) {
             updateAlert_log(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
+            this.form.logId = this.form.logNumber
             addAlert_log(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
@@ -304,13 +339,14 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除预警日志编号为"' + ids + '"的数据项？').then(function() {
-        return delAlert_log(ids);
+      const logIds = row.logId || this.ids;
+      this.$modal.confirm('是否确认删除预警日志编号为"' + logIds + '"的数据项？').then(function () {
+        return delAlert_log(logIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
