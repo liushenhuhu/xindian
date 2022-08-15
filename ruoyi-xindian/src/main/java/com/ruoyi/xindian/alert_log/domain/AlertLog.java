@@ -41,9 +41,9 @@ public class AlertLog extends BaseEntity
     @Excel(name = "事件说明")
     private String eventDescription;
 
-    /** 患者身份证号 */
-    @Excel(name = "患者身份证号")
-    private String patientNumber;
+    /** 患者id */
+    @Excel(name = "患者id")
+    private String patientId;
 
     /**
      * 患者姓名
@@ -51,6 +51,9 @@ public class AlertLog extends BaseEntity
     @Excel(name = "患者姓名")
     private String patientName;
 
+    /** 患者身份证号 */
+    @Excel(name = "患者身份证号")
+    private String patientNumber;
 
     /**
      * 患者电话
@@ -71,7 +74,6 @@ public class AlertLog extends BaseEntity
     /** 医院名称 */
     @Excel(name = "医院名称")
     private String hospitalName;
-
 
 
     public void setLogId(String logId)
@@ -128,14 +130,14 @@ public class AlertLog extends BaseEntity
     {
         return eventDescription;
     }
-    public void setPatientNumber(String patientNumber)
+    public void setPatientId(String patientId)
     {
-        this.patientNumber = patientNumber;
+        this.patientId = patientId;
     }
 
-    public String getPatientNumber()
+    public String getPatientId()
     {
-        return patientNumber;
+        return patientId;
     }
     public void setHospitalCode(String hospitalCode)
     {
@@ -153,6 +155,14 @@ public class AlertLog extends BaseEntity
 
     public void setPatientName(String patientName) {
         this.patientName = patientName;
+    }
+
+    public String getPatientNumber() {
+        return patientNumber;
+    }
+
+    public void setPatientNumber(String patientNumber) {
+        this.patientNumber = patientNumber;
     }
 
     public String getPatientPhone() {
@@ -188,8 +198,9 @@ public class AlertLog extends BaseEntity
                 .append("logType", getLogType())
                 .append("eventName", getEventName())
                 .append("eventDescription", getEventDescription())
-                .append("patientNumber", getPatientNumber())
+                .append("patientId", getPatientId())
                 .append("patientName", getPatientName())
+                .append("patientNumber", getPatientNumber())
                 .append("patientPhone", getPatientPhone())
                 .append("familyPhone", getFamilyPhone())
                 .append("hospitalCode", getHospitalCode())

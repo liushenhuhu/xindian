@@ -16,89 +16,89 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.xindian.hospital.domain.HospitalManagement;
-import com.ruoyi.xindian.hospital.service.IHospitalManagementService;
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 医院管理Controller
- *
+ * 医院Controller
+ * 
  * @author hanhan
  * @date 2022-08-15
  */
 @RestController
 @RequestMapping("/hospital/hospital")
-public class HospitalManagementController extends BaseController
+public class HospitalController extends BaseController
 {
     @Autowired
-    private IHospitalManagementService hospitalManagementService;
+    private IHospitalService hospitalService;
 
     /**
-     * 查询医院管理列表
+     * 查询医院列表
      */
     @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
     @GetMapping("/list")
-    public TableDataInfo list(HospitalManagement hospitalManagement)
+    public TableDataInfo list(Hospital hospital)
     {
         startPage();
-        List<HospitalManagement> list = hospitalManagementService.selectHospitalManagementList(hospitalManagement);
+        List<Hospital> list = hospitalService.selectHospitalList(hospital);
         return getDataTable(list);
     }
 
     /**
-     * 导出医院管理列表
+     * 导出医院列表
      */
     @PreAuthorize("@ss.hasPermi('hospital:hospital:export')")
-    @Log(title = "医院管理", businessType = BusinessType.EXPORT)
+    @Log(title = "医院", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, HospitalManagement hospitalManagement)
+    public void export(HttpServletResponse response, Hospital hospital)
     {
-        List<HospitalManagement> list = hospitalManagementService.selectHospitalManagementList(hospitalManagement);
-        ExcelUtil<HospitalManagement> util = new ExcelUtil<HospitalManagement>(HospitalManagement.class);
-        util.exportExcel(response, list, "医院管理数据");
+        List<Hospital> list = hospitalService.selectHospitalList(hospital);
+        ExcelUtil<Hospital> util = new ExcelUtil<Hospital>(Hospital.class);
+        util.exportExcel(response, list, "医院数据");
     }
 
     /**
-     * 获取医院管理详细信息
+     * 获取医院详细信息
      */
     @PreAuthorize("@ss.hasPermi('hospital:hospital:query')")
     @GetMapping(value = "/{hospitalId}")
     public AjaxResult getInfo(@PathVariable("hospitalId") String hospitalId)
     {
-        return AjaxResult.success(hospitalManagementService.selectHospitalManagementByHospitalId(hospitalId));
+        return AjaxResult.success(hospitalService.selectHospitalByHospitalId(hospitalId));
     }
 
     /**
-     * 新增医院管理
+     * 新增医院
      */
     @PreAuthorize("@ss.hasPermi('hospital:hospital:add')")
-    @Log(title = "医院管理", businessType = BusinessType.INSERT)
+    @Log(title = "医院", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody HospitalManagement hospitalManagement)
+    public AjaxResult add(@RequestBody Hospital hospital)
     {
-        return toAjax(hospitalManagementService.insertHospitalManagement(hospitalManagement));
+        return toAjax(hospitalService.insertHospital(hospital));
     }
 
     /**
-     * 修改医院管理
+     * 修改医院
      */
     @PreAuthorize("@ss.hasPermi('hospital:hospital:edit')")
-    @Log(title = "医院管理", businessType = BusinessType.UPDATE)
+    @Log(title = "医院", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody HospitalManagement hospitalManagement)
+    public AjaxResult edit(@RequestBody Hospital hospital)
     {
-        return toAjax(hospitalManagementService.updateHospitalManagement(hospitalManagement));
+        return toAjax(hospitalService.updateHospital(hospital));
     }
 
     /**
-     * 删除医院管理
+     * 删除医院
      */
     @PreAuthorize("@ss.hasPermi('hospital:hospital:remove')")
-    @Log(title = "医院管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{hospitalIds}")
+    @Log(title = "医院", businessType = BusinessType.DELETE)
+	@DeleteMapping("/{hospitalIds}")
     public AjaxResult remove(@PathVariable String[] hospitalIds)
     {
-        return toAjax(hospitalManagementService.deleteHospitalManagementByHospitalIds(hospitalIds));
+        return toAjax(hospitalService.deleteHospitalByHospitalIds(hospitalIds));
     }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.xindian.patient.mapper.PatientManagementMapper">
-
-    <resultMap type="PatientManagement" id="PatientManagementResult">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.patient.mapper.PatientMapper">
+    
+    <resultMap type="Patient" id="PatientResult">
         <result property="patientId"    column="patient_id"    />
         <result property="patientName"    column="patient_name"    />
         <result property="patientNumber"    column="patient_number"    />
@@ -13,21 +13,20 @@
         <result property="patientSource"    column="patient_source"    />
         <result property="patientPhone"    column="patient_phone"    />
         <result property="familyPhone"    column="family_phone"    />
-        <result property="hospitalName"    column="hospital_name"    />
-        <result property="hospitalCode"    column="hospital_code"    />
         <result property="equipmentId"    column="equipment_id"    />
         <result property="monitoringStatus"    column="monitoring_status"    />
         <result property="bedNumber"    column="bed_number"    />
         <result property="caseHistoryNumber"    column="case_history_number"    />
+        <result property="hospitalCode"    column="hospital_code"    />
     </resultMap>
 
-    <sql id="selectPatientManagementVo">
-        select patient_id, patient_name, patient_number, patient_age, patient_sex, patient_source, patient_phone, family_phone, hospital_name, hospital_code, equipment_id, monitoring_status, bed_number, case_history_number from patient_management
+    <sql id="selectPatientVo">
+        select patient_id, patient_name, patient_number, patient_age, patient_sex, patient_source, patient_phone, family_phone, equipment_id, monitoring_status, bed_number, case_history_number, hospital_code from patient
     </sql>
 
-    <select id="selectPatientManagementList" parameterType="PatientManagement" resultMap="PatientManagementResult">
-        <include refid="selectPatientManagementVo"/>
-        <where>
+    <select id="selectPatientList" parameterType="Patient" resultMap="PatientResult">
+        <include refid="selectPatientVo"/>
+        <where>  
             <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientNumber != null  and patientNumber != ''"> and patient_number like concat('%', #{patientNumber}, '%')</if>
             <if test="patientAge != null  and patientAge != ''"> and patient_age like concat('%', #{patientAge}, '%')</if>
@@ -35,27 +34,21 @@
             <if test="patientSource != null  and patientSource != ''"> and patient_source like concat('%', #{patientSource}, '%')</if>
             <if test="patientPhone != null  and patientPhone != ''"> and patient_phone like concat('%', #{patientPhone}, '%')</if>
             <if test="familyPhone != null  and familyPhone != ''"> and family_phone like concat('%', #{familyPhone}, '%')</if>
-            <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
             <if test="equipmentId != null  and equipmentId != ''"> and equipment_id like concat('%', #{equipmentId}, '%')</if>
             <if test="monitoringStatus != null  and monitoringStatus != ''"> and monitoring_status like concat('%', #{monitoringStatus}, '%')</if>
             <if test="bedNumber != null  and bedNumber != ''"> and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''"> and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
+            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
         </where>
     </select>
-
-    <select id="selectPatientManagementByPatientId" parameterType="String" resultMap="PatientManagementResult">
-        <include refid="selectPatientManagementVo"/>
+    
+    <select id="selectPatientByPatientId" parameterType="String" resultMap="PatientResult">
+        <include refid="selectPatientVo"/>
         where patient_id = #{patientId}
     </select>
-
-    <select id="selectPatientManagementByPatientNumber" parameterType="String" resultMap="PatientManagementResult">
-        <include refid="selectPatientManagementVo"/>
-        where patient_number = #{patientNumber}
-    </select>
-
-    <insert id="insertPatientManagement" parameterType="PatientManagement">
-        insert into patient_management
+        
+    <insert id="insertPatient" parameterType="Patient">
+        insert into patient
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientId != null">patient_id,</if>
             <if test="patientName != null and patientName != ''">patient_name,</if>
@@ -65,13 +58,12 @@
             <if test="patientSource != null">patient_source,</if>
             <if test="patientPhone != null">patient_phone,</if>
             <if test="familyPhone != null">family_phone,</if>
-            <if test="hospitalName != null and hospitalName != ''">hospital_name,</if>
-            <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
             <if test="equipmentId != null">equipment_id,</if>
             <if test="monitoringStatus != null">monitoring_status,</if>
             <if test="bedNumber != null">bed_number,</if>
             <if test="caseHistoryNumber != null">case_history_number,</if>
-        </trim>
+            <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
             <if test="patientName != null and patientName != ''">#{patientName},</if>
@@ -81,17 +73,16 @@
             <if test="patientSource != null">#{patientSource},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
             <if test="familyPhone != null">#{familyPhone},</if>
-            <if test="hospitalName != null and hospitalName != ''">#{hospitalName},</if>
-            <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
             <if test="equipmentId != null">#{equipmentId},</if>
             <if test="monitoringStatus != null">#{monitoringStatus},</if>
             <if test="bedNumber != null">#{bedNumber},</if>
             <if test="caseHistoryNumber != null">#{caseHistoryNumber},</if>
-        </trim>
+            <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
+         </trim>
     </insert>
 
-    <update id="updatePatientManagement" parameterType="PatientManagement">
-        update patient_management
+    <update id="updatePatient" parameterType="Patient">
+        update patient
         <trim prefix="SET" suffixOverrides=",">
             <if test="patientName != null and patientName != ''">patient_name = #{patientName},</if>
             <if test="patientNumber != null and patientNumber != ''">patient_number = #{patientNumber},</if>
@@ -100,22 +91,21 @@
             <if test="patientSource != null">patient_source = #{patientSource},</if>
             <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
             <if test="familyPhone != null">family_phone = #{familyPhone},</if>
-            <if test="hospitalName != null and hospitalName != ''">hospital_name = #{hospitalName},</if>
-            <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>
             <if test="equipmentId != null">equipment_id = #{equipmentId},</if>
             <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
             <if test="bedNumber != null">bed_number = #{bedNumber},</if>
             <if test="caseHistoryNumber != null">case_history_number = #{caseHistoryNumber},</if>
+            <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>
         </trim>
         where patient_id = #{patientId}
     </update>
 
-    <delete id="deletePatientManagementByPatientId" parameterType="String">
-        delete from patient_management where patient_id = #{patientId}
+    <delete id="deletePatientByPatientId" parameterType="String">
+        delete from patient where patient_id = #{patientId}
     </delete>
 
-    <delete id="deletePatientManagementByPatientIds" parameterType="String">
-        delete from patient_management where patient_id in
+    <delete id="deletePatientByPatientIds" parameterType="String">
+        delete from patient where patient_id in 
         <foreach item="patientId" collection="array" open="(" separator="," close=")">
             #{patientId}
         </foreach>

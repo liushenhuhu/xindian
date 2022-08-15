@@ -58,12 +58,14 @@
         />
       </el-form-item>
       <el-form-item label="正在监测患者数" prop="monitoringPatientNumber">
-        <el-input
-          v-model="queryParams.monitoringPatientNumber"
-          placeholder="请输入正在监测患者数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.monitoringPatientNumber" placeholder="请选择正在监测患者数" clearable>
+          <el-option
+            v-for="dict in dict.type.if"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="账号总数" prop="accountNumber">
         <el-input
@@ -151,7 +153,11 @@
       <el-table-column label="医院密码" align="center" prop="hospitalPassword" />
       <el-table-column label="设备数量" align="center" prop="equipmentNumber" />
       <el-table-column label="患者总数" align="center" prop="patientNumber" />
-      <el-table-column label="正在监测患者数" align="center" prop="monitoringPatientNumber" />
+      <el-table-column label="正在监测患者数" align="center" prop="monitoringPatientNumber">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if" :value="scope.row.monitoringPatientNumber"/>
+        </template>
+      </el-table-column>
       <el-table-column label="账号总数" align="center" prop="accountNumber" />
       <el-table-column label="首次收到心电数据时间" align="center" prop="firstEcgTime" width="180">
         <template slot-scope="scope">
@@ -187,7 +193,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改医院管理对话框 -->
+    <!-- 添加或修改医院对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="省份" prop="province">
@@ -211,8 +217,14 @@
         <el-form-item label="患者总数" prop="patientNumber">
           <el-input v-model="form.patientNumber" placeholder="请输入患者总数" />
         </el-form-item>
-        <el-form-item label="正在监测患者数" prop="monitoringPatientNumber">
-          <el-input v-model="form.monitoringPatientNumber" placeholder="请输入正在监测患者数" />
+        <el-form-item label="正在监测患者数">
+          <el-radio-group v-model="form.monitoringPatientNumber">
+            <el-radio
+              v-for="dict in dict.type.if"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="账号总数" prop="accountNumber">
           <el-input v-model="form.accountNumber" placeholder="请输入账号总数" />
@@ -242,6 +254,7 @@ import { listHospital, getHospital, delHospital, addHospital, updateHospital } f
 
 export default {
   name: "Hospital",
+  dicts: ['if'],
   data() {
     return {
       // 遮罩层
@@ -256,7 +269,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 医院管理表格数据
+      // 医院表格数据
       hospitalList: [],
       // 弹出层标题
       title: "",
@@ -295,7 +308,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询医院管理列表 */
+    /** 查询医院列表 */
     getList() {
       this.loading = true;
       listHospital(this.queryParams).then(response => {
@@ -320,7 +333,7 @@ export default {
         hospitalPassword: null,
         equipmentNumber: null,
         patientNumber: null,
-        monitoringPatientNumber: null,
+        monitoringPatientNumber: 0,
         accountNumber: null,
         firstEcgTime: null,
         ifStatistics: null
@@ -347,7 +360,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加医院管理";
+      this.title = "添加医院";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -356,7 +369,7 @@ export default {
       getHospital(hospitalId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改医院管理";
+        this.title = "修改医院";
       });
     },
     /** 提交按钮 */
@@ -383,7 +396,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const hospitalIds = row.hospitalId || this.ids;
-      this.$modal.confirm('是否确认删除医院管理编号为"' + hospitalIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除医院编号为"' + hospitalIds + '"的数据项？').then(function() {
         return delHospital(hospitalIds);
       }).then(() => {
         this.getList();

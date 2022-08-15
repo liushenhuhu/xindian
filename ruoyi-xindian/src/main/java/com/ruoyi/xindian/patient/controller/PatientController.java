@@ -16,89 +16,89 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.xindian.patient.domain.PatientManagement;
-import com.ruoyi.xindian.patient.service.IPatientManagementService;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 患者管理Controller
- *
+ * 患者Controller
+ * 
  * @author hanhan
  * @date 2022-08-15
  */
 @RestController
 @RequestMapping("/patient/patient")
-public class PatientManagementController extends BaseController
+public class PatientController extends BaseController
 {
     @Autowired
-    private IPatientManagementService patientManagementService;
+    private IPatientService patientService;
 
     /**
-     * 查询患者管理列表
+     * 查询患者列表
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PatientManagement patientManagement)
+    public TableDataInfo list(Patient patient)
     {
         startPage();
-        List<PatientManagement> list = patientManagementService.selectPatientManagementList(patientManagement);
+        List<Patient> list = patientService.selectPatientList(patient);
         return getDataTable(list);
     }
 
     /**
-     * 导出患者管理列表
+     * 导出患者列表
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:export')")
-    @Log(title = "患者管理", businessType = BusinessType.EXPORT)
+    @Log(title = "患者", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PatientManagement patientManagement)
+    public void export(HttpServletResponse response, Patient patient)
     {
-        List<PatientManagement> list = patientManagementService.selectPatientManagementList(patientManagement);
-        ExcelUtil<PatientManagement> util = new ExcelUtil<PatientManagement>(PatientManagement.class);
-        util.exportExcel(response, list, "患者管理数据");
+        List<Patient> list = patientService.selectPatientList(patient);
+        ExcelUtil<Patient> util = new ExcelUtil<Patient>(Patient.class);
+        util.exportExcel(response, list, "患者数据");
     }
 
     /**
-     * 获取患者管理详细信息
+     * 获取患者详细信息
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:query')")
     @GetMapping(value = "/{patientId}")
     public AjaxResult getInfo(@PathVariable("patientId") String patientId)
     {
-        return AjaxResult.success(patientManagementService.selectPatientManagementByPatientId(patientId));
+        return AjaxResult.success(patientService.selectPatientByPatientId(patientId));
     }
 
     /**
-     * 新增患者管理
+     * 新增患者
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:add')")
-    @Log(title = "患者管理", businessType = BusinessType.INSERT)
+    @Log(title = "患者", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PatientManagement patientManagement)
+    public AjaxResult add(@RequestBody Patient patient)
     {
-        return toAjax(patientManagementService.insertPatientManagement(patientManagement));
+        return toAjax(patientService.insertPatient(patient));
     }
 
     /**
-     * 修改患者管理
+     * 修改患者
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:edit')")
-    @Log(title = "患者管理", businessType = BusinessType.UPDATE)
+    @Log(title = "患者", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PatientManagement patientManagement)
+    public AjaxResult edit(@RequestBody Patient patient)
     {
-        return toAjax(patientManagementService.updatePatientManagement(patientManagement));
+        return toAjax(patientService.updatePatient(patient));
     }
 
     /**
-     * 删除患者管理
+     * 删除患者
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:remove')")
-    @Log(title = "患者管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{patientIds}")
+    @Log(title = "患者", businessType = BusinessType.DELETE)
+	@DeleteMapping("/{patientIds}")
     public AjaxResult remove(@PathVariable String[] patientIds)
     {
-        return toAjax(patientManagementService.deletePatientManagementByPatientIds(patientIds));
+        return toAjax(patientService.deletePatientByPatientIds(patientIds));
     }
 }

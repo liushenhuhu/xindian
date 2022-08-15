@@ -8,12 +8,12 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 医院管理对象 hospital_management
- *
+ * 医院对象 hospital
+ * 
  * @author hanhan
  * @date 2022-08-15
  */
-public class HospitalManagement extends BaseEntity
+public class Hospital extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -65,111 +65,111 @@ public class HospitalManagement extends BaseEntity
     @Excel(name = "是否开通数据统计")
     private String ifStatistics;
 
-    public void setHospitalId(String hospitalId)
+    public void setHospitalId(String hospitalId) 
     {
         this.hospitalId = hospitalId;
     }
 
-    public String getHospitalId()
+    public String getHospitalId() 
     {
         return hospitalId;
     }
-    public void setProvince(String province)
+    public void setProvince(String province) 
     {
         this.province = province;
     }
 
-    public String getProvince()
+    public String getProvince() 
     {
         return province;
     }
-    public void setHospitalName(String hospitalName)
+    public void setHospitalName(String hospitalName) 
     {
         this.hospitalName = hospitalName;
     }
 
-    public String getHospitalName()
+    public String getHospitalName() 
     {
         return hospitalName;
     }
-    public void setHospitalCode(String hospitalCode)
+    public void setHospitalCode(String hospitalCode) 
     {
         this.hospitalCode = hospitalCode;
     }
 
-    public String getHospitalCode()
+    public String getHospitalCode() 
     {
         return hospitalCode;
     }
-    public void setHospitalAccount(String hospitalAccount)
+    public void setHospitalAccount(String hospitalAccount) 
     {
         this.hospitalAccount = hospitalAccount;
     }
 
-    public String getHospitalAccount()
+    public String getHospitalAccount() 
     {
         return hospitalAccount;
     }
-    public void setHospitalPassword(String hospitalPassword)
+    public void setHospitalPassword(String hospitalPassword) 
     {
         this.hospitalPassword = hospitalPassword;
     }
 
-    public String getHospitalPassword()
+    public String getHospitalPassword() 
     {
         return hospitalPassword;
     }
-    public void setEquipmentNumber(Long equipmentNumber)
+    public void setEquipmentNumber(Long equipmentNumber) 
     {
         this.equipmentNumber = equipmentNumber;
     }
 
-    public Long getEquipmentNumber()
+    public Long getEquipmentNumber() 
     {
         return equipmentNumber;
     }
-    public void setPatientNumber(Long patientNumber)
+    public void setPatientNumber(Long patientNumber) 
     {
         this.patientNumber = patientNumber;
     }
 
-    public Long getPatientNumber()
+    public Long getPatientNumber() 
     {
         return patientNumber;
     }
-    public void setMonitoringPatientNumber(Long monitoringPatientNumber)
+    public void setMonitoringPatientNumber(Long monitoringPatientNumber) 
     {
         this.monitoringPatientNumber = monitoringPatientNumber;
     }
 
-    public Long getMonitoringPatientNumber()
+    public Long getMonitoringPatientNumber() 
     {
         return monitoringPatientNumber;
     }
-    public void setAccountNumber(Long accountNumber)
+    public void setAccountNumber(Long accountNumber) 
     {
         this.accountNumber = accountNumber;
     }
 
-    public Long getAccountNumber()
+    public Long getAccountNumber() 
     {
         return accountNumber;
     }
-    public void setFirstEcgTime(Date firstEcgTime)
+    public void setFirstEcgTime(Date firstEcgTime) 
     {
         this.firstEcgTime = firstEcgTime;
     }
 
-    public Date getFirstEcgTime()
+    public Date getFirstEcgTime() 
     {
         return firstEcgTime;
     }
-    public void setIfStatistics(String ifStatistics)
+    public void setIfStatistics(String ifStatistics) 
     {
         this.ifStatistics = ifStatistics;
     }
 
-    public String getIfStatistics()
+    public String getIfStatistics() 
     {
         return ifStatistics;
     }
@@ -177,18 +177,18 @@ public class HospitalManagement extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("hospitalId", getHospitalId())
-                .append("province", getProvince())
-                .append("hospitalName", getHospitalName())
-                .append("hospitalCode", getHospitalCode())
-                .append("hospitalAccount", getHospitalAccount())
-                .append("hospitalPassword", getHospitalPassword())
-                .append("equipmentNumber", getEquipmentNumber())
-                .append("patientNumber", getPatientNumber())
-                .append("monitoringPatientNumber", getMonitoringPatientNumber())
-                .append("accountNumber", getAccountNumber())
-                .append("firstEcgTime", getFirstEcgTime())
-                .append("ifStatistics", getIfStatistics())
-                .toString();
+            .append("hospitalId", getHospitalId())
+            .append("province", getProvince())
+            .append("hospitalName", getHospitalName())
+            .append("hospitalCode", getHospitalCode())
+            .append("hospitalAccount", getHospitalAccount())
+            .append("hospitalPassword", getHospitalPassword())
+            .append("equipmentNumber", getEquipmentNumber())
+            .append("patientNumber", getPatientNumber())
+            .append("monitoringPatientNumber", getMonitoringPatientNumber())
+            .append("accountNumber", getAccountNumber())
+            .append("firstEcgTime", getFirstEcgTime())
+            .append("ifStatistics", getIfStatistics())
+            .toString();
     }
 }

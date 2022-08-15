@@ -61,26 +61,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName">
-        <el-input
-          v-model="queryParams.hospitalName"
-          placeholder="请输入医院名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="医院代号" prop="hospitalCode">
-        <el-input
-          v-model="queryParams.hospitalCode"
-          placeholder="请输入医院代号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="最近连接设备号" prop="equipmentId">
         <el-input
           v-model="queryParams.equipmentId"
           placeholder="请输入最近连接设备号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="监测状态" prop="monitoringStatus">
+        <el-input
+          v-model="queryParams.monitoringStatus"
+          placeholder="请输入监测状态"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -97,6 +89,14 @@
         <el-input
           v-model="queryParams.caseHistoryNumber"
           placeholder="请输入病历号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="医院代号" prop="hospitalCode">
+        <el-input
+          v-model="queryParams.hospitalCode"
+          placeholder="请输入医院代号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -155,10 +155,11 @@
 
     <el-table v-loading="loading" :data="patientList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="患者ID" align="center" prop="patientId" />
+      <el-table-column label="患者id" align="center" prop="patientId" />
       <el-table-column label="患者姓名" align="center" prop="patientName" />
       <el-table-column label="患者身份证号" align="center" prop="patientNumber" />
-      <el-table-column label="患者年龄" align="center" prop="patientAge" />
+      <el-table-column label="患者年龄
+" align="center" prop="patientAge" />
       <el-table-column label="患者性别" align="center" prop="patientSex">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
@@ -167,12 +168,11 @@
       <el-table-column label="患者来源" align="center" prop="patientSource" />
       <el-table-column label="患者电话" align="center" prop="patientPhone" />
       <el-table-column label="家属电话" align="center" prop="familyPhone" />
-      <el-table-column label="医院名称" align="center" prop="hospitalName" />
-      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
       <el-table-column label="最近连接设备号" align="center" prop="equipmentId" />
       <el-table-column label="监测状态" align="center" prop="monitoringStatus" />
       <el-table-column label="床位号" align="center" prop="bedNumber" />
       <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />
+      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -201,7 +201,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改患者管理对话框 -->
+    <!-- 添加或修改患者对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="患者姓名" prop="patientName">
@@ -210,18 +210,19 @@
         <el-form-item label="患者身份证号" prop="patientNumber">
           <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号" />
         </el-form-item>
-        <el-form-item label="患者年龄" prop="patientAge">
-          <el-input v-model="form.patientAge" placeholder="请输入患者年龄" />
+        <el-form-item label="患者年龄
+" prop="patientAge">
+          <el-input v-model="form.patientAge" placeholder="请输入患者年龄
+" />
         </el-form-item>
-        <el-form-item label="患者性别" prop="patientSex">
-          <el-select v-model="form.patientSex" placeholder="请选择患者性别">
-            <el-option
+        <el-form-item label="患者性别">
+          <el-radio-group v-model="form.patientSex">
+            <el-radio
               v-for="dict in dict.type.sex"
               :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="患者来源" prop="patientSource">
           <el-input v-model="form.patientSource" placeholder="请输入患者来源" />
@@ -232,20 +233,20 @@
         <el-form-item label="家属电话" prop="familyPhone">
           <el-input v-model="form.familyPhone" placeholder="请输入家属电话" />
         </el-form-item>
-        <el-form-item label="医院名称" prop="hospitalName">
-          <el-input v-model="form.hospitalName" placeholder="请输入医院名称" />
-        </el-form-item>
-        <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
-        </el-form-item>
         <el-form-item label="最近连接设备号" prop="equipmentId">
           <el-input v-model="form.equipmentId" placeholder="请输入最近连接设备号" />
+        </el-form-item>
+        <el-form-item label="监测状态" prop="monitoringStatus">
+          <el-input v-model="form.monitoringStatus" placeholder="请输入监测状态" />
         </el-form-item>
         <el-form-item label="床位号" prop="bedNumber">
           <el-input v-model="form.bedNumber" placeholder="请输入床位号" />
         </el-form-item>
         <el-form-item label="病历号" prop="caseHistoryNumber">
           <el-input v-model="form.caseHistoryNumber" placeholder="请输入病历号" />
+        </el-form-item>
+        <el-form-item label="医院代号" prop="hospitalCode">
+          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -276,7 +277,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 患者管理表格数据
+      // 患者表格数据
       patientList: [],
       // 弹出层标题
       title: "",
@@ -293,12 +294,11 @@ export default {
         patientSource: null,
         patientPhone: null,
         familyPhone: null,
-        hospitalName: null,
-        hospitalCode: null,
         equipmentId: null,
         monitoringStatus: null,
         bedNumber: null,
-        caseHistoryNumber: null
+        caseHistoryNumber: null,
+        hospitalCode: null
       },
       // 表单参数
       form: {},
@@ -310,12 +310,9 @@ export default {
         patientNumber: [
           { required: true, message: "患者身份证号不能为空", trigger: "blur" }
         ],
-        hospitalName: [
-          { required: true, message: "医院名称不能为空", trigger: "blur" }
-        ],
         hospitalCode: [
           { required: true, message: "医院代号不能为空", trigger: "blur" }
-        ],
+        ]
       }
     };
   },
@@ -323,7 +320,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询患者管理列表 */
+    /** 查询患者列表 */
     getList() {
       this.loading = true;
       listPatient(this.queryParams).then(response => {
@@ -344,16 +341,15 @@ export default {
         patientName: null,
         patientNumber: null,
         patientAge: null,
-        patientSex: null,
+        patientSex: "0",
         patientSource: null,
         patientPhone: null,
         familyPhone: null,
-        hospitalName: null,
-        hospitalCode: null,
         equipmentId: null,
-        monitoringStatus: "0",
+        monitoringStatus: null,
         bedNumber: null,
-        caseHistoryNumber: null
+        caseHistoryNumber: null,
+        hospitalCode: null
       };
       this.resetForm("form");
     },
@@ -377,7 +373,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加患者管理";
+      this.title = "添加患者";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -386,7 +382,7 @@ export default {
       getPatient(patientId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改患者管理";
+        this.title = "修改患者";
       });
     },
     /** 提交按钮 */
@@ -413,7 +409,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const patientIds = row.patientId || this.ids;
-      this.$modal.confirm('是否确认删除患者管理编号为"' + patientIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除患者编号为"' + patientIds + '"的数据项？').then(function() {
         return delPatient(patientIds);
       }).then(() => {
         this.getList();
