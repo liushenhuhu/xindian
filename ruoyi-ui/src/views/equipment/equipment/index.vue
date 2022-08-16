@@ -102,6 +102,7 @@
       <el-table-column label="患者性别" align="center" prop="patientSex"/>
       <el-table-column label="患者电话" align="center" prop="patientPhone"/>
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+      <el-table-column label="医院名称" align="center" prop="hospitalName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -176,7 +177,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: true,
+      showSearch: false,
       // 总条数
       total: 0,
       // 设备表格数据
