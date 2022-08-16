@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="设备号" prop="equipmentNumber">
+        <el-input
+          v-model="queryParams.equipmentNumber"
+          placeholder="请输入设备号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="设备版本号" prop="equipmentVersion">
         <el-input
           v-model="queryParams.equipmentVersion"
@@ -9,34 +17,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName">
-        <el-input
-          v-model="queryParams.hospitalName"
-          placeholder="请输入医院名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="医院代号" prop="hospitalCode">
-        <el-input
-          v-model="queryParams.hospitalCode"
-          placeholder="请输入医院代号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="连接时间" prop="connectionTime">
         <el-date-picker clearable
-          v-model="queryParams.connectionTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择连接时间">
+                        v-model="queryParams.connectionTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择连接时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="患者ID" prop="patientId">
+      <el-form-item label="患者id" prop="patientId">
         <el-input
           v-model="queryParams.patientId"
-          placeholder="请输入患者ID"
+          placeholder="请输入患者id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -95,16 +87,21 @@
 
     <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="设备号" align="center" prop="equipmentId" />
+      <el-table-column label="设备id" align="center" prop="equipmentId" />
+      <el-table-column label="设备号" align="center" prop="equipmentNumber" />
       <el-table-column label="设备版本号" align="center" prop="equipmentVersion" />
-      <el-table-column label="医院名称" align="center" prop="hospitalName" />
-      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
       <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="患者ID" align="center" prop="patientId" />
+      <el-table-column label="患者id" align="center" prop="patientId" />
+      <el-table-column label="患者姓名" align="center" prop="patientName"/>
+      <el-table-column label="患者身份证号" align="center" prop="patientNumber"/>
+      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+      <el-table-column label="患者性别" align="center" prop="patientSex"/>
+      <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -124,7 +121,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -133,28 +130,25 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改设备管理对话框 -->
+    <!-- 添加或修改设备对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="设备号" prop="equipmentNumber">
+          <el-input v-model="form.equipmentNumber" placeholder="请输入设备号" />
+        </el-form-item>
         <el-form-item label="设备版本号" prop="equipmentVersion">
           <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号" />
         </el-form-item>
-        <el-form-item label="医院名称" prop="hospitalName">
-          <el-input v-model="form.hospitalName" placeholder="请输入医院名称" />
-        </el-form-item>
-        <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
-        </el-form-item>
         <el-form-item label="连接时间" prop="connectionTime">
           <el-date-picker clearable
-            v-model="form.connectionTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择连接时间">
+                          v-model="form.connectionTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择连接时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="患者ID" prop="patientId">
-          <el-input v-model="form.patientId" placeholder="请输入患者ID" />
+        <el-form-item label="患者id" prop="patientId">
+          <el-input v-model="form.patientId" placeholder="请输入患者id" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -170,6 +164,7 @@ import { listEquipment, getEquipment, delEquipment, addEquipment, updateEquipmen
 
 export default {
   name: "Equipment",
+  dicts: ['sex'],
   data() {
     return {
       // 遮罩层
@@ -184,7 +179,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 设备管理表格数据
+      // 设备表格数据
       equipmentList: [],
       // 弹出层标题
       title: "",
@@ -194,16 +189,25 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        equipmentNumber: null,
         equipmentVersion: null,
-        hospitalName: null,
-        hospitalCode: null,
         connectionTime: null,
-        patientId: null
+        patientId: null,
+        hospitalCode: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        equipmentNumber: [
+          { required: true, message: "设备号不能为空", trigger: "blur" }
+        ],
+        patientId: [
+          { required: true, message: "患者id不能为空", trigger: "blur" }
+        ],
+        hospitalCode: [
+          { required: true, message: "医院代号不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -211,7 +215,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询设备管理列表 */
+    /** 查询设备列表 */
     getList() {
       this.loading = true;
       listEquipment(this.queryParams).then(response => {
@@ -229,11 +233,11 @@ export default {
     reset() {
       this.form = {
         equipmentId: null,
+        equipmentNumber: null,
         equipmentVersion: null,
-        hospitalName: null,
-        hospitalCode: null,
         connectionTime: null,
-        patientId: null
+        patientId: null,
+        hospitalCode: null
       };
       this.resetForm("form");
     },
@@ -257,7 +261,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加设备管理";
+      this.title = "添加设备";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -266,7 +270,7 @@ export default {
       getEquipment(equipmentId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改设备管理";
+        this.title = "修改设备";
       });
     },
     /** 提交按钮 */
@@ -280,6 +284,7 @@ export default {
               this.getList();
             });
           } else {
+            this.form.equipmentId = this.form.equipmentNumber
             addEquipment(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
@@ -292,7 +297,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const equipmentIds = row.equipmentId || this.ids;
-      this.$modal.confirm('是否确认删除设备管理编号为"' + equipmentIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除设备编号为"' + equipmentIds + '"的数据项？').then(function() {
         return delEquipment(equipmentIds);
       }).then(() => {
         this.getList();

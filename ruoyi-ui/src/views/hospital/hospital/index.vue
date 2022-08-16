@@ -58,14 +58,12 @@
         />
       </el-form-item>
       <el-form-item label="正在监测患者数" prop="monitoringPatientNumber">
-        <el-select v-model="queryParams.monitoringPatientNumber" placeholder="请选择正在监测患者数" clearable>
-          <el-option
-            v-for="dict in dict.type.if"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
+        <el-input
+          v-model="queryParams.monitoringPatientNumber"
+          placeholder="请输入正在监测患者数"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="账号总数" prop="accountNumber">
         <el-input
@@ -84,12 +82,14 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="是否开通数据统计" prop="ifStatistics">
-        <el-input
-          v-model="queryParams.ifStatistics"
-          placeholder="请输入是否开通数据统计"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.ifStatistics" placeholder="请选择是否开通数据统计" clearable>
+          <el-option
+            v-for="dict in dict.type.if"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -153,18 +153,18 @@
       <el-table-column label="医院密码" align="center" prop="hospitalPassword" />
       <el-table-column label="设备数量" align="center" prop="equipmentNumber" />
       <el-table-column label="患者总数" align="center" prop="patientNumber" />
-      <el-table-column label="正在监测患者数" align="center" prop="monitoringPatientNumber">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.if" :value="scope.row.monitoringPatientNumber"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="正在监测患者数" align="center" prop="monitoringPatientNumber" />
       <el-table-column label="账号总数" align="center" prop="accountNumber" />
       <el-table-column label="首次收到心电数据时间" align="center" prop="firstEcgTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.firstEcgTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否开通数据统计" align="center" prop="ifStatistics" />
+      <el-table-column label="是否开通数据统计" align="center" prop="ifStatistics">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if" :value="scope.row.ifStatistics"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -217,14 +217,8 @@
         <el-form-item label="患者总数" prop="patientNumber">
           <el-input v-model="form.patientNumber" placeholder="请输入患者总数" />
         </el-form-item>
-        <el-form-item label="正在监测患者数">
-          <el-radio-group v-model="form.monitoringPatientNumber">
-            <el-radio
-              v-for="dict in dict.type.if"
-              :key="dict.value"
-              :label="parseInt(dict.value)"
-            >{{dict.label}}</el-radio>
-          </el-radio-group>
+        <el-form-item label="正在监测患者数" prop="monitoringPatientNumber">
+          <el-input v-model="form.monitoringPatientNumber" placeholder="请输入正在监测患者数" />
         </el-form-item>
         <el-form-item label="账号总数" prop="accountNumber">
           <el-input v-model="form.accountNumber" placeholder="请输入账号总数" />
@@ -237,8 +231,14 @@
                           placeholder="请选择首次收到心电数据时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="是否开通数据统计" prop="ifStatistics">
-          <el-input v-model="form.ifStatistics" placeholder="请输入是否开通数据统计" />
+        <el-form-item label="是否开通数据统计">
+          <el-radio-group v-model="form.ifStatistics">
+            <el-radio
+              v-for="dict in dict.type.if"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -333,10 +333,10 @@ export default {
         hospitalPassword: null,
         equipmentNumber: null,
         patientNumber: null,
-        monitoringPatientNumber: 0,
+        monitoringPatientNumber: null,
         accountNumber: null,
         firstEcgTime: null,
-        ifStatistics: null
+        ifStatistics: "0"
       };
       this.resetForm("form");
     },

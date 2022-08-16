@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询报告管理列表
+// 查询报告列表
 export function listInform(query) {
   return request({
     url: '/inform/inform/list',
@@ -9,7 +9,7 @@ export function listInform(query) {
   })
 }
 
-// 查询报告管理详细
+// 查询报告详细
 export function getInform(informId) {
   return request({
     url: '/inform/inform/' + informId,
@@ -17,7 +17,7 @@ export function getInform(informId) {
   })
 }
 
-// 新增报告管理
+// 新增报告
 export function addInform(data) {
   return request({
     url: '/inform/inform',
@@ -26,7 +26,7 @@ export function addInform(data) {
   })
 }
 
-// 修改报告管理
+// 修改报告
 export function updateInform(data) {
   return request({
     url: '/inform/inform',
@@ -35,7 +35,7 @@ export function updateInform(data) {
   })
 }
 
-// 删除报告管理
+// 删除报告
 export function delInform(informId) {
   return request({
     url: '/inform/inform/' + informId,

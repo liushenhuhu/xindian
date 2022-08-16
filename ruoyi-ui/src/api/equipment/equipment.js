@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询设备管理列表
+// 查询设备列表
 export function listEquipment(query) {
   return request({
     url: '/equipment/equipment/list',
@@ -9,7 +9,7 @@ export function listEquipment(query) {
   })
 }
 
-// 查询设备管理详细
+// 查询设备详细
 export function getEquipment(equipmentId) {
   return request({
     url: '/equipment/equipment/' + equipmentId,
@@ -17,7 +17,7 @@ export function getEquipment(equipmentId) {
   })
 }
 
-// 新增设备管理
+// 新增设备
 export function addEquipment(data) {
   return request({
     url: '/equipment/equipment',
@@ -26,7 +26,7 @@ export function addEquipment(data) {
   })
 }
 
-// 修改设备管理
+// 修改设备
 export function updateEquipment(data) {
   return request({
     url: '/equipment/equipment',
@@ -35,7 +35,7 @@ export function updateEquipment(data) {
   })
 }
 
-// 删除设备管理
+// 删除设备
 export function delEquipment(equipmentId) {
   return request({
     url: '/equipment/equipment/' + equipmentId,

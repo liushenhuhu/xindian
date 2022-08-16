@@ -34,8 +34,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/alert_log/alert_log")
-public class AlertLogController extends BaseController
-{
+public class AlertLogController extends BaseController {
     @Autowired
     private IAlertLogService alertLogService;
 
@@ -50,20 +49,18 @@ public class AlertLogController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AlertLog alertLog)
-    {
+    public TableDataInfo list(AlertLog alertLog) {
         startPage();
         List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
-        TableDataInfo dataTable = getDataTable(list);
-        List<AlertLog> rows = (List<AlertLog>) dataTable.getRows();
-        for (AlertLog row : rows) {
-            Patient patient = patientService.selectPatientByPatientId(row.getPatientId());
-            Hospital hospital = hospitalService.selectHospitalByHospitalId(row.getHospitalCode());
-            row.setPatientName(patient.getPatientName());
-            row.setPatientNumber(patient.getPatientNumber());
-            row.setPatientPhone(patient.getPatientPhone());
-            row.setFamilyPhone(patient.getFamilyPhone());
-            row.setHospitalName(hospital.getHospitalName());
+        for (AlertLog log : list) {
+            Patient patient = patientService.selectPatientByPatientId(log.getPatientId());
+            Hospital hospital = hospitalService.selectHospitalByHospitalId(patient.getHospitalCode());
+            log.setPatientName(patient.getPatientName());
+            log.setPatientNumber(patient.getPatientNumber());
+            log.setPatientPhone(patient.getPatientPhone());
+            log.setFamilyPhone(patient.getFamilyPhone());
+            log.setHospitalCode(hospital.getHospitalCode());
+            log.setHospitalName(hospital.getHospitalName());
         }
         return getDataTable(list);
     }
@@ -74,8 +71,7 @@ public class AlertLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:export')")
     @Log(title = "预警日志", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, AlertLog alertLog)
-    {
+    public void export(HttpServletResponse response, AlertLog alertLog) {
         List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
         ExcelUtil<AlertLog> util = new ExcelUtil<AlertLog>(AlertLog.class);
         util.exportExcel(response, list, "预警日志数据");
@@ -86,8 +82,7 @@ public class AlertLogController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:query')")
     @GetMapping(value = "/{logId}")
-    public AjaxResult getInfo(@PathVariable("logId") String logId)
-    {
+    public AjaxResult getInfo(@PathVariable("logId") String logId) {
         return AjaxResult.success(alertLogService.selectAlertLogByLogId(logId));
     }
 
@@ -97,8 +92,7 @@ public class AlertLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:add')")
     @Log(title = "预警日志", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody AlertLog alertLog)
-    {
+    public AjaxResult add(@RequestBody AlertLog alertLog) {
         return toAjax(alertLogService.insertAlertLog(alertLog));
     }
 
@@ -108,8 +102,7 @@ public class AlertLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:edit')")
     @Log(title = "预警日志", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody AlertLog alertLog)
-    {
+    public AjaxResult edit(@RequestBody AlertLog alertLog) {
         return toAjax(alertLogService.updateAlertLog(alertLog));
     }
 
@@ -119,8 +112,7 @@ public class AlertLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:remove')")
     @Log(title = "预警日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{logIds}")
-    public AjaxResult remove(@PathVariable String[] logIds)
-    {
+    public AjaxResult remove(@PathVariable String[] logIds) {
         return toAjax(alertLogService.deleteAlertLogByLogIds(logIds));
     }
 }

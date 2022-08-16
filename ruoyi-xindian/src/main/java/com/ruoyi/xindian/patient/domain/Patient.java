@@ -66,6 +66,10 @@ public class Patient extends BaseEntity
     @Excel(name = "医院代号")
     private String hospitalCode;
 
+    /** 医院名称 */
+    @Excel(name = "医院代号")
+    private String hospitalName;
+
     public void setPatientId(String patientId)
     {
         this.patientId = patientId;
@@ -184,6 +188,14 @@ public class Patient extends BaseEntity
         return hospitalCode;
     }
 
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -200,6 +212,7 @@ public class Patient extends BaseEntity
             .append("bedNumber", getBedNumber())
             .append("caseHistoryNumber", getCaseHistoryNumber())
             .append("hospitalCode", getHospitalCode())
+            .append("hospitalName", getHospitalName())
             .toString();
     }
 }

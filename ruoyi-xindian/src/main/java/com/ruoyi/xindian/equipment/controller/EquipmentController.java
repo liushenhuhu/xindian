@@ -2,6 +2,11 @@ package com.ruoyi.xindian.equipment.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +27,10 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 设备管理Controller
- * 
+ * 设备Controller
+ *
  * @author hanhan
- * @date 2022-08-14
+ * @date 2022-08-15
  */
 @RestController
 @RequestMapping("/equipment/equipment")
@@ -34,8 +39,14 @@ public class EquipmentController extends BaseController
     @Autowired
     private IEquipmentService equipmentService;
 
+    @Autowired
+    private IPatientService patientService;
+
+    @Autowired
+    private IHospitalService hospitalService;
+
     /**
-     * 查询设备管理列表
+     * 查询设备列表
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:list')")
     @GetMapping("/list")
@@ -43,24 +54,35 @@ public class EquipmentController extends BaseController
     {
         startPage();
         List<Equipment> list = equipmentService.selectEquipmentList(equipment);
+        for (Equipment listEquipment : list) {
+            Patient patient = patientService.selectPatientByPatientId(listEquipment.getPatientId());
+            Hospital hospital = hospitalService.selectHospitalByHospitalId(patient.getHospitalCode());
+            listEquipment.setPatientName(patient.getPatientName());
+            listEquipment.setPatientNumber(patient.getPatientNumber());
+            listEquipment.setPatientAge(patient.getPatientAge());
+            listEquipment.setPatientSex(patient.getPatientSex());
+            listEquipment.setPatientPhone(patient.getPatientPhone());
+            listEquipment.setHospitalCode(patient.getHospitalCode());
+            listEquipment.setHospitalName(hospital.getHospitalName());
+        }
         return getDataTable(list);
     }
 
     /**
-     * 导出设备管理列表
+     * 导出设备列表
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:export')")
-    @Log(title = "设备管理", businessType = BusinessType.EXPORT)
+    @Log(title = "设备", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Equipment equipment)
     {
         List<Equipment> list = equipmentService.selectEquipmentList(equipment);
         ExcelUtil<Equipment> util = new ExcelUtil<Equipment>(Equipment.class);
-        util.exportExcel(response, list, "设备管理数据");
+        util.exportExcel(response, list, "设备数据");
     }
 
     /**
-     * 获取设备管理详细信息
+     * 获取设备详细信息
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:query')")
     @GetMapping(value = "/{equipmentId}")
@@ -70,10 +92,10 @@ public class EquipmentController extends BaseController
     }
 
     /**
-     * 新增设备管理
+     * 新增设备
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:add')")
-    @Log(title = "设备管理", businessType = BusinessType.INSERT)
+    @Log(title = "设备", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Equipment equipment)
     {
@@ -81,10 +103,10 @@ public class EquipmentController extends BaseController
     }
 
     /**
-     * 修改设备管理
+     * 修改设备
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:edit')")
-    @Log(title = "设备管理", businessType = BusinessType.UPDATE)
+    @Log(title = "设备", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Equipment equipment)
     {
@@ -92,11 +114,11 @@ public class EquipmentController extends BaseController
     }
 
     /**
-     * 删除设备管理
+     * 删除设备
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:remove')")
-    @Log(title = "设备管理", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{equipmentIds}")
+    @Log(title = "设备", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{equipmentIds}")
     public AjaxResult remove(@PathVariable String[] equipmentIds)
     {
         return toAjax(equipmentService.deleteEquipmentByEquipmentIds(equipmentIds));

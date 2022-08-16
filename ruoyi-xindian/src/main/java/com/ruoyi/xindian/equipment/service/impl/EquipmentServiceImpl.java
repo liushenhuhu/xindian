@@ -8,22 +8,22 @@ import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
 
 /**
- * 设备管理Service业务层处理
- * 
+ * 设备Service业务层处理
+ *
  * @author hanhan
- * @date 2022-08-14
+ * @date 2022-08-16
  */
 @Service
-public class EquipmentServiceImpl implements IEquipmentService 
+public class EquipmentServiceImpl implements IEquipmentService
 {
     @Autowired
     private EquipmentMapper equipmentMapper;
 
     /**
-     * 查询设备管理
-     * 
-     * @param equipmentId 设备管理主键
-     * @return 设备管理
+     * 查询设备
+     *
+     * @param equipmentId 设备主键
+     * @return 设备
      */
     @Override
     public Equipment selectEquipmentByEquipmentId(String equipmentId)
@@ -32,10 +32,10 @@ public class EquipmentServiceImpl implements IEquipmentService
     }
 
     /**
-     * 查询设备管理列表
-     * 
-     * @param equipment 设备管理
-     * @return 设备管理
+     * 查询设备列表
+     *
+     * @param equipment 设备
+     * @return 设备
      */
     @Override
     public List<Equipment> selectEquipmentList(Equipment equipment)
@@ -44,9 +44,9 @@ public class EquipmentServiceImpl implements IEquipmentService
     }
 
     /**
-     * 新增设备管理
-     * 
-     * @param equipment 设备管理
+     * 新增设备
+     *
+     * @param equipment 设备
      * @return 结果
      */
     @Override
@@ -56,9 +56,9 @@ public class EquipmentServiceImpl implements IEquipmentService
     }
 
     /**
-     * 修改设备管理
-     * 
-     * @param equipment 设备管理
+     * 修改设备
+     *
+     * @param equipment 设备
      * @return 结果
      */
     @Override
@@ -68,9 +68,9 @@ public class EquipmentServiceImpl implements IEquipmentService
     }
 
     /**
-     * 批量删除设备管理
-     * 
-     * @param equipmentIds 需要删除的设备管理主键
+     * 批量删除设备
+     *
+     * @param equipmentIds 需要删除的设备主键
      * @return 结果
      */
     @Override
@@ -80,9 +80,9 @@ public class EquipmentServiceImpl implements IEquipmentService
     }
 
     /**
-     * 删除设备管理信息
-     * 
-     * @param equipmentId 设备管理主键
+     * 删除设备信息
+     *
+     * @param equipmentId 设备主键
      * @return 结果
      */
     @Override

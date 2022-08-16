@@ -49,14 +49,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院代号" prop="hospitalCode">
-        <el-input
-          v-model="queryParams.hospitalCode"
-          placeholder="请输入医院代号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -159,9 +151,9 @@
     <!-- 添加或修改预警日志对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="日志号" prop="logNumber">
-          <el-input v-model="form.logNumber" placeholder="请输入日志号" />
-        </el-form-item>
+<!--        <el-form-item label="日志号" prop="logNumber">-->
+<!--          <el-input v-model="form.logNumber" placeholder="请输入日志号" />-->
+<!--        </el-form-item>-->
         <el-form-item label="发生时间" prop="logTime">
           <el-date-picker clearable
                           v-model="form.logTime"
@@ -181,9 +173,6 @@
         </el-form-item>
         <el-form-item label="患者id" prop="patientId">
           <el-input v-model="form.patientId" placeholder="请输入患者id" />
-        </el-form-item>
-        <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -229,7 +218,6 @@ export default {
         eventName: null,
         eventDescription: null,
         patientId: null,
-        hospitalCode: null
       },
       // 表单参数
       form: {},
@@ -275,7 +263,6 @@ export default {
         eventName: null,
         eventDescription: null,
         patientId: null,
-        hospitalCode: null
       };
       this.resetForm("form");
     },

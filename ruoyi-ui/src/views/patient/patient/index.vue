@@ -158,8 +158,7 @@
       <el-table-column label="患者id" align="center" prop="patientId" />
       <el-table-column label="患者姓名" align="center" prop="patientName" />
       <el-table-column label="患者身份证号" align="center" prop="patientNumber" />
-      <el-table-column label="患者年龄
-" align="center" prop="patientAge" />
+      <el-table-column label="患者年龄" align="center" prop="patientAge" />
       <el-table-column label="患者性别" align="center" prop="patientSex">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
@@ -173,6 +172,7 @@
       <el-table-column label="床位号" align="center" prop="bedNumber" />
       <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+      <el-table-column label="医院名称" align="center" prop="hospitalName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -210,10 +210,8 @@
         <el-form-item label="患者身份证号" prop="patientNumber">
           <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号" />
         </el-form-item>
-        <el-form-item label="患者年龄
-" prop="patientAge">
-          <el-input v-model="form.patientAge" placeholder="请输入患者年龄
-" />
+        <el-form-item label="患者年龄" prop="patientAge">
+          <el-input v-model="form.patientAge" placeholder="请输入患者年龄" />
         </el-form-item>
         <el-form-item label="患者性别">
           <el-radio-group v-model="form.patientSex">

@@ -2,6 +2,9 @@ package com.ruoyi.xindian.patient.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +26,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 患者Controller
- * 
+ *
  * @author hanhan
  * @date 2022-08-15
  */
@@ -34,6 +37,9 @@ public class PatientController extends BaseController
     @Autowired
     private IPatientService patientService;
 
+    @Autowired
+    private IHospitalService hospitalService;
+
     /**
      * 查询患者列表
      */
@@ -43,6 +49,10 @@ public class PatientController extends BaseController
     {
         startPage();
         List<Patient> list = patientService.selectPatientList(patient);
+        for (Patient listPatient : list) {
+            Hospital hospital = hospitalService.selectHospitalByHospitalId(listPatient.getHospitalCode());
+            listPatient.setHospitalName(hospital.getHospitalName());
+        }
         return getDataTable(list);
     }
 
