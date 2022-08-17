@@ -203,7 +203,7 @@
           <el-input v-model="form.hospitalName" placeholder="请输入医院名称" />
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
+          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" :disabled="judge"/>
         </el-form-item>
         <el-form-item label="医院账号" prop="hospitalAccount">
           <el-input v-model="form.hospitalAccount" placeholder="请输入医院账号" />
@@ -275,6 +275,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //是否不可编辑
+      judge: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -361,6 +363,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加医院";
+      this.judge = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -370,6 +373,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改医院";
+        this.judge = true;
       });
     },
     /** 提交按钮 */

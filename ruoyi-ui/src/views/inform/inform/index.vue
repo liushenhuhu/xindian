@@ -155,7 +155,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="报告号" prop="informNumber">
-          <el-input v-model="form.informNumber" placeholder="请输入报告号" />
+          <el-input v-model="form.informNumber" placeholder="请输入报告号" :disabled="judge"/>
         </el-form-item>
         <el-form-item label="患者ID" prop="patientId">
           <el-input v-model="form.patientId" placeholder="请输入患者ID" />
@@ -214,6 +214,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //是否不可编辑
+      judge: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -291,6 +293,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加报告";
+      this.judge = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -300,6 +303,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改报告";
+        this.judge = true;
       });
     },
     /** 提交按钮 */

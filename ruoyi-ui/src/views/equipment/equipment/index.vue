@@ -135,7 +135,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="设备号" prop="equipmentNumber">
-          <el-input v-model="form.equipmentNumber" placeholder="请输入设备号" />
+          <el-input v-model="form.equipmentNumber" placeholder="请输入设备号" :disabled="judge"/>
         </el-form-item>
         <el-form-item label="设备版本号" prop="equipmentVersion">
           <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号" />
@@ -186,6 +186,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //是否不可编辑
+      judge: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -263,6 +265,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加设备";
+      this.judge = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -272,6 +275,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改设备";
+        this.judge = true;
       });
     },
     /** 提交按钮 */

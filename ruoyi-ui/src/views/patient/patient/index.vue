@@ -222,7 +222,7 @@
           <el-input v-model="form.patientName" placeholder="请输入患者姓名"/>
         </el-form-item>
         <el-form-item label="患者身份证号" prop="patientNumber">
-          <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号"/>
+          <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号" :disabled="judge"/>
         </el-form-item>
         <el-form-item label="患者年龄" prop="patientAge">
           <el-input v-model="form.patientAge" placeholder="请输入患者年龄"/>
@@ -259,7 +259,7 @@
           <el-input v-model="form.caseHistoryNumber" placeholder="请输入病历号"/>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
+          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" :disabled="judge"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -272,6 +272,7 @@
 
 <script>
 import {listPatient, getPatient, delPatient, addPatient, updatePatient} from "@/api/patient/patient";
+import axios from "axios";
 
 export default {
   name: "Patient",
@@ -296,6 +297,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //是否不可编辑
+      judge: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -387,6 +390,8 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加患者";
+      this.judge = false;
+
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -396,6 +401,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改患者";
+        this.judge = true;
       });
     },
     /** 跳转到预警日志*/

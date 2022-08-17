@@ -166,7 +166,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="日志号" prop="logNumber">
-          <el-input v-model="form.logNumber" placeholder="请输入日志号"/>
+          <el-input v-model="form.logNumber" placeholder="请输入日志号" :disabled="judge"/>
         </el-form-item>
         <el-form-item label="发生时间" prop="logTime">
           <el-date-picker clearable
@@ -222,6 +222,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //是否不可编辑
+      judge: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -310,6 +312,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加预警日志";
+      this.judge = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -319,9 +322,11 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改预警日志";
+        this.judge = true;
       });
     },
 
+    //todo
     /** 查看日志*/
     handleLook() {
       console.log('查看日志');
