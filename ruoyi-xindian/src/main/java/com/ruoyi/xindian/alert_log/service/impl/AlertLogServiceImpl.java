@@ -9,31 +9,31 @@ import com.ruoyi.xindian.alert_log.service.IAlertLogService;
 
 /**
  * 预警日志Service业务层处理
- * 
- * @author ruoyi
- * @date 2022-07-23
+ *
+ * @author hanhan
+ * @date 2022-08-15
  */
 @Service
-public class AlertLogServiceImpl implements IAlertLogService 
+public class AlertLogServiceImpl implements IAlertLogService
 {
     @Autowired
     private AlertLogMapper alertLogMapper;
 
     /**
      * 查询预警日志
-     * 
-     * @param id 预警日志主键
+     *
+     * @param logId 预警日志主键
      * @return 预警日志
      */
     @Override
-    public AlertLog selectAlertLogById(Long id)
+    public AlertLog selectAlertLogByLogId(String logId)
     {
-        return alertLogMapper.selectAlertLogById(id);
+        return alertLogMapper.selectAlertLogByLogId(logId);
     }
 
     /**
      * 查询预警日志列表
-     * 
+     *
      * @param alertLog 预警日志
      * @return 预警日志
      */
@@ -45,7 +45,7 @@ public class AlertLogServiceImpl implements IAlertLogService
 
     /**
      * 新增预警日志
-     * 
+     *
      * @param alertLog 预警日志
      * @return 结果
      */
@@ -57,7 +57,7 @@ public class AlertLogServiceImpl implements IAlertLogService
 
     /**
      * 修改预警日志
-     * 
+     *
      * @param alertLog 预警日志
      * @return 结果
      */
@@ -69,25 +69,25 @@ public class AlertLogServiceImpl implements IAlertLogService
 
     /**
      * 批量删除预警日志
-     * 
-     * @param ids 需要删除的预警日志主键
+     *
+     * @param logIds 需要删除的预警日志主键
      * @return 结果
      */
     @Override
-    public int deleteAlertLogByIds(Long[] ids)
+    public int deleteAlertLogByLogIds(String[] logIds)
     {
-        return alertLogMapper.deleteAlertLogByIds(ids);
+        return alertLogMapper.deleteAlertLogByLogIds(logIds);
     }
 
     /**
      * 删除预警日志信息
-     * 
-     * @param id 预警日志主键
+     *
+     * @param logId 预警日志主键
      * @return 结果
      */
     @Override
-    public int deleteAlertLogById(Long id)
+    public int deleteAlertLogByLogId(String logId)
     {
-        return alertLogMapper.deleteAlertLogById(id);
+        return alertLogMapper.deleteAlertLogByLogId(logId);
     }
 }

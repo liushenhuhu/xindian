@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.HospitalMapper">
+    
+    <resultMap type="Hospital" id="HospitalResult">
+        <result property="hospitalId"    column="hospital_id"    />
+        <result property="province"    column="province"    />
+        <result property="hospitalName"    column="hospital_name"    />
+        <result property="hospitalCode"    column="hospital_code"    />
+        <result property="hospitalAccount"    column="hospital_account"    />
+        <result property="hospitalPassword"    column="hospital_password"    />
+        <result property="equipmentNumber"    column="equipment_number"    />
+        <result property="patientNumber"    column="patient_number"    />
+        <result property="monitoringPatientNumber"    column="monitoring_patient_number"    />
+        <result property="accountNumber"    column="account_number"    />
+        <result property="firstEcgTime"    column="first_ecg_time"    />
+        <result property="ifStatistics"    column="if_statistics"    />
+    </resultMap>
+
+    <sql id="selectHospitalVo">
+        select hospital_id, province, hospital_name, hospital_code, hospital_account, hospital_password, equipment_number, patient_number, monitoring_patient_number, account_number, first_ecg_time, if_statistics from hospital
+    </sql>
+
+    <select id="selectHospitalList" parameterType="Hospital" resultMap="HospitalResult">
+        <include refid="selectHospitalVo"/>
+        <where>  
+            <if test="province != null  and province != ''"> and province like concat('%', #{province}, '%')</if>
+            <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
+            <if test="hospitalAccount != null  and hospitalAccount != ''"> and hospital_account like concat('%', #{hospitalAccount}, '%')</if>
+            <if test="hospitalPassword != null  and hospitalPassword != ''"> and hospital_password like concat('%', #{hospitalPassword}, '%')</if>
+            <if test="equipmentNumber != null "> and equipment_number like concat('%', #{equipmentNumber}, '%')</if>
+            <if test="patientNumber != null "> and patient_number like concat('%', #{patientNumber}, '%')</if>
+            <if test="monitoringPatientNumber != null "> and monitoring_patient_number like concat('%', #{monitoringPatientNumber}, '%')</if>
+            <if test="accountNumber != null "> and account_number like concat('%', #{accountNumber}, '%')</if>
+            <if test="firstEcgTime != null "> and first_ecg_time like concat('%', #{firstEcgTime}, '%')</if>
+            <if test="ifStatistics != null  and ifStatistics != ''"> and if_statistics like concat('%', #{ifStatistics}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectHospitalByHospitalId" parameterType="String" resultMap="HospitalResult">
+        <include refid="selectHospitalVo"/>
+        where hospital_id = #{hospitalId}
+    </select>
+        
+    <insert id="insertHospital" parameterType="Hospital">
+        insert into hospital
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hospitalId != null">hospital_id,</if>
+            <if test="province != null">province,</if>
+            <if test="hospitalName != null and hospitalName != ''">hospital_name,</if>
+            <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
+            <if test="hospitalAccount != null">hospital_account,</if>
+            <if test="hospitalPassword != null">hospital_password,</if>
+            <if test="equipmentNumber != null">equipment_number,</if>
+            <if test="patientNumber != null">patient_number,</if>
+            <if test="monitoringPatientNumber != null">monitoring_patient_number,</if>
+            <if test="accountNumber != null">account_number,</if>
+            <if test="firstEcgTime != null">first_ecg_time,</if>
+            <if test="ifStatistics != null">if_statistics,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hospitalId != null">#{hospitalId},</if>
+            <if test="province != null">#{province},</if>
+            <if test="hospitalName != null and hospitalName != ''">#{hospitalName},</if>
+            <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
+            <if test="hospitalAccount != null">#{hospitalAccount},</if>
+            <if test="hospitalPassword != null">#{hospitalPassword},</if>
+            <if test="equipmentNumber != null">#{equipmentNumber},</if>
+            <if test="patientNumber != null">#{patientNumber},</if>
+            <if test="monitoringPatientNumber != null">#{monitoringPatientNumber},</if>
+            <if test="accountNumber != null">#{accountNumber},</if>
+            <if test="firstEcgTime != null">#{firstEcgTime},</if>
+            <if test="ifStatistics != null">#{ifStatistics},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHospital" parameterType="Hospital">
+        update hospital
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="province != null">province = #{province},</if>
+            <if test="hospitalName != null and hospitalName != ''">hospital_name = #{hospitalName},</if>
+            <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>
+            <if test="hospitalAccount != null">hospital_account = #{hospitalAccount},</if>
+            <if test="hospitalPassword != null">hospital_password = #{hospitalPassword},</if>
+            <if test="equipmentNumber != null">equipment_number = #{equipmentNumber},</if>
+            <if test="patientNumber != null">patient_number = #{patientNumber},</if>
+            <if test="monitoringPatientNumber != null">monitoring_patient_number = #{monitoringPatientNumber},</if>
+            <if test="accountNumber != null">account_number = #{accountNumber},</if>
+            <if test="firstEcgTime != null">first_ecg_time = #{firstEcgTime},</if>
+            <if test="ifStatistics != null">if_statistics = #{ifStatistics},</if>
+        </trim>
+        where hospital_id = #{hospitalId}
+    </update>
+
+    <delete id="deleteHospitalByHospitalId" parameterType="String">
+        delete from hospital where hospital_id = #{hospitalId}
+    </delete>
+
+    <delete id="deleteHospitalByHospitalIds" parameterType="String">
+        delete from hospital where hospital_id in 
+        <foreach item="hospitalId" collection="array" open="(" separator="," close=")">
+            #{hospitalId}
+        </foreach>
+    </delete>
+</mapper>

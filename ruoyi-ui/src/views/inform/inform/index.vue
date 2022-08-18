@@ -1,34 +1,42 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="设备号" prop="equipmentNumber">
+      <el-form-item label="报告号" prop="informNumber">
         <el-input
-          v-model="queryParams.equipmentNumber"
-          placeholder="请输入设备号"
+          v-model="queryParams.informNumber"
+          placeholder="请输入报告号"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="设备版本号" prop="equipmentVersion">
-        <el-input
-          v-model="queryParams.equipmentVersion"
-          placeholder="请输入设备版本号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="连接时间" prop="connectionTime">
-        <el-date-picker clearable
-                        v-model="queryParams.connectionTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择连接时间">
-        </el-date-picker>
       </el-form-item>
       <el-form-item label="患者id" prop="patientId">
         <el-input
           v-model="queryParams.patientId"
           placeholder="请输入患者id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="开始遥测时间" prop="startTelemetryTime">
+        <el-date-picker clearable
+          v-model="queryParams.startTelemetryTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择开始遥测时间">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="报告日期" prop="informTime">
+        <el-date-picker clearable
+          v-model="queryParams.informTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择报告日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="报告状态" prop="informStatus">
+        <el-input
+          v-model="queryParams.informStatus"
+          placeholder="请输入报告状态"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -47,7 +55,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['equipment:equipment:add']"
+          v-hasPermi="['inform:inform:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -58,7 +66,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['equipment:equipment:edit']"
+          v-hasPermi="['inform:inform:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -69,7 +77,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['equipment:equipment:remove']"
+          v-hasPermi="['inform:inform:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -79,30 +87,42 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['equipment:equipment:export']"
+          v-hasPermi="['inform:inform:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="informList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="设备id" align="center" prop="equipmentId" />
-      <el-table-column label="设备号" align="center" prop="equipmentNumber" />
-      <el-table-column label="设备版本号" align="center" prop="equipmentVersion" />
-      <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
+      <el-table-column label="报告id" align="center" prop="informId" />
+      <el-table-column label="报告号" align="center" prop="informNumber" />
+      <el-table-column label="患者id" align="center" prop="patientId" />
+      <el-table-column label="患者姓名" align="center" prop="patientName" />
+      <el-table-column label="患者身份证号" align="center" prop="patientNumber" />
+      <el-table-column label="患者年龄" align="center" prop="patientAge" />
+      <el-table-column label="患者性别" align="center" prop="patientSex">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d}') }}</span>
+          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者id" align="center" prop="patientId" />
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
-      <el-table-column label="患者身份证号" align="center" prop="patientNumber"/>
-      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-      <el-table-column label="患者性别" align="center" prop="patientSex"/>
-      <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+      <el-table-column label="患者电话" align="center" prop="patientPhone" />
+      <el-table-column label="床位号" align="center" prop="bedNumber" />
+      <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />
+      <el-table-column label="患者来源" align="center" prop="patientSource" />
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />
       <el-table-column label="医院名称" align="center" prop="hospitalName" />
+      <el-table-column label="开始遥测时间" align="center" prop="startTelemetryTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.startTelemetryTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="报告日期" align="center" prop="informTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.informTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="报告状态" align="center" prop="informStatus" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -110,14 +130,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['equipment:equipment:edit']"
+            v-hasPermi="['inform:inform:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['equipment:equipment:remove']"
+            v-hasPermi="['inform:inform:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -131,25 +151,33 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改设备对话框 -->
+    <!-- 添加或修改报告对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="设备号" prop="equipmentNumber">
-          <el-input v-model="form.equipmentNumber" placeholder="请输入设备号" :disabled="judge"/>
+        <el-form-item label="报告号" prop="informNumber">
+          <el-input v-model="form.informNumber" placeholder="请输入报告号" :disabled="judge"/>
         </el-form-item>
-        <el-form-item label="设备版本号" prop="equipmentVersion">
-          <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号" />
+        <el-form-item label="患者ID" prop="patientId">
+          <el-input v-model="form.patientId" placeholder="请输入患者ID" />
         </el-form-item>
-        <el-form-item label="连接时间" prop="connectionTime">
+        <el-form-item label="开始遥测时间" prop="startTelemetryTime">
           <el-date-picker clearable
-                          v-model="form.connectionTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择连接时间">
+            v-model="form.startTelemetryTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择开始遥测时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="患者id" prop="patientId">
-          <el-input v-model="form.patientId" placeholder="请输入患者id" />
+        <el-form-item label="报告日期" prop="informTime">
+          <el-date-picker clearable
+            v-model="form.informTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择报告日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="报告状态" prop="informStatus">
+          <el-input v-model="form.informStatus" placeholder="请输入报告状态" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -161,10 +189,10 @@
 </template>
 
 <script>
-import { listEquipment, getEquipment, delEquipment, addEquipment, updateEquipment } from "@/api/equipment/equipment";
+import { listInform, getInform, delInform, addInform, updateInform } from "@/api/inform/inform";
 
 export default {
-  name: "Equipment",
+  name: "Inform",
   dicts: ['sex'],
   data() {
     return {
@@ -180,8 +208,8 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-      // 设备表格数据
-      equipmentList: [],
+      // 报告表格数据
+      informList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -192,25 +220,25 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        equipmentNumber: null,
-        equipmentVersion: null,
-        connectionTime: null,
+        informNumber: null,
         patientId: null,
-        hospitalCode: null
+        startTelemetryTime: null,
+        informTime: null,
+        informStatus: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        equipmentNumber: [
-          { required: true, message: "设备号不能为空", trigger: "blur" }
+        informNumber: [
+          { required: true, message: "报告号不能为空", trigger: "blur" }
         ],
         patientId: [
-          { required: true, message: "患者id不能为空", trigger: "blur" }
+          { required: true, message: "患者ID不能为空", trigger: "blur" }
         ],
         hospitalCode: [
           { required: true, message: "医院代号不能为空", trigger: "blur" }
-        ]
+        ],
       }
     };
   },
@@ -218,11 +246,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询设备列表 */
+    /** 查询报告列表 */
     getList() {
       this.loading = true;
-      listEquipment(this.queryParams).then(response => {
-        this.equipmentList = response.rows;
+      listInform(this.queryParams).then(response => {
+        this.informList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -235,12 +263,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        equipmentId: null,
-        equipmentNumber: null,
-        equipmentVersion: null,
-        connectionTime: null,
+        informId: null,
+        informNumber: null,
         patientId: null,
-        hospitalCode: null
+        startTelemetryTime: null,
+        informTime: null,
+        informStatus: null,
       };
       this.resetForm("form");
     },
@@ -256,7 +284,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.equipmentId)
+      this.ids = selection.map(item => item.informId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -264,17 +292,17 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加设备";
+      this.title = "添加报告";
       this.judge = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const equipmentId = row.equipmentId || this.ids
-      getEquipment(equipmentId).then(response => {
+      const informId = row.informId || this.ids
+      getInform(informId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改设备";
+        this.title = "修改报告";
         this.judge = true;
       });
     },
@@ -282,15 +310,15 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.equipmentId != null) {
-            updateEquipment(this.form).then(response => {
+          if (this.form.informId != null) {
+            updateInform(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            this.form.equipmentId = this.form.equipmentNumber
-            addEquipment(this.form).then(response => {
+            this.form.informId = this.form.informNumber
+            addInform(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -301,9 +329,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const equipmentIds = row.equipmentId || this.ids;
-      this.$modal.confirm('是否确认删除设备编号为"' + equipmentIds + '"的数据项？').then(function() {
-        return delEquipment(equipmentIds);
+      const informIds = row.informId || this.ids;
+      this.$modal.confirm('是否确认删除报告编号为"' + informIds + '"的数据项？').then(function() {
+        return delInform(informIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -311,9 +339,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('equipment/equipment/export', {
+      this.download('inform/inform/export', {
         ...this.queryParams
-      }, `equipment_${new Date().getTime()}.xlsx`)
+      }, `inform_${new Date().getTime()}.xlsx`)
     }
   }
 };

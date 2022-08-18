@@ -1,103 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.equipment.mapper.EquipmentMapper">
-    
+
     <resultMap type="Equipment" id="EquipmentResult">
-        <result property="id"    column="id"    />
-        <result property="hostId"    column="host_id"    />
-        <result property="hostMac"    column="host_mac"    />
-        <result property="hostVersion"    column="host_version"    />
-        <result property="hospitalName"    column="hospital_name"    />
-        <result property="hospitalCode"    column="hospital_code"    />
+        <result property="equipmentId"    column="equipment_id"    />
+        <result property="equipmentNumber"    column="equipment_number"    />
+        <result property="equipmentVersion"    column="equipment_version"    />
         <result property="connectionTime"    column="connection_time"    />
-        <result property="recentlyUsername"    column="recently_username"    />
-        <result property="age"    column="age"    />
-        <result property="sex"    column="sex"    />
-        <result property="phone"    column="phone"    />
+        <result property="patientId"    column="patient_id"    />
     </resultMap>
 
     <sql id="selectEquipmentVo">
-        select id, host_id, host_mac, host_version, hospital_name, hospital_code, connection_time, recently_username, age, sex, phone from equipment
+        select equipment_id, equipment_number, equipment_version, connection_time, patient_id from equipment
     </sql>
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
         <include refid="selectEquipmentVo"/>
-        <where>  
-            <if test="hostId != null  and hostId != ''"> and host_id = #{hostId}</if>
-            <if test="hostMac != null  and hostMac != ''"> and host_mac = #{hostMac}</if>
-            <if test="hostVersion != null  and hostVersion != ''"> and host_version = #{hostVersion}</if>
-            <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code = #{hospitalCode}</if>
-            <if test="connectionTime != null "> and connection_time = #{connectionTime}</if>
-            <if test="recentlyUsername != null  and recentlyUsername != ''"> and recently_username like concat('%', #{recentlyUsername}, '%')</if>
-            <if test="age != null  and age != ''"> and age = #{age}</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        <where>
+            <if test="equipmentNumber != null  and equipmentNumber != ''"> and equipment_number like concat('%', #{equipmentNumber}, '%')</if>
+            <if test="equipmentVersion != null  and equipmentVersion != ''"> and equipment_version like concat('%', #{equipmentVersion}, '%')</if>
+            <if test="connectionTime != null "> and connection_time like concat('%', #{connectionTime}, '%')</if>
+            <if test="patientId != null  and patientId != ''"> and patient_id like concat('%', #{patientId}, '%')</if>
         </where>
     </select>
-    
-    <select id="selectEquipmentById" parameterType="Long" resultMap="EquipmentResult">
+
+    <select id="selectEquipmentByEquipmentId" parameterType="String" resultMap="EquipmentResult">
         <include refid="selectEquipmentVo"/>
-        where id = #{id}
+        where equipment_id = #{equipmentId}
     </select>
-        
+
     <insert id="insertEquipment" parameterType="Equipment">
         insert into equipment
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="hostId != null and hostId != ''">host_id,</if>
-            <if test="hostMac != null">host_mac,</if>
-            <if test="hostVersion != null">host_version,</if>
-            <if test="hospitalName != null">hospital_name,</if>
-            <if test="hospitalCode != null">hospital_code,</if>
+            <if test="equipmentId != null">equipment_id,</if>
+            <if test="equipmentNumber != null and equipmentNumber != ''">equipment_number,</if>
+            <if test="equipmentVersion != null">equipment_version,</if>
             <if test="connectionTime != null">connection_time,</if>
-            <if test="recentlyUsername != null">recently_username,</if>
-            <if test="age != null">age,</if>
-            <if test="sex != null">sex,</if>
-            <if test="phone != null">phone,</if>
-         </trim>
+            <if test="patientId != null and patientId != ''">patient_id,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
-            <if test="hostId != null and hostId != ''">#{hostId},</if>
-            <if test="hostMac != null">#{hostMac},</if>
-            <if test="hostVersion != null">#{hostVersion},</if>
-            <if test="hospitalName != null">#{hospitalName},</if>
-            <if test="hospitalCode != null">#{hospitalCode},</if>
+            <if test="equipmentId != null">#{equipmentId},</if>
+            <if test="equipmentNumber != null and equipmentNumber != ''">#{equipmentNumber},</if>
+            <if test="equipmentVersion != null">#{equipmentVersion},</if>
             <if test="connectionTime != null">#{connectionTime},</if>
-            <if test="recentlyUsername != null">#{recentlyUsername},</if>
-            <if test="age != null">#{age},</if>
-            <if test="sex != null">#{sex},</if>
-            <if test="phone != null">#{phone},</if>
-         </trim>
+            <if test="patientId != null and patientId != ''">#{patientId},</if>
+        </trim>
     </insert>
 
     <update id="updateEquipment" parameterType="Equipment">
         update equipment
         <trim prefix="SET" suffixOverrides=",">
-            <if test="hostId != null and hostId != ''">host_id = #{hostId},</if>
-            <if test="hostMac != null">host_mac = #{hostMac},</if>
-            <if test="hostVersion != null">host_version = #{hostVersion},</if>
-            <if test="hospitalName != null">hospital_name = #{hospitalName},</if>
-            <if test="hospitalCode != null">hospital_code = #{hospitalCode},</if>
+            <if test="equipmentNumber != null and equipmentNumber != ''">equipment_number = #{equipmentNumber},</if>
+            <if test="equipmentVersion != null">equipment_version = #{equipmentVersion},</if>
             <if test="connectionTime != null">connection_time = #{connectionTime},</if>
-            <if test="recentlyUsername != null">recently_username = #{recentlyUsername},</if>
-            <if test="age != null">age = #{age},</if>
-            <if test="sex != null">sex = #{sex},</if>
-            <if test="phone != null">phone = #{phone},</if>
+            <if test="patientId != null and patientId != ''">patient_id = #{patientId},</if>
         </trim>
-        where id = #{id}
+        where equipment_id = #{equipmentId}
     </update>
 
-    <delete id="deleteEquipmentById" parameterType="Long">
-        delete from equipment where id = #{id}
+    <delete id="deleteEquipmentByEquipmentId" parameterType="String">
+        delete from equipment where equipment_id = #{equipmentId}
     </delete>
 
-    <delete id="deleteEquipmentByIds" parameterType="String">
-        delete from equipment where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
+    <delete id="deleteEquipmentByEquipmentIds" parameterType="String">
+        delete from equipment where equipment_id in
+        <foreach item="equipmentId" collection="array" open="(" separator="," close=")">
+            #{equipmentId}
         </foreach>
     </delete>
 </mapper>

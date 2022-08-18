@@ -8,173 +8,181 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 设备管理对象 equipment
- * 
- * @author Han
- * @date 2022-07-22
+ * 设备对象 equipment
+ *
+ * @author hanhan
+ * @date 2022-08-15
  */
 public class Equipment extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 序号 */
-    private Long id;
+    /** 设备id */
+    private String equipmentId;
 
-    /** 主机序列号 */
-    @Excel(name = "主机序列号")
-    private String hostId;
+    /** 设备号 */
+    @Excel(name = "设备号")
+    private String equipmentNumber;
 
-    /** 主机MAC地址 */
-    @Excel(name = "主机MAC地址")
-    private String hostMac;
-
-    /** 主机版本号 */
-    @Excel(name = "主机版本号")
-    private String hostVersion;
-
-    /** 医院名称 */
-    @Excel(name = "医院名称")
-    private String hospitalName;
-
-    /** 医院代号 */
-    @Excel(name = "医院代号")
-    private String hospitalCode;
+    /** 设备版本号 */
+    @Excel(name = "设备版本号")
+    private String equipmentVersion;
 
     /** 连接时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "连接时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date connectionTime;
 
-    /** 最近使用患者姓名 */
-    @Excel(name = "最近使用患者姓名")
-    private String recentlyUsername;
+    /** 患者id */
+    @Excel(name = "患者id")
+    private String patientId;
 
-    /** 年龄 */
-    @Excel(name = "年龄")
-    private String age;
+    /** 患者姓名 */
+    @Excel(name = "患者姓名")
+    private String patientName;
 
-    /** 性别 */
-    @Excel(name = "性别")
-    private String sex;
+    /** 患者身份证号 */
+    @Excel(name = "患者身份证号")
+    private String patientNumber;
 
-    /** 手机号 */
-    @Excel(name = "手机号")
-    private String phone;
+    /** 患者年龄*/
+    @Excel(name = "患者年龄 ")
+    private String patientAge;
 
-    public void setId(Long id) 
+    /** 患者性别 */
+    @Excel(name = "患者性别")
+    private String patientSex;
+
+    /** 患者电话 */
+    @Excel(name = "患者电话")
+    private String patientPhone;
+
+    /** 医院代号 */
+    @Excel(name = "医院代号")
+    private String hospitalCode;
+
+    /** 医院名称 */
+    @Excel(name = "医院名称")
+    private String hospitalName;
+
+    public void setEquipmentId(String equipmentId)
     {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setHostId(String hostId) 
-    {
-        this.hostId = hostId;
-    }
-
-    public String getHostId() 
-    {
-        return hostId;
-    }
-    public void setHostMac(String hostMac) 
-    {
-        this.hostMac = hostMac;
+        this.equipmentId = equipmentId;
     }
 
-    public String getHostMac() 
+    public String getEquipmentId()
     {
-        return hostMac;
+        return equipmentId;
     }
-    public void setHostVersion(String hostVersion) 
+    public void setEquipmentNumber(String equipmentNumber)
     {
-        this.hostVersion = hostVersion;
-    }
-
-    public String getHostVersion() 
-    {
-        return hostVersion;
-    }
-    public void setHospitalName(String hospitalName) 
-    {
-        this.hospitalName = hospitalName;
+        this.equipmentNumber = equipmentNumber;
     }
 
-    public String getHospitalName() 
+    public String getEquipmentNumber()
     {
-        return hospitalName;
+        return equipmentNumber;
     }
-    public void setHospitalCode(String hospitalCode) 
+    public void setEquipmentVersion(String equipmentVersion)
     {
-        this.hospitalCode = hospitalCode;
+        this.equipmentVersion = equipmentVersion;
     }
 
-    public String getHospitalCode() 
+    public String getEquipmentVersion()
     {
-        return hospitalCode;
+        return equipmentVersion;
     }
-    public void setConnectionTime(Date connectionTime) 
+    public void setConnectionTime(Date connectionTime)
     {
         this.connectionTime = connectionTime;
     }
 
-    public Date getConnectionTime() 
+    public Date getConnectionTime()
     {
         return connectionTime;
     }
-    public void setRecentlyUsername(String recentlyUsername) 
+    public void setPatientId(String patientId)
     {
-        this.recentlyUsername = recentlyUsername;
+        this.patientId = patientId;
     }
 
-    public String getRecentlyUsername() 
+    public String getPatientId()
     {
-        return recentlyUsername;
+        return patientId;
     }
-    public void setAge(String age) 
+    public void setHospitalCode(String hospitalCode)
     {
-        this.age = age;
-    }
-
-    public String getAge() 
-    {
-        return age;
-    }
-    public void setSex(String sex) 
-    {
-        this.sex = sex;
+        this.hospitalCode = hospitalCode;
     }
 
-    public String getSex() 
+    public String getHospitalCode()
     {
-        return sex;
-    }
-    public void setPhone(String phone) 
-    {
-        this.phone = phone;
+        return hospitalCode;
     }
 
-    public String getPhone() 
-    {
-        return phone;
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
+    public String getPatientNumber() {
+        return patientNumber;
+    }
+
+    public void setPatientNumber(String patientNumber) {
+        this.patientNumber = patientNumber;
+    }
+
+    public String getPatientAge() {
+        return patientAge;
+    }
+
+    public void setPatientAge(String patientAge) {
+        this.patientAge = patientAge;
+    }
+
+    public String getPatientSex() {
+        return patientSex;
+    }
+
+    public void setPatientSex(String patientSex) {
+        this.patientSex = patientSex;
+    }
+
+    public String getPatientPhone() {
+        return patientPhone;
+    }
+
+    public void setPatientPhone(String patientPhone) {
+        this.patientPhone = patientPhone;
+    }
+
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("hostId", getHostId())
-            .append("hostMac", getHostMac())
-            .append("hostVersion", getHostVersion())
-            .append("hospitalName", getHospitalName())
-            .append("hospitalCode", getHospitalCode())
-            .append("connectionTime", getConnectionTime())
-            .append("recentlyUsername", getRecentlyUsername())
-            .append("age", getAge())
-            .append("sex", getSex())
-            .append("phone", getPhone())
-            .toString();
+                .append("equipmentId", getEquipmentId())
+                .append("equipmentNumber", getEquipmentNumber())
+                .append("equipmentVersion", getEquipmentVersion())
+                .append("connectionTime", getConnectionTime())
+                .append("patientId", getPatientId())
+                .append("patientName",getPatientName())
+                .append("patientNumber",getPatientNumber())
+                .append("patientAge",getPatientAge())
+                .append("patientSex",getPatientSex())
+                .append("patientPhone",getPatientPhone())
+                .append("hospitalCode", getHospitalCode())
+                .append("hospitalName", getHospitalName())
+                .toString();
     }
 }
