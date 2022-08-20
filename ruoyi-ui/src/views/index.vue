@@ -3,7 +3,7 @@
     width="100%"
     :height="TableHeight"
     allowfullscreen="true"
-    src="http://47.110.32.83:6006/">
+    src="http://219.155.7.235:6006/">
   </iframe>
 </template>
 
