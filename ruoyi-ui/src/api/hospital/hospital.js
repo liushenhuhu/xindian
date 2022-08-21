@@ -17,6 +17,14 @@ export function getHospital(hospitalId) {
   })
 }
 
+// 查询医院详细
+export function getHospitalByHospitalCode(hospitalCode) {
+  return request({
+    url: '/hospital/hospital/getInfoByHospitalCode' + hospitalCode,
+    method: 'get'
+  })
+}
+
 // 新增医院
 export function addHospital(data) {
   return request({

@@ -17,12 +17,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者年龄
-" prop="patientAge">
+      <el-form-item label="患者年龄" prop="patientAge">
         <el-input
           v-model="queryParams.patientAge"
-          placeholder="请输入患者年龄
-"
+          placeholder="请输入患者年龄"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -93,14 +91,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院代号" prop="hospitalCode">
-        <el-input
-          v-model="queryParams.hospitalCode"
-          placeholder="请输入医院代号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -116,8 +106,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['patient:patient:add']"
-        >新增
-        </el-button>
+        >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -128,8 +117,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['patient:patient:edit']"
-        >修改
-        </el-button>
+        >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -140,8 +128,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['patient:patient:remove']"
-        >删除
-        </el-button>
+        >删除</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -151,58 +138,45 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['patient:patient:export']"
-        >导出
-        </el-button>
+        >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="patientList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="患者id" align="center" prop="patientId"/>
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
-      <el-table-column label="患者身份证号" align="center" prop="patientNumber"/>
-      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="患者id" align="center" prop="patientId" />
+      <el-table-column label="患者姓名" align="center" prop="patientName" />
+      <el-table-column label="患者身份证号" align="center" prop="patientNumber" />
+      <el-table-column label="患者年龄" align="center" prop="patientAge" />
       <el-table-column label="患者性别" align="center" prop="patientSex">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者来源" align="center" prop="patientSource"/>
-      <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-      <el-table-column label="家属电话" align="center" prop="familyPhone"/>
-      <el-table-column label="最近连接设备号" align="center" prop="equipmentId"/>
-      <el-table-column label="监测状态" align="center" prop="monitoringStatus"/>
-      <el-table-column label="床位号" align="center" prop="bedNumber"/>
-      <el-table-column label="病历号" align="center" prop="caseHistoryNumber"/>
-      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+      <el-table-column label="患者来源" align="center" prop="patientSource" />
+      <el-table-column label="患者电话" align="center" prop="patientPhone" />
+      <el-table-column label="家属电话" align="center" prop="familyPhone" />
+      <el-table-column label="最近连接设备号" align="center" prop="equipmentId" />
+      <el-table-column label="监测状态" align="center" prop="monitoringStatus" />
+      <el-table-column label="床位号" align="center" prop="bedNumber" />
+      <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-order"
-            @click="handleAlert(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
-          >预警日志
-          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['patient:patient:edit']"
-          >修改
-          </el-button>
+          >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['patient:patient:remove']"
-          >删除
-          </el-button>
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -219,47 +193,44 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="患者姓名" prop="patientName">
-          <el-input v-model="form.patientName" placeholder="请输入患者姓名"/>
+          <el-input v-model="form.patientName" placeholder="请输入患者姓名" />
         </el-form-item>
         <el-form-item label="患者身份证号" prop="patientNumber">
-          <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号" :disabled="judge"/>
+          <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号" />
         </el-form-item>
         <el-form-item label="患者年龄" prop="patientAge">
-          <el-input v-model="form.patientAge" placeholder="请输入患者年龄"/>
+          <el-input v-model="form.patientAge" placeholder="请输入患者年龄" />
         </el-form-item>
-        <el-form-item label="患者性别">
-          <el-radio-group v-model="form.patientSex">
-            <el-radio
+        <el-form-item label="患者性别" prop="patientSex">
+          <el-select v-model="form.patientSex" placeholder="请选择患者性别">
+            <el-option
               v-for="dict in dict.type.sex"
               :key="dict.value"
-              :label="dict.value"
-            >{{ dict.label }}
-            </el-radio>
-          </el-radio-group>
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="患者来源" prop="patientSource">
-          <el-input v-model="form.patientSource" placeholder="请输入患者来源"/>
+          <el-input v-model="form.patientSource" placeholder="请输入患者来源" />
         </el-form-item>
         <el-form-item label="患者电话" prop="patientPhone">
-          <el-input v-model="form.patientPhone" placeholder="请输入患者电话"/>
+          <el-input v-model="form.patientPhone" placeholder="请输入患者电话" />
         </el-form-item>
         <el-form-item label="家属电话" prop="familyPhone">
-          <el-input v-model="form.familyPhone" placeholder="请输入家属电话"/>
+          <el-input v-model="form.familyPhone" placeholder="请输入家属电话" />
         </el-form-item>
         <el-form-item label="最近连接设备号" prop="equipmentId">
-          <el-input v-model="form.equipmentId" placeholder="请输入最近连接设备号"/>
+          <el-input v-model="form.equipmentId" placeholder="请输入最近连接设备号" />
         </el-form-item>
         <el-form-item label="监测状态" prop="monitoringStatus">
-          <el-input v-model="form.monitoringStatus" placeholder="请输入监测状态"/>
+          <el-input v-model="form.monitoringStatus" placeholder="请输入监测状态" />
         </el-form-item>
         <el-form-item label="床位号" prop="bedNumber">
-          <el-input v-model="form.bedNumber" placeholder="请输入床位号"/>
+          <el-input v-model="form.bedNumber" placeholder="请输入床位号" />
         </el-form-item>
         <el-form-item label="病历号" prop="caseHistoryNumber">
-          <el-input v-model="form.caseHistoryNumber" placeholder="请输入病历号"/>
-        </el-form-item>
-        <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" :disabled="judge"/>
+          <el-input v-model="form.caseHistoryNumber" placeholder="请输入病历号" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -271,8 +242,7 @@
 </template>
 
 <script>
-import {listPatient, getPatient, delPatient, addPatient, updatePatient} from "@/api/patient/patient";
-import axios from "axios";
+import { listPatient, getPatient, delPatient, addPatient, updatePatient } from "@/api/patient/patient";
 
 export default {
   name: "Patient",
@@ -297,8 +267,6 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      //是否不可编辑
-      judge: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -313,22 +281,18 @@ export default {
         equipmentId: null,
         monitoringStatus: null,
         bedNumber: null,
-        caseHistoryNumber: null,
-        hospitalCode: null
+        caseHistoryNumber: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         patientName: [
-          {required: true, message: "患者姓名不能为空", trigger: "blur"}
+          { required: true, message: "患者姓名不能为空", trigger: "blur" }
         ],
         patientNumber: [
-          {required: true, message: "患者身份证号不能为空", trigger: "blur"}
+          { required: true, message: "患者身份证号不能为空", trigger: "blur" }
         ],
-        hospitalCode: [
-          {required: true, message: "医院代号不能为空", trigger: "blur"}
-        ]
       }
     };
   },
@@ -357,15 +321,14 @@ export default {
         patientName: null,
         patientNumber: null,
         patientAge: null,
-        patientSex: "0",
+        patientSex: null,
         patientSource: null,
         patientPhone: null,
         familyPhone: null,
         equipmentId: null,
         monitoringStatus: null,
         bedNumber: null,
-        caseHistoryNumber: null,
-        hospitalCode: null
+        caseHistoryNumber: null
       };
       this.resetForm("form");
     },
@@ -382,7 +345,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.patientId)
-      this.single = selection.length !== 1
+      this.single = selection.length!==1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -390,8 +353,6 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加患者";
-      this.judge = false;
-
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -401,12 +362,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改患者";
-        this.judge = true;
       });
-    },
-    /** 跳转到预警日志*/
-    handleAlert(row) {
-      this.$router.push({path: "/alert_log", query: {patientId: row.patientId}});
     },
     /** 提交按钮 */
     submitForm() {
@@ -419,7 +375,6 @@ export default {
               this.getList();
             });
           } else {
-            this.form.patientId = this.form.patientNumber + this.form.hospitalCode
             addPatient(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
@@ -432,13 +387,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const patientIds = row.patientId || this.ids;
-      this.$modal.confirm('是否确认删除患者编号为"' + patientIds + '"的数据项？').then(function () {
+      this.$modal.confirm('是否确认删除患者编号为"' + patientIds + '"的数据项？').then(function() {
         return delPatient(patientIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {
-      });
+      }).catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {

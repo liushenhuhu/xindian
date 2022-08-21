@@ -11,11 +11,11 @@
         <result property="logType"    column="log_type"    />
         <result property="eventName"    column="event_name"    />
         <result property="eventDescription"    column="event_description"    />
-        <result property="patientId"    column="patient_id"    />
+        <result property="pId"    column="p_id"    />
     </resultMap>
 
     <sql id="selectAlertLogVo">
-        select log_id, log_number, log_time, log_type, event_name, event_description, patient_id from alert_log
+        select log_id, log_number, log_time, log_type, event_name, event_description, p_id from alert_log
     </sql>
 
     <select id="selectAlertLogList" parameterType="AlertLog" resultMap="AlertLogResult">
@@ -26,11 +26,11 @@
             <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
             <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
             <if test="eventDescription != null  and eventDescription != ''"> and event_description like concat('%', #{eventDescription}, '%')</if>
-            <if test="patientId != null  and patientId != ''"> and patient_id = #{patientId}</if>
+            <if test="pId != null "> and p_id like concat('%', #{pId}, '%')</if>
         </where>
     </select>
 
-    <select id="selectAlertLogByLogId" parameterType="String" resultMap="AlertLogResult">
+    <select id="selectAlertLogByLogId" parameterType="Long" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         where log_id = #{logId}
     </select>
@@ -44,7 +44,7 @@
             <if test="logType != null">log_type,</if>
             <if test="eventName != null">event_name,</if>
             <if test="eventDescription != null">event_description,</if>
-            <if test="patientId != null and patientId != ''">patient_id,</if>
+            <if test="pId != null">p_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="logId != null">#{logId},</if>
@@ -53,7 +53,7 @@
             <if test="logType != null">#{logType},</if>
             <if test="eventName != null">#{eventName},</if>
             <if test="eventDescription != null">#{eventDescription},</if>
-            <if test="patientId != null and patientId != ''">#{patientId},</if>
+            <if test="pId != null">#{pId},</if>
         </trim>
     </insert>
 
@@ -65,12 +65,12 @@
             <if test="logType != null">log_type = #{logType},</if>
             <if test="eventName != null">event_name = #{eventName},</if>
             <if test="eventDescription != null">event_description = #{eventDescription},</if>
-            <if test="patientId != null and patientId != ''">patient_id = #{patientId},</if>
+            <if test="pId != null">p_id = #{pId},</if>
         </trim>
         where log_id = #{logId}
     </update>
 
-    <delete id="deleteAlertLogByLogId" parameterType="String">
+    <delete id="deleteAlertLogByLogId" parameterType="Long">
         delete from alert_log where log_id = #{logId}
     </delete>
 

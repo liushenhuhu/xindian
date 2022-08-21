@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.hospital.mapper.HospitalMapper">
-    
+
     <resultMap type="Hospital" id="HospitalResult">
         <result property="hospitalId"    column="hospital_id"    />
         <result property="province"    column="province"    />
@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectHospitalList" parameterType="Hospital" resultMap="HospitalResult">
         <include refid="selectHospitalVo"/>
-        <where>  
+        <where>
             <if test="province != null  and province != ''"> and province like concat('%', #{province}, '%')</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
@@ -39,12 +39,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="ifStatistics != null  and ifStatistics != ''"> and if_statistics like concat('%', #{ifStatistics}, '%')</if>
         </where>
     </select>
-    
-    <select id="selectHospitalByHospitalId" parameterType="String" resultMap="HospitalResult">
+
+    <select id="selectHospitalByHospitalId" parameterType="Long" resultMap="HospitalResult">
         <include refid="selectHospitalVo"/>
         where hospital_id = #{hospitalId}
     </select>
-        
+
+    <select id="selectHospitalByHospitalCode" parameterType="String" resultMap="HospitalResult">
+        <include refid="selectHospitalVo"/>
+        where hospital_code = #{hospitalCode}
+    </select>
+
     <insert id="insertHospital" parameterType="Hospital">
         insert into hospital
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -60,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="accountNumber != null">account_number,</if>
             <if test="firstEcgTime != null">first_ecg_time,</if>
             <if test="ifStatistics != null">if_statistics,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="hospitalId != null">#{hospitalId},</if>
             <if test="province != null">#{province},</if>
@@ -74,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="accountNumber != null">#{accountNumber},</if>
             <if test="firstEcgTime != null">#{firstEcgTime},</if>
             <if test="ifStatistics != null">#{ifStatistics},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateHospital" parameterType="Hospital">
@@ -95,12 +100,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where hospital_id = #{hospitalId}
     </update>
 
-    <delete id="deleteHospitalByHospitalId" parameterType="String">
+    <delete id="deleteHospitalByHospitalId" parameterType="Long">
         delete from hospital where hospital_id = #{hospitalId}
     </delete>
 
     <delete id="deleteHospitalByHospitalIds" parameterType="String">
-        delete from hospital where hospital_id in 
+        delete from hospital where hospital_id in
         <foreach item="hospitalId" collection="array" open="(" separator="," close=")">
             #{hospitalId}
         </foreach>

@@ -9,31 +9,36 @@ import com.ruoyi.xindian.hospital.service.IHospitalService;
 
 /**
  * 医院Service业务层处理
- * 
+ *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @Service
-public class HospitalServiceImpl implements IHospitalService 
+public class HospitalServiceImpl implements IHospitalService
 {
     @Autowired
     private HospitalMapper hospitalMapper;
 
     /**
      * 查询医院
-     * 
+     *
      * @param hospitalId 医院主键
      * @return 医院
      */
     @Override
-    public Hospital selectHospitalByHospitalId(String hospitalId)
+    public Hospital selectHospitalByHospitalId(Long hospitalId)
     {
         return hospitalMapper.selectHospitalByHospitalId(hospitalId);
     }
 
+    @Override
+    public Hospital selectHospitalByHospitalCode(String hospitalCode) {
+        return hospitalMapper.selectHospitalByHospitalCode(hospitalCode);
+    }
+
     /**
      * 查询医院列表
-     * 
+     *
      * @param hospital 医院
      * @return 医院
      */
@@ -45,7 +50,7 @@ public class HospitalServiceImpl implements IHospitalService
 
     /**
      * 新增医院
-     * 
+     *
      * @param hospital 医院
      * @return 结果
      */
@@ -57,7 +62,7 @@ public class HospitalServiceImpl implements IHospitalService
 
     /**
      * 修改医院
-     * 
+     *
      * @param hospital 医院
      * @return 结果
      */
@@ -69,24 +74,24 @@ public class HospitalServiceImpl implements IHospitalService
 
     /**
      * 批量删除医院
-     * 
+     *
      * @param hospitalIds 需要删除的医院主键
      * @return 结果
      */
     @Override
-    public int deleteHospitalByHospitalIds(String[] hospitalIds)
+    public int deleteHospitalByHospitalIds(Long[] hospitalIds)
     {
         return hospitalMapper.deleteHospitalByHospitalIds(hospitalIds);
     }
 
     /**
      * 删除医院信息
-     * 
+     *
      * @param hospitalId 医院主键
      * @return 结果
      */
     @Override
-    public int deleteHospitalByHospitalId(String hospitalId)
+    public int deleteHospitalByHospitalId(Long hospitalId)
     {
         return hospitalMapper.deleteHospitalByHospitalId(hospitalId);
     }

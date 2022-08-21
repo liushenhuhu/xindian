@@ -7,7 +7,7 @@ import com.ruoyi.xindian.equipment.domain.Equipment;
  * 设备Service接口
  *
  * @author hanhan
- * @date 2022-08-16
+ * @date 2022-08-20
  */
 public interface IEquipmentService
 {
@@ -17,7 +17,7 @@ public interface IEquipmentService
      * @param equipmentId 设备主键
      * @return 设备
      */
-    public Equipment selectEquipmentByEquipmentId(String equipmentId);
+    public Equipment selectEquipmentByEquipmentId(Long equipmentId);
 
     /**
      * 查询设备列表
@@ -49,7 +49,7 @@ public interface IEquipmentService
      * @param equipmentIds 需要删除的设备主键集合
      * @return 结果
      */
-    public int deleteEquipmentByEquipmentIds(String[] equipmentIds);
+    public int deleteEquipmentByEquipmentIds(Long[] equipmentIds);
 
     /**
      * 删除设备信息
@@ -57,5 +57,5 @@ public interface IEquipmentService
      * @param equipmentId 设备主键
      * @return 结果
      */
-    public int deleteEquipmentByEquipmentId(String equipmentId);
+    public int deleteEquipmentByEquipmentId(Long equipmentId);
 }

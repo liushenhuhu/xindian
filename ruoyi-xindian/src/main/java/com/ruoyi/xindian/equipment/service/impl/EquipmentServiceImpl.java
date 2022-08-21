@@ -11,7 +11,7 @@ import com.ruoyi.xindian.equipment.service.IEquipmentService;
  * 设备Service业务层处理
  *
  * @author hanhan
- * @date 2022-08-16
+ * @date 2022-08-20
  */
 @Service
 public class EquipmentServiceImpl implements IEquipmentService
@@ -26,7 +26,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 设备
      */
     @Override
-    public Equipment selectEquipmentByEquipmentId(String equipmentId)
+    public Equipment selectEquipmentByEquipmentId(Long equipmentId)
     {
         return equipmentMapper.selectEquipmentByEquipmentId(equipmentId);
     }
@@ -74,7 +74,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 结果
      */
     @Override
-    public int deleteEquipmentByEquipmentIds(String[] equipmentIds)
+    public int deleteEquipmentByEquipmentIds(Long[] equipmentIds)
     {
         return equipmentMapper.deleteEquipmentByEquipmentIds(equipmentIds);
     }
@@ -86,7 +86,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 结果
      */
     @Override
-    public int deleteEquipmentByEquipmentId(String equipmentId)
+    public int deleteEquipmentByEquipmentId(Long equipmentId)
     {
         return equipmentMapper.deleteEquipmentByEquipmentId(equipmentId);
     }

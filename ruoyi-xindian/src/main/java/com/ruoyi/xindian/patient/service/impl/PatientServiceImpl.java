@@ -9,31 +9,31 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 
 /**
  * 患者Service业务层处理
- * 
+ *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @Service
-public class PatientServiceImpl implements IPatientService 
+public class PatientServiceImpl implements IPatientService
 {
     @Autowired
     private PatientMapper patientMapper;
 
     /**
      * 查询患者
-     * 
+     *
      * @param patientId 患者主键
      * @return 患者
      */
     @Override
-    public Patient selectPatientByPatientId(String patientId)
+    public Patient selectPatientByPatientId(Long patientId)
     {
         return patientMapper.selectPatientByPatientId(patientId);
     }
 
     /**
      * 查询患者列表
-     * 
+     *
      * @param patient 患者
      * @return 患者
      */
@@ -45,7 +45,7 @@ public class PatientServiceImpl implements IPatientService
 
     /**
      * 新增患者
-     * 
+     *
      * @param patient 患者
      * @return 结果
      */
@@ -57,7 +57,7 @@ public class PatientServiceImpl implements IPatientService
 
     /**
      * 修改患者
-     * 
+     *
      * @param patient 患者
      * @return 结果
      */
@@ -69,25 +69,30 @@ public class PatientServiceImpl implements IPatientService
 
     /**
      * 批量删除患者
-     * 
+     *
      * @param patientIds 需要删除的患者主键
      * @return 结果
      */
     @Override
-    public int deletePatientByPatientIds(String[] patientIds)
+    public int deletePatientByPatientIds(Long[] patientIds)
     {
         return patientMapper.deletePatientByPatientIds(patientIds);
     }
 
     /**
      * 删除患者信息
-     * 
+     *
      * @param patientId 患者主键
      * @return 结果
      */
     @Override
-    public int deletePatientByPatientId(String patientId)
+    public int deletePatientByPatientId(Long patientId)
     {
         return patientMapper.deletePatientByPatientId(patientId);
+    }
+
+    @Override
+    public Patient selectPatientByPatientNumber(String patientNumber) {
+        return patientMapper.selectPatientByPatientNumber(patientNumber);
     }
 }

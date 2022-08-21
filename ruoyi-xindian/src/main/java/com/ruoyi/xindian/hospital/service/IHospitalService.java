@@ -5,23 +5,31 @@ import com.ruoyi.xindian.hospital.domain.Hospital;
 
 /**
  * 医院Service接口
- * 
+ *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
-public interface IHospitalService 
+public interface IHospitalService
 {
     /**
      * 查询医院
-     * 
+     *
      * @param hospitalId 医院主键
      * @return 医院
      */
-    public Hospital selectHospitalByHospitalId(String hospitalId);
+    public Hospital selectHospitalByHospitalId(Long hospitalId);
+
+    /**
+     * 查询医院
+     *
+     * @param hospitalCode 医院代号
+     * @return 医院
+     */
+    public Hospital selectHospitalByHospitalCode(String hospitalCode);
 
     /**
      * 查询医院列表
-     * 
+     *
      * @param hospital 医院
      * @return 医院集合
      */
@@ -29,7 +37,7 @@ public interface IHospitalService
 
     /**
      * 新增医院
-     * 
+     *
      * @param hospital 医院
      * @return 结果
      */
@@ -37,7 +45,7 @@ public interface IHospitalService
 
     /**
      * 修改医院
-     * 
+     *
      * @param hospital 医院
      * @return 结果
      */
@@ -45,17 +53,17 @@ public interface IHospitalService
 
     /**
      * 批量删除医院
-     * 
+     *
      * @param hospitalIds 需要删除的医院主键集合
      * @return 结果
      */
-    public int deleteHospitalByHospitalIds(String[] hospitalIds);
+    public int deleteHospitalByHospitalIds(Long[] hospitalIds);
 
     /**
      * 删除医院信息
-     * 
+     *
      * @param hospitalId 医院主键
      * @return 结果
      */
-    public int deleteHospitalByHospitalId(String hospitalId);
+    public int deleteHospitalByHospitalId(Long hospitalId);
 }

@@ -5,23 +5,23 @@ import com.ruoyi.xindian.inform.domain.Inform;
 
 /**
  * 报告Service接口
- * 
+ *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
-public interface IInformService 
+public interface IInformService
 {
     /**
      * 查询报告
-     * 
+     *
      * @param informId 报告主键
      * @return 报告
      */
-    public Inform selectInformByInformId(String informId);
+    public Inform selectInformByInformId(Long informId);
 
     /**
      * 查询报告列表
-     * 
+     *
      * @param inform 报告
      * @return 报告集合
      */
@@ -29,7 +29,7 @@ public interface IInformService
 
     /**
      * 新增报告
-     * 
+     *
      * @param inform 报告
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface IInformService
 
     /**
      * 修改报告
-     * 
+     *
      * @param inform 报告
      * @return 结果
      */
@@ -45,17 +45,17 @@ public interface IInformService
 
     /**
      * 批量删除报告
-     * 
+     *
      * @param informIds 需要删除的报告主键集合
      * @return 结果
      */
-    public int deleteInformByInformIds(String[] informIds);
+    public int deleteInformByInformIds(Long[] informIds);
 
     /**
      * 删除报告信息
-     * 
+     *
      * @param informId 报告主键
      * @return 结果
      */
-    public int deleteInformByInformId(String informId);
+    public int deleteInformByInformId(Long informId);
 }
