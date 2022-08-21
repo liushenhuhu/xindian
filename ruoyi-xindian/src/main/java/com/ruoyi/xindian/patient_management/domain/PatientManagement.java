@@ -23,6 +23,12 @@ public class PatientManagement extends BaseEntity {
     private Long pId;
 
     /**
+     * 患者姓名
+     */
+    @Excel(name = "患者姓名")
+    private String patientName;
+
+    /**
      * 患者身份证号
      */
     @Excel(name = "患者身份证号")
@@ -214,6 +220,14 @@ public class PatientManagement extends BaseEntity {
         this.hospitalName = hospitalName;
     }
 
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -232,6 +246,7 @@ public class PatientManagement extends BaseEntity {
                 .append("bedNumber", getBedNumber())
                 .append("caseHistoryNumber", getCaseHistoryNumber())
                 .append("hospitalName", getHospitalName())
+                .append("patientName", getPatientName())
                 .toString();
     }
 }

@@ -227,6 +227,15 @@ export default {
     };
   },
   created() {
+    if (this.$route.query.pId) {
+      this.queryParams.pId = this.$route.query.pId;
+    }
+    this.getList();
+  },
+  activated() {
+    if (this.$route.query.pId) {
+      this.queryParams.pId = this.$route.query.pId;
+    }
     this.getList();
   },
   methods: {

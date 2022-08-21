@@ -133,14 +133,6 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-s-order"
-            @click="handleAlert(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
-          >预警日志
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['alert_log:alert_log:edit']"
@@ -187,8 +179,8 @@
         <el-form-item label="事件说明" prop="eventDescription">
           <el-input v-model="form.eventDescription" placeholder="请输入事件说明" />
         </el-form-item>
-        <el-form-item label="患者id" prop="pId">
-          <el-input v-model="form.pId" placeholder="请输入患者id" />
+        <el-form-item label="患者管理id" prop="pId">
+          <el-input v-model="form.pId" placeholder="请输入患者管理id" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -250,14 +242,14 @@ export default {
     };
   },
   created() {
-    if (this.$route.query.patientId) {
-      this.queryParams.patientId = this.$route.query.patientId;
+    if (this.$route.query.pId) {
+      this.queryParams.pId = this.$route.query.pId;
     }
     this.getList();
   },
   activated() {
-    if (this.$route.query.patientId) {
-      this.queryParams.patientId = this.$route.query.patientId;
+    if (this.$route.query.pId) {
+      this.queryParams.pId = this.$route.query.pId;
     }
     this.getList();
   },
@@ -362,7 +354,6 @@ export default {
       this.$router.push({path: "/alert_log", query: {patientId: row.patientId}});
     },
 
-    //todo
     /** 查看日志*/
     handleLook() {
       console.log('查看日志');

@@ -62,6 +62,7 @@ public class PatientManagementController extends BaseController
             Patient patient = patientService.selectPatientByPatientNumber(management.getPatientNumber());
             Hospital hospital = hospitalService.selectHospitalByHospitalCode(management.getHospitalCode());
             management.setHospitalName(hospital.getHospitalName());
+            management.setPatientName(patient.getPatientName());
             management.setPatientAge(patient.getPatientAge());
             management.setPatientSex(patient.getPatientSex());
             management.setPatientSource(patient.getPatientSource());

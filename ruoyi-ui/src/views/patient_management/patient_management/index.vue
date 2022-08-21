@@ -88,6 +88,7 @@
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="患者管理id" align="center" prop="pId" />
+      <el-table-column label="患者姓名" align="center" prop="patientName" />
       <el-table-column label="患者身份证号" align="center" prop="patientNumber" />
       <el-table-column label="患者年龄" align="center" prop="patientAge" />
       <el-table-column label="患者性别" align="center" prop="patientSex">
@@ -111,6 +112,22 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-order"
+            @click="handleAlert(scope.row)"
+            v-hasPermi="['patient:patient:alert']"
+          >查看预警日志
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-magic-stick"
+            @click="handleAlert(scope.row)"
+            v-hasPermi="['patient:patient:inform']"
+          >查看报告
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -313,7 +330,16 @@ export default {
       this.download('patient_management/patient_management/export', {
         ...this.queryParams
       }, `patient_management_${new Date().getTime()}.xlsx`)
-    }
+    },
+    /** 跳转到预警日志*/
+    handleAlert(row) {
+      this.$router.push({path: "/alert_log", query: {pId: row.pId}});
+    },
+    /** 跳转到报告*/
+    handleInform(row) {
+      this.$router.push({path: "/inform", query: {pId: row.pId}});
+    },
+
   }
 };
 </script>
