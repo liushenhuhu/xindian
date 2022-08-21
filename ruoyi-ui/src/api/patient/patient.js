@@ -17,6 +17,14 @@ export function getPatient(patientId) {
   })
 }
 
+// 查询患者详细
+export function getPatientByPatientNumber(patientNumber) {
+  return request({
+    url: '/patient/patient/getInfoByPatientNumber' + patientNumber,
+    method: 'get'
+  })
+}
+
 // 新增患者
 export function addPatient(data) {
   return request({

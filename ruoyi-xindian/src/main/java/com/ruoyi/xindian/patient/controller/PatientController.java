@@ -2,9 +2,6 @@ package com.ruoyi.xindian.patient.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.xindian.hospital.domain.Hospital;
-import com.ruoyi.xindian.hospital.service.IHospitalService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 患者Controller
  *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @RestController
 @RequestMapping("/patient/patient")
@@ -36,9 +33,6 @@ public class PatientController extends BaseController
 {
     @Autowired
     private IPatientService patientService;
-
-    @Autowired
-    private IHospitalService hospitalService;
 
     /**
      * 查询患者列表
@@ -49,10 +43,6 @@ public class PatientController extends BaseController
     {
         startPage();
         List<Patient> list = patientService.selectPatientList(patient);
-        for (Patient listPatient : list) {
-            Hospital hospital = hospitalService.selectHospitalByHospitalId(listPatient.getHospitalCode());
-            listPatient.setHospitalName(hospital.getHospitalName());
-        }
         return getDataTable(list);
     }
 
@@ -74,9 +64,19 @@ public class PatientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:query')")
     @GetMapping(value = "/{patientId}")
-    public AjaxResult getInfo(@PathVariable("patientId") String patientId)
+    public AjaxResult getInfo(@PathVariable("patientId") Long patientId)
     {
         return AjaxResult.success(patientService.selectPatientByPatientId(patientId));
+    }
+
+    /**
+     * 通过patientNumber获取患者详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('patient:patient:query')")
+    @GetMapping(value = "/getInfoByPatientNumber/{patientNumber}")
+    public AjaxResult getInfoByPatientNumber(@PathVariable("patientNumber") String patientNumber)
+    {
+        return AjaxResult.success(patientService.selectPatientByPatientNumber(patientNumber));
     }
 
     /**
@@ -106,8 +106,8 @@ public class PatientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:remove')")
     @Log(title = "患者", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{patientIds}")
-    public AjaxResult remove(@PathVariable String[] patientIds)
+    @DeleteMapping("/{patientIds}")
+    public AjaxResult remove(@PathVariable Long[] patientIds)
     {
         return toAjax(patientService.deletePatientByPatientIds(patientIds));
     }

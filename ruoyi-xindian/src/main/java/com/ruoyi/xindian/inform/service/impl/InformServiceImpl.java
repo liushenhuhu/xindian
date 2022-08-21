@@ -9,31 +9,31 @@ import com.ruoyi.xindian.inform.service.IInformService;
 
 /**
  * 报告Service业务层处理
- * 
+ *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @Service
-public class InformServiceImpl implements IInformService 
+public class InformServiceImpl implements IInformService
 {
     @Autowired
     private InformMapper informMapper;
 
     /**
      * 查询报告
-     * 
+     *
      * @param informId 报告主键
      * @return 报告
      */
     @Override
-    public Inform selectInformByInformId(String informId)
+    public Inform selectInformByInformId(Long informId)
     {
         return informMapper.selectInformByInformId(informId);
     }
 
     /**
      * 查询报告列表
-     * 
+     *
      * @param inform 报告
      * @return 报告
      */
@@ -45,7 +45,7 @@ public class InformServiceImpl implements IInformService
 
     /**
      * 新增报告
-     * 
+     *
      * @param inform 报告
      * @return 结果
      */
@@ -57,7 +57,7 @@ public class InformServiceImpl implements IInformService
 
     /**
      * 修改报告
-     * 
+     *
      * @param inform 报告
      * @return 结果
      */
@@ -69,24 +69,24 @@ public class InformServiceImpl implements IInformService
 
     /**
      * 批量删除报告
-     * 
+     *
      * @param informIds 需要删除的报告主键
      * @return 结果
      */
     @Override
-    public int deleteInformByInformIds(String[] informIds)
+    public int deleteInformByInformIds(Long[] informIds)
     {
         return informMapper.deleteInformByInformIds(informIds);
     }
 
     /**
      * 删除报告信息
-     * 
+     *
      * @param informId 报告主键
      * @return 结果
      */
     @Override
-    public int deleteInformByInformId(String informId)
+    public int deleteInformByInformId(Long informId)
     {
         return informMapper.deleteInformByInformId(informId);
     }

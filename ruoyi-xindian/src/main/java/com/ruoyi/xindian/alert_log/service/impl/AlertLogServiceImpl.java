@@ -11,7 +11,7 @@ import com.ruoyi.xindian.alert_log.service.IAlertLogService;
  * 预警日志Service业务层处理
  *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @Service
 public class AlertLogServiceImpl implements IAlertLogService
@@ -26,7 +26,7 @@ public class AlertLogServiceImpl implements IAlertLogService
      * @return 预警日志
      */
     @Override
-    public AlertLog selectAlertLogByLogId(String logId)
+    public AlertLog selectAlertLogByLogId(Long logId)
     {
         return alertLogMapper.selectAlertLogByLogId(logId);
     }
@@ -74,7 +74,7 @@ public class AlertLogServiceImpl implements IAlertLogService
      * @return 结果
      */
     @Override
-    public int deleteAlertLogByLogIds(String[] logIds)
+    public int deleteAlertLogByLogIds(Long[] logIds)
     {
         return alertLogMapper.deleteAlertLogByLogIds(logIds);
     }
@@ -86,7 +86,7 @@ public class AlertLogServiceImpl implements IAlertLogService
      * @return 结果
      */
     @Override
-    public int deleteAlertLogByLogId(String logId)
+    public int deleteAlertLogByLogId(Long logId)
     {
         return alertLogMapper.deleteAlertLogByLogId(logId);
     }

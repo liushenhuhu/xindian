@@ -23,9 +23,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 医院Controller
- * 
+ *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @RestController
 @RequestMapping("/hospital/hospital")
@@ -64,9 +64,19 @@ public class HospitalController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hospital:hospital:query')")
     @GetMapping(value = "/{hospitalId}")
-    public AjaxResult getInfo(@PathVariable("hospitalId") String hospitalId)
+    public AjaxResult getInfo(@PathVariable("hospitalId") Long hospitalId)
     {
         return AjaxResult.success(hospitalService.selectHospitalByHospitalId(hospitalId));
+    }
+
+    /**
+     * 通过hospitalCode获取医院详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('hospital:hospital:query')")
+    @GetMapping(value = "/getInfoByHospitalCode/{hospitalCode}")
+    public AjaxResult getInfoByHospitalCode(@PathVariable("hospitalCode") String hospitalCode)
+    {
+        return AjaxResult.success(hospitalService.selectHospitalByHospitalCode(hospitalCode));
     }
 
     /**
@@ -96,8 +106,8 @@ public class HospitalController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hospital:hospital:remove')")
     @Log(title = "医院", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{hospitalIds}")
-    public AjaxResult remove(@PathVariable String[] hospitalIds)
+    @DeleteMapping("/{hospitalIds}")
+    public AjaxResult remove(@PathVariable Long[] hospitalIds)
     {
         return toAjax(hospitalService.deleteHospitalByHospitalIds(hospitalIds));
     }

@@ -11,14 +11,14 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 预警日志对象 alert_log
  *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 public class AlertLog extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 日志id */
-    private String logId;
+    private Long logId;
 
     /** 日志号 */
     @Excel(name = "日志号")
@@ -43,11 +43,9 @@ public class AlertLog extends BaseEntity
 
     /** 患者id */
     @Excel(name = "患者id")
-    private String patientId;
+    private Long pId;
 
-    /**
-     * 患者姓名
-     */
+    /** 患者姓名 */
     @Excel(name = "患者姓名")
     private String patientName;
 
@@ -75,13 +73,12 @@ public class AlertLog extends BaseEntity
     @Excel(name = "医院名称")
     private String hospitalName;
 
-
-    public void setLogId(String logId)
+    public void setLogId(Long logId)
     {
         this.logId = logId;
     }
 
-    public String getLogId()
+    public Long getLogId()
     {
         return logId;
     }
@@ -130,23 +127,14 @@ public class AlertLog extends BaseEntity
     {
         return eventDescription;
     }
-    public void setPatientId(String patientId)
+    public void setpId(Long pId)
     {
-        this.patientId = patientId;
+        this.pId = pId;
     }
 
-    public String getPatientId()
+    public Long getpId()
     {
-        return patientId;
-    }
-    public void setHospitalCode(String hospitalCode)
-    {
-        this.hospitalCode = hospitalCode;
-    }
-
-    public String getHospitalCode()
-    {
-        return hospitalCode;
+        return pId;
     }
 
     public String getPatientName() {
@@ -181,6 +169,14 @@ public class AlertLog extends BaseEntity
         this.familyPhone = familyPhone;
     }
 
+    public String getHospitalCode() {
+        return hospitalCode;
+    }
+
+    public void setHospitalCode(String hospitalCode) {
+        this.hospitalCode = hospitalCode;
+    }
+
     public String getHospitalName() {
         return hospitalName;
     }
@@ -198,7 +194,7 @@ public class AlertLog extends BaseEntity
                 .append("logType", getLogType())
                 .append("eventName", getEventName())
                 .append("eventDescription", getEventDescription())
-                .append("patientId", getPatientId())
+                .append("pId", getpId())
                 .append("patientName", getPatientName())
                 .append("patientNumber", getPatientNumber())
                 .append("patientPhone", getPatientPhone())

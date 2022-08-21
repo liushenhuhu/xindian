@@ -7,6 +7,8 @@ import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +32,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 预警日志Controller
  *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @RestController
 @RequestMapping("/alert_log/alert_log")
-public class AlertLogController extends BaseController {
+public class AlertLogController extends BaseController
+{
     @Autowired
     private IAlertLogService alertLogService;
 
@@ -44,17 +47,22 @@ public class AlertLogController extends BaseController {
     @Autowired
     private IHospitalService hospitalService;
 
+    @Autowired
+    private IPatientManagementService patientManagementService;
+
     /**
      * 查询预警日志列表
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AlertLog alertLog) {
+    public TableDataInfo list(AlertLog alertLog)
+    {
         startPage();
         List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
         for (AlertLog log : list) {
-            Patient patient = patientService.selectPatientByPatientId(log.getPatientId());
-            Hospital hospital = hospitalService.selectHospitalByHospitalId(patient.getHospitalCode());
+            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(log.getpId());
+            Patient patient = patientService.selectPatientByPatientNumber(patientManagement.getPatientNumber());
+            Hospital hospital = hospitalService.selectHospitalByHospitalCode(patientManagement.getHospitalCode());
             log.setPatientName(patient.getPatientName());
             log.setPatientNumber(patient.getPatientNumber());
             log.setPatientPhone(patient.getPatientPhone());
@@ -71,7 +79,8 @@ public class AlertLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:export')")
     @Log(title = "预警日志", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, AlertLog alertLog) {
+    public void export(HttpServletResponse response, AlertLog alertLog)
+    {
         List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
         ExcelUtil<AlertLog> util = new ExcelUtil<AlertLog>(AlertLog.class);
         util.exportExcel(response, list, "预警日志数据");
@@ -82,7 +91,8 @@ public class AlertLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:query')")
     @GetMapping(value = "/{logId}")
-    public AjaxResult getInfo(@PathVariable("logId") String logId) {
+    public AjaxResult getInfo(@PathVariable("logId") Long logId)
+    {
         return AjaxResult.success(alertLogService.selectAlertLogByLogId(logId));
     }
 
@@ -92,7 +102,8 @@ public class AlertLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:add')")
     @Log(title = "预警日志", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody AlertLog alertLog) {
+    public AjaxResult add(@RequestBody AlertLog alertLog)
+    {
         return toAjax(alertLogService.insertAlertLog(alertLog));
     }
 
@@ -102,7 +113,8 @@ public class AlertLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:edit')")
     @Log(title = "预警日志", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody AlertLog alertLog) {
+    public AjaxResult edit(@RequestBody AlertLog alertLog)
+    {
         return toAjax(alertLogService.updateAlertLog(alertLog));
     }
 
@@ -112,7 +124,8 @@ public class AlertLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:remove')")
     @Log(title = "预警日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{logIds}")
-    public AjaxResult remove(@PathVariable String[] logIds) {
+    public AjaxResult remove(@PathVariable Long[] logIds)
+    {
         return toAjax(alertLogService.deleteAlertLogByLogIds(logIds));
     }
 }

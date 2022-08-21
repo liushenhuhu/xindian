@@ -2,11 +2,6 @@ package com.ruoyi.xindian.equipment.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.xindian.hospital.domain.Hospital;
-import com.ruoyi.xindian.hospital.service.IHospitalService;
-import com.ruoyi.xindian.patient.domain.Patient;
-import com.ruoyi.xindian.patient.service.IPatientService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 设备Controller
  *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @RestController
 @RequestMapping("/equipment/equipment")
@@ -38,12 +33,6 @@ public class EquipmentController extends BaseController
 {
     @Autowired
     private IEquipmentService equipmentService;
-
-    @Autowired
-    private IPatientService patientService;
-
-    @Autowired
-    private IHospitalService hospitalService;
 
     /**
      * 查询设备列表
@@ -54,17 +43,6 @@ public class EquipmentController extends BaseController
     {
         startPage();
         List<Equipment> list = equipmentService.selectEquipmentList(equipment);
-        for (Equipment listEquipment : list) {
-            Patient patient = patientService.selectPatientByPatientId(listEquipment.getPatientId());
-            Hospital hospital = hospitalService.selectHospitalByHospitalId(patient.getHospitalCode());
-            listEquipment.setPatientName(patient.getPatientName());
-            listEquipment.setPatientNumber(patient.getPatientNumber());
-            listEquipment.setPatientAge(patient.getPatientAge());
-            listEquipment.setPatientSex(patient.getPatientSex());
-            listEquipment.setPatientPhone(patient.getPatientPhone());
-            listEquipment.setHospitalCode(patient.getHospitalCode());
-            listEquipment.setHospitalName(hospital.getHospitalName());
-        }
         return getDataTable(list);
     }
 
@@ -86,7 +64,7 @@ public class EquipmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:query')")
     @GetMapping(value = "/{equipmentId}")
-    public AjaxResult getInfo(@PathVariable("equipmentId") String equipmentId)
+    public AjaxResult getInfo(@PathVariable("equipmentId") Long equipmentId)
     {
         return AjaxResult.success(equipmentService.selectEquipmentByEquipmentId(equipmentId));
     }
@@ -119,7 +97,7 @@ public class EquipmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('equipment:equipment:remove')")
     @Log(title = "设备", businessType = BusinessType.DELETE)
     @DeleteMapping("/{equipmentIds}")
-    public AjaxResult remove(@PathVariable String[] equipmentIds)
+    public AjaxResult remove(@PathVariable Long[] equipmentIds)
     {
         return toAjax(equipmentService.deleteEquipmentByEquipmentIds(equipmentIds));
     }

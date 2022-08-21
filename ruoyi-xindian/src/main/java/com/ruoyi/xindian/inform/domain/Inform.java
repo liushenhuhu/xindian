@@ -1,7 +1,6 @@
 package com.ruoyi.xindian.inform.domain;
 
 import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -12,27 +11,36 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 报告对象 inform
  *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
-public class Inform extends BaseEntity {
+public class Inform extends BaseEntity
+{
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 报告id
-     */
-    private String informId;
+    /** 报告id */
+    private Long informId;
 
-    /**
-     * 报告号
-     */
+    /** 报告号 */
     @Excel(name = "报告号")
     private String informNumber;
 
-    /**
-     * 患者id
-     */
-    @Excel(name = "患者id")
-    private String patientId;
+    /** 患者管理id */
+    @Excel(name = "患者管理id")
+    private Long pId;
+
+    /** 开始遥测时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "开始遥测时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date startTelemetryTime;
+
+    /** 报告日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "报告日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date informTime;
+
+    /** 报告状态 */
+    @Excel(name = "报告状态")
+    private String informStatus;
 
     /**
      * 患者姓名
@@ -94,79 +102,58 @@ public class Inform extends BaseEntity {
     @Excel(name = "医院名称")
     private String hospitalName;
 
-    /**
-     * 开始遥测时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始遥测时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date startTelemetryTime;
-
-    /**
-     * 报告日期
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "报告日期", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date informTime;
-
-    /**
-     * 报告状态
-     */
-    @Excel(name = "报告状态")
-    private String informStatus;
-
-    public void setInformId(String informId) {
+    public void setInformId(Long informId)
+    {
         this.informId = informId;
     }
 
-    public String getInformId() {
+    public Long getInformId()
+    {
         return informId;
     }
-
-    public void setInformNumber(String informNumber) {
+    public void setInformNumber(String informNumber)
+    {
         this.informNumber = informNumber;
     }
 
-    public String getInformNumber() {
+    public String getInformNumber()
+    {
         return informNumber;
     }
-
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
+    public void setpId(Long pId)
+    {
+        this.pId = pId;
     }
 
-    public String getPatientId() {
-        return patientId;
+    public Long getpId()
+    {
+        return pId;
     }
-
-    public void setHospitalCode(String hospitalCode) {
-        this.hospitalCode = hospitalCode;
-    }
-
-    public String getHospitalCode() {
-        return hospitalCode;
-    }
-
-    public void setStartTelemetryTime(Date startTelemetryTime) {
+    public void setStartTelemetryTime(Date startTelemetryTime)
+    {
         this.startTelemetryTime = startTelemetryTime;
     }
 
-    public Date getStartTelemetryTime() {
+    public Date getStartTelemetryTime()
+    {
         return startTelemetryTime;
     }
-
-    public void setInformTime(Date informTime) {
+    public void setInformTime(Date informTime)
+    {
         this.informTime = informTime;
     }
 
-    public Date getInformTime() {
+    public Date getInformTime()
+    {
         return informTime;
     }
-
-    public void setInformStatus(String informStatus) {
+    public void setInformStatus(String informStatus)
+    {
         this.informStatus = informStatus;
     }
 
-    public String getInformStatus() {
+    public String getInformStatus()
+    {
         return informStatus;
     }
 
@@ -234,6 +221,14 @@ public class Inform extends BaseEntity {
         this.patientSource = patientSource;
     }
 
+    public String getHospitalCode() {
+        return hospitalCode;
+    }
+
+    public void setHospitalCode(String hospitalCode) {
+        this.hospitalCode = hospitalCode;
+    }
+
     public String getHospitalName() {
         return hospitalName;
     }
@@ -244,10 +239,10 @@ public class Inform extends BaseEntity {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("informId", getInformId())
                 .append("informNumber", getInformNumber())
-                .append("patientId", getPatientId())
+                .append("pId", getpId())
                 .append("startTelemetryTime", getStartTelemetryTime())
                 .append("informTime", getInformTime())
                 .append("informStatus", getInformStatus())

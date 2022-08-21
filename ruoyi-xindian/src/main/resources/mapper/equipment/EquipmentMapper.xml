@@ -8,12 +8,12 @@
         <result property="equipmentId"    column="equipment_id"    />
         <result property="equipmentNumber"    column="equipment_number"    />
         <result property="equipmentVersion"    column="equipment_version"    />
-        <result property="connectionTime"    column="connection_time"    />
-        <result property="patientId"    column="patient_id"    />
+        <result property="equipmentStatus"    column="equipment_status"    />
+        <result property="hospitalCode"    column="hospital_code"    />
     </resultMap>
 
     <sql id="selectEquipmentVo">
-        select equipment_id, equipment_number, equipment_version, connection_time, patient_id from equipment
+        select equipment_id, equipment_number, equipment_version, equipment_status, hospital_code from equipment
     </sql>
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
@@ -21,12 +21,12 @@
         <where>
             <if test="equipmentNumber != null  and equipmentNumber != ''"> and equipment_number like concat('%', #{equipmentNumber}, '%')</if>
             <if test="equipmentVersion != null  and equipmentVersion != ''"> and equipment_version like concat('%', #{equipmentVersion}, '%')</if>
-            <if test="connectionTime != null "> and connection_time like concat('%', #{connectionTime}, '%')</if>
-            <if test="patientId != null  and patientId != ''"> and patient_id like concat('%', #{patientId}, '%')</if>
+            <if test="equipmentStatus != null  and equipmentStatus != ''"> and equipment_status like concat('%', #{equipmentStatus}, '%')</if>
+            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
         </where>
     </select>
 
-    <select id="selectEquipmentByEquipmentId" parameterType="String" resultMap="EquipmentResult">
+    <select id="selectEquipmentByEquipmentId" parameterType="Long" resultMap="EquipmentResult">
         <include refid="selectEquipmentVo"/>
         where equipment_id = #{equipmentId}
     </select>
@@ -37,15 +37,15 @@
             <if test="equipmentId != null">equipment_id,</if>
             <if test="equipmentNumber != null and equipmentNumber != ''">equipment_number,</if>
             <if test="equipmentVersion != null">equipment_version,</if>
-            <if test="connectionTime != null">connection_time,</if>
-            <if test="patientId != null and patientId != ''">patient_id,</if>
+            <if test="equipmentStatus != null">equipment_status,</if>
+            <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="equipmentId != null">#{equipmentId},</if>
             <if test="equipmentNumber != null and equipmentNumber != ''">#{equipmentNumber},</if>
             <if test="equipmentVersion != null">#{equipmentVersion},</if>
-            <if test="connectionTime != null">#{connectionTime},</if>
-            <if test="patientId != null and patientId != ''">#{patientId},</if>
+            <if test="equipmentStatus != null">#{equipmentStatus},</if>
+            <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
         </trim>
     </insert>
 
@@ -54,13 +54,13 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="equipmentNumber != null and equipmentNumber != ''">equipment_number = #{equipmentNumber},</if>
             <if test="equipmentVersion != null">equipment_version = #{equipmentVersion},</if>
-            <if test="connectionTime != null">connection_time = #{connectionTime},</if>
-            <if test="patientId != null and patientId != ''">patient_id = #{patientId},</if>
+            <if test="equipmentStatus != null">equipment_status = #{equipmentStatus},</if>
+            <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>
         </trim>
         where equipment_id = #{equipmentId}
     </update>
 
-    <delete id="deleteEquipmentByEquipmentId" parameterType="String">
+    <delete id="deleteEquipmentByEquipmentId" parameterType="Long">
         delete from equipment where equipment_id = #{equipmentId}
     </delete>
 

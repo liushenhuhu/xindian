@@ -7,6 +7,8 @@ import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +32,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 报告Controller
  *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 @RestController
 @RequestMapping("/inform/inform")
@@ -45,6 +47,9 @@ public class InformController extends BaseController
     @Autowired
     private IHospitalService hospitalService;
 
+    @Autowired
+    private IPatientManagementService patientManagementService;
+
     /**
      * 查询报告列表
      */
@@ -55,8 +60,9 @@ public class InformController extends BaseController
         startPage();
         List<Inform> list = informService.selectInformList(inform);
         for (Inform listInform : list) {
-            Patient patient = patientService.selectPatientByPatientId(listInform.getPatientId());
-            Hospital hospital = hospitalService.selectHospitalByHospitalId(patient.getHospitalCode());
+            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(listInform.getpId());
+            Patient patient = patientService.selectPatientByPatientNumber(patientManagement.getPatientNumber());
+            Hospital hospital = hospitalService.selectHospitalByHospitalCode(patientManagement.getHospitalCode());
             listInform.setPatientName(patient.getPatientName());
             listInform.setPatientNumber(patient.getPatientNumber());
             listInform.setPatientAge(patient.getPatientAge());
@@ -65,7 +71,7 @@ public class InformController extends BaseController
             listInform.setBedNumber(patient.getBedNumber());
             listInform.setCaseHistoryNumber(patient.getCaseHistoryNumber());
             listInform.setPatientSource(patient.getPatientSource());
-            listInform.setHospitalCode(patient.getHospitalCode());
+            listInform.setHospitalCode(hospital.getHospitalCode());
             listInform.setHospitalName(hospital.getHospitalName());
         }
         return getDataTable(list);
@@ -89,7 +95,7 @@ public class InformController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('inform:inform:query')")
     @GetMapping(value = "/{informId}")
-    public AjaxResult getInfo(@PathVariable("informId") String informId)
+    public AjaxResult getInfo(@PathVariable("informId") Long informId)
     {
         return AjaxResult.success(informService.selectInformByInformId(informId));
     }
@@ -121,8 +127,8 @@ public class InformController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('inform:inform:remove')")
     @Log(title = "报告", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{informIds}")
-    public AjaxResult remove(@PathVariable String[] informIds)
+    @DeleteMapping("/{informIds}")
+    public AjaxResult remove(@PathVariable Long[] informIds)
     {
         return toAjax(informService.deleteInformByInformIds(informIds));
     }

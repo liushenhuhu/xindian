@@ -7,7 +7,7 @@ import com.ruoyi.xindian.alert_log.domain.AlertLog;
  * 预警日志Service接口
  *
  * @author hanhan
- * @date 2022-08-15
+ * @date 2022-08-20
  */
 public interface IAlertLogService
 {
@@ -17,7 +17,7 @@ public interface IAlertLogService
      * @param logId 预警日志主键
      * @return 预警日志
      */
-    public AlertLog selectAlertLogByLogId(String logId);
+    public AlertLog selectAlertLogByLogId(Long logId);
 
     /**
      * 查询预警日志列表
@@ -49,7 +49,7 @@ public interface IAlertLogService
      * @param logIds 需要删除的预警日志主键集合
      * @return 结果
      */
-    public int deleteAlertLogByLogIds(String[] logIds);
+    public int deleteAlertLogByLogIds(Long[] logIds);
 
     /**
      * 删除预警日志信息
@@ -57,5 +57,5 @@ public interface IAlertLogService
      * @param logId 预警日志主键
      * @return 结果
      */
-    public int deleteAlertLogByLogId(String logId);
+    public int deleteAlertLogByLogId(Long logId);
 }
