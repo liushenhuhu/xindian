@@ -734,7 +734,8 @@
 
       </div>
     </div>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 25% " @click="btnClick">导出PDF</el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 15% ;margin-bottom: 15px" @click="btnClear">清除缓存并刷新</el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
   </div>
 </template>
 
@@ -813,52 +814,59 @@ export default {
           longestTachycardia:(JSON.parse(localStorage.getItem("data"))).result.最长心动过速心搏数,
 
         },
+
         //室性异位心率
         ventricularEctopicHeartRate: {
           //总数
-          total: 0,
+          total: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律总数,
           //单发
-          singleShot: 0,
+          singleShot: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律单发,
           //成对
-          pair: 0,
+          pair: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律成对,
           //短阵性室速
-          burstVT: 0,
-          RONT: 0,
+          burstVT: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律短振性室速,
+          RONT: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律RONT,
           //二联律
-          doubletLaw: 0,
+          doubletLaw: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律二联律,
           //三联律
-          tripleLaw: 0,
+          tripleLaw: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律三联率,
           //室性逸搏
-          ventricularEscape: 0,
+          ventricularEscape: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律室性逸搏,
           //最快室速
-          fastestVT: 0,
+          fastestVT: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律最快室速,
           //最长室速
-          longestVT: 0,
+          longestVT: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律最长室速,
           //室性百分比
-          ventricularPercentage: 0
+          ventricularPercentage: (JSON.parse(localStorage.getItem("data"))).result.室性异位心律室性百分比
           //平均/小时
           //平均/1000
         },
         //室上性异位心率
+
+        // '室上性异位心律室性逸搏': None,
+        // '室上性异位心律最快室上速发生于': None,
+        // '室上性异位心律最长室上速发生于': None,
+        // '室上性异位心律平均/小时': None,
+        // '室上性异位心律平均/1000': None,
         supraventricularEctopicHeartRate: {
           //总数
-          total: 0,
+          total: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律总数,
           //单发
-          singleShot: 0,
+          singleShot: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律单发,
           //成对
-          pair: 0,
+          pair: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律成对,
           //短阵性室上速
-          paroxysmalSupraventricularTachycardia: 0,
+          paroxysmalSupraventricularTachycardia: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律短振性室上速,
           //二联律
-          doubletLaw: 0,
+          doubletLaw: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律二联律,
           //三联律
-          tripleLaw: 0,
+          tripleLaw: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律三联率,
           //最快室上速
-          fastestSupraventricularVelocity: 0,
+          fastestSupraventricularVelocity: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律最快室上速,
           //最长室上速
-          longestSupraventricularVelocity: 0,
+          longestSupraventricularVelocity: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律最长室上速,
           //室上性百分比
-          supraventricularPercentage: 0
+          supraventricularPercentage: (JSON.parse(localStorage.getItem("data"))).result.室上性异位心律室上性百分比
           //平均/小时
           //平均/1000
         },
@@ -874,38 +882,38 @@ export default {
         //房颤分析
         atrialFibrillationAnalysis: {
           //总数
-          total: "无数据",
+          total: (JSON.parse(localStorage.getItem("data"))).result.房颤总数,
           //发生阵数
-          number: "无数据",
+          number: (JSON.parse(localStorage.getItem("data"))).result.房颤发生阵数,
           //大于1500
-          num_1500: "无数据",
+          num_1500: (JSON.parse(localStorage.getItem("data"))).result.房颤大于1500ms,
           //大于2000
-          num_2000: "无数据",
+          num_2000: (JSON.parse(localStorage.getItem("data"))).result.房颤大于2000ms,
           //持续时间
-          duration: "无数据"
+          duration: (JSON.parse(localStorage.getItem("data"))).result.房颤持续时间
         },
         //起搏分析
         pacingAnalysis: {
           //起搏总数
-          total: 0,
+          total: (JSON.parse(localStorage.getItem("data"))).result.起搏总数,
           //起搏占百分比
-          pacingAnalysisPercentage: 0.0,
+          pacingAnalysisPercentage: (JSON.parse(localStorage.getItem("data"))).result.起搏总数百分比,
           //心房起搏数
-          atrialPace: 0,
+          atrialPace: (JSON.parse(localStorage.getItem("data"))).result.起搏心房起搏数,
           //心房起搏占百分比
-          atrialPacePercentage: 0.0,
+          atrialPacePercentage: (JSON.parse(localStorage.getItem("data"))).result.起搏心房起搏数百分比,
           //双腔起搏
-          dual_chamberPacing: 0,
+          dual_chamberPacing: (JSON.parse(localStorage.getItem("data"))).result.起搏双腔起搏,
           //双腔起搏占百分比
-          dual_chamberPacingPercentage: 0.0,
+          dual_chamberPacingPercentage: (JSON.parse(localStorage.getItem("data"))).result.起搏双腔起搏百分比,
           //心室起搏数
-          ventricularPace: 0,
+          ventricularPace: (JSON.parse(localStorage.getItem("data"))).result.起搏心室起搏数,
           //心室起搏数占百分比
-          ventricularPacePercentage: 0.0,
+          ventricularPacePercentage: (JSON.parse(localStorage.getItem("data"))).result.起搏心室起搏数百分比,
           //错误起搏
-          wrongPacing: 0,
+          wrongPacing: (JSON.parse(localStorage.getItem("data"))).result.起搏错误起搏,
           //错误起搏占百分比
-          wrongPacingPercentage: 0.0
+          wrongPacingPercentage: (JSON.parse(localStorage.getItem("data"))).result.起搏错误起搏百分比
         },
 
       },
@@ -2913,6 +2921,12 @@ var data = obj
 
     window.addEventListener('resize', myChart.resize);
      },
+
+    btnClear(){
+      localStorage.removeItem('data');
+      localStorage.removeItem('show');
+      window.location.reload();
+    },
 
     btnClick() {
       // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
