@@ -751,7 +751,6 @@ export default {
   name: "ExportPDF",
   data() {
     return {
-      show:false,
       exportPDFtitle: "页面导出PDF文件名",
       froms: {
         patientInfo: {
@@ -989,35 +988,10 @@ export default {
     };
   },
   created() {
-    const loading = this.$loading({
-      lock: true,//lock的修改符--默认是false
-      text: 'Loading',//显示在加载图标下方的加载文案
-      spinner: 'el-icon-loading',//自定义加载图标类名
-      background: 'rgba(0, 0, 0, 0.7)',//遮罩层颜色
-      target: document.querySelector('#table')//loadin覆盖的dom元素节点
-    });
-
-    console.log("执行")
-    $.ajax({
-      type: "post",
-      url: "http://219.155.7.235:5004",
-      asynsc: false,
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-      }),
-      success: function (data) {
-        console.log(data)
-        localStorage.setItem('data' ,JSON.stringify(data))
-        loading.close()
-        //location.reload();
-      },
-      error:function (data)
-      {
-        console.log("错误")
-      }
-    })
-     // this.get();
+    var show =localStorage.getItem("show");
+    if (!show){
+      this.get();
+    }
   },
   mounted() {
     this.drawLine();
@@ -1031,9 +1005,6 @@ export default {
     this.drawBar2();
   },
   methods: {
-    refresh() {
-      this.$emit("data");
-    },
     columnStyle({ row, column, rowIndex, columnIndex }) {
         return 'padding:0;border:0'
     },
@@ -1059,31 +1030,15 @@ export default {
           console.log(data)
           localStorage.removeItem("data");
           localStorage.setItem('data' ,JSON.stringify(data))
+          localStorage.setItem('show' ,true)
           loading.close()
-          //location.reload();
+          window.location.reload("#pdfDom");
         },
         error:function (data)
         {
           console.log("错误")
         }
       })
-        // .then((data)=>{
-        // if(!this.show){
-        //   this.show=!this.show
-        //   this.drawLine();
-        //   this.line();
-        //   this.line1();
-        //   this.line2();
-        //   this.line3();
-        //   this.drawscatter();
-        //   this.drawBar();
-        //   this.drawBar1();
-        //   this.drawBar2();
-        //   console.log("执行2")
-        // }
-        // console.log("执行3")
-      // })
-
     },
 
     line(){
@@ -3002,6 +2957,7 @@ var data = obj
         PDF.save(title + ".pdf");
       });
       localStorage.removeItem('data');
+      localStorage.removeItem('show');
     }
   }
 };
