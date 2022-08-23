@@ -73,17 +73,6 @@ public class Patient extends BaseEntity {
     @Excel(name = "监测状态")
     private String monitoringStatus;
 
-    /**
-     * 床位号
-     */
-    @Excel(name = "床位号")
-    private String bedNumber;
-
-    /**
-     * 病历号
-     */
-    @Excel(name = "病历号")
-    private String caseHistoryNumber;
 
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
@@ -165,21 +154,6 @@ public class Patient extends BaseEntity {
         return monitoringStatus;
     }
 
-    public void setBedNumber(String bedNumber) {
-        this.bedNumber = bedNumber;
-    }
-
-    public String getBedNumber() {
-        return bedNumber;
-    }
-
-    public void setCaseHistoryNumber(String caseHistoryNumber) {
-        this.caseHistoryNumber = caseHistoryNumber;
-    }
-
-    public String getCaseHistoryNumber() {
-        return caseHistoryNumber;
-    }
 
     @Override
     public String toString() {
@@ -194,8 +168,6 @@ public class Patient extends BaseEntity {
                 .append("familyPhone", getFamilyPhone())
                 .append("equipmentId", getEquipmentId())
                 .append("monitoringStatus", getMonitoringStatus())
-                .append("bedNumber", getBedNumber())
-                .append("caseHistoryNumber", getCaseHistoryNumber())
                 .toString();
     }
 }

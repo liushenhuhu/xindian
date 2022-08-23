@@ -68,8 +68,8 @@ public class InformController extends BaseController
             listInform.setPatientAge(patient.getPatientAge());
             listInform.setPatientSex(patient.getPatientSex());
             listInform.setPatientPhone(patient.getPatientPhone());
-            listInform.setBedNumber(patient.getBedNumber());
-            listInform.setCaseHistoryNumber(patient.getCaseHistoryNumber());
+            listInform.setBedNumber(patientManagement.getBedNumber());
+            listInform.setCaseHistoryNumber(patientManagement.getCaseHistoryNumber());
             listInform.setPatientSource(patient.getPatientSource());
             listInform.setHospitalCode(hospital.getHospitalCode());
             listInform.setHospitalName(hospital.getHospitalName());

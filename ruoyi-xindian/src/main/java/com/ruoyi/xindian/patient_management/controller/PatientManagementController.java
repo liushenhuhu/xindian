@@ -69,8 +69,6 @@ public class PatientManagementController extends BaseController
             management.setPatientPhone(patient.getPatientPhone());
             management.setFamilyPhone(patient.getFamilyPhone());
             management.setMonitoringStatus(patient.getMonitoringStatus());
-            management.setBedNumber(patient.getBedNumber());
-            management.setCaseHistoryNumber(patient.getCaseHistoryNumber());
         }
         return getDataTable(list);
     }
@@ -93,7 +91,7 @@ public class PatientManagementController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('patient_management:patient_management:query')")
     @GetMapping(value = "/{pId}")
-    public AjaxResult getInfo(@PathVariable("pId") Long pId)
+    public AjaxResult getInfo(@PathVariable("pId") String pId)
     {
         return AjaxResult.success(patientManagementService.selectPatientManagementByPId(pId));
     }
@@ -126,7 +124,7 @@ public class PatientManagementController extends BaseController
     @PreAuthorize("@ss.hasPermi('patient_management:patient_management:remove')")
     @Log(title = "患者管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{pIds}")
-    public AjaxResult remove(@PathVariable Long[] pIds)
+    public AjaxResult remove(@PathVariable String[] pIds)
     {
         return toAjax(patientManagementService.deletePatientManagementByPIds(pIds));
     }

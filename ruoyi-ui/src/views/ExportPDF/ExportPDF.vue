@@ -996,9 +996,7 @@ export default {
     };
   },
   created() {
-
     var pId = this.$route.query.pId;
-
     var show =localStorage.getItem("show");
     if (!show){
       this.get();

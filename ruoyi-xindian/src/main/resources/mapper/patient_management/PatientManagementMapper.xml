@@ -3,34 +3,38 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper">
-    
+
     <resultMap type="PatientManagement" id="PatientManagementResult">
         <result property="pId"    column="p_id"    />
         <result property="patientNumber"    column="patient_number"    />
         <result property="hospitalCode"    column="hospital_code"    />
         <result property="equipmentNumber"    column="equipment_number"    />
         <result property="connectionTime"    column="connection_time"    />
+        <result property="bedNumber"    column="bed_number"    />
+        <result property="caseHistoryNumber"    column="case_history_number"    />
     </resultMap>
 
     <sql id="selectPatientManagementVo">
-        select p_id, patient_number, hospital_code, equipment_number, connection_time from patient_management
+        select p_id, patient_number, hospital_code, equipment_number, connection_time, bed_number, case_history_number from patient_management
     </sql>
 
     <select id="selectPatientManagementList" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
-        <where>  
+        <where>
             <if test="patientNumber != null  and patientNumber != ''"> and patient_number like concat('%', #{patientNumber}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
             <if test="equipmentNumber != null  and equipmentNumber != ''"> and equipment_number like concat('%', #{equipmentNumber}, '%')</if>
             <if test="connectionTime != null "> and connection_time like concat('%', #{connectionTime}, '%')</if>
+            <if test="bedNumber != null  and bedNumber != ''"> and bed_number like concat('%', #{bedNumber}, '%')</if>
+            <if test="caseHistoryNumber != null  and caseHistoryNumber != ''"> and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
         </where>
     </select>
-    
-    <select id="selectPatientManagementByPId" parameterType="Long" resultMap="PatientManagementResult">
+
+    <select id="selectPatientManagementByPId" parameterType="String" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         where p_id = #{pId}
     </select>
-        
+
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">
         insert into patient_management
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -38,12 +42,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
             <if test="equipmentNumber != null and equipmentNumber != ''">equipment_number,</if>
             <if test="connectionTime != null">connection_time,</if>
+            <if test="bedNumber != null">bed_number,</if>
+            <if test="caseHistoryNumber != null">case_history_number,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientNumber != null and patientNumber != ''">#{patientNumber},</if>
             <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
             <if test="equipmentNumber != null and equipmentNumber != ''">#{equipmentNumber},</if>
             <if test="connectionTime != null">#{connectionTime},</if>
+            <if test="bedNumber != null">#{bedNumber},</if>
+            <if test="caseHistoryNumber != null">#{caseHistoryNumber},</if>
          </trim>
     </insert>
 
@@ -54,16 +62,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>
             <if test="equipmentNumber != null and equipmentNumber != ''">equipment_number = #{equipmentNumber},</if>
             <if test="connectionTime != null">connection_time = #{connectionTime},</if>
+            <if test="bedNumber != null">bed_number = #{bedNumber},</if>
+            <if test="caseHistoryNumber != null">case_history_number = #{caseHistoryNumber},</if>
         </trim>
         where p_id = #{pId}
     </update>
 
-    <delete id="deletePatientManagementByPId" parameterType="Long">
+    <delete id="deletePatientManagementByPId" parameterType="String">
         delete from patient_management where p_id = #{pId}
     </delete>
 
     <delete id="deletePatientManagementByPIds" parameterType="String">
-        delete from patient_management where p_id in 
+        delete from patient_management where p_id in
         <foreach item="pId" collection="array" open="(" separator="," close=")">
             #{pId}
         </foreach>

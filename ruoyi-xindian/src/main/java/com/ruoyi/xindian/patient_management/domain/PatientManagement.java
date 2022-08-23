@@ -20,7 +20,7 @@ public class PatientManagement extends BaseEntity {
     /**
      * 患者管理id
      */
-    private Long pId;
+    private String pId;
 
     /**
      * 患者姓名
@@ -108,12 +108,13 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "连接时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date connectionTime;
 
-    public void setpId(Long pId) {
-        this.pId = pId;
+
+    public String getpId() {
+        return pId;
     }
 
-    public Long getpId() {
-        return pId;
+    public void setpId(String pId) {
+        this.pId = pId;
     }
 
     public void setPatientNumber(String patientNumber) {

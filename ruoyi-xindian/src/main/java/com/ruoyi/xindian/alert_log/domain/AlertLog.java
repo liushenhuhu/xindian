@@ -43,7 +43,7 @@ public class AlertLog extends BaseEntity
 
     /** 患者id */
     @Excel(name = "患者id")
-    private Long pId;
+    private String pId;
 
     /** 患者姓名 */
     @Excel(name = "患者姓名")
@@ -127,14 +127,13 @@ public class AlertLog extends BaseEntity
     {
         return eventDescription;
     }
-    public void setpId(Long pId)
-    {
-        this.pId = pId;
+
+    public String getpId() {
+        return pId;
     }
 
-    public Long getpId()
-    {
-        return pId;
+    public void setpId(String pId) {
+        this.pId = pId;
     }
 
     public String getPatientName() {

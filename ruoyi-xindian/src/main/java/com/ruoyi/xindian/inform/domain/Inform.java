@@ -26,7 +26,7 @@ public class Inform extends BaseEntity
 
     /** 患者管理id */
     @Excel(name = "患者管理id")
-    private Long pId;
+    private String pId;
 
     /** 开始遥测时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -120,15 +120,15 @@ public class Inform extends BaseEntity
     {
         return informNumber;
     }
-    public void setpId(Long pId)
-    {
+
+    public String getpId() {
+        return pId;
+    }
+
+    public void setpId(String pId) {
         this.pId = pId;
     }
 
-    public Long getpId()
-    {
-        return pId;
-    }
     public void setStartTelemetryTime(Date startTelemetryTime)
     {
         this.startTelemetryTime = startTelemetryTime;

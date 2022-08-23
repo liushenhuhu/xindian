@@ -15,12 +15,10 @@
         <result property="familyPhone"    column="family_phone"    />
         <result property="equipmentId"    column="equipment_id"    />
         <result property="monitoringStatus"    column="monitoring_status"    />
-        <result property="bedNumber"    column="bed_number"    />
-        <result property="caseHistoryNumber"    column="case_history_number"    />
     </resultMap>
 
     <sql id="selectPatientVo">
-        select patient_id, patient_name, patient_number, patient_age, patient_sex, patient_source, patient_phone, family_phone, equipment_id, monitoring_status, bed_number, case_history_number from patient
+        select patient_id, patient_name, patient_number, patient_age, patient_sex, patient_source, patient_phone, family_phone, equipment_id, monitoring_status from patient
     </sql>
 
     <select id="selectPatientList" parameterType="Patient" resultMap="PatientResult">
@@ -35,9 +33,8 @@
             <if test="familyPhone != null  and familyPhone != ''"> and family_phone like concat('%', #{familyPhone}, '%')</if>
             <if test="equipmentId != null  and equipmentId != ''"> and equipment_id like concat('%', #{equipmentId}, '%')</if>
             <if test="monitoringStatus != null  and monitoringStatus != ''"> and monitoring_status like concat('%', #{monitoringStatus}, '%')</if>
-            <if test="bedNumber != null  and bedNumber != ''"> and bed_number like concat('%', #{bedNumber}, '%')</if>
-            <if test="caseHistoryNumber != null  and caseHistoryNumber != ''"> and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
         </where>
+        order by patient_id desc
     </select>
 
     <select id="selectPatientByPatientId" parameterType="Long" resultMap="PatientResult">
@@ -63,8 +60,6 @@
             <if test="familyPhone != null">family_phone,</if>
             <if test="equipmentId != null">equipment_id,</if>
             <if test="monitoringStatus != null">monitoring_status,</if>
-            <if test="bedNumber != null">bed_number,</if>
-            <if test="caseHistoryNumber != null">case_history_number,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
@@ -77,8 +72,6 @@
             <if test="familyPhone != null">#{familyPhone},</if>
             <if test="equipmentId != null">#{equipmentId},</if>
             <if test="monitoringStatus != null">#{monitoringStatus},</if>
-            <if test="bedNumber != null">#{bedNumber},</if>
-            <if test="caseHistoryNumber != null">#{caseHistoryNumber},</if>
         </trim>
     </insert>
 
@@ -94,8 +87,6 @@
             <if test="familyPhone != null">family_phone = #{familyPhone},</if>
             <if test="equipmentId != null">equipment_id = #{equipmentId},</if>
             <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
-            <if test="bedNumber != null">bed_number = #{bedNumber},</if>
-            <if test="caseHistoryNumber != null">case_history_number = #{caseHistoryNumber},</if>
         </trim>
         where patient_id = #{patientId}
     </update>
