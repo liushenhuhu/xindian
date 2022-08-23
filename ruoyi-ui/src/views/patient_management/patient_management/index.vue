@@ -115,6 +115,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-download"
+            @click="downloadInform(scope.row)"
+            v-hasPermi="['patient:patient:downloadInform']"
+          >下载报告
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-s-order"
             @click="handleAlert(scope.row)"
             v-hasPermi="['patient:patient:alert']"
@@ -124,7 +132,7 @@
             size="mini"
             type="text"
             icon="el-icon-magic-stick"
-            @click="handleAlert(scope.row)"
+            @click="handleInform(scope.row)"
             v-hasPermi="['patient:patient:inform']"
           >查看报告
           </el-button>
@@ -339,7 +347,10 @@ export default {
     handleInform(row) {
       this.$router.push({path: "/inform", query: {pId: row.pId}});
     },
-
+    /** 下载报告*/
+    downloadInform(row) {
+      this.$router.push({path: "/inform", query: {pId: row.pId}});
+    }
   }
 };
 </script>
