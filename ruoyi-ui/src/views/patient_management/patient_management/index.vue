@@ -349,7 +349,7 @@ export default {
     },
     /** 下载报告*/
     downloadInform(row) {
-      this.$router.push({path: "/inform", query: {pId: row.pId}});
+      this.$router.push({path: "/ExportPDF", query: {pId: row.pId}});
     }
   }
 };
