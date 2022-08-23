@@ -1044,6 +1044,7 @@ export default {
         },
         error:function (data)
         {
+          alert("数据请求错误,请刷新页面或联系管理员")
           console.log("错误")
         }
       })
