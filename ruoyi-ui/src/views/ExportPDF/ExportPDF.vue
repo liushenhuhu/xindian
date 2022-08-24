@@ -2,736 +2,739 @@
   <div class="wrap" style="background: #8c939d">
     <div id="pdfDom" style="padding: 10px;width: 800px ;background: #fff" >
       <div id="app">
-        <h1 style="margin-top:5vh;">通许第一医院</h1>
-        <h1>动态心电图报告</h1>
-        <div class="main">
-          <div class="box1">
-            <div class="box1-top">
-              <h2>病人信息</h2>
-            </div>
-            <div class="box1-bottom clearfix">
-              <div class="box1-bottom1">
-                <div class="box1-1">
-                  姓名:
-                  <strong>{{froms.patientInfo.name}}</strong>
-                </div>
-                <div class="box1-1">
-                  性别:
-                  <strong>{{froms.patientInfo.sex}}</strong>
-                </div>
-                <div class="box1-1">
-                  年龄:
-                  <strong>{{froms.patientInfo.age}}</strong>
-                </div>
-                <div class="box1-1">
-                  单号:
-                  <strong>{{froms.patientInfo.no}}</strong>
-                </div>
+        <div class="page">
+          <h1>通许第一医院</h1>
+          <h1>动态心电图报告</h1>
+          <div class="main">
+            <div class="box1">
+              <div class="box1-top">
+                <h2>病人信息</h2>
               </div>
-              <div class="box1-bottom2">
-                <div class="box1-1">
-                  门诊号:
-                  <strong>{{froms.patientInfo.clinicNumber}}</strong>
+              <div class="box1-bottom clearfix">
+                <div class="box1-bottom1">
+                  <div class="box1-1">
+                    姓名:
+                    <strong>{{froms.patientInfo.name}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    性别:
+                    <strong>{{froms.patientInfo.sex}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    年龄:
+                    <strong>{{froms.patientInfo.age}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    单号:
+                    <strong>{{froms.patientInfo.no}}</strong>
+                  </div>
                 </div>
-                <div class="box1-1">
-                  住院号:
-                  <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                <div class="box1-bottom2">
+                  <div class="box1-1">
+                    门诊号:
+                    <strong>{{froms.patientInfo.clinicNumber}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    住院号:
+                    <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    科室:
+                    <strong>{{froms.patientInfo.department}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    床号:
+                    <strong>{{froms.patientInfo.bedNo}}</strong>
+                  </div>
                 </div>
-                <div class="box1-1">
-                  科室:
-                  <strong>{{froms.patientInfo.department}}</strong>
+                <div class="box1-bottom3">
+                  <div class="box1-1">
+                    ID:
+                    <strong>{{froms.patientInfo.ID}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    设备编号:
+                    <strong>{{froms.patientInfo.deviceID}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    记录日期:
+                    <strong>{{froms.patientInfo.recordDate}}</strong>
+                  </div>
+                  <div class="box1-1">
+                    记录时长:
+                    <strong>{{froms.patientInfo.recordDuration}}</strong>
+                  </div>
                 </div>
-                <div class="box1-1">
-                  床号:
-                  <strong>{{froms.patientInfo.bedNo}}</strong>
-                </div>
-              </div>
-              <div class="box1-bottom3">
-                <div class="box1-1">
-                  ID:
-                  <strong>{{froms.patientInfo.ID}}</strong>
-                </div>
-                <div class="box1-1">
-                  设备编号:
-                  <strong>{{froms.patientInfo.deviceID}}</strong>
-                </div>
-                <div class="box1-1">
-                  记录日期:
-                  <strong>{{froms.patientInfo.recordDate}}</strong>
-                </div>
-                <div class="box1-1">
-                  记录时长:
-                  <strong>{{froms.patientInfo.recordDuration}}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="box2 clearfix">
-            <div class="box2-top">
-              <div class="box2-title">
-                <h2>心率</h2>
-              </div>
-              <div class="box2-left-bottom">
-                <div class="box2-1">
-                  总心搏数:
-                  <strong>{{froms.heartRate.totalHeartRate}}次</strong>
-                </div>
-                <div class="box2-1">
-                  最慢心率:
-                  <strong>{{froms.heartRate.slowestHeartRate}}</strong> bpm
-                </div>
-                <div class="box2-1">
-                  最快心率:
-                  <strong>{{froms.heartRate.fastestHeartRate}}</strong> bpm
-                </div>
-                <div class="box2-1">
-                  平均心率:
-                  <strong>{{froms.heartRate.averageHeartRate}}</strong> bpm
-                </div>
-              </div>
-              <div class="box2-left-bottom">
-                <div class="box2-1">
-                  心率标准差:
-                  <strong>{{froms.heartRate.standardDeviation}}</strong>
-                </div>
-                <div class="box2-1">
-                  最长间期:
-                  <strong>{{froms.heartRate.longestInterval}}ms</strong>
-                </div>
-                <div class="box2-1">
-                  最短间期:
-                  <strong>{{froms.heartRate.slowestInterval}}ms</strong>
-                </div>
-                <div class="box2-1"></div>
               </div>
             </div>
-            <div class="box2-bottom">
-              <div class="box2-title">
-                <h2>心动过缓/心动过速</h2>
-              </div>
-              <div class="box2-1-outer">
-                <div class="box2-right-bottom">
+            <div class="box2 clearfix">
+              <div class="box2-top">
+                <div class="box2-title">
+                  <h2>心率</h2>
+                </div>
+                <div class="box2-left-bottom">
                   <div class="box2-1">
-                    心动过缓总数:
-                    <strong>{{froms.heartbeat.bradycardiaTotal}}</strong>次
+                    总心搏数:
+                    <strong>{{froms.heartRate.totalHeartRate}}次</strong>
                   </div>
                   <div class="box2-1">
-                    心动过缓占比:
-                    <strong>{{froms.heartbeat.bradycardiaPercentage}}</strong>
+                    最慢心率:
+                    <strong>{{froms.heartRate.slowestHeartRate}}</strong> bpm
                   </div>
                   <div class="box2-1">
-                    心动过缓总持续时间:
-                    <strong>{{froms.heartbeat.bradycardiaTotalDuration}}</strong>ms
+                    最快心率:
+                    <strong>{{froms.heartRate.fastestHeartRate}}</strong> bpm
                   </div>
                   <div class="box2-1">
-                    最长心动过缓周期开始时间:
-                    <strong>{{froms.heartbeat.longestBradycardiaStartTime}}</strong>
-                  </div>
-                  <div class="box2-1">
-                    最长心动过缓周期结束时间:
-                    <strong>{{froms.heartbeat.longestBradycardiaEndTime}}</strong>
-                  </div>
-                  <div class="box2-1">
-                    最长心动过缓周期持续时间:
-                    <strong>{{froms.heartbeat.longestBradycardiaCycleDuration}}</strong>ms
-                  </div>
-                  <div class="box2-1">
-                    最长心动过缓心搏数:
-                    <strong>{{froms.heartbeat.longestBradycardia}}</strong>次
+                    平均心率:
+                    <strong>{{froms.heartRate.averageHeartRate}}</strong> bpm
                   </div>
                 </div>
-                <div class="box2-right-bottom">
+                <div class="box2-left-bottom">
                   <div class="box2-1">
-                    心动过速总数:
-                    <strong>{{froms.heartbeat.tachycardiaTotal}}</strong>次
+                    心率标准差:
+                    <strong>{{froms.heartRate.standardDeviation}}</strong>
                   </div>
                   <div class="box2-1">
-                    心动过速占比:
-                    <strong>{{froms.heartbeat.tachycardiaPercentage}}</strong>
+                    最长间期:
+                    <strong>{{froms.heartRate.longestInterval}}ms</strong>
                   </div>
                   <div class="box2-1">
-                    心动过速总持续时间:
-                    <strong>{{froms.heartbeat.tachycardiaTotalDuration}}</strong>ms
+                    最短间期:
+                    <strong>{{froms.heartRate.slowestInterval}}ms</strong>
                   </div>
-                  <div class="box2-1">
-                    最长心动过速周期开始时间:
-                    <strong>{{froms.heartbeat.longestTachycardiaStartTime}}</strong>
+                  <div class="box2-1"></div>
+                </div>
+              </div>
+              <div class="box2-bottom">
+                <div class="box2-title">
+                  <h2>心动过缓/心动过速</h2>
+                </div>
+                <div class="box2-1-outer">
+                  <div class="box2-right-bottom">
+                    <div class="box2-1">
+                      心动过缓总数:
+                      <strong>{{froms.heartbeat.bradycardiaTotal}}</strong>次
+                    </div>
+                    <div class="box2-1">
+                      心动过缓占比:
+                      <strong>{{froms.heartbeat.bradycardiaPercentage}}</strong>
+                    </div>
+                    <div class="box2-1">
+                      心动过缓总持续时间:
+                      <strong>{{froms.heartbeat.bradycardiaTotalDuration}}</strong>ms
+                    </div>
+                    <div class="box2-1">
+                      最长心动过缓周期开始时间:
+                      <strong>{{froms.heartbeat.longestBradycardiaStartTime}}</strong>
+                    </div>
+                    <div class="box2-1">
+                      最长心动过缓周期结束时间:
+                      <strong>{{froms.heartbeat.longestBradycardiaEndTime}}</strong>
+                    </div>
+                    <div class="box2-1">
+                      最长心动过缓周期持续时间:
+                      <strong>{{froms.heartbeat.longestBradycardiaCycleDuration}}</strong>ms
+                    </div>
+                    <div class="box2-1">
+                      最长心动过缓心搏数:
+                      <strong>{{froms.heartbeat.longestBradycardia}}</strong>次
+                    </div>
                   </div>
-                  <div class="box2-1">
-                    最长心动过速周期结束时间:
-                    <strong>{{froms.heartbeat.longestTachycardiaEndTime}}</strong>
+                  <div class="box2-right-bottom">
+                    <div class="box2-1">
+                      心动过速总数:
+                      <strong>{{froms.heartbeat.tachycardiaTotal}}</strong>次
+                    </div>
+                    <div class="box2-1">
+                      心动过速占比:
+                      <strong>{{froms.heartbeat.tachycardiaPercentage}}</strong>
+                    </div>
+                    <div class="box2-1">
+                      心动过速总持续时间:
+                      <strong>{{froms.heartbeat.tachycardiaTotalDuration}}</strong>ms
+                    </div>
+                    <div class="box2-1">
+                      最长心动过速周期开始时间:
+                      <strong>{{froms.heartbeat.longestTachycardiaStartTime}}</strong>
+                    </div>
+                    <div class="box2-1">
+                      最长心动过速周期结束时间:
+                      <strong>{{froms.heartbeat.longestTachycardiaEndTime}}</strong>
+                    </div>
+                    <div class="box2-1">
+                      最长心动过速周期持续时间:
+                      <strong>{{froms.heartbeat.longestTachycardiaCycleDuration}}</strong>
+                    </div>
+                    <div class="box2-1">
+                      最长心动过速心搏数:
+                      <strong>{{froms.heartbeat.longestTachycardia}}</strong>次
+                    </div>
                   </div>
-                  <div class="box2-1">
-                    最长心动过速周期持续时间:
-                    <strong>{{froms.heartbeat.longestTachycardiaCycleDuration}}</strong>
+                </div>
+
+              </div>
+            </div>
+            <div class="box3">
+              <span>停搏(>2.0秒)</span>&emsp;&emsp;总计&nbsp
+              <strong>{{froms.asystole.total}}</strong>;&nbsp;次，最长一次：&nbsp;&nbsp;
+              <strong>{{froms.asystole.longest}}</strong>&nbsp;&nbsp;秒，发生于：&nbsp;
+              <strong>{{froms.asystole.longestTime}}&nbsp;</strong>
+            </div>
+            <div class="box4 clearfix">
+              <div class="box4-left">
+                <div class="box4-top">
+                  <h2>室性异位心率</h2>
+                </div>
+                <div class="box4-left-bottom">
+                  <div class="flex-box">
+                    <div class="box4-1 flex-box-child">
+                      总数:
+                      <strong>{{froms.ventricularEctopicHeartRate.total}}</strong> 次
+                    </div>
+                    <div class="box4-1 flex-box-child">
+                      室性百分比:
+                      <strong>{{froms.ventricularEctopicHeartRate.ventricularPercentage}}</strong>
+                    </div>
                   </div>
-                  <div class="box2-1">
-                    最长心动过速心搏数:
-                    <strong>{{froms.heartbeat.longestTachycardia}}</strong>次
+                  <div class="flex-box">
+                    <div class="box4-1 flex-box-child">
+                      单发:
+                      <strong>{{froms.ventricularEctopicHeartRate.singleShot}}</strong> 次
+                    </div>
+                    <div class="box4-1 flex-box-child">
+                      平均/小时:
+                      <strong>预留</strong>
+                    </div>
                   </div>
+                  <div class="flex-box">
+                    <div class="box4-1 flex-box-child">
+                      成对:
+                      <strong>{{froms.ventricularEctopicHeartRate.pair}}</strong> 次
+                    </div>
+                    <div class="box4-1 flex-box-child">
+                      平均/1000:
+                      <strong>预留</strong>
+                    </div>
+                  </div>
+
+                  <div class="box4-1">
+                    短阵性室速:
+                    <strong>{{froms.ventricularEctopicHeartRate.burstVT}}</strong> 阵
+                  </div>
+                  <div class="box4-1">
+                    RONT:
+                    <strong>{{froms.ventricularEctopicHeartRate.RONT}}</strong> 次
+                  </div>
+                  <div class="box4-1">
+                    二联律:
+                    <strong>{{froms.ventricularEctopicHeartRate.doubletLaw}}</strong> 阵
+                  </div>
+                  <div class="box4-1">
+                    三联律:
+                    <strong>{{froms.ventricularEctopicHeartRate.tripleLaw}}</strong> 阵
+                  </div>
+                  <div class="box4-1">
+                    室性逸搏:
+                    <strong>{{froms.ventricularEctopicHeartRate.ventricularEscape}}</strong> 次
+                  </div>
+                  <div class="box4-1">
+                    最快室速:
+                    <strong>{{froms.ventricularEctopicHeartRate.fastestVT}}</strong> bpm,&emsp;发生于
+                  </div>
+                  <div class="box4-1">
+                    最长室速:
+                    <strong>{{froms.ventricularEctopicHeartRate.longestVT}}</strong> 次心搏,发生于
+                  </div>
+                </div>
+              </div>
+              <div class="box4-right">
+                <div class="box4-top">
+                  <h2>室上性异位心率</h2>
+                </div>
+                <div class="box4-right-bottom">
+                  <div class="flex-box">
+                    <div class="box4-1 flex-box-child">
+                      总数:
+                      <strong>{{froms.supraventricularEctopicHeartRate.total}}</strong> 次
+                    </div>
+                    <div class="box4-1 flex-box-child">
+                      室上性百分比:
+                      <strong>{{froms.supraventricularEctopicHeartRate.supraventricularPercentage}}</strong>
+                    </div>
+                  </div>
+                  <div class="flex-box">
+                    <div class="box4-1 flex-box-child">
+                      单发:
+                      <strong>{{froms.supraventricularEctopicHeartRate.singleShot}}</strong> 次
+                    </div>
+                    <div class="box4-1 flex-box-child">
+                      平均/小时:
+                      <strong>预留</strong>
+                    </div>
+                  </div>
+                  <div class="flex-box">
+                    <div class="box4-1 flex-box-child">
+                      成对:
+                      <strong>{{froms.supraventricularEctopicHeartRate.pair}}</strong> 次
+                    </div>
+                    <div class="box4-1 flex-box-child">
+                      平均/1000:
+                      <strong>预留</strong>
+                    </div>
+                  </div>
+                  <div class="box4-1">
+                    短阵性室上速:
+                    <strong>{{froms.supraventricularEctopicHeartRate.paroxysmalSupraventricularTachycardia}}</strong> 阵
+                  </div>
+                  <div class="box4-1">
+                    二联律:
+                    <strong>{{froms.supraventricularEctopicHeartRate.doubletLaw}}</strong> 阵
+                  </div>
+                  <div class="box4-1">
+                    三联律:
+                    <strong>{{froms.supraventricularEctopicHeartRate.tripleLaw}}</strong> 阵
+                  </div>
+                  <div class="box4-1">
+                    最快室上速:
+                    <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity}}</strong> bpm,&emsp;发生于
+                  </div>
+                  <div class="box4-1">
+                    最长室上速:
+                    <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity}}</strong> 次心搏,发生于
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="box5">
+              <h2>心率变异性分析</h2>
+              <div>
+                <span>
+                  SDNN:
+                  <strong>{{froms.heartRateVariabilityAnalysis.SDNN}}</strong> ms
+                </span>
+                <span>
+                  rMSSD:
+                  <strong>{{froms.heartRateVariabilityAnalysis.rMSSD}}</strong> ms
+                </span>
+                <span>
+                  NN20:
+                  <strong>{{froms.heartRateVariabilityAnalysis.NN20}}</strong> ms
+                </span>
+                <span>
+                  PNN20:
+                  <strong>{{froms.heartRateVariabilityAnalysis.PNN20}}</strong>%
+                </span>
+                <span>
+                  NN50:
+                  <strong>{{froms.heartRateVariabilityAnalysis.NN50}}</strong> ms
+                </span>
+                <span>
+                  PNN50:
+                  <strong>{{froms.heartRateVariabilityAnalysis.PNN50}}</strong>%
+                </span>
+              </div>
+
+            </div>
+            <div class="box6">
+              <div class="box6-top clearfix">
+                <h2>房颤分析</h2>
+                <span style="margin-left: 7vw;">
+                  总数:
+                  <strong>{{froms.atrialFibrillationAnalysis.total}}</strong> 次
+                </span>
+              </div>
+              <div class="box6-bottom">
+                <div class="box6-1">
+                  <div>
+                    发生阵数:
+                    <strong>{{froms.atrialFibrillationAnalysis.number}}</strong> 阵
+                  </div>
+                  <div>
+                    大于
+                    <strong>1500ms</strong> 的心搏有
+                    <strong>{{froms.atrialFibrillationAnalysis.num_1500}}</strong> 次
+                  </div>
+                  <div></div>
+                </div>
+                <div class="box6-1">
+                  <div>
+                    持续时间:
+                    <strong>{{froms.atrialFibrillationAnalysis.duration}}</strong>
+                  </div>
+                  <div>
+                    大于
+                    <strong>2000ms</strong> 的心搏有
+                    <strong>{{froms.atrialFibrillationAnalysis.num_2000}}</strong> 次
+                  </div>
+                  <div></div>
                 </div>
               </div>
 
             </div>
-          </div>
-          <div class="box3">
-            <span>停搏(>2.0秒)</span>&emsp;&emsp;总计&nbsp
-            <strong>{{froms.asystole.total}}</strong>;&nbsp;次，最长一次：&nbsp;&nbsp;
-            <strong>{{froms.asystole.longest}}</strong>&nbsp;&nbsp;秒，发生于：&nbsp;
-            <strong>{{froms.asystole.longestTime}}&nbsp;</strong>
-          </div>
-          <div class="box4 clearfix">
-            <div class="box4-left">
-              <div class="box4-top">
-                <h2>室性异位心率</h2>
+            <div class="box7">
+              <div class="box7-top">
+                <h2>起搏分析</h2>
+                <span>
+                  总数:
+                  <strong>{{ froms.pacingAnalysis.total}}</strong> 次
+                </span>
+                <span>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.pacingAnalysisPercentage}}</strong> %
+                </span>
               </div>
-              <div class="box4-left-bottom">
-                <div class="flex-box">
-                  <div class="box4-1 flex-box-child">
-                    总数:
-                    <strong>{{froms.ventricularEctopicHeartRate.total}}</strong> 次
-                  </div>
-                  <div class="box4-1 flex-box-child">
-                    室性百分比:
-                    <strong>{{froms.ventricularEctopicHeartRate.ventricularPercentage}}</strong>
-                  </div>
-                </div>
-                <div class="flex-box">
-                  <div class="box4-1 flex-box-child">
-                    单发:
-                    <strong>{{froms.ventricularEctopicHeartRate.singleShot}}</strong> 次
-                  </div>
-                  <div class="box4-1 flex-box-child">
-                    平均/小时:
-                    <strong>预留</strong>
-                  </div>
-                </div>
-                <div class="flex-box">
-                  <div class="box4-1 flex-box-child">
-                    成对:
-                    <strong>{{froms.ventricularEctopicHeartRate.pair}}</strong> 次
-                  </div>
-                  <div class="box4-1 flex-box-child">
-                    平均/1000:
-                    <strong>预留</strong>
-                  </div>
-                </div>
-
-                <div class="box4-1">
-                  短阵性室速:
-                  <strong>{{froms.ventricularEctopicHeartRate.burstVT}}</strong> 阵
-                </div>
-                <div class="box4-1">
-                  RONT:
-                  <strong>{{froms.ventricularEctopicHeartRate.RONT}}</strong> 次
-                </div>
-                <div class="box4-1">
-                  二联律:
-                  <strong>{{froms.ventricularEctopicHeartRate.doubletLaw}}</strong> 阵
-                </div>
-                <div class="box4-1">
-                  三联律:
-                  <strong>{{froms.ventricularEctopicHeartRate.tripleLaw}}</strong> 阵
-                </div>
-                <div class="box4-1">
-                  室性逸搏:
-                  <strong>{{froms.ventricularEctopicHeartRate.ventricularEscape}}</strong> 次
-                </div>
-                <div class="box4-1">
-                  最快室速:
-                  <strong>{{froms.ventricularEctopicHeartRate.fastestVT}}</strong> bpm,&emsp;发生于
-                </div>
-                <div class="box4-1">
-                  最长室速:
-                  <strong>{{froms.ventricularEctopicHeartRate.longestVT}}</strong> 次心搏,发生于
-                </div>
-              </div>
-            </div>
-            <div class="box4-right">
-              <div class="box4-top">
-                <h2>室上性异位心率</h2>
-              </div>
-              <div class="box4-right-bottom">
-                <div class="flex-box">
-                  <div class="box4-1 flex-box-child">
-                    总数:
-                    <strong>{{froms.supraventricularEctopicHeartRate.total}}</strong> 次
-                  </div>
-                  <div class="box4-1 flex-box-child">
-                    室上性百分比:
-                    <strong>{{froms.supraventricularEctopicHeartRate.supraventricularPercentage}}</strong>
-                  </div>
-                </div>
-                <div class="flex-box">
-                  <div class="box4-1 flex-box-child">
-                    单发:
-                    <strong>{{froms.supraventricularEctopicHeartRate.singleShot}}</strong> 次
-                  </div>
-                  <div class="box4-1 flex-box-child">
-                    平均/小时:
-                    <strong>预留</strong>
-                  </div>
-                </div>
-                <div class="flex-box">
-                  <div class="box4-1 flex-box-child">
-                    成对:
-                    <strong>{{froms.supraventricularEctopicHeartRate.pair}}</strong> 次
-                  </div>
-                  <div class="box4-1 flex-box-child">
-                    平均/1000:
-                    <strong>预留</strong>
-                  </div>
-                </div>
-                <div class="box4-1">
-                  短阵性室上速:
-                  <strong>{{froms.supraventricularEctopicHeartRate.paroxysmalSupraventricularTachycardia}}</strong> 阵
-                </div>
-                <div class="box4-1">
-                  二联律:
-                  <strong>{{froms.supraventricularEctopicHeartRate.doubletLaw}}</strong> 阵
-                </div>
-                <div class="box4-1">
-                  三联律:
-                  <strong>{{froms.supraventricularEctopicHeartRate.tripleLaw}}</strong> 阵
-                </div>
-                <div class="box4-1">
-                  最快室上速:
-                  <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity}}</strong> bpm,&emsp;发生于
-                </div>
-                <div class="box4-1">
-                  最长室上速:
-                  <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity}}</strong> 次心搏,发生于
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="box5">
-            <h2>心率变异性分析</h2>
-            <div>
-              <span>
-                SDNN:
-                <strong>{{froms.heartRateVariabilityAnalysis.SDNN}}</strong> ms
-              </span>
-              <span>
-                rMSSD:
-                <strong>{{froms.heartRateVariabilityAnalysis.rMSSD}}</strong> ms
-              </span>
-              <span>
-                NN20:
-                <strong>{{froms.heartRateVariabilityAnalysis.NN20}}</strong> ms
-              </span>
-              <span>
-                PNN20:
-                <strong>{{froms.heartRateVariabilityAnalysis.PNN20}}</strong>%
-              </span>
-              <span>
-                NN50:
-                <strong>{{froms.heartRateVariabilityAnalysis.NN50}}</strong> ms
-              </span>
-              <span>
-                PNN50:
-                <strong>{{froms.heartRateVariabilityAnalysis.PNN50}}</strong>%
-              </span>
-            </div>
-
-          </div>
-          <div class="box6">
-            <div class="box6-top clearfix">
-              <h2>房颤分析</h2>
-              <span style="margin-left: 7vw;">
-                总数:
-                <strong>{{froms.atrialFibrillationAnalysis.total}}</strong> 次
-              </span>
-            </div>
-            <div class="box6-bottom">
-              <div class="box6-1">
+              <div class="box7-1">
                 <div>
-                  发生阵数:
-                  <strong>{{froms.atrialFibrillationAnalysis.number}}</strong> 阵
+                  心房起搏数:
+                  <strong>{{ froms.pacingAnalysis.atrialPace}}</strong>
                 </div>
                 <div>
-                  大于
-                  <strong>1500ms</strong> 的心搏有
-                  <strong>{{froms.atrialFibrillationAnalysis.num_1500}}</strong> 次
-                </div>
-                <div></div>
-              </div>
-              <div class="box6-1">
-                <div>
-                  持续时间:
-                  <strong>{{froms.atrialFibrillationAnalysis.duration}}</strong>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.atrialPacePercentage}}</strong> %
                 </div>
                 <div>
-                  大于
-                  <strong>2000ms</strong> 的心搏有
-                  <strong>{{froms.atrialFibrillationAnalysis.num_2000}}</strong> 次
+                  双腔起搏:
+                  <strong>{{ froms.pacingAnalysis.dual_chamberPacing}}</strong>
                 </div>
-                <div></div>
+                <div>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.dual_chamberPacingPercentage}}</strong> %
+                </div>
+              </div>
+              <div class="box7-1">
+                <div>
+                  心室起搏数:
+                  <strong>{{ froms.pacingAnalysis.ventricularPace}}</strong>
+                </div>
+                <div>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.ventricularPacePercentage}}</strong> %
+                </div>
+                <div>
+                  错误起搏:
+                  <strong>{{ froms.pacingAnalysis.wrongPacing}}</strong>
+                </div>
+                <div>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.wrongPacingPercentage}}</strong> %
+                </div>
               </div>
             </div>
-
-          </div>
-          <div class="box7">
-            <div class="box7-top">
-              <h2>起搏分析</h2>
-              <span>
-                总数:
-                <strong>{{ froms.pacingAnalysis.total}}</strong> 次
-              </span>
-              <span>
-                百分比:
-                <strong>{{ froms.pacingAnalysis.pacingAnalysisPercentage}}</strong> %
-              </span>
-            </div>
-            <div class="box7-1">
-              <div>
-                心房起搏数:
-                <strong>{{ froms.pacingAnalysis.atrialPace}}</strong>
+            <div class="box8 clearfix">
+              <h2>结论:</h2>
+              <div class="box8-1">
+                一丶总心搏
+                <strong>{{froms.heartRate.totalHeartRate}}</strong>次，
+                平均心率
+                <strong>{{froms.heartRate.averageHeartRate}}</strong>bpm，
+                最快心率
+                <strong>{{froms.heartRate.fastestHeartRate}}</strong>pm（
+  <!--              <strong>{{froms.heartRate.fastestTime}}</strong>-->
+                ），
+                最慢心率
+                <strong>{{froms.heartRate.slowestHeartRate}}</strong>bpm（
+  <!--              <strong>{{froms.heartRate.slowestTime}}</strong>-->
+                ）；
               </div>
-              <div>
-                百分比:
-                <strong>{{ froms.pacingAnalysis.atrialPacePercentage}}</strong> %
+              <div class="box8-1">HRV:SD>50ms</div>
+              <div class="box8-1">二丶诊断</div>
+              <div class="box8-1">1.窦性心律 心率动态变化正常</div>
+              <div class="box8-1">2.最快心率156，仍为窦性</div>
+              <div
+                class="box8-1"
+              >3.ST:ll、II、 avF、V5、V6导联于: 12:30-13:30,18:27-18:38,8:10-9:05分 (心率较快时)出现水平型压低0.10mv，最大压低0.20mv伴多数导联T波倒置，请结合临床</div>
+              <div class="box8-1">4.心率变异性:正常</div>
+              <div class="box8-1">5.建议治疗后复查</div>
+              <div class="bottom">
+                报告者:
+                <span class="box8-2"></span>日期:
+                <span class="box8-2"></span>
               </div>
-              <div>
-                双腔起搏:
-                <strong>{{ froms.pacingAnalysis.dual_chamberPacing}}</strong>
-              </div>
-              <div>
-                百分比:
-                <strong>{{ froms.pacingAnalysis.dual_chamberPacingPercentage}}</strong> %
-              </div>
-            </div>
-            <div class="box7-1">
-              <div>
-                心室起搏数:
-                <strong>{{ froms.pacingAnalysis.ventricularPace}}</strong>
-              </div>
-              <div>
-                百分比:
-                <strong>{{ froms.pacingAnalysis.ventricularPacePercentage}}</strong> %
-              </div>
-              <div>
-                错误起搏:
-                <strong>{{ froms.pacingAnalysis.wrongPacing}}</strong>
-              </div>
-              <div>
-                百分比:
-                <strong>{{ froms.pacingAnalysis.wrongPacingPercentage}}</strong> %
-              </div>
-            </div>
-          </div>
-          <div class="box8 clearfix">
-            <h2>结论:</h2>
-            <div class="box8-1">
-              一丶总心搏
-              <strong>{{froms.heartRate.totalHeartRate}}</strong>次，
-              平均心率
-              <strong>{{froms.heartRate.averageHeartRate}}</strong>bpm，
-              最快心率
-              <strong>{{froms.heartRate.fastestHeartRate}}</strong>pm（
-<!--              <strong>{{froms.heartRate.fastestTime}}</strong>-->
-              ），
-              最慢心率
-              <strong>{{froms.heartRate.slowestHeartRate}}</strong>bpm（
-<!--              <strong>{{froms.heartRate.slowestTime}}</strong>-->
-              ）；
-            </div>
-            <div class="box8-1">HRV:SD>50ms</div>
-            <div class="box8-1">二丶诊断</div>
-            <div class="box8-1">1.窦性心律 心率动态变化正常</div>
-            <div class="box8-1">2.最快心率156，仍为窦性</div>
-            <div
-              class="box8-1"
-            >3.ST:ll、II、 avF、V5、V6导联于: 12:30-13:30,18:27-18:38,8:10-9:05分 (心率较快时)出现水平型压低0.10mv，最大压低0.20mv伴多数导联T波倒置，请结合临床</div>
-            <div class="box8-1">4.心率变异性:正常</div>
-            <div class="box8-1">5.建议治疗后复查</div>
-            <div class="bottom">
-              报告者:
-              <span class="box8-2"></span>日期:
-              <span class="box8-2"></span>
             </div>
           </div>
         </div>
-
-        <div class="main">
-          <div class="box9 clearfix">
-            <div class="box9-top">
-              <h2>概要数据统计表</h2>
+        <div class="page">
+          <div class="main">
+            <div class="box9 clearfix">
+              <div class="box9-top">
+                <h2>概要数据统计表</h2>
+              </div>
+              <div class="box9-bottom">
+                <div class="box9-1">
+                  <div class="box9-2">
+                    姓名:
+                    <strong>{{froms.patientInfo.name}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    性别:
+                    <strong>{{froms.patientInfo.sex}}</strong>
+                  </div>
+                </div>
+                <div class="box9-1">
+                  <div class="box9-2">
+                    年龄:
+                    <strong>{{froms.patientInfo.age}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    单号:
+                    <strong>{{froms.patientInfo.no}}</strong>
+                  </div>
+                </div>
+                <div class="box9-1">
+                  <div class="box9-2">
+                    住院号:
+                    <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    科室:
+                    <strong>{{froms.patientInfo.department}}</strong>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="box9-bottom">
-              <div class="box9-1">
-                <div class="box9-2">
-                  姓名:
-                  <strong>{{froms.patientInfo.name}}</strong>
-                </div>
-                <div class="box9-2">
-                  性别:
-                  <strong>{{froms.patientInfo.sex}}</strong>
-                </div>
-              </div>
-              <div class="box9-1">
-                <div class="box9-2">
-                  年龄:
-                  <strong>{{froms.patientInfo.age}}</strong>
-                </div>
-                <div class="box9-2">
-                  单号:
-                  <strong>{{froms.patientInfo.no}}</strong>
-                </div>
-              </div>
-              <div class="box9-1">
-                <div class="box9-2">
-                  住院号:
-                  <strong>{{froms.patientInfo.hospitalNumber}}</strong>
-                </div>
-                <div class="box9-2">
-                  科室:
-                  <strong>{{froms.patientInfo.department}}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="box10" id="myChart" >图形数据</div>
-          <div class="box11 clearfix">
-            <el-table
-              :data="tableData"
-              style="width: 100%"
-              size="mini"
-              :cell-style="columnStyle">
-              <el-table-column
-                prop="time"
-                label="时间"
-                width="48">
-              </el-table-column>
-              <el-table-column
-                 prop="heartBeatNumber"
-                 label="心搏数"
-                 width="48">
-              </el-table-column>
+            <div class="box10" id="myChart" >图形数据</div>
+            <div class="box11 clearfix">
+              <el-table
+                :data="tableData"
+                style="width: 100%"
+                size="mini"
+                :cell-style="columnStyle">
+                <el-table-column
+                  prop="time"
+                  label="时间"
+                  width="48">
+                </el-table-column>
+                <el-table-column
+                   prop="heartBeatNumber"
+                   label="心搏数"
+                   width="48">
+                </el-table-column>
 
-              <el-table-column
-                label="心律(bpm)"
-               >
                 <el-table-column
-                  prop="heartRate.fastest"
-                  label="最高"
-                  width="42">
+                  label="心律(bpm)"
+                 >
+                  <el-table-column
+                    prop="heartRate.fastest"
+                    label="最高"
+                    width="42">
+                  </el-table-column>
+                  <el-table-column
+                    prop="heartRate.average"
+                    label="平均"
+                    width="40">
+                  </el-table-column>
+                  <el-table-column
+                    prop="heartRate.slowest"
+                    label="最低"
+                    width="40">
+                  </el-table-column>
                 </el-table-column>
-                <el-table-column
-                  prop="heartRate.average"
-                  label="平均"
-                  width="40">
-                </el-table-column>
-                <el-table-column
-                  prop="heartRate.slowest"
-                  label="最低"
-                  width="40">
-                </el-table-column>
-              </el-table-column>
 
-              <el-table-column label="室性异位">
-                <el-table-column
-                  prop="ventricularEctopic.total"
-                  label="总数"
-                  width="40">
-                </el-table-column>
-                <el-table-column
-                  prop="ventricularEctopic.percentage"
-                  label="%"
-                  width="40">
-                </el-table-column>
-                <el-table-column
-                prop="ventricularEctopic.singleShot"
-                label="单发"
-                width="40">
-              </el-table-column>
-                <el-table-column
-                prop="ventricularEctopic.pair"
-                label="成对"
-                width="40">
-              </el-table-column>
-                <el-table-column
-                prop="ventricularEctopic.VT"
-                label="室速"
-                width="40">
-              </el-table-column>
-                <el-table-column
-                  prop="ventricularEctopic.escape"
-                  label="逸搏"
-                  width="40">
-                </el-table-column>
-              </el-table-column>
-
-              <el-table-column label="室性上异位">
-                <el-table-column
-                  prop="supraventricularEctopic.total"
-                  label="总数"
-                  width="40">
-                </el-table-column>
-                <el-table-column
-                  prop="supraventricularEctopic.percentage"
-                  label="%"
-                  width="40">
-                </el-table-column>
-                <el-table-column
-                  prop="supraventricularEctopic.singleShot"
+                <el-table-column label="室性异位">
+                  <el-table-column
+                    prop="ventricularEctopic.total"
+                    label="总数"
+                    width="40">
+                  </el-table-column>
+                  <el-table-column
+                    prop="ventricularEctopic.percentage"
+                    label="%"
+                    width="40">
+                  </el-table-column>
+                  <el-table-column
+                  prop="ventricularEctopic.singleShot"
                   label="单发"
                   width="40">
                 </el-table-column>
-                <el-table-column
-                  prop="supraventricularEctopic.pair"
+                  <el-table-column
+                  prop="ventricularEctopic.pair"
                   label="成对"
                   width="40">
                 </el-table-column>
-                <el-table-column
-                  prop="supraventricularEctopic.supraventricularTachycardia"
-                  label="室上速"
+                  <el-table-column
+                  prop="ventricularEctopic.VT"
+                  label="室速"
                   width="40">
                 </el-table-column>
-              </el-table-column>
-              <el-table-column
-                prop="asystole"
-                label="停搏"
-                width="38">
-              </el-table-column>
-            </el-table>
-<!--            <div class="box11-1">-->
-<!--              <span>时间</span>-->
-<!--            </div>-->
-<!--            <div class="box11-2">-->
-<!--              <span>心搏数</span>-->
-<!--            </div>-->
-<!--            <div class="box11-3">-->
-<!--              <span>心率</span>-->
-<!--              <div class="box11-3-1">-->
-<!--                <span>最高</span>-->
-<!--                <span>平均</span>-->
-<!--                <span>最低</span>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="box11-4">-->
-<!--              <span>室性异位</span>-->
+                  <el-table-column
+                    prop="ventricularEctopic.escape"
+                    label="逸搏"
+                    width="40">
+                  </el-table-column>
+                </el-table-column>
 
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="box11-5">-->
-<!--              <span>室上性异位</span>-->
-<!--              <div class="box11-5-1">-->
-<!--                <span>总数</span>-->
-<!--                <span>%</span>-->
-<!--                <span>单发</span>-->
-<!--                <span>成对室上速</span>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="box11-6">-->
-<!--              <span>停搏</span>-->
-<!--            </div>-->
+                <el-table-column label="室性上异位">
+                  <el-table-column
+                    prop="supraventricularEctopic.total"
+                    label="总数"
+                    width="40">
+                  </el-table-column>
+                  <el-table-column
+                    prop="supraventricularEctopic.percentage"
+                    label="%"
+                    width="40">
+                  </el-table-column>
+                  <el-table-column
+                    prop="supraventricularEctopic.singleShot"
+                    label="单发"
+                    width="40">
+                  </el-table-column>
+                  <el-table-column
+                    prop="supraventricularEctopic.pair"
+                    label="成对"
+                    width="40">
+                  </el-table-column>
+                  <el-table-column
+                    prop="supraventricularEctopic.supraventricularTachycardia"
+                    label="室上速"
+                    width="40">
+                  </el-table-column>
+                </el-table-column>
+                <el-table-column
+                  prop="asystole"
+                  label="停搏"
+                  width="38">
+                </el-table-column>
+              </el-table>
+  <!--            <div class="box11-1">-->
+  <!--              <span>时间</span>-->
+  <!--            </div>-->
+  <!--            <div class="box11-2">-->
+  <!--              <span>心搏数</span>-->
+  <!--            </div>-->
+  <!--            <div class="box11-3">-->
+  <!--              <span>心率</span>-->
+  <!--              <div class="box11-3-1">-->
+  <!--                <span>最高</span>-->
+  <!--                <span>平均</span>-->
+  <!--                <span>最低</span>-->
+  <!--              </div>-->
+  <!--            </div>-->
+  <!--            <div class="box11-4">-->
+  <!--              <span>室性异位</span>-->
+
+  <!--              </div>-->
+  <!--            </div>-->
+  <!--            <div class="box11-5">-->
+  <!--              <span>室上性异位</span>-->
+  <!--              <div class="box11-5-1">-->
+  <!--                <span>总数</span>-->
+  <!--                <span>%</span>-->
+  <!--                <span>单发</span>-->
+  <!--                <span>成对室上速</span>-->
+  <!--              </div>-->
+  <!--            </div>-->
+  <!--            <div class="box11-6">-->
+  <!--              <span>停搏</span>-->
+  <!--            </div>-->
+            </div>
+            <div class="box12" id="container" style="height: 300px"></div>
+            <div class="box12" id="line1" style="height: 300px"></div>
+
           </div>
-          <div class="box12" id="container" style="height: 300px"></div>
-          <div class="box12" id="line1" style="height: 300px"></div>
-
         </div>
-
-        <div class="main">
-          <div class="box9 clearfix">
-            <div class="box9-top">
-              <h2>概要数据统计表</h2>
-            </div>
-            <div class="box9-bottom">
-              <div class="box9-1">
-                <div class="box9-2">
-                  姓名:
-                  <strong>{{froms.patientInfo.name}}</strong>
-                </div>
-                <div class="box9-2">
-                  性别:
-                  <strong>{{froms.patientInfo.sex}}</strong>
-                </div>
+        <div class="page">
+          <div class="main">
+            <div class="box9 clearfix">
+              <div class="box9-top">
+                <h2>概要数据统计表</h2>
               </div>
-              <div class="box9-1">
-                <div class="box9-2">
-                  年龄:
-                  <strong>{{froms.patientInfo.age}}</strong>
+              <div class="box9-bottom">
+                <div class="box9-1">
+                  <div class="box9-2">
+                    姓名:
+                    <strong>{{froms.patientInfo.name}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    性别:
+                    <strong>{{froms.patientInfo.sex}}</strong>
+                  </div>
                 </div>
-                <div class="box9-2">
-                  单号:
-                  <strong>{{froms.patientInfo.no}}</strong>
+                <div class="box9-1">
+                  <div class="box9-2">
+                    年龄:
+                    <strong>{{froms.patientInfo.age}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    单号:
+                    <strong>{{froms.patientInfo.no}}</strong>
+                  </div>
                 </div>
-              </div>
-              <div class="box9-1">
-                <div class="box9-2">
-                  住院号:
-                  <strong>{{froms.patientInfo.hospitalNumber}}</strong>
-                </div>
-                <div class="box9-2">
-                  科室:
-                  <strong>{{froms.patientInfo.department}}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="box12" id="line2" style="height: 300px"></div>
-          <div class="box12" id="line3" style="height: 300px"></div>
-          <div class="box12" id="line4" style="height: 300px"></div>
-         </div>
-
-
-         <div class="main">
-          <div class="box9 clearfix">
-            <div class="box9-top">
-              <h2>概要数据统计表</h2>
-            </div>
-            <div class="box9-bottom">
-              <div class="box9-1">
-                <div class="box9-2">
-                  姓名:
-                  <strong>{{froms.patientInfo.name}}</strong>
-                </div>
-                <div class="box9-2">
-                  性别:
-                  <strong>{{froms.patientInfo.sex}}</strong>
-                </div>
-              </div>
-              <div class="box9-1">
-                <div class="box9-2">
-                  年龄:
-                  <strong>{{froms.patientInfo.age}}</strong>
-                </div>
-                <div class="box9-2">
-                  单号:
-                  <strong>{{froms.patientInfo.no}}</strong>
-                </div>
-              </div>
-              <div class="box9-1">
-                <div class="box9-2">
-                  住院号:
-                  <strong>{{froms.patientInfo.hospitalNumber}}</strong>
-                </div>
-                <div class="box9-2">
-                  科室:
-                  <strong>{{froms.patientInfo.department}}</strong>
+                <div class="box9-1">
+                  <div class="box9-2">
+                    住院号:
+                    <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    科室:
+                    <strong>{{froms.patientInfo.department}}</strong>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="box13 clearfix">
-            <div class="box13-left"  >
-              <div id="scatter" style="width:98% ;height:98%;float:right"></div>
+            <div class="box12" id="line2" style="height: 300px"></div>
+            <div class="box12" id="line3" style="height: 300px"></div>
+            <div class="box12" id="line4" style="height: 300px"></div>
+           </div>
+        </div>
+        <div class="page">
+           <div class="main">
+            <div class="box9 clearfix">
+              <div class="box9-top">
+                <h2>概要数据统计表</h2>
+              </div>
+              <div class="box9-bottom">
+                <div class="box9-1">
+                  <div class="box9-2">
+                    姓名:
+                    <strong>{{froms.patientInfo.name}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    性别:
+                    <strong>{{froms.patientInfo.sex}}</strong>
+                  </div>
+                </div>
+                <div class="box9-1">
+                  <div class="box9-2">
+                    年龄:
+                    <strong>{{froms.patientInfo.age}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    单号:
+                    <strong>{{froms.patientInfo.no}}</strong>
+                  </div>
+                </div>
+                <div class="box9-1">
+                  <div class="box9-2">
+                    住院号:
+                    <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                  </div>
+                  <div class="box9-2">
+                    科室:
+                    <strong>{{froms.patientInfo.department}}</strong>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="box13-right" >
-              <div id="bar" style="width:98% ;height:98%"></div>
+            <div class="box13 clearfix">
+              <div class="box13-left"  >
+                <div id="scatter" style="width:98% ;height:98%;float:right"></div>
+              </div>
+              <div class="box13-right" >
+                <div id="bar" style="width:98% ;height:98%"></div>
+              </div>
             </div>
-          </div>
-          <div class="box13 clearfix">
-            <div class="box13-left"  >
-              <div id="bar1" style="width:98% ;height:98%;float:right"></div>
+            <div class="box13 clearfix">
+              <div class="box13-left"  >
+                <div id="bar1" style="width:98% ;height:98%;float:right"></div>
+              </div>
+              <div class="box13-right">
+                <div id="bar2" style="width:98% ;height:98%"></div>
+              </div>
             </div>
-            <div class="box13-right">
-              <div id="bar2" style="width:98% ;height:98%"></div>
-            </div>
-          </div>
-         </div>
-
+           </div>
+        </div>
       </div>
     </div>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 15% ;margin-bottom: 15px" @click="btnClear">清除缓存并刷新</el-button>
@@ -1000,11 +1003,11 @@ export default {
     var pId = this.$route.query.pId;
     if(pId){
       this.pId=pId;
-    }
-    console.log(pId)
-    var show =localStorage.getItem("show");
-    if (!show){
-      this.get();
+      console.log(pId)
+      var show =localStorage.getItem("show");
+      if (!show){
+        this.get();
+      }
     }
   },
   mounted() {
@@ -3004,9 +3007,16 @@ var data = obj
   /* IE6、7 专有 */
   *zoom: 1;
 }
+.page{
+  padding-top: 50px ;
+  padding-bottom: 50px;
+  margin-top: 5px;
+  width: 794px;
+  height: 1127px;
+}
 
 .main {
-  margin-bottom: 18vh;
+
 }
 h1 {
   text-align: center;
