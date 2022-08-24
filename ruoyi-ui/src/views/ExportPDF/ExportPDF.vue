@@ -752,7 +752,8 @@ export default {
   name: "ExportPDF",
   data() {
     return {
-      exportPDFtitle: "页面导出PDF文件名",
+      exportPDFtitle: (JSON.parse(localStorage.getItem("data"))).result.姓名+"心电报告",
+      pId:null,
       froms: {
         patientInfo: {
           name: (JSON.parse(localStorage.getItem("data"))).result.姓名,
@@ -997,6 +998,10 @@ export default {
   },
   created() {
     var pId = this.$route.query.pId;
+    if(pId){
+      this.pId=pId;
+    }
+    console.log(pId)
     var show =localStorage.getItem("show");
     if (!show){
       this.get();
@@ -1020,13 +1025,16 @@ export default {
     get(){
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
-        text: 'Loading',//显示在加载图标下方的加载文案
+        text: '正在分析数据，请稍后...\n' +
+              '这个过程可能需要1-3分钟的时间\n' +
+              '请勿刷新页面并耐心等待',//显示在加载图标下方的加载文案
         spinner: 'el-icon-loading',//自定义加载图标类名
         background: 'rgba(0, 0, 0, 0.7)',//遮罩层颜色
         target: document.querySelector('#table')//loadin覆盖的dom元素节点
       });
 
       console.log("执行")
+      console.log(this.pId)
       $.ajax({
         type: "post",
         url: "http://219.155.7.235:5004",
@@ -1034,6 +1042,7 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
+          pId: this.pId
         }),
         success: function (data) {
           console.log(data)
@@ -1046,6 +1055,7 @@ export default {
         error:function (data)
         {
           alert("数据请求错误,请刷新页面或联系管理员")
+          loading.close()
           console.log("错误")
         }
       })
