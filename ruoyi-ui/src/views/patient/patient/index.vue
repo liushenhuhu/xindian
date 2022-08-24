@@ -133,7 +133,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="患者id" align="center" prop="patientId" />
       <el-table-column label="患者姓名" align="center" prop="patientName" />
-      <el-table-column label="患者身份证号" align="center" prop="patientNumber" />
+<!--      <el-table-column label="患者身份证号" align="center" prop="patientNumber" />-->
       <el-table-column label="患者年龄" align="center" prop="patientAge" />
       <el-table-column label="患者性别" align="center" prop="patientSex">
         <template slot-scope="scope">
