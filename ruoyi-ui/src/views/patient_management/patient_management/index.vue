@@ -349,7 +349,8 @@ export default {
     },
     /** 下载报告*/
     downloadInform(row) {
-      this.$router.push({path: "/ExportPDF", query: {pId: row.pId}});
+      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId}});
+      window.open(routeUrl.href, '_blank');
     }
   }
 };
