@@ -68,29 +68,15 @@
         />
       </el-form-item>
       <el-form-item label="监测状态" prop="monitoringStatus">
-        <el-input
-          v-model="queryParams.monitoringStatus"
-          placeholder="请输入监测状态"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.monitoringStatus" placeholder="请选择监测状态" clearable>
+          <el-option
+            v-for="dict in dict.type.monitoring_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-<!--      <el-form-item label="床位号" prop="bedNumber">
-        <el-input
-          v-model="queryParams.bedNumber"
-          placeholder="请输入床位号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="病历号" prop="caseHistoryNumber">
-        <el-input
-          v-model="queryParams.caseHistoryNumber"
-          placeholder="请输入病历号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -158,9 +144,11 @@
       <el-table-column label="患者电话" align="center" prop="patientPhone" />
       <el-table-column label="家属电话" align="center" prop="familyPhone" />
       <el-table-column label="最近连接设备号" align="center" prop="equipmentId" />
-      <el-table-column label="监测状态" align="center" prop="monitoringStatus" />
-<!--      <el-table-column label="床位号" align="center" prop="bedNumber" />
-      <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />-->
+      <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -226,12 +214,16 @@
         <el-form-item label="监测状态" prop="monitoringStatus">
           <el-input v-model="form.monitoringStatus" placeholder="请输入监测状态" />
         </el-form-item>
-<!--        <el-form-item label="床位号" prop="bedNumber">
-          <el-input v-model="form.bedNumber" placeholder="请输入床位号" />
+        <el-form-item label="监测状态" prop="monitoringStatus">
+          <el-select v-model="form.monitoringStatus" placeholder="请选择监测状态">
+            <el-option
+              v-for="dict in dict.type.monitoring_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="病历号" prop="caseHistoryNumber">
-          <el-input v-model="form.caseHistoryNumber" placeholder="请输入病历号" />
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -246,7 +238,7 @@ import { listPatient, getPatient, delPatient, addPatient, updatePatient } from "
 
 export default {
   name: "Patient",
-  dicts: ['sex'],
+  dicts: ['sex', 'monitoring_status'],
   data() {
     return {
       // 遮罩层
@@ -280,8 +272,7 @@ export default {
         familyPhone: null,
         equipmentId: null,
         monitoringStatus: null,
-/*        bedNumber: null,
-        caseHistoryNumber: null*/
+
       },
       // 表单参数
       form: {},
@@ -327,8 +318,7 @@ export default {
         familyPhone: null,
         equipmentId: null,
         monitoringStatus: null,
-/*        bedNumber: null,
-        caseHistoryNumber: null*/
+
       };
       this.resetForm("form");
     },

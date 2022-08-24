@@ -18,12 +18,14 @@
         />
       </el-form-item>
       <el-form-item label="设备状态" prop="equipmentStatus">
-        <el-input
-          v-model="queryParams.equipmentStatus"
-          placeholder="请输入设备状态"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.equipmentStatus" placeholder="请选择设备状态" clearable>
+          <el-option
+            v-for="dict in dict.type.equipment_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="医院代号" prop="hospitalCode">
         <el-input
@@ -90,7 +92,11 @@
       <el-table-column label="设备id" align="center" prop="equipmentId" />
       <el-table-column label="设备号" align="center" prop="equipmentNumber" />
       <el-table-column label="设备版本号" align="center" prop="equipmentVersion" />
-      <el-table-column label="设备状态" align="center" prop="equipmentStatus" />
+      <el-table-column label="设备状态" align="center" prop="equipmentStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
+        </template>
+      </el-table-column>
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -130,7 +136,14 @@
           <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号" />
         </el-form-item>
         <el-form-item label="设备状态" prop="equipmentStatus">
-          <el-input v-model="form.equipmentStatus" placeholder="请输入设备状态" />
+          <el-select v-model="form.equipmentStatus" placeholder="请选择设备状态">
+            <el-option
+              v-for="dict in dict.type.equipment_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
           <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
@@ -149,6 +162,7 @@ import { listEquipment, getEquipment, delEquipment, addEquipment, updateEquipmen
 
 export default {
   name: "Equipment",
+  dicts: ['equipment_status'],
   data() {
     return {
       // 遮罩层

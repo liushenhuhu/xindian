@@ -149,7 +149,7 @@
       <el-table-column label="省份" align="center" prop="province" />
       <el-table-column label="医院名称" align="center" prop="hospitalName" />
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />
-      <el-table-column label="医院账号" align="center" prop="hospitalAccount" />
+<!--      <el-table-column label="医院账号" align="center" prop="hospitalAccount" />
       <el-table-column label="医院密码" align="center" prop="hospitalPassword" />
       <el-table-column label="设备数量" align="center" prop="equipmentNumber" />
       <el-table-column label="患者总数" align="center" prop="patientNumber" />
@@ -159,7 +159,7 @@
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.firstEcgTime, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="是否开通数据统计" align="center" prop="ifStatistics">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if" :value="scope.row.ifStatistics"/>
