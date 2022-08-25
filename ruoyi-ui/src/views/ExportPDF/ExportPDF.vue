@@ -439,16 +439,23 @@
               </div>
               <div class="box8-1">HRV:SD>50ms</div>
               <div class="box8-1">二丶诊断</div>
-              <div class="box8-1">1.窦性心律 心率动态变化正常</div>
-              <div class="box8-1">2.最快心率156，仍为窦性</div>
-              <div
-                class="box8-1"
-              >3.ST:ll、II、 avF、V5、V6导联于: 12:30-13:30,18:27-18:38,8:10-9:05分 (心率较快时)出现水平型压低0.10mv，最大压低0.20mv伴多数导联T波倒置，请结合临床</div>
-              <div class="box8-1">4.心率变异性:正常</div>
-              <div class="box8-1">5.建议治疗后复查</div>
+              <textarea
+                type="textarea"
+                placeholder="请输入诊断结果"
+                class="box8-1-1"
+                v-model="froms.textarea"
+              >
+              </textarea>
+<!--              <div class="box8-1">1.窦性心律 心率动态变化正常</div>-->
+<!--              <div class="box8-1">2.最快心率156，仍为窦性</div>-->
+<!--              <div-->
+<!--                class="box8-1"-->
+<!--              >3.ST:ll、II、 avF、V5、V6导联于: 12:30-13:30,18:27-18:38,8:10-9:05分 (心率较快时)出现水平型压低0.10mv，最大压低0.20mv伴多数导联T波倒置，请结合临床</div>-->
+<!--              <div class="box8-1">4.心率变异性:正常</div>-->
+<!--              <div class="box8-1">5.建议治疗后复查</div>-->
               <div class="bottom">
-                报告者:<span class="box8-2"></span>
-                日期:<span class="box8-2"></span>
+                报告者:<input class="box8-2"></input>
+                日期:<input class="box8-2"></input>
               </div>
             </div>
           </div>
@@ -761,6 +768,12 @@ export default {
       pId:null,
       _th:null,
       froms: {
+        textarea: '1.窦性心律 心率动态变化正常\n' +
+                  '2.最快心率156，仍为窦性\n' +
+                  '3.ST:ll、II、 avF、V5、V6导联于: 12:30-13:30,18:27-18:38,8:10-9:05分 (心率较快时)出现水平型压低0.10mv，最大压低0.20mv伴多数导联T波倒置，请结合临床\n' +
+                  '4.心率变异性:正常\n' +
+                  '5.建议治疗后复查',
+
         patientInfo: {
           name: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名,
           sex: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.性别,
@@ -3290,17 +3303,34 @@ h2 {
 .box8-1 {
   margin: 5px 0;
 }
+.box8-1-1{
+  width: 682px;
+  height: 120px;
+  border: none;
+  resize: none;
+  cursor: pointer;
+  outline:none;
+  font-size: 13px;
+  font-family: "Helvetica Neue";
+}
 .box8 .bottom {
-  margin-top: 3vm;
-  margin-bottom: 1vw;
+  position: relative;
+  top: 0;
+  bottom: 0px;
+  right: 3px;
+  margin-top: 3px;
+  margin-bottom: 1px;
   text-align: right;
+
 }
 .box8-2 {
   display: inline-block;
-  width: 10vw;
-  height: 3vh;
+  width: 100px;
+  height: 20px;
+  border: none;
   border-bottom: 1px solid black;
-  margin-right: 3vw;
+  margin-right: 10px;
+  outline:none
 }
 
 .box9 {
