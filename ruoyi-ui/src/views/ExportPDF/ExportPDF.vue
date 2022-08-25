@@ -3,7 +3,7 @@
     <div id="pdfDom" style="padding: 10px;width: 800px ;background: #fff" >
       <div id="app">
         <div class="page">
-          <h1>通许第一医院</h1>
+          <h1>{{ hospitalName }}</h1>
           <h1>动态心电图报告</h1>
           <div class="main">
             <div class="box1">
@@ -756,94 +756,95 @@ export default {
 
   data() {
     return {
-      exportPDFtitle: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.姓名+"心电报告",
+      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名+"心电报告",
+      hospitalName: this.$route.query.hospitalName,
       pId:null,
       _th:null,
       froms: {
         patientInfo: {
-          name: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.姓名,
-          sex: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.性别,
-          age: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.年龄,
-          no: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.门诊号,
+          name: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名,
+          sex: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.性别,
+          age: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.年龄,
+          no: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.门诊号,
           //门诊号
-          clinicNumber: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.门诊号,
+          clinicNumber: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.门诊号,
           //住院号
-          hospitalNumber: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.住院号,
+          hospitalNumber: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.住院号,
           //科室
-          department: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.科室,
+          department: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.科室,
           //床号
-          bedNo: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.床号,
-          ID:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.ID,
-          deviceID:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.设备编号,
-          recordDate: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.时间,
-          recordDuration: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.记录时间
+          bedNo: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.床号,
+          ID:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.ID,
+          deviceID:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.设备编号,
+          recordDate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.时间,
+          recordDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.记录时间
         },
         heartRate: {
-          totalHeartRate: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.总心搏数,
-          slowestHeartRate: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最小心率,
+          totalHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.总心搏数,
+          slowestHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最小心率,
          // slowestTime: "05:11:44",
-          fastestHeartRate: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最大心率,
+          fastestHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最大心率,
           //fastestTime: "13:03:16",
-          averageHeartRate: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.平均心率,
+          averageHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.平均心率,
          //标准差
-          standardDeviation:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.心率标准差,
+          standardDeviation:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心率标准差,
           //最长间期
-          longestInterval:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长间期,
+          longestInterval:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长间期,
           //最短间期
-          slowestInterval:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最短间期
+          slowestInterval:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最短间期
 
         },
         //停搏
         asystole: {
-          total: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.停搏总计,
-          longest: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长一次,
-          longestTime: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.发生于
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.停搏总计,
+          longest: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长一次,
+          longestTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.发生于
         },
         //心动过缓/心动过速
         heartbeat: {
-          bradycardiaTotal:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓总数,
-          bradycardiaPercentage:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓占比,
+          bradycardiaTotal:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓总数,
+          bradycardiaPercentage:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓占比,
           //心动过缓总持续时间
-          bradycardiaTotalDuration: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓总持续时间,
-          longestBradycardiaStartTime:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期开始时间,
-          longestBradycardiaEndTime:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期结束时间,
-          longestBradycardiaCycleDuration:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期持续时间,
-          longestBradycardia:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓心搏数,
+          bradycardiaTotalDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓总持续时间,
+          longestBradycardiaStartTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期开始时间,
+          longestBradycardiaEndTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期结束时间,
+          longestBradycardiaCycleDuration:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期持续时间,
+          longestBradycardia:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓心搏数,
 
-          tachycardiaTotal:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.心动过速总数,
-          tachycardiaPercentage:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.心动过速占比,
+          tachycardiaTotal:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过速总数,
+          tachycardiaPercentage:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过速占比,
           //心动过速总持续时间
-          tachycardiaTotalDuration: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.心动过速总持续时间,
-          longestTachycardiaStartTime:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期开始时间,
-          longestTachycardiaEndTime:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期结束时间,
-          longestTachycardiaCycleDuration:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期持续时间,
-          longestTachycardia:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速心搏数,
+          tachycardiaTotalDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过速总持续时间,
+          longestTachycardiaStartTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期开始时间,
+          longestTachycardiaEndTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期结束时间,
+          longestTachycardiaCycleDuration:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期持续时间,
+          longestTachycardia:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速心搏数,
 
         },
 
         //室性异位心率
         ventricularEctopicHeartRate: {
           //总数
-          total: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律总数,
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律总数,
           //单发
-          singleShot: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律单发,
+          singleShot: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律单发,
           //成对
-          pair: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律成对,
+          pair: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律成对,
           //短阵性室速
-          burstVT: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律短振性室速,
-          RONT: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律RONT,
+          burstVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律短振性室速,
+          RONT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律RONT,
           //二联律
-          doubletLaw: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律二联律,
+          doubletLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律二联律,
           //三联律
-          tripleLaw: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律三联率,
+          tripleLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律三联率,
           //室性逸搏
-          ventricularEscape: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性逸搏,
+          ventricularEscape: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性逸搏,
           //最快室速
-          fastestVT: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最快室速,
+          fastestVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最快室速,
           //最长室速
-          longestVT: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最长室速,
+          longestVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最长室速,
           //室性百分比
-          ventricularPercentage: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性百分比
+          ventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性百分比
           //平均/小时
           //平均/1000
         },
@@ -856,70 +857,70 @@ export default {
         // '室上性异位心律平均/1000': None,
         supraventricularEctopicHeartRate: {
           //总数
-          total: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律总数,
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律总数,
           //单发
-          singleShot: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律单发,
+          singleShot: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律单发,
           //成对
-          pair: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律成对,
+          pair: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律成对,
           //短阵性室上速
-          paroxysmalSupraventricularTachycardia: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律短振性室上速,
+          paroxysmalSupraventricularTachycardia: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律短振性室上速,
           //二联律
-          doubletLaw: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律二联律,
+          doubletLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律二联律,
           //三联律
-          tripleLaw: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律三联率,
+          tripleLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律三联率,
           //最快室上速
-          fastestSupraventricularVelocity: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最快室上速,
+          fastestSupraventricularVelocity: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最快室上速,
           //最长室上速
-          longestSupraventricularVelocity: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最长室上速,
+          longestSupraventricularVelocity: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最长室上速,
           //室上性百分比
-          supraventricularPercentage: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律室上性百分比
+          supraventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律室上性百分比
           //平均/小时
           //平均/1000
         },
         //心率变异性分析
         heartRateVariabilityAnalysis: {
-          SDNN: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.sdnn,
-          NN20: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.nn20,
-          PNN20: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.pnn20,
-          NN50: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.nn50,
-          rMSSD: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.rmssd,
-          PNN50: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.pnn50
+          SDNN: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.sdnn,
+          NN20: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.nn20,
+          PNN20: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.pnn20,
+          NN50: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.nn50,
+          rMSSD: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.rmssd,
+          PNN50: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.pnn50
         },
         //房颤分析
         atrialFibrillationAnalysis: {
           //总数
-          total: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.房颤总数,
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤总数,
           //发生阵数
-          number: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.房颤发生阵数,
+          number: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤发生阵数,
           //大于1500
-          num_1500: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.房颤大于1500ms,
+          num_1500: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤大于1500ms,
           //大于2000
-          num_2000: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.房颤大于2000ms,
+          num_2000: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤大于2000ms,
           //持续时间
-          duration: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.房颤持续时间
+          duration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤持续时间
         },
         //起搏分析
         pacingAnalysis: {
           //起搏总数
-          total: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏总数,
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏总数,
           //起搏占百分比
-          pacingAnalysisPercentage: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏总数百分比,
+          pacingAnalysisPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏总数百分比,
           //心房起搏数
-          atrialPace: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏心房起搏数,
+          atrialPace: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏心房起搏数,
           //心房起搏占百分比
-          atrialPacePercentage: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏心房起搏数百分比,
+          atrialPacePercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏心房起搏数百分比,
           //双腔起搏
-          dual_chamberPacing: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏双腔起搏,
+          dual_chamberPacing: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏双腔起搏,
           //双腔起搏占百分比
-          dual_chamberPacingPercentage: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏双腔起搏百分比,
+          dual_chamberPacingPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏双腔起搏百分比,
           //心室起搏数
-          ventricularPace: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏心室起搏数,
+          ventricularPace: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏心室起搏数,
           //心室起搏数占百分比
-          ventricularPacePercentage: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏心室起搏数百分比,
+          ventricularPacePercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏心室起搏数百分比,
           //错误起搏
-          wrongPacing: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏错误起搏,
+          wrongPacing: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏错误起搏,
           //错误起搏占百分比
-          wrongPacingPercentage: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.起搏错误起搏百分比
+          wrongPacingPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏错误起搏百分比
         },
 
       },
@@ -1007,7 +1008,7 @@ export default {
     if(pId){
       this.pId=pId;
       console.log(pId)
-      var show =localStorage.getItem(pId+"show");
+      var show =sessionStorage.getItem(pId+"show");
       if (!show){
         this.get();
       }
@@ -1051,9 +1052,9 @@ export default {
         success: function (data) {
           console.log(_th.pId)
           console.log(data)
-          localStorage.removeItem("data");
-          localStorage.setItem(_th.pId+'data' ,JSON.stringify(data))
-          localStorage.setItem(_th.pId+'show' ,true)
+          sessionStorage.removeItem("data");
+          sessionStorage.setItem(_th.pId+'data' ,JSON.stringify(data))
+          sessionStorage.setItem(_th.pId+'show' ,true)
           loading.close()
           window.location.reload("#pdfDom");
         },
@@ -1068,7 +1069,7 @@ export default {
 
     line(){
       var obj = {
-          "data":(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime
+          "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime
       } ;
       var dom = document.getElementById('container');
       var myChart = echarts.init(dom, null, {
@@ -1212,7 +1213,7 @@ export default {
     //10次心搏均值心率
     line1(){
       var obj ={
-      "data":(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_10
+      "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_10
     };
 
       var dom = document.getElementById('line1');
@@ -1351,7 +1352,7 @@ export default {
      //50次心搏均值心率
       line2(){
         var obj = {
-          "data":(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_50
+          "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_50
         };
 
       var dom = document.getElementById('line2');
@@ -1490,7 +1491,7 @@ export default {
 
       line3(){
         var obj ={
-          "data":(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_100
+          "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_100
         }
       ;
 
@@ -2786,7 +2787,7 @@ var data = obj
      //散点图
      drawscatter(){
       var obj ={
-        "data":(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphLorenz
+        "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphLorenz
       }
          var dom = document.getElementById('scatter');
     var myChart = echarts.init(dom, null, {
@@ -2841,7 +2842,7 @@ var data = obj
         grid: {left: '18%',},
         xAxis: {
           type: 'category',
-          data: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartRatesFrequency
+          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartRatesFrequency
 
         },
         yAxis: {
@@ -2849,7 +2850,7 @@ var data = obj
         },
         series: [
           {
-            data: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartRatesFrequency_Count,
+            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartRatesFrequency_Count,
             type: 'bar'
           }
         ]
@@ -2880,14 +2881,14 @@ var data = obj
         grid: {left: '18%',},
         xAxis: {
           type: 'category',
-          data: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterFrequency,
+          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterFrequency,
         },
         yAxis: {
           type: 'value'
         },
         series: [
           {
-            data: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterFrequency_Count,
+            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterFrequency_Count,
             type: 'bar'
           }
         ]
@@ -2918,7 +2919,7 @@ var data = obj
         grid: {left: '18%',},
         xAxis: {
           type: 'category',
-          data:(JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterSubFrequency
+          data:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterSubFrequency
 
         },
         yAxis: {
@@ -2926,7 +2927,7 @@ var data = obj
         },
         series: [
           {
-            data: (JSON.parse(localStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterSubFrequency_Count,
+            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterSubFrequency_Count,
             type: 'bar'
           }
         ]
@@ -2939,11 +2940,11 @@ var data = obj
     window.addEventListener('resize', myChart.resize);
      },
     btnClear(){
-      localStorage.clear();
+      sessionStorage.clear();
     },
     btnClearSelf(){
-      localStorage.removeItem(this.$route.query.pId+'data');
-      localStorage.removeItem(this.$route.query.pId+'show');
+      sessionStorage.removeItem(this.$route.query.pId+'data');
+      sessionStorage.removeItem(this.$route.query.pId+'show');
       window.location.reload();
     },
 
@@ -3001,8 +3002,8 @@ var data = obj
         console.log("*-*-*-*-*-*--*-*-*-*-")
 
       });
-       localStorage.removeItem('data');
-       localStorage.removeItem('show');
+       sessionStorage.removeItem('data');
+       sessionStorage.removeItem('show');
     },
 
     //上传pdf

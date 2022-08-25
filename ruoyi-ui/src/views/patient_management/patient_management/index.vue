@@ -349,7 +349,7 @@ export default {
     },
     /** 下载报告*/
     downloadInform(row) {
-      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId}});
+      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId , hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
     }
   }
