@@ -439,13 +439,14 @@
               </div>
               <div class="box8-1">HRV:SD>50ms</div>
               <div class="box8-1">二丶诊断</div>
-              <textarea
+              <div
                 type="textarea"
+                contenteditable="true"
                 placeholder="请输入诊断结果"
                 class="box8-1-1"
-                v-model="froms.textarea"
-              >
-              </textarea>
+              >{{froms.textarea.text1}}<br>
+                {{froms.textarea.text2}}
+              </div>
 <!--              <div class="box8-1">1.窦性心律 心率动态变化正常</div>-->
 <!--              <div class="box8-1">2.最快心率156，仍为窦性</div>-->
 <!--              <div-->
@@ -768,11 +769,10 @@ export default {
       pId:null,
       _th:null,
       froms: {
-        textarea: '1.窦性心律 心率动态变化正常\n' +
-                  '2.最快心率156，仍为窦性\n' +
-                  '3.ST:ll、II、 avF、V5、V6导联于: 12:30-13:30,18:27-18:38,8:10-9:05分 (心率较快时)出现水平型压低0.10mv，最大压低0.20mv伴多数导联T波倒置，请结合临床\n' +
-                  '4.心率变异性:正常\n' +
-                  '5.建议治疗后复查',
+        textarea: {
+          text1:'1.窦性心律 心率动态变化正常',
+          text2:'2.最快心率156，仍为窦性',
+        },
 
         patientInfo: {
           name: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名,
@@ -3312,6 +3312,7 @@ h2 {
   outline:none;
   font-size: 13px;
   font-family: "Helvetica Neue";
+  word-wrap: break-word;
 }
 .box8 .bottom {
   position: relative;
