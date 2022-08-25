@@ -61,10 +61,10 @@ public class AlertLogController extends BaseController
         List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
         for (AlertLog log : list) {
             PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(log.getpId());
-            Patient patient = patientService.selectPatientByPatientNumber(patientManagement.getPatientNumber());
+            Patient patient = patientService.selectPatientByPatientCode(patientManagement.getPatientCode());
             Hospital hospital = hospitalService.selectHospitalByHospitalCode(patientManagement.getHospitalCode());
             log.setPatientName(patient.getPatientName());
-            log.setPatientNumber(patient.getPatientNumber());
+            log.setPatientNumber(patient.getPatientCode());
             log.setPatientPhone(patient.getPatientPhone());
             log.setFamilyPhone(patient.getFamilyPhone());
             log.setHospitalCode(hospital.getHospitalCode());

@@ -9,9 +9,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者身份证号" prop="patientNumber">
+      <el-form-item label="患者身份证号" prop="patientCode">
         <el-input
-          v-model="queryParams.patientNumber"
+          v-model="queryParams.patientCode"
           placeholder="请输入患者身份证号"
           clearable
           @keyup.enter.native="handleQuery"
@@ -133,7 +133,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="患者id" align="center" prop="patientId" />
       <el-table-column label="患者姓名" align="center" prop="patientName" />
-<!--      <el-table-column label="患者身份证号" align="center" prop="patientNumber" />-->
+<!--      <el-table-column label="患者身份证号" align="center" prop="patientCode" />-->
       <el-table-column label="患者年龄" align="center" prop="patientAge" />
       <el-table-column label="患者性别" align="center" prop="patientSex">
         <template slot-scope="scope">
@@ -183,8 +183,8 @@
         <el-form-item label="患者姓名" prop="patientName">
           <el-input v-model="form.patientName" placeholder="请输入患者姓名" />
         </el-form-item>
-        <el-form-item label="患者身份证号" prop="patientNumber">
-          <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号" />
+        <el-form-item label="患者身份证号" prop="patientCode">
+          <el-input v-model="form.patientCode" placeholder="请输入患者身份证号" />
         </el-form-item>
         <el-form-item label="患者年龄" prop="patientAge">
           <el-input v-model="form.patientAge" placeholder="请输入患者年龄" />
@@ -264,7 +264,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         patientName: null,
-        patientNumber: null,
+        patientCode: null,
         patientAge: null,
         patientSex: null,
         patientSource: null,
@@ -281,7 +281,7 @@ export default {
         patientName: [
           { required: true, message: "患者姓名不能为空", trigger: "blur" }
         ],
-        patientNumber: [
+        patientCode: [
           { required: true, message: "患者身份证号不能为空", trigger: "blur" }
         ],
       }
@@ -310,7 +310,7 @@ export default {
       this.form = {
         patientId: null,
         patientName: null,
-        patientNumber: null,
+        patientCode: null,
         patientAge: null,
         patientSex: null,
         patientSource: null,

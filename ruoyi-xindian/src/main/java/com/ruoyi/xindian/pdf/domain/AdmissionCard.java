@@ -1,9 +1,12 @@
+/*
 package com.ruoyi.xindian.pdf.domain;
 
+*/
 /**
  * @Author: han
  * @Date: 2022-07-24
- */
+ *//*
+
 public class AdmissionCard {
     private String name;
     private String age;
@@ -73,3 +76,4 @@ public class AdmissionCard {
                 '}';
     }
 }
+*/

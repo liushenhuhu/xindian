@@ -20,7 +20,15 @@ export function getPatient(patientId) {
 // 查询患者详细
 export function getPatientByPatientNumber(patientNumber) {
   return request({
-    url: '/patient/patient/getInfoByPatientNumber' + patientNumber,
+    url: '/patient/patient/getInfoByPatientNumber/' + patientNumber,
+    method: 'get'
+  })
+}
+
+// 查询患者详细
+export function getPatientByPatientName(patientName) {
+  return request({
+    url: '/patient/patient/getInfoByPatientName/' + patientName,
     method: 'get'
   })
 }

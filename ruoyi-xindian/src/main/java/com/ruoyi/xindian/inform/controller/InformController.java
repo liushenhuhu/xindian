@@ -61,10 +61,10 @@ public class InformController extends BaseController
         List<Inform> list = informService.selectInformList(inform);
         for (Inform listInform : list) {
             PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(listInform.getpId());
-            Patient patient = patientService.selectPatientByPatientNumber(patientManagement.getPatientNumber());
+            Patient patient = patientService.selectPatientByPatientCode(patientManagement.getPatientCode());
             Hospital hospital = hospitalService.selectHospitalByHospitalCode(patientManagement.getHospitalCode());
             listInform.setPatientName(patient.getPatientName());
-            listInform.setPatientNumber(patient.getPatientNumber());
+            listInform.setPatientNumber(patient.getPatientCode());
             listInform.setPatientAge(patient.getPatientAge());
             listInform.setPatientSex(patient.getPatientSex());
             listInform.setPatientPhone(patient.getPatientPhone());

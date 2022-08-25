@@ -91,8 +91,14 @@ public class PatientServiceImpl implements IPatientService
         return patientMapper.deletePatientByPatientId(patientId);
     }
 
+
     @Override
-    public Patient selectPatientByPatientNumber(String patientNumber) {
-        return patientMapper.selectPatientByPatientNumber(patientNumber);
+    public Patient selectPatientByPatientCode(String patientCode) {
+        return patientMapper.selectPatientByPatientCode(patientCode);
+    }
+
+    @Override
+    public Patient selectPatientByPatientName(String patientName) {
+        return patientMapper.selectPatientByPatientName(patientName);
     }
 }

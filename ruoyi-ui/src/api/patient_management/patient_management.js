@@ -42,3 +42,11 @@ export function delPatient_management(pId) {
     method: 'delete'
   })
 }
+
+export function download(path) {
+  return request({
+    url: '/download/' + path,
+    method: 'get'
+  })
+
+}

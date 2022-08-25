@@ -6,7 +6,6 @@
 
     <resultMap type="AlertLog" id="AlertLogResult">
         <result property="logId"    column="log_id"    />
-        <result property="logNumber"    column="log_number"    />
         <result property="logTime"    column="log_time"    />
         <result property="logType"    column="log_type"    />
         <result property="eventName"    column="event_name"    />
@@ -15,13 +14,12 @@
     </resultMap>
 
     <sql id="selectAlertLogVo">
-        select log_id, log_number, log_time, log_type, event_name, event_description, p_id from alert_log
+        select log_id, log_time, log_type, event_name, event_description, p_id from alert_log
     </sql>
 
     <select id="selectAlertLogList" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         <where>
-            <if test="logNumber != null  and logNumber != ''"> and log_number like concat('%', #{logNumber}, '%')</if>
             <if test="logTime != null "> and log_time like concat('%', #{logTime}, '%')</if>
             <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
             <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
@@ -39,7 +37,6 @@
         insert into alert_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="logId != null">log_id,</if>
-            <if test="logNumber != null and logNumber != ''">log_number,</if>
             <if test="logTime != null">log_time,</if>
             <if test="logType != null">log_type,</if>
             <if test="eventName != null">event_name,</if>
@@ -48,7 +45,6 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="logId != null">#{logId},</if>
-            <if test="logNumber != null and logNumber != ''">#{logNumber},</if>
             <if test="logTime != null">#{logTime},</if>
             <if test="logType != null">#{logType},</if>
             <if test="eventName != null">#{eventName},</if>
@@ -60,7 +56,6 @@
     <update id="updateAlertLog" parameterType="AlertLog">
         update alert_log
         <trim prefix="SET" suffixOverrides=",">
-            <if test="logNumber != null and logNumber != ''">log_number = #{logNumber},</if>
             <if test="logTime != null">log_time = #{logTime},</if>
             <if test="logType != null">log_type = #{logType},</if>
             <if test="eventName != null">event_name = #{eventName},</if>

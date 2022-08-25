@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="设备号" prop="equipmentNumber">
+      <el-form-item label="设备号" prop="equipmentCode">
         <el-input
-          v-model="queryParams.equipmentNumber"
+          v-model="queryParams.equipmentCode"
           placeholder="请输入设备号"
           clearable
           @keyup.enter.native="handleQuery"
@@ -90,7 +90,7 @@
     <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="设备id" align="center" prop="equipmentId" />
-      <el-table-column label="设备号" align="center" prop="equipmentNumber" />
+      <el-table-column label="设备号" align="center" prop="equipmentCode" />
       <el-table-column label="设备版本号" align="center" prop="equipmentVersion" />
       <el-table-column label="设备状态" align="center" prop="equipmentStatus">
         <template slot-scope="scope">
@@ -129,8 +129,8 @@
     <!-- 添加或修改设备对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="设备号" prop="equipmentNumber">
-          <el-input v-model="form.equipmentNumber" placeholder="请输入设备号" />
+        <el-form-item label="设备号" prop="equipmentCode">
+          <el-input v-model="form.equipmentCode" placeholder="请输入设备号" />
         </el-form-item>
         <el-form-item label="设备版本号" prop="equipmentVersion">
           <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号" />
@@ -187,7 +187,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        equipmentNumber: null,
+        equipmentCode: null,
         equipmentVersion: null,
         equipmentStatus: null,
         hospitalCode: null
@@ -196,7 +196,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        equipmentNumber: [
+        equipmentCode: [
           { required: true, message: "设备号不能为空", trigger: "blur" }
         ],
         hospitalCode: [
@@ -227,7 +227,7 @@ export default {
     reset() {
       this.form = {
         equipmentId: null,
-        equipmentNumber: null,
+        equipmentCode: null,
         equipmentVersion: null,
         equipmentStatus: null,
         hospitalCode: null

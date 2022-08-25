@@ -76,7 +76,19 @@ public class PatientController extends BaseController
     @GetMapping(value = "/getInfoByPatientNumber/{patientNumber}")
     public AjaxResult getInfoByPatientNumber(@PathVariable("patientNumber") String patientNumber)
     {
-        return AjaxResult.success(patientService.selectPatientByPatientNumber(patientNumber));
+        return AjaxResult.success(patientService.selectPatientByPatientCode(patientNumber));
+    }
+
+    /**
+     * 通过patientName获取患者详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('patient:patient:query')")
+    @GetMapping(value = "/getInfoByPatientName/{patientName}")
+    public AjaxResult getInfoByPatientName(@PathVariable("patientName") String patientName)
+    {
+        Patient patient = patientService.selectPatientByPatientName(patientName);
+        System.out.println(patient);
+        return AjaxResult.success(patient);
     }
 
     /**

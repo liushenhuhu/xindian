@@ -7,7 +7,7 @@
     <resultMap type="Patient" id="PatientResult">
         <result property="patientId"    column="patient_id"    />
         <result property="patientName"    column="patient_name"    />
-        <result property="patientNumber"    column="patient_number"    />
+        <result property="patientCode"    column="patient_code"    />
         <result property="patientAge"    column="patient_age"    />
         <result property="patientSex"    column="patient_sex"    />
         <result property="patientSource"    column="patient_source"    />
@@ -18,14 +18,14 @@
     </resultMap>
 
     <sql id="selectPatientVo">
-        select patient_id, patient_name, patient_number, patient_age, patient_sex, patient_source, patient_phone, family_phone, equipment_id, monitoring_status from patient
+        select patient_id, patient_name, patient_code, patient_age, patient_sex, patient_source, patient_phone, family_phone, equipment_id, monitoring_status from patient
     </sql>
 
     <select id="selectPatientList" parameterType="Patient" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
         <where>
             <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
-            <if test="patientNumber != null  and patientNumber != ''"> and patient_number like concat('%', #{patientNumber}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''"> and patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="patientAge != null  and patientAge != ''"> and patient_age like concat('%', #{patientAge}, '%')</if>
             <if test="patientSex != null  and patientSex != ''"> and patient_sex like concat('%', #{patientSex}, '%')</if>
             <if test="patientSource != null  and patientSource != ''"> and patient_source like concat('%', #{patientSource}, '%')</if>
@@ -42,9 +42,14 @@
         where patient_id = #{patientId}
     </select>
 
-    <select id="selectPatientByPatientNumber" parameterType="String" resultMap="PatientResult">
+    <select id="selectPatientByPatientCode" parameterType="String" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
-        where patient_number = #{patientNumber}
+        where patient_code = #{patientCode}
+    </select>
+
+    <select id="selectPatientByPatientName" parameterType="String" resultMap="PatientResult">
+        <include refid="selectPatientVo"/>
+        where patient_name = #{patientName}
     </select>
 
     <insert id="insertPatient" parameterType="Patient">
@@ -52,7 +57,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientId != null">patient_id,</if>
             <if test="patientName != null and patientName != ''">patient_name,</if>
-            <if test="patientNumber != null and patientNumber != ''">patient_number,</if>
+            <if test="patientCode != null and patientCode != ''">patient_code,</if>
             <if test="patientAge != null">patient_age,</if>
             <if test="patientSex != null">patient_sex,</if>
             <if test="patientSource != null">patient_source,</if>
@@ -64,7 +69,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
             <if test="patientName != null and patientName != ''">#{patientName},</if>
-            <if test="patientNumber != null and patientNumber != ''">#{patientNumber},</if>
+            <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
             <if test="patientAge != null">#{patientAge},</if>
             <if test="patientSex != null">#{patientSex},</if>
             <if test="patientSource != null">#{patientSource},</if>
@@ -79,7 +84,7 @@
         update patient
         <trim prefix="SET" suffixOverrides=",">
             <if test="patientName != null and patientName != ''">patient_name = #{patientName},</if>
-            <if test="patientNumber != null and patientNumber != ''">patient_number = #{patientNumber},</if>
+            <if test="patientCode != null and patientCode != ''">patient_code = #{patientCode},</if>
             <if test="patientAge != null">patient_age = #{patientAge},</if>
             <if test="patientSex != null">patient_sex = #{patientSex},</if>
             <if test="patientSource != null">patient_source = #{patientSource},</if>

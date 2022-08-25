@@ -1,5 +1,8 @@
 package com.ruoyi.xindian.patient.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -29,7 +32,7 @@ public class Patient extends BaseEntity {
      * 患者身份证号
      */
     @Excel(name = "患者身份证号")
-    private String patientNumber;
+    private String patientCode;
 
     /**
      * 患者年龄
@@ -90,12 +93,12 @@ public class Patient extends BaseEntity {
         return patientName;
     }
 
-    public void setPatientNumber(String patientNumber) {
-        this.patientNumber = patientNumber;
+    public String getPatientCode() {
+        return patientCode;
     }
 
-    public String getPatientNumber() {
-        return patientNumber;
+    public void setPatientCode(String patientCode) {
+        this.patientCode = patientCode;
     }
 
     public void setPatientAge(String patientAge) {
@@ -160,7 +163,7 @@ public class Patient extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("patientId", getPatientId())
                 .append("patientName", getPatientName())
-                .append("patientNumber", getPatientNumber())
+                .append("patientCode", getPatientCode())
                 .append("patientAge", getPatientAge())
                 .append("patientSex", getPatientSex())
                 .append("patientSource", getPatientSource())

@@ -20,7 +20,7 @@ public class Equipment extends BaseEntity
 
     /** 设备号 */
     @Excel(name = "设备号")
-    private String equipmentNumber;
+    private String equipmentCode;
 
     /** 设备版本号 */
     @Excel(name = "设备版本号")
@@ -43,15 +43,15 @@ public class Equipment extends BaseEntity
     {
         return equipmentId;
     }
-    public void setEquipmentNumber(String equipmentNumber)
-    {
-        this.equipmentNumber = equipmentNumber;
+
+    public String getEquipmentCode() {
+        return equipmentCode;
     }
 
-    public String getEquipmentNumber()
-    {
-        return equipmentNumber;
+    public void setEquipmentCode(String equipmentCode) {
+        this.equipmentCode = equipmentCode;
     }
+
     public void setEquipmentVersion(String equipmentVersion)
     {
         this.equipmentVersion = equipmentVersion;
@@ -84,7 +84,7 @@ public class Equipment extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("equipmentId", getEquipmentId())
-                .append("equipmentNumber", getEquipmentNumber())
+                .append("equipmentCode", getEquipmentCode())
                 .append("equipmentVersion", getEquipmentVersion())
                 .append("equipmentStatus", getEquipmentStatus())
                 .append("hospitalCode", getHospitalCode())

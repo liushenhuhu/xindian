@@ -20,13 +20,9 @@ public class AlertLog extends BaseEntity
     /** 日志id */
     private Long logId;
 
-    /** 日志号 */
-    @Excel(name = "日志号")
-    private String logNumber;
-
     /** 发生时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "发生时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "发生时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date logTime;
 
     /** 预警类型 */
@@ -82,15 +78,7 @@ public class AlertLog extends BaseEntity
     {
         return logId;
     }
-    public void setLogNumber(String logNumber)
-    {
-        this.logNumber = logNumber;
-    }
 
-    public String getLogNumber()
-    {
-        return logNumber;
-    }
     public void setLogTime(Date logTime)
     {
         this.logTime = logTime;
@@ -188,7 +176,6 @@ public class AlertLog extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("logId", getLogId())
-                .append("logNumber", getLogNumber())
                 .append("logTime", getLogTime())
                 .append("logType", getLogType())
                 .append("eventName", getEventName())

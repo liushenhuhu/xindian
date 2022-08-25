@@ -6,20 +6,20 @@
 
     <resultMap type="Equipment" id="EquipmentResult">
         <result property="equipmentId"    column="equipment_id"    />
-        <result property="equipmentNumber"    column="equipment_number"    />
+        <result property="equipmentCode"    column="equipment_code"    />
         <result property="equipmentVersion"    column="equipment_version"    />
         <result property="equipmentStatus"    column="equipment_status"    />
         <result property="hospitalCode"    column="hospital_code"    />
     </resultMap>
 
     <sql id="selectEquipmentVo">
-        select equipment_id, equipment_number, equipment_version, equipment_status, hospital_code from equipment
+        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code from equipment
     </sql>
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
         <include refid="selectEquipmentVo"/>
         <where>
-            <if test="equipmentNumber != null  and equipmentNumber != ''"> and equipment_number like concat('%', #{equipmentNumber}, '%')</if>
+            <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="equipmentVersion != null  and equipmentVersion != ''"> and equipment_version like concat('%', #{equipmentVersion}, '%')</if>
             <if test="equipmentStatus != null  and equipmentStatus != ''"> and equipment_status like concat('%', #{equipmentStatus}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
@@ -35,14 +35,14 @@
         insert into equipment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="equipmentId != null">equipment_id,</if>
-            <if test="equipmentNumber != null and equipmentNumber != ''">equipment_number,</if>
+            <if test="equipmentCode != null and equipmentCode != ''">equipment_code,</if>
             <if test="equipmentVersion != null">equipment_version,</if>
             <if test="equipmentStatus != null">equipment_status,</if>
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="equipmentId != null">#{equipmentId},</if>
-            <if test="equipmentNumber != null and equipmentNumber != ''">#{equipmentNumber},</if>
+            <if test="equipmentCode != null and equipmentCode != ''">#{equipmentCode},</if>
             <if test="equipmentVersion != null">#{equipmentVersion},</if>
             <if test="equipmentStatus != null">#{equipmentStatus},</if>
             <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
@@ -52,7 +52,7 @@
     <update id="updateEquipment" parameterType="Equipment">
         update equipment
         <trim prefix="SET" suffixOverrides=",">
-            <if test="equipmentNumber != null and equipmentNumber != ''">equipment_number = #{equipmentNumber},</if>
+            <if test="equipmentCode != null and equipmentCode != ''">equipment_code = #{equipmentCode},</if>
             <if test="equipmentVersion != null">equipment_version = #{equipmentVersion},</if>
             <if test="equipmentStatus != null">equipment_status = #{equipmentStatus},</if>
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>

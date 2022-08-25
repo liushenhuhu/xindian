@@ -62,8 +62,16 @@ public interface IPatientService
     /**
      * 查询患者
      *
-     * @param patientNumber 患者主键
+     * @param patientCode 患者身份证号
      * @return 患者
      */
-    public Patient selectPatientByPatientNumber(String patientNumber);
+    public Patient selectPatientByPatientCode(String patientCode);
+
+    /**
+     * 查询患者
+     *
+     * @param patientName 患者姓名
+     * @return 患者
+     */
+    public Patient selectPatientByPatientName(String patientName);
 }

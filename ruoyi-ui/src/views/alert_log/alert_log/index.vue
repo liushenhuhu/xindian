@@ -1,19 +1,11 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="日志号" prop="logNumber">
-        <el-input
-          v-model="queryParams.logNumber"
-          placeholder="请输入日志号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="发生时间" prop="logTime">
         <el-date-picker clearable
                         v-model="queryParams.logTime"
                         type="date"
-                        value-format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         placeholder="请选择发生时间">
         </el-date-picker>
       </el-form-item>
@@ -104,10 +96,9 @@
     <el-table v-loading="loading" :data="alert_logList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="日志id" align="center" prop="logId" />
-      <el-table-column label="日志号" align="center" prop="logNumber" />
       <el-table-column label="发生时间" align="center" prop="logTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="预警类型" align="center" prop="logType" />
@@ -159,14 +150,12 @@
     <!-- 添加或修改预警日志对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="日志号" prop="logNumber">
-          <el-input v-model="form.logNumber" placeholder="请输入日志号" />
-        </el-form-item>
+
         <el-form-item label="发生时间" prop="logTime">
           <el-date-picker clearable
                           v-model="form.logTime"
                           type="date"
-                          value-format="yyyy-MM-dd"
+                          value-format="yyyy-MM-dd HH:mm:ss"
                           placeholder="请选择发生时间">
           </el-date-picker>
         </el-form-item>
@@ -221,7 +210,6 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        logNumber: null,
         logTime: null,
         logType: null,
         eventName: null,
@@ -272,7 +260,6 @@ export default {
     reset() {
       this.form = {
         logId: null,
-        logNumber: null,
         logTime: null,
         logType: null,
         eventName: null,

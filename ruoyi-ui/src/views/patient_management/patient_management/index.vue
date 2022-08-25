@@ -1,9 +1,19 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="患者身份证号" prop="patientNumber">
+
+      <el-form-item label="患者姓名" prop="patient.patientName">
         <el-input
-          v-model="queryParams.patientNumber"
+          v-model="queryParams.patient.patientName"
+          placeholder="请输入患者姓名"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
+      <el-form-item label="患者身份证号" prop="patientCode">
+        <el-input
+          v-model="queryParams.patientCode"
           placeholder="请输入患者身份证号"
           clearable
           @keyup.enter.native="handleQuery"
@@ -17,9 +27,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="设备号" prop="equipmentNumber">
+      <el-form-item label="设备号" prop="equipmentCode">
         <el-input
-          v-model="queryParams.equipmentNumber"
+          v-model="queryParams.equipmentCode"
           placeholder="请输入设备号"
           clearable
           @keyup.enter.native="handleQuery"
@@ -27,10 +37,10 @@
       </el-form-item>
       <el-form-item label="连接时间" prop="connectionTime">
         <el-date-picker clearable
-          v-model="queryParams.connectionTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择连接时间">
+                        v-model="queryParams.connectionTime"
+                        type="date"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="请选择连接时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -48,7 +58,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['patient_management:patient_management:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -59,7 +70,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['patient_management:patient_management:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -70,7 +82,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['patient_management:patient_management:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -80,34 +93,35 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['patient_management:patient_management:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="患者管理id" align="center" prop="pId" />
-      <el-table-column label="患者姓名" align="center" prop="patientName" />
-<!--      <el-table-column label="患者身份证号" align="center" prop="patientNumber" />-->
-      <el-table-column label="患者年龄" align="center" prop="patientAge" />
-      <el-table-column label="患者性别" align="center" prop="patientSex">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="患者管理id" align="center" prop="pId"/>
+      <el-table-column label="患者姓名" align="center" prop="patient.patientName"/>
+      <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode" />-->
+      <el-table-column label="患者年龄" align="center" prop="patient.patientAge"/>
+      <el-table-column label="患者性别" align="center" prop="patient.patientSex">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+          <dict-tag :options="dict.type.sex" :value="scope.row.patient.patientSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者来源" align="center" prop="patientSource" />
-      <el-table-column label="患者电话" align="center" prop="patientPhone" />
-      <el-table-column label="家属电话" align="center" prop="familyPhone" />
-      <el-table-column label="监测状态" align="center" prop="monitoringStatus" />
-<!--      <el-table-column label="床位号" align="center" prop="bedNumber" />
-      <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />-->
-      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
-      <el-table-column label="医院名称" align="center" prop="hospitalName" />
-      <el-table-column label="设备号" align="center" prop="equipmentNumber" />
+      <el-table-column label="患者来源" align="center" prop="patient.patientSource"/>
+      <el-table-column label="患者电话" align="center" prop="patient.patientPhone"/>
+      <el-table-column label="家属电话" align="center" prop="patient.familyPhone"/>
+      <el-table-column label="监测状态" align="center" prop="patient.monitoringStatus"/>
+      <!--      <el-table-column label="床位号" align="center" prop="bedNumber" />
+            <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />-->
+      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+      <el-table-column label="医院名称" align="center" prop="hospital.hospitalName"/>
+      <el-table-column label="设备号" align="center" prop="equipmentCode"/>
       <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -116,8 +130,16 @@
             size="mini"
             type="text"
             icon="el-icon-download"
-            @click="downloadInform(scope.row)"
+            @click="handleInform(scope.row)"
             v-hasPermi="['patient:patient:downloadInform']"
+          >生成报告
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-magic-stick"
+            @click="downloadInform(scope.row)"
+            v-hasPermi="['patient:patient:inform']"
           >下载报告
           </el-button>
           <el-button
@@ -131,25 +153,19 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-magic-stick"
-            @click="handleInform(scope.row)"
-            v-hasPermi="['patient:patient:inform']"
-          >查看报告
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['patient_management:patient_management:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['patient_management:patient_management:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -165,21 +181,21 @@
     <!-- 添加或修改患者管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="患者身份证号" prop="patientNumber">
-          <el-input v-model="form.patientNumber" placeholder="请输入患者身份证号" />
+        <el-form-item label="患者身份证号" prop="patientCode">
+          <el-input v-model="form.patientCode" placeholder="请输入患者身份证号"/>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
+          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
         </el-form-item>
-        <el-form-item label="设备号" prop="equipmentNumber">
-          <el-input v-model="form.equipmentNumber" placeholder="请输入设备号" />
+        <el-form-item label="设备号" prop="equipmentCode">
+          <el-input v-model="form.equipmentCode" placeholder="请输入设备号"/>
         </el-form-item>
         <el-form-item label="连接时间" prop="connectionTime">
           <el-date-picker clearable
-            v-model="form.connectionTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择连接时间">
+                          v-model="form.connectionTime"
+                          type="date"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          placeholder="请选择连接时间">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -192,11 +208,19 @@
 </template>
 
 <script>
-import { listPatient_management, getPatient_management, delPatient_management, addPatient_management, updatePatient_management } from "@/api/patient_management/patient_management";
+import {
+  listPatient_management,
+  getPatient_management,
+  delPatient_management,
+  addPatient_management,
+  updatePatient_management
+} from "@/api/patient_management/patient_management";
+import axios from "axios";
+import {getPatientByPatientName, getPatientByPatientNumber} from "@/api/patient/patient";
 
 export default {
   name: "Patient_management",
-  dicts: ['if','sex'],
+  dicts: ['if', 'sex'],
   data() {
     return {
       // 遮罩层
@@ -221,23 +245,26 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        patientNumber: null,
+        patientCode: null,
         hospitalCode: null,
-        equipmentNumber: null,
-        connectionTime: null
+        equipmentCode: null,
+        connectionTime: null,
+        patient: {
+          patientName: null,
+        }
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        patientNumber: [
-          { required: true, message: "患者身份证号不能为空", trigger: "blur" }
+        patientCode: [
+          {required: true, message: "患者身份证号不能为空", trigger: "blur"}
         ],
         hospitalCode: [
-          { required: true, message: "医院代号不能为空", trigger: "blur" }
+          {required: true, message: "医院代号不能为空", trigger: "blur"}
         ],
-        equipmentNumber: [
-          { required: true, message: "设备号不能为空", trigger: "blur" }
+        equipmentCode: [
+          {required: true, message: "设备号不能为空", trigger: "blur"}
         ],
       }
     };
@@ -263,10 +290,11 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        patientName: null,
         pId: null,
-        patientNumber: null,
+        patientCode: null,
         hospitalCode: null,
-        equipmentNumber: null,
+        equipmentCode: null,
         connectionTime: null
       };
       this.resetForm("form");
@@ -284,7 +312,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.pId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -326,12 +354,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const pIds = row.pId || this.ids;
-      this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
         return delPatient_management(pIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -343,13 +372,41 @@ export default {
     handleAlert(row) {
       this.$router.push({path: "/alert_log", query: {pId: row.pId}});
     },
-    /** 跳转到报告*/
+    /** 生成报告*/
     handleInform(row) {
-      this.$router.push({path: "/inform", query: {pId: row.pId}});
+      this.$router.push({path: "/ExportPDF", query: {pId: row.pId}});
+
     },
     /** 下载报告*/
     downloadInform(row) {
-      this.$router.push({path: "/ExportPDF", query: {pId: row.pId}});
+
+      // window.open("http://localhost:83/dev-api/download/test.pdf?token=" + this.getToken(), '_blank');
+
+      // axios.get('http://localhost:83/dev-api/download/test.pdf',
+      //   {responseType: 'blob'}
+      // ).then((res)=>{
+      //   console.log('文件下载成功');
+      //   const blob = new Blob([res.data]);
+      //   const fileName = "test.pdf";
+      //
+      //   if ('download' in document.createElement('a')) {
+      //
+      //     const link = document.createElement('a');//创建a标签
+      //     link.download = fileName;//a标签添加属性
+      //     link.style.display = 'none';
+      //     link.href = URL.createObjectURL(blob);
+      //     document.body.appendChild(link);
+      //     link.click();//执行下载
+      //     URL.revokeObjectURL(link.href); //释放url
+      //     document.body.removeChild(link);//释放标签
+      //   } else {
+      //     navigator.msSaveBlob(blob, fileName);
+      //   }
+      // }).catch((res)=>{
+      //   console.log('文件下载失败');
+      // });
+
+
     }
   }
 };
