@@ -252,6 +252,7 @@ export default {
         patient: {
           patientName: null,
         }
+
       },
       // 表单参数
       form: {},
@@ -276,6 +277,8 @@ export default {
     /** 查询患者管理列表 */
     getList() {
       this.loading = true;
+      console.log(this.queryParams);
+
       listPatient_management(this.queryParams).then(response => {
         this.patient_managementList = response.rows;
         this.total = response.total;

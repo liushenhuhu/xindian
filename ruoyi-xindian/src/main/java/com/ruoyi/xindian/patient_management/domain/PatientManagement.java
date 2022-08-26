@@ -29,48 +29,11 @@ public class PatientManagement extends BaseEntity {
      */
     private Patient patient;
 
-   /* *//**
-     * 患者姓名
-     *//*
-    @Excel(name = "患者姓名")
-    private String patientName;*/
-
     /**
      * 患者身份证号
      */
     @Excel(name = "患者身份证号")
     private String patientCode;
-
- /*   *//**
-     * 患者年龄
-     *//*
-    @Excel(name = "患者年龄 ")
-    private String patientAge;
-
-    *//**
-     * 患者性别
-     *//*
-    @Excel(name = "患者性别")
-    private String patientSex;
-
-    *//**
-     * 患者来源
-     *//*
-    @Excel(name = "患者来源")
-    private String patientSource;
-
-    *//**
-     * 患者电话
-     *//*
-    @Excel(name = "患者电话")
-    private String patientPhone;
-
-    *//**
-     * 家属电话
-     *//*
-    @Excel(name = "家属电话")
-    private String familyPhone;
-*/
 
     /**
      * 监测状态
@@ -101,12 +64,6 @@ public class PatientManagement extends BaseEntity {
      * 医院
      */
     private Hospital hospital;
-
-/*    *//**
-     * 医院名称
-     *//*
-    @Excel(name = "医院名称")
-    private String hospitalName;*/
 
     /**
      * 设备号
