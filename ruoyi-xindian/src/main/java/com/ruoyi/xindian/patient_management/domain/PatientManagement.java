@@ -3,8 +3,9 @@ package com.ruoyi.xindian.patient_management.domain;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.xindian.hospital.domain.Hospital;
-import com.ruoyi.xindian.patient.domain.Patient;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -25,51 +26,16 @@ public class PatientManagement extends BaseEntity {
     private String pId;
 
     /**
-     * 患者
-     */
-    private Patient patient;
-
-    /**
-     * 患者身姓名
-     */
-    @Excel(name = "患者姓名")
-    private String patientName;
-
-    /**
      * 患者身份证号
      */
     @Excel(name = "患者身份证号")
     private String patientCode;
 
     /**
-     * 监测状态
-     */
-    @Excel(name = "监测状态")
-    private String monitoringStatus;
-
-    /**
-     * 床位号
-     */
-    @Excel(name = "床位号")
-    private String bedNumber;
-
-    /**
-     * 病历号
-     */
-    @Excel(name = "病历号")
-    private String caseHistoryNumber;
-
-    /**
      * 医院代号
      */
     @Excel(name = "医院代号")
     private String hospitalCode;
-
-
-    /**
-     * 医院
-     */
-    private Hospital hospital;
 
     /**
      * 设备号
@@ -84,6 +50,65 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "连接时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date connectionTime;
 
+    /**
+     * 床位号
+     */
+    @Excel(name = "床位号")
+    private String bedNumber;
+
+    /**
+     * 病历号
+     */
+    @Excel(name = "病历号")
+    private String caseHistoryNumber;
+
+    /**
+     * 患者姓名
+     */
+    @Excel(name = "患者姓名")
+    private String patientName;
+
+    /**
+     * 患者年龄
+     */
+    @Excel(name = "患者年龄 ")
+    private String patientAge;
+
+    /**
+     * 患者性别
+     */
+    @Excel(name = "患者性别")
+    private String patientSex;
+
+    /**
+     * 患者来源
+     */
+    @Excel(name = "患者来源")
+    private String patientSource;
+
+    /**
+     * 患者电话
+     */
+    @Excel(name = "患者电话")
+    private String patientPhone;
+
+    /**
+     * 家属电话
+     */
+    @Excel(name = "家属电话")
+    private String familyPhone;
+
+    /**
+     * 监测状态
+     */
+    @Excel(name = "监测状态")
+    private String monitoringStatus;
+
+    /**
+     * 医院名称
+     */
+    @Excel(name = "医院名称")
+    private String hospitalName;
 
     public String getpId() {
         return pId;
@@ -101,12 +126,12 @@ public class PatientManagement extends BaseEntity {
         this.patientCode = patientCode;
     }
 
-    public void setHospitalCode(String hospitalCode) {
-        this.hospitalCode = hospitalCode;
-    }
-
     public String getHospitalCode() {
         return hospitalCode;
+    }
+
+    public void setHospitalCode(String hospitalCode) {
+        this.hospitalCode = hospitalCode;
     }
 
     public String getEquipmentCode() {
@@ -117,21 +142,12 @@ public class PatientManagement extends BaseEntity {
         this.equipmentCode = equipmentCode;
     }
 
-    public void setConnectionTime(Date connectionTime) {
-        this.connectionTime = connectionTime;
-    }
-
     public Date getConnectionTime() {
         return connectionTime;
     }
 
-
-    public String getMonitoringStatus() {
-        return monitoringStatus;
-    }
-
-    public void setMonitoringStatus(String monitoringStatus) {
-        this.monitoringStatus = monitoringStatus;
+    public void setConnectionTime(Date connectionTime) {
+        this.connectionTime = connectionTime;
     }
 
     public String getBedNumber() {
@@ -150,28 +166,68 @@ public class PatientManagement extends BaseEntity {
         this.caseHistoryNumber = caseHistoryNumber;
     }
 
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    public Hospital getHospital() {
-        return hospital;
-    }
-
-    public void setHospital(Hospital hospital) {
-        this.hospital = hospital;
-    }
-
     public String getPatientName() {
         return patientName;
     }
 
     public void setPatientName(String patientName) {
         this.patientName = patientName;
+    }
+
+    public String getPatientAge() {
+        return patientAge;
+    }
+
+    public void setPatientAge(String patientAge) {
+        this.patientAge = patientAge;
+    }
+
+    public String getPatientSex() {
+        return patientSex;
+    }
+
+    public void setPatientSex(String patientSex) {
+        this.patientSex = patientSex;
+    }
+
+    public String getPatientSource() {
+        return patientSource;
+    }
+
+    public void setPatientSource(String patientSource) {
+        this.patientSource = patientSource;
+    }
+
+    public String getPatientPhone() {
+        return patientPhone;
+    }
+
+    public void setPatientPhone(String patientPhone) {
+        this.patientPhone = patientPhone;
+    }
+
+    public String getFamilyPhone() {
+        return familyPhone;
+    }
+
+    public void setFamilyPhone(String familyPhone) {
+        this.familyPhone = familyPhone;
+    }
+
+    public String getMonitoringStatus() {
+        return monitoringStatus;
+    }
+
+    public void setMonitoringStatus(String monitoringStatus) {
+        this.monitoringStatus = monitoringStatus;
+    }
+
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
     }
 
     @Override
@@ -185,9 +241,8 @@ public class PatientManagement extends BaseEntity {
                 .append("monitoringStatus", getMonitoringStatus())
                 .append("bedNumber", getBedNumber())
                 .append("caseHistoryNumber", getCaseHistoryNumber())
-                .append("patient",getPatient())
-                .append("hospital",getHospital())
                 .append("patientName",getPatientName())
+                .append("hospitalName",getHospitalName())
                 .toString();
     }
 }

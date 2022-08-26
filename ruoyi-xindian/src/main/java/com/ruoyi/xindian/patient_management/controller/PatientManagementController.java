@@ -57,10 +57,7 @@ public class PatientManagementController extends BaseController
     public TableDataInfo list(PatientManagement patientManagement)
     {
         startPage();
-        System.out.println("******************");
-        System.out.println(patientManagement.toString());
         List<PatientManagement> list = patientManagementService.selectPatientManagementList(patientManagement);
-
         return getDataTable(list);
     }
 

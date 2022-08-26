@@ -212,9 +212,6 @@
           <el-input v-model="form.equipmentId" placeholder="请输入最近连接设备号" />
         </el-form-item>
         <el-form-item label="监测状态" prop="monitoringStatus">
-          <el-input v-model="form.monitoringStatus" placeholder="请输入监测状态" />
-        </el-form-item>
-        <el-form-item label="监测状态" prop="monitoringStatus">
           <el-select v-model="form.monitoringStatus" placeholder="请选择监测状态">
             <el-option
               v-for="dict in dict.type.monitoring_status"

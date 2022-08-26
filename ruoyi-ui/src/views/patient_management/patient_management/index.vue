@@ -102,22 +102,30 @@
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="患者管理id" align="center" prop="pId"/>
-      <el-table-column label="患者姓名" align="center" prop="patient.patientName"/>
+      <el-table-column label="患者姓名" align="center" prop="patientName"/>
       <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode" />-->
-      <el-table-column label="患者年龄" align="center" prop="patient.patientAge"/>
-      <el-table-column label="患者性别" align="center" prop="patient.patientSex">
+      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+      <el-table-column label="患者性别" align="center" prop="patientSex">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sex" :value="scope.row.patient.patientSex"/>
+          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者来源" align="center" prop="patient.patientSource"/>
-      <el-table-column label="患者电话" align="center" prop="patient.patientPhone"/>
-      <el-table-column label="家属电话" align="center" prop="patient.familyPhone"/>
-      <el-table-column label="监测状态" align="center" prop="patient.monitoringStatus"/>
+      <el-table-column label="患者来源" align="center" prop="patientSource"/>
+      <el-table-column label="患者电话" align="center" prop="patientPhone">
+<!--        <el-tooltip class="item" effect="dark" property="patientPhone" placement="top-start">
+          <el-button>患者电话</el-button>
+        </el-tooltip>-->
+      </el-table-column>
+      <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+      <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+        </template>
+      </el-table-column>
       <!--      <el-table-column label="床位号" align="center" prop="bedNumber" />
             <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <el-table-column label="医院名称" align="center" prop="hospital.hospitalName"/>
+      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
       <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
         <template slot-scope="scope">
@@ -126,6 +134,14 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-order"
+            @click="handleAlert(scope.row)"
+            v-hasPermi="['patient:patient:alert']"
+          >查看预警日志
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -141,14 +157,6 @@
             @click="downloadInform(scope.row)"
             v-hasPermi="['patient:patient:inform']"
           >下载报告
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-order"
-            @click="handleAlert(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
-          >查看预警日志
           </el-button>
           <el-button
             size="mini"
@@ -219,7 +227,7 @@ import axios from "axios";
 
 export default {
   name: "Patient_management",
-  dicts: ['if', 'sex'],
+  dicts: ['if', 'sex', 'monitoring_status'],
   data() {
     return {
       // 遮罩层
@@ -289,12 +297,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        patientName: null,
         pId: null,
         patientCode: null,
         hospitalCode: null,
         equipmentCode: null,
-        connectionTime: null
+        connectionTime: null,
+        patientName: null
       };
       this.resetForm("form");
     },
