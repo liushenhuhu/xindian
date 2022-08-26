@@ -60,18 +60,7 @@ public class PatientManagementController extends BaseController
         System.out.println("******************");
         System.out.println(patientManagement.toString());
         List<PatientManagement> list = patientManagementService.selectPatientManagementList(patientManagement);
-//        for (PatientManagement management : list) {
-//            Patient patient = patientService.selectPatientByPatientNumber(management.getPatientNumber());
-//            Hospital hospital = hospitalService.selectHospitalByHospitalCode(management.getHospitalCode());
-//            management.setHospitalName(hospital.getHospitalName());
-//            management.setPatientName(patient.getPatientName());
-//            management.setPatientAge(patient.getPatientAge());
-//            management.setPatientSex(patient.getPatientSex());
-//            management.setPatientSource(patient.getPatientSource());
-//            management.setPatientPhone(patient.getPatientPhone());
-//            management.setFamilyPhone(patient.getFamilyPhone());
-//            management.setMonitoringStatus(patient.getMonitoringStatus());
-//        }
+
         return getDataTable(list);
     }
 

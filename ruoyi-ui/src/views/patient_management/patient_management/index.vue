@@ -2,9 +2,9 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 
-      <el-form-item label="患者姓名" prop="patient.patientName">
+      <el-form-item label="患者姓名" prop="patientName">
         <el-input
-          v-model="queryParams.patient.patientName"
+          v-model="queryParams.patientName"
           placeholder="请输入患者姓名"
           clearable
           @keyup.enter.native="handleQuery"
@@ -216,7 +216,6 @@ import {
   updatePatient_management
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
-import {getPatientByPatientName, getPatientByPatientNumber} from "@/api/patient/patient";
 
 export default {
   name: "Patient_management",
@@ -249,10 +248,7 @@ export default {
         hospitalCode: null,
         equipmentCode: null,
         connectionTime: null,
-        patient: {
-          patientName: null,
-        }
-
+        patientName: null,
       },
       // 表单参数
       form: {},
@@ -377,7 +373,8 @@ export default {
     },
     /** 生成报告*/
     handleInform(row) {
-      this.$router.push({path: "/ExportPDF", query: {pId: row.pId}});
+      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId , hospitalName: row.hospitalName}});
+      window.open(routeUrl.href, '_blank');
 
     },
     /** 下载报告*/

@@ -52,6 +52,7 @@
                 #{caseHistoryNumber}, '%')
             </if>
         </where>
+        order by connection_time desc
     </select>
 
     <select id="selectPatientManagementByPId" parameterType="String" resultMap="PatientManagementResult">

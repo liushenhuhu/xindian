@@ -30,6 +30,12 @@ public class PatientManagement extends BaseEntity {
     private Patient patient;
 
     /**
+     * 患者身姓名
+     */
+    @Excel(name = "患者姓名")
+    private String patientName;
+
+    /**
      * 患者身份证号
      */
     @Excel(name = "患者身份证号")
@@ -160,6 +166,13 @@ public class PatientManagement extends BaseEntity {
         this.hospital = hospital;
     }
 
+    public String getPatientName() {
+        return patientName;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
+    }
 
     @Override
     public String toString() {
@@ -174,6 +187,7 @@ public class PatientManagement extends BaseEntity {
                 .append("caseHistoryNumber", getCaseHistoryNumber())
                 .append("patient",getPatient())
                 .append("hospital",getHospital())
+                .append("patientName",getPatientName())
                 .toString();
     }
 }

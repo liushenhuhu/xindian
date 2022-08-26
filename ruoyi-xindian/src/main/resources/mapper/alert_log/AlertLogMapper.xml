@@ -11,10 +11,20 @@
         <result property="eventName"    column="event_name"    />
         <result property="eventDescription"    column="event_description"    />
         <result property="pId"    column="p_id"    />
+        <result property="patientName" column="patient_name"    />
+        <result property="patientCode" column="patient_code"    />
+        <result property="patientPhone" column="patient_phone"  />
+        <result property="familyPhone"    column="family_phone"    />
+        <result property="hospitalCode" column="hospital_code"  />
+        <result property="hospitalName" column="hospital_name"  />
     </resultMap>
 
     <sql id="selectAlertLogVo">
-        select log_id, log_time, log_type, event_name, event_description, p_id from alert_log
+        select *
+        from alert_log al
+            inner join patient_management pm on al.p_id = pm.p_id
+            inner join patient p on pm.patient_code = p.patient_code
+            inner join hospital h on pm.hospital_code = h.hospital_code
     </sql>
 
     <select id="selectAlertLogList" parameterType="AlertLog" resultMap="AlertLogResult">
@@ -25,7 +35,10 @@
             <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
             <if test="eventDescription != null  and eventDescription != ''"> and event_description like concat('%', #{eventDescription}, '%')</if>
             <if test="pId != null "> and p_id like concat('%', #{pId}, '%')</if>
+            <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="hospitalName != null "> and hospital_name like concat('%', #{hospitalName}, '%')</if>
         </where>
+        order by log_time desc
     </select>
 
     <select id="selectAlertLogByLogId" parameterType="Long" resultMap="AlertLogResult">

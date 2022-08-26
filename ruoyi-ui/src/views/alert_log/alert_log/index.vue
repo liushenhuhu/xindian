@@ -41,6 +41,22 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="患者姓名" prop="patientName">
+        <el-input
+          v-model="queryParams.patientName"
+          placeholder="请输入患者姓名"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="医院名称" prop="hospitalName">
+        <el-input
+          v-model="queryParams.hospitalName"
+          placeholder="请输入医院名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -106,7 +122,7 @@
       <el-table-column label="事件说明" align="center" prop="eventDescription" />
       <el-table-column label="患者id" align="center" prop="pId" />
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
-      <el-table-column label="患者身份证号" align="center" prop="patientNumber"/>
+      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
       <el-table-column label="患者电话" align="center" prop="patientPhone"/>
       <el-table-column label="家属电话" align="center" prop="familyPhone"/>
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
@@ -214,7 +230,9 @@ export default {
         logType: null,
         eventName: null,
         eventDescription: null,
-        pId: null
+        pId: null,
+        patientName: null,
+        hospitalName: null
       },
       // 表单参数
       form: {},
@@ -264,7 +282,9 @@ export default {
         logType: null,
         eventName: null,
         eventDescription: null,
-        pId: null
+        pId: null,
+        patientName: null,
+        hospitalName: null
       };
       this.resetForm("form");
     },

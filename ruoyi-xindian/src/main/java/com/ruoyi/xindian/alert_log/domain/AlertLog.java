@@ -2,6 +2,9 @@ package com.ruoyi.xindian.alert_log.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -13,6 +16,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author hanhan
  * @date 2022-08-20
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AlertLog extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -47,7 +53,7 @@ public class AlertLog extends BaseEntity
 
     /** 患者身份证号 */
     @Excel(name = "患者身份证号")
-    private String patientNumber;
+    private String patientCode;
 
     /**
      * 患者电话
@@ -69,107 +75,12 @@ public class AlertLog extends BaseEntity
     @Excel(name = "医院名称")
     private String hospitalName;
 
-    public void setLogId(Long logId)
-    {
-        this.logId = logId;
-    }
-
-    public Long getLogId()
-    {
-        return logId;
-    }
-
-    public void setLogTime(Date logTime)
-    {
-        this.logTime = logTime;
-    }
-
-    public Date getLogTime()
-    {
-        return logTime;
-    }
-    public void setLogType(String logType)
-    {
-        this.logType = logType;
-    }
-
-    public String getLogType()
-    {
-        return logType;
-    }
-    public void setEventName(String eventName)
-    {
-        this.eventName = eventName;
-    }
-
-    public String getEventName()
-    {
-        return eventName;
-    }
-    public void setEventDescription(String eventDescription)
-    {
-        this.eventDescription = eventDescription;
-    }
-
-    public String getEventDescription()
-    {
-        return eventDescription;
-    }
-
     public String getpId() {
         return pId;
     }
 
     public void setpId(String pId) {
         this.pId = pId;
-    }
-
-    public String getPatientName() {
-        return patientName;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
-
-    public String getPatientNumber() {
-        return patientNumber;
-    }
-
-    public void setPatientNumber(String patientNumber) {
-        this.patientNumber = patientNumber;
-    }
-
-    public String getPatientPhone() {
-        return patientPhone;
-    }
-
-    public void setPatientPhone(String patientPhone) {
-        this.patientPhone = patientPhone;
-    }
-
-    public String getFamilyPhone() {
-        return familyPhone;
-    }
-
-    public void setFamilyPhone(String familyPhone) {
-        this.familyPhone = familyPhone;
-    }
-
-    public String getHospitalCode() {
-        return hospitalCode;
-    }
-
-    public void setHospitalCode(String hospitalCode) {
-        this.hospitalCode = hospitalCode;
-    }
-
-    public String getHospitalName() {
-        return hospitalName;
-    }
-
-    public void setHospitalName(String hospitalName) {
-        this.hospitalName = hospitalName;
     }
 
     @Override
@@ -182,7 +93,7 @@ public class AlertLog extends BaseEntity
                 .append("eventDescription", getEventDescription())
                 .append("pId", getpId())
                 .append("patientName", getPatientName())
-                .append("patientNumber", getPatientNumber())
+                .append("patientCode", getPatientCode())
                 .append("patientPhone", getPatientPhone())
                 .append("familyPhone", getFamilyPhone())
                 .append("hospitalCode", getHospitalCode())

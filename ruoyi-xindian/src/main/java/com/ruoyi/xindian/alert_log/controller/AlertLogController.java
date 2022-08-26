@@ -41,15 +41,6 @@ public class AlertLogController extends BaseController
     @Autowired
     private IAlertLogService alertLogService;
 
-    @Autowired
-    private IPatientService patientService;
-
-    @Autowired
-    private IHospitalService hospitalService;
-
-    @Autowired
-    private IPatientManagementService patientManagementService;
-
     /**
      * 查询预警日志列表
      */
@@ -59,17 +50,6 @@ public class AlertLogController extends BaseController
     {
         startPage();
         List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
-        for (AlertLog log : list) {
-            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(log.getpId());
-            Patient patient = patientService.selectPatientByPatientCode(patientManagement.getPatientCode());
-            Hospital hospital = hospitalService.selectHospitalByHospitalCode(patientManagement.getHospitalCode());
-            log.setPatientName(patient.getPatientName());
-            log.setPatientNumber(patient.getPatientCode());
-            log.setPatientPhone(patient.getPatientPhone());
-            log.setFamilyPhone(patient.getFamilyPhone());
-            log.setHospitalCode(hospital.getHospitalCode());
-            log.setHospitalName(hospital.getHospitalName());
-        }
         return getDataTable(list);
     }
 
