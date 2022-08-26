@@ -3015,8 +3015,8 @@ var data = obj
         console.log("*-*-*-*-*-*--*-*-*-*-")
 
       });
-       sessionStorage.removeItem('data');
-       sessionStorage.removeItem('show');
+       // sessionStorage.removeItem('data');
+       // sessionStorage.removeItem('show');
     },
 
     //上传pdf
