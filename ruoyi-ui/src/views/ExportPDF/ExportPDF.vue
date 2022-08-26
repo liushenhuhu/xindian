@@ -1055,7 +1055,7 @@ export default {
       console.log(this.pId)
       $.ajax({
         type: "post",
-        url: "http://219.155.7.235:5004",
+        url: "http://219.155.7.235:5003/analysis_decg",
         asynsc: false,
         contentType: "application/json",
         dataType: "json",
