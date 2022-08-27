@@ -10,10 +10,11 @@
         <result property="equipmentVersion"    column="equipment_version"    />
         <result property="equipmentStatus"    column="equipment_status"    />
         <result property="hospitalCode"    column="hospital_code"    />
+        <result property="equipmentType"    column="equipment_type"    />
     </resultMap>
 
     <sql id="selectEquipmentVo">
-        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code from equipment
+        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code, equipment_type from equipment
     </sql>
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
@@ -23,6 +24,7 @@
             <if test="equipmentVersion != null  and equipmentVersion != ''"> and equipment_version like concat('%', #{equipmentVersion}, '%')</if>
             <if test="equipmentStatus != null  and equipmentStatus != ''"> and equipment_status like concat('%', #{equipmentStatus}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
+            <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
         </where>
     </select>
 
@@ -39,6 +41,7 @@
             <if test="equipmentVersion != null">equipment_version,</if>
             <if test="equipmentStatus != null">equipment_status,</if>
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
+            <if test="equipmentType != null">equipment_type,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="equipmentId != null">#{equipmentId},</if>
@@ -46,6 +49,7 @@
             <if test="equipmentVersion != null">#{equipmentVersion},</if>
             <if test="equipmentStatus != null">#{equipmentStatus},</if>
             <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
+            <if test="equipmentType != null">#{equipmentType},</if>
         </trim>
     </insert>
 
@@ -56,6 +60,7 @@
             <if test="equipmentVersion != null">equipment_version = #{equipmentVersion},</if>
             <if test="equipmentStatus != null">equipment_status = #{equipmentStatus},</if>
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>
+            <if test="equipmentType != null">equipment_type = #{equipmentType},</if>
         </trim>
         where equipment_id = #{equipmentId}
     </update>

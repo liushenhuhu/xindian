@@ -102,11 +102,8 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-
-
-    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" highlight-current-row="true">
+    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-
       <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -166,16 +163,15 @@
       </el-table-column>
 
 
-
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-s-order"
-            @click="handleAlert(scope.row)"
+            @click="lookECG(scope.row)"
             v-hasPermi="['patient:patient:alert']"
-          >查看预警日志
+          >查看心电图
           </el-button>
           <el-button
             size="mini"
@@ -304,7 +300,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'DECG'
+        ecgType: 'ECG',
       },
       // 表单参数
       form: {},
@@ -354,7 +350,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'DECG'
+        ecgType: 'ECG'
       };
       this.resetForm("form");
     },
@@ -427,9 +423,9 @@ export default {
         ...this.queryParams
       }, `patient_management_${new Date().getTime()}.xlsx`)
     },
-    /** 跳转到预警日志*/
-    handleAlert(row) {
-      this.$router.push({path: "/alert_log", query: {pId: row.pId}});
+    /** 查看心电图*/
+    lookECG(row) {
+      this.$router.push({path: "/staticECG", query: {pId: row.pId}});
     },
     /** 生成报告*/
     handleInform(row) {

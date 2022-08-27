@@ -35,6 +35,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="设备种类" prop="equipmentType">
+        <el-select v-model="queryParams.equipmentType" placeholder="请选择设备种类" clearable>
+          <el-option
+            v-for="dict in dict.type.ecg_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -50,7 +60,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['equipment:equipment:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -61,7 +72,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['equipment:equipment:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -72,7 +84,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['equipment:equipment:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -82,22 +95,28 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['equipment:equipment:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="设备id" align="center" prop="equipmentId" />
-      <el-table-column label="设备号" align="center" prop="equipmentCode" />
-      <el-table-column label="设备版本号" align="center" prop="equipmentVersion" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="设备id" align="center" prop="equipmentId"/>
+      <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+      <el-table-column label="设备版本号" align="center" prop="equipmentVersion"/>
       <el-table-column label="设备状态" align="center" prop="equipmentStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+      <el-table-column label="设备种类" align="center" prop="equipmentType">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -106,14 +125,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['equipment:equipment:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['equipment:equipment:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -130,10 +151,10 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="设备号" prop="equipmentCode">
-          <el-input v-model="form.equipmentCode" placeholder="请输入设备号" />
+          <el-input v-model="form.equipmentCode" placeholder="请输入设备号"/>
         </el-form-item>
         <el-form-item label="设备版本号" prop="equipmentVersion">
-          <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号" />
+          <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号"/>
         </el-form-item>
         <el-form-item label="设备状态" prop="equipmentStatus">
           <el-select v-model="form.equipmentStatus" placeholder="请选择设备状态">
@@ -146,7 +167,17 @@
           </el-select>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" />
+          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
+        </el-form-item>
+        <el-form-item label="设备种类" prop="equipmentType">
+          <el-select v-model="form.equipmentType" placeholder="请选择设备种类">
+            <el-option
+              v-for="dict in dict.type.ecg_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -158,11 +189,11 @@
 </template>
 
 <script>
-import { listEquipment, getEquipment, delEquipment, addEquipment, updateEquipment } from "@/api/equipment/equipment";
+import {listEquipment, getEquipment, delEquipment, addEquipment, updateEquipment} from "@/api/equipment/equipment";
 
 export default {
   name: "Equipment",
-  dicts: ['equipment_status'],
+  dicts: ['equipment_status', 'ecg_type'],
   data() {
     return {
       // 遮罩层
@@ -190,17 +221,18 @@ export default {
         equipmentCode: null,
         equipmentVersion: null,
         equipmentStatus: null,
-        hospitalCode: null
+        hospitalCode: null,
+        equipmentType: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         equipmentCode: [
-          { required: true, message: "设备号不能为空", trigger: "blur" }
+          {required: true, message: "设备号不能为空", trigger: "blur"}
         ],
         hospitalCode: [
-          { required: true, message: "医院代号不能为空", trigger: "blur" }
+          {required: true, message: "医院代号不能为空", trigger: "blur"}
         ]
       }
     };
@@ -230,7 +262,8 @@ export default {
         equipmentCode: null,
         equipmentVersion: null,
         equipmentStatus: null,
-        hospitalCode: null
+        hospitalCode: null,
+        equipmentType: null
       };
       this.resetForm("form");
     },
@@ -247,7 +280,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.equipmentId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -289,12 +322,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const equipmentIds = row.equipmentId || this.ids;
-      this.$modal.confirm('是否确认删除设备编号为"' + equipmentIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除设备编号为"' + equipmentIds + '"的数据项？').then(function () {
         return delEquipment(equipmentIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

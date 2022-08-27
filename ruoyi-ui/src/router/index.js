@@ -87,7 +87,16 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  }
+  },
+
+/*  {
+    //自己添加的公开路由页面，不要添加在动态路由中！
+    //查看心电图
+    path: 'http://219.155.7.235:6006/diagnosis',
+    component: () => import('@/views/不会写'),
+    hidden: true,
+  },*/
+
 ]
 
 // 动态路由，基于用户权限动态去加载

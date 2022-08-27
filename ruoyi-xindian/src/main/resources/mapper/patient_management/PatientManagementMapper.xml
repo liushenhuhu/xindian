@@ -21,6 +21,7 @@
         <result property="familyPhone"    column="family_phone"    />
         <result property="monitoringStatus"    column="monitoring_status"    />
         <result property="hospitalName"    column="hospital_name"    />
+        <result property="ecgType"    column="ecg_type"    />
     </resultMap>
 
     <sql id="selectPatientManagementVo">
@@ -34,23 +35,14 @@
     <select id="selectPatientManagementList" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         <where>
-            <if test="patientName != null  and patientName != ''">and patient_name like concat('%',
-                #{patientName}, '%')
-            </if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%',
-                #{patientCode}, '%')
-            </if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},
-                '%')
-            </if>
-            <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%',
-                #{equipmentCode}, '%')
-            </if>
-            <if test="connectionTime != null ">and connection_time like concat('%', #{connectionTime}, '%')</if>
+            <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
+            <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
+            <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
-            <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%',
-                #{caseHistoryNumber}, '%')
-            </if>
+            <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type = #{ecgType} </if>
         </where>
         order by connection_time desc
     </select>
@@ -69,6 +61,7 @@
             <if test="connectionTime != null">connection_time,</if>
             <if test="bedNumber != null">bed_number,</if>
             <if test="caseHistoryNumber != null">case_history_number,</if>
+            <if test="ecgType != null">ecg_type,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -77,6 +70,7 @@
             <if test="connectionTime != null">#{connectionTime},</if>
             <if test="bedNumber != null">#{bedNumber},</if>
             <if test="caseHistoryNumber != null">#{caseHistoryNumber},</if>
+            <if test="ecgType != null">#{ecgType},</if>
         </trim>
     </insert>
 
@@ -89,6 +83,7 @@
             <if test="connectionTime != null">connection_time = #{connectionTime},</if>
             <if test="bedNumber != null">bed_number = #{bedNumber},</if>
             <if test="caseHistoryNumber != null">case_history_number = #{caseHistoryNumber},</if>
+            <if test="ecgType != null">ecg_type = #{ecgType},</if>
         </trim>
         where p_id = #{pId}
     </update>

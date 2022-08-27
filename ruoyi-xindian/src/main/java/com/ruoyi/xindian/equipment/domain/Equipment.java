@@ -34,6 +34,10 @@ public class Equipment extends BaseEntity
     @Excel(name = "医院代号")
     private String hospitalCode;
 
+    /** 设备种类（静态动态） */
+    @Excel(name = "设备种类", readConverterExp = "静=态动态")
+    private String equipmentType;
+
     public void setEquipmentId(Long equipmentId)
     {
         this.equipmentId = equipmentId;
@@ -80,6 +84,14 @@ public class Equipment extends BaseEntity
         return hospitalCode;
     }
 
+    public String getEquipmentType() {
+        return equipmentType;
+    }
+
+    public void setEquipmentType(String equipmentType) {
+        this.equipmentType = equipmentType;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -88,6 +100,7 @@ public class Equipment extends BaseEntity
                 .append("equipmentVersion", getEquipmentVersion())
                 .append("equipmentStatus", getEquipmentStatus())
                 .append("hospitalCode", getHospitalCode())
+                .append("equipmentType",getEquipmentType())
                 .toString();
     }
 }

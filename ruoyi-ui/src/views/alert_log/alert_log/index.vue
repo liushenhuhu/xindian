@@ -2,12 +2,17 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="发生时间" prop="logTime">
-        <el-date-picker clearable
-                        v-model="queryParams.logTime"
-                        type="date"
-                        value-format="yyyy-MM-dd HH:mm:ss"
-                        placeholder="请选择发生时间">
-        </el-date-picker>
+        <el-form-item label="发生时间">
+          <el-date-picker
+            v-model="daterangeLogTime"
+            style="width: 240px"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetimerange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
       </el-form-item>
       <el-form-item label="预警类型" prop="logType">
         <el-input
@@ -120,13 +125,36 @@
       <el-table-column label="预警类型" align="center" prop="logType" />
       <el-table-column label="事件名称" align="center" prop="eventName" />
       <el-table-column label="事件说明" align="center" prop="eventDescription" />
-      <el-table-column label="患者id" align="center" prop="pId" />
+      <el-table-column label="患者id" align="center" prop="pId" show-overflow-tooltip/>
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
-      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
+<!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
       <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-      <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+      <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
+
+      <!--  隐藏的患者的个人信息    -->
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-divider content-position="left">患者信息</el-divider>
+            <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
+              <span>{{scope.row.patientCode}}</span>
+            </el-form-item>
+            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+              <span>{{scope.row.patientSource}}</span>
+            </el-form-item>
+            <el-form-item label="患者电话" width="200" style="padding-left: 40px">
+              <span>{{scope.row.patientPhone}}</span>
+            </el-form-item>
+            <el-form-item label="家属电话" width="200" style="padding-left: 40px">
+              <span>{{scope.row.familyPhone}}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -170,7 +198,7 @@
         <el-form-item label="发生时间" prop="logTime">
           <el-date-picker clearable
                           v-model="form.logTime"
-                          type="date"
+                          type="datetime"
                           value-format="yyyy-MM-dd HH:mm:ss"
                           placeholder="请选择发生时间">
           </el-date-picker>
@@ -222,6 +250,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 时间范围
+      daterangeLogTime: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -263,6 +293,11 @@ export default {
     /** 查询预警日志列表 */
     getList() {
       this.loading = true;
+      this.queryParams.params = {};
+      if (null != this.daterangeLogTime && '' != this.daterangeLogTime) {
+        this.queryParams.params["beginLogTime"] = this.daterangeLogTime[0];
+        this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
+      }
       listAlert_log(this.queryParams).then(response => {
         this.alert_logList = response.rows;
         this.total = response.total;
@@ -355,10 +390,6 @@ export default {
       this.download('alert_log/alert_log/export', {
         ...this.queryParams
       }, `alert_log_${new Date().getTime()}.xlsx`)
-    },
-    /** 跳转到预警日志*/
-    handleAlert(row) {
-      this.$router.push({path: "/alert_log", query: {patientId: row.patientId}});
     },
 
     /** 查看日志*/
