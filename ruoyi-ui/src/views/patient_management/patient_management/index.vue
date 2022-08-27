@@ -269,6 +269,7 @@ import {
   updatePatient_management
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
+import $ from "jquery";
 
 export default {
   name: "Patient_management",
@@ -433,10 +434,26 @@ export default {
     },
     /** 生成报告*/
     handleInform(row) {
-      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId , hospitalName: row.hospitalName}});
-      window.open(routeUrl.href, '_blank');
-
+      var name = row.patientName
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/analysis_decg",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          pId: row.pId
+        }),
+        success: function (data) {
+          alert(name+"动态心电报告已生成")
+        },
+        error:function (data)
+        {
+          alert(name+"动态心电报告生成出错,请重新请求或联系管理员")
+        }
+      })
+      alert(name+"动态报告生成中，请稍后...")
     },
+
     /** 下载报告*/
     downloadInform(row) {
       let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId , hospitalName: row.hospitalName}});

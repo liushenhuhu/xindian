@@ -754,7 +754,6 @@
 // 导出页面为PDF格式
 import html2Canvas from "html2canvas";
 import JsPDF from "jspdf";
-import logoImg from "@/assets/logo/logo.png";
 import echarts from 'echarts'
 import $ from 'jquery';
 import { Loading } from 'element-ui';
@@ -1045,23 +1044,25 @@ export default {
     get(){
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
-        text: '请勿刷新页面，正在获取数据，请耐心等待1-3分钟...',//显示在加载图标下方的加载文案
+        text: '请勿刷新页面，正在获取数据...',//显示在加载图标下方的加载文案
         spinner: 'el-icon-loading',//自定义加载图标类名
         background: 'rgba(0, 0, 0, 0.7)',//遮罩层颜色
         target: document.querySelector('#table')//loadin覆盖的dom元素节点
       });
+
       var _th = this
       console.log("执行")
       console.log(this.pId)
       $.ajax({
         type: "post",
-        url: "http://219.155.7.235:5003/analysis_decg",
+        url: "http://219.155.7.235:5003/get_analysis_decg",
         asynsc: false,
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
           pId: this.pId
         }),
+
         success: function (data) {
           console.log(_th.pId)
           console.log(data)
@@ -1070,11 +1071,12 @@ export default {
           sessionStorage.setItem(_th.pId+'show' ,true)
           loading.close()
           window.location.reload("#pdfDom");
+          console.log("12123"+_th.pId)
         },
         error:function (data)
         {
-          alert("数据请求错误,请刷新页面或联系管理员")
-          loading.close()
+            alert("数据请求错误,请刷新页面或联系管理员")
+            loading.close()
           console.log("错误")
           console.log(_th.pId)
           console.log(data)
@@ -1120,8 +1122,9 @@ export default {
             },
             yAxis: {
               show:false,
-              scale:true
-            },
+              //y轴动态规划
+              // scale:true
+           },
             // toolbox: {
             //     right: 10,
             //     feature: {
@@ -1265,7 +1268,7 @@ export default {
             },
             yAxis: {
               show:false,
-              scale:true
+              // scale:true
             },
             // toolbox: {
             //     right: 10,
@@ -1404,7 +1407,7 @@ export default {
             },
             yAxis: {
               show:false,
-              scale:true
+              // scale:true
             },
             // toolbox: {
             //     right: 10,
@@ -1544,7 +1547,7 @@ export default {
             },
             yAxis: {
               show:false,
-              scale:true
+              // scale:true
             },
             // toolbox: {
             //     right: 10,
@@ -2855,6 +2858,9 @@ var data = obj
         left:'1%',
      },
         grid: {left: '18%',},
+      tooltip: {
+        trigger: 'axis'
+      },
         xAxis: {
           type: 'category',
           data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartRatesFrequency
@@ -2894,6 +2900,9 @@ var data = obj
         left:'1%',
      },
         grid: {left: '18%',},
+      tooltip: {
+        trigger: 'axis'
+      },
         xAxis: {
           type: 'category',
           data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterFrequency,
@@ -2932,6 +2941,9 @@ var data = obj
         left:'1%',
      },
         grid: {left: '18%',},
+      tooltip: {
+        trigger: 'axis'
+      },
         xAxis: {
           type: 'category',
           data:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterSubFrequency
@@ -3017,8 +3029,8 @@ var data = obj
         console.log("*-*-*-*-*-*--*-*-*-*-")
 
       });
-       // sessionStorage.removeItem('data');
-       // sessionStorage.removeItem('show');
+       sessionStorage.removeItem(this.$route.query.pId+'data');
+       sessionStorage.removeItem(this.$route.query.pId+'show');
     },
 
     //上传pdf

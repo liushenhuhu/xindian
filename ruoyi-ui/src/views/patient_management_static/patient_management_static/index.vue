@@ -429,13 +429,13 @@ export default {
     },
     /** 生成报告*/
     handleInform(row) {
-      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId , hospitalName: row.hospitalName}});
+      let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId , hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
 
     },
     /** 下载报告*/
     downloadInform(row) {
-      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId , hospitalName: row.hospitalName}});
+      let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId , hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
 
       // window.open("http://localhost:83/dev-api/download/test.pdf?token=" + this.getToken(), '_blank');
