@@ -75,7 +75,7 @@
                 <div class="box2-left-bottom">
                   <div class="box2-1">
                     总心搏数:
-                    <strong>{{froms.heartRate.totalHeartRate}}次</strong>
+                    <strong>{{froms.heartRate.totalHeartRate}}</strong> 次
                   </div>
                   <div class="box2-1">
                     最慢心率:
@@ -97,11 +97,11 @@
                   </div>
                   <div class="box2-1">
                     最长间期:
-                    <strong>{{froms.heartRate.longestInterval}}ms</strong>
+                    <strong>{{froms.heartRate.longestInterval}}</strong> ms
                   </div>
                   <div class="box2-1">
                     最短间期:
-                    <strong>{{froms.heartRate.slowestInterval}}ms</strong>
+                    <strong>{{froms.heartRate.slowestInterval}}</strong> ms
                   </div>
                   <div class="box2-1"></div>
                 </div>
@@ -114,7 +114,7 @@
                   <div class="box2-right-bottom">
                     <div class="box2-1">
                       心动过缓总数:
-                      <strong>{{froms.heartbeat.bradycardiaTotal}}</strong>次
+                      <strong>{{froms.heartbeat.bradycardiaTotal}}</strong> 次
                     </div>
                     <div class="box2-1">
                       心动过缓占比:
@@ -122,7 +122,7 @@
                     </div>
                     <div class="box2-1">
                       心动过缓总持续时间:
-                      <strong>{{froms.heartbeat.bradycardiaTotalDuration}}</strong>ms
+                      <strong>{{froms.heartbeat.bradycardiaTotalDuration}}</strong> s
                     </div>
                     <div class="box2-1">
                       最长心动过缓周期开始时间:
@@ -134,17 +134,17 @@
                     </div>
                     <div class="box2-1">
                       最长心动过缓周期持续时间:
-                      <strong>{{froms.heartbeat.longestBradycardiaCycleDuration}}</strong>ms
+                      <strong>{{froms.heartbeat.longestBradycardiaCycleDuration}}</strong> s
                     </div>
                     <div class="box2-1">
                       最长心动过缓心搏数:
-                      <strong>{{froms.heartbeat.longestBradycardia}}</strong>次
+                      <strong>{{froms.heartbeat.longestBradycardia}}</strong> 次
                     </div>
                   </div>
                   <div class="box2-right-bottom">
                     <div class="box2-1">
                       心动过速总数:
-                      <strong>{{froms.heartbeat.tachycardiaTotal}}</strong>次
+                      <strong>{{froms.heartbeat.tachycardiaTotal}}</strong> 次
                     </div>
                     <div class="box2-1">
                       心动过速占比:
@@ -152,7 +152,7 @@
                     </div>
                     <div class="box2-1">
                       心动过速总持续时间:
-                      <strong>{{froms.heartbeat.tachycardiaTotalDuration}}</strong>ms
+                      <strong>{{froms.heartbeat.tachycardiaTotalDuration}}</strong> s
                     </div>
                     <div class="box2-1">
                       最长心动过速周期开始时间:
@@ -164,11 +164,11 @@
                     </div>
                     <div class="box2-1">
                       最长心动过速周期持续时间:
-                      <strong>{{froms.heartbeat.longestTachycardiaCycleDuration}}</strong>
+                      <strong>{{froms.heartbeat.longestTachycardiaCycleDuration}}</strong> s
                     </div>
                     <div class="box2-1">
                       最长心动过速心搏数:
-                      <strong>{{froms.heartbeat.longestTachycardia}}</strong>次
+                      <strong>{{froms.heartbeat.longestTachycardia}}</strong> 次
                     </div>
                   </div>
                 </div>
@@ -311,15 +311,15 @@
               <div>
                 <span>
                   SDNN:
-                  <strong>{{froms.heartRateVariabilityAnalysis.SDNN}}</strong> ms
+                  <strong>{{froms.heartRateVariabilityAnalysis.SDNN}}</strong>ms
                 </span>
                 <span>
                   rMSSD:
-                  <strong>{{froms.heartRateVariabilityAnalysis.rMSSD}}</strong> ms
+                  <strong>{{froms.heartRateVariabilityAnalysis.rMSSD}}</strong>ms
                 </span>
                 <span>
                   NN20:
-                  <strong>{{froms.heartRateVariabilityAnalysis.NN20}}</strong> ms
+                  <strong>{{froms.heartRateVariabilityAnalysis.NN20}}</strong>ms
                 </span>
                 <span>
                   PNN20:
@@ -327,7 +327,7 @@
                 </span>
                 <span>
                   NN50:
-                  <strong>{{froms.heartRateVariabilityAnalysis.NN50}}</strong> ms
+                  <strong>{{froms.heartRateVariabilityAnalysis.NN50}}</strong>ms
                 </span>
                 <span>
                   PNN50:
@@ -787,10 +787,10 @@ export default {
           department: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.科室,
           //床号
           bedNo: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.床号,
-          ID:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.ID,
+          ID:this.$route.query.pId,
           deviceID:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.设备编号,
-          recordDate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.时间,
-          recordDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.记录时间
+          recordDate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.上传时间,
+          recordDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.记录时长
         },
         heartRate: {
           totalHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.总心搏数,
@@ -1076,6 +1076,8 @@ export default {
           alert("数据请求错误,请刷新页面或联系管理员")
           loading.close()
           console.log("错误")
+          console.log(_th.pId)
+          console.log(data)
         }
       })
     },
