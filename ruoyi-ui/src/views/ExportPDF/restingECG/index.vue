@@ -94,7 +94,8 @@
       </div>
 
     </div>
-    <button type="button" style="margin-top: 20px;" @click="btnClick">导出PDF</button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 48% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
+
   </div>
 </template>
 
@@ -108,7 +109,7 @@ export default {
   name: "index",
   data() {
     return {
-      exportPDFtitle: "页面导出PDF文件名",
+      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.patientName+"静态心电报告",
       pId:null,
       data:{
         name:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.patientName,
@@ -1451,8 +1452,8 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
   width: 100%;
-  height: 1345px;
-  border: 3px solid #0000ff;
+  height: 1220px;
+  //border: 3px solid #0000ff;
 }
 .header{
   display: flex;

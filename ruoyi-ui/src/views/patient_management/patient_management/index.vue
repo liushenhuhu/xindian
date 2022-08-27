@@ -448,7 +448,7 @@ export default {
         },
         error:function (data)
         {
-          alert(name+"动态心电报告生成出错,请重新请求或联系管理员")
+          console.log(name+"动态心电报告生成出错,请重新请求或联系管理员")
         }
       })
       alert(name+"动态报告生成中，请稍后...")

@@ -938,79 +938,80 @@ export default {
       },
       tableData: [
         {
-          time:"D1-09:04",
-          heartBeatNumber:5109,
+          time:"-",
+          heartBeatNumber:"-",
           heartRate:{
-            fastest:167,
-            average:88,
-            slowest:69
+            fastest:"-",
+            average:"-",
+            slowest:"-"
           },
           //室性异位
           ventricularEctopic:{
             //总数
-            total: 0,
+            total: "-",
             //百分比
-            percentage:0,
+            percentage:"-",
             //单发
-            singleShot: 0,
+            singleShot: "-",
             //成对
-            pair: 0,
+            pair: "-",
             //室速
-            VT: 0,
+            VT: "-",
             //逸搏
-            escape: 0,
+            escape: "-",
           },
           supraventricularEctopic: {
             //总数
-            total: 0,
+            total: "-",
             //室上性百分比
-            percentage: 0,
+            percentage: "-",
             //单发
-            singleShot: 0,
+            singleShot: "-",
             //成对
-            pair: 0,
+            pair: "-",
             //室上速
-            supraventricularTachycardia: 0,
+            supraventricularTachycardia: "-",
           },
-          asystole:0
+          asystole:"-"
         },
         {
-          time:"D1-09:04",
-          heartBeatNumber:5109,
+          time:"-",
+          heartBeatNumber:"-",
           heartRate:{
-            fastest:167,
-            average:88,
-            slowest:69
+            fastest:"-",
+            average:"-",
+            slowest:"-"
           },
           //室性异位
           ventricularEctopic:{
             //总数
-            total: 0,
+            total: "-",
             //百分比
-            percentage:0,
+            percentage:"-",
             //单发
-            singleShot: 0,
+            singleShot: "-",
             //成对
-            pair: 0,
+            pair: "-",
             //室速
-            VT: 0,
+            VT: "-",
             //逸搏
-            escape: 0,
+            escape: "-",
           },
           supraventricularEctopic: {
             //总数
-            total: 0,
+            total: "-",
             //室上性百分比
-            percentage: 0,
+            percentage: "-",
             //单发
-            singleShot: 0,
+            singleShot: "-",
             //成对
-            pair: 0,
+            pair: "-",
             //室上速
-            supraventricularTachycardia: 0,
+            supraventricularTachycardia: "-",
           },
-          asystole:0
+          asystole:"-"
         },
+
       ]
     };
   },
@@ -1071,12 +1072,11 @@ export default {
           sessionStorage.setItem(_th.pId+'show' ,true)
           loading.close()
           window.location.reload("#pdfDom");
-          console.log("12123"+_th.pId)
         },
         error:function (data)
         {
-            alert("数据请求错误,请刷新页面或联系管理员")
-            loading.close()
+          console.log("数据请求错误，请先点击生成报告。")
+          loading.close()
           console.log("错误")
           console.log(_th.pId)
           console.log(data)
