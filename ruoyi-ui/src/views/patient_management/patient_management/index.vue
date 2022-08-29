@@ -104,7 +104,7 @@
 
 
 
-    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" highlight-current-row="true">
+    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" >
       <el-table-column type="selection" width="55" align="center"/>
 
       <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
@@ -130,7 +130,7 @@
         </template>
       </el-table-column>
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
+<!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
       <el-table-column label="心电种类" align="center" prop="ecgType">
         <template slot-scope="scope">
@@ -142,7 +142,7 @@
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
-            <el-divider content-position="left">患者信息</el-divider>
+            <el-divider content-position="left">其他信息</el-divider>
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{scope.row.patientCode}}</span>
             </el-form-item>
@@ -161,10 +161,14 @@
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
               <span>{{scope.row.familyPhone}}</span>
             </el-form-item>
+
+            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+              <span>{{scope.row.hospitalName}}</span>
+            </el-form-item>
+
           </el-form>
         </template>
       </el-table-column>
-
 
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -172,10 +176,10 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-s-order"
-            @click="handleAlert(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
-          >查看预警日志
+            icon="el-icon-loading"
+            @click="monitoring(scope.row)"
+            v-hasPermi="['patient:patient:monitoring']"
+          >实时监测
           </el-button>
           <el-button
             size="mini"
@@ -192,6 +196,14 @@
             @click="downloadInform(scope.row)"
             v-hasPermi="['patient:patient:inform']"
           >下载报告
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-order"
+            @click="handleAlert(scope.row)"
+            v-hasPermi="['patient:patient:alert']"
+          >预警日志
           </el-button>
           <el-button
             size="mini"
@@ -270,6 +282,7 @@ import {
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
+import {getToken} from "@/utils/auth";
 
 export default {
   name: "Patient_management",
@@ -432,6 +445,11 @@ export default {
     handleAlert(row) {
       this.$router.push({path: "/alert_log", query: {pId: row.pId}});
     },
+    /** 跳转到心电图实时监测*/
+    monitoring(row) {
+      this.$router.push({path: "/monitoring", query: {equipmentCode: row.equipmentCode}});
+    },
+
     /** 生成报告*/
     handleInform(row) {
       var name = row.patientName
@@ -484,6 +502,33 @@ export default {
       // }).catch((res)=>{
       //   console.log('文件下载失败');
       // });
+
+      //下载pdf文件
+
+      /*  axios({
+          url: 'http://localhost:83/dev-api/download/downPdf',
+          method: 'post',
+          responseType: 'blob',
+          headers: { 'Authorization': 'Bearer ' + getToken() }
+        }).then(res => {
+          console.log('PDFres',res);
+          var blob = new Blob([res], {
+            type: 'application/pdf;charset=UTF-8',
+          }); //type这里表示pdf类型
+          console.log('blob',blob);
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(blob, '使用说明.pdf');
+          } else {
+            var downloadElement = document.createElement('a');
+            var href = window.URL.createObjectURL(blob); //创建下载的链接
+            downloadElement.href = href;
+            downloadElement.download = '使用说明.pdf'; //下载后文件名
+            document.body.appendChild(downloadElement);
+            downloadElement.click(); //点击下载
+            document.body.removeChild(downloadElement); //下载完成移除元素
+            window.URL.revokeObjectURL(href); //释放掉blob对象
+          }
+        });*/
 
 
     }
