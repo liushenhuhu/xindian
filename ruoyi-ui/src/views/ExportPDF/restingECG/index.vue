@@ -203,9 +203,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -251,8 +251,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -266,22 +266,73 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -303,9 +354,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -351,8 +402,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -366,22 +417,75 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
+
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
+
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -403,9 +507,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -451,8 +555,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -466,22 +570,74 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
+
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -503,9 +659,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -551,8 +707,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -566,22 +722,74 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
+
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -603,9 +811,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -651,8 +859,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -666,22 +874,74 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
+
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -703,9 +963,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -751,8 +1011,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -766,22 +1026,74 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
+
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -803,9 +1115,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -851,8 +1163,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -866,22 +1178,73 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -903,9 +1266,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -951,8 +1314,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -966,22 +1329,73 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -1003,9 +1417,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -1051,8 +1465,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -1066,22 +1480,73 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -1103,9 +1568,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -1151,8 +1616,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -1166,22 +1631,73 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -1203,9 +1719,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -1251,8 +1767,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -1266,22 +1782,73 @@ export default {
                 color : "#000000",
                 width : 1
               }
-            }
+            },
+            markLine: {
+        symbol:"none",
+          silent: true,
+          lineStyle: {
+          type:"solid",
+            color: '#b33939',
+            width: 0.5
+        },
+        label: {
+
+          position: 'start', // 表现内容展示的位置
+            color: '#b33939'  // 展示内容颜色
+        },
+
+        data: [
+          {xAxis: 0},
+          {xAxis: 25},
+          {xAxis: 50},
+          {xAxis: 75},
+          {xAxis: 100},
+          {xAxis: 125},
+          {xAxis: 150},
+          {xAxis: 175},
+          {xAxis: 200},
+          {xAxis: 225},
+          {xAxis: 250},
+          {xAxis: 275},
+          {xAxis: 300},
+          {xAxis: 325},
+          {xAxis: 350},
+          {xAxis: 375},
+          {xAxis: 400},
+          {xAxis: 425},
+          {xAxis: 450},
+          {xAxis: 475},
+          {xAxis: 500},
+          {xAxis: 525},
+          {xAxis: 550},
+          {xAxis: 575},
+          {xAxis: 600},
+          {xAxis: 625},
+          {xAxis: 650},
+          {xAxis: 675},
+          {xAxis: 700},
+          {xAxis: 725},
+          {xAxis: 750},
+          {xAxis: 775},
+          {xAxis: 800},
+          {xAxis: 825},
+          {xAxis: 850},
+          {xAxis: 875},
+          {xAxis: 900},
+          {xAxis: 925},
+          {xAxis: 950},
+          {xAxis: 975},
+          {xAxis: 999.4},
+
+          {yAxis: -1},
+          {yAxis: -0.5},
+          {yAxis: 0},
+          {yAxis: 0.5},
+          {yAxis: 1},
+        ]
+      }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -1303,9 +1870,9 @@ export default {
         },
         grid: {
           left: '5',
-          right: '0',
+          right: '1',
           top:'0',
-          bottom:'0',
+          bottom:'1',
           containLabel: false
         },
         xAxis: {
@@ -1351,8 +1918,8 @@ export default {
               type:'solid' //网格是实实线，可以修改成虚线以及其他的类型
             }
           },
-          max:0.8,
-          min:-0.7
+          max:1,
+          min:-1
         },
 
         series : [
@@ -1366,22 +1933,74 @@ export default {
                 color : "#000000",
                 width : 1
               }
+            },
+            markLine: {
+              symbol:"none",
+              silent: true,
+              lineStyle: {
+                type:"solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
             }
           }
         ],
-        graphic: [{
-          type: 'image',
-          left: '20',
-          right: '2',
-          top:'15',
-          bottom:'20',
-          z: -2,
-          bounding: 'raw',
-          style: {
-            image: '../tools/images/ecg_long.png',
-            height: 405
-          }
-        }]
+
       };
       ecgBc.setOption(option);
       $(window).resize(function(){
@@ -1474,7 +2093,8 @@ export default {
 }
 
 .line{
-  height:112.5px;
+  height:100px;
+  width: 98%;
   margin: 0;
   padding: 0
 }
