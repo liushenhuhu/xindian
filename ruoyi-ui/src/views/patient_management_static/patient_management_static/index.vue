@@ -127,8 +127,8 @@
         </template>
       </el-table-column>
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
-      <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+<!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
+      <el-table-column label="设备号" align="center" prop="equipmentCode"/>-->
       <el-table-column label="心电种类" align="center" prop="ecgType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
@@ -139,7 +139,7 @@
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
-            <el-divider content-position="left">患者信息</el-divider>
+            <el-divider content-position="left">其他信息</el-divider>
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{scope.row.patientCode}}</span>
             </el-form-item>
@@ -158,6 +158,15 @@
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
               <span>{{scope.row.familyPhone}}</span>
             </el-form-item>
+
+            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+              <span>{{scope.row.hospitalName}}</span>
+            </el-form-item>
+            <el-form-item label="设备号" width="200" style="padding-left: 40px">
+              <span>{{scope.row.equipmentCode}}</span>
+            </el-form-item>
+
+
           </el-form>
         </template>
       </el-table-column>

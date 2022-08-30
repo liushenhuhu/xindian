@@ -140,7 +140,7 @@
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者来源" align="center" prop="patientSource" />
+<!--      <el-table-column label="患者来源" align="center" prop="patientSource" />-->
       <el-table-column label="患者电话" align="center" prop="patientPhone" />
       <el-table-column label="家属电话" align="center" prop="familyPhone" />
       <el-table-column label="最近连接设备号" align="center" prop="equipmentId" />
@@ -149,6 +149,23 @@
           <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
         </template>
       </el-table-column>
+
+
+      <!--  隐藏的患者的个人信息    -->
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-divider content-position="left">其他信息</el-divider>
+
+            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+              <span>{{scope.row.patientSource}}</span>
+            </el-form-item>
+
+
+          </el-form>
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

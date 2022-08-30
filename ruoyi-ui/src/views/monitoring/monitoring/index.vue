@@ -21,9 +21,9 @@ export default {
     };
   },
   created() {
-    if (this.$route.query.pId) {
-      this.pId = this.$route.query.pId;
-      this.src = "http://219.155.7.235:6006/diagnosis?pId=" + this.pId;
+    if (this.$route.query.equipmentCode) {
+      this.equipmentCode = this.$route.query.equipmentCode;
+      this.src = "http://219.155.7.235:6006/screen?equipmentCode=" + this.equipmentCode;
       console.log(this.src)
     }
     //动态计算表格高度
@@ -31,9 +31,9 @@ export default {
     this.TableHeight = windowHeight + 180;
   },
   activated() {
-    if (this.$route.query.pId) {
-      this.pId = this.$route.query.pId;
-      this.src = "http://219.155.7.235:6006/diagnosis?pId=" + this.pId;
+    if (this.$route.query.equipmentCode) {
+      this.equipmentCode = this.$route.query.equipmentCode;
+      this.src = "http://219.155.7.235:6006/screen?equipmentCode=" + this.equipmentCode;
       console.log(this.src)
     }
   },
