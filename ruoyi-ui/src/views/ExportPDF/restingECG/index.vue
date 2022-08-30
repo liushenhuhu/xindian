@@ -4,68 +4,72 @@
       <div id="app">
         <div class="page">
           <div class="header">
-            <div class="header-1">
-              <div class="header-1-1">
-                姓名: {{data.name}}
+            <div class="header-left">
+              <div class="header-1">
+                <div class="header-1-1">
+                  姓名: {{data.name}}
+                </div>
+                <div class="header-1-1">
+                  性别: {{ data.gender }}
+                </div>
+                <div class="header-1-1">
+                  年龄: {{ data.age }} 岁
+                </div>
+                <div class="header-1-1">
+                  送检科室: -
+                </div>
+                <div class="header-1-1">
+                  申请单号: -
+                </div>
               </div>
-              <div class="header-1-1">
-                性别: {{ data.gender }}
+              <div class="header-1">
+                <div class="header-1-1">
+                  门诊号: -
+                </div>
+                <div class="header-1-1">
+                  住院号: -
+                </div>
+                <div class="header-1-1">
+                  病人编号: -
+                </div>
+                <div class="header-1-1">
+                  HR: - bpm
+                </div>
+                <div class="header-1-1">
+                  PR: - ms
+                </div>
               </div>
-              <div class="header-1-1">
-                年龄: {{ data.age }} 岁
-              </div>
-              <div class="header-1-1">
-                送检科室: -
-              </div>
-              <div class="header-1-1">
-                申请单号: -
+              <div class="header-1">
+                <div class="header-1-1">
+                 QRS: - ms
+                </div>
+                <div class="header-1-1">
+                  QT/QTc: - ms/ - ms
+                </div>
+                <div class="header-1-1">
+                  P/QRS/T: -/-/- deg
+                </div>
+                <div class="header-1-1">
+                  PV5/SV1: -/- mV
+                </div>
+                <div class="header-1-1">
+                  RV5+SV1: - mV
+                </div>
               </div>
             </div>
-            <div class="header-1">
-              <div class="header-1-1">
-                门诊号: -
-              </div>
-              <div class="header-1-1">
-                住院号: -
-              </div>
-              <div class="header-1-1">
-                病人编号: -
-              </div>
-              <div class="header-1-1">
-                HR: - bpm
-              </div>
-              <div class="header-1-1">
-                PR: - ms
-              </div>
-            </div>
-            <div class="header-1">
-              <div class="header-1-1">
-               QRS: - ms
-              </div>
-              <div class="header-1-1">
-                QT/QTc: - ms/ - ms
-              </div>
-              <div class="header-1-1">
-                P/QRS/T: -/-/- deg
-              </div>
-              <div class="header-1-1">
-                PV5/SV1: -/- mV
-              </div>
-              <div class="header-1-1">
-                RV5+SV1: - mV
-              </div>
-            </div>
-            <div class="header-1" style="flex: 1.5">
-              <div class="header-1-1">
-                诊断
-              </div>
-              <div class="header-1-1">
-                <div
-                  type="textarea"
-                  contenteditable="true"
-                  placeholder="请输入诊断结果"
-                  class="box8-1-1"
-                >{{ data.result }}
+            <div class="header-left" >
+                <div class="header-1">
+                <div class="header-1-1">
+                  诊断
+                </div>
+                <div class="header-1-1">
+                  <div
+                    type="textarea"
+                    contenteditable="true"
+                    placeholder="请输入诊断结果"
+                    class="box8-1-1"
+                  >{{ data.result }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -2077,10 +2081,16 @@ export default {
 .header{
   display: flex;
   justify-content: space-between;
+  font-size: 20px;
   margin-bottom: 3vh;
+}
+.header-left{
+  display: flex;
+  flex: 1;
 }
 
 .header-1{
+  flex: 1;
   float: left;
   padding-left: 3vw;
 }
