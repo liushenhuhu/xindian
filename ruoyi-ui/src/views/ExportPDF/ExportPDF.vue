@@ -6,7 +6,9 @@
           <h1>{{ hospitalName }}</h1>
           <h1>动态心电图报告</h1>
           <div class="main">
+            <div class="time">报告时间：{{froms.reportTime}}</div>
             <div class="box1">
+
               <div class="box1-top">
                 <h2>病人信息</h2>
               </div>
@@ -772,7 +774,7 @@ export default {
           text1:'1.窦性心律 心率动态变化正常',
           text2:'2.最快心率156，仍为窦性',
         },
-
+        reportTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.报告时间,
         patientInfo: {
           name: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名,
           sex: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.性别,
@@ -3117,8 +3119,10 @@ var data = obj
   height: 1127px;
 }
 
-.main {
-
+.main .time{
+  font-size: 6px;
+  margin-top: 10px;
+  margin-left: 65%;
 }
 h1 {
   text-align: center;
@@ -3131,7 +3135,7 @@ h2 {
 .box1 {
   width: 90%;
   height: 100px;
-  margin: 20px auto 0;
+  margin: 0 auto 0;
   border: 1px solid black;
   font-size: 13px;
 }
