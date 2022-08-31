@@ -337,6 +337,17 @@ export default {
     };
   },
   created() {
+    if (this.$route.params.patientName) {
+      this.queryParams.patientName = this.$route.params.patientName;
+      this.queryParams.patientCode = this.$route.params.patientCode;
+    }
+    this.getList();
+  },
+  activated() {
+    if (this.$route.params.patientName) {
+      this.queryParams.patientName = this.$route.params.patientName;
+      this.queryParams.patientCode = this.$route.params.patientCode;
+    }
     this.getList();
   },
   methods: {
