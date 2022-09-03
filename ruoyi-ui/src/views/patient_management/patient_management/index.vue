@@ -46,6 +46,16 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
+      <el-form-item label="在线状态" prop="onlineStatus">
+        <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
+          <el-option
+            v-for="dict in dict.type.monitoring_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -124,14 +134,19 @@
       <el-table-column label="患者来源" align="center" prop="patientSource"/>
       <el-table-column label="患者电话" align="center" prop="patientPhone"/>
       <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
-      <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+<!--      <el-table-column label="监测状态" align="center" prop="monitoringStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
 <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+      <el-table-column label="在线状态" align="center" prop="onlineStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
+        </template>
+      </el-table-column>
       <el-table-column label="心电种类" align="center" prop="ecgType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
@@ -263,6 +278,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="在线状态" prop="onlineStatus">
+          <el-select v-model="form.onlineStatus" placeholder="请选择在线状态">
+            <el-option
+              v-for="dict in dict.type.monitoring_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -278,11 +303,13 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management
+  updatePatient_management, updateStatus
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
 import {getToken} from "@/utils/auth";
+import {updateMonitoringStatus} from "@/api/patient/patient";
+import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
 
 export default {
   name: "Patient_management",
@@ -336,6 +363,26 @@ export default {
       }
     };
   },
+  // beforeCreate() {
+  //   $.ajax({
+  //     type: "post",
+  //     url: "http://219.155.7.235:5003/get_device2",
+  //     contentType: "application/json",
+  //     dataType: "json",
+  //     data: JSON.stringify({
+  //       "ts": 0
+  //     }),
+  //     success: function (res) {
+  //       let pIdList;
+  //       pIdList = res.result.pid_list;
+  //       console.log(pIdList)
+  //       updateStatus(pIdList);
+  //     },
+  //     error: function () {
+  //       alert("更新失败！")
+  //     }
+  //   })
+  // },
   created() {
     if (this.$route.params.patientName) {
       this.queryParams.patientName = this.$route.params.patientName;
@@ -353,17 +400,60 @@ export default {
   methods: {
     /** 查询患者管理列表 */
     getList() {
-      this.loading = true;
-      this.queryParams.params = {};
-      if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
-        this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
-        this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
-      }
-      listPatient_management(this.queryParams).then(response => {
-        this.patient_managementList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device2",
+        contentType: "application/json",
+        dataType: "json",
+        // async: false,
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let pIdList;
+          pIdList = res.result.pid_list;
+          console.log(pIdList)
+          updateStatus(pIdList)
+        },
+        error: function () {
+          alert("更新失败！")
+        }
+      })
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device",
+        contentType: "application/json",
+        dataType: "json",
+        // async: false,
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let devList;
+          devList = res.result.dev_list;
+          console.log(devList)
+          updateEquipmentStatus(devList)
+        },
+        error: function () {
+          alert("更新失败！")
+        }
+      })
+
+      setTimeout(()=>{
+        this.loading = true;
+        this.queryParams.params = {};
+        if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
+          this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
+          this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
+        }
+        listPatient_management(this.queryParams).then(response => {
+          this.patient_managementList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      })
+
+
     },
     // 取消按钮
     cancel() {

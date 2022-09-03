@@ -22,6 +22,7 @@
         <result property="monitoringStatus"    column="monitoring_status"    />
         <result property="hospitalName"    column="hospital_name"    />
         <result property="ecgType"    column="ecg_type"    />
+        <result property="onlineStatus"    column="online_status"    />
     </resultMap>
 
     <sql id="selectPatientManagementVo">
@@ -43,8 +44,9 @@
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
             <if test="ecgType != null  and ecgType != ''"> and ecg_type = #{ecgType} </if>
+            <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
         </where>
-        order by connection_time desc
+        order by online_status desc, connection_time desc
     </select>
 
     <select id="selectPatientManagementByPId" parameterType="String" resultMap="PatientManagementResult">
@@ -62,6 +64,7 @@
             <if test="bedNumber != null">bed_number,</if>
             <if test="caseHistoryNumber != null">case_history_number,</if>
             <if test="ecgType != null">ecg_type,</if>
+            <if test="onlineStatus != null">online_status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -71,6 +74,7 @@
             <if test="bedNumber != null">#{bedNumber},</if>
             <if test="caseHistoryNumber != null">#{caseHistoryNumber},</if>
             <if test="ecgType != null">#{ecgType},</if>
+            <if test="onlineStatus != null">#{onlineStatus},</if>
         </trim>
     </insert>
 
@@ -84,8 +88,20 @@
             <if test="bedNumber != null">bed_number = #{bedNumber},</if>
             <if test="caseHistoryNumber != null">case_history_number = #{caseHistoryNumber},</if>
             <if test="ecgType != null">ecg_type = #{ecgType},</if>
+            <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
         </trim>
         where p_id = #{pId}
+    </update>
+
+    <update id="updateStatusAll">
+        update patient_management set online_status = 0
+    </update>
+
+    <update id="updateStatus" parameterType="String">
+        update patient_management set online_status = 1 where patient_management.p_id in
+        <foreach item="pId" collection="array" open="(" separator="," close=")">
+            #{pId}
+        </foreach>
     </update>
 
     <delete id="deletePatientManagementByPId" parameterType="String">

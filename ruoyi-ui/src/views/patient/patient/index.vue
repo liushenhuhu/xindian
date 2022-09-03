@@ -264,7 +264,17 @@
 </template>
 
 <script>
-import {listPatient, getPatient, delPatient, addPatient, updatePatient} from "@/api/patient/patient";
+import {
+  listPatient,
+  getPatient,
+  delPatient,
+  addPatient,
+  updatePatient,
+  updateMonitoringStatus
+} from "@/api/patient/patient";
+import $ from "jquery";
+import {updateStatus} from "@/api/patient_management/patient_management";
+import {updateEquipmentStatus} from "@/api/equipment/equipment";
 
 export default {
   name: "Patient",
@@ -285,6 +295,10 @@ export default {
       total: 0,
       // 患者表格数据
       patientList: [],
+
+      // 监测状态列表
+      monitoringStatusList: [],
+
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -302,7 +316,6 @@ export default {
         familyPhone: null,
         equipmentId: null,
         monitoringStatus: null,
-
       },
       // 表单参数
       form: {},
@@ -323,16 +336,52 @@ export default {
   methods: {
     /** 查询患者列表 */
     getList() {
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device2",
+        contentType: "application/json",
+        dataType: "json",
+        // async: false,
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let pIdList;
+          pIdList = res.result.pid_list;
+          console.log(pIdList)
+          updateStatus(pIdList)
+        },
+        error: function () {
+          alert("更新失败！")
+        }
+      })
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device",
+        contentType: "application/json",
+        dataType: "json",
+        // async: false,
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let devList;
+          devList = res.result.dev_list;
+          console.log(devList)
+          updateEquipmentStatus(devList)
+        },
+        error: function () {
+          alert("更新失败！")
+        }
+      })
+
       this.loading = true;
       listPatient(this.queryParams).then(response => {
         this.patientList = response.rows;
-        for (let i = 0; i < this.patientList.length; i++) {
-          // this.patientList[0].monitoringStatus = 1;
-          console.log(this.patientList[i]);
-        }
         this.total = response.total;
         this.loading = false;
       });
+
     },
     // 取消按钮
     cancel() {
@@ -424,13 +473,35 @@ export default {
         ...this.queryParams
       }, `patient_${new Date().getTime()}.xlsx`)
     },
-    /** 跳转到动态心电列表*/
+    /** 跳转到动态心电列表 */
     lookList(row) {
       this.$router.push({
         name: "lookList",
         params: {patientName: row.patientName, patientCode: row.patientCode}
       });
     },
+
+    /*    /!** 更新监测状态 *!/
+        getMonitoringStatus() {
+          $.ajax({
+            type: "POST",
+            url: "http://219.155.7.235:5003/get_device",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+              "ts": 0
+            }),
+            success: function (res) {
+              this.monitoringStatusList = res.result.dev_list;
+              console.log(this.monitoringStatusList)
+              updateMonitoringStatus(this.monitoringStatusList);
+            },
+            error: function () {
+              alert("更新失败！")
+            }
+          })
+        }*/
+
   }
 };
 </script>

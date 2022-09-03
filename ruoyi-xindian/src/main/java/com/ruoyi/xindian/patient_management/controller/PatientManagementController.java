@@ -4,7 +4,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
-import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -115,5 +114,28 @@ public class PatientManagementController extends BaseController
     public AjaxResult remove(@PathVariable String[] pIds)
     {
         return toAjax(patientManagementService.deletePatientManagementByPIds(pIds));
+    }
+
+    /**
+     * 修改患者管理
+     */
+    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:edit')")
+    @Log(title = "患者管理", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateStatus")
+    public void updateStatus(@RequestBody String[] pIds) {
+        patientManagementService.updateStatusAll();
+        patientManagementService.updateStatus(pIds);
+        System.out.println(pIds);
+        for (String pId : pIds) {
+            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
+            if (patientManagement != null) {
+                Patient patient = new Patient();
+                patient.setPatientName(patientManagement.getPatientName());
+                patient.setPatientCode(patientManagement.getPatientCode());
+                Patient patient1 = patientService.selectPatientByNameAndCode(patient);
+                patient1.setMonitoringStatus("1");
+                patientService.updatePatient(patient1);
+            }
+        }
     }
 }

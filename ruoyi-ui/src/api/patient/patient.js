@@ -58,3 +58,12 @@ export function delPatient(patientId) {
     method: 'delete'
   })
 }
+
+export function updateMonitoringStatus(data) {
+  return request({
+    url: '/patient/patient/updateMonitoringStatus',
+    method: 'post',
+    data: data,
+    timeout: 100000
+  })
+}

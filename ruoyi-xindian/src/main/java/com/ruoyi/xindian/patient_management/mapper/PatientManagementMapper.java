@@ -58,4 +58,8 @@ public interface PatientManagementMapper
      * @return 结果
      */
     public int deletePatientManagementByPIds(String[] pIds);
+
+    public void updateStatusAll();
+
+    public void updateStatus(String[] pIds);
 }

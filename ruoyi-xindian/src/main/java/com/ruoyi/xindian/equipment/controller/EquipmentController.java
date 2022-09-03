@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.equipment.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -100,5 +101,17 @@ public class EquipmentController extends BaseController
     public AjaxResult remove(@PathVariable Long[] equipmentIds)
     {
         return toAjax(equipmentService.deleteEquipmentByEquipmentIds(equipmentIds));
+    }
+
+    /**
+     * 修改设备
+     */
+    @PreAuthorize("@ss.hasPermi('equipment:equipment:edit')")
+    @Log(title = "设备", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateEquipmentStatus")
+    public void updateEquipmentStatus(@RequestBody String[] equipmentList)
+    {
+        equipmentService.updateEquipmentStatusAll();
+        equipmentService.updateEquipmentStatus(equipmentList);
     }
 }

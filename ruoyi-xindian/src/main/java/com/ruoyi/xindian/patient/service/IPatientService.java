@@ -74,4 +74,10 @@ public interface IPatientService
      * @return 患者
      */
     public Patient selectPatientByPatientName(String patientName);
+
+    public void updateMonitoringStatus();
+
+    public void updateMonitoringStatus2(String equipment);
+
+    public Patient selectPatientByNameAndCode(Patient patient);
 }

@@ -48,5 +48,13 @@ export function download(path) {
     url: '/download/' + path,
     method: 'get'
   })
+}
 
+export function updateStatus(data) {
+  return request({
+    url: '/patient_management/patient_management/updateStatus',
+    method: 'post',
+    data: data,
+    timeout: 100000
+  })
 }

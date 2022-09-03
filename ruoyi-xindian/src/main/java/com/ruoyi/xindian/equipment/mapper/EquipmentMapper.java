@@ -58,4 +58,8 @@ public interface EquipmentMapper
      * @return 结果
      */
     public int deleteEquipmentByEquipmentIds(Long[] equipmentIds);
+
+    void updateEquipmentStatusAll();
+
+    void updateEquipmentStatus(String[] equipmentList);
 }

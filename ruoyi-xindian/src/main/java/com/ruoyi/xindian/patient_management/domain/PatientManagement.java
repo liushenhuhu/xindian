@@ -114,6 +114,10 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "心电种类", readConverterExp = "静=态动态")
     private String ecgType;
 
+    /** 在线状态 */
+    @Excel(name = "在线状态")
+    private String onlineStatus;
+
     public String getpId() {
         return pId;
     }
@@ -242,6 +246,14 @@ public class PatientManagement extends BaseEntity {
         this.ecgType = ecgType;
     }
 
+    public String getOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public void setOnlineStatus(String onlineStatus) {
+        this.onlineStatus = onlineStatus;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -256,6 +268,7 @@ public class PatientManagement extends BaseEntity {
                 .append("patientName",getPatientName())
                 .append("hospitalName",getHospitalName())
                 .append("ecgType", getEcgType())
+                .append("onlineStatus", getOnlineStatus())
                 .toString();
     }
 }

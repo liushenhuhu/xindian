@@ -189,7 +189,17 @@
 </template>
 
 <script>
-import {listEquipment, getEquipment, delEquipment, addEquipment, updateEquipment} from "@/api/equipment/equipment";
+import {
+  listEquipment,
+  getEquipment,
+  delEquipment,
+  addEquipment,
+  updateEquipment,
+  updateEquipmentStatus
+} from "@/api/equipment/equipment";
+import $ from "jquery";
+import {updateMonitoringStatus} from "@/api/patient/patient";
+import {updateStatus} from "@/api/patient_management/patient_management";
 
 export default {
   name: "Equipment",
@@ -214,6 +224,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+
+      // 状态列表
+      statusList: [],
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -243,12 +257,52 @@ export default {
   methods: {
     /** 查询设备列表 */
     getList() {
-      this.loading = true;
-      listEquipment(this.queryParams).then(response => {
-        this.equipmentList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device2",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let pIdList;
+          pIdList = res.result.pid_list;
+          console.log(pIdList)
+          updateStatus(pIdList)
+        },
+        error: function () {
+          alert("更新失败！")
+        }
+      })
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let devList;
+          devList = res.result.dev_list;
+          console.log(devList)
+          updateEquipmentStatus(devList)
+        },
+        error: function () {
+          alert("更新失败！")
+        }
+      })
+      setTimeout(()=>{
+        this.loading = true;
+        listEquipment(this.queryParams).then(response => {
+          console.log("time--------------")
+          this.equipmentList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        },5000);
+      })
+
     },
     // 取消按钮
     cancel() {
@@ -335,7 +389,9 @@ export default {
       this.download('equipment/equipment/export', {
         ...this.queryParams
       }, `equipment_${new Date().getTime()}.xlsx`)
-    }
+    },
+
+
   }
 };
 </script>

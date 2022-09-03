@@ -5,36 +5,62 @@
 <mapper namespace="com.ruoyi.xindian.patient.mapper.PatientMapper">
 
     <resultMap type="Patient" id="PatientResult">
-        <result property="patientId"    column="patient_id"    />
-        <result property="patientName"    column="patient_name"    />
-        <result property="patientCode"    column="patient_code"    />
-        <result property="patientAge"    column="patient_age"    />
-        <result property="patientSex"    column="patient_sex"    />
-        <result property="patientSource"    column="patient_source"    />
-        <result property="patientPhone"    column="patient_phone"    />
-        <result property="familyPhone"    column="family_phone"    />
-        <result property="equipmentId"    column="equipment_id"    />
-        <result property="monitoringStatus"    column="monitoring_status"    />
+        <result property="patientId" column="patient_id"/>
+        <result property="patientName" column="patient_name"/>
+        <result property="patientCode" column="patient_code"/>
+        <result property="patientAge" column="patient_age"/>
+        <result property="patientSex" column="patient_sex"/>
+        <result property="patientSource" column="patient_source"/>
+        <result property="patientPhone" column="patient_phone"/>
+        <result property="familyPhone" column="family_phone"/>
+        <result property="equipmentId" column="equipment_id"/>
+        <result property="monitoringStatus" column="monitoring_status"/>
     </resultMap>
 
     <sql id="selectPatientVo">
-        select patient_id, patient_name, patient_code, patient_age, patient_sex, patient_source, patient_phone, family_phone, equipment_id, monitoring_status from patient
+        select patient_id,
+               patient_name,
+               patient_code,
+               patient_age,
+               patient_sex,
+               patient_source,
+               patient_phone,
+               family_phone,
+               equipment_id,
+               monitoring_status
+        from patient
     </sql>
 
     <select id="selectPatientList" parameterType="Patient" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
         <where>
-            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''"> and patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="patientAge != null  and patientAge != ''"> and patient_age like concat('%', #{patientAge}, '%')</if>
-            <if test="patientSex != null  and patientSex != ''"> and patient_sex like concat('%', #{patientSex}, '%')</if>
-            <if test="patientSource != null  and patientSource != ''"> and patient_source like concat('%', #{patientSource}, '%')</if>
-            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone like concat('%', #{patientPhone}, '%')</if>
-            <if test="familyPhone != null  and familyPhone != ''"> and family_phone like concat('%', #{familyPhone}, '%')</if>
-            <if test="equipmentId != null  and equipmentId != ''"> and equipment_id like concat('%', #{equipmentId}, '%')</if>
-            <if test="monitoringStatus != null  and monitoringStatus != ''"> and monitoring_status like concat('%', #{monitoringStatus}, '%')</if>
+            <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName},
+                '%')
+            </if>
+            <if test="patientCode != null  and patientCode != ''">and patient_code like concat('%', #{patientCode},
+                '%')
+            </if>
+            <if test="patientAge != null  and patientAge != ''">and patient_age like concat('%', #{patientAge}, '%')
+            </if>
+            <if test="patientSex != null  and patientSex != ''">and patient_sex like concat('%', #{patientSex}, '%')
+            </if>
+            <if test="patientSource != null  and patientSource != ''">and patient_source like concat('%',
+                #{patientSource}, '%')
+            </if>
+            <if test="patientPhone != null  and patientPhone != ''">and patient_phone like concat('%', #{patientPhone},
+                '%')
+            </if>
+            <if test="familyPhone != null  and familyPhone != ''">and family_phone like concat('%', #{familyPhone},
+                '%')
+            </if>
+            <if test="equipmentId != null  and equipmentId != ''">and equipment_id like concat('%', #{equipmentId},
+                '%')
+            </if>
+            <if test="monitoringStatus != null  and monitoringStatus != ''">and monitoring_status like concat('%',
+                #{monitoringStatus}, '%')
+            </if>
         </where>
-        order by patient_id desc
+        order by monitoring_status desc, patient_id desc
     </select>
 
     <select id="selectPatientByPatientId" parameterType="Long" resultMap="PatientResult">
@@ -50,6 +76,11 @@
     <select id="selectPatientByPatientName" parameterType="String" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
         where patient_name = #{patientName}
+    </select>
+
+    <select id="selectPatientByNameAndCode" parameterType="patient" resultMap="PatientResult">
+        <include refid="selectPatientVo"/>
+        where patient_name = #{patientName} and patient_code = #{patientCode}
     </select>
 
     <insert id="insertPatient" parameterType="Patient">
@@ -96,8 +127,21 @@
         where patient_id = #{patientId}
     </update>
 
+    <update id="updateMonitoringStatus">
+        update patient
+        set monitoring_status = 0;
+    </update>
+
+    <update id="updateMonitoringStatus2">
+        update patient
+        set monitoring_status = 1
+        where equipment_id = #{param}
+    </update>
+
     <delete id="deletePatientByPatientId" parameterType="Long">
-        delete from patient where patient_id = #{patientId}
+        delete
+        from patient
+        where patient_id = #{patientId}
     </delete>
 
     <delete id="deletePatientByPatientIds" parameterType="String">
