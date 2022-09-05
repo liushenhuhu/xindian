@@ -3,7 +3,7 @@
     width="100%"
     :height="TableHeight"
     allowfullscreen="true"
-    src="http://zzuecg.tpddns.cn:6006/">
+    src="http://192.168.0.109:6006/">
   </iframe>
 </template>
 
