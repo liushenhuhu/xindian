@@ -26,6 +26,7 @@
             <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
             <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
         </where>
+        order by equipment_status desc
     </select>
 
     <select id="selectEquipmentByEquipmentId" parameterType="Long" resultMap="EquipmentResult">
@@ -63,6 +64,17 @@
             <if test="equipmentType != null">equipment_type = #{equipmentType},</if>
         </trim>
         where equipment_id = #{equipmentId}
+    </update>
+
+    <update id="updateEquipmentStatusAll">
+        update equipment set equipment_status = 'False'
+    </update>
+
+    <update id="updateEquipmentStatus">
+        update equipment set equipment_status = 'True' where equipment_code in
+        <foreach item="equipmentCode" collection="array" open="(" separator="," close=")">
+            #{equipmentCode}
+        </foreach>
     </update>
 
     <delete id="deleteEquipmentByEquipmentId" parameterType="Long">

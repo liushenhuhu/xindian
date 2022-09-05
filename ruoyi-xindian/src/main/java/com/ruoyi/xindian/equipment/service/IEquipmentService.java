@@ -58,4 +58,8 @@ public interface IEquipmentService
      * @return 结果
      */
     public int deleteEquipmentByEquipmentId(Long equipmentId);
+
+    public void updateEquipmentStatusAll();
+
+    public void updateEquipmentStatus(String[] statusList);
 }

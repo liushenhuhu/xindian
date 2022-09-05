@@ -58,4 +58,8 @@ public interface IPatientManagementService
      * @return 结果
      */
     public int deletePatientManagementByPId(String pId);
+
+    void updateStatusAll();
+
+    void updateStatus(String[] pIds);
 }

@@ -68,9 +68,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/index'),
+        component: () => import('@/views/alert_log/alert_log/index'),
         name: 'Index',
-        meta: { title: '心电大屏', icon: 'dashboard', affix: true }
+        meta: {title: '主页', icon: 'dashboard', affix: true}
       }
     ]
   },
@@ -84,19 +84,25 @@ export const constantRoutes = [
         path: 'profile',
         component: () => import('@/views/system/user/profile/index'),
         name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
+        meta: {title: '个人中心', icon: 'user'}
       }
     ]
   },
 
-/*  {
-    //自己添加的公开路由页面，不要添加在动态路由中！
-    //查看心电图
-    path: 'http://219.155.7.235:6006/diagnosis',
-    component: () => import('@/views/不会写'),
-    hidden: true,
-  },*/
-
+  /*跳转到的监测列表页面*/
+  {
+    path: '',
+    component: Layout,
+    children: [
+      {
+        path: '/lookList',
+        hidden: true,
+        name: 'lookList',
+        component: () => import('@/views/patient_management/patient_management/index'),
+        meta: {title: '监测列表'}
+      }
+    ]
+  },
 ]
 
 // 动态路由，基于用户权限动态去加载
@@ -111,7 +117,7 @@ export const dynamicRoutes = [
         path: 'role/:userId(\\d+)',
         component: () => import('@/views/system/user/authRole'),
         name: 'AuthRole',
-        meta: { title: '分配角色', activeMenu: '/system/user' }
+        meta: {title: '分配角色', activeMenu: '/system/user'}
       }
     ]
   },
@@ -125,7 +131,7 @@ export const dynamicRoutes = [
         path: 'user/:roleId(\\d+)',
         component: () => import('@/views/system/role/authUser'),
         name: 'AuthUser',
-        meta: { title: '分配用户', activeMenu: '/system/role' }
+        meta: {title: '分配用户', activeMenu: '/system/role'}
       }
     ]
   },
@@ -139,7 +145,7 @@ export const dynamicRoutes = [
         path: 'index/:dictId(\\d+)',
         component: () => import('@/views/system/dict/data'),
         name: 'Data',
-        meta: { title: '字典数据', activeMenu: '/system/dict' }
+        meta: {title: '字典数据', activeMenu: '/system/dict'}
       }
     ]
   },
@@ -153,7 +159,7 @@ export const dynamicRoutes = [
         path: 'index',
         component: () => import('@/views/monitor/job/log'),
         name: 'JobLog',
-        meta: { title: '调度日志', activeMenu: '/monitor/job' }
+        meta: {title: '调度日志', activeMenu: '/monitor/job'}
       }
     ]
   },
@@ -167,7 +173,7 @@ export const dynamicRoutes = [
         path: 'index/:tableId(\\d+)',
         component: () => import('@/views/tool/gen/editTable'),
         name: 'GenEdit',
-        meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
+        meta: {title: '修改生成配置', activeMenu: '/tool/gen'}
       }
     ]
   }
@@ -181,6 +187,6 @@ Router.prototype.push = function push(location) {
 
 export default new Router({
   mode: 'history', // 去掉url中的#
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })

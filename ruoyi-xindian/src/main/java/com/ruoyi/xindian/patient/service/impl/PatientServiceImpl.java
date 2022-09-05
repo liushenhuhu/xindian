@@ -101,4 +101,19 @@ public class PatientServiceImpl implements IPatientService
     public Patient selectPatientByPatientName(String patientName) {
         return patientMapper.selectPatientByPatientName(patientName);
     }
+
+    @Override
+    public void updateMonitoringStatus() {
+        patientMapper.updateMonitoringStatus();
+    }
+
+    @Override
+    public void updateMonitoringStatus2(String equipment) {
+        patientMapper.updateMonitoringStatus2(equipment);
+    }
+
+    @Override
+    public Patient selectPatientByNameAndCode(Patient patient) {
+        return patientMapper.selectPatientByNameAndCode(patient);
+    }
 }

@@ -123,4 +123,20 @@ public class PatientController extends BaseController
     {
         return toAjax(patientService.deletePatientByPatientIds(patientIds));
     }
+
+    /**
+     * 修改患者
+     */
+    @PreAuthorize("@ss.hasPermi('patient:patient:edit')")
+    @Log(title = "患者", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateMonitoringStatus")
+    public void updateMonitoringStatus(@RequestBody List<String> monitoringStatusList)
+    {
+        System.out.println("执行开始");
+        patientService.updateMonitoringStatus();
+        for (String equipmentCode : monitoringStatusList) {
+            patientService.updateMonitoringStatus2(equipmentCode);
+        }
+        System.out.println("执行完毕");
+    }
 }

@@ -90,4 +90,14 @@ public class PatientManagementServiceImpl implements IPatientManagementService
     {
         return patientManagementMapper.deletePatientManagementByPId(pId);
     }
+
+    @Override
+    public void updateStatusAll() {
+        patientManagementMapper.updateStatusAll();
+    }
+
+    @Override
+    public void updateStatus(String[] pIds) {
+        patientManagementMapper.updateStatus(pIds);
+    }
 }

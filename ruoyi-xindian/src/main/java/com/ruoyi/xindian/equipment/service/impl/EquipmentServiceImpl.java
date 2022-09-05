@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.equipment.service.impl;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.equipment.mapper.EquipmentMapper;
@@ -14,8 +15,7 @@ import com.ruoyi.xindian.equipment.service.IEquipmentService;
  * @date 2022-08-20
  */
 @Service
-public class EquipmentServiceImpl implements IEquipmentService
-{
+public class EquipmentServiceImpl implements IEquipmentService {
     @Autowired
     private EquipmentMapper equipmentMapper;
 
@@ -26,8 +26,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 设备
      */
     @Override
-    public Equipment selectEquipmentByEquipmentId(Long equipmentId)
-    {
+    public Equipment selectEquipmentByEquipmentId(Long equipmentId) {
         return equipmentMapper.selectEquipmentByEquipmentId(equipmentId);
     }
 
@@ -38,8 +37,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 设备
      */
     @Override
-    public List<Equipment> selectEquipmentList(Equipment equipment)
-    {
+    public List<Equipment> selectEquipmentList(Equipment equipment) {
         return equipmentMapper.selectEquipmentList(equipment);
     }
 
@@ -50,8 +48,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 结果
      */
     @Override
-    public int insertEquipment(Equipment equipment)
-    {
+    public int insertEquipment(Equipment equipment) {
         return equipmentMapper.insertEquipment(equipment);
     }
 
@@ -62,8 +59,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 结果
      */
     @Override
-    public int updateEquipment(Equipment equipment)
-    {
+    public int updateEquipment(Equipment equipment) {
         return equipmentMapper.updateEquipment(equipment);
     }
 
@@ -74,8 +70,7 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 结果
      */
     @Override
-    public int deleteEquipmentByEquipmentIds(Long[] equipmentIds)
-    {
+    public int deleteEquipmentByEquipmentIds(Long[] equipmentIds) {
         return equipmentMapper.deleteEquipmentByEquipmentIds(equipmentIds);
     }
 
@@ -86,8 +81,17 @@ public class EquipmentServiceImpl implements IEquipmentService
      * @return 结果
      */
     @Override
-    public int deleteEquipmentByEquipmentId(Long equipmentId)
-    {
+    public int deleteEquipmentByEquipmentId(Long equipmentId) {
         return equipmentMapper.deleteEquipmentByEquipmentId(equipmentId);
+    }
+
+    @Override
+    public void updateEquipmentStatusAll() {
+        equipmentMapper.updateEquipmentStatusAll();
+    }
+
+    @Override
+    public void updateEquipmentStatus(String[] statusList) {
+        equipmentMapper.updateEquipmentStatus(statusList);
     }
 }

@@ -42,3 +42,17 @@ export function delEquipment(equipmentId) {
     method: 'delete'
   })
 }
+
+export function updateEquipmentStatus(data) {
+  return request({
+    url: '/equipment/equipment/updateEquipmentStatus',
+    method: 'post',
+    data: data,
+    timeout: 100000
+  })
+}
+
+export function test() {
+}
+
+
