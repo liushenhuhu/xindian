@@ -2828,7 +2828,7 @@ var data = obj
   yAxis: {},
   series: [
     {
-      symbolSize: 5,
+      symbolSize: 2,
       data: obj.data,
       name:"Lorenz-散点图 全部心搏",
       type: 'scatter'
