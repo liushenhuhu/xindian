@@ -23,7 +23,7 @@ export default {
   created() {
     if (this.$route.query.equipmentCode) {
       this.equipmentCode = this.$route.query.equipmentCode;
-      this.src = "http://zzuecg.tpddns.cn:6006/screen?equipmentCode=" + this.equipmentCode;
+      this.src = "http://192.168.0.109:6006/screen?equipmentCode=" + this.equipmentCode;
       console.log(this.src)
     }
     //动态计算表格高度
@@ -33,7 +33,7 @@ export default {
   activated() {
     if (this.$route.query.equipmentCode) {
       this.equipmentCode = this.$route.query.equipmentCode;
-      this.src = "http://zzuecg.tpddns.cn:6006/screen?equipmentCode=" + this.equipmentCode;
+      this.src = "http://192.168.0.109:6006/screen?equipmentCode=" + this.equipmentCode;
       console.log(this.src)
     }
   },

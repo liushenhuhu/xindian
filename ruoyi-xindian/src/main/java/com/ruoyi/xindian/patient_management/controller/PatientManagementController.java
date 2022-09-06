@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.patient_management.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -123,18 +124,21 @@ public class PatientManagementController extends BaseController
     @Log(title = "患者管理", businessType = BusinessType.UPDATE)
     @PostMapping("/updateStatus")
     public void updateStatus(@RequestBody String[] pIds) {
-        patientManagementService.updateStatusAll();
-        patientManagementService.updateStatus(pIds);
-        System.out.println(pIds);
-        for (String pId : pIds) {
-            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
-            if (patientManagement != null) {
-                Patient patient = new Patient();
-                patient.setPatientName(patientManagement.getPatientName());
-                patient.setPatientCode(patientManagement.getPatientCode());
-                Patient patient1 = patientService.selectPatientByNameAndCode(patient);
-                patient1.setMonitoringStatus("1");
-                patientService.updatePatient(patient1);
+
+        if (pIds.length != 0) {
+            patientManagementService.updateStatusAll();
+            patientManagementService.updateStatus(pIds);
+//            System.out.println(Arrays.toString(pIds));
+            for (String pId : pIds) {
+                PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
+                if (patientManagement != null) {
+                    Patient patient = new Patient();
+                    patient.setPatientName(patientManagement.getPatientName());
+                    patient.setPatientCode(patientManagement.getPatientCode());
+                    Patient patient1 = patientService.selectPatientByNameAndCode(patient);
+                    patient1.setMonitoringStatus("1");
+                    patientService.updatePatient(patient1);
+                }
             }
         }
     }

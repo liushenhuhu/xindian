@@ -23,7 +23,7 @@ export default {
   created() {
     if (this.$route.query.pId) {
       this.pId = this.$route.query.pId;
-      this.src = "http://219.155.7.235:6006/diagnosis?pId=" + this.pId;
+      this.src = "http://192.168.0.109:6006//diagnosis?pId=" + this.pId;
       console.log(this.src)
     }
     //动态计算表格高度
@@ -33,7 +33,7 @@ export default {
   activated() {
     if (this.$route.query.pId) {
       this.pId = this.$route.query.pId;
-      this.src = "http://219.155.7.235:6006/diagnosis?pId=" + this.pId;
+      this.src = "http://192.168.0.109:6006//diagnosis?pId=" + this.pId;
       console.log(this.src)
     }
   },

@@ -3,6 +3,7 @@ package com.ruoyi.xindian.equipment.controller;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +31,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/equipment/equipment")
-public class EquipmentController extends BaseController
-{
+public class EquipmentController extends BaseController {
     @Autowired
     private IEquipmentService equipmentService;
 
@@ -40,8 +40,7 @@ public class EquipmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Equipment equipment)
-    {
+    public TableDataInfo list(Equipment equipment) {
         startPage();
         List<Equipment> list = equipmentService.selectEquipmentList(equipment);
         return getDataTable(list);
@@ -53,8 +52,7 @@ public class EquipmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('equipment:equipment:export')")
     @Log(title = "设备", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Equipment equipment)
-    {
+    public void export(HttpServletResponse response, Equipment equipment) {
         List<Equipment> list = equipmentService.selectEquipmentList(equipment);
         ExcelUtil<Equipment> util = new ExcelUtil<Equipment>(Equipment.class);
         util.exportExcel(response, list, "设备数据");
@@ -65,8 +63,7 @@ public class EquipmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:query')")
     @GetMapping(value = "/{equipmentId}")
-    public AjaxResult getInfo(@PathVariable("equipmentId") Long equipmentId)
-    {
+    public AjaxResult getInfo(@PathVariable("equipmentId") Long equipmentId) {
         return AjaxResult.success(equipmentService.selectEquipmentByEquipmentId(equipmentId));
     }
 
@@ -76,8 +73,7 @@ public class EquipmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('equipment:equipment:add')")
     @Log(title = "设备", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Equipment equipment)
-    {
+    public AjaxResult add(@RequestBody Equipment equipment) {
         return toAjax(equipmentService.insertEquipment(equipment));
     }
 
@@ -87,8 +83,7 @@ public class EquipmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('equipment:equipment:edit')")
     @Log(title = "设备", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Equipment equipment)
-    {
+    public AjaxResult edit(@RequestBody Equipment equipment) {
         return toAjax(equipmentService.updateEquipment(equipment));
     }
 
@@ -98,8 +93,7 @@ public class EquipmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('equipment:equipment:remove')")
     @Log(title = "设备", businessType = BusinessType.DELETE)
     @DeleteMapping("/{equipmentIds}")
-    public AjaxResult remove(@PathVariable Long[] equipmentIds)
-    {
+    public AjaxResult remove(@PathVariable Long[] equipmentIds) {
         return toAjax(equipmentService.deleteEquipmentByEquipmentIds(equipmentIds));
     }
 
@@ -109,9 +103,10 @@ public class EquipmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('equipment:equipment:edit')")
     @Log(title = "设备", businessType = BusinessType.UPDATE)
     @PostMapping("/updateEquipmentStatus")
-    public void updateEquipmentStatus(@RequestBody String[] equipmentList)
-    {
-        equipmentService.updateEquipmentStatusAll();
-        equipmentService.updateEquipmentStatus(equipmentList);
+    public void updateEquipmentStatus(@RequestBody String[] equipmentList) {
+        if (equipmentList.length != 0) {
+            equipmentService.updateEquipmentStatusAll();
+            equipmentService.updateEquipmentStatus(equipmentList);
+        }
     }
 }
