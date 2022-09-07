@@ -116,7 +116,7 @@
 
     <el-table v-loading="loading" :data="alert_logList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="日志id" align="center" prop="logId" />
+<!--      <el-table-column label="日志id" align="center" prop="logId" />-->
       <el-table-column label="发生时间" align="center" prop="logTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>

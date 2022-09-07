@@ -109,12 +109,11 @@
         >导出
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
 
-
-    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" >
+    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
 
       <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
@@ -122,25 +121,25 @@
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
+<!--      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>-->
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
-<!--      <el-table-column label="患者身份证号" align="center" prop="patientCode" />
-      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-      <el-table-column label="患者性别" align="center" prop="patientSex">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="患者来源" align="center" prop="patientSource"/>
-      <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-      <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
-<!--      <el-table-column label="监测状态" align="center" prop="monitoringStatus">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
-        </template>
-      </el-table-column>-->
+<!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
+            <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+            <el-table-column label="患者性别" align="center" prop="patientSex">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+              </template>
+            </el-table-column>
+            <el-table-column label="患者来源" align="center" prop="patientSource"/>
+            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+            <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+            <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+              </template>
+            </el-table-column>-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-<!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+      <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
       <el-table-column label="在线状态" align="center" prop="onlineStatus">
         <template slot-scope="scope">
@@ -159,26 +158,26 @@
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
-              <span>{{scope.row.patientCode}}</span>
+              <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
             <el-form-item label="患者年龄" width="200" style="padding-left: 40px">
-              <span>{{scope.row.patientAge}}</span>
+              <span>{{ scope.row.patientAge }}</span>
             </el-form-item>
             <el-form-item label="患者性别" width="200" style="padding-left: 40px">
-              <span>{{scope.row.patientSex}}</span>
+              <span>{{ scope.row.patientSex }}</span>
             </el-form-item>
             <el-form-item label="患者来源" width="200" style="padding-left: 40px">
-              <span>{{scope.row.patientSource}}</span>
+              <span>{{ scope.row.patientSource }}</span>
             </el-form-item>
             <el-form-item label="患者电话" width="200" style="padding-left: 40px">
-              <span>{{scope.row.patientPhone}}</span>
+              <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
-              <span>{{scope.row.familyPhone}}</span>
+              <span>{{ scope.row.familyPhone }}</span>
             </el-form-item>
 
             <el-form-item label="医院名称" width="200" style="padding-left: 40px">
-              <span>{{scope.row.hospitalName}}</span>
+              <span>{{ scope.row.hospitalName }}</span>
             </el-form-item>
 
           </el-form>
@@ -313,7 +312,7 @@ import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
 
 export default {
   name: "Patient_management",
-  dicts: ['if', 'sex', 'monitoring_status','ecg_type'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type'],
   data() {
     return {
       // 遮罩层
@@ -363,26 +362,46 @@ export default {
       }
     };
   },
-  // beforeCreate() {
-  //   $.ajax({
-  //     type: "post",
-  //     url: "http://219.155.7.235:5003/get_device2",
-  //     contentType: "application/json",
-  //     dataType: "json",
-  //     data: JSON.stringify({
-  //       "ts": 0
-  //     }),
-  //     success: function (res) {
-  //       let pIdList;
-  //       pIdList = res.result.pid_list;
-  //       console.log(pIdList)
-  //       updateStatus(pIdList);
-  //     },
-  //     error: function () {
-  //       alert("更新失败！")
-  //     }
-  //   })
-  // },
+
+  beforeCreate() {
+    $.ajax({
+      type: "post",
+      url: "http://219.155.7.235:5003/get_device2",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        "ts": 0
+      }),
+      success: function (res) {
+        let pIdList;
+        pIdList = res.result.pid_list;
+        console.log(pIdList)
+        updateStatus(pIdList)
+      },
+      error: function () {
+        alert("更新失败！")
+      }
+    })
+    $.ajax({
+      type: "post",
+      url: "http://219.155.7.235:5003/get_device",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        "ts": 0
+      }),
+      success: function (res) {
+        let devList;
+        devList = res.result.dev_list;
+        console.log(devList)
+        updateEquipmentStatus(devList)
+      },
+      error: function () {
+        alert("更新失败！")
+      }
+    })
+  },
+
   created() {
     if (this.$route.params.patientName) {
       this.queryParams.patientName = this.$route.params.patientName;
@@ -398,14 +417,13 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询患者管理列表 */
-    getList() {
+    refreshList() {
+      console.log("refresh======")
       $.ajax({
         type: "post",
         url: "http://219.155.7.235:5003/get_device2",
         contentType: "application/json",
         dataType: "json",
-        // async: false,
         data: JSON.stringify({
           "ts": 0
         }),
@@ -424,7 +442,6 @@ export default {
         url: "http://219.155.7.235:5003/get_device",
         contentType: "application/json",
         dataType: "json",
-        // async: false,
         data: JSON.stringify({
           "ts": 0
         }),
@@ -438,8 +455,51 @@ export default {
           alert("更新失败！")
         }
       })
+      this.getList();
+    },
 
-      setTimeout(()=>{
+    /** 查询患者管理列表 */
+    getList() {
+      /*      $.ajax({
+              type: "post",
+              url: "http://219.155.7.235:5003/get_device2",
+              contentType: "application/json",
+              dataType: "json",
+              // async: false,
+              data: JSON.stringify({
+                "ts": 0
+              }),
+              success: function (res) {
+                let pIdList;
+                pIdList = res.result.pid_list;
+                console.log(pIdList)
+                updateStatus(pIdList)
+              },
+              error: function () {
+                alert("更新失败！")
+              }
+            })
+            $.ajax({
+              type: "post",
+              url: "http://219.155.7.235:5003/get_device",
+              contentType: "application/json",
+              dataType: "json",
+              // async: false,
+              data: JSON.stringify({
+                "ts": 0
+              }),
+              success: function (res) {
+                let devList;
+                devList = res.result.dev_list;
+                console.log(devList)
+                updateEquipmentStatus(devList)
+              },
+              error: function () {
+                alert("更新失败！")
+              }
+            })*/
+
+      setTimeout(() => {
         this.loading = true;
         this.queryParams.params = {};
         if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
@@ -563,19 +623,18 @@ export default {
           pId: row.pId
         }),
         success: function (data) {
-          alert(name+"动态心电报告已生成")
+          alert(name + "动态心电报告已生成")
         },
-        error:function (data)
-        {
-          console.log(name+"动态心电报告生成出错,请重新请求或联系管理员")
+        error: function (data) {
+          console.log(name + "动态心电报告生成出错,请重新请求或联系管理员")
         }
       })
-      alert(name+"动态报告生成中，请稍后...")
+      alert(name + "动态报告生成中，请稍后...")
     },
 
     /** 下载报告*/
     downloadInform(row) {
-      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId , hospitalName: row.hospitalName}});
+      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
 
       // window.open("http://localhost:83/dev-api/download/test.pdf?token=" + this.getToken(), '_blank');

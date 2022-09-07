@@ -98,12 +98,12 @@
         >导出
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="设备id" align="center" prop="equipmentId"/>
+<!--      <el-table-column label="设备id" align="center" prop="equipmentId"/>-->
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
       <el-table-column label="设备版本号" align="center" prop="equipmentVersion"/>
       <el-table-column label="设备状态" align="center" prop="equipmentStatus">
@@ -251,12 +251,50 @@ export default {
       }
     };
   },
+  beforeCreate() {
+    $.ajax({
+      type: "post",
+      url: "http://219.155.7.235:5003/get_device2",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        "ts": 0
+      }),
+      success: function (res) {
+        let pIdList;
+        pIdList = res.result.pid_list;
+        console.log(pIdList)
+        updateStatus(pIdList)
+      },
+      error: function () {
+        alert("更新失败！")
+      }
+    })
+    $.ajax({
+      type: "post",
+      url: "http://219.155.7.235:5003/get_device",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        "ts": 0
+      }),
+      success: function (res) {
+        let devList;
+        devList = res.result.dev_list;
+        console.log(devList)
+        updateEquipmentStatus(devList)
+      },
+      error: function () {
+        alert("更新失败！")
+      }
+    })
+  },
   created() {
     this.getList();
   },
   methods: {
-    /** 查询设备列表 */
-    getList() {
+    refreshList() {
+      console.log("refresh======")
       $.ajax({
         type: "post",
         url: "http://219.155.7.235:5003/get_device2",
@@ -293,14 +331,54 @@ export default {
           alert("更新失败！")
         }
       })
-      setTimeout(()=>{
-        this.loading = true;
-        listEquipment(this.queryParams).then(response => {
-          console.log("time--------------")
-          this.equipmentList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        },5000);
+      this.getList();
+    },
+
+    /** 查询设备列表 */
+    getList() {
+      /*      $.ajax({
+              type: "post",
+              url: "http://219.155.7.235:5003/get_device2",
+              contentType: "application/json",
+              dataType: "json",
+              data: JSON.stringify({
+                "ts": 0
+              }),
+              success: function (res) {
+                let pIdList;
+                pIdList = res.result.pid_list;
+                console.log(pIdList)
+                updateStatus(pIdList)
+              },
+              error: function () {
+                alert("更新失败！")
+              }
+            })
+            $.ajax({
+              type: "post",
+              url: "http://219.155.7.235:5003/get_device",
+              contentType: "application/json",
+              dataType: "json",
+              data: JSON.stringify({
+                "ts": 0
+              }),
+              success: function (res) {
+                let devList;
+                devList = res.result.dev_list;
+                console.log(devList)
+                updateEquipmentStatus(devList)
+              },
+              error: function () {
+                alert("更新失败！")
+              }
+            })*/
+
+      this.loading = true;
+      listEquipment(this.queryParams).then(response => {
+        this.equipmentList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+
       })
 
     },
