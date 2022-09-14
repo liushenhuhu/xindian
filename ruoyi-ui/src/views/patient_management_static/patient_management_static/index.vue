@@ -119,7 +119,7 @@
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>-->
+      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
 <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
             <el-table-column label="患者年龄" align="center" prop="patientAge"/>
