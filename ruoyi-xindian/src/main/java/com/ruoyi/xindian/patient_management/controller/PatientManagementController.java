@@ -125,14 +125,12 @@ public class PatientManagementController extends BaseController
     @PostMapping("/updateStatus")
     public void updateStatus(@RequestBody String[] pIds) {
 
-        patientManagementService.updateStatusAll();
-        patientService.updateMonitoringStatus();
         if (pIds.length != 0) {
+            patientManagementService.updateStatusAll();
             patientManagementService.updateStatus(pIds);
 //            System.out.println(Arrays.toString(pIds));
             for (String pId : pIds) {
                 PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
-
                 if (patientManagement != null) {
                     Patient patient = new Patient();
                     patient.setPatientName(patientManagement.getPatientName());
