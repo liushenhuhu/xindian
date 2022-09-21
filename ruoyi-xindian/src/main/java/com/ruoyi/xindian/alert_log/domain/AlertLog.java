@@ -75,6 +75,10 @@ public class AlertLog extends BaseEntity
     @Excel(name = "医院名称")
     private String hospitalName;
 
+    /** 数据 */
+    @Excel(name = "数据")
+    private String logData;
+
     public String getpId() {
         return pId;
     }
@@ -98,6 +102,7 @@ public class AlertLog extends BaseEntity
                 .append("familyPhone", getFamilyPhone())
                 .append("hospitalCode", getHospitalCode())
                 .append("hospitalName", getHospitalName())
+                .append("logData",getLogData())
                 .toString();
     }
 }

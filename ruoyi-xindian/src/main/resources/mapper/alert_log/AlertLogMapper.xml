@@ -17,6 +17,7 @@
         <result property="familyPhone"    column="family_phone"    />
         <result property="hospitalCode" column="hospital_code"  />
         <result property="hospitalName" column="hospital_name"  />
+        <result property="logData"    column="log_data"    />
     </resultMap>
 
     <sql id="selectAlertLogVo">
@@ -38,6 +39,7 @@
             <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
             <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null "> and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="logData != null  and logData != ''"> and log_data = #{logData}</if>
         </where>
         order by log_time desc
     </select>
@@ -56,6 +58,7 @@
             <if test="eventName != null">event_name,</if>
             <if test="eventDescription != null">event_description,</if>
             <if test="pId != null">p_id,</if>
+            <if test="logData != null">log_data,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="logId != null">#{logId},</if>
@@ -64,6 +67,7 @@
             <if test="eventName != null">#{eventName},</if>
             <if test="eventDescription != null">#{eventDescription},</if>
             <if test="pId != null">#{pId},</if>
+            <if test="logData != null">log_data,</if>
         </trim>
     </insert>
 
@@ -75,6 +79,7 @@
             <if test="eventName != null">event_name = #{eventName},</if>
             <if test="eventDescription != null">event_description = #{eventDescription},</if>
             <if test="pId != null">p_id = #{pId},</if>
+            <if test="logData != null">log_data = #{logData},</if>
         </trim>
         where log_id = #{logId}
     </update>

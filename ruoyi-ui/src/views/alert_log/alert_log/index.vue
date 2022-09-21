@@ -263,7 +263,8 @@ export default {
         eventDescription: null,
         pId: null,
         patientName: null,
-        hospitalName: null
+        hospitalName: null,
+        logData: null
       },
       // 表单参数
       form: {},
@@ -320,7 +321,8 @@ export default {
         eventDescription: null,
         pId: null,
         patientName: null,
-        hospitalName: null
+        hospitalName: null,
+        logData: null
       };
       this.resetForm("form");
     },
@@ -394,7 +396,15 @@ export default {
     },
 
     /** 查看日志*/
-    handleLook() {
+    handleLook(row) {
+      const logId = row.logId || this.ids
+      console.log(logId)
+
+      getAlert_log(logId).then((res) => {
+        console.log(res)
+      })
+
+
       console.log('查看日志');
     },
   }
