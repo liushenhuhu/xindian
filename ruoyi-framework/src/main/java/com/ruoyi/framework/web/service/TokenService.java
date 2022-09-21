@@ -119,6 +119,18 @@ public class TokenService
     }
 
     /**
+     * 创建令牌 (不需要登录体)
+     *
+     * @return 令牌
+     */
+    public String createToken() {
+        String token = IdUtils.fastUUID();
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(Constants.LOGIN_USER_KEY, token);
+        return createToken(claims);
+    }
+
+    /**
      * 验证令牌有效期，相差不足20分钟，自动刷新缓存
      *
      * @param loginUser
