@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +22,7 @@ import com.ruoyi.system.service.ISysMenuService;
 
 /**
  * 登录验证
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -36,7 +39,7 @@ public class SysLoginController
 
     /**
      * 登录方法
-     * 
+     *
      * @param loginBody 登录信息
      * @return 结果
      */
@@ -51,9 +54,31 @@ public class SysLoginController
         return ajax;
     }
 
+
+    /**
+     * 手机号登录方法
+     *
+     * @param
+     * @return 结果
+     */
+    @ApiOperation("手机号登录")
+    @ApiImplicitParam(name = "loginBody", value = "登录信息", dataType = "LoginBody")
+    @PostMapping("/sms/login")
+    public AjaxResult smsLogin(@RequestBody LoginBody loginBody)
+    {
+        String mobile=loginBody.getMobile();
+        String smsCode=loginBody.getSmsCode();
+        String uuid=loginBody.getUuid();
+        AjaxResult ajax = loginService.smsLogin(mobile, smsCode,
+                uuid);
+        return ajax;
+    }
+
+
+
     /**
      * 获取用户信息
-     * 
+     *
      * @return 用户信息
      */
     @GetMapping("getInfo")
@@ -73,7 +98,7 @@ public class SysLoginController
 
     /**
      * 获取路由信息
-     * 
+     *
      * @return 路由信息
      */
     @GetMapping("getRouters")

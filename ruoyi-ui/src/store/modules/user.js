@@ -46,6 +46,22 @@ const user = {
       })
     },
 
+    // 短信登录
+    SmsLogin({ commit }, userInfo) {
+      const mobile = userInfo.mobile.trim()
+      const smsCode = userInfo.smsCode
+      const uuid = userInfo.uuid
+      return new Promise((resolve, reject) => {
+        smsLogin( mobile, smsCode, uuid).then(res => {
+          setToken(res.token)
+          commit('SET_TOKEN', res.token)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {

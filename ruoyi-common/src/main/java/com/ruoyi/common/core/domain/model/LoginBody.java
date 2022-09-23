@@ -2,7 +2,7 @@ package com.ruoyi.common.core.domain.model;
 
 /**
  * 用户登录对象
- * 
+ *
  * @author ruoyi
  */
 public class LoginBody
@@ -26,6 +26,35 @@ public class LoginBody
      * 唯一标识
      */
     private String uuid;
+
+    /**
+     * 手机号
+     */
+    private String mobile;
+
+    /**
+     * 手机验证码
+     */
+    private String smsCode;
+
+
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getSmsCode() {
+        return smsCode;
+    }
+
+    public void setSmsCode(String smsCode) {
+        this.smsCode = smsCode;
+    }
+
 
     public String getUsername()
     {

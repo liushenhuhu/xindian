@@ -595,33 +595,6 @@ export default {
       let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
 
-      // window.open("http://localhost:83/dev-api/download/test.pdf?token=" + this.getToken(), '_blank');
-
-      // axios.get('http://localhost:83/dev-api/download/test.pdf',
-      //   {responseType: 'blob'}
-      // ).then((res)=>{
-      //   console.log('文件下载成功');
-      //   const blob = new Blob([res.data]);
-      //   const fileName = "test.pdf";
-      //
-      //   if ('download' in document.createElement('a')) {
-      //
-      //     const link = document.createElement('a');//创建a标签
-      //     link.download = fileName;//a标签添加属性
-      //     link.style.display = 'none';
-      //     link.href = URL.createObjectURL(blob);
-      //     document.body.appendChild(link);
-      //     link.click();//执行下载
-      //     URL.revokeObjectURL(link.href); //释放url
-      //     document.body.removeChild(link);//释放标签
-      //   } else {
-      //     navigator.msSaveBlob(blob, fileName);
-      //   }
-      // }).catch((res)=>{
-      //   console.log('文件下载失败');
-      // });
-
-
     }
   }
 };

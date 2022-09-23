@@ -1,5 +1,6 @@
 package com.ruoyi.framework.config;
 
+import com.ruoyi.framework.smsConfig.SmsCodeAuthenticationSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -64,6 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Autowired
     private PermitAllUrlProperties permitAllUrl;
 
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
     /**
      * 解决 无法直接注入 AuthenticationManager
      *
@@ -100,6 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         permitAllUrl.getUrls().forEach(url -> registry.antMatchers(url).permitAll());
 
         httpSecurity
+                .apply(smsCodeAuthenticationSecurityConfig).and()
                 // CSRF禁用，因为不使用session
                 .csrf().disable()
                 // 认证失败处理类
@@ -109,6 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
+                .antMatchers("/sms/**").permitAll()
                 .antMatchers("/login", "/register", "/captchaImage").anonymous()
 
                 .antMatchers("/websocket").anonymous()

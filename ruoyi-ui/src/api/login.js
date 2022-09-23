@@ -57,3 +57,33 @@ export function getCodeImg() {
     timeout: 20000
   })
 }
+
+
+// 短信登录方法
+export function smsLogin(mobile,smsCode,uuid) {
+  const data = {
+    mobile,
+    smsCode,
+    uuid
+  }
+  return request({
+    url: '/sms/login',
+    method: 'post',
+    data: data
+  })
+}
+
+
+// 发送短信验证码
+export function getSmsCode(mobile) {
+
+  const data = {
+    mobile
+  }
+
+  return request({
+    url: '/sms/code',
+    method: 'post',
+    data:data
+  })
+}
