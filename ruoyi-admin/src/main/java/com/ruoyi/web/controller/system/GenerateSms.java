@@ -46,7 +46,7 @@ public class GenerateSms {
         map.put("mobile", mobile);
         map.put("code", code);
 
-        SMSUtils.sendMessage("阿里云短信测试", "SMS_154950909", mobile, String.valueOf(code));
+//        SMSUtils.sendMessage("阿里云短信测试", "SMS_154950909", mobile, String.valueOf(code));
 
 
         redisCache.setCacheObject(verifyKey, map, Constants.SMS_EXPIRATION, TimeUnit.MINUTES);
