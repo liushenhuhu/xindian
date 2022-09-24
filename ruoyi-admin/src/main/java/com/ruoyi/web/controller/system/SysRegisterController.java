@@ -31,7 +31,7 @@ public class SysRegisterController extends BaseController
     @Autowired
     private ISysConfigService configService;
 
-/*    @PostMapping("/register")
+    @PostMapping("/register")
     public AjaxResult register(@RequestBody RegisterBody user)
     {
         if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser"))))
@@ -40,9 +40,9 @@ public class SysRegisterController extends BaseController
         }
         String msg = registerService.register(user);
         return StringUtils.isEmpty(msg) ? success() : error(msg);
-    }*/
+    }
 
-    @Autowired
+    /*@Autowired
     private ISysUserService userService;
 
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
@@ -65,5 +65,5 @@ public class SysRegisterController extends BaseController
         }
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         return toAjax(userService.insertUser(user));
-    }
+    }*/
 }

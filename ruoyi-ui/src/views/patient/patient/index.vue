@@ -130,7 +130,7 @@
         >导出
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="patientList" @selection-change="handleSelectionChange">
@@ -330,13 +330,95 @@ export default {
       }
     };
   },
+
+  beforeCreate() {
+    $.ajax({
+      type: "post",
+      url: "http://219.155.7.235:5003/get_device2",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        "ts": 0
+      }),
+      success: function (res) {
+        let pIdList;
+        pIdList = res.result.pid_list;
+        console.log(pIdList)
+        updateStatus(pIdList)
+      },
+      error: function () {
+        alert("更新失败！")
+      }
+    })
+    $.ajax({
+      type: "post",
+      url: "http://219.155.7.235:5003/get_device",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        "ts": 0
+      }),
+      success: function (res) {
+        let devList;
+        devList = res.result.dev_list;
+        console.log(devList)
+        updateEquipmentStatus(devList)
+      },
+      error: function () {
+        alert("更新失败！")
+      }
+    })
+  },
+
   created() {
     this.getList();
   },
   methods: {
+
+    refreshList() {
+      console.log("refresh======")
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device2",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let pIdList;
+          pIdList = res.result.pid_list;
+          console.log(pIdList)
+          updateStatus(pIdList)
+        },
+        error: function () {
+          alert("更新失败！")
+        }
+      })
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let devList;
+          devList = res.result.dev_list;
+          console.log(devList)
+          updateEquipmentStatus(devList)
+        },
+        error: function () {
+          alert("更新失败！")
+        }
+      })
+      this.getList();
+    },
+
     /** 查询患者列表 */
     getList() {
-      $.ajax({
+      /*$.ajax({
         type: "post",
         url: "http://219.155.7.235:5003/get_device2",
         contentType: "application/json",
@@ -373,7 +455,7 @@ export default {
         error: function () {
           alert("更新失败！")
         }
-      })
+      })*/
 
       this.loading = true;
       listPatient(this.queryParams).then(response => {
@@ -481,26 +563,6 @@ export default {
       });
     },
 
-    /*    /!** 更新监测状态 *!/
-        getMonitoringStatus() {
-          $.ajax({
-            type: "POST",
-            url: "http://219.155.7.235:5003/get_device",
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify({
-              "ts": 0
-            }),
-            success: function (res) {
-              this.monitoringStatusList = res.result.dev_list;
-              console.log(this.monitoringStatusList)
-              updateMonitoringStatus(this.monitoringStatusList);
-            },
-            error: function () {
-              alert("更新失败！")
-            }
-          })
-        }*/
 
   }
 };
