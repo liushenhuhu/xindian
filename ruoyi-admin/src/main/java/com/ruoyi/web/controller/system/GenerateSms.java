@@ -31,12 +31,12 @@ public class GenerateSms {
 
 
     @ApiOperation("生成验证码")
-    @ApiImplicitParam(name = "mobile",value = "手机号码",required = true,dataType = "String",paramType = "query")
+    @ApiImplicitParam(name = "mobile", value = "手机号码", required = true, dataType = "String", paramType = "query")
     @PostMapping("/sms/code")
     @ResponseBody
     public AjaxResult sms(@RequestBody LoginBody loginBody) {
 
-        String mobile=loginBody.getMobile();
+        String mobile = loginBody.getMobile();
         // 保存验证码信息
         String uuid = IdUtils.simpleUUID();
         String verifyKey = Constants.SMS_CAPTCHA_CODE_KEY + uuid;
@@ -46,12 +46,16 @@ public class GenerateSms {
         map.put("mobile", mobile);
         map.put("code", code);
 
+        SMSUtils.sendMessage("阿里云短信测试", "SMS_154950909", mobile, String.valueOf(code));
+
+
         redisCache.setCacheObject(verifyKey, map, Constants.SMS_EXPIRATION, TimeUnit.MINUTES);
 //        session.setAttribute("smsCode", map);
 
         logger.info(" 为 {} 设置短信验证码：{}", mobile, code);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("uuid", uuid);
+        ajax.put("smsCode", code);
         return ajax;
     }
 

@@ -227,7 +227,7 @@ export default {
       <h3 class="title">远程心电管理系统</h3>
       <el-form-item prop="username" v-if="!isSmsLogin">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
-          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
       <el-form-item prop="password" v-if="!isSmsLogin">
@@ -236,12 +236,11 @@ export default {
           type="password"
           auto-complete="off"
           placeholder="密码"
-          @keyup.enter.native="handleLogin"
-        >
-          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+          @keyup.enter.native="handleLogin">
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
-      <el-form-item prop="code" v-if="!isSmsLogin">
+      <el-form-item prop="code" v-if="captchaOnOff">
         <el-input
           v-model="loginForm.code"
           auto-complete="off"
@@ -249,7 +248,7 @@ export default {
           style="width: 63%"
           @keyup.enter.native="handleLogin"
         >
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
         </el-input>
         <div class="login-code">
           <img :src="codeUrl" @click="getCode" class="login-code-img"/>
@@ -258,7 +257,7 @@ export default {
 
       <el-form-item prop="mobile" v-if="isSmsLogin">
         <el-input v-model="loginForm.mobile" type="text" auto-complete="off" placeholder="手机号">
-          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
       <el-form-item prop="smsCode" v-if="isSmsLogin">
@@ -269,10 +268,11 @@ export default {
           style="width: 63%"
           @keyup.enter.native="handleLogin"
         >
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
         </el-input>
         <div class="login-code">
-          <el-button round @click.native.prevent="getSmsCode">{{computeTime>0 ? `(${computeTime}s)已发送` : '获取验证码'}}</el-button>
+          <el-button round @click.native.prevent="getSmsCode">{{ computeTime > 0 ? `(${computeTime}s)已发送` : '获取验证码' }}
+          </el-button>
         </div>
       </el-form-item>
 
@@ -308,9 +308,9 @@ export default {
 </template>
 
 <script>
-import { getCodeImg , getSmsCode , smsLogin } from "@/api/login";
+import {getCodeImg, getSmsCode, smsLogin} from "@/api/login";
 import Cookies from "js-cookie";
-import { encrypt, decrypt } from '@/utils/jsencrypt'
+import {encrypt, decrypt} from '@/utils/jsencrypt'
 
 export default {
   name: "Login",
@@ -330,25 +330,29 @@ export default {
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", message: "用户名不能为空" }
+          {required: true, trigger: "blur", message: "用户名不能为空"}
         ],
         mobile: [
-          { required: true, trigger: "blur", message: "手机号不能为空" }
+          {required: true, trigger: "blur", message: "手机号不能为空"}
         ],
         password: [
-          { required: true, trigger: "blur", message: "密码不能为空" }
+          {required: true, trigger: "blur", message: "密码不能为空"}
         ],
-        code: [{ required: true, trigger: "change", message: "验证码不能为空" }],
+        code: [{required: true, trigger: "change", message: "验证码不能为空"}],
         // smsCode: [{ required: true, trigger: "blur", message: "验证码不能为空" }]
       },
       loading: false,
+      // 验证码开关
+      captchaOnOff: false,
+      // 手机登陆开关
       isSmsLogin: false,
+      //注册开关
       redirect: undefined
     };
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect;
       },
       immediate: true
@@ -359,15 +363,15 @@ export default {
     this.getCookie();
   },
   methods: {
-    loginMethod(){
+    loginMethod() {
       this.isSmsLogin = !this.isSmsLogin;
     },
-    getSmsCode(){
+    getSmsCode() {
       if (!this.computeTime) {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            getSmsCode(this.loginForm.mobile).then(res =>{
-              if(res.code === 200){
+            getSmsCode(this.loginForm.mobile).then(res => {
+              if (res.code === 200) {
                 this.$message({
                   message: '验证码已发送',
                   type: 'success'
@@ -406,34 +410,41 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          if(this.isSmsLogin){
+          if (this.isSmsLogin) {
             this.loading = true;
             if (this.loginForm.rememberMe) {
-              Cookies.set("mobile", this.loginForm.mobile, { expires: 30 });
-              Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 });
+              Cookies.set("mobile", this.loginForm.mobile, {expires: 30});
+              Cookies.set('rememberMe', this.loginForm.rememberMe, {expires: 30});
             } else {
               Cookies.remove("mobile");
               Cookies.remove('rememberMe');
             }
 
-            this.$store.dispatch("SmsLogin", this.codeLoginForm).then(() => {
-              this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
+            console.log(this.loginForm)
+
+            this.$store.dispatch("SmsLogin", this.loginForm).then(() => {
+              this.$router.push({path: this.redirect || "/"}).catch(() => {
+              });
             }).catch(() => {
               this.loading = false;
             });
-          }else{
+          } else {
             this.loading = true;
             if (this.loginForm.rememberMe) {
-              Cookies.set("username", this.loginForm.username, { expires: 30 });
-              Cookies.set("password", encrypt(this.loginForm.password), { expires: 30 });
-              Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 });
+              Cookies.set("username", this.loginForm.username, {expires: 30});
+              Cookies.set("password", encrypt(this.loginForm.password), {expires: 30});
+              Cookies.set('rememberMe', this.loginForm.rememberMe, {expires: 30});
             } else {
               Cookies.remove("username");
               Cookies.remove("password");
               Cookies.remove('rememberMe');
             }
+
+            console.log(this.loginForm)
+
             this.$store.dispatch("Login", this.loginForm).then(() => {
-              this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
+              this.$router.push({path: this.redirect || "/"}).catch(() => {
+              });
             }).catch(() => {
               this.loading = false;
               this.getCode();
@@ -455,6 +466,7 @@ export default {
   background-image: url("../assets/images/login-background.jpg");
   background-size: cover;
 }
+
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
@@ -466,27 +478,33 @@ export default {
   background: #ffffff;
   width: 400px;
   padding: 25px 25px 5px 25px;
+
   .el-input {
     height: 38px;
+
     input {
       height: 38px;
     }
   }
+
   .input-icon {
     height: 39px;
     width: 14px;
     margin-left: 2px;
   }
 }
+
 .login-tip {
   font-size: 13px;
   text-align: center;
   color: #bfbfbf;
 }
+
 .login-code {
   width: 33%;
   height: 38px;
   float: right;
+
   img {
     cursor: pointer;
     vertical-align: middle;
@@ -500,6 +518,7 @@ export default {
 
 
 }
+
 .el-login-footer {
   height: 40px;
   line-height: 40px;
@@ -512,6 +531,7 @@ export default {
   font-size: 12px;
   letter-spacing: 1px;
 }
+
 .login-code-img {
   height: 38px;
 }

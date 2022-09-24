@@ -60,7 +60,7 @@ export function getCodeImg() {
 
 
 // 短信登录方法
-export function smsLogin(mobile,smsCode,uuid) {
+export function smsLogin(mobile, smsCode, uuid) {
   const data = {
     mobile,
     smsCode,
@@ -76,14 +76,12 @@ export function smsLogin(mobile,smsCode,uuid) {
 
 // 发送短信验证码
 export function getSmsCode(mobile) {
-
   const data = {
     mobile
   }
-
   return request({
     url: '/sms/code',
     method: 'post',
-    data:data
+    data: data
   })
 }
