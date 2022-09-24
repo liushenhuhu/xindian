@@ -290,12 +290,12 @@ export default {
     }
     this.getList();
   },
-  activated() {
+/*  activated() {
     if (this.$route.query.pId) {
       this.queryParams.pId = this.$route.query.pId;
     }
     this.getList();
-  },
+  },*/
   methods: {
     /** 查询预警日志列表 */
     getList() {

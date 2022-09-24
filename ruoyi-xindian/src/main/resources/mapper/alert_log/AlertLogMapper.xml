@@ -21,7 +21,8 @@
     </resultMap>
 
     <sql id="selectAlertLogVo">
-        select *
+        select log_id, log_time, log_type, event_name, event_description, al.p_id,
+               pm.hospital_code, pm.patient_code, patient_name, patient_phone, family_phone, hospital_name
         from alert_log al
             inner join patient_management pm on al.p_id = pm.p_id
             inner join patient p on pm.patient_code = p.patient_code
@@ -31,7 +32,6 @@
     <select id="selectAlertLogList" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         <where>
-            <!--<if test="logTime != null "> and log_time like concat('%', #{logTime}, '%')</if>-->
             <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''"> and log_time between #{params.beginLogTime} and #{params.endLogTime}</if>
             <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
             <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
@@ -39,7 +39,6 @@
             <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
             <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null "> and hospital_name like concat('%', #{hospitalName}, '%')</if>
-            <if test="logData != null  and logData != ''"> and log_data = #{logData}</if>
         </where>
         order by log_time desc
     </select>

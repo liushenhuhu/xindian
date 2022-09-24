@@ -1,11 +1,5 @@
 package com.ruoyi.web.controller.system;
 
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
