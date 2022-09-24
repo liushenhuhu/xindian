@@ -1,5 +1,6 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.system.mapper.SysUserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
@@ -33,6 +34,7 @@ public class SysRegisterService {
 
     @Autowired
     private RedisCache redisCache;
+
 
     /**
      * 注册
@@ -69,6 +71,11 @@ public class SysRegisterService {
             if (!regFlag) {
                 msg = "注册失败,请联系系统管理人员";
             } else {
+                Long userId = userService.selectUserByUserName(username).getUserId();
+
+                //设置账号的角色
+                userService.setUserRole(userId, 100L);
+
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER,
                         MessageUtils.message("user.register.success")));
             }
@@ -95,4 +102,6 @@ public class SysRegisterService {
             throw new CaptchaException();
         }
     }
+
+
 }
