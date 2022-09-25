@@ -26,7 +26,8 @@ export default {
         this.logId = this.$route.params.logId;
         this.logType = this.$route.params.logType;
         console.log(this.logId)
-        this.src = "http://192.168.0.109:6006//look_log?logId=" + this.logId + "&logType=" + this.logType;
+        // this.src = "http://192.168.0.109:6006/look_log?logId=" + this.logId + "&logType=" + this.logType;
+        this.src = "http://zzuecg.tpddns.cn:6006/look_log?logId=" + this.logId + "&logType=" + this.logType;
         console.log(this.src)
       } else {
         console.log("该日志不存在")
@@ -40,7 +41,7 @@ export default {
     if (this.$route.params.logId) {
       this.logId = this.$route.params.logId;
       this.logType = this.$route.params.logType;
-      this.src = "http://192.168.0.109:6006//look_log?logId=" + this.logId + "&logType=" + this.logType;
+      this.src = "http://zzuecg.tpddns.cn:6006/look_log?logId=" + this.logId + "&logType=" + this.logType;
       console.log(this.src);
     } else {
       console.log("该日志不存在")

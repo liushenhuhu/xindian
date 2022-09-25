@@ -3,7 +3,7 @@
     width="100%"
     :height="TableHeight"
     allowfullscreen="true"
-    src="http://192.168.0.109:6006/">
+    :src= src>
   </iframe>
 </template>
 
@@ -16,13 +16,23 @@ export default {
       // 版本号
       version: "3.8.3",
       TableHeight: 100,
+      src: null
     };
   },
   created() {
     //动态计算表格高度
     let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
     this.TableHeight = windowHeight + 180;
+
+    var url = window.location.href
+    console.log(url)
+    if (url === 'http://zzuecg.tpddns.cn:83/ECGScreen') {
+      this.src = 'http://zzuecg.tpddns.cn:6006/';
+    } else {
+      this.src = 'http://192.168.0.109:6006/'
+    }
   },
+
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
