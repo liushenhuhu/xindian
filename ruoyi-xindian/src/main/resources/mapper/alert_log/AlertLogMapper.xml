@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.alert_log.mapper.AlertLogMapper">
 
-    <cache eviction="FIFO" flushInterval="600000" readOnly="false" size="1024"/>
+<!--    <cache eviction="FIFO" flushInterval="5000" readOnly="false" size="1024"/>-->
 
     <resultMap type="AlertLog" id="AlertLogResult">
         <result property="logId"    column="log_id"    />

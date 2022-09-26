@@ -3,7 +3,7 @@
     width="100%"
     :height="TableHeight"
     allowfullscreen="true"
-    :src= src >
+    :src= url >
   </iframe>
 </template>
 
@@ -17,15 +17,26 @@ export default {
       version: "3.8.3",
       TableHeight: 100,
       pId: null,
+      url: null,
       src: null
     };
   },
   created() {
+
+    var url = window.location.href
+    // console.log(url)
+    var split = url.split('/', 3);
+    var str = split[2];
+    // console.log(str);
+    var split1 = str.split(':');
+    var str1 = split1[0];
+    this.src = 'http://' + str1 + ':6006/';
+    console.log(this.src)
+
     if (this.$route.query.equipmentCode) {
       this.equipmentCode = this.$route.query.equipmentCode;
-      // this.src = "http://192.168.0.109:6006/screen?equipmentCode=" + this.equipmentCode;
-      this.src = "http://zzuecg.tpddns.cn:6006/screen?equipmentCode=" + this.equipmentCode;
-      console.log(this.src)
+      this.url = this.src + "screen?equipmentCode=" + this.equipmentCode;
+      console.log(this.url)
     }
     //动态计算表格高度
     let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
@@ -34,8 +45,8 @@ export default {
   activated() {
     if (this.$route.query.equipmentCode) {
       this.equipmentCode = this.$route.query.equipmentCode;
-      this.src = "http://zzuecg.tpddns.cn:6006/screen?equipmentCode=" + this.equipmentCode;
-      console.log(this.src)
+      this.src = this.src + "screen?equipmentCode=" + this.equipmentCode;
+      console.log(this.url)
     }
   },
   methods: {
