@@ -230,6 +230,20 @@
             </el-form-item>
           </el-col>
         </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="医院名称" prop="hospitalName">
+              <el-input v-model="form.hospitalName" placeholder="请输入医院名称" maxlength="50" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="医院代号" prop="hospitalCode">
+              <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" maxlength="50" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-row>
           <el-col :span="12">
             <el-form-item v-if="form.userId == undefined" label="用户名称" prop="userName">

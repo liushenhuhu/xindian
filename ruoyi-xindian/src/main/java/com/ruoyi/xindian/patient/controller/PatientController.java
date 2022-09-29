@@ -1,7 +1,12 @@
 package com.ruoyi.xindian.patient.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +39,9 @@ public class PatientController extends BaseController
     @Autowired
     private IPatientService patientService;
 
+    @Autowired
+    private ISysUserService userService;
+
     /**
      * 查询患者列表
      */
@@ -41,8 +49,17 @@ public class PatientController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Patient patient)
     {
-        startPage();
-        List<Patient> list = patientService.selectPatientList(patient);
+        List<Patient> list = new ArrayList<>();
+        if (getDeptId() == 200) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalName = sysUser.getHospitalName();
+            patient.setPatientSource(hospitalName);
+            startPage();
+            list = patientService.selectPatientList(patient);
+        } else {
+            startPage();
+            list = patientService.selectPatientList(patient);
+        }
         return getDataTable(list);
     }
 
@@ -54,7 +71,15 @@ public class PatientController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Patient patient)
     {
-        List<Patient> list = patientService.selectPatientList(patient);
+        List<Patient> list = new ArrayList<>();
+        if (getDeptId() == 200) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalName = sysUser.getHospitalName();
+            patient.setPatientSource(hospitalName);
+            list = patientService.selectPatientList(patient);
+        } else {
+            list = patientService.selectPatientList(patient);
+        }
         ExcelUtil<Patient> util = new ExcelUtil<Patient>(Patient.class);
         util.exportExcel(response, list, "患者数据");
     }

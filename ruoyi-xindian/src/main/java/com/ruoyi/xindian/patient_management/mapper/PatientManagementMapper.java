@@ -62,4 +62,5 @@ public interface PatientManagementMapper
     public void updateStatusAll();
 
     public void updateStatus(String[] pIds);
+
 }

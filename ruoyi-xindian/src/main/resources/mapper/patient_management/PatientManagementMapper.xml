@@ -45,6 +45,7 @@
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
             <if test="ecgType != null  and ecgType != ''"> and ecg_type = #{ecgType} </if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
+            <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
         </where>
         order by online_status desc, connection_time desc
     </select>

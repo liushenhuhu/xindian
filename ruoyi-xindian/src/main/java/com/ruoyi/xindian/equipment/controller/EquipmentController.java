@@ -1,9 +1,13 @@
 package com.ruoyi.xindian.equipment.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,14 +39,26 @@ public class EquipmentController extends BaseController {
     @Autowired
     private IEquipmentService equipmentService;
 
+    @Autowired
+    private ISysUserService userService;
+
     /**
      * 查询设备列表
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:list')")
     @GetMapping("/list")
     public TableDataInfo list(Equipment equipment) {
-        startPage();
-        List<Equipment> list = equipmentService.selectEquipmentList(equipment);
+        List<Equipment> list = new ArrayList<>();
+        if (getDeptId() == 200) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalCode = sysUser.getHospitalCode();
+            equipment.setHospitalCode(hospitalCode);
+            startPage();
+            list = equipmentService.selectEquipmentList(equipment);
+        } else {
+            startPage();
+            list = equipmentService.selectEquipmentList(equipment);
+        }
         return getDataTable(list);
     }
 
@@ -53,7 +69,15 @@ public class EquipmentController extends BaseController {
     @Log(title = "设备", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Equipment equipment) {
-        List<Equipment> list = equipmentService.selectEquipmentList(equipment);
+        List<Equipment> list = new ArrayList<>();
+        if (getDeptId() == 200) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalCode = sysUser.getHospitalCode();
+            equipment.setHospitalCode(hospitalCode);
+            list = equipmentService.selectEquipmentList(equipment);
+        } else {
+            list = equipmentService.selectEquipmentList(equipment);
+        }
         ExcelUtil<Equipment> util = new ExcelUtil<Equipment>(Equipment.class);
         util.exportExcel(response, list, "设备数据");
     }

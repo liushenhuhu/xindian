@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.patient_management.service.impl;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
@@ -14,8 +15,7 @@ import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
  * @date 2022-08-20
  */
 @Service
-public class PatientManagementServiceImpl implements IPatientManagementService
-{
+public class PatientManagementServiceImpl implements IPatientManagementService {
     @Autowired
     private PatientManagementMapper patientManagementMapper;
 
@@ -26,8 +26,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 患者管理
      */
     @Override
-    public PatientManagement selectPatientManagementByPId(String pId)
-    {
+    public PatientManagement selectPatientManagementByPId(String pId) {
         return patientManagementMapper.selectPatientManagementByPId(pId);
     }
 
@@ -38,8 +37,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 患者管理
      */
     @Override
-    public List<PatientManagement> selectPatientManagementList(PatientManagement patientManagement)
-    {
+    public List<PatientManagement> selectPatientManagementList(PatientManagement patientManagement) {
         return patientManagementMapper.selectPatientManagementList(patientManagement);
     }
 
@@ -50,8 +48,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 结果
      */
     @Override
-    public int insertPatientManagement(PatientManagement patientManagement)
-    {
+    public int insertPatientManagement(PatientManagement patientManagement) {
         return patientManagementMapper.insertPatientManagement(patientManagement);
     }
 
@@ -62,8 +59,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 结果
      */
     @Override
-    public int updatePatientManagement(PatientManagement patientManagement)
-    {
+    public int updatePatientManagement(PatientManagement patientManagement) {
         return patientManagementMapper.updatePatientManagement(patientManagement);
     }
 
@@ -74,8 +70,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 结果
      */
     @Override
-    public int deletePatientManagementByPIds(String[] pIds)
-    {
+    public int deletePatientManagementByPIds(String[] pIds) {
         return patientManagementMapper.deletePatientManagementByPIds(pIds);
     }
 
@@ -86,8 +81,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService
      * @return 结果
      */
     @Override
-    public int deletePatientManagementByPId(String pId)
-    {
+    public int deletePatientManagementByPId(String pId) {
         return patientManagementMapper.deletePatientManagementByPId(pId);
     }
 
@@ -100,4 +94,5 @@ public class PatientManagementServiceImpl implements IPatientManagementService
     public void updateStatus(String[] pIds) {
         patientManagementMapper.updateStatus(pIds);
     }
+
 }

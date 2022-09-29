@@ -1,8 +1,11 @@
 package com.ruoyi.xindian.alert_log.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -41,6 +44,9 @@ public class AlertLogController extends BaseController
     @Autowired
     private IAlertLogService alertLogService;
 
+    @Autowired
+    private ISysUserService userService;
+
     /**
      * 查询预警日志列表
      */
@@ -48,8 +54,17 @@ public class AlertLogController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(AlertLog alertLog)
     {
-        startPage();
-        List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
+        List<AlertLog> list = new ArrayList<>();
+        if (getDeptId() == 200) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalName = sysUser.getHospitalName();
+            alertLog.setHospitalName(hospitalName);
+            startPage();
+            list = alertLogService.selectAlertLogList(alertLog);
+        } else {
+            startPage();
+            list = alertLogService.selectAlertLogList(alertLog);
+        }
         return getDataTable(list);
     }
 
@@ -61,7 +76,17 @@ public class AlertLogController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, AlertLog alertLog)
     {
-        List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
+
+        List<AlertLog> list = new ArrayList<>();
+        if (getDeptId() == 200) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalName = sysUser.getHospitalName();
+            alertLog.setHospitalName(hospitalName);
+            list = alertLogService.selectAlertLogList(alertLog);
+        } else {
+            list = alertLogService.selectAlertLogList(alertLog);
+        }
+
         ExcelUtil<AlertLog> util = new ExcelUtil<AlertLog>(AlertLog.class);
         util.exportExcel(response, list, "预警日志数据");
     }
