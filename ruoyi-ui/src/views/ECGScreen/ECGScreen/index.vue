@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import {getUserInfo} from "@/api/patient_management/patient_management";
+
 let windowHeight;
 export default {
   name: "Index",
@@ -20,19 +22,54 @@ export default {
     };
   },
   created() {
-    //动态计算表格高度
-    let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
-    this.TableHeight = windowHeight + 180;
+    getUserInfo().then(user => {
+      console.log(user);
+      var hospitalName = '所有'
+      var hospitalCode = 'null'
+      if (user.deptId === 200) {
+        hospitalName = user.hospitalName
+        hospitalCode = user.hospitalCode
+      }
+      var url = window.location.href
+      // console.log(url)
+      var split = url.split('/', 3);
+      var str = split[2];
+      // console.log(str);
+      var split1 = str.split(':');
+      var str1 = split1[0];
+      this.src = 'http://' + str1 + ':6006?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
+      console.log(this.src)
 
-    var url = window.location.href
-    // console.log(url)
-    var split = url.split('/', 3);
-    var str = split[2];
-    // console.log(str);
-    var split1 = str.split(':');
-    var str1 = split1[0];
-    this.src = 'http://' + str1 + ':6006/';
-    console.log(this.src)
+      //动态计算表格高度
+      let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
+      this.TableHeight = windowHeight + 180;
+
+    })
+  },
+  activated() {
+    getUserInfo().then(user => {
+      console.log(user);
+      var hospitalName = '所有'
+      var hospitalCode = 'null'
+      if (user.deptId === 200) {
+        hospitalName = user.hospitalName
+        hospitalCode = user.hospitalCode
+      }
+      var url = window.location.href
+      // console.log(url)
+      var split = url.split('/', 3);
+      var str = split[2];
+      // console.log(str);
+      var split1 = str.split(':');
+      var str1 = split1[0];
+      this.src = 'http://' + str1 + ':6006?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
+      console.log(this.src)
+
+      //动态计算表格高度
+      let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
+      this.TableHeight = windowHeight + 180;
+
+    })
   },
 
   methods: {

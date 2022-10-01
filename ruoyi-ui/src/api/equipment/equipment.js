@@ -52,7 +52,4 @@ export function updateEquipmentStatus(data) {
   })
 }
 
-export function test() {
-}
-
 

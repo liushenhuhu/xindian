@@ -58,3 +58,10 @@ export function updateStatus(data) {
     timeout: 100000
   })
 }
+
+export function getUserInfo() {
+  return request({
+    url: '/patient_management/patient_management/getUserInfo',
+    method: 'get'
+  })
+}

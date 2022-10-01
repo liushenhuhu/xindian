@@ -76,7 +76,6 @@ public class AlertLogController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, AlertLog alertLog)
     {
-
         List<AlertLog> list = new ArrayList<>();
         if (getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
@@ -86,7 +85,6 @@ public class AlertLogController extends BaseController
         } else {
             list = alertLogService.selectAlertLogList(alertLog);
         }
-
         ExcelUtil<AlertLog> util = new ExcelUtil<AlertLog>(AlertLog.class);
         util.exportExcel(response, list, "预警日志数据");
     }

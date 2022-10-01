@@ -121,21 +121,21 @@
       </el-table-column>
       <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
-<!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
-            <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-            <el-table-column label="患者性别" align="center" prop="patientSex">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="患者来源" align="center" prop="patientSource"/>
-            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-            <el-table-column label="家属电话" align="center" prop="familyPhone"/>
-            <el-table-column label="监测状态" align="center" prop="monitoringStatus">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
-              </template>
-            </el-table-column>-->
+      <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
+                  <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+                  <el-table-column label="患者性别" align="center" prop="patientSex">
+                    <template slot-scope="scope">
+                      <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="患者来源" align="center" prop="patientSource"/>
+                  <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+                  <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+                  <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+                    <template slot-scope="scope">
+                      <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+                    </template>
+                  </el-table-column>-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
       <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
             <el-table-column label="设备号" align="center" prop="equipmentCode"/>-->
@@ -296,7 +296,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus
+  updatePatient_management, updateStatus, getUserInfo
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -356,51 +356,14 @@ export default {
   },
 
   beforeCreate() {
-    $.ajax({
-      type: "post",
-      url: "http://219.155.7.235:5003/get_device2",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        "ts": 0
-      }),
-      success: function (res) {
-        let pIdList;
-        pIdList = res.result.pid_list;
-        console.log(pIdList)
-        updateStatus(pIdList)
-      },
-      error: function () {
-        alert("更新失败！")
-      }
-    })
-    $.ajax({
-      type: "post",
-      url: "http://219.155.7.235:5003/get_device",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        "ts": 0
-      }),
-      success: function (res) {
-        let devList;
-        devList = res.result.dev_list;
-        console.log(devList)
-        updateEquipmentStatus(devList)
-      },
-      error: function () {
-        alert("更新失败！")
-      }
-    })
-  },
 
-  created() {
-    this.getList();
-  },
-  methods: {
-
-    refreshList() {
-      console.log("refresh======")
+    getUserInfo().then(user => {
+      console.log(user);
+      var hospitalName = '所有'
+      if (user.deptId === 200) {
+        hospitalName = user.hospitalName
+      }
+      console.log(hospitalName);
       $.ajax({
         type: "post",
         url: "http://219.155.7.235:5003/get_device2",
@@ -416,7 +379,7 @@ export default {
           updateStatus(pIdList)
         },
         error: function () {
-          alert("更新失败！")
+          console.log("更新失败！")
         }
       })
       $.ajax({
@@ -425,6 +388,7 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
+          "hospName": hospitalName,
           "ts": 0
         }),
         success: function (res) {
@@ -434,53 +398,73 @@ export default {
           updateEquipmentStatus(devList)
         },
         error: function () {
-          alert("更新失败！")
+          console.log("更新失败！")
         }
       })
+
+    });
+  },
+
+  created() {
+    this.getList();
+  },
+  methods: {
+
+    refreshList() {
+      console.log("refresh======")
+
+      getUserInfo().then(user => {
+        console.log(user);
+        var hospitalName = '所有'
+        if (user.deptId === 200) {
+          hospitalName = user.hospitalName
+        }
+        console.log(hospitalName);
+        $.ajax({
+          type: "post",
+          url: "http://219.155.7.235:5003/get_device2",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            "ts": 0
+          }),
+          success: function (res) {
+            let pIdList;
+            pIdList = res.result.pid_list;
+            console.log(pIdList)
+            updateStatus(pIdList)
+          },
+          error: function () {
+            console.log("更新失败！")
+          }
+        })
+        $.ajax({
+          type: "post",
+          url: "http://219.155.7.235:5003/get_device",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            "hospName": hospitalName,
+            "ts": 0
+          }),
+          success: function (res) {
+            let devList;
+            devList = res.result.dev_list;
+            console.log(devList)
+            updateEquipmentStatus(devList)
+          },
+          error: function () {
+            console.log("更新失败！")
+          }
+        })
+
+      });
+
       this.getList();
     },
 
     /** 查询患者管理列表 */
     getList() {
-      /*      $.ajax({
-              type: "post",
-              url: "http://219.155.7.235:5003/get_device2",
-              contentType: "application/json",
-              dataType: "json",
-              // async: false,
-              data: JSON.stringify({
-                "ts": 0
-              }),
-              success: function (res) {
-                let pIdList;
-                pIdList = res.result.pid_list;
-                console.log(pIdList)
-                updateStatus(pIdList)
-              },
-              error: function () {
-                alert("更新失败！")
-              }
-            })
-            $.ajax({
-              type: "post",
-              url: "http://219.155.7.235:5003/get_device",
-              contentType: "application/json",
-              dataType: "json",
-              // async: false,
-              data: JSON.stringify({
-                "ts": 0
-              }),
-              success: function (res) {
-                let devList;
-                devList = res.result.dev_list;
-                console.log(devList)
-                updateEquipmentStatus(devList)
-              },
-              error: function () {
-                alert("更新失败！")
-              }
-            })*/
-
       this.loading = true;
       this.queryParams.params = {};
       if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {

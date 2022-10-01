@@ -163,4 +163,16 @@ public class PatientManagementController extends BaseController {
             }
         }
     }
+
+    /**
+     * 获取用户信息
+     */
+    @GetMapping("/getUserInfo")
+    public SysUser getUserInfo() {
+        SysUser sysUser = userService.selectUserById(getUserId());
+//        String hospitalName = sysUser.getHospitalName();
+        return sysUser;
+    }
+
+
 }

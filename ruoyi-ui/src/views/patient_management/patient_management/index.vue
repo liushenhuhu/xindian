@@ -302,7 +302,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus
+  updatePatient_management, updateStatus, getUserInfo
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -364,42 +364,53 @@ export default {
   },
 
   beforeCreate() {
-    $.ajax({
-      type: "post",
-      url: "http://219.155.7.235:5003/get_device2",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        "ts": 0
-      }),
-      success: function (res) {
-        let pIdList;
-        pIdList = res.result.pid_list;
-        console.log(pIdList)
-        updateStatus(pIdList)
-      },
-      error: function () {
-        alert("更新失败！")
+
+    getUserInfo().then(user => {
+      console.log(user);
+      var hospitalName = '所有'
+      if (user.deptId === 200) {
+        hospitalName = user.hospitalName
       }
-    })
-    $.ajax({
-      type: "post",
-      url: "http://219.155.7.235:5003/get_device",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        "ts": 0
-      }),
-      success: function (res) {
-        let devList;
-        devList = res.result.dev_list;
-        console.log(devList)
-        updateEquipmentStatus(devList)
-      },
-      error: function () {
-        alert("更新失败！")
-      }
-    })
+      console.log(hospitalName);
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device2",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          "ts": 0
+        }),
+        success: function (res) {
+          let pIdList;
+          pIdList = res.result.pid_list;
+          console.log(pIdList)
+          updateStatus(pIdList)
+        },
+        error: function () {
+          console.log("更新失败！")
+        }
+      })
+      $.ajax({
+        type: "post",
+        url: "http://219.155.7.235:5003/get_device",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          "hospName": hospitalName,
+          "ts": 0
+        }),
+        success: function (res) {
+          let devList;
+          devList = res.result.dev_list;
+          console.log(devList)
+          updateEquipmentStatus(devList)
+        },
+        error: function () {
+          console.log("更新失败！")
+        }
+      })
+
+    });
   },
 
   created() {
@@ -419,85 +430,57 @@ export default {
   methods: {
     refreshList() {
       console.log("refresh======")
-      $.ajax({
-        type: "post",
-        url: "http://219.155.7.235:5003/get_device2",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          "ts": 0
-        }),
-        success: function (res) {
-          let pIdList;
-          pIdList = res.result.pid_list;
-          console.log(pIdList)
-          updateStatus(pIdList)
-        },
-        error: function () {
-          alert("更新失败！")
+      getUserInfo().then(user => {
+        console.log(user);
+        var hospitalName = '所有'
+        if (user.deptId === 200) {
+          hospitalName = user.hospitalName
         }
-      })
-      $.ajax({
-        type: "post",
-        url: "http://219.155.7.235:5003/get_device",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          "ts": 0
-        }),
-        success: function (res) {
-          let devList;
-          devList = res.result.dev_list;
-          console.log(devList)
-          updateEquipmentStatus(devList)
-        },
-        error: function () {
-          alert("更新失败！")
-        }
-      })
+        console.log(hospitalName);
+        $.ajax({
+          type: "post",
+          url: "http://219.155.7.235:5003/get_device2",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            "ts": 0
+          }),
+          success: function (res) {
+            let pIdList;
+            pIdList = res.result.pid_list;
+            console.log(pIdList)
+            updateStatus(pIdList)
+          },
+          error: function () {
+            console.log("更新失败！")
+          }
+        })
+        $.ajax({
+          type: "post",
+          url: "http://219.155.7.235:5003/get_device",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            "hospName": hospitalName,
+            "ts": 0
+          }),
+          success: function (res) {
+            let devList;
+            devList = res.result.dev_list;
+            console.log(devList)
+            updateEquipmentStatus(devList)
+          },
+          error: function () {
+            console.log("更新失败！")
+          }
+        })
+
+      });
       this.getList();
     },
 
     /** 查询患者管理列表 */
     getList() {
-      /*      $.ajax({
-              type: "post",
-              url: "http://219.155.7.235:5003/get_device2",
-              contentType: "application/json",
-              dataType: "json",
-              // async: false,
-              data: JSON.stringify({
-                "ts": 0
-              }),
-              success: function (res) {
-                let pIdList;
-                pIdList = res.result.pid_list;
-                console.log(pIdList)
-                updateStatus(pIdList)
-              },
-              error: function () {
-                alert("更新失败！")
-              }
-            })
-            $.ajax({
-              type: "post",
-              url: "http://219.155.7.235:5003/get_device",
-              contentType: "application/json",
-              dataType: "json",
-              // async: false,
-              data: JSON.stringify({
-                "ts": 0
-              }),
-              success: function (res) {
-                let devList;
-                devList = res.result.dev_list;
-                console.log(devList)
-                updateEquipmentStatus(devList)
-              },
-              error: function () {
-                alert("更新失败！")
-              }
-            })*/
 
       setTimeout(() => {
         this.loading = true;
