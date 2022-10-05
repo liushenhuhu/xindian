@@ -344,7 +344,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'DECG'
+        ecgType: 'DECG1'
       },
       // 表单参数
       form: {},
