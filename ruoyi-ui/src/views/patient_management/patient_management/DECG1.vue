@@ -109,6 +109,17 @@
         >导出
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-refresh"
+          size="mini"
+          @click="updateOnline"
+          v-hasPermi="['patient_management:patient_management:updateOnline']"
+        >更新在线状态
+        </el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
@@ -123,22 +134,22 @@
       </el-table-column>
       <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
-<!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
-            <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-            <el-table-column label="患者性别" align="center" prop="patientSex">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="患者来源" align="center" prop="patientSource"/>
-            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-            <el-table-column label="家属电话" align="center" prop="familyPhone"/>
-            <el-table-column label="监测状态" align="center" prop="monitoringStatus">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+      <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
+                  <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+                  <el-table-column label="患者性别" align="center" prop="patientSex">
+                    <template slot-scope="scope">
+                      <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="患者来源" align="center" prop="patientSource"/>
+                  <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+                  <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+                  <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+                    <template slot-scope="scope">
+                      <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
       <el-table-column label="在线状态" align="center" prop="onlineStatus">
@@ -430,6 +441,58 @@ export default {
   methods: {
     refreshList() {
       console.log("refresh======")
+/*      getUserInfo().then(user => {
+        console.log(user);
+        var hospitalName = '所有'
+        if (user.deptId === 200) {
+          hospitalName = user.hospitalName
+        }
+        console.log(hospitalName);
+        $.ajax({
+          type: "post",
+          url: "http://219.155.7.235:5003/get_device2",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            "ts": 0
+          }),
+          success: function (res) {
+            let pIdList;
+            pIdList = res.result.pid_list;
+            console.log(pIdList)
+            updateStatus(pIdList)
+          },
+          error: function () {
+            console.log("更新失败！")
+          }
+        })
+        $.ajax({
+          type: "post",
+          url: "http://219.155.7.235:5003/get_device",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            "hospName": hospitalName,
+            "ts": 0
+          }),
+          success: function (res) {
+            let devList;
+            devList = res.result.dev_list;
+            console.log(devList)
+            updateEquipmentStatus(devList)
+          },
+          error: function () {
+            console.log("更新失败！")
+          }
+        })
+
+      });*/
+      this.getList();
+    },
+
+    /** 更新在线状态*/
+    updateOnline() {
+      console.log("updateOnline======")
       getUserInfo().then(user => {
         console.log(user);
         var hospitalName = '所有'
@@ -476,27 +539,26 @@ export default {
         })
 
       });
-      this.getList();
+      this.$modal.msgSuccess("在线状态更新中，请稍候")
+      setTimeout(this.successUpdate,4000)
+    },
+    successUpdate() {
+      this.$modal.msgSuccess("在线状态更新成功，请刷新列表")
     },
 
     /** 查询患者管理列表 */
     getList() {
-
-      setTimeout(() => {
-        this.loading = true;
-        this.queryParams.params = {};
-        if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
-          this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
-          this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
-        }
-        listPatient_management(this.queryParams).then(response => {
-          this.patient_managementList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        });
-      })
-
-
+      this.loading = true;
+      this.queryParams.params = {};
+      if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
+        this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
+        this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
+      }
+      listPatient_management(this.queryParams).then(response => {
+        this.patient_managementList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
     },
     // 取消按钮
     cancel() {
@@ -619,61 +681,6 @@ export default {
     downloadInform(row) {
       let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
-
-      // window.open("http://localhost:83/dev-api/download/test.pdf?token=" + this.getToken(), '_blank');
-
-      // axios.get('http://localhost:83/dev-api/download/test.pdf',
-      //   {responseType: 'blob'}
-      // ).then((res)=>{
-      //   console.log('文件下载成功');
-      //   const blob = new Blob([res.data]);
-      //   const fileName = "test.pdf";
-      //
-      //   if ('download' in document.createElement('a')) {
-      //
-      //     const link = document.createElement('a');//创建a标签
-      //     link.download = fileName;//a标签添加属性
-      //     link.style.display = 'none';
-      //     link.href = URL.createObjectURL(blob);
-      //     document.body.appendChild(link);
-      //     link.click();//执行下载
-      //     URL.revokeObjectURL(link.href); //释放url
-      //     document.body.removeChild(link);//释放标签
-      //   } else {
-      //     navigator.msSaveBlob(blob, fileName);
-      //   }
-      // }).catch((res)=>{
-      //   console.log('文件下载失败');
-      // });
-
-      //下载pdf文件
-
-      /*  axios({
-          url: 'http://localhost:83/dev-api/download/downPdf',
-          method: 'post',
-          responseType: 'blob',
-          headers: { 'Authorization': 'Bearer ' + getToken() }
-        }).then(res => {
-          console.log('PDFres',res);
-          var blob = new Blob([res], {
-            type: 'application/pdf;charset=UTF-8',
-          }); //type这里表示pdf类型
-          console.log('blob',blob);
-          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveOrOpenBlob(blob, '使用说明.pdf');
-          } else {
-            var downloadElement = document.createElement('a');
-            var href = window.URL.createObjectURL(blob); //创建下载的链接
-            downloadElement.href = href;
-            downloadElement.download = '使用说明.pdf'; //下载后文件名
-            document.body.appendChild(downloadElement);
-            downloadElement.click(); //点击下载
-            document.body.removeChild(downloadElement); //下载完成移除元素
-            window.URL.revokeObjectURL(href); //释放掉blob对象
-          }
-        });*/
-
-
     }
   }
 };
