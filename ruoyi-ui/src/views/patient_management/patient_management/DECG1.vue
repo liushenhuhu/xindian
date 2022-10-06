@@ -665,7 +665,8 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pId: row.pId
+          pId: row.pId,
+          ecg_type: row.ecgType
         }),
         success: function (data) {
           alert(name + "动态心电报告已生成")
