@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.report.mapper.ReportMapper">
+
+    <resultMap type="Report" id="ReportResult">
+        <result property="reportId"    column="report_id"    />
+        <result property="pId"    column="p_id"    />
+        <result property="diagnosisStatus"    column="diagnosis_status"    />
+        <result property="diagnosisConclusion"    column="diagnosis_conclusion"    />
+        <result property="diagnosisDoctor"    column="diagnosis_doctor"    />
+        <result property="reportTime"    column="report_time"    />
+        <result property="reportType"    column="report_type"    />
+    </resultMap>
+
+    <sql id="selectReportVo">
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type from report
+    </sql>
+
+    <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
+        <include refid="selectReportVo"/>
+        <where>
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+            <if test="diagnosisStatus != null  and diagnosisStatus != ''"> and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
+            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
+            <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
+            <if test="reportType != null  and reportType != ''"> and report_type = #{reportType}</if>
+        </where>
+    </select>
+
+    <select id="selectReportByReportId" parameterType="Long" resultMap="ReportResult">
+        <include refid="selectReportVo"/>
+        where report_id = #{reportId}
+    </select>
+
+    <insert id="insertReport" parameterType="Report" useGeneratedKeys="true" keyProperty="reportId">
+        insert into report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pId != null and pId != ''">p_id,</if>
+            <if test="diagnosisStatus != null">diagnosis_status,</if>
+            <if test="diagnosisConclusion != null">diagnosis_conclusion,</if>
+            <if test="diagnosisDoctor != null">diagnosis_doctor,</if>
+            <if test="reportTime != null">report_time,</if>
+            <if test="reportType != null">report_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pId != null and pId != ''">#{pId},</if>
+            <if test="diagnosisStatus != null">#{diagnosisStatus},</if>
+            <if test="diagnosisConclusion != null">#{diagnosisConclusion},</if>
+            <if test="diagnosisDoctor != null">#{diagnosisDoctor},</if>
+            <if test="reportTime != null">#{reportTime},</if>
+            <if test="reportType != null">#{reportType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateReport" parameterType="Report">
+        update report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pId != null and pId != ''">p_id = #{pId},</if>
+            <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
+            <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
+            <if test="diagnosisDoctor != null">diagnosis_doctor = #{diagnosisDoctor},</if>
+            <if test="reportTime != null">report_time = #{reportTime},</if>
+            <if test="reportType != null">report_type = #{reportType},</if>
+        </trim>
+        where report_id = #{reportId}
+    </update>
+
+    <delete id="deleteReportByReportId" parameterType="Long">
+        delete from report where report_id = #{reportId}
+    </delete>
+
+    <delete id="deleteReportByReportIds" parameterType="String">
+        delete from report where report_id in
+        <foreach item="reportId" collection="array" open="(" separator="," close=")">
+            #{reportId}
+        </foreach>
+    </delete>
+</mapper>

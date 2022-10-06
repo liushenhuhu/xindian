@@ -109,6 +109,17 @@
         >导出
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-refresh"
+          size="mini"
+          @click="updateOnline"
+          v-hasPermi="['patient_management:patient_management:updateOnline']"
+        >更新在线状态
+        </el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
@@ -412,7 +423,58 @@ export default {
 
     refreshList() {
       console.log("refresh======")
+/*      getUserInfo().then(user => {
+        console.log(user);
+        var hospitalName = '所有'
+        if (user.deptId === 200) {
+          hospitalName = user.hospitalName
+        }
+        console.log(hospitalName);
+        $.ajax({
+          type: "post",
+          url: "http://219.155.7.235:5003/get_device2",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            "ts": 0
+          }),
+          success: function (res) {
+            let pIdList;
+            pIdList = res.result.pid_list;
+            console.log(pIdList)
+            updateStatus(pIdList)
+          },
+          error: function () {
+            console.log("更新失败！")
+          }
+        })
+        $.ajax({
+          type: "post",
+          url: "http://219.155.7.235:5003/get_device",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            "hospName": hospitalName,
+            "ts": 0
+          }),
+          success: function (res) {
+            let devList;
+            devList = res.result.dev_list;
+            console.log(devList)
+            updateEquipmentStatus(devList)
+          },
+          error: function () {
+            console.log("更新失败！")
+          }
+        })
 
+      });*/
+      this.getList();
+    },
+
+    /** 更新在线状态*/
+    updateOnline() {
+      console.log("updateOnline======")
       getUserInfo().then(user => {
         console.log(user);
         var hospitalName = '所有'
@@ -459,8 +521,11 @@ export default {
         })
 
       });
-
-      this.getList();
+      this.$modal.msgSuccess("在线状态更新中，请稍候")
+      setTimeout(this.successUpdate,4000)
+    },
+    successUpdate() {
+      this.$modal.msgSuccess("在线状态更新成功，请刷新列表")
     },
 
     /** 查询患者管理列表 */

@@ -1,44 +1,44 @@
 import request from '@/utils/request'
 
 // 查询报告列表
-export function listInform(query) {
+export function listReport(query) {
   return request({
-    url: '/inform/inform/list',
+    url: '/report/report/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询报告详细
-export function getInform(informId) {
+export function getReport(reportId) {
   return request({
-    url: '/inform/inform/' + informId,
+    url: '/report/report/' + reportId,
     method: 'get'
   })
 }
 
 // 新增报告
-export function addInform(data) {
+export function addReport(data) {
   return request({
-    url: '/inform/inform',
+    url: '/report/report',
     method: 'post',
     data: data
   })
 }
 
 // 修改报告
-export function updateInform(data) {
+export function updateReport(data) {
   return request({
-    url: '/inform/inform',
+    url: '/report/report',
     method: 'put',
     data: data
   })
 }
 
 // 删除报告
-export function delInform(informId) {
+export function delReport(reportId) {
   return request({
-    url: '/inform/inform/' + informId,
+    url: '/report/report/' + reportId,
     method: 'delete'
   })
 }

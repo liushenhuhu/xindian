@@ -1,38 +1,61 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="报告号" prop="informNumber">
-        <el-input
-          v-model="queryParams.informNumber"
-          placeholder="请输入报告号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="患者管理id" prop="pId">
+      <el-form-item label="心电id" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入患者管理id"
+          placeholder="请输入心电id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="开始遥测时间" prop="startTelemetryTime">
-        <el-date-picker clearable
-                        v-model="queryParams.startTelemetryTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择开始遥测时间">
-        </el-date-picker>
+      <el-form-item label="诊断状态" prop="diagnosisStatus">
+        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
+          <el-option
+            v-for="dict in dict.type.diagnosis_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="报告日期" prop="informTime">
-        <el-date-picker clearable
-                        v-model="queryParams.informTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择报告日期">
-        </el-date-picker>
+      <el-form-item label="诊断结论" prop="diagnosisConclusion">
+        <el-input
+          v-model="queryParams.diagnosisConclusion"
+          placeholder="请输入诊断结论"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
+      <el-form-item label="诊断医生" prop="diagnosisDoctor">
+        <el-input
+          v-model="queryParams.diagnosisDoctor"
+          placeholder="请输入诊断医生"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="报告时间">
+        <el-date-picker
+          v-model="daterangeReportTime"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+<!--      <el-form-item label="报告种类" prop="reportType">
+        <el-select v-model="queryParams.reportType" placeholder="请选择报告种类" clearable>
+          <el-option
+            v-for="dict in dict.type.ecg_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -47,7 +70,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['inform:inform:add']"
+          v-hasPermi="['report:report:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -58,7 +81,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['inform:inform:edit']"
+          v-hasPermi="['report:report:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -69,7 +92,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['inform:inform:remove']"
+          v-hasPermi="['report:report:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -79,42 +102,33 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['inform:inform:export']"
+          v-hasPermi="['report:report:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="informList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="reportList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="报告id" align="center" prop="informId" />
-      <el-table-column label="报告号" align="center" prop="informNumber" />
-      <el-table-column label="开始遥测时间" align="center" prop="startTelemetryTime" width="180">
+      <el-table-column label="报告id" align="center" prop="reportId" />
+      <el-table-column label="心电id" align="center" prop="pId" />
+      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startTelemetryTime, '{y}-{m}-{d}') }}</span>
+          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="报告日期" align="center" prop="informTime" width="180">
+      <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" />
+      <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor" />
+      <el-table-column label="报告时间" align="center" prop="reportTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.informTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报告状态" align="center" prop="informStatus" />
-      <el-table-column label="患者管理id" align="center" prop="pId" />
-      <el-table-column label="患者姓名" align="center" prop="patientName" />
-      <el-table-column label="患者身份证号" align="center" prop="patientNumber" />
-      <el-table-column label="患者年龄" align="center" prop="patientAge" />
-      <el-table-column label="患者性别" align="center" prop="patientSex">
+      <el-table-column label="报告种类" align="center" prop="reportType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+          <dict-tag :options="dict.type.ecg_type" :value="scope.row.reportType"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者电话" align="center" prop="patientPhone" />
-      <el-table-column label="床位号" align="center" prop="bedNumber" />
-      <el-table-column label="病历号" align="center" prop="caseHistoryNumber" />
-      <el-table-column label="患者来源" align="center" prop="patientSource" />
-      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
-      <el-table-column label="医院名称" align="center" prop="hospitalName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -122,14 +136,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['inform:inform:edit']"
+            v-hasPermi="['report:report:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['inform:inform:remove']"
+            v-hasPermi="['report:report:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -146,27 +160,41 @@
     <!-- 添加或修改报告对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="报告号" prop="informNumber">
-          <el-input v-model="form.informNumber" placeholder="请输入报告号" />
+        <el-form-item label="心电id" prop="pId">
+          <el-input v-model="form.pId" placeholder="请输入心电id" />
         </el-form-item>
-        <el-form-item label="患者管理id" prop="pId">
-          <el-input v-model="form.pId" placeholder="请输入患者管理id" />
+        <el-form-item label="诊断状态">
+          <el-radio-group v-model="form.diagnosisStatus">
+            <el-radio
+              v-for="dict in dict.type.diagnosis_status"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="开始遥测时间" prop="startTelemetryTime">
+        <el-form-item label="诊断结论" prop="diagnosisConclusion">
+          <el-input v-model="form.diagnosisConclusion" placeholder="请输入诊断结论" />
+        </el-form-item>
+        <el-form-item label="诊断医生" prop="diagnosisDoctor">
+          <el-input v-model="form.diagnosisDoctor" placeholder="请输入诊断医生" />
+        </el-form-item>
+        <el-form-item label="报告时间" prop="reportTime">
           <el-date-picker clearable
-                          v-model="form.startTelemetryTime"
+                          v-model="form.reportTime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择开始遥测时间">
+                          placeholder="请选择报告时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="报告日期" prop="informTime">
-          <el-date-picker clearable
-                          v-model="form.informTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择报告日期">
-          </el-date-picker>
+        <el-form-item label="报告种类" prop="reportType">
+          <el-select v-model="form.reportType" placeholder="请选择报告种类">
+            <el-option
+              v-for="dict in dict.type.ecg_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -178,11 +206,11 @@
 </template>
 
 <script>
-import { listInform, getInform, delInform, addInform, updateInform } from "@/api/inform/inform";
+import { listReport, getReport, delReport, addReport, updateReport } from "@/api/report/report";
 
 export default {
-  name: "Inform",
-  dicts: ['sex'],
+  name: "Report",
+  dicts: ['diagnosis_status', 'ecg_type'],
   data() {
     return {
       // 遮罩层
@@ -198,52 +226,48 @@ export default {
       // 总条数
       total: 0,
       // 报告表格数据
-      informList: [],
+      reportList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 报告种类时间范围
+      daterangeReportTime: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        informNumber: null,
         pId: null,
-        startTelemetryTime: null,
-        informTime: null,
-        informStatus: null
+        diagnosisStatus: null,
+        diagnosisConclusion: null,
+        diagnosisDoctor: null,
+        reportTime: null,
+        reportType: 'DECG'
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        informNumber: [
-          { required: true, message: "报告号不能为空", trigger: "blur" }
-        ],
         pId: [
-          { required: true, message: "患者管理id不能为空", trigger: "blur" }
+          { required: true, message: "动态/静态心电id不能为空", trigger: "blur" }
         ],
       }
     };
   },
   created() {
-    if (this.$route.query.pId) {
-      this.queryParams.pId = this.$route.query.pId;
-    }
-    this.getList();
-  },
-  activated() {
-    if (this.$route.query.pId) {
-      this.queryParams.pId = this.$route.query.pId;
-    }
     this.getList();
   },
   methods: {
     /** 查询报告列表 */
     getList() {
       this.loading = true;
-      listInform(this.queryParams).then(response => {
-        this.informList = response.rows;
+      this.queryParams.params = {};
+      if (null != this.daterangeReportTime && '' != this.daterangeReportTime) {
+        this.queryParams.params["beginReportTime"] = this.daterangeReportTime[0];
+        this.queryParams.params["endReportTime"] = this.daterangeReportTime[1];
+      }
+      listReport(this.queryParams).then(response => {
+        this.reportList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -256,12 +280,13 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        informId: null,
-        informNumber: null,
+        reportId: null,
         pId: null,
-        startTelemetryTime: null,
-        informTime: null,
-        informStatus: "0"
+        diagnosisStatus: "0",
+        diagnosisConclusion: null,
+        diagnosisDoctor: null,
+        reportTime: null,
+        reportType: null
       };
       this.resetForm("form");
     },
@@ -272,12 +297,13 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.daterangeReportTime = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.informId)
+      this.ids = selection.map(item => item.reportId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -290,8 +316,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const informId = row.informId || this.ids
-      getInform(informId).then(response => {
+      const reportId = row.reportId || this.ids
+      getReport(reportId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改报告";
@@ -301,14 +327,14 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.informId != null) {
-            updateInform(this.form).then(response => {
+          if (this.form.reportId != null) {
+            updateReport(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addInform(this.form).then(response => {
+            addReport(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -319,9 +345,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const informIds = row.informId || this.ids;
-      this.$modal.confirm('是否确认删除报告编号为"' + informIds + '"的数据项？').then(function() {
-        return delInform(informIds);
+      const reportIds = row.reportId || this.ids;
+      this.$modal.confirm('是否确认删除报告编号为"' + reportIds + '"的数据项？').then(function() {
+        return delReport(reportIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -329,9 +355,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('inform/inform/export', {
+      this.download('report/report/export', {
         ...this.queryParams
-      }, `inform_${new Date().getTime()}.xlsx`)
+      }, `report_${new Date().getTime()}.xlsx`)
     }
   }
 };
