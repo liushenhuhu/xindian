@@ -665,7 +665,8 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pId: row.pId
+          pId: row.pId,
+          ecg_type: row.ecgType
         }),
         success: function (data) {
           alert(name + "动态心电报告已生成")
@@ -679,7 +680,7 @@ export default {
 
     /** 下载报告*/
     downloadInform(row) {
-      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName}});
+      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName ,ecg_type:row.ecgType}});
       window.open(routeUrl.href, '_blank');
     }
   }

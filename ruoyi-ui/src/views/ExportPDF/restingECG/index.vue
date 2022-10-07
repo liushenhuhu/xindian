@@ -7,70 +7,80 @@
             <div class="header-left">
               <div class="header-1">
                 <div class="header-1-1">
-                  姓名: {{data.name}}
+                  <strong>姓名:</strong> {{data.name}}
                 </div>
                 <div class="header-1-1">
-                  性别: {{ data.gender }}
+                  <strong>性别:</strong> {{ data.gender }}
                 </div>
                 <div class="header-1-1">
-                  年龄: {{ data.age }} 岁
+                  <strong>年龄:</strong> {{ data.age }} 岁
                 </div>
                 <div class="header-1-1">
-                  送检科室: -
+                  <strong>送检科室:</strong> -
                 </div>
                 <div class="header-1-1">
-                  申请单号: -
-                </div>
-              </div>
-              <div class="header-1">
-                <div class="header-1-1">
-                  门诊号: -
-                </div>
-                <div class="header-1-1">
-                  住院号: -
-                </div>
-                <div class="header-1-1">
-                  病人编号: -
-                </div>
-                <div class="header-1-1">
-                  HR: - bpm
-                </div>
-                <div class="header-1-1">
-                  PR: - ms
+                  <strong>申请单号:</strong> -
                 </div>
               </div>
               <div class="header-1">
                 <div class="header-1-1">
-                 QRS: - ms
+                  <strong>门诊号:</strong> -
                 </div>
                 <div class="header-1-1">
-                  QT/QTc: - ms/ - ms
+                  <strong>住院号:</strong> -
                 </div>
                 <div class="header-1-1">
-                  P/QRS/T: -/-/- deg
+                  <strong>病人编号:</strong> -
                 </div>
                 <div class="header-1-1">
-                  PV5/SV1: -/- mV
+                  <strong>HR:</strong> - bpm
                 </div>
                 <div class="header-1-1">
-                  RV5+SV1: - mV
+                  <strong>PR:</strong> - ms
+                </div>
+              </div>
+              <div class="header-1">
+                <div class="header-1-1">
+                  <strong>QRS:</strong> - ms
+                </div>
+                <div class="header-1-1">
+                  <strong>QT/QTc:</strong> - ms/ - ms
+                </div>
+                <div class="header-1-1">
+                  <strong>P/QRS/T:</strong> -/-/- deg
+                </div>
+                <div class="header-1-1">
+                  <strong>PV5/SV1:</strong> -/- mV
+                </div>
+                <div class="header-1-1">
+                  <strong>RV5+SV1:</strong> - mV
                 </div>
               </div>
             </div>
             <div class="header-left" >
                 <div class="header-1">
                 <div class="header-1-1">
-                  诊断
+                  <strong>自动分析结果，需医师确认</strong>
                 </div>
                 <div class="header-1-1">
                   <div
-                    type="textarea"
-                    contenteditable="true"
-                    placeholder="请输入诊断结果"
                     class="box8-1-1"
                   >{{ data.result }}
                   </div>
                 </div>
+
+                  <div class="header-1-1"> </div>
+
+                  <div class="header-1-1">
+                    <strong>医师诊断</strong>
+                  </div>
+                  <div >
+                    <textarea
+                      v-model="data.resultByDoctor"
+                      placeholder="请在这里输入医生诊断结果"
+                      class="box-1-1"
+                    />
+                  </div>
               </div>
             </div>
 
@@ -93,7 +103,10 @@
               <div id="V6" class="line"></div>
             </div>
           </div>
-
+          <div class="bottom">
+            <strong>医师:</strong><input class="box8-2"></input>
+            <strong>日期:</strong><input class="box8-2"></input>
+          </div>
         </div>
       </div>
 
@@ -119,7 +132,8 @@ export default {
         name:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.patientName,
         gender:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.gender,
         age:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.age,
-        result:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.result
+        result:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.result,
+        resultByDoctor:null,
       }
     };
   },
@@ -2095,11 +2109,52 @@ export default {
   padding-left: 3vw;
 }
 
+.header-1 .header-1-1{
+  height: 30px;
+}
+
+.box-1-1{
+  wrap:"physical";
+  //resize:none;
+  overflow-y:auto;
+  width: 99%;
+  height: 80px;
+  font-size: 20px;
+  border:none;
+  overflow:hidden;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
 .body{
   display: flex;
 }
 .body .body-1{
   flex: 1;
+}
+
+.bottom{
+  position: relative;
+  top: 0;
+  bottom: 0px;
+  right: 3px;
+  margin-top: 3px;
+  margin-bottom: 1px;
+  text-align: right;
+  font-size: 20px;
+}
+
+.box8-2 {
+  display: inline-block;
+  width: 150px;
+  height: 20px;
+  border: none;
+  font-size: 20px;
+  text-align:center;
+  border-bottom: 1px solid black;
+  margin-right: 10px;
+  margin-top: 20px;
+  outline:none
+
 }
 
 .line{

@@ -206,7 +206,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/小时:
-                      <strong>预留</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="flex-box">
@@ -216,7 +216,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/1000:
-                      <strong>预留</strong>
+                      <strong></strong>
                     </div>
                   </div>
 
@@ -272,7 +272,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/小时:
-                      <strong>预留</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="flex-box">
@@ -282,7 +282,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/1000:
-                      <strong>预留</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="box4-1">
@@ -769,10 +769,11 @@ export default {
       hospitalName: this.$route.query.hospitalName,
       pId:null,
       _th:null,
+      ecg_type:null,
       froms: {
         textarea: {
-          text1:'1.窦性心律 心率动态变化正常',
-          text2:'2.最快心率156，仍为窦性',
+          text1:null,
+          text2:null,
         },
         reportTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.报告时间,
         patientInfo: {
@@ -1020,9 +1021,12 @@ export default {
   created() {
     console.log("创建")
     var pId = this.$route.query.pId;
+    var ecg_type = this.$route.query.ecg_type;
     if(pId){
+      this.ecg_type=ecg_type
       this.pId=pId;
       console.log(pId)
+      console.log(this.ecg_type)
       var show =sessionStorage.getItem(pId+"show");
       if (!show){
         this.get();
@@ -1056,6 +1060,8 @@ export default {
       var _th = this
       console.log("执行")
       console.log(this.pId)
+      console.log(this.ecg_type)
+      console.log(JSON.stringify(_th.ecg_type))
       $.ajax({
         type: "post",
         url: "http://219.155.7.235:5003/get_analysis_decg",
@@ -1063,12 +1069,14 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pId: this.pId
+          pId: this.pId,
+          ecg_type: this.ecg_type,
         }),
 
         success: function (data) {
           console.log(_th.pId)
           console.log(data)
+          console.log(_th.ecg_type)
           sessionStorage.removeItem("data");
           sessionStorage.setItem(_th.pId+'data' ,JSON.stringify(data))
           sessionStorage.setItem(_th.pId+'show' ,true)
@@ -1081,6 +1089,7 @@ export default {
           loading.close()
           console.log("错误")
           console.log(_th.pId)
+          console.log(_th.ecg_type)
           console.log(data)
         }
       })
