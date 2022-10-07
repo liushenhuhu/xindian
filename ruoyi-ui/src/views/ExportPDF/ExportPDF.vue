@@ -769,6 +769,7 @@ export default {
       hospitalName: this.$route.query.hospitalName,
       pId:null,
       _th:null,
+      ecg_type:null,
       froms: {
         textarea: {
           text1:'1.窦性心律 心率动态变化正常',
@@ -1020,9 +1021,12 @@ export default {
   created() {
     console.log("创建")
     var pId = this.$route.query.pId;
+    var ecg_type = this.$route.query.ecg_type;
     if(pId){
+      this.ecg_type=ecg_type
       this.pId=pId;
       console.log(pId)
+      console.log(this.ecg_type)
       var show =sessionStorage.getItem(pId+"show");
       if (!show){
         this.get();
@@ -1056,6 +1060,8 @@ export default {
       var _th = this
       console.log("执行")
       console.log(this.pId)
+      console.log(this.ecg_type)
+      console.log(JSON.stringify(_th.ecg_type))
       $.ajax({
         type: "post",
         url: "http://219.155.7.235:5003/get_analysis_decg",
@@ -1064,12 +1070,13 @@ export default {
         dataType: "json",
         data: JSON.stringify({
           pId: this.pId,
-          ecg: this.ecg_type,
+          ecg_type: this.ecg_type,
         }),
 
         success: function (data) {
           console.log(_th.pId)
           console.log(data)
+          console.log(_th.ecg_type)
           sessionStorage.removeItem("data");
           sessionStorage.setItem(_th.pId+'data' ,JSON.stringify(data))
           sessionStorage.setItem(_th.pId+'show' ,true)
@@ -1082,6 +1089,7 @@ export default {
           loading.close()
           console.log("错误")
           console.log(_th.pId)
+          console.log(_th.ecg_type)
           console.log(data)
         }
       })
