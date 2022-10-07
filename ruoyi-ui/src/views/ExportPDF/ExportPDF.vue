@@ -206,7 +206,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/小时:
-                      <strong>预留</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="flex-box">
@@ -216,7 +216,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/1000:
-                      <strong>预留</strong>
+                      <strong></strong>
                     </div>
                   </div>
 
@@ -272,7 +272,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/小时:
-                      <strong>预留</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="flex-box">
@@ -282,7 +282,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/1000:
-                      <strong>预留</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="box4-1">
@@ -772,8 +772,8 @@ export default {
       ecg_type:null,
       froms: {
         textarea: {
-          text1:'1.窦性心律 心率动态变化正常',
-          text2:'2.最快心率156，仍为窦性',
+          text1:null,
+          text2:null,
         },
         reportTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.报告时间,
         patientInfo: {
