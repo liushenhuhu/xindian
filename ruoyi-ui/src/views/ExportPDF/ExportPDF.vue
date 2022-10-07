@@ -1063,7 +1063,8 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pId: this.pId
+          pId: this.pId,
+          ecg: this.ecg_type,
         }),
 
         success: function (data) {

@@ -680,7 +680,7 @@ export default {
 
   /** 下载报告*/
   downloadInform(row) {
-    let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName}});
+    let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName,ecg_type:row.ecgType}});
     window.open(routeUrl.href, '_blank');
 
   }
