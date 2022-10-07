@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * app相关数据Controller
- * 
+ *
  * @author hanhan
  * @date 2022-10-06
  */
@@ -39,7 +39,7 @@ public class AppDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AppData appData)
+    public TableDataInfo list(@RequestBody AppData appData)
     {
         startPage();
         List<AppData> list = appDataService.selectAppDataList(appData);
