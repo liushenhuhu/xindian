@@ -45,6 +45,14 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="患者身份证" prop="patientCode">
+        <el-input
+          v-model="queryParams.patientCode"
+          placeholder="请输入患者身份证"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -128,6 +136,7 @@
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
         </template>
       </el-table-column>
+      <el-table-column label="患者身份证" align="center" prop="patientCode" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -190,6 +199,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="患者身份证" prop="patientCode">
+          <el-input v-model="form.patientCode" placeholder="请输入患者身份证" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -247,7 +259,8 @@ export default {
         equipmentVersion: null,
         equipmentStatus: null,
         hospitalCode: null,
-        equipmentType: null
+        equipmentType: null,
+        patientCode: null
       },
       // 表单参数
       form: {},
@@ -445,7 +458,8 @@ export default {
         equipmentVersion: null,
         equipmentStatus: null,
         hospitalCode: null,
-        equipmentType: null
+        equipmentType: null,
+        patientCode: null
       };
       this.resetForm("form");
     },

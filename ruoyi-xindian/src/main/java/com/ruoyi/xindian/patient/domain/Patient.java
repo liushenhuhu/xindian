@@ -80,7 +80,6 @@ public class Patient extends BaseEntity {
     @Excel(name = "绑定状态")
     private String bindingState;
 
-
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
