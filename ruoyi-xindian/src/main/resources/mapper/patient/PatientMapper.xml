@@ -15,6 +15,7 @@
         <result property="familyPhone" column="family_phone"/>
         <result property="equipmentId" column="equipment_id"/>
         <result property="monitoringStatus" column="monitoring_status"/>
+        <result property="bindingState" column="binding_state"/>
     </resultMap>
 
     <sql id="selectPatientVo">
@@ -27,7 +28,8 @@
                patient_phone,
                family_phone,
                equipment_id,
-               monitoring_status
+               monitoring_status,
+               binding_state
         from patient
     </sql>
 
@@ -59,6 +61,7 @@
             <if test="monitoringStatus != null  and monitoringStatus != ''">and monitoring_status like concat('%',
                 #{monitoringStatus}, '%')
             </if>
+            <if test="bindingState != null  and bindingState != ''">and binding_state = #{bindingState}</if>
         </where>
         order by monitoring_status desc, patient_id desc
     </select>
@@ -96,6 +99,7 @@
             <if test="familyPhone != null">family_phone,</if>
             <if test="equipmentId != null">equipment_id,</if>
             <if test="monitoringStatus != null">monitoring_status,</if>
+            <if test="bindingState != null">binding_state,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
@@ -108,6 +112,7 @@
             <if test="familyPhone != null">#{familyPhone},</if>
             <if test="equipmentId != null">#{equipmentId},</if>
             <if test="monitoringStatus != null">#{monitoringStatus},</if>
+            <if test="bindingState != null">#{bindingState},</if>
         </trim>
     </insert>
 
@@ -123,6 +128,7 @@
             <if test="familyPhone != null">family_phone = #{familyPhone},</if>
             <if test="equipmentId != null">equipment_id = #{equipmentId},</if>
             <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
+            <if test="bindingState != null">binding_state = #{bindingState},</if>
         </trim>
         where patient_id = #{patientId}
     </update>

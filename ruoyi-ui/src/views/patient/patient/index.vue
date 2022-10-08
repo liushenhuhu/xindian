@@ -77,6 +77,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="绑定状态" prop="bindingState">
+        <el-select v-model="queryParams.bindingState" placeholder="请选择绑定状态" clearable>
+          <el-option
+            v-for="dict in dict.type.binding_state"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -164,7 +174,11 @@
           <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
         </template>
       </el-table-column>
-
+      <el-table-column label="绑定状态" align="center" prop="bindingState">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.binding_state" :value="scope.row.bindingState"/>
+        </template>
+      </el-table-column>
 
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
@@ -265,6 +279,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="绑定状态" prop="bindingState">
+        <el-select v-model="form.bindingState" placeholder="请选择绑定状态">
+          <el-option
+            v-for="dict in dict.type.binding_state"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -289,7 +313,7 @@ import {updateEquipmentStatus} from "@/api/equipment/equipment";
 
 export default {
   name: "Patient",
-  dicts: ['sex', 'monitoring_status'],
+  dicts: ['sex', 'monitoring_status', 'binding_state'],
   data() {
     return {
       // 遮罩层
@@ -327,6 +351,7 @@ export default {
         familyPhone: null,
         equipmentId: null,
         monitoringStatus: null,
+        bindingState: null
       },
       // 表单参数
       form: {},
@@ -530,6 +555,7 @@ export default {
         familyPhone: null,
         equipmentId: null,
         monitoringStatus: null,
+        bindingState: null
       };
       this.resetForm("form");
     },

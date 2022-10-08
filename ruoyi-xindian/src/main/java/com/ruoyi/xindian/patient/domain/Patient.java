@@ -76,6 +76,10 @@ public class Patient extends BaseEntity {
     @Excel(name = "监测状态")
     private String monitoringStatus;
 
+    /** 绑定状态 */
+    @Excel(name = "绑定状态")
+    private String bindingState;
+
 
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
@@ -157,6 +161,13 @@ public class Patient extends BaseEntity {
         return monitoringStatus;
     }
 
+    public String getBindingState() {
+        return bindingState;
+    }
+
+    public void setBindingState(String bindingState) {
+        this.bindingState = bindingState;
+    }
 
     @Override
     public String toString() {
@@ -171,6 +182,7 @@ public class Patient extends BaseEntity {
                 .append("familyPhone", getFamilyPhone())
                 .append("equipmentId", getEquipmentId())
                 .append("monitoringStatus", getMonitoringStatus())
+                .append("bindingState", getBindingState())
                 .toString();
     }
 }
