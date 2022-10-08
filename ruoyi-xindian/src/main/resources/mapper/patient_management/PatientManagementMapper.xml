@@ -26,7 +26,11 @@
     </resultMap>
 
     <sql id="selectPatientManagementVo">
-        select *
+        select m.p_id, m.patient_code, m.hospital_code, m.equipment_code,
+               connection_time, bed_number, case_history_number,
+               ecg_type, online_status, patient_name,patient_age, patient_sex, patient_source,
+               patient_phone, family_phone,  monitoring_status,
+               equipment_status, equipment_type, hospital_name
         from patient_management m
                  inner join patient p on p.patient_code = m.patient_code
                  inner join equipment e on m.equipment_code = e.equipment_code
@@ -52,7 +56,7 @@
 
     <select id="selectPatientManagementByPId" parameterType="String" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
-        where p_id = #{pId}
+        where m.p_id = #{pId}
     </select>
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">

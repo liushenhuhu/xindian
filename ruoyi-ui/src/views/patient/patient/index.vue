@@ -358,10 +358,19 @@ export default {
       // 表单校验
       rules: {
         patientName: [
-          {required: true, message: "患者姓名不能为空", trigger: "blur"}
+          { required: true, message: "患者姓名不能为空", trigger: "blur" }
         ],
         patientCode: [
-          {required: true, message: "患者身份证号不能为空", trigger: "blur"}
+          { required: true, message: "患者身份证号不能为空", trigger: "blur" }
+        ],
+        patientAge: [
+          { required: true, message: "患者年龄不能为空", trigger: "blur" }
+        ],
+        patientSex: [
+          { required: true, message: "患者性别不能为空", trigger: "change" }
+        ],
+        patientSource: [
+          { required: true, message: "患者来源不能为空", trigger: "blur" }
         ],
       }
     };

@@ -271,7 +271,10 @@ export default {
         ],
         hospitalCode: [
           {required: true, message: "医院代号不能为空", trigger: "blur"}
-        ]
+        ],
+        patientCode: [
+          { required: true, message: "患者身份证不能为空", trigger: "blur" }
+        ],
       }
     };
   },
