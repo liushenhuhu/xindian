@@ -111,8 +111,8 @@
       </div>
 
     </div>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 48% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
-
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">保存数据</el-button>
   </div>
 </template>
 
@@ -121,6 +121,7 @@ import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 import echarts from 'echarts'
 import $ from 'jquery';
+import {addReport} from "@/api/report/report";
 
 export default {
   name: "index",
@@ -204,7 +205,6 @@ export default {
         }
       })
     },
-
 
     I(){
       var data = (JSON.parse(sessionStorage.getItem(this.pId+"data"))).result.data.I
@@ -2025,9 +2025,6 @@ export default {
         ecgBc.resize();
       });
     },
-
-
-
     btnClick(){
       // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
       let top = document.getElementById('pdfDom');
@@ -2071,6 +2068,20 @@ export default {
         PDF.save(title + '.pdf')
       })
     },
+    btnUpload(){
+      var form = {
+        pId: this.pId,
+        diagnosisStatus:'未确定',
+        reportType: "ECG",
+        diagnosisConclusion: this.data.resultByDoctor,
+      }
+      addReport(form).then(response => {
+        this.$modal.msgSuccess("新增成功");
+        this.getList();
+        console.log("新增成功！")
+      });
+    },
+
   },
 };
 

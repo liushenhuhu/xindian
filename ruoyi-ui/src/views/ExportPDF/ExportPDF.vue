@@ -749,7 +749,9 @@
     <el-button type="primary" round style="margin-top: 20px; margin-left: 7% ;margin-bottom: 15px" @click="btnClear">清除所有缓并刷新</el-button>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClearSelf">清除本页缓存并刷新</el-button>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">保存诊断结果</el-button>
   </div>
+
 </template>
 
 <script>
@@ -759,6 +761,7 @@ import JsPDF from "jspdf";
 import echarts from 'echarts'
 import $ from 'jquery';
 import { Loading } from 'element-ui';
+import {addReport, listReport, updateReport} from "@/api/report/report";
 
 export default {
   name: "ExportPDF",
@@ -772,8 +775,8 @@ export default {
       ecg_type:null,
       froms: {
         textarea: {
-          text1:null,
-          text2:null,
+          text1:"1111",
+          text2:"null",
         },
         reportTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.报告时间,
         patientInfo: {
@@ -1025,8 +1028,6 @@ export default {
     if(pId){
       this.ecg_type=ecg_type
       this.pId=pId;
-      console.log(pId)
-      console.log(this.ecg_type)
       var show =sessionStorage.getItem(pId+"show");
       if (!show){
         this.get();
@@ -1045,6 +1046,8 @@ export default {
     this.drawBar2();
   },
   methods: {
+
+
     columnStyle({ row, column, rowIndex, columnIndex }) {
         return 'padding:0;border:0'
     },
@@ -1378,8 +1381,8 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-     //50次心搏均值心率
-      line2(){
+    //50次心搏均值心率
+    line2(){
         var obj = {
           "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_50
         };
@@ -1518,7 +1521,7 @@ export default {
       window.addEventListener('resize', myChart.resize);
     },
 
-      line3(){
+    line3(){
         var obj ={
           "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_100
         }
@@ -1657,7 +1660,6 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-
 
     //echarts测试
     drawLine() {
@@ -2812,7 +2814,6 @@ var data = obj
       }, 200);
     },
 
-
      //散点图
      drawscatter(){
       var obj ={
@@ -2985,7 +2986,6 @@ var data = obj
       sessionStorage.removeItem(this.$route.query.pId+'show');
       window.location.reload();
     },
-
     btnClick() {
       var _self = this
       // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
@@ -3043,7 +3043,6 @@ var data = obj
        sessionStorage.removeItem(this.$route.query.pId+'data');
        sessionStorage.removeItem(this.$route.query.pId+'show');
     },
-
     //上传pdf
     upload_pdf(file) {
       // var url ='';
@@ -3083,8 +3082,8 @@ var data = obj
       //返回值
       //return url;
     },
-//将base64转换为文件对象
-  dataURLtoFile(dataurl, filename) {
+    //将base64转换为文件对象
+    dataURLtoFile(dataurl, filename) {
   var arr = dataurl.split(',');
   var mime = arr[0].match(/:(.*?);/)[1];
   var bstr = atob(arr[1]);
@@ -3097,10 +3096,62 @@ var data = obj
   return new File([u8arr], filename, {type:mime});
   //转换成成blob对象
   //return new Blob([u8arr],{type:mime});
+},
+    //保存结果
+    btnUpload(){
+      var form = {
+        pId: this.pId,
+        diagnosisStatus:'未确定',
+        reportType: this.ecg_type,
+        diagnosisConclusion: this.froms.textarea.text1+" "+this.froms.textarea.text2,
+      }
+      addReport(form).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                this.getList();
+                console.log("新增成功！")
+              });
+    }
+    //   const loading = this.$loading({
+    //     lock: true,//lock的修改符--默认是false
+    //     text: '正在上传，请稍后...',//显示在加载图标下方的加载文案
+    //     spinner: 'el-icon-loading',//自定义加载图标类名
+    //     background: 'rgba(0, 0, 0, 0.7)',//遮罩层颜色
+    //     target: document.querySelector('#table')//loadin覆盖的dom元素节点
+    //   });
+    //
+    //   console.log("上传信息")
+    //   $.ajax({
+    //     type: "post",
+    //     url: "http://219.155.7.235:9000/report/report",
+    //     asynsc: false,
+    //     contentType: "application/json",
+    //     dataType: "json",
+    //     data: JSON.stringify({
+    //       pId: this.pId,
+    //       diagnosisStatus:'未确定',
+    //       reportTime: this.ecg_type,
+    //       diagnosisConclusion:"test",
+    //     }),
+    //
+    //     success: function (res) {
+    //       console.log("yes")
+    //       console.log(res)
+    //       if(res.data.code==200){
+    //         console.log("保存成功")
+    //       }else
+    //         console.log("保存失败")
+    //       loading.close()
+    //     },
+    //     error:function (err)
+    //     {
+    //       console.log("no")
+    //       console.log(err)
+    //       loading.close()
+    //     }
+    //   })
+    // }
+    }
 }
-
-  }
-};
 </script>
 
 <style lang="scss" scoped>
