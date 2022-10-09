@@ -39,7 +39,19 @@ public class AppDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:list')")
     @GetMapping("/list")
-    public TableDataInfo list(@RequestBody AppData appData)
+    public TableDataInfo list(AppData appData)
+    {
+        startPage();
+        List<AppData> list = appDataService.selectAppDataList(appData);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询app相关数据列表
+     */
+    @PreAuthorize("@ss.hasPermi('appData:appData:list')")
+    @PostMapping("/list1")
+    public TableDataInfo list1(@RequestBody AppData appData)
     {
         startPage();
         List<AppData> list = appDataService.selectAppDataList(appData);
