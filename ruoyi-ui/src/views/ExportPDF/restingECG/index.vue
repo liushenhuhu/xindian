@@ -104,8 +104,8 @@
             </div>
           </div>
           <div class="bottom">
-            <strong>医师:</strong><input class="box8-2"></input>
-            <strong>日期:</strong><input class="box8-2"></input>
+            <strong>医师:</strong><input class="box8-2" v-model="data.doctorName"></input>
+            <strong>日期:</strong><input class="box8-2" v-model="data.dataTime"></input>
           </div>
         </div>
       </div>
@@ -135,12 +135,14 @@ export default {
         age:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.age,
         result:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.result,
         resultByDoctor:null,
+        dataTime:"",
+        doctorName:"",
       }
     };
   },
   created() {
     console.log("创建")
-     var pId = this.$route.query.pId;
+    var pId = this.$route.query.pId;
     console.log(pId)
     if(pId){
        this.pId=pId;
@@ -163,7 +165,7 @@ export default {
     this.V4()
     this.V5()
     this.V6()
-
+    this.getDate();
   },
   methods: {
     get(){
@@ -2068,12 +2070,20 @@ export default {
         PDF.save(title + '.pdf')
       })
     },
+    getDate() {
+      var str= new Date();
+      this.data.dataTime= str.getFullYear() + "-"
+        + (str.getMonth() + 1) + "-" + str.getDate();
+      console.log(this.dataTime);
+    },
     btnUpload(){
       var form = {
         pId: this.pId,
         diagnosisStatus:'未确定',
         reportType: "ECG",
         diagnosisConclusion: this.data.resultByDoctor,
+        reportTime: this.data.dataTime,
+        diagnosisDoctor: this.data.doctorName,
       }
       addReport(form).then(response => {
         this.$modal.msgSuccess("新增成功");
