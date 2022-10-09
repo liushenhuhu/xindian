@@ -446,6 +446,7 @@
                 contenteditable="true"
                 placeholder="请输入诊断结果"
                 class="box8-1-1"
+                v-model="froms.textarea.text1"
               >{{froms.textarea.text1}}<br>
                 {{froms.textarea.text2}}
               </div>
@@ -457,8 +458,8 @@
 <!--              <div class="box8-1">4.心率变异性:正常</div>-->
 <!--              <div class="box8-1">5.建议治疗后复查</div>-->
               <div class="bottom">
-                报告者:<input class="box8-2"></input>
-                日期:<input class="box8-2"></input>
+                报告者:<input class="box8-2" v-model="doctorName"></input>
+                日期:<input class="box8-2" v-model="dataTime"></input>
               </div>
             </div>
           </div>
@@ -749,7 +750,9 @@
     <el-button type="primary" round style="margin-top: 20px; margin-left: 7% ;margin-bottom: 15px" @click="btnClear">清除所有缓并刷新</el-button>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClearSelf">清除本页缓存并刷新</el-button>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">保存诊断结果</el-button>
   </div>
+
 </template>
 
 <script>
@@ -759,10 +762,10 @@ import JsPDF from "jspdf";
 import echarts from 'echarts'
 import $ from 'jquery';
 import { Loading } from 'element-ui';
+import {addReport, listReport, updateReport} from "@/api/report/report";
 
 export default {
   name: "ExportPDF",
-
   data() {
     return {
       exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名+"心电报告",
@@ -770,10 +773,12 @@ export default {
       pId:null,
       _th:null,
       ecg_type:null,
+      dataTime:"",
+      doctorName:"",
       froms: {
         textarea: {
-          text1:null,
-          text2:null,
+          text1:"1.",
+          text2:"2.",
         },
         reportTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.报告时间,
         patientInfo: {
@@ -1025,8 +1030,6 @@ export default {
     if(pId){
       this.ecg_type=ecg_type
       this.pId=pId;
-      console.log(pId)
-      console.log(this.ecg_type)
       var show =sessionStorage.getItem(pId+"show");
       if (!show){
         this.get();
@@ -1043,6 +1046,7 @@ export default {
     this.drawBar();
     this.drawBar1();
     this.drawBar2();
+    this.getDate();
   },
   methods: {
     columnStyle({ row, column, rowIndex, columnIndex }) {
@@ -1378,8 +1382,8 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-     //50次心搏均值心率
-      line2(){
+    //50次心搏均值心率
+    line2(){
         var obj = {
           "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_50
         };
@@ -1518,7 +1522,7 @@ export default {
       window.addEventListener('resize', myChart.resize);
     },
 
-      line3(){
+    line3(){
         var obj ={
           "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_100
         }
@@ -1657,7 +1661,6 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-
 
     //echarts测试
     drawLine() {
@@ -2812,7 +2815,6 @@ var data = obj
       }, 200);
     },
 
-
      //散点图
      drawscatter(){
       var obj ={
@@ -2985,7 +2987,6 @@ var data = obj
       sessionStorage.removeItem(this.$route.query.pId+'show');
       window.location.reload();
     },
-
     btnClick() {
       var _self = this
       // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
@@ -2996,7 +2997,8 @@ var data = obj
       }
       let title = this.exportPDFtitle;
       html2Canvas(document.querySelector("#pdfDom"), {
-        scale:3,
+        //清晰度，越大越好
+        scale:2,
         allowTaint: true
       }).then(function(canvas) {
         // 获取canvas画布的宽高
@@ -3028,79 +3030,102 @@ var data = obj
             }
           }
         }
-        var pdfName = title+".pdf"
         PDF.save(title + ".pdf");
-        console.log("*-*-*-*-*-*--*-*-*-*-")
-        console.log(_self.pId)
-        // 将pdf输入为base格式的字符串
-        var buffer = PDF.output("datauristring")
-        // 将base64格式的字符串转换为file文件
-        var myfile = _self.dataURLtoFile(buffer, pdfName)
-        name = _self.upload_pdf(myfile)
-        console.log("*-*-*-*-*-*--*-*-*-*-")
+        // console.log("*-*-*-*-*-*--*-*-*-*-")
+        // console.log(_self.pId)
+        // // 将pdf输入为base格式的字符串
+        // var buffer = PDF.output("datauristring")
+        // // 将base64格式的字符串转换为file文件
+        // var myfile = _self.dataURLtoFile(buffer, pdfName)
+        // name = _self.upload_pdf(myfile)
+        // console.log("*-*-*-*-*-*--*-*-*-*-")
 
       });
        sessionStorage.removeItem(this.$route.query.pId+'data');
        sessionStorage.removeItem(this.$route.query.pId+'show');
     },
-
     //上传pdf
-    upload_pdf(file) {
-      // var url ='';
-      var formdata = new FormData()
-      formdata.append("file", file); // 文件对象
-      console.log("上传pdf-1")
-      //多个参数的情况
-      // formdata.append("name", name);
-      var msg='';
-      // 之后ajax传递数据
-      $.ajax({
-        url: "http://219.155.7.235:5050/pdfTest",  //url地址
-        type: 'POST' ,                 //上传方式
-        data: formdata,                   // 上传formdata封装的数据
-        dataType: 'JSON',
-        cache: false,                  // 不缓存
-        async:false,                   // 开启的异步 保证返回信息
-        processData: false,            // jQuery不要去处理发送的数据
-        contentType: false,            // jQuery不要去设置Content-Type请求头
-        success:function (data) {
-          console.log("上传pdf-success")
-          if (data.status == 0) {
-            //var url= data.url;
-            //跳转pdf界面 uploadUrl为服务器地址
-            window.open(uploadUrl+url)
-          }else{
-            // layer.alert("文件上传失败");
-            alert("文件上传失败");
-
-          }
-        },
-        error:function (data) {           //失败回调
-          layer.msg('数据不能为空', {icon: 5});
-          console.log(data);
-        }
-      });
+    // upload_pdf(file) {
+    //   // var url ='';
+    //   var formdata = new FormData()
+    //   formdata.append("file", file); // 文件对象
+    //   console.log("上传pdf-1")
+    //   //多个参数的情况
+    //   // formdata.append("name", name);
+    //   var msg='';
+    //   // 之后ajax传递数据
+    //   $.ajax({
+    //     url: "http://219.155.7.235:5050/pdfTest",  //url地址
+    //     type: 'POST' ,                 //上传方式
+    //     data: formdata,                   // 上传formdata封装的数据
+    //     dataType: 'JSON',
+    //     cache: false,                  // 不缓存
+    //     async:false,                   // 开启的异步 保证返回信息
+    //     processData: false,            // jQuery不要去处理发送的数据
+    //     contentType: false,            // jQuery不要去设置Content-Type请求头
+    //     success:function (data) {
+    //       console.log("上传pdf-success")
+    //       if (data.status == 0) {
+    //         //var url= data.url;
+    //         //跳转pdf界面 uploadUrl为服务器地址
+    //         window.open(uploadUrl+url)
+    //       }else{
+    //         // layer.alert("文件上传失败");
+    //         alert("文件上传失败");
+    //
+    //       }
+    //     },
+    //     error:function (data) {           //失败回调
+    //       layer.msg('数据不能为空', {icon: 5});
+    //       console.log(data);
+    //     }
+    //   });
       //返回值
       //return url;
-    },
-//将base64转换为文件对象
-  dataURLtoFile(dataurl, filename) {
-  var arr = dataurl.split(',');
-  var mime = arr[0].match(/:(.*?);/)[1];
-  var bstr = atob(arr[1]);
-  var n = bstr.length;
-  var u8arr = new Uint8Array(n);
-  while(n--){
-    u8arr[n] = bstr.charCodeAt(n);
-  }
-  //转换成file对象
-  return new File([u8arr], filename, {type:mime});
-  //转换成成blob对象
-  //return new Blob([u8arr],{type:mime});
-}
+    // },
+    //将base64转换为文件对象
+    // dataURLtoFile(dataurl, filename) {
+    //   var arr = dataurl.split(',');
+    //   var mime = arr[0].match(/:(.*?);/)[1];
+    //   var bstr = atob(arr[1]);
+    //   var n = bstr.length;
+    //   var u8arr = new Uint8Array(n);
+    //   while(n--){
+    //     u8arr[n] = bstr.charCodeAt(n);
+    //   }
+    //   //转换成file对象
+    //   return new File([u8arr], filename, {type:mime});
+    //   //转换成成blob对象
+    //   //return new Blob([u8arr],{type:mime});
+    // },
 
-  }
-};
+    getDate() {
+      var str= new Date();
+      this.dataTime= str.getFullYear() + "-"
+        + (str.getMonth() + 1) + "-" + str.getDate();
+      console.log(this.dataTime);
+    },
+
+
+    //保存结果
+    btnUpload(){
+      var form = {
+        pId: this.pId,
+        diagnosisStatus:'未确定',
+        reportType: this.ecg_type,
+        diagnosisConclusion: this.froms.textarea.text1+" "+this.froms.textarea.text2,
+        reportTime: this.dataTime,
+        diagnosisDoctor: this.doctorName,
+      }
+      addReport(form).then(response => {
+          this.$modal.msgSuccess("新增成功");
+          this.getList();
+          console.log("新增成功！")
+        });
+      }
+
+    },
+}
 </script>
 
 <style lang="scss" scoped>
