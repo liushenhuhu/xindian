@@ -61,16 +61,26 @@ public class PatientManagementController extends BaseController {
     @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/list")
     public TableDataInfo list(PatientManagement patientManagement) {
+//        startPage();
+//        List<PatientManagement> list_add = new ArrayList<>();
         List<PatientManagement> list = new ArrayList<>();
         if (getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalName = sysUser.getHospitalName();
             patientManagement.setHospitalName(hospitalName);
             startPage();
-            list = patientManagementService.selectPatientManagementList(patientManagement);
+            if (patientManagement.getEcgType().equals("DECG1")){
+                list = patientManagementService.selectPatientManagementListDECG(patientManagement);
+            }else{
+                list = patientManagementService.selectPatientManagementList(patientManagement);
+            }
         } else {
             startPage();
-            list = patientManagementService.selectPatientManagementList(patientManagement);
+            if (patientManagement.getEcgType().equals("DECG1")){
+                list = patientManagementService.selectPatientManagementListDECG(patientManagement);
+            }else{
+                list = patientManagementService.selectPatientManagementList(patientManagement);
+            }
         }
         return getDataTable(list);
     }
