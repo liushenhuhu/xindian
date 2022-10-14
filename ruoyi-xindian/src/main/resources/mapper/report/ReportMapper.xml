@@ -37,7 +37,7 @@
 
     <select id="selectReportByPId" parameterType="string" resultMap="ReportResult">
         <include refid="selectReportVo"/>
-        where report_id = #{pId}
+        where p_id = #{pId}
     </select>
 
 

@@ -207,6 +207,7 @@
 
 <script>
 import { listReport, getReport, delReport, addReport, updateReport } from "@/api/report/report";
+import {getReportByPId} from "../../../api/report/report";
 
 export default {
   name: "Report",
@@ -322,6 +323,10 @@ export default {
         this.open = true;
         this.title = "修改报告";
       });
+/*      getReportByPId(row.pId).then(res =>{
+        console.log(row.pId)
+        console.log(res)
+      })*/
     },
     /** 提交按钮 */
     submitForm() {
