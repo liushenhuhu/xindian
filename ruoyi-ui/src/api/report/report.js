@@ -17,6 +17,15 @@ export function getReport(reportId) {
   })
 }
 
+// 查询报告详细
+export function getReportByPId(pId) {
+  return request({
+    url: '/report/report/getInfoByPid/' + pId,
+    method: 'get'
+  })
+}
+
+
 // 新增报告
 export function addReport(data) {
   return request({

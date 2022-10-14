@@ -35,6 +35,12 @@
         where report_id = #{reportId}
     </select>
 
+    <select id="selectReportByPId" parameterType="string" resultMap="ReportResult">
+        <include refid="selectReportVo"/>
+        where report_id = #{pId}
+    </select>
+
+
     <insert id="insertReport" parameterType="Report" useGeneratedKeys="true" keyProperty="reportId">
         insert into report
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -31,6 +31,11 @@ public class ReportServiceImpl implements IReportService
         return reportMapper.selectReportByReportId(reportId);
     }
 
+    @Override
+    public Report selectReportByPId(String pId) {
+        return reportMapper.selectReportByPId(pId);
+    }
+
     /**
      * 查询报告列表
      * 

@@ -20,6 +20,14 @@ public interface IReportService
     public Report selectReportByReportId(Long reportId);
 
     /**
+     * 查询报告
+     *
+     * @param pId 主键
+     * @return 报告
+     */
+    public Report selectReportByPId(String pId);
+
+    /**
      * 查询报告列表
      * 
      * @param report 报告

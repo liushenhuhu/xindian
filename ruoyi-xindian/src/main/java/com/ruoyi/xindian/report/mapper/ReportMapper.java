@@ -58,4 +58,6 @@ public interface ReportMapper
      * @return 结果
      */
     public int deleteReportByReportIds(Long[] reportIds);
+
+    public Report selectReportByPId(String pId);
 }

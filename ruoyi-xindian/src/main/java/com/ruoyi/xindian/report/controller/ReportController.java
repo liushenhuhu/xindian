@@ -70,6 +70,16 @@ public class ReportController extends BaseController
     }
 
     /**
+     * 获取报告详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('report:report:query')")
+    @GetMapping(value = "/getInfoByPid/{pId}")
+    public AjaxResult getInfoByPid(@PathVariable("pId") String pId)
+    {
+        return AjaxResult.success(reportService.selectReportByPId(pId));
+    }
+
+    /**
      * 新增报告
      */
     @PreAuthorize("@ss.hasPermi('report:report:add')")
