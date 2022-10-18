@@ -40,12 +40,11 @@ public class GenerateSms {
         String uuid = IdUtils.simpleUUID();
         String verifyKey = Constants.SMS_CAPTCHA_CODE_KEY + uuid;
 
-        int code = (int) Math.ceil(Math.random() * 9000 + 1000);
+        String code = Integer.toString((int) (Math.random() * 9000) + 1000);
         Map<String, Object> map = new HashMap<>(16);
         map.put("mobile", mobile);
         map.put("code", code);
 
-//        SMSUtils.sendMessage("阿里云短信测试", "SMS_154950909", mobile, String.valueOf(code));
         AjaxResult codeResult = getCode(mobile, code);
         System.out.println(codeResult);
 //        redisCache.setCacheObject(verifyKey, map, Constants.SMS_EXPIRATION, TimeUnit.MINUTES);
@@ -58,20 +57,24 @@ public class GenerateSms {
         return ajax;
     }
 
-
-    @GetMapping("check/{code}/{telephone}")
-    public AjaxResult checkCode(@PathVariable String code, @PathVariable String telephone) {
-        String cacheObject = redisCache.getCacheObject(telephone);
+    @PostMapping("/sms/check")
+    @ResponseBody
+    public AjaxResult checkCode(@RequestBody LoginBody loginBody) {
+        String mobile = loginBody.getMobile();
+        String code = loginBody.getCode();
+        String cacheObject = redisCache.getCacheObject(mobile);
         if (code != null && !"".equals(code) && code.equals(cacheObject)) {
             return AjaxResult.success("操作成功");
-        }
-        else {
+        } else {
             return AjaxResult.error("验证码信息错误");
         }
     }
 
 
-    public AjaxResult getCode(String telephone, Integer code) {
+
+
+
+    public AjaxResult getCode(String telephone, String code) {
         String host = "http://smsyun.market.alicloudapi.com";
         String path = "/sms/sms01";
         String method = "POST";
@@ -80,10 +83,10 @@ public class GenerateSms {
         //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
         headers.put("Authorization", "APPCODE " + appcode);
         Map<String, String> querys = new HashMap<String, String>();
-        querys.put("content", "【智能心电】您的验证码为：" + code + "，有效期为5分钟。如非本人操作，请忽略本消息。");
+        querys.put("content", "【迈雅】您正在登录验证，验证码" + code + "，切勿将验证码泄露于他人，本条验证码有效期15分钟。");
         querys.put("mobile", telephone);
         String bodys = "";
-        redisCache.setCacheObject(telephone, code, 5, TimeUnit.MINUTES);
+        redisCache.setCacheObject(telephone, code, 15, TimeUnit.MINUTES);
         try {
             HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
             System.out.println(response.toString()); //获取response的body //
