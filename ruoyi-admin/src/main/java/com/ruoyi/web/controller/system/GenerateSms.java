@@ -8,14 +8,13 @@ import com.ruoyi.common.utils.uuid.IdUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,9 +46,9 @@ public class GenerateSms {
         map.put("code", code);
 
 //        SMSUtils.sendMessage("阿里云短信测试", "SMS_154950909", mobile, String.valueOf(code));
-
-
-        redisCache.setCacheObject(verifyKey, map, Constants.SMS_EXPIRATION, TimeUnit.MINUTES);
+        AjaxResult codeResult = getCode(mobile, code);
+        System.out.println(codeResult);
+//        redisCache.setCacheObject(verifyKey, map, Constants.SMS_EXPIRATION, TimeUnit.MINUTES);
 //        session.setAttribute("smsCode", map);
 
         logger.info(" 为 {} 设置短信验证码：{}", mobile, code);
@@ -58,5 +57,42 @@ public class GenerateSms {
         ajax.put("smsCode", code);
         return ajax;
     }
+
+
+    @GetMapping("check/{code}/{telephone}")
+    public AjaxResult checkCode(@PathVariable String code, @PathVariable String telephone) {
+        String cacheObject = redisCache.getCacheObject(telephone);
+        if (code != null && !"".equals(code) && code.equals(cacheObject)) {
+            return AjaxResult.success("操作成功");
+        }
+        else {
+            return AjaxResult.error("验证码信息错误");
+        }
+    }
+
+
+    public AjaxResult getCode(String telephone, Integer code) {
+        String host = "http://smsyun.market.alicloudapi.com";
+        String path = "/sms/sms01";
+        String method = "POST";
+        String appcode = "37a5b008bed84153ad0691d0c33fe42a";
+        Map<String, String> headers = new HashMap<String, String>();
+        //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+        headers.put("Authorization", "APPCODE " + appcode);
+        Map<String, String> querys = new HashMap<String, String>();
+        querys.put("content", "【智能心电】您的验证码为：" + code + "，有效期为5分钟。如非本人操作，请忽略本消息。");
+        querys.put("mobile", telephone);
+        String bodys = "";
+        redisCache.setCacheObject(telephone, code, 5, TimeUnit.MINUTES);
+        try {
+            HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
+            System.out.println(response.toString()); //获取response的body //
+            System.out.println(EntityUtils.toString(response.getEntity()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AjaxResult.success(code);
+    }
+
 
 }

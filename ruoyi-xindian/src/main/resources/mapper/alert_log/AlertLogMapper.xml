@@ -25,10 +25,10 @@
 
     <sql id="selectAlertLogVo">
         select log_id, log_time, log_type, event_name, event_description, al.p_id,
-               pm.hospital_code, pm.patient_code, patient_name, patient_phone, family_phone, hospital_name
+               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone, hospital_name
         from alert_log al
             inner join patient_management pm on al.p_id = pm.p_id
-            inner join patient p on pm.patient_code = p.patient_code
+            inner join patient p on pm.patient_phone = p.patient_phone
             inner join hospital h on pm.hospital_code = h.hospital_code
     </sql>
 
