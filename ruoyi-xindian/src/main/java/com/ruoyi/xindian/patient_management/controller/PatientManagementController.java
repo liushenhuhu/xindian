@@ -185,10 +185,10 @@ public class PatientManagementController extends BaseController {
     }
 
 
-    @GetMapping("getPatientManagementByCode/{patientCode}")
-    public AjaxResult getPatientManagementByCode(@PathVariable String patientCode) {
+    @GetMapping("getPatientManagementByPhone/{patientPhone}")
+    public AjaxResult getPatientManagementByPhone(@PathVariable String patientPhone) {
         PatientManagement patientManagement = new PatientManagement();
-        patientManagement.setPatientCode(patientCode);
+        patientManagement.setPatientPhone(patientPhone);
         List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementList(patientManagement);
         return AjaxResult.success(patientManagements);
     }

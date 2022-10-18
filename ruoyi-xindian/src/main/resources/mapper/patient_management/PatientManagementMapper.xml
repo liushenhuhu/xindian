@@ -50,6 +50,7 @@
             <if test="ecgType != null  and ecgType != ''"> and ecg_type = #{ecgType} </if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
         </where>
         order by online_status desc, connection_time desc
     </select>
@@ -67,6 +68,7 @@
             <if test="ecgType != null  and ecgType != ''"> and ecg_type = #{ecgType} or ecg_type = "DECG2"</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
         </where>
         order by online_status desc, connection_time desc
     </select>
@@ -89,6 +91,7 @@
             <if test="caseHistoryNumber != null">case_history_number,</if>
             <if test="ecgType != null">ecg_type,</if>
             <if test="onlineStatus != null">online_status,</if>
+            <if test="patientPhone != null">patient_phone,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -99,6 +102,7 @@
             <if test="caseHistoryNumber != null">#{caseHistoryNumber},</if>
             <if test="ecgType != null">#{ecgType},</if>
             <if test="onlineStatus != null">#{onlineStatus},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
         </trim>
     </insert>
 
@@ -113,6 +117,7 @@
             <if test="caseHistoryNumber != null">case_history_number = #{caseHistoryNumber},</if>
             <if test="ecgType != null">ecg_type = #{ecgType},</if>
             <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
         </trim>
         where p_id = #{pId}
     </update>
