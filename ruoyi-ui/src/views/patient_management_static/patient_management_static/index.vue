@@ -11,6 +11,15 @@
         />
       </el-form-item>
 
+      <el-form-item label="患者电话" prop="patientPhone">
+        <el-input
+          v-model="queryParams.patientPhone"
+          placeholder="请输入患者电话"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
       <el-form-item label="患者身份证号" prop="patientCode">
         <el-input
           v-model="queryParams.patientCode"
@@ -255,8 +264,8 @@
     <!-- 添加或修改患者管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="患者身份证号" prop="patientCode">
-          <el-input v-model="form.patientCode" placeholder="请输入患者身份证号"/>
+        <el-form-item label="患者电话" prop="patientPhone">
+          <el-input v-model="form.patientPhone" placeholder="请输入患者电话"/>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
           <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
@@ -348,13 +357,14 @@ export default {
         connectionTime: null,
         patientName: null,
         ecgType: 'ECG',
+        patientPhone: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        patientCode: [
-          {required: true, message: "患者身份证号不能为空", trigger: "blur"}
+        patientPhone: [
+          {required: true, message: "患者电话不能为空", trigger: "blur"}
         ],
         hospitalCode: [
           {required: true, message: "医院代号不能为空", trigger: "blur"}

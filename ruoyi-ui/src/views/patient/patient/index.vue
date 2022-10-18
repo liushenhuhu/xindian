@@ -241,9 +241,10 @@
         <el-form-item label="患者姓名" prop="patientName">
           <el-input v-model="form.patientName" placeholder="请输入患者姓名"/>
         </el-form-item>
-        <el-form-item label="患者身份证号" prop="patientCode">
-          <el-input v-model="form.patientCode" placeholder="请输入患者身份证号"/>
+        <el-form-item label="患者电话" prop="patientPhone">
+          <el-input v-model="form.patientPhone" placeholder="请输入患者电话"/>
         </el-form-item>
+
         <el-form-item label="患者年龄" prop="patientAge">
           <el-input v-model="form.patientAge" placeholder="请输入患者年龄"/>
         </el-form-item>
@@ -257,11 +258,12 @@
             ></el-option>
           </el-select>
         </el-form-item>
+
         <el-form-item label="患者来源" prop="patientSource">
           <el-input v-model="form.patientSource" placeholder="请输入患者来源"/>
         </el-form-item>
-        <el-form-item label="患者电话" prop="patientPhone">
-          <el-input v-model="form.patientPhone" placeholder="请输入患者电话"/>
+        <el-form-item label="患者身份证号" prop="patientCode">
+          <el-input v-model="form.patientCode" placeholder="请输入患者身份证号"/>
         </el-form-item>
         <el-form-item label="家属电话" prop="familyPhone">
           <el-input v-model="form.familyPhone" placeholder="请输入家属电话"/>
@@ -360,8 +362,8 @@ export default {
         patientName: [
           { required: true, message: "患者姓名不能为空", trigger: "blur" }
         ],
-        patientCode: [
-          { required: true, message: "患者身份证号不能为空", trigger: "blur" }
+        patientPhone: [
+          { required: true, message: "患者电话不能为空", trigger: "blur" }
         ],
         patientAge: [
           { required: true, message: "患者年龄不能为空", trigger: "blur" }
