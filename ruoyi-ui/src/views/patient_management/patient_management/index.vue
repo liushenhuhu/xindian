@@ -427,14 +427,14 @@ export default {
   created() {
     if (this.$route.params.patientName) {
       this.queryParams.patientName = this.$route.params.patientName;
-      this.queryParams.patientCode = this.$route.params.patientCode;
+      this.queryParams.patientPhone = this.$route.params.patientPhone;
     }
     this.getList();
   },
   activated() {
     if (this.$route.params.patientName) {
       this.queryParams.patientName = this.$route.params.patientName;
-      this.queryParams.patientCode = this.$route.params.patientCode;
+      this.queryParams.patientPhone = this.$route.params.patientPhone;
     }
     this.getList();
   },

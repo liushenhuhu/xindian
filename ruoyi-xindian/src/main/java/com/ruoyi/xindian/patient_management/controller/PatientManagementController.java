@@ -165,8 +165,8 @@ public class PatientManagementController extends BaseController {
                 if (patientManagement != null) {
                     Patient patient = new Patient();
                     patient.setPatientName(patientManagement.getPatientName());
-                    patient.setPatientCode(patientManagement.getPatientCode());
-                    Patient patient1 = patientService.selectPatientByNameAndCode(patient);
+                    patient.setPatientPhone(patientManagement.getPatientPhone());
+                    Patient patient1 = patientService.selectPatientByNameAndPhone(patient);
                     patient1.setMonitoringStatus("1");
                     patientService.updatePatient(patient1);
                 }

@@ -113,7 +113,7 @@ public class PatientServiceImpl implements IPatientService
     }
 
     @Override
-    public Patient selectPatientByNameAndCode(Patient patient) {
-        return patientMapper.selectPatientByNameAndCode(patient);
+    public Patient selectPatientByNameAndPhone(Patient patient) {
+        return patientMapper.selectPatientByNameAndPhone(patient);
     }
 }

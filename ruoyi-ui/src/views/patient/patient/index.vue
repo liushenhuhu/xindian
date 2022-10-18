@@ -641,7 +641,7 @@ export default {
     lookList(row) {
       this.$router.push({
         name: "lookList",
-        params: {patientName: row.patientName, patientCode: row.patientCode}
+        params: {patientName: row.patientName, patientPhone: row.patientPhone}
       });
     },
 

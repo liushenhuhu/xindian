@@ -81,9 +81,9 @@
         where patient_name = #{patientName}
     </select>
 
-    <select id="selectPatientByNameAndCode" parameterType="patient" resultMap="PatientResult">
+    <select id="selectPatientByNameAndPhone" parameterType="patient" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
-        where patient_name = #{patientName} and patient_code = #{patientCode}
+        where patient_name = #{patientName} and patient_phone = #{patientPhone}
     </select>
 
     <insert id="insertPatient" parameterType="Patient">

@@ -79,5 +79,5 @@ public interface IPatientService
 
     public void updateMonitoringStatus2(String equipment);
 
-    public Patient selectPatientByNameAndCode(Patient patient);
+    public Patient selectPatientByNameAndPhone(Patient patient);
 }
