@@ -40,14 +40,15 @@ public class GenerateSms {
         String uuid = IdUtils.simpleUUID();
         String verifyKey = Constants.SMS_CAPTCHA_CODE_KEY + uuid;
 
-        String code = Integer.toString((int) (Math.random() * 9000) + 1000);
+        int code = (int) Math.ceil(Math.random() * 9000 + 1000);
+//        String code = Integer.toString((int) (Math.random() * 9000) + 1000);
         Map<String, Object> map = new HashMap<>(16);
         map.put("mobile", mobile);
         map.put("code", code);
 
         AjaxResult codeResult = getCode(mobile, code);
         System.out.println(codeResult);
-//        redisCache.setCacheObject(verifyKey, map, Constants.SMS_EXPIRATION, TimeUnit.MINUTES);
+        redisCache.setCacheObject(verifyKey, map, Constants.SMS_EXPIRATION, TimeUnit.MINUTES);
 //        session.setAttribute("smsCode", map);
 
         logger.info(" 为 {} 设置短信验证码：{}", mobile, code);
@@ -72,9 +73,7 @@ public class GenerateSms {
 
 
 
-
-
-    public AjaxResult getCode(String telephone, String code) {
+    public AjaxResult getCode(String telephone, int code) {
         String host = "http://smsyun.market.alicloudapi.com";
         String path = "/sms/sms01";
         String method = "POST";

@@ -26,8 +26,7 @@ import com.ruoyi.system.service.ISysMenuService;
  * @author ruoyi
  */
 @RestController
-public class SysLoginController
-{
+public class SysLoginController {
     @Autowired
     private SysLoginService loginService;
 
@@ -44,8 +43,7 @@ public class SysLoginController
      * @return 结果
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginBody loginBody)
-    {
+    public AjaxResult login(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
@@ -64,16 +62,13 @@ public class SysLoginController
     @ApiOperation("手机号登录")
     @ApiImplicitParam(name = "loginBody", value = "登录信息", dataType = "LoginBody")
     @PostMapping("/sms/login")
-    public AjaxResult smsLogin(@RequestBody LoginBody loginBody)
-    {
-        String mobile=loginBody.getMobile();
-        String smsCode=loginBody.getSmsCode();
-        String uuid=loginBody.getUuid();
-        AjaxResult ajax = loginService.smsLogin(mobile, smsCode,
-                uuid);
+    public AjaxResult smsLogin(@RequestBody LoginBody loginBody) {
+        String mobile = loginBody.getMobile();
+        String smsCode = loginBody.getSmsCode();
+        String uuid = loginBody.getUuid();
+        AjaxResult ajax = loginService.smsLogin(mobile, smsCode, uuid);
         return ajax;
     }
-
 
 
     /**
@@ -82,8 +77,7 @@ public class SysLoginController
      * @return 用户信息
      */
     @GetMapping("getInfo")
-    public AjaxResult getInfo()
-    {
+    public AjaxResult getInfo() {
         SysUser user = SecurityUtils.getLoginUser().getUser();
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
@@ -102,8 +96,7 @@ public class SysLoginController
      * @return 路由信息
      */
     @GetMapping("getRouters")
-    public AjaxResult getRouters()
-    {
+    public AjaxResult getRouters() {
         Long userId = SecurityUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
         return AjaxResult.success(menuService.buildMenus(menus));
