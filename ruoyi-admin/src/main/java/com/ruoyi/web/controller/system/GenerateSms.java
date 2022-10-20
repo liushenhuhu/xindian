@@ -4,7 +4,9 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginBody;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.framework.web.service.SysLoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +28,9 @@ import java.util.concurrent.TimeUnit;
 public class GenerateSms {
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private SysLoginService loginService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -61,16 +67,41 @@ public class GenerateSms {
     @PostMapping("/sms/check")
     @ResponseBody
     public AjaxResult checkCode(@RequestBody LoginBody loginBody) {
-        String mobile = loginBody.getMobile();
+/*        String mobile = loginBody.getMobile();
         String code = loginBody.getCode();
         String cacheObject = redisCache.getCacheObject(mobile);
         if (code != null && !"".equals(code) && code.equals(cacheObject)) {
             return AjaxResult.success("操作成功");
         } else {
             return AjaxResult.error("验证码信息错误");
+        }*/
+        String mobile = loginBody.getMobile();
+        String inputCode = loginBody.getSmsCode();
+        String uuid = loginBody.getUuid();
+        String verifyKey = Constants.SMS_CAPTCHA_CODE_KEY + uuid;
+
+        Map<String, Object> smsCode = redisCache.getCacheObject(verifyKey);
+//        redisCache.deleteObject(verifyKey);
+        if (StringUtils.isEmpty(inputCode)) {
+            return AjaxResult.error("验证码不能为空");
+        }
+
+        if (smsCode == null) {
+            return AjaxResult.error("验证码失效");
+        }
+
+        String applyMobile = (String) smsCode.get("mobile");
+        int code = (int) smsCode.get("code");
+
+        if (!applyMobile.equals(mobile)) {
+            return AjaxResult.error("手机号码不一致");
+        }
+        if (code != Integer.parseInt(inputCode)) {
+            return AjaxResult.error("验证码错误");
+        } else {
+            return AjaxResult.success("验证码正确");
         }
     }
-
 
 
     public AjaxResult getCode(String telephone, int code) {
