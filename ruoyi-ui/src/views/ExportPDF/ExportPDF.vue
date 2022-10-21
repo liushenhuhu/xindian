@@ -441,15 +441,12 @@
               </div>
               <div class="box8-1">HRV:SD>50ms</div>
               <div class="box8-1">二丶诊断</div>
-              <div
-                type="textarea"
-                contenteditable="true"
+              <textarea
                 placeholder="请输入诊断结果"
                 class="box8-1-1"
                 v-model="froms.textarea.text1"
-              >{{froms.textarea.text1}}<br>
-                {{froms.textarea.text2}}
-              </div>
+              >
+              </textarea>
 <!--              <div class="box8-1">1.窦性心律 心率动态变化正常</div>-->
 <!--              <div class="box8-1">2.最快心率156，仍为窦性</div>-->
 <!--              <div-->
@@ -459,7 +456,9 @@
 <!--              <div class="box8-1">5.建议治疗后复查</div>-->
               <div class="bottom">
                 报告者:<input class="box8-2" v-model="doctorName"></input>
-                日期:<input class="box8-2" v-model="dataTime"></input>
+                日期:<input class="box8-2" v-if="diagnosisData!=null" v-model="diagnosisData"></input>
+                    <input class="box8-2" v-else v-model="dataTime"></input>
+
               </div>
             </div>
           </div>
@@ -762,7 +761,7 @@ import JsPDF from "jspdf";
 import echarts from 'echarts'
 import $ from 'jquery';
 import { Loading } from 'element-ui';
-import {addReport, listReport, updateReport} from "@/api/report/report";
+import {addReport, getReportByPId, listReport, updateReport} from "@/api/report/report";
 
 export default {
   name: "ExportPDF",
@@ -774,15 +773,17 @@ export default {
       _th:null,
       ecg_type:null,
       dataTime:"",
+      diagnosisData: null,
       doctorName:"",
       froms: {
         textarea: {
           text1:"1.",
-          text2:"2.",
+
         },
         reportTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.报告时间,
         patientInfo: {
-          name: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名,
+          name:this.$route.query.patientName,
+          //name: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名,
           sex: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.性别,
           age: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.年龄,
           no: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.门诊号,
@@ -1030,10 +1031,20 @@ export default {
     if(pId){
       this.ecg_type=ecg_type
       this.pId=pId;
+      getReportByPId(this.pId).then(response => {
+        console.log(response.data)
+        this.froms.textarea.text1=response.data.diagnosisConclusion
+        this.doctorName=response.data.diagnosisDoctor
+        this.diagnosisData = response.data.reportTime
+        console.log("-------------------------------")
+        console.log(this.diagnosisData)
+      });
       var show =sessionStorage.getItem(pId+"show");
       if (!show){
         this.get();
+        this.dataTime = response.data.reportTime
       }
+
     }
   },
   mounted() {
@@ -1042,11 +1053,15 @@ export default {
     this.line1();
     this.line2();
     this.line3();
+    this.line4();
     this.drawscatter();
     this.drawBar();
     this.drawBar1();
     this.drawBar2();
     this.getDate();
+  },
+  computed(){
+
   },
   methods: {
     columnStyle({ row, column, rowIndex, columnIndex }) {
@@ -1661,6 +1676,338 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
+
+
+    line4(){
+        var obj = {
+          "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+        };
+
+        var dom = document.getElementById('line4');
+        var myChart = echarts.init(dom, null, {
+          renderer: 'canvas',
+          useDirtyRect: false
+        });
+        var app = {};
+        var option;
+        var data=obj.data;
+        var time=data.map(function (item) {
+          return item[0];
+        })
+        var datatime=[];
+        for (var i=0;i<time.length;i++)
+        {
+          datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5)))
+        }
+        var datax=[]
+        for (var i=0;i<24*60;i++){
+          datax.push(i)
+        }
+        var data2=data
+        for(i=0;i<data2.length;i++)
+        {
+          data2[i][0]=datatime[i]
+        }
+        console.log(datatime)
+        var option1=[]
+        for(i=0;i<data.length;i=i+20)
+        {
+          option1.push(
+            {
+              xAxis: datatime[i],
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C' , // 展示内容颜色
+                formatter: time[i]
+              },
+            },
+          )
+        }
+        myChart.setOption(
+          (option = {
+            title: {
+              text: '心搏均值心率变化图',
+              left: '1%'
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            grid: {
+              left: '5%',
+              right: '15%',
+              bottom: '10%'
+            },
+            xAxis: {
+              //type: 'time',
+              show:false,
+              // data: data.map(function (item) {
+              //   return item[0];
+              // })
+              // boundaryGap:true,
+              // data:timex
+              data: datax
+            },
+            yAxis: {
+              show: false,
+              // scale:true
+            },
+            // toolbox: {
+            //     right: 10,
+            //     feature: {
+            //         dataZoom: {
+            //             yAxisIndex: 'none'
+            //         },
+            //         restore: {},
+            //         saveAsImage: {}
+            //     }
+            // },
+            dataZoom: [
+              {
+                startValue: 0,
+              },
+              {
+                type: 'inside'
+              }
+            ],
+            visualMap: {
+              top: 50,
+              right: 10,
+              pieces: [
+                {
+                  gt: 0,
+                  lte: 60,
+                  color: '#3867d6'
+                },
+                {
+                  gt: 60,
+                  lte: 100,
+                  color: '#34ace0'
+                },
+                {
+                  gt: 100,
+                  lte: 120,
+                  color: '#fa8231'
+                },
+                {
+                  gt: 120,
+                  lte: 150,
+                  color: '#FD0100'
+                },
+
+              ],
+              outOfRange: {
+                color: '#AA069F'
+              }
+            },
+            series: {
+              name: '心搏均值心率',
+              type: 'line',
+              // smooth:'true',
+              data: data2,
+              // data: data.map(function (item) {
+              //   return item[1];
+              // }),
+              markLine: {
+                silent: true,
+                symbol: ['none', 'none'],
+                lineStyle: {
+                  color: '#aaa69d',
+                  width: 1
+                },
+                label: {
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8C8C8C'  // 展示内容颜色
+                },
+                data: option1,
+              }
+            }
+          })
+        );
+
+        if (option && typeof option === 'object') {
+          myChart.setOption(option);
+        }
+        window.addEventListener('resize', myChart.resize);
+    },
+    // line4(){
+    //   var obj ={
+    //       "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime
+    //     }
+    //   ;
+    //
+    //   var dom = document.getElementById('line4');
+    //   var myChart = echarts.init(dom, null, {
+    //     renderer: 'canvas',
+    //     useDirtyRect: false
+    //   });
+    //   var app = {};
+    //   var option;
+    //   var data = obj.data;
+    //   var time = data.map(function (item){
+    //     return item[0];
+    //   })
+    //   // for (var i=0 ;i<time.length;i++){
+    //   //   time.push(time[1]);
+    //   // }
+    //   // $.get('line2.json', function (data) {
+    //   myChart.setOption(
+    //     (option = {
+    //       title: {
+    //         text: '心搏均值心率变化图',
+    //         left: '1%'
+    //       },
+    //       tooltip: {
+    //         trigger: 'axis'
+    //       },
+    //       grid: {
+    //         left: '5%',
+    //         right: '15%',
+    //         bottom: '10%'
+    //       },
+    //       xAxis: {
+    //         show:false,
+    //         // data: data.map(function (item) {
+    //         //   return item[0];
+    //         // })
+    //         // data:obj.data[0]
+    //         data: time
+    //       },
+    //       yAxis: {
+    //         show:false,
+    //         // scale:true
+    //       },
+    //       // toolbox: {
+    //       //     right: 10,
+    //       //     feature: {
+    //       //         dataZoom: {
+    //       //             yAxisIndex: 'none'
+    //       //         },
+    //       //         restore: {},
+    //       //         saveAsImage: {}
+    //       //     }
+    //       // },
+    //       dataZoom: [
+    //         {
+    //           startValue: 0,
+    //         },
+    //         {
+    //           type: 'inside'
+    //         }
+    //       ],
+    //       visualMap: {
+    //         top: 50,
+    //         right: 10,
+    //         pieces: [
+    //           {
+    //             gt: 0,
+    //             lte: 60,
+    //             color: '#3867d6'
+    //           },
+    //           {
+    //             gt: 60,
+    //             lte: 100,
+    //             color: '#34ace0'
+    //           },
+    //           {
+    //             gt: 100,
+    //             lte: 120,
+    //             color: '#fa8231'
+    //           },
+    //           {
+    //             gt: 120,
+    //             lte: 150,
+    //             color: '#FD0100'
+    //           },
+    //         ],
+    //         outOfRange: {
+    //           color: '#AA069F'
+    //         }
+    //       },
+    //       series: {
+    //         name: '心搏均值心率',
+    //         type: 'line',
+    //         // smooth:'true',
+    //         data: obj.data.map(function (item){
+    //           return item[1];
+    //         }),
+    //         // data: data.map(function (item) {
+    //         //   return item[1];
+    //         // }),
+    //         markLine: {
+    //           silent: true,
+    //           symbol:['none','none'],
+    //           lineStyle: {
+    //             color: '#aaa69d',
+    //             width: 1
+    //           },
+    //           label: {
+    //             position: 'start', // 表现内容展示的位置
+    //             color: '#8C8C8C'  // 展示内容颜色
+    //           },
+    //
+    //           data: [
+    //             {
+    //               xAxis: 1,
+    //
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[1]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 10,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[10]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 40,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[40]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 66,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[66]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 66,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[66]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 99,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[99]
+    //               },
+    //             },
+    //           ]
+    //         }
+    //       }
+    //     })
+    //   );
+    //   // });
+    //
+    //   if (option && typeof option === 'object') {
+    //     myChart.setOption(option);
+    //   }
+    //   window.addEventListener('resize', myChart.resize);
+    // },
+
 
     //echarts测试
     drawLine() {
@@ -3101,11 +3448,19 @@ var data = obj
 
     getDate() {
       var str= new Date();
-      this.dataTime= str.getFullYear() + "-"
-        + (str.getMonth() + 1) + "-" + str.getDate();
-      console.log(this.dataTime);
-    },
+      console.log("++++++++++++++")
+      console.log(this.diagnosisData)
+      if(this.diagnosisData!=null){
+        this.dataTime=this.diagnosisData
+      }else{
+        this.dataTime= str.getFullYear() + "-"
+          + (str.getMonth() + 1) + "-" + str.getDate();
 
+        console.log("---------------------")
+        console.log(this.dataTime);
+      }
+
+    },
 
     //保存结果
     btnUpload(){
@@ -3113,7 +3468,7 @@ var data = obj
         pId: this.pId,
         diagnosisStatus:'未确定',
         reportType: this.ecg_type,
-        diagnosisConclusion: this.froms.textarea.text1+" "+this.froms.textarea.text2,
+        diagnosisConclusion: this.froms.textarea.text1,
         reportTime: this.dataTime,
         diagnosisDoctor: this.doctorName,
       }
@@ -3361,7 +3716,7 @@ h2 {
   border: none;
   resize: none;
   cursor: pointer;
-  outline:none;
+  //outline:none;
   font-size: 13px;
   font-family: "Helvetica Neue";
   word-wrap: break-word;
