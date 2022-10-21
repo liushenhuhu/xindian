@@ -122,7 +122,7 @@ import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 import echarts from 'echarts'
 import $ from 'jquery';
-import {addReport, getReportByPId} from "@/api/report/report";
+import {addReport, getReportByPId, updateReport} from "@/api/report/report";
 
 export default {
   name: "index",
@@ -2095,11 +2095,24 @@ export default {
         reportTime: this.data.dataTime,
         diagnosisDoctor: this.data.doctorName,
       }
-      addReport(form).then(response => {
-        this.$modal.msgSuccess("新增成功");
-        this.getList();
-        console.log("新增成功！")
-      });
+      getReportByPId(this.pId).then(res=>{
+
+        if (res.data == null){
+          addReport(form).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.getList();
+            console.log("新增成功！")
+          });
+        }else{
+          form["reportId"]=res.data.reportId
+          console.log(form)
+          updateReport(form).then(response=>{
+            this.$modal.msgSuccess("修改成功");
+            this.getList();
+            console.log("修改成功！")
+          })
+        }
+      })
     },
 
   },

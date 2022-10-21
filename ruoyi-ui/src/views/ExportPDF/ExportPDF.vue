@@ -3472,11 +3472,25 @@ var data = obj
         reportTime: this.dataTime,
         diagnosisDoctor: this.doctorName,
       }
-      addReport(form).then(response => {
-          this.$modal.msgSuccess("新增成功");
-          this.getList();
-          console.log("新增成功！")
-        });
+
+      getReportByPId(this.pId).then(res=>{
+
+          if (res.data == null){
+            addReport(form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.getList();
+              console.log("新增成功！")
+            });
+          }else{
+            form["reportId"]=res.data.reportId
+            console.log(form)
+            updateReport(form).then(response=>{
+              this.$modal.msgSuccess("修改成功");
+              this.getList();
+              console.log("修改成功！")
+            })
+          }
+        })
       }
 
     },
