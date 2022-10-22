@@ -105,7 +105,8 @@
           </div>
           <div class="bottom">
             <strong>医师:</strong><input class="box8-2" v-model="data.doctorName"></input>
-            <strong>日期:</strong><input class="box8-2" v-model="data.dataTime"></input>
+            <strong>日期:</strong><input class="box8-2" v-if="data.diagnosisData!=null" v-model="data.diagnosisData"></input>
+                                  <input class="box8-2" v-else v-model="data.dataTime"></input>
           </div>
         </div>
       </div>
@@ -121,7 +122,7 @@ import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 import echarts from 'echarts'
 import $ from 'jquery';
-import {addReport} from "@/api/report/report";
+import {addReport, getReportByPId, updateReport} from "@/api/report/report";
 
 export default {
   name: "index",
@@ -137,6 +138,7 @@ export default {
         resultByDoctor:null,
         dataTime:"",
         doctorName:"",
+        diagnosisData:null,
       }
     };
   },
@@ -146,6 +148,14 @@ export default {
     console.log(pId)
     if(pId){
        this.pId=pId;
+      getReportByPId(this.pId).then(response => {
+        console.log(response.data)
+        this.data.resultByDoctor=response.data.diagnosisConclusion
+        this.data.doctorName=response.data.diagnosisDoctor
+        this.data.diagnosisData = response.data.reportTime
+        console.log("-------------------------------")
+        console.log(this.diagnosisData)
+      });
       var show =sessionStorage.getItem(pId+"show");
       if (!show){
         this.get();
@@ -2085,11 +2095,24 @@ export default {
         reportTime: this.data.dataTime,
         diagnosisDoctor: this.data.doctorName,
       }
-      addReport(form).then(response => {
-        this.$modal.msgSuccess("新增成功");
-        this.getList();
-        console.log("新增成功！")
-      });
+      getReportByPId(this.pId).then(res=>{
+
+        if (res.data == null){
+          addReport(form).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.getList();
+            console.log("新增成功！")
+          });
+        }else{
+          form["reportId"]=res.data.reportId
+          console.log(form)
+          updateReport(form).then(response=>{
+            this.$modal.msgSuccess("修改成功");
+            this.getList();
+            console.log("修改成功！")
+          })
+        }
+      })
     },
 
   },
