@@ -68,6 +68,29 @@ public class AlertLogController extends BaseController
         return getDataTable(list);
     }
 
+
+    /**
+     * 查询预警日志列表
+     */
+    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
+    @PostMapping("/list1")
+    public TableDataInfo list1(@RequestBody AlertLog alertLog)
+    {
+        List<AlertLog> list = new ArrayList<>();
+        if (getDeptId() == 200) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalName = sysUser.getHospitalName();
+            alertLog.setHospitalName(hospitalName);
+            startPage();
+            list = alertLogService.selectAlertLogList(alertLog);
+        } else {
+            startPage();
+            list = alertLogService.selectAlertLogList(alertLog);
+        }
+        return getDataTable(list);
+    }
+
+
     /**
      * 导出预警日志列表
      */
