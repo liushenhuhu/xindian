@@ -692,7 +692,7 @@ export default {
     downloadInform(row) {
       let routeUrl = this.$router.resolve({
         path: "/ExportPDF",
-        query: {pId: row.pId, hospitalName: row.hospitalName, ecg_type: row.ecgType}
+        query: {pId: row.pId, hospitalName: row.hospitalName, ecg_type: row.ecgType, patientName: row.patientName}
       });
       window.open(routeUrl.href, '_blank');
 

@@ -186,7 +186,7 @@
             <div class="box4 clearfix">
               <div class="box4-left">
                 <div class="box4-top">
-                  <h2>室性异位心率</h2>
+                  <h2>室性异位心律</h2>
                 </div>
                 <div class="box4-left-bottom">
                   <div class="flex-box">
@@ -206,7 +206,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/小时:
-                      <strong></strong>
+                      <strong>{{froms.ventricularEctopicHeartRate.averageTimeHour}}</strong>
                     </div>
                   </div>
                   <div class="flex-box">
@@ -216,7 +216,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/1000:
-                      <strong></strong>
+                      <strong>{{froms.ventricularEctopicHeartRate.averageTime1000}}</strong>
                     </div>
                   </div>
 
@@ -243,16 +243,18 @@
                   <div class="box4-1">
                     最快室速:
                     <strong>{{froms.ventricularEctopicHeartRate.fastestVT}}</strong> bpm,&emsp;发生于
+                    <strong>{{froms.ventricularEctopicHeartRate.fastestVTTime}}</strong>
                   </div>
                   <div class="box4-1">
                     最长室速:
                     <strong>{{froms.ventricularEctopicHeartRate.longestVT}}</strong> 次心搏,发生于
+                    <strong>{{froms.ventricularEctopicHeartRate.longestVTTime}}</strong>
                   </div>
                 </div>
               </div>
               <div class="box4-right">
                 <div class="box4-top">
-                  <h2>室上性异位心率</h2>
+                  <h2>室上性异位心律</h2>
                 </div>
                 <div class="box4-right-bottom">
                   <div class="flex-box">
@@ -272,7 +274,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/小时:
-                      <strong></strong>
+                      <strong>{{froms.supraventricularEctopicHeartRate.averageTimeHour}}</strong>
                     </div>
                   </div>
                   <div class="flex-box">
@@ -282,7 +284,7 @@
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/1000:
-                      <strong></strong>
+                      <strong>{{froms.supraventricularEctopicHeartRate.averageTime1000}}</strong>
                     </div>
                   </div>
                   <div class="box4-1">
@@ -300,10 +302,12 @@
                   <div class="box4-1">
                     最快室上速:
                     <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity}}</strong> bpm,&emsp;发生于
+                    <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocityTime}}</strong>
                   </div>
                   <div class="box4-1">
                     最长室上速:
-                    <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity}}</strong> 次心搏,发生于
+                    <strong>{{froms.supraventricularEctopicHeartRate.longestSupraventricularVelocity}}</strong> 次心搏,发生于
+                    <strong>{{froms.supraventricularEctopicHeartRate.longestSupraventricularVelocityTime}}</strong>
                   </div>
                 </div>
               </div>
@@ -862,12 +866,18 @@ export default {
           ventricularEscape: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性逸搏,
           //最快室速
           fastestVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最快室速,
+          //最快室速发生于
+          fastestVTTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最快室速发生于,
           //最长室速
           longestVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最长室速,
+          //最长室速发生于
+          longestVTTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最长室速发生于,
           //室性百分比
-          ventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性百分比
+          ventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性百分比,
           //平均/小时
+          averageTimeHour: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律平均小时,
           //平均/1000
+          averageTime1000: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律平均1000,
         },
         //室上性异位心率
 
@@ -891,12 +901,18 @@ export default {
           tripleLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律三联率,
           //最快室上速
           fastestSupraventricularVelocity: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最快室上速,
+          // 室上性异位心律最快室上速发生于
+          fastestSupraventricularVelocityTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最快室上速发生于,
           //最长室上速
           longestSupraventricularVelocity: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最长室上速,
+          // 室上性异位心律最长室上速发生于
+          longestSupraventricularVelocityTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最长室上速发生于,
           //室上性百分比
-          supraventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律室上性百分比
-          //平均/小时
-          //平均/1000
+          supraventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律室上性百分比,
+          // 室上性异位心律平均/小时
+          averageTimeHour: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律平均小时,
+          // 室上性异位心律平均/1000
+          averageTime1000: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律平均1000,
         },
         //心率变异性分析
         heartRateVariabilityAnalysis: {
@@ -1052,7 +1068,7 @@ export default {
     this.line();
     this.line1();
     this.line2();
-    this.line3();
+    // this.line3();
     this.line4();
     this.drawscatter();
     this.drawBar();
@@ -1258,13 +1274,152 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-    //10次心搏均值心率
+    //5次心搏均值心率
     line1(){
       var obj ={
-      "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_10
+      "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_5
     };
 
       var dom = document.getElementById('line1');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
+      var option;
+      // $.get('line2.json', function (data) {
+        myChart.setOption(
+          (option = {
+            title: {
+              text: '5次心搏均值心率变化图',
+              left: '1%'
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            grid: {
+              left: '5%',
+              right: '15%',
+              bottom: '10%'
+            },
+            xAxis: {
+              //show:false,
+              // data: data.map(function (item) {
+              //   return item[0];
+              // })
+              // data:obj.data[0]
+            data: obj.data.map(function (item) {
+                return item[0];
+              })
+            },
+            yAxis: {
+              show:false,
+              // scale:true
+            },
+            // toolbox: {
+            //     right: 10,
+            //     feature: {
+            //         dataZoom: {
+            //             yAxisIndex: 'none'
+            //         },
+            //         restore: {},
+            //         saveAsImage: {}
+            //     }
+            // },
+            dataZoom: [
+               {
+                 startValue: 0,
+               },
+              {
+                type: 'inside'
+              }
+            ],
+            visualMap: {
+              top: 50,
+              right: 10,
+              pieces: [
+                {
+                  gt: 0,
+                  lte: 60,
+                  color: '#3867d6'
+                },
+                {
+                  gt: 60,
+                  lte: 100,
+                  color: '#34ace0'
+                },
+                {
+                  gt: 100,
+                  lte: 120,
+                  color: '#fa8231'
+                },
+                {
+                  gt: 120,
+                  lte: 150,
+                  color: '#FD0100'
+                },
+              ],
+              outOfRange: {
+                color: '#AA069F'
+              }
+            },
+            series: {
+              name: '5次心搏均值心率',
+              type: 'line',
+              // smooth:'true',
+              data: obj.data.map(function (item){
+                return item[1];
+              }),
+              // data: data.map(function (item) {
+              //   return item[1];
+              // }),
+              markLine: {
+                silent: true,
+                lineStyle: {
+
+                  color: '#aaa69d',
+                  width: 1
+                },
+                label: {
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8C8C8C'  // 展示内容颜色
+                },
+
+                data: [
+                  {
+                    yAxis: 60
+                  },
+                  {
+                    yAxis: 100
+                  },
+                  {
+                    yAxis: 120
+                  },
+                  {
+                    yAxis: 150
+                  },
+                  {
+                    yAxis: 180
+                  }
+                ]
+              }
+            }
+          })
+        );
+      // });
+
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      window.addEventListener('resize', myChart.resize);
+    },
+    //10次心搏均值心率
+    line2(){
+        var obj = {
+          "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_10
+        };
+
+      var dom = document.getElementById('line2');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
@@ -1397,286 +1552,146 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-    //50次心搏均值心率
-    line2(){
-        var obj = {
-          "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_50
-        };
 
-      var dom = document.getElementById('line2');
-      var myChart = echarts.init(dom, null, {
-        renderer: 'canvas',
-        useDirtyRect: false
-      });
-      var app = {};
-      var option;
-      // $.get('line2.json', function (data) {
-        myChart.setOption(
-          (option = {
-            title: {
-              text: '50次心搏均值心率变化图',
-              left: '1%'
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              left: '5%',
-              right: '15%',
-              bottom: '10%'
-            },
-            xAxis: {
-              //show:false,
-              // data: data.map(function (item) {
-              //   return item[0];
-              // })
-              // data:obj.data[0]
-            data: obj.data.map(function (item) {
-                return item[0];
-              })
-            },
-            yAxis: {
-              show:false,
-              // scale:true
-            },
-            // toolbox: {
-            //     right: 10,
-            //     feature: {
-            //         dataZoom: {
-            //             yAxisIndex: 'none'
-            //         },
-            //         restore: {},
-            //         saveAsImage: {}
-            //     }
-            // },
-            dataZoom: [
-               {
-                 startValue: 0,
-               },
-              {
-                type: 'inside'
-              }
-            ],
-            visualMap: {
-              top: 50,
-              right: 10,
-              pieces: [
-                {
-                  gt: 0,
-                  lte: 60,
-                  color: '#3867d6'
-                },
-                {
-                  gt: 60,
-                  lte: 100,
-                  color: '#34ace0'
-                },
-                {
-                  gt: 100,
-                  lte: 120,
-                  color: '#fa8231'
-                },
-                {
-                  gt: 120,
-                  lte: 150,
-                  color: '#FD0100'
-                },
-              ],
-              outOfRange: {
-                color: '#AA069F'
-              }
-            },
-            series: {
-              name: '50次心搏均值心率',
-              type: 'line',
-              // smooth:'true',
-              data: obj.data.map(function (item){
-                return item[1];
-              }),
-              // data: data.map(function (item) {
-              //   return item[1];
-              // }),
-              markLine: {
-                silent: true,
-                lineStyle: {
-
-                  color: '#aaa69d',
-                  width: 1
-                },
-                label: {
-                  position: 'start', // 表现内容展示的位置
-                  color: '#8C8C8C'  // 展示内容颜色
-                },
-
-                data: [
-                  {
-                    yAxis: 60
-                  },
-                  {
-                    yAxis: 100
-                  },
-                  {
-                    yAxis: 120
-                  },
-                  {
-                    yAxis: 150
-                  },
-                  {
-                    yAxis: 180
-                  }
-                ]
-              }
-            }
-          })
-        );
-      // });
-
-      if (option && typeof option === 'object') {
-        myChart.setOption(option);
-      }
-      window.addEventListener('resize', myChart.resize);
-    },
-
-    line3(){
-        var obj ={
-          "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_100
-        }
-      ;
-
-      var dom = document.getElementById('line3');
-      var myChart = echarts.init(dom, null, {
-        renderer: 'canvas',
-        useDirtyRect: false
-      });
-      var app = {};
-      var option;
-      // $.get('line2.json', function (data) {
-        myChart.setOption(
-          (option = {
-            title: {
-              text: '100次心搏均值心率变化图',
-              left: '1%'
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              left: '5%',
-              right: '15%',
-              bottom: '10%'
-            },
-            xAxis: {
-              //show:false,
-              // data: data.map(function (item) {
-              //   return item[0];
-              // })
-              // data:obj.data[0]
-            data: obj.data.map(function (item) {
-                return item[0];
-              })
-            },
-            yAxis: {
-              show:false,
-              // scale:true
-            },
-            // toolbox: {
-            //     right: 10,
-            //     feature: {
-            //         dataZoom: {
-            //             yAxisIndex: 'none'
-            //         },
-            //         restore: {},
-            //         saveAsImage: {}
-            //     }
-            // },
-            dataZoom: [
-               {
-                 startValue: 0,
-               },
-              {
-                type: 'inside'
-              }
-            ],
-            visualMap: {
-              top: 50,
-              right: 10,
-              pieces: [
-                {
-                  gt: 0,
-                  lte: 60,
-                  color: '#3867d6'
-                },
-                {
-                  gt: 60,
-                  lte: 100,
-                  color: '#34ace0'
-                },
-                {
-                  gt: 100,
-                  lte: 120,
-                  color: '#fa8231'
-                },
-                {
-                  gt: 120,
-                  lte: 150,
-                  color: '#FD0100'
-                },
-              ],
-              outOfRange: {
-                color: '#AA069F'
-              }
-            },
-            series: {
-              name: '100次心搏均值心率',
-              type: 'line',
-              // smooth:'true',
-              data: obj.data.map(function (item){
-                return item[1];
-              }),
-              // data: data.map(function (item) {
-              //   return item[1];
-              // }),
-              markLine: {
-                silent: true,
-                lineStyle: {
-
-                  color: '#aaa69d',
-                  width: 1
-                },
-                label: {
-                  position: 'start', // 表现内容展示的位置
-                  color: '#8C8C8C'  // 展示内容颜色
-                },
-
-                data: [
-                  {
-                    yAxis: 60
-                  },
-                  {
-                    yAxis: 100
-                  },
-                  {
-                    yAxis: 120
-                  },
-                  {
-                    yAxis: 150
-                  },
-                  {
-                    yAxis: 180
-                  }
-                ]
-              }
-            }
-          })
-        );
-      // });
-
-      if (option && typeof option === 'object') {
-        myChart.setOption(option);
-      }
-      window.addEventListener('resize', myChart.resize);
-    },
-
+    // line3(){
+    //     var obj ={
+    //       "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_10
+    //     }
+    //   ;
+    //
+    //   var dom = document.getElementById('line3');
+    //   var myChart = echarts.init(dom, null, {
+    //     renderer: 'canvas',
+    //     useDirtyRect: false
+    //   });
+    //   var app = {};
+    //   var option;
+    //   // $.get('line2.json', function (data) {
+    //     myChart.setOption(
+    //       (option = {
+    //         title: {
+    //           text: '100次心搏均值心率变化图',
+    //           left: '1%'
+    //         },
+    //         tooltip: {
+    //           trigger: 'axis'
+    //         },
+    //         grid: {
+    //           left: '5%',
+    //           right: '15%',
+    //           bottom: '10%'
+    //         },
+    //         xAxis: {
+    //           //show:false,
+    //           // data: data.map(function (item) {
+    //           //   return item[0];
+    //           // })
+    //           // data:obj.data[0]
+    //         data: obj.data.map(function (item) {
+    //             return item[0];
+    //           })
+    //         },
+    //         yAxis: {
+    //           show:false,
+    //           // scale:true
+    //         },
+    //         // toolbox: {
+    //         //     right: 10,
+    //         //     feature: {
+    //         //         dataZoom: {
+    //         //             yAxisIndex: 'none'
+    //         //         },
+    //         //         restore: {},
+    //         //         saveAsImage: {}
+    //         //     }
+    //         // },
+    //         dataZoom: [
+    //            {
+    //              startValue: 0,
+    //            },
+    //           {
+    //             type: 'inside'
+    //           }
+    //         ],
+    //         visualMap: {
+    //           top: 50,
+    //           right: 10,
+    //           pieces: [
+    //             {
+    //               gt: 0,
+    //               lte: 60,
+    //               color: '#3867d6'
+    //             },
+    //             {
+    //               gt: 60,
+    //               lte: 100,
+    //               color: '#34ace0'
+    //             },
+    //             {
+    //               gt: 100,
+    //               lte: 120,
+    //               color: '#fa8231'
+    //             },
+    //             {
+    //               gt: 120,
+    //               lte: 150,
+    //               color: '#FD0100'
+    //             },
+    //           ],
+    //           outOfRange: {
+    //             color: '#AA069F'
+    //           }
+    //         },
+    //         series: {
+    //           name: '100次心搏均值心率',
+    //           type: 'line',
+    //           // smooth:'true',
+    //           data: obj.data.map(function (item){
+    //             return item[1];
+    //           }),
+    //           // data: data.map(function (item) {
+    //           //   return item[1];
+    //           // }),
+    //           markLine: {
+    //             silent: true,
+    //             lineStyle: {
+    //
+    //               color: '#aaa69d',
+    //               width: 1
+    //             },
+    //             label: {
+    //               position: 'start', // 表现内容展示的位置
+    //               color: '#8C8C8C'  // 展示内容颜色
+    //             },
+    //
+    //             data: [
+    //               {
+    //                 yAxis: 60
+    //               },
+    //               {
+    //                 yAxis: 100
+    //               },
+    //               {
+    //                 yAxis: 120
+    //               },
+    //               {
+    //                 yAxis: 150
+    //               },
+    //               {
+    //                 yAxis: 180
+    //               }
+    //             ]
+    //           }
+    //         }
+    //       })
+    //     );
+    //   // });
+    //
+    //   if (option && typeof option === 'object') {
+    //     myChart.setOption(option);
+    //   }
+    //   window.addEventListener('resize', myChart.resize);
+    // },
 
     line4(){
         var obj = {
@@ -1829,185 +1844,6 @@ export default {
         }
         window.addEventListener('resize', myChart.resize);
     },
-    // line4(){
-    //   var obj ={
-    //       "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime
-    //     }
-    //   ;
-    //
-    //   var dom = document.getElementById('line4');
-    //   var myChart = echarts.init(dom, null, {
-    //     renderer: 'canvas',
-    //     useDirtyRect: false
-    //   });
-    //   var app = {};
-    //   var option;
-    //   var data = obj.data;
-    //   var time = data.map(function (item){
-    //     return item[0];
-    //   })
-    //   // for (var i=0 ;i<time.length;i++){
-    //   //   time.push(time[1]);
-    //   // }
-    //   // $.get('line2.json', function (data) {
-    //   myChart.setOption(
-    //     (option = {
-    //       title: {
-    //         text: '心搏均值心率变化图',
-    //         left: '1%'
-    //       },
-    //       tooltip: {
-    //         trigger: 'axis'
-    //       },
-    //       grid: {
-    //         left: '5%',
-    //         right: '15%',
-    //         bottom: '10%'
-    //       },
-    //       xAxis: {
-    //         show:false,
-    //         // data: data.map(function (item) {
-    //         //   return item[0];
-    //         // })
-    //         // data:obj.data[0]
-    //         data: time
-    //       },
-    //       yAxis: {
-    //         show:false,
-    //         // scale:true
-    //       },
-    //       // toolbox: {
-    //       //     right: 10,
-    //       //     feature: {
-    //       //         dataZoom: {
-    //       //             yAxisIndex: 'none'
-    //       //         },
-    //       //         restore: {},
-    //       //         saveAsImage: {}
-    //       //     }
-    //       // },
-    //       dataZoom: [
-    //         {
-    //           startValue: 0,
-    //         },
-    //         {
-    //           type: 'inside'
-    //         }
-    //       ],
-    //       visualMap: {
-    //         top: 50,
-    //         right: 10,
-    //         pieces: [
-    //           {
-    //             gt: 0,
-    //             lte: 60,
-    //             color: '#3867d6'
-    //           },
-    //           {
-    //             gt: 60,
-    //             lte: 100,
-    //             color: '#34ace0'
-    //           },
-    //           {
-    //             gt: 100,
-    //             lte: 120,
-    //             color: '#fa8231'
-    //           },
-    //           {
-    //             gt: 120,
-    //             lte: 150,
-    //             color: '#FD0100'
-    //           },
-    //         ],
-    //         outOfRange: {
-    //           color: '#AA069F'
-    //         }
-    //       },
-    //       series: {
-    //         name: '心搏均值心率',
-    //         type: 'line',
-    //         // smooth:'true',
-    //         data: obj.data.map(function (item){
-    //           return item[1];
-    //         }),
-    //         // data: data.map(function (item) {
-    //         //   return item[1];
-    //         // }),
-    //         markLine: {
-    //           silent: true,
-    //           symbol:['none','none'],
-    //           lineStyle: {
-    //             color: '#aaa69d',
-    //             width: 1
-    //           },
-    //           label: {
-    //             position: 'start', // 表现内容展示的位置
-    //             color: '#8C8C8C'  // 展示内容颜色
-    //           },
-    //
-    //           data: [
-    //             {
-    //               xAxis: 1,
-    //
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[1]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 10,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[10]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 40,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[40]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 66,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[66]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 66,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[66]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 99,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[99]
-    //               },
-    //             },
-    //           ]
-    //         }
-    //       }
-    //     })
-    //   );
-    //   // });
-    //
-    //   if (option && typeof option === 'object') {
-    //     myChart.setOption(option);
-    //   }
-    //   window.addEventListener('resize', myChart.resize);
-    // },
-
 
     //echarts测试
     drawLine() {
@@ -3167,39 +3003,36 @@ var data = obj
       var obj ={
         "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphLorenz
       }
-         var dom = document.getElementById('scatter');
-    var myChart = echarts.init(dom, null, {
-      renderer: 'canvas',
-      useDirtyRect: false
-    });
-    var app = {};
+      var dom = document.getElementById('scatter');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
 
-    var option;
+      var option;
 
-    option = {
-     title:{
-        text:'Lorenz散点图-全部心搏',
-        left:'1%',
-     },
-    grid: {left: '18%',},
-  xAxis: {},
-  yAxis: {},
-  series: [
-    {
-      symbolSize: 2,
-      data: obj.data,
-      name:"Lorenz-散点图 全部心搏",
-      type: 'scatter'
+      option = {
+       title:{
+          text:'Lorenz散点图-全部心搏',
+          left:'1%',
+       },
+        grid: {left: '18%',},
+        xAxis: {},
+        yAxis: {},
+        series: [{
+          symbolSize: 2,
+          data: obj.data,
+          name:"Lorenz-散点图 全部心搏",
+          type: 'scatter'
+        }]
+      };
 
-    }
-  ]
-};
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
 
-    if (option && typeof option === 'object') {
-      myChart.setOption(option);
-    }
-
-    window.addEventListener('resize', myChart.resize);
+       window.addEventListener('resize', myChart.resize);
      },
 
      drawBar(){
@@ -3326,6 +3159,7 @@ var data = obj
 
     window.addEventListener('resize', myChart.resize);
      },
+
     btnClear(){
       sessionStorage.clear();
     },
