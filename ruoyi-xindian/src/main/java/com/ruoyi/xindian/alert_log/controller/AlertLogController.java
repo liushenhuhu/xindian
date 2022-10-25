@@ -39,8 +39,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/alert_log/alert_log")
-public class AlertLogController extends BaseController
-{
+public class AlertLogController extends BaseController {
     @Autowired
     private IAlertLogService alertLogService;
 
@@ -52,8 +51,7 @@ public class AlertLogController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AlertLog alertLog)
-    {
+    public TableDataInfo list(AlertLog alertLog) {
         List<AlertLog> list = new ArrayList<>();
         if (getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
@@ -72,21 +70,10 @@ public class AlertLogController extends BaseController
     /**
      * 查询预警日志列表
      */
-    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
     @PostMapping("/list1")
-    public TableDataInfo list1(@RequestBody AlertLog alertLog)
-    {
-        List<AlertLog> list = new ArrayList<>();
-        if (getDeptId() == 200) {
-            SysUser sysUser = userService.selectUserById(getUserId());
-            String hospitalName = sysUser.getHospitalName();
-            alertLog.setHospitalName(hospitalName);
-            startPage();
-            list = alertLogService.selectAlertLogList(alertLog);
-        } else {
-            startPage();
-            list = alertLogService.selectAlertLogList(alertLog);
-        }
+    public TableDataInfo list1(@RequestBody AlertLog alertLog) {
+        startPage();
+        List<AlertLog> list = alertLogService.selectAlertLogList(alertLog);
         return getDataTable(list);
     }
 
@@ -97,8 +84,7 @@ public class AlertLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:export')")
     @Log(title = "预警日志", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, AlertLog alertLog)
-    {
+    public void export(HttpServletResponse response, AlertLog alertLog) {
         List<AlertLog> list = new ArrayList<>();
         if (getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
@@ -117,8 +103,7 @@ public class AlertLogController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:query')")
     @GetMapping(value = "/{logId}")
-    public AjaxResult getInfo(@PathVariable("logId") Long logId)
-    {
+    public AjaxResult getInfo(@PathVariable("logId") Long logId) {
         return AjaxResult.success(alertLogService.selectAlertLogByLogId(logId));
     }
 
@@ -128,8 +113,7 @@ public class AlertLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:add')")
     @Log(title = "预警日志", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody AlertLog alertLog)
-    {
+    public AjaxResult add(@RequestBody AlertLog alertLog) {
         return toAjax(alertLogService.insertAlertLog(alertLog));
     }
 
@@ -139,8 +123,7 @@ public class AlertLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:edit')")
     @Log(title = "预警日志", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody AlertLog alertLog)
-    {
+    public AjaxResult edit(@RequestBody AlertLog alertLog) {
         return toAjax(alertLogService.updateAlertLog(alertLog));
     }
 
@@ -150,8 +133,7 @@ public class AlertLogController extends BaseController
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:remove')")
     @Log(title = "预警日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{logIds}")
-    public AjaxResult remove(@PathVariable Long[] logIds)
-    {
+    public AjaxResult remove(@PathVariable Long[] logIds) {
         return toAjax(alertLogService.deleteAlertLogByLogIds(logIds));
     }
 }
