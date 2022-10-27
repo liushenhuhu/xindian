@@ -1,12 +1,12 @@
 <template>
   <div class="wrap" style="background: #8c939d">
-    <div id="pdfDom" style="padding: 10px;width: 800px ;background: #fff" >
+    <div id="pdfDom" style="padding: 10px;width: 800px ;background: #fff">
       <div id="app">
         <div class="page">
           <h1>{{ hospitalName }}</h1>
           <h1>动态心电图报告</h1>
           <div class="main">
-            <div class="time">报告时间：{{froms.reportTime}}</div>
+            <div class="time">报告时间：{{ froms.reportTime }}</div>
             <div class="box1">
 
               <div class="box1-top">
@@ -16,55 +16,55 @@
                 <div class="box1-bottom1">
                   <div class="box1-1">
                     姓名:
-                    <strong>{{froms.patientInfo.name}}</strong>
+                    <strong>{{ froms.patientInfo.name }}</strong>
                   </div>
                   <div class="box1-1">
                     性别:
-                    <strong>{{froms.patientInfo.sex}}</strong>
+                    <strong>{{ froms.patientInfo.sex }}</strong>
                   </div>
                   <div class="box1-1">
                     年龄:
-                    <strong>{{froms.patientInfo.age}}</strong>
+                    <strong>{{ froms.patientInfo.age }}</strong>
                   </div>
                   <div class="box1-1">
                     单号:
-                    <strong>{{froms.patientInfo.no}}</strong>
+                    <strong>{{ froms.patientInfo.no }}</strong>
                   </div>
                 </div>
                 <div class="box1-bottom2">
                   <div class="box1-1">
                     门诊号:
-                    <strong>{{froms.patientInfo.clinicNumber}}</strong>
+                    <strong>{{ froms.patientInfo.clinicNumber }}</strong>
                   </div>
                   <div class="box1-1">
                     住院号:
-                    <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>
                   </div>
                   <div class="box1-1">
                     科室:
-                    <strong>{{froms.patientInfo.department}}</strong>
+                    <strong>{{ froms.patientInfo.department }}</strong>
                   </div>
                   <div class="box1-1">
                     床号:
-                    <strong>{{froms.patientInfo.bedNo}}</strong>
+                    <strong>{{ froms.patientInfo.bedNo }}</strong>
                   </div>
                 </div>
                 <div class="box1-bottom3">
                   <div class="box1-1">
                     ID:
-                    <strong>{{froms.patientInfo.ID}}</strong>
+                    <strong>{{ froms.patientInfo.ID }}</strong>
                   </div>
                   <div class="box1-1">
                     设备编号:
-                    <strong>{{froms.patientInfo.deviceID}}</strong>
+                    <strong>{{ froms.patientInfo.deviceID }}</strong>
                   </div>
                   <div class="box1-1">
                     记录日期:
-                    <strong>{{froms.patientInfo.recordDate}}</strong>
+                    <strong>{{ froms.patientInfo.recordDate }}</strong>
                   </div>
                   <div class="box1-1">
                     记录时长:
-                    <strong>{{froms.patientInfo.recordDuration}}</strong>
+                    <strong>{{ froms.patientInfo.recordDuration }}</strong>
                   </div>
                 </div>
               </div>
@@ -77,33 +77,33 @@
                 <div class="box2-left-bottom">
                   <div class="box2-1">
                     总心搏数:
-                    <strong>{{froms.heartRate.totalHeartRate}}</strong> 次
+                    <strong>{{ froms.heartRate.totalHeartRate }}</strong> 次
                   </div>
                   <div class="box2-1">
                     最慢心率:
-                    <strong>{{froms.heartRate.slowestHeartRate}}</strong> bpm
+                    <strong>{{ froms.heartRate.slowestHeartRate }}</strong> bpm
                   </div>
                   <div class="box2-1">
                     最快心率:
-                    <strong>{{froms.heartRate.fastestHeartRate}}</strong> bpm
+                    <strong>{{ froms.heartRate.fastestHeartRate }}</strong> bpm
                   </div>
                   <div class="box2-1">
                     平均心率:
-                    <strong>{{froms.heartRate.averageHeartRate}}</strong> bpm
+                    <strong>{{ froms.heartRate.averageHeartRate }}</strong> bpm
                   </div>
                 </div>
                 <div class="box2-left-bottom">
                   <div class="box2-1">
                     心率标准差:
-                    <strong>{{froms.heartRate.standardDeviation}}</strong>
+                    <strong>{{ froms.heartRate.standardDeviation }}</strong>
                   </div>
                   <div class="box2-1">
                     最长间期:
-                    <strong>{{froms.heartRate.longestInterval}}</strong> ms
+                    <strong>{{ froms.heartRate.longestInterval }}</strong> ms
                   </div>
                   <div class="box2-1">
                     最短间期:
-                    <strong>{{froms.heartRate.slowestInterval}}</strong> ms
+                    <strong>{{ froms.heartRate.slowestInterval }}</strong> ms
                   </div>
                   <div class="box2-1"></div>
                 </div>
@@ -116,61 +116,61 @@
                   <div class="box2-right-bottom">
                     <div class="box2-1">
                       心动过缓总数:
-                      <strong>{{froms.heartbeat.bradycardiaTotal}}</strong> 次
+                      <strong>{{ froms.heartbeat.bradycardiaTotal }}</strong> 次
                     </div>
                     <div class="box2-1">
                       心动过缓占比:
-                      <strong>{{froms.heartbeat.bradycardiaPercentage}}</strong>
+                      <strong>{{ froms.heartbeat.bradycardiaPercentage }}</strong>
                     </div>
                     <div class="box2-1">
                       心动过缓总持续时间:
-                      <strong>{{froms.heartbeat.bradycardiaTotalDuration}}</strong> s
+                      <strong>{{ froms.heartbeat.bradycardiaTotalDuration }}</strong> s
                     </div>
                     <div class="box2-1">
                       最长心动过缓周期开始时间:
-                      <strong>{{froms.heartbeat.longestBradycardiaStartTime}}</strong>
+                      <strong>{{ froms.heartbeat.longestBradycardiaStartTime }}</strong>
                     </div>
                     <div class="box2-1">
                       最长心动过缓周期结束时间:
-                      <strong>{{froms.heartbeat.longestBradycardiaEndTime}}</strong>
+                      <strong>{{ froms.heartbeat.longestBradycardiaEndTime }}</strong>
                     </div>
                     <div class="box2-1">
                       最长心动过缓周期持续时间:
-                      <strong>{{froms.heartbeat.longestBradycardiaCycleDuration}}</strong> s
+                      <strong>{{ froms.heartbeat.longestBradycardiaCycleDuration }}</strong> s
                     </div>
                     <div class="box2-1">
                       最长心动过缓心搏数:
-                      <strong>{{froms.heartbeat.longestBradycardia}}</strong> 次
+                      <strong>{{ froms.heartbeat.longestBradycardia }}</strong> 次
                     </div>
                   </div>
                   <div class="box2-right-bottom">
                     <div class="box2-1">
                       心动过速总数:
-                      <strong>{{froms.heartbeat.tachycardiaTotal}}</strong> 次
+                      <strong>{{ froms.heartbeat.tachycardiaTotal }}</strong> 次
                     </div>
                     <div class="box2-1">
                       心动过速占比:
-                      <strong>{{froms.heartbeat.tachycardiaPercentage}}</strong>
+                      <strong>{{ froms.heartbeat.tachycardiaPercentage }}</strong>
                     </div>
                     <div class="box2-1">
                       心动过速总持续时间:
-                      <strong>{{froms.heartbeat.tachycardiaTotalDuration}}</strong> s
+                      <strong>{{ froms.heartbeat.tachycardiaTotalDuration }}</strong> s
                     </div>
                     <div class="box2-1">
                       最长心动过速周期开始时间:
-                      <strong>{{froms.heartbeat.longestTachycardiaStartTime}}</strong>
+                      <strong>{{ froms.heartbeat.longestTachycardiaStartTime }}</strong>
                     </div>
                     <div class="box2-1">
                       最长心动过速周期结束时间:
-                      <strong>{{froms.heartbeat.longestTachycardiaEndTime}}</strong>
+                      <strong>{{ froms.heartbeat.longestTachycardiaEndTime }}</strong>
                     </div>
                     <div class="box2-1">
                       最长心动过速周期持续时间:
-                      <strong>{{froms.heartbeat.longestTachycardiaCycleDuration}}</strong> s
+                      <strong>{{ froms.heartbeat.longestTachycardiaCycleDuration }}</strong> s
                     </div>
                     <div class="box2-1">
                       最长心动过速心搏数:
-                      <strong>{{froms.heartbeat.longestTachycardia}}</strong> 次
+                      <strong>{{ froms.heartbeat.longestTachycardia }}</strong> 次
                     </div>
                   </div>
                 </div>
@@ -179,135 +179,133 @@
             </div>
             <div class="box3">
               <span>停搏(>2.0秒)</span>&emsp;&emsp;总计&nbsp
-              <strong>{{froms.asystole.total}}</strong>;&nbsp;次，最长一次：&nbsp;&nbsp;
-              <strong>{{froms.asystole.longest}}</strong>&nbsp;&nbsp;秒，发生于：&nbsp;
-              <strong>{{froms.asystole.longestTime}}&nbsp;</strong>
+              <strong>{{ froms.asystole.total }}</strong>;&nbsp;次，最长一次：&nbsp;&nbsp;
+              <strong>{{ froms.asystole.longest }}</strong>&nbsp;&nbsp;秒，发生于：&nbsp;
+              <strong>{{ froms.asystole.longestTime }}&nbsp;</strong>
             </div>
             <div class="box4 clearfix">
               <div class="box4-left">
                 <div class="box4-top">
-                  <h2>室性异位心律</h2>
+                  <h2>室性异位心率</h2>
                 </div>
                 <div class="box4-left-bottom">
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       总数:
-                      <strong>{{froms.ventricularEctopicHeartRate.total}}</strong> 次
+                      <strong>{{ froms.ventricularEctopicHeartRate.total }}</strong> 次
                     </div>
                     <div class="box4-1 flex-box-child">
                       室性百分比:
-                      <strong>{{froms.ventricularEctopicHeartRate.ventricularPercentage}}</strong>
+                      <strong>{{ froms.ventricularEctopicHeartRate.ventricularPercentage }}</strong>
                     </div>
                   </div>
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       单发:
-                      <strong>{{froms.ventricularEctopicHeartRate.singleShot}}</strong> 次
+                      <strong>{{ froms.ventricularEctopicHeartRate.singleShot }}</strong> 次
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/小时:
-                      <strong>{{froms.ventricularEctopicHeartRate.averageTimeHour}}</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       成对:
-                      <strong>{{froms.ventricularEctopicHeartRate.pair}}</strong> 次
+                      <strong>{{ froms.ventricularEctopicHeartRate.pair }}</strong> 次
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/1000:
-                      <strong>{{froms.ventricularEctopicHeartRate.averageTime1000}}</strong>
+                      <strong></strong>
                     </div>
                   </div>
 
                   <div class="box4-1">
                     短阵性室速:
-                    <strong>{{froms.ventricularEctopicHeartRate.burstVT}}</strong> 阵
+                    <strong>{{ froms.ventricularEctopicHeartRate.burstVT }}</strong> 阵
                   </div>
                   <div class="box4-1">
                     RONT:
-                    <strong>{{froms.ventricularEctopicHeartRate.RONT}}</strong> 次
+                    <strong>{{ froms.ventricularEctopicHeartRate.RONT }}</strong> 次
                   </div>
                   <div class="box4-1">
                     二联律:
-                    <strong>{{froms.ventricularEctopicHeartRate.doubletLaw}}</strong> 阵
+                    <strong>{{ froms.ventricularEctopicHeartRate.doubletLaw }}</strong> 阵
                   </div>
                   <div class="box4-1">
                     三联律:
-                    <strong>{{froms.ventricularEctopicHeartRate.tripleLaw}}</strong> 阵
+                    <strong>{{ froms.ventricularEctopicHeartRate.tripleLaw }}</strong> 阵
                   </div>
                   <div class="box4-1">
                     室性逸搏:
-                    <strong>{{froms.ventricularEctopicHeartRate.ventricularEscape}}</strong> 次
+                    <strong>{{ froms.ventricularEctopicHeartRate.ventricularEscape }}</strong> 次
                   </div>
                   <div class="box4-1">
                     最快室速:
-                    <strong>{{froms.ventricularEctopicHeartRate.fastestVT}}</strong> bpm,&emsp;发生于
-                    <strong>{{froms.ventricularEctopicHeartRate.fastestVTTime}}</strong>
+                    <strong>{{ froms.ventricularEctopicHeartRate.fastestVT }}</strong> bpm,&emsp;发生于
                   </div>
                   <div class="box4-1">
                     最长室速:
-                    <strong>{{froms.ventricularEctopicHeartRate.longestVT}}</strong> 次心搏,发生于
-                    <strong>{{froms.ventricularEctopicHeartRate.longestVTTime}}</strong>
+                    <strong>{{ froms.ventricularEctopicHeartRate.longestVT }}</strong> 次心搏,发生于
                   </div>
                 </div>
               </div>
               <div class="box4-right">
                 <div class="box4-top">
-                  <h2>室上性异位心律</h2>
+                  <h2>室上性异位心率</h2>
                 </div>
                 <div class="box4-right-bottom">
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       总数:
-                      <strong>{{froms.supraventricularEctopicHeartRate.total}}</strong> 次
+                      <strong>{{ froms.supraventricularEctopicHeartRate.total }}</strong> 次
                     </div>
                     <div class="box4-1 flex-box-child">
                       室上性百分比:
-                      <strong>{{froms.supraventricularEctopicHeartRate.supraventricularPercentage}}</strong>
+                      <strong>{{ froms.supraventricularEctopicHeartRate.supraventricularPercentage }}</strong>
                     </div>
                   </div>
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       单发:
-                      <strong>{{froms.supraventricularEctopicHeartRate.singleShot}}</strong> 次
+                      <strong>{{ froms.supraventricularEctopicHeartRate.singleShot }}</strong> 次
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/小时:
-                      <strong>{{froms.supraventricularEctopicHeartRate.averageTimeHour}}</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       成对:
-                      <strong>{{froms.supraventricularEctopicHeartRate.pair}}</strong> 次
+                      <strong>{{ froms.supraventricularEctopicHeartRate.pair }}</strong> 次
                     </div>
                     <div class="box4-1 flex-box-child">
                       平均/1000:
-                      <strong>{{froms.supraventricularEctopicHeartRate.averageTime1000}}</strong>
+                      <strong></strong>
                     </div>
                   </div>
                   <div class="box4-1">
                     短阵性室上速:
-                    <strong>{{froms.supraventricularEctopicHeartRate.paroxysmalSupraventricularTachycardia}}</strong> 阵
+                    <strong>{{ froms.supraventricularEctopicHeartRate.paroxysmalSupraventricularTachycardia }}</strong>
+                    阵
                   </div>
                   <div class="box4-1">
                     二联律:
-                    <strong>{{froms.supraventricularEctopicHeartRate.doubletLaw}}</strong> 阵
+                    <strong>{{ froms.supraventricularEctopicHeartRate.doubletLaw }}</strong> 阵
                   </div>
                   <div class="box4-1">
                     三联律:
-                    <strong>{{froms.supraventricularEctopicHeartRate.tripleLaw}}</strong> 阵
+                    <strong>{{ froms.supraventricularEctopicHeartRate.tripleLaw }}</strong> 阵
                   </div>
                   <div class="box4-1">
                     最快室上速:
-                    <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity}}</strong> bpm,&emsp;发生于
-                    <strong>{{froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocityTime}}</strong>
+                    <strong>{{ froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity }}</strong> bpm,&emsp;发生于
                   </div>
                   <div class="box4-1">
                     最长室上速:
-                    <strong>{{froms.supraventricularEctopicHeartRate.longestSupraventricularVelocity}}</strong> 次心搏,发生于
-                    <strong>{{froms.supraventricularEctopicHeartRate.longestSupraventricularVelocityTime}}</strong>
+                    <strong>{{ froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity }}</strong>
+                    次心搏,发生于
                   </div>
                 </div>
               </div>
@@ -317,27 +315,27 @@
               <div>
                 <span>
                   SDNN:
-                  <strong>{{froms.heartRateVariabilityAnalysis.SDNN}}</strong>ms
+                  <strong>{{ froms.heartRateVariabilityAnalysis.SDNN }}</strong>ms
                 </span>
                 <span>
                   rMSSD:
-                  <strong>{{froms.heartRateVariabilityAnalysis.rMSSD}}</strong>ms
+                  <strong>{{ froms.heartRateVariabilityAnalysis.rMSSD }}</strong>ms
                 </span>
                 <span>
                   NN20:
-                  <strong>{{froms.heartRateVariabilityAnalysis.NN20}}</strong>ms
+                  <strong>{{ froms.heartRateVariabilityAnalysis.NN20 }}</strong>ms
                 </span>
                 <span>
                   PNN20:
-                  <strong>{{froms.heartRateVariabilityAnalysis.PNN20}}</strong>%
+                  <strong>{{ froms.heartRateVariabilityAnalysis.PNN20 }}</strong>%
                 </span>
                 <span>
                   NN50:
-                  <strong>{{froms.heartRateVariabilityAnalysis.NN50}}</strong>ms
+                  <strong>{{ froms.heartRateVariabilityAnalysis.NN50 }}</strong>ms
                 </span>
                 <span>
                   PNN50:
-                  <strong>{{froms.heartRateVariabilityAnalysis.PNN50}}</strong>%
+                  <strong>{{ froms.heartRateVariabilityAnalysis.PNN50 }}</strong>%
                 </span>
               </div>
 
@@ -347,31 +345,31 @@
                 <h2>房颤分析</h2>
                 <span style="margin-left: 7vw;">
                   总数:
-                  <strong>{{froms.atrialFibrillationAnalysis.total}}</strong> 次
+                  <strong>{{ froms.atrialFibrillationAnalysis.total }}</strong> 次
                 </span>
               </div>
               <div class="box6-bottom">
                 <div class="box6-1">
                   <div>
                     发生阵数:
-                    <strong>{{froms.atrialFibrillationAnalysis.number}}</strong> 阵
+                    <strong>{{ froms.atrialFibrillationAnalysis.number }}</strong> 阵
                   </div>
                   <div>
                     大于
                     <strong>1500ms</strong> 的心搏有
-                    <strong>{{froms.atrialFibrillationAnalysis.num_1500}}</strong> 次
+                    <strong>{{ froms.atrialFibrillationAnalysis.num_1500 }}</strong> 次
                   </div>
                   <div></div>
                 </div>
                 <div class="box6-1">
                   <div>
                     持续时间:
-                    <strong>{{froms.atrialFibrillationAnalysis.duration}}</strong>
+                    <strong>{{ froms.atrialFibrillationAnalysis.duration }}</strong>
                   </div>
                   <div>
                     大于
                     <strong>2000ms</strong> 的心搏有
-                    <strong>{{froms.atrialFibrillationAnalysis.num_2000}}</strong> 次
+                    <strong>{{ froms.atrialFibrillationAnalysis.num_2000 }}</strong> 次
                   </div>
                   <div></div>
                 </div>
@@ -383,47 +381,47 @@
                 <h2>起搏分析</h2>
                 <span>
                   总数:
-                  <strong>{{ froms.pacingAnalysis.total}}</strong> 次
+                  <strong>{{ froms.pacingAnalysis.total }}</strong> 次
                 </span>
                 <span>
                   百分比:
-                  <strong>{{ froms.pacingAnalysis.pacingAnalysisPercentage}}</strong> %
+                  <strong>{{ froms.pacingAnalysis.pacingAnalysisPercentage }}</strong> %
                 </span>
               </div>
               <div class="box7-1">
                 <div>
                   心房起搏数:
-                  <strong>{{ froms.pacingAnalysis.atrialPace}}</strong>
+                  <strong>{{ froms.pacingAnalysis.atrialPace }}</strong>
                 </div>
                 <div>
                   百分比:
-                  <strong>{{ froms.pacingAnalysis.atrialPacePercentage}}</strong> %
+                  <strong>{{ froms.pacingAnalysis.atrialPacePercentage }}</strong> %
                 </div>
                 <div>
                   双腔起搏:
-                  <strong>{{ froms.pacingAnalysis.dual_chamberPacing}}</strong>
+                  <strong>{{ froms.pacingAnalysis.dual_chamberPacing }}</strong>
                 </div>
                 <div>
                   百分比:
-                  <strong>{{ froms.pacingAnalysis.dual_chamberPacingPercentage}}</strong> %
+                  <strong>{{ froms.pacingAnalysis.dual_chamberPacingPercentage }}</strong> %
                 </div>
               </div>
               <div class="box7-1">
                 <div>
                   心室起搏数:
-                  <strong>{{ froms.pacingAnalysis.ventricularPace}}</strong>
+                  <strong>{{ froms.pacingAnalysis.ventricularPace }}</strong>
                 </div>
                 <div>
                   百分比:
-                  <strong>{{ froms.pacingAnalysis.ventricularPacePercentage}}</strong> %
+                  <strong>{{ froms.pacingAnalysis.ventricularPacePercentage }}</strong> %
                 </div>
                 <div>
                   错误起搏:
-                  <strong>{{ froms.pacingAnalysis.wrongPacing}}</strong>
+                  <strong>{{ froms.pacingAnalysis.wrongPacing }}</strong>
                 </div>
                 <div>
                   百分比:
-                  <strong>{{ froms.pacingAnalysis.wrongPacingPercentage}}</strong> %
+                  <strong>{{ froms.pacingAnalysis.wrongPacingPercentage }}</strong> %
                 </div>
               </div>
             </div>
@@ -431,16 +429,16 @@
               <h2>结论:</h2>
               <div class="box8-1">
                 一丶总心搏
-                <strong>{{froms.heartRate.totalHeartRate}}</strong>次，
+                <strong>{{ froms.heartRate.totalHeartRate }}</strong>次，
                 平均心率
-                <strong>{{froms.heartRate.averageHeartRate}}</strong>bpm，
+                <strong>{{ froms.heartRate.averageHeartRate }}</strong>bpm，
                 最快心率
-                <strong>{{froms.heartRate.fastestHeartRate}}</strong>pm（
-  <!--              <strong>{{froms.heartRate.fastestTime}}</strong>-->
+                <strong>{{ froms.heartRate.fastestHeartRate }}</strong>pm（
+                <!--              <strong>{{froms.heartRate.fastestTime}}</strong>-->
                 ），
                 最慢心率
-                <strong>{{froms.heartRate.slowestHeartRate}}</strong>bpm（
-  <!--              <strong>{{froms.heartRate.slowestTime}}</strong>-->
+                <strong>{{ froms.heartRate.slowestHeartRate }}</strong>bpm（
+                <!--              <strong>{{froms.heartRate.slowestTime}}</strong>-->
                 ）；
               </div>
               <div class="box8-1">HRV:SD>50ms</div>
@@ -451,17 +449,17 @@
                 v-model="froms.textarea.text1"
               >
               </textarea>
-<!--              <div class="box8-1">1.窦性心律 心率动态变化正常</div>-->
-<!--              <div class="box8-1">2.最快心率156，仍为窦性</div>-->
-<!--              <div-->
-<!--                class="box8-1"-->
-<!--              >3.ST:ll、II、 avF、V5、V6导联于: 12:30-13:30,18:27-18:38,8:10-9:05分 (心率较快时)出现水平型压低0.10mv，最大压低0.20mv伴多数导联T波倒置，请结合临床</div>-->
-<!--              <div class="box8-1">4.心率变异性:正常</div>-->
-<!--              <div class="box8-1">5.建议治疗后复查</div>-->
+              <!--              <div class="box8-1">1.窦性心律 心率动态变化正常</div>-->
+              <!--              <div class="box8-1">2.最快心率156，仍为窦性</div>-->
+              <!--              <div-->
+              <!--                class="box8-1"-->
+              <!--              >3.ST:ll、II、 avF、V5、V6导联于: 12:30-13:30,18:27-18:38,8:10-9:05分 (心率较快时)出现水平型压低0.10mv，最大压低0.20mv伴多数导联T波倒置，请结合临床</div>-->
+              <!--              <div class="box8-1">4.心率变异性:正常</div>-->
+              <!--              <div class="box8-1">5.建议治疗后复查</div>-->
               <div class="bottom">
                 报告者:<input class="box8-2" v-model="doctorName"></input>
                 日期:<input class="box8-2" v-if="diagnosisData!=null" v-model="diagnosisData"></input>
-                    <input class="box8-2" v-else v-model="dataTime"></input>
+                <input class="box8-2" v-else v-model="dataTime"></input>
 
               </div>
             </div>
@@ -477,36 +475,36 @@
                 <div class="box9-1">
                   <div class="box9-2">
                     姓名:
-                    <strong>{{froms.patientInfo.name}}</strong>
+                    <strong>{{ froms.patientInfo.name }}</strong>
                   </div>
                   <div class="box9-2">
                     性别:
-                    <strong>{{froms.patientInfo.sex}}</strong>
+                    <strong>{{ froms.patientInfo.sex }}</strong>
                   </div>
                 </div>
                 <div class="box9-1">
                   <div class="box9-2">
                     年龄:
-                    <strong>{{froms.patientInfo.age}}</strong>
+                    <strong>{{ froms.patientInfo.age }}</strong>
                   </div>
                   <div class="box9-2">
                     单号:
-                    <strong>{{froms.patientInfo.no}}</strong>
+                    <strong>{{ froms.patientInfo.no }}</strong>
                   </div>
                 </div>
                 <div class="box9-1">
                   <div class="box9-2">
                     住院号:
-                    <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>
                   </div>
                   <div class="box9-2">
                     科室:
-                    <strong>{{froms.patientInfo.department}}</strong>
+                    <strong>{{ froms.patientInfo.department }}</strong>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="box10" id="myChart" >图形数据</div>
+            <div class="box10" id="myChart">图形数据</div>
             <div class="box11 clearfix">
               <el-table
                 :data="tableData"
@@ -519,14 +517,14 @@
                   width="48">
                 </el-table-column>
                 <el-table-column
-                   prop="heartBeatNumber"
-                   label="心搏数"
-                   width="48">
+                  prop="heartBeatNumber"
+                  label="心搏数"
+                  width="48">
                 </el-table-column>
 
                 <el-table-column
                   label="心律(bpm)"
-                 >
+                >
                   <el-table-column
                     prop="heartRate.fastest"
                     label="最高"
@@ -556,20 +554,20 @@
                     width="40">
                   </el-table-column>
                   <el-table-column
-                  prop="ventricularEctopic.singleShot"
-                  label="单发"
-                  width="40">
-                </el-table-column>
+                    prop="ventricularEctopic.singleShot"
+                    label="单发"
+                    width="40">
+                  </el-table-column>
                   <el-table-column
-                  prop="ventricularEctopic.pair"
-                  label="成对"
-                  width="40">
-                </el-table-column>
+                    prop="ventricularEctopic.pair"
+                    label="成对"
+                    width="40">
+                  </el-table-column>
                   <el-table-column
-                  prop="ventricularEctopic.VT"
-                  label="室速"
-                  width="40">
-                </el-table-column>
+                    prop="ventricularEctopic.VT"
+                    label="室速"
+                    width="40">
+                  </el-table-column>
                   <el-table-column
                     prop="ventricularEctopic.escape"
                     label="逸搏"
@@ -610,37 +608,37 @@
                   width="38">
                 </el-table-column>
               </el-table>
-  <!--            <div class="box11-1">-->
-  <!--              <span>时间</span>-->
-  <!--            </div>-->
-  <!--            <div class="box11-2">-->
-  <!--              <span>心搏数</span>-->
-  <!--            </div>-->
-  <!--            <div class="box11-3">-->
-  <!--              <span>心率</span>-->
-  <!--              <div class="box11-3-1">-->
-  <!--                <span>最高</span>-->
-  <!--                <span>平均</span>-->
-  <!--                <span>最低</span>-->
-  <!--              </div>-->
-  <!--            </div>-->
-  <!--            <div class="box11-4">-->
-  <!--              <span>室性异位</span>-->
+              <!--            <div class="box11-1">-->
+              <!--              <span>时间</span>-->
+              <!--            </div>-->
+              <!--            <div class="box11-2">-->
+              <!--              <span>心搏数</span>-->
+              <!--            </div>-->
+              <!--            <div class="box11-3">-->
+              <!--              <span>心率</span>-->
+              <!--              <div class="box11-3-1">-->
+              <!--                <span>最高</span>-->
+              <!--                <span>平均</span>-->
+              <!--                <span>最低</span>-->
+              <!--              </div>-->
+              <!--            </div>-->
+              <!--            <div class="box11-4">-->
+              <!--              <span>室性异位</span>-->
 
-  <!--              </div>-->
-  <!--            </div>-->
-  <!--            <div class="box11-5">-->
-  <!--              <span>室上性异位</span>-->
-  <!--              <div class="box11-5-1">-->
-  <!--                <span>总数</span>-->
-  <!--                <span>%</span>-->
-  <!--                <span>单发</span>-->
-  <!--                <span>成对室上速</span>-->
-  <!--              </div>-->
-  <!--            </div>-->
-  <!--            <div class="box11-6">-->
-  <!--              <span>停搏</span>-->
-  <!--            </div>-->
+              <!--              </div>-->
+              <!--            </div>-->
+              <!--            <div class="box11-5">-->
+              <!--              <span>室上性异位</span>-->
+              <!--              <div class="box11-5-1">-->
+              <!--                <span>总数</span>-->
+              <!--                <span>%</span>-->
+              <!--                <span>单发</span>-->
+              <!--                <span>成对室上速</span>-->
+              <!--              </div>-->
+              <!--            </div>-->
+              <!--            <div class="box11-6">-->
+              <!--              <span>停搏</span>-->
+              <!--            </div>-->
             </div>
             <div class="box12" id="container" style="height: 300px"></div>
             <div class="box12" id="line1" style="height: 300px"></div>
@@ -657,31 +655,31 @@
                 <div class="box9-1">
                   <div class="box9-2">
                     姓名:
-                    <strong>{{froms.patientInfo.name}}</strong>
+                    <strong>{{ froms.patientInfo.name }}</strong>
                   </div>
                   <div class="box9-2">
                     性别:
-                    <strong>{{froms.patientInfo.sex}}</strong>
+                    <strong>{{ froms.patientInfo.sex }}</strong>
                   </div>
                 </div>
                 <div class="box9-1">
                   <div class="box9-2">
                     年龄:
-                    <strong>{{froms.patientInfo.age}}</strong>
+                    <strong>{{ froms.patientInfo.age }}</strong>
                   </div>
                   <div class="box9-2">
                     单号:
-                    <strong>{{froms.patientInfo.no}}</strong>
+                    <strong>{{ froms.patientInfo.no }}</strong>
                   </div>
                 </div>
                 <div class="box9-1">
                   <div class="box9-2">
                     住院号:
-                    <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>
                   </div>
                   <div class="box9-2">
                     科室:
-                    <strong>{{froms.patientInfo.department}}</strong>
+                    <strong>{{ froms.patientInfo.department }}</strong>
                   </div>
                 </div>
               </div>
@@ -689,10 +687,10 @@
             <div class="box12" id="line2" style="height: 300px"></div>
             <div class="box12" id="line3" style="height: 300px"></div>
             <div class="box12" id="line4" style="height: 300px"></div>
-           </div>
+          </div>
         </div>
         <div class="page">
-           <div class="main">
+          <div class="main">
             <div class="box9 clearfix">
               <div class="box9-top">
                 <h2>概要数据统计表</h2>
@@ -701,59 +699,71 @@
                 <div class="box9-1">
                   <div class="box9-2">
                     姓名:
-                    <strong>{{froms.patientInfo.name}}</strong>
+                    <strong>{{ froms.patientInfo.name }}</strong>
                   </div>
                   <div class="box9-2">
                     性别:
-                    <strong>{{froms.patientInfo.sex}}</strong>
+                    <strong>{{ froms.patientInfo.sex }}</strong>
                   </div>
                 </div>
                 <div class="box9-1">
                   <div class="box9-2">
                     年龄:
-                    <strong>{{froms.patientInfo.age}}</strong>
+                    <strong>{{ froms.patientInfo.age }}</strong>
                   </div>
                   <div class="box9-2">
                     单号:
-                    <strong>{{froms.patientInfo.no}}</strong>
+                    <strong>{{ froms.patientInfo.no }}</strong>
                   </div>
                 </div>
                 <div class="box9-1">
                   <div class="box9-2">
                     住院号:
-                    <strong>{{froms.patientInfo.hospitalNumber}}</strong>
+                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>
                   </div>
                   <div class="box9-2">
                     科室:
-                    <strong>{{froms.patientInfo.department}}</strong>
+                    <strong>{{ froms.patientInfo.department }}</strong>
                   </div>
                 </div>
               </div>
             </div>
             <div class="box13 clearfix">
-              <div class="box13-left"  >
+              <div class="box13-left">
                 <div id="scatter" style="width:98% ;height:98%;float:right"></div>
               </div>
-              <div class="box13-right" >
+              <div class="box13-right">
                 <div id="bar" style="width:98% ;height:98%"></div>
               </div>
             </div>
             <div class="box13 clearfix">
-              <div class="box13-left"  >
+              <div class="box13-left">
                 <div id="bar1" style="width:98% ;height:98%;float:right"></div>
               </div>
               <div class="box13-right">
                 <div id="bar2" style="width:98% ;height:98%"></div>
               </div>
             </div>
-           </div>
+          </div>
         </div>
       </div>
     </div>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 7% ;margin-bottom: 15px" @click="btnClear">清除所有缓并刷新</el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClearSelf">清除本页缓存并刷新</el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">保存诊断结果</el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 7% ;margin-bottom: 15px" @click="btnClear">
+      清除所有缓并刷新
+    </el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px"
+               @click="btnClearSelf">清除本页缓存并刷新
+    </el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClick">
+      导出PDF
+    </el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">
+      保存诊断结果
+    </el-button>
+
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="upload_pdf">
+      上传到服务器
+    </el-button>
   </div>
 
 </template>
@@ -764,120 +774,115 @@ import html2Canvas from "html2canvas";
 import JsPDF from "jspdf";
 import echarts from 'echarts'
 import $ from 'jquery';
-import { Loading } from 'element-ui';
+import {Loading} from 'element-ui';
 import {addReport, getReportByPId, listReport, updateReport} from "@/api/report/report";
+import {pdfDownload, pdfDownload2} from "../../api/pdf/pdf";
 
 export default {
   name: "ExportPDF",
   data() {
     return {
-      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名+"心电报告",
+      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.姓名 + "心电报告",
       hospitalName: this.$route.query.hospitalName,
-      pId:null,
-      _th:null,
-      ecg_type:null,
-      dataTime:"",
+      pId: null,
+      _th: null,
+      ecg_type: null,
+      dataTime: "",
       diagnosisData: null,
-      doctorName:"",
+      doctorName: "",
       froms: {
         textarea: {
-          text1:"1.",
+          text1: "1.",
 
         },
-        reportTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.报告时间,
+        reportTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.报告时间,
         patientInfo: {
-          name:this.$route.query.patientName,
+          name: this.$route.query.patientName,
           //name: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.姓名,
-          sex: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.性别,
-          age: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.年龄,
-          no: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.门诊号,
+          sex: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.性别,
+          age: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.年龄,
+          no: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.门诊号,
           //门诊号
-          clinicNumber: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.门诊号,
+          clinicNumber: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.门诊号,
           //住院号
-          hospitalNumber: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.住院号,
+          hospitalNumber: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.住院号,
           //科室
-          department: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.科室,
+          department: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.科室,
           //床号
-          bedNo: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.床号,
-          ID:this.$route.query.pId,
-          deviceID:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.设备编号,
-          recordDate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.上传时间,
-          recordDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.记录时长
+          bedNo: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.床号,
+          ID: this.$route.query.pId,
+          deviceID: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.设备编号,
+          recordDate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.上传时间,
+          recordDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.记录时长
         },
         heartRate: {
-          totalHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.总心搏数,
-          slowestHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最小心率,
-         // slowestTime: "05:11:44",
-          fastestHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最大心率,
+          totalHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.总心搏数,
+          slowestHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最小心率,
+          // slowestTime: "05:11:44",
+          fastestHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最大心率,
           //fastestTime: "13:03:16",
-          averageHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.平均心率,
-         //标准差
-          standardDeviation:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心率标准差,
+          averageHeartRate: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.平均心率,
+          //标准差
+          standardDeviation: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.心率标准差,
           //最长间期
-          longestInterval:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长间期,
+          longestInterval: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长间期,
           //最短间期
-          slowestInterval:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最短间期
+          slowestInterval: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最短间期
 
         },
         //停搏
         asystole: {
-          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.停搏总计,
-          longest: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长一次,
-          longestTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.发生于
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.停搏总计,
+          longest: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长一次,
+          longestTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.发生于
         },
         //心动过缓/心动过速
         heartbeat: {
-          bradycardiaTotal:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓总数,
-          bradycardiaPercentage:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓占比,
+          bradycardiaTotal: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.心动过缓总数,
+          bradycardiaPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.心动过缓占比,
           //心动过缓总持续时间
-          bradycardiaTotalDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过缓总持续时间,
-          longestBradycardiaStartTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期开始时间,
-          longestBradycardiaEndTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期结束时间,
-          longestBradycardiaCycleDuration:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓周期持续时间,
-          longestBradycardia:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过缓心搏数,
+          bradycardiaTotalDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.心动过缓总持续时间,
+          longestBradycardiaStartTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长心动过缓周期开始时间,
+          longestBradycardiaEndTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长心动过缓周期结束时间,
+          longestBradycardiaCycleDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长心动过缓周期持续时间,
+          longestBradycardia: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长心动过缓心搏数,
 
-          tachycardiaTotal:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过速总数,
-          tachycardiaPercentage:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过速占比,
+          tachycardiaTotal: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.心动过速总数,
+          tachycardiaPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.心动过速占比,
           //心动过速总持续时间
-          tachycardiaTotalDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.心动过速总持续时间,
-          longestTachycardiaStartTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期开始时间,
-          longestTachycardiaEndTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期结束时间,
-          longestTachycardiaCycleDuration:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速周期持续时间,
-          longestTachycardia:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.最长心动过速心搏数,
+          tachycardiaTotalDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.心动过速总持续时间,
+          longestTachycardiaStartTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长心动过速周期开始时间,
+          longestTachycardiaEndTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长心动过速周期结束时间,
+          longestTachycardiaCycleDuration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长心动过速周期持续时间,
+          longestTachycardia: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.最长心动过速心搏数,
 
         },
 
         //室性异位心率
         ventricularEctopicHeartRate: {
           //总数
-          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律总数,
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律总数,
           //单发
-          singleShot: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律单发,
+          singleShot: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律单发,
           //成对
-          pair: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律成对,
+          pair: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律成对,
           //短阵性室速
-          burstVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律短振性室速,
-          RONT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律RONT,
+          burstVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律短振性室速,
+          RONT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律RONT,
           //二联律
-          doubletLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律二联律,
+          doubletLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律二联律,
           //三联律
-          tripleLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律三联率,
+          tripleLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律三联率,
           //室性逸搏
-          ventricularEscape: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性逸搏,
+          ventricularEscape: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律室性逸搏,
           //最快室速
-          fastestVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最快室速,
-          //最快室速发生于
-          fastestVTTime:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最快室速发生于,
+          fastestVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律最快室速,
           //最长室速
-          longestVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最长室速,
-          //最长室速发生于
-          longestVTTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律最长室速发生于,
+          longestVT: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律最长室速,
           //室性百分比
-          ventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律室性百分比,
+          ventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室性异位心律室性百分比
           //平均/小时
-          averageTimeHour: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律平均小时,
           //平均/1000
-          averageTime1000: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室性异位心律平均1000,
         },
         //室上性异位心率
 
@@ -888,94 +893,88 @@ export default {
         // '室上性异位心律平均/1000': None,
         supraventricularEctopicHeartRate: {
           //总数
-          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律总数,
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律总数,
           //单发
-          singleShot: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律单发,
+          singleShot: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律单发,
           //成对
-          pair: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律成对,
+          pair: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律成对,
           //短阵性室上速
-          paroxysmalSupraventricularTachycardia: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律短振性室上速,
+          paroxysmalSupraventricularTachycardia: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律短振性室上速,
           //二联律
-          doubletLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律二联律,
+          doubletLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律二联律,
           //三联律
-          tripleLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律三联率,
+          tripleLaw: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律三联率,
           //最快室上速
-          fastestSupraventricularVelocity: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最快室上速,
-          // 室上性异位心律最快室上速发生于
-          fastestSupraventricularVelocityTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最快室上速发生于,
+          fastestSupraventricularVelocity: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律最快室上速,
           //最长室上速
-          longestSupraventricularVelocity: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最长室上速,
-          // 室上性异位心律最长室上速发生于
-          longestSupraventricularVelocityTime: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律最长室上速发生于,
+          longestSupraventricularVelocity: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律最长室上速,
           //室上性百分比
-          supraventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律室上性百分比,
-          // 室上性异位心律平均/小时
-          averageTimeHour: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律平均小时,
-          // 室上性异位心律平均/1000
-          averageTime1000: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.室上性异位心律平均1000,
+          supraventricularPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.室上性异位心律室上性百分比
+          //平均/小时
+          //平均/1000
         },
         //心率变异性分析
         heartRateVariabilityAnalysis: {
-          SDNN: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.sdnn,
-          NN20: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.nn20,
-          PNN20: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.pnn20,
-          NN50: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.nn50,
-          rMSSD: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.rmssd,
-          PNN50: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.pnn50
+          SDNN: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.sdnn,
+          NN20: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.nn20,
+          PNN20: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.pnn20,
+          NN50: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.nn50,
+          rMSSD: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.rmssd,
+          PNN50: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.pnn50
         },
         //房颤分析
         atrialFibrillationAnalysis: {
           //总数
-          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤总数,
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.房颤总数,
           //发生阵数
-          number: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤发生阵数,
+          number: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.房颤发生阵数,
           //大于1500
-          num_1500: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤大于1500ms,
+          num_1500: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.房颤大于1500ms,
           //大于2000
-          num_2000: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤大于2000ms,
+          num_2000: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.房颤大于2000ms,
           //持续时间
-          duration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.房颤持续时间
+          duration: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.房颤持续时间
         },
         //起搏分析
         pacingAnalysis: {
           //起搏总数
-          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏总数,
+          total: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏总数,
           //起搏占百分比
-          pacingAnalysisPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏总数百分比,
+          pacingAnalysisPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏总数百分比,
           //心房起搏数
-          atrialPace: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏心房起搏数,
+          atrialPace: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏心房起搏数,
           //心房起搏占百分比
-          atrialPacePercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏心房起搏数百分比,
+          atrialPacePercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏心房起搏数百分比,
           //双腔起搏
-          dual_chamberPacing: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏双腔起搏,
+          dual_chamberPacing: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏双腔起搏,
           //双腔起搏占百分比
-          dual_chamberPacingPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏双腔起搏百分比,
+          dual_chamberPacingPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏双腔起搏百分比,
           //心室起搏数
-          ventricularPace: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏心室起搏数,
+          ventricularPace: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏心室起搏数,
           //心室起搏数占百分比
-          ventricularPacePercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏心室起搏数百分比,
+          ventricularPacePercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏心室起搏数百分比,
           //错误起搏
-          wrongPacing: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏错误起搏,
+          wrongPacing: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏错误起搏,
           //错误起搏占百分比
-          wrongPacingPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.起搏错误起搏百分比
+          wrongPacingPercentage: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.起搏错误起搏百分比
         },
 
       },
       tableData: [
         {
-          time:"-",
-          heartBeatNumber:"-",
-          heartRate:{
-            fastest:"-",
-            average:"-",
-            slowest:"-"
+          time: "-",
+          heartBeatNumber: "-",
+          heartRate: {
+            fastest: "-",
+            average: "-",
+            slowest: "-"
           },
           //室性异位
-          ventricularEctopic:{
+          ventricularEctopic: {
             //总数
             total: "-",
             //百分比
-            percentage:"-",
+            percentage: "-",
             //单发
             singleShot: "-",
             //成对
@@ -997,22 +996,22 @@ export default {
             //室上速
             supraventricularTachycardia: "-",
           },
-          asystole:"-"
+          asystole: "-"
         },
         {
-          time:"-",
-          heartBeatNumber:"-",
-          heartRate:{
-            fastest:"-",
-            average:"-",
-            slowest:"-"
+          time: "-",
+          heartBeatNumber: "-",
+          heartRate: {
+            fastest: "-",
+            average: "-",
+            slowest: "-"
           },
           //室性异位
-          ventricularEctopic:{
+          ventricularEctopic: {
             //总数
             total: "-",
             //百分比
-            percentage:"-",
+            percentage: "-",
             //单发
             singleShot: "-",
             //成对
@@ -1034,7 +1033,7 @@ export default {
             //室上速
             supraventricularTachycardia: "-",
           },
-          asystole:"-"
+          asystole: "-"
         },
 
       ]
@@ -1044,20 +1043,23 @@ export default {
     console.log("创建")
     var pId = this.$route.query.pId;
     var ecg_type = this.$route.query.ecg_type;
-    if(pId){
-      this.ecg_type=ecg_type
-      this.pId=pId;
+    if (pId) {
+      this.ecg_type = ecg_type
+      this.pId = pId;
       getReportByPId(this.pId).then(response => {
         console.log(response.data)
-        this.froms.textarea.text1=response.data.diagnosisConclusion
-        this.doctorName=response.data.diagnosisDoctor
+        this.froms.textarea.text1 = response.data.diagnosisConclusion
+        this.doctorName = response.data.diagnosisDoctor
         this.diagnosisData = response.data.reportTime
         console.log("-------------------------------")
         console.log(this.diagnosisData)
       });
-      var show =sessionStorage.getItem(pId+"show");
-      if (!show){
+      var show = sessionStorage.getItem(pId + "show");
+      if (!show) {
         this.get();
+
+        // this.upload_pdf()
+
         this.dataTime = response.data.reportTime
       }
 
@@ -1068,22 +1070,22 @@ export default {
     this.line();
     this.line1();
     this.line2();
-    // this.line3();
-    //this.line4();
+    this.line3();
+    this.line4();
     this.drawscatter();
     this.drawBar();
     this.drawBar1();
     this.drawBar2();
     this.getDate();
   },
-  computed(){
+  computed() {
 
   },
   methods: {
-    columnStyle({ row, column, rowIndex, columnIndex }) {
-        return 'padding:0;border:0'
+    columnStyle({row, column, rowIndex, columnIndex}) {
+      return 'padding:0;border:0'
     },
-    get(){
+    get() {
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
         text: '请勿刷新页面，正在获取数据...',//显示在加载图标下方的加载文案
@@ -1113,13 +1115,12 @@ export default {
           console.log(data)
           console.log(_th.ecg_type)
           sessionStorage.removeItem("data");
-          sessionStorage.setItem(_th.pId+'data' ,JSON.stringify(data))
-          sessionStorage.setItem(_th.pId+'show' ,true)
+          sessionStorage.setItem(_th.pId + 'data', JSON.stringify(data))
+          sessionStorage.setItem(_th.pId + 'show', true)
           loading.close()
           window.location.reload("#pdfDom");
         },
-        error:function (data)
-        {
+        error: function (data) {
           console.log("数据请求错误，请先点击生成报告。")
           loading.close()
           console.log("错误")
@@ -1130,10 +1131,10 @@ export default {
       })
     },
 
-    line(){
+    line() {
       var obj = {
-          "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime
-      } ;
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+      };
       var dom = document.getElementById('container');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
@@ -1142,131 +1143,131 @@ export default {
       var app = {};
       var option;
       // $.get('line2.json', function (data) {
-        myChart.setOption(
-          (option = {
-            title: {
-              text: '心率24小时变化图',
-              left: '1%'
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              left: '5%',
-              right: '15%',
-              bottom: '10%'
-            },
-            xAxis: {
-              //show:false,
-              // data: data.map(function (item) {
-              //   return item[0];
-              // })
-              // data:obj.data[0]
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '心率24小时变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // data:obj.data[0]
             data: obj.data.map(function (item) {
-                return item[0];
-              })
+              return item[0];
+            })
+          },
+          yAxis: {
+            show: false,
+            //y轴动态规划
+            // scale:true
+          },
+          // toolbox: {
+          //     right: 10,
+          //     feature: {
+          //         dataZoom: {
+          //             yAxisIndex: 'none'
+          //         },
+          //         restore: {},
+          //         saveAsImage: {}
+          //     }
+          // },
+          dataZoom: [
+            {
+              startValue: 0,
             },
-            yAxis: {
-              show:false,
-              //y轴动态规划
-              // scale:true
-           },
-            // toolbox: {
-            //     right: 10,
-            //     feature: {
-            //         dataZoom: {
-            //             yAxisIndex: 'none'
-            //         },
-            //         restore: {},
-            //         saveAsImage: {}
-            //     }
-            // },
-            dataZoom: [
-               {
-                 startValue: 0,
-               },
-              {
-                type: 'inside'
-              }
-            ],
-            visualMap: {
-              top: 50,
-              right: 10,
-              pieces: [
-                {
-                  gt: 0,
-                  lte: 60,
-                  color: '#3867d6'
-                },
-                {
-                  gt: 60,
-                  lte: 100,
-                  color: '#34ace0'
-                },
-                {
-                  gt: 100,
-                  lte: 120,
-                  color: '#fa8231'
-                },
-                {
-                  gt: 120,
-                  lte: 150,
-                  color: '#FD0100'
-                },
-                {
-                  gt: 150,
-                  lte: 180,
-                  color: '#AA069F'
-                },
-
-              ],
-              outOfRange: {
-                color: '#999'
-              }
-            },
-            series: {
-              name: '心电24小时',
-              type: 'line',
-              // smooth:'true',
-              data: obj.data.map(function (item){
-                return item[1];
-              }),
-              // data: data.map(function (item) {
-              //   return item[1];
-              // }),
-              markLine: {
-                silent: true,
-                lineStyle: {
-
-                  color: '#aaa69d',
-                  width: 1
-                },
-                label: {
-                  position: 'start', // 表现内容展示的位置
-                  color: '#8C8C8C'  // 展示内容颜色
-                },
-
-                data: [
-                  {
-                    yAxis: 60
-                  },
-                  {
-                    yAxis: 100
-                  },
-                  {
-                    yAxis: 120
-                  },
-                  {
-                    yAxis: 150
-                  },
-                  {
-                    yAxis: 180
-                  }
-                ]
-              }
+            {
+              type: 'inside'
             }
-          })
-        );
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+              {
+                gt: 150,
+                lte: 180,
+                color: '#AA069F'
+              },
+
+            ],
+            outOfRange: {
+              color: '#999'
+            }
+          },
+          series: {
+            name: '心电24小时',
+            type: 'line',
+            // smooth:'true',
+            data: obj.data.map(function (item) {
+              return item[1];
+            }),
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              lineStyle: {
+
+                color: '#aaa69d',
+                width: 1
+              },
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C'  // 展示内容颜色
+              },
+
+              data: [
+                {
+                  yAxis: 60
+                },
+                {
+                  yAxis: 100
+                },
+                {
+                  yAxis: 120
+                },
+                {
+                  yAxis: 150
+                },
+                {
+                  yAxis: 180
+                }
+              ]
+            }
+          }
+        })
+      );
       // });
 
       if (option && typeof option === 'object') {
@@ -1274,11 +1275,11 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-    //5次心搏均值心率
-    line1(){
-      var obj ={
-      "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_5
-    };
+    //10次心搏均值心率
+    line1() {
+      var obj = {
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_10
+      };
 
       var dom = document.getElementById('line1');
       var myChart = echarts.init(dom, null, {
@@ -1288,124 +1289,124 @@ export default {
       var app = {};
       var option;
       // $.get('line2.json', function (data) {
-        myChart.setOption(
-          (option = {
-            title: {
-              text: '5次心搏均值心率变化图',
-              left: '1%'
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              left: '5%',
-              right: '15%',
-              bottom: '10%'
-            },
-            xAxis: {
-              //show:false,
-              // data: data.map(function (item) {
-              //   return item[0];
-              // })
-              // data:obj.data[0]
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '10次心搏均值心率变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // data:obj.data[0]
             data: obj.data.map(function (item) {
-                return item[0];
-              })
+              return item[0];
+            })
+          },
+          yAxis: {
+            show: false,
+            // scale:true
+          },
+          // toolbox: {
+          //     right: 10,
+          //     feature: {
+          //         dataZoom: {
+          //             yAxisIndex: 'none'
+          //         },
+          //         restore: {},
+          //         saveAsImage: {}
+          //     }
+          // },
+          dataZoom: [
+            {
+              startValue: 0,
             },
-            yAxis: {
-              show:false,
-              // scale:true
-            },
-            // toolbox: {
-            //     right: 10,
-            //     feature: {
-            //         dataZoom: {
-            //             yAxisIndex: 'none'
-            //         },
-            //         restore: {},
-            //         saveAsImage: {}
-            //     }
-            // },
-            dataZoom: [
-               {
-                 startValue: 0,
-               },
-              {
-                type: 'inside'
-              }
-            ],
-            visualMap: {
-              top: 50,
-              right: 10,
-              pieces: [
-                {
-                  gt: 0,
-                  lte: 60,
-                  color: '#3867d6'
-                },
-                {
-                  gt: 60,
-                  lte: 100,
-                  color: '#34ace0'
-                },
-                {
-                  gt: 100,
-                  lte: 120,
-                  color: '#fa8231'
-                },
-                {
-                  gt: 120,
-                  lte: 150,
-                  color: '#FD0100'
-                },
-              ],
-              outOfRange: {
-                color: '#AA069F'
-              }
-            },
-            series: {
-              name: '5次心搏均值心率',
-              type: 'line',
-              // smooth:'true',
-              data: obj.data.map(function (item){
-                return item[1];
-              }),
-              // data: data.map(function (item) {
-              //   return item[1];
-              // }),
-              markLine: {
-                silent: true,
-                lineStyle: {
-
-                  color: '#aaa69d',
-                  width: 1
-                },
-                label: {
-                  position: 'start', // 表现内容展示的位置
-                  color: '#8C8C8C'  // 展示内容颜色
-                },
-
-                data: [
-                  {
-                    yAxis: 60
-                  },
-                  {
-                    yAxis: 100
-                  },
-                  {
-                    yAxis: 120
-                  },
-                  {
-                    yAxis: 150
-                  },
-                  {
-                    yAxis: 180
-                  }
-                ]
-              }
+            {
+              type: 'inside'
             }
-          })
-        );
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+            ],
+            outOfRange: {
+              color: '#AA069F'
+            }
+          },
+          series: {
+            name: '10次心搏均值心率',
+            type: 'line',
+            // smooth:'true',
+            data: obj.data.map(function (item) {
+              return item[1];
+            }),
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              lineStyle: {
+
+                color: '#aaa69d',
+                width: 1
+              },
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C'  // 展示内容颜色
+              },
+
+              data: [
+                {
+                  yAxis: 60
+                },
+                {
+                  yAxis: 100
+                },
+                {
+                  yAxis: 120
+                },
+                {
+                  yAxis: 150
+                },
+                {
+                  yAxis: 180
+                }
+              ]
+            }
+          }
+        })
+      );
       // });
 
       if (option && typeof option === 'object') {
@@ -1413,11 +1414,11 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-    //10次心搏均值心率
-    line2(){
-        var obj = {
-          "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_10
-        };
+    //50次心搏均值心率
+    line2() {
+      var obj = {
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_50
+      };
 
       var dom = document.getElementById('line2');
       var myChart = echarts.init(dom, null, {
@@ -1427,124 +1428,124 @@ export default {
       var app = {};
       var option;
       // $.get('line2.json', function (data) {
-        myChart.setOption(
-          (option = {
-            title: {
-              text: '10次心搏均值心率变化图',
-              left: '1%'
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              left: '5%',
-              right: '15%',
-              bottom: '10%'
-            },
-            xAxis: {
-              //show:false,
-              // data: data.map(function (item) {
-              //   return item[0];
-              // })
-              // data:obj.data[0]
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '50次心搏均值心率变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // data:obj.data[0]
             data: obj.data.map(function (item) {
-                return item[0];
-              })
+              return item[0];
+            })
+          },
+          yAxis: {
+            show: false,
+            // scale:true
+          },
+          // toolbox: {
+          //     right: 10,
+          //     feature: {
+          //         dataZoom: {
+          //             yAxisIndex: 'none'
+          //         },
+          //         restore: {},
+          //         saveAsImage: {}
+          //     }
+          // },
+          dataZoom: [
+            {
+              startValue: 0,
             },
-            yAxis: {
-              show:false,
-              // scale:true
-            },
-            // toolbox: {
-            //     right: 10,
-            //     feature: {
-            //         dataZoom: {
-            //             yAxisIndex: 'none'
-            //         },
-            //         restore: {},
-            //         saveAsImage: {}
-            //     }
-            // },
-            dataZoom: [
-               {
-                 startValue: 0,
-               },
-              {
-                type: 'inside'
-              }
-            ],
-            visualMap: {
-              top: 50,
-              right: 10,
-              pieces: [
-                {
-                  gt: 0,
-                  lte: 60,
-                  color: '#3867d6'
-                },
-                {
-                  gt: 60,
-                  lte: 100,
-                  color: '#34ace0'
-                },
-                {
-                  gt: 100,
-                  lte: 120,
-                  color: '#fa8231'
-                },
-                {
-                  gt: 120,
-                  lte: 150,
-                  color: '#FD0100'
-                },
-              ],
-              outOfRange: {
-                color: '#AA069F'
-              }
-            },
-            series: {
-              name: '10次心搏均值心率',
-              type: 'line',
-              // smooth:'true',
-              data: obj.data.map(function (item){
-                return item[1];
-              }),
-              // data: data.map(function (item) {
-              //   return item[1];
-              // }),
-              markLine: {
-                silent: true,
-                lineStyle: {
-
-                  color: '#aaa69d',
-                  width: 1
-                },
-                label: {
-                  position: 'start', // 表现内容展示的位置
-                  color: '#8C8C8C'  // 展示内容颜色
-                },
-
-                data: [
-                  {
-                    yAxis: 60
-                  },
-                  {
-                    yAxis: 100
-                  },
-                  {
-                    yAxis: 120
-                  },
-                  {
-                    yAxis: 150
-                  },
-                  {
-                    yAxis: 180
-                  }
-                ]
-              }
+            {
+              type: 'inside'
             }
-          })
-        );
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+            ],
+            outOfRange: {
+              color: '#AA069F'
+            }
+          },
+          series: {
+            name: '50次心搏均值心率',
+            type: 'line',
+            // smooth:'true',
+            data: obj.data.map(function (item) {
+              return item[1];
+            }),
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              lineStyle: {
+
+                color: '#aaa69d',
+                width: 1
+              },
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C'  // 展示内容颜色
+              },
+
+              data: [
+                {
+                  yAxis: 60
+                },
+                {
+                  yAxis: 100
+                },
+                {
+                  yAxis: 120
+                },
+                {
+                  yAxis: 150
+                },
+                {
+                  yAxis: 180
+                }
+              ]
+            }
+          }
+        })
+      );
       // });
 
       if (option && typeof option === 'object') {
@@ -1553,150 +1554,151 @@ export default {
       window.addEventListener('resize', myChart.resize);
     },
 
-    // line3(){
-    //     var obj ={
-    //       "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime_mean_10
-    //     }
-    //   ;
-    //
-    //   var dom = document.getElementById('line3');
-    //   var myChart = echarts.init(dom, null, {
-    //     renderer: 'canvas',
-    //     useDirtyRect: false
-    //   });
-    //   var app = {};
-    //   var option;
-    //   // $.get('line2.json', function (data) {
-    //     myChart.setOption(
-    //       (option = {
-    //         title: {
-    //           text: '100次心搏均值心率变化图',
-    //           left: '1%'
-    //         },
-    //         tooltip: {
-    //           trigger: 'axis'
-    //         },
-    //         grid: {
-    //           left: '5%',
-    //           right: '15%',
-    //           bottom: '10%'
-    //         },
-    //         xAxis: {
-    //           //show:false,
-    //           // data: data.map(function (item) {
-    //           //   return item[0];
-    //           // })
-    //           // data:obj.data[0]
-    //         data: obj.data.map(function (item) {
-    //             return item[0];
-    //           })
-    //         },
-    //         yAxis: {
-    //           show:false,
-    //           // scale:true
-    //         },
-    //         // toolbox: {
-    //         //     right: 10,
-    //         //     feature: {
-    //         //         dataZoom: {
-    //         //             yAxisIndex: 'none'
-    //         //         },
-    //         //         restore: {},
-    //         //         saveAsImage: {}
-    //         //     }
-    //         // },
-    //         dataZoom: [
-    //            {
-    //              startValue: 0,
-    //            },
-    //           {
-    //             type: 'inside'
-    //           }
-    //         ],
-    //         visualMap: {
-    //           top: 50,
-    //           right: 10,
-    //           pieces: [
-    //             {
-    //               gt: 0,
-    //               lte: 60,
-    //               color: '#3867d6'
-    //             },
-    //             {
-    //               gt: 60,
-    //               lte: 100,
-    //               color: '#34ace0'
-    //             },
-    //             {
-    //               gt: 100,
-    //               lte: 120,
-    //               color: '#fa8231'
-    //             },
-    //             {
-    //               gt: 120,
-    //               lte: 150,
-    //               color: '#FD0100'
-    //             },
-    //           ],
-    //           outOfRange: {
-    //             color: '#AA069F'
-    //           }
-    //         },
-    //         series: {
-    //           name: '100次心搏均值心率',
-    //           type: 'line',
-    //           // smooth:'true',
-    //           data: obj.data.map(function (item){
-    //             return item[1];
-    //           }),
-    //           // data: data.map(function (item) {
-    //           //   return item[1];
-    //           // }),
-    //           markLine: {
-    //             silent: true,
-    //             lineStyle: {
-    //
-    //               color: '#aaa69d',
-    //               width: 1
-    //             },
-    //             label: {
-    //               position: 'start', // 表现内容展示的位置
-    //               color: '#8C8C8C'  // 展示内容颜色
-    //             },
-    //
-    //             data: [
-    //               {
-    //                 yAxis: 60
-    //               },
-    //               {
-    //                 yAxis: 100
-    //               },
-    //               {
-    //                 yAxis: 120
-    //               },
-    //               {
-    //                 yAxis: 150
-    //               },
-    //               {
-    //                 yAxis: 180
-    //               }
-    //             ]
-    //           }
-    //         }
-    //       })
-    //     );
-    //   // });
-    //
-    //   if (option && typeof option === 'object') {
-    //     myChart.setOption(option);
-    //   }
-    //   window.addEventListener('resize', myChart.resize);
-    // },
+    line3() {
+      var obj = {
+          "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_100
+        }
+      ;
 
-    line4(){
-        var obj = {
-          "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
-        };
+      var dom = document.getElementById('line3');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
+      var option;
+      // $.get('line2.json', function (data) {
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '100次心搏均值心率变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // data:obj.data[0]
+            data: obj.data.map(function (item) {
+              return item[0];
+            })
+          },
+          yAxis: {
+            show: false,
+            // scale:true
+          },
+          // toolbox: {
+          //     right: 10,
+          //     feature: {
+          //         dataZoom: {
+          //             yAxisIndex: 'none'
+          //         },
+          //         restore: {},
+          //         saveAsImage: {}
+          //     }
+          // },
+          dataZoom: [
+            {
+              startValue: 0,
+            },
+            {
+              type: 'inside'
+            }
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+            ],
+            outOfRange: {
+              color: '#AA069F'
+            }
+          },
+          series: {
+            name: '100次心搏均值心率',
+            type: 'line',
+            // smooth:'true',
+            data: obj.data.map(function (item) {
+              return item[1];
+            }),
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              lineStyle: {
+
+                color: '#aaa69d',
+                width: 1
+              },
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C'  // 展示内容颜色
+              },
+
+              data: [
+                {
+                  yAxis: 60
+                },
+                {
+                  yAxis: 100
+                },
+                {
+                  yAxis: 120
+                },
+                {
+                  yAxis: 150
+                },
+                {
+                  yAxis: 180
+                }
+              ]
+            }
+          }
+        })
+      );
+      // });
+
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      window.addEventListener('resize', myChart.resize);
+    },
+
+
+    line4() {
+      var obj = {
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+      };
 
       var dom = document.getElementById('line4');
       var myChart = echarts.init(dom, null, {
@@ -1705,89 +1707,32 @@ export default {
       });
       var app = {};
       var option;
-      var data = obj.data
-      var time=data.map(function (item) {
+      var data = obj.data;
+      var time = data.map(function (item) {
         return item[0];
       })
-      var datatime=[];
-      for (var i=0;i<time.length;i++)
-      {
-        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5)))
+      var datatime = [];
+      for (var i = 0; i < time.length; i++) {
+        datatime.push(parseInt(time[i].slice(0, 2)) * 60 + parseInt(time[i].slice(3, 5)))
       }
-      var temp1;
-      var temp2;
-      for(i=0;i<datatime.length-1;i++){
-        for(var j=0;j<datatime.length- 1 - i;j++){
-          if(datatime[j]>datatime[j+1])
-          {
-            temp1=datatime[j]
-            temp2=data[j];
-            datatime[j]=datatime[j+1]
-            data[j]=data[j+1]
-            datatime[j+1]=temp1
-            data[j+1]=temp2
-          }
-        }
-      }
-      console.log(datatime)
-      time=data.map(function (item) {
-        return item[0];
-      })
-      var datax=[];
-      var datay=[];
-      for (var i=0;i<24*60;i++){
+      var datax = []
+      for (var i = 0; i < 24 * 60; i++) {
         datax.push(i)
       }
-      // //   for (var i=0;i<24*60;i++){
-      // //     datay.push(undefined)
-      // // }
-      var data2=data
-      for(i=0;i<data2.length;i++)
-      {
-        data2[i][0]=datatime[i];
+      var data2 = data
+      for (i = 0; i < data2.length; i++) {
+        data2[i][0] = datatime[i]
       }
-      // var j;
-      // for(i=0;i<data2.length-1;i++)
-      // {
-      //   if(data2[i+1][0]-data2[i][0]<50)
-      //   {
-      //     datay.push(data2[i][1])
-      //   }
-      //   else
-      //   {
-      //     for(j=i;j<data2[i][0]-1;j++)
-      //     {
-      //       datay.push(undefined)
-      //     }
-      //     datay[data2[i][0]-1]=data2[i][1];
-      //   }
-      // }
-      //   for(var j=datay.length-1;j<24*60;j++)
-      //   {
-      //     datay.push(undefined)
-      //   }
-      //   console.log(datay)
-      //   console.log(datatime)
-      //   console.log(datax)
-      var option1=[]
-      var temp
-      for(i=0;i<24;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i
-        }
-        else
-        {
-          temp=i+''
-        }
+      console.log(datatime)
+      var option1 = []
+      for (i = 0; i < data.length; i = i + 20) {
         option1.push(
           {
-            xAxis: i*60,
+            xAxis: datatime[i],
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
-              formatter: temp
+              color: '#8C8C8C', // 展示内容颜色
+              formatter: time[i]
             },
           },
         )
@@ -1795,11 +1740,11 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '24小时心率变化图',
+            text: '心搏均值心率变化图',
             left: '1%'
           },
           tooltip: {
-            trigger: 'axis',
+            trigger: 'axis'
           },
           grid: {
             left: '5%',
@@ -1808,7 +1753,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -1819,7 +1764,6 @@ export default {
           yAxis: {
             show: false,
             // scale:true
-            data:datay,
           },
           // toolbox: {
           //     right: 10,
@@ -1870,8 +1814,8 @@ export default {
             }
           },
           series: {
-            name: '50次心搏均值心率',
-            type: 'scatter',       //type: scatter表示散点图
+            name: '心搏均值心率',
+            type: 'line',
             // smooth:'true',
             data: data2,
             // data: data.map(function (item) {
@@ -1888,57 +1832,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
-              // [
-              //     {
-              //         xAxis: 1,
-              //         label: {
-              //             position: 'start', // 表现内容展示的位置
-              //             color: '#8C8C8C' , // 展示内容颜色
-              //             formatter: time[1]
-              //         },
-              //     },
-              //     {
-              //         xAxis: 10,
-              //         label: {
-              //             position: 'start', // 表现内容展示的位置
-              //             color: '#8C8C8C' , // 展示内容颜色
-              //             formatter: time[10]
-              //         },
-              //     },
-              //     {
-              //         xAxis: 40,
-              //         label: {
-              //             position: 'start', // 表现内容展示的位置
-              //             color: '#8C8C8C' , // 展示内容颜色
-              //             formatter: time[40]
-              //         },
-              //     },
-              //     {
-              //         xAxis: 66,
-              //         label: {
-              //             position: 'start', // 表现内容展示的位置
-              //             color: '#8C8C8C' , // 展示内容颜色
-              //             formatter: time[66]
-              //         },
-              //     },
-              //     {
-              //         xAxis: 66,
-              //         label: {
-              //             position: 'start', // 表现内容展示的位置
-              //             color: '#8C8C8C' , // 展示内容颜色
-              //             formatter: time[66]
-              //         },
-              //     },
-              //     {
-              //         xAxis: 99,
-              //         label: {
-              //             position: 'start', // 表现内容展示的位置
-              //             color: '#8C8C8C' , // 展示内容颜色
-              //             formatter: time[99]
-              //         },
-              //     },
-              // ]
+              data: option1,
             }
           }
         })
@@ -1949,1051 +1843,1230 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
+    // line4(){
+    //   var obj ={
+    //       "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime
+    //     }
+    //   ;
+    //
+    //   var dom = document.getElementById('line4');
+    //   var myChart = echarts.init(dom, null, {
+    //     renderer: 'canvas',
+    //     useDirtyRect: false
+    //   });
+    //   var app = {};
+    //   var option;
+    //   var data = obj.data;
+    //   var time = data.map(function (item){
+    //     return item[0];
+    //   })
+    //   // for (var i=0 ;i<time.length;i++){
+    //   //   time.push(time[1]);
+    //   // }
+    //   // $.get('line2.json', function (data) {
+    //   myChart.setOption(
+    //     (option = {
+    //       title: {
+    //         text: '心搏均值心率变化图',
+    //         left: '1%'
+    //       },
+    //       tooltip: {
+    //         trigger: 'axis'
+    //       },
+    //       grid: {
+    //         left: '5%',
+    //         right: '15%',
+    //         bottom: '10%'
+    //       },
+    //       xAxis: {
+    //         show:false,
+    //         // data: data.map(function (item) {
+    //         //   return item[0];
+    //         // })
+    //         // data:obj.data[0]
+    //         data: time
+    //       },
+    //       yAxis: {
+    //         show:false,
+    //         // scale:true
+    //       },
+    //       // toolbox: {
+    //       //     right: 10,
+    //       //     feature: {
+    //       //         dataZoom: {
+    //       //             yAxisIndex: 'none'
+    //       //         },
+    //       //         restore: {},
+    //       //         saveAsImage: {}
+    //       //     }
+    //       // },
+    //       dataZoom: [
+    //         {
+    //           startValue: 0,
+    //         },
+    //         {
+    //           type: 'inside'
+    //         }
+    //       ],
+    //       visualMap: {
+    //         top: 50,
+    //         right: 10,
+    //         pieces: [
+    //           {
+    //             gt: 0,
+    //             lte: 60,
+    //             color: '#3867d6'
+    //           },
+    //           {
+    //             gt: 60,
+    //             lte: 100,
+    //             color: '#34ace0'
+    //           },
+    //           {
+    //             gt: 100,
+    //             lte: 120,
+    //             color: '#fa8231'
+    //           },
+    //           {
+    //             gt: 120,
+    //             lte: 150,
+    //             color: '#FD0100'
+    //           },
+    //         ],
+    //         outOfRange: {
+    //           color: '#AA069F'
+    //         }
+    //       },
+    //       series: {
+    //         name: '心搏均值心率',
+    //         type: 'line',
+    //         // smooth:'true',
+    //         data: obj.data.map(function (item){
+    //           return item[1];
+    //         }),
+    //         // data: data.map(function (item) {
+    //         //   return item[1];
+    //         // }),
+    //         markLine: {
+    //           silent: true,
+    //           symbol:['none','none'],
+    //           lineStyle: {
+    //             color: '#aaa69d',
+    //             width: 1
+    //           },
+    //           label: {
+    //             position: 'start', // 表现内容展示的位置
+    //             color: '#8C8C8C'  // 展示内容颜色
+    //           },
+    //
+    //           data: [
+    //             {
+    //               xAxis: 1,
+    //
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[1]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 10,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[10]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 40,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[40]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 66,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[66]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 66,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[66]
+    //               },
+    //             },
+    //             {
+    //               xAxis: 99,
+    //               label: {
+    //                 position: 'start', // 表现内容展示的位置
+    //                 color: '#8C8C8C' , // 展示内容颜色
+    //                 formatter: time[99]
+    //               },
+    //             },
+    //           ]
+    //         }
+    //       }
+    //     })
+    //   );
+    //   // });
+    //
+    //   if (option && typeof option === 'object') {
+    //     myChart.setOption(option);
+    //   }
+    //   window.addEventListener('resize', myChart.resize);
+    // },
+
 
     //echarts测试
     drawLine() {
-          var obj = {
-    "result": {
-        "data": {
+      var obj = {
+        "result": {
+          "data": {
             "I": [
-                0.05859375,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.05859375,
-                0.05859375,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.0732421875,
-                0.087890625,
-                0.087890625,
-                0.0732421875,
-                0.087890625,
-                0.087890625,
-                0.0732421875,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.05859375,
-                0,
-                0,
-                0.0146484375,
-                0,
-                0.029296875,
-                0.1318359375,
-                0.439453125,
-                0.76171875,
-                0.0146484375,
-                -0.1025390625,
-                -0.146484375,
-                -0.1025390625,
-                -0.0732421875,
-                -0.029296875,
-                -0.0146484375,
-                -0.029296875,
-                -0.0146484375,
-                -0.029296875,
-                -0.029296875,
-                -0.0439453125,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.029296875,
-                -0.0146484375,
-                -0.029296875,
-                -0.05859375,
-                -0.0439453125,
-                -0.0439453125,
-                -0.029296875,
-                -0.0146484375,
-                0,
-                -0.029296875,
-                -0.0146484375,
-                0.029296875,
-                0.05859375,
-                0.0732421875,
-                0.0732421875,
-                0.1318359375,
-                0.146484375,
-                0.1611328125,
-                0.146484375,
-                0.1318359375,
-                0.087890625,
-                0.0439453125,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0,
-                0.029296875,
-                0.0146484375,
-                0,
-                0,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                -0.0146484375,
-                -0.0146484375,
-                0.0146484375,
-                0,
-                0.0146484375,
-                0,
-                0.0146484375,
-                -0.0146484375,
-                0.0146484375,
-                0,
-                -0.0146484375,
-                -0.029296875,
-                -0.0146484375,
-                0,
-                0,
-                -0.0146484375,
-                -0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.05859375,
-                0.0146484375,
-                0,
-                -0.0146484375,
-                -0.0146484375,
-                -0.0146484375,
-                0,
-                0,
-                -0.029296875,
-                -0.0439453125,
-                -0.0146484375,
-                0.0146484375,
-                0.1611328125,
-                0.556640625,
-                0.46875,
-                0.0146484375,
-                -0.1025390625,
-                -0.1611328125,
-                -0.1025390625,
-                -0.0732421875,
-                -0.0732421875,
-                -0.0732421875,
-                -0.0732421875,
-                -0.05859375,
-                -0.05859375,
-                -0.05859375,
-                -0.0732421875,
-                -0.0439453125,
-                -0.05859375,
-                -0.0439453125,
-                -0.0732421875,
-                -0.0732421875,
-                -0.05859375,
-                -0.05859375,
-                -0.05859375,
-                -0.029296875,
-                -0.0439453125,
-                -0.05859375,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0146484375,
-                0,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.1025390625,
-                0.1171875,
-                0.1171875,
-                0.1171875,
-                0.087890625,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.0439453125,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.0439453125,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.0439453125,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0,
-                -0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                -0.0146484375,
-                0.0439453125,
-                0.029296875,
-                0.05859375,
-                0.05859375,
-                0.05859375,
-                0.0732421875,
-                0.0732421875,
-                0.05859375,
-                0,
-                0,
-                0.0146484375,
-                0.0146484375,
-                0,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0439453125,
-                0.2197265625,
-                0.615234375,
-                0.52734375,
-                0.0146484375,
-                -0.0732421875,
-                -0.087890625,
-                -0.05859375,
-                -0.0439453125,
-                -0.0146484375,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                -0.0439453125,
-                -0.0146484375,
-                -0.0146484375,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                -0.0439453125,
-                -0.029296875,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                0,
-                0,
-                -0.0146484375,
-                0,
-                0,
-                0.029296875,
-                0.0439453125,
-                0.1025390625,
-                0.1025390625,
-                0.1171875,
-                0.146484375,
-                0.146484375,
-                0.146484375,
-                0.1171875,
-                0.087890625,
-                0.0732421875,
-                0.087890625,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.087890625,
-                0.05859375,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.029296875,
-                0.0732421875,
-                0.0732421875,
-                0.0732421875,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.0732421875,
-                0.0439453125,
-                0.0439453125,
-                0.0732421875,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.029296875,
-                0.0439453125,
-                0.05859375,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0732421875,
-                0.0732421875,
-                0.087890625,
-                0.087890625,
-                0.1025390625,
-                0.1025390625,
-                0.0732421875,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.0146484375,
-                0.0146484375,
-                0.0439453125,
-                0.029296875,
-                0.0146484375,
-                0.0732421875,
-                0.29296875,
-                0.673828125,
-                0.439453125,
-                0.0146484375,
-                -0.1025390625,
-                -0.1025390625,
-                -0.029296875,
-                -0.0439453125,
-                -0.029296875,
-                -0.0146484375,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                -0.0146484375,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.029296875,
-                -0.0439453125,
-                0,
-                0,
-                -0.0439453125,
-                -0.029296875,
-                -0.0146484375,
-                -0.029296875,
-                -0.0146484375,
-                0,
-                0.029296875,
-                0.0439453125,
-                0.087890625,
-                0.087890625,
-                0.1025390625,
-                0.146484375,
-                0.146484375,
-                0.1611328125,
-                0.146484375,
-                0.1171875,
-                0.1025390625,
-                0.087890625,
-                0.087890625,
-                0.0732421875,
-                0.05859375,
-                0.05859375,
-                0.0732421875,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.05859375,
-                0.0439453125,
-                0.05859375,
-                0.05859375,
-                0.0732421875,
-                0.0732421875,
-                0.05859375,
-                0.05859375,
-                0.05859375,
-                0.0732421875,
-                0.0439453125,
-                0.05859375,
-                0.0732421875,
-                0.05859375,
-                0.05859375,
-                0.0732421875,
-                0.05859375,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.05859375,
-                0.029296875,
-                0.0439453125,
-                0.05859375,
-                0.05859375,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.05859375,
-                0.0732421875,
-                0.0732421875,
-                0.087890625,
-                0.0732421875,
-                0.1025390625,
-                0.1318359375,
-                0.087890625,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0,
-                0.0146484375,
-                0.1318359375,
-                0.498046875,
-                0.7177734375,
-                0.0439453125,
-                -0.087890625,
-                -0.1171875,
-                -0.087890625,
-                -0.05859375,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0146484375,
-                -0.0439453125,
-                -0.05859375,
-                -0.0439453125,
-                -0.0439453125,
-                -0.029296875,
-                -0.0146484375,
-                -0.0439453125,
-                -0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.05859375,
-                0.0732421875,
-                0.1025390625,
-                0.1318359375,
-                0.146484375,
-                0.1318359375,
-                0.1318359375,
-                0.1171875,
-                0.05859375,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.05859375,
-                0.0439453125,
-                0.029296875,
-                0.05859375,
-                0.05859375,
-                0.0146484375,
-                0.05859375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.05859375,
-                0.0439453125,
-                0.0146484375,
-                0,
-                0.029296875,
-                0.029296875,
-                0,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0,
-                -0.0146484375,
-                0,
-                0.0146484375,
-                0.0146484375,
-                0,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.0439453125,
-                0.0732421875,
-                0.05859375,
-                0.05859375,
-                0.05859375,
-                0.029296875,
-                0,
-                0.029296875,
-                0,
-                0,
-                0.029296875,
-                0.0146484375,
-                0,
-                0.0146484375,
-                0,
-                0.0732421875,
-                0.263671875,
-                0.7177734375,
-                0.46875,
-                -0.029296875,
-                -0.146484375,
-                -0.1171875,
-                -0.0732421875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0732421875,
-                -0.05859375,
-                -0.029296875,
-                -0.0439453125,
-                -0.05859375,
-                -0.05859375,
-                -0.0732421875,
-                -0.0732421875,
-                -0.05859375,
-                -0.0439453125,
-                -0.05859375,
-                -0.0439453125,
-                -0.05859375,
-                -0.05859375,
-                -0.05859375,
-                -0.0439453125,
-                -0.05859375,
-                -0.0146484375,
-                -0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.0732421875,
-                0.087890625,
-                0.1171875,
-                0.1611328125,
-                0.17578125,
-                0.146484375,
-                0.1171875,
-                0.1025390625,
-                0.05859375,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.0732421875,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0732421875,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.0146484375,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.029296875,
-                0.0146484375,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.0439453125,
-                0.087890625,
-                0.0732421875,
-                0.0732421875,
-                0.05859375,
-                0.0732421875,
-                0.0732421875,
-                0.05859375,
-                0,
-                0,
-                0.029296875,
-                0.0146484375,
-                0,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.1171875,
-                0.4541015625,
-                0.8056640625,
-                0.1171875,
-                -0.1025390625,
-                -0.146484375,
-                -0.1171875,
-                -0.05859375,
-                -0.0439453125,
-                -0.0146484375,
-                -0.029296875,
-                -0.0439453125,
-                -0.05859375,
-                -0.0146484375,
-                -0.0146484375,
-                -0.0439453125,
-                -0.05859375,
-                -0.029296875,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.029296875,
-                -0.0439453125,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                0.0439453125,
-                0.1025390625,
-                0.1025390625,
-                0.1171875,
-                0.1611328125,
-                0.205078125,
-                0.1611328125,
-                0.1904296875,
-                0.1318359375,
-                0.087890625,
-                0.05859375,
-                0.05859375,
-                0.0732421875,
-                0.0439453125,
-                0.0146484375,
-                0.0439453125,
-                0.05859375,
-                0.05859375,
-                0.05859375,
-                0.05859375,
-                0.0439453125,
-                0.05859375,
-                0.0732421875,
-                0.0439453125,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.0732421875,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.029296875,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.05859375,
-                0.05859375,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.087890625,
-                0.1025390625,
-                0.087890625,
-                0.087890625,
-                0.087890625,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.1025390625,
-                0.3662109375,
-                0.7177734375,
-                0.234375,
-                -0.0732421875,
-                -0.1318359375,
-                -0.1025390625,
-                -0.0439453125,
-                -0.0439453125,
-                -0.029296875,
-                -0.0439453125,
-                -0.029296875,
-                -0.0146484375,
-                -0.0439453125,
-                -0.0146484375,
-                -0.0146484375,
-                -0.0439453125,
-                -0.0439453125,
-                -0.029296875,
-                -0.029296875,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0146484375,
-                0,
-                -0.029296875,
-                -0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.0439453125,
-                0.0732421875,
-                0.087890625,
-                0.1318359375,
-                0.1611328125,
-                0.1611328125,
-                0.1611328125,
-                0.1318359375,
-                0.1171875,
-                0.0732421875,
-                0.05859375,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0732421875,
-                0.0732421875,
-                0.0732421875,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0,
-                0,
-                0.0146484375,
-                0,
-                0,
-                0.0146484375,
-                0,
-                -0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.2197265625,
-                0.6298828125,
-                0.5126953125,
-                0.0146484375,
-                -0.1025390625,
-                -0.1171875,
-                -0.05859375,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0439453125,
-                -0.05859375,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0439453125,
-                -0.05859375,
-                -0.05859375,
-                -0.05859375,
-                -0.05859375,
-                -0.05859375,
-                -0.0732421875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.05859375,
-                -0.05859375,
-                -0.05859375,
-                -0.05859375,
-                -0.0439453125,
-                -0.0146484375,
-                0,
-                0,
-                0.029296875,
-                0.0439453125,
-                0.0732421875,
-                0.1025390625,
-                0.1171875,
-                0.1318359375,
-                0.1318359375,
-                0.1171875,
-                0.087890625,
-                0.0732421875,
-                0.05859375,
-                0.05859375,
-                0.05859375,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.05859375,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0,
-                0.0146484375,
-                0.029296875,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.029296875,
-                0.0146484375,
-                0.029296875,
-                0.0439453125,
-                0.0732421875,
-                0.05859375,
-                0.0732421875,
-                0.1025390625,
-                0.05859375,
-                0.0146484375,
-                0,
-                0,
-                0.0439453125,
-                0,
-                0,
-                0.0146484375,
-                0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.1171875,
-                0.41015625,
-                0.7177734375,
-                0.146484375,
-                -0.0439453125,
-                -0.1025390625,
-                -0.0732421875,
-                -0.0439453125,
-                -0.05859375,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0439453125,
-                -0.05859375,
-                -0.05859375,
-                -0.0439453125,
-                -0.029296875,
-                -0.0439453125,
-                -0.0732421875,
-                -0.05859375,
-                -0.029296875,
-                -0.05859375,
-                -0.05859375,
-                -0.0439453125,
-                -0.029296875,
-                -0.0439453125,
-                -0.0439453125,
-                -0.0146484375,
-                0.0146484375,
-                0.029296875,
-                0.05859375,
-                0.0732421875,
-                0.1025390625,
-                0.1171875,
-                0.146484375,
-                0.146484375,
-                0.1318359375,
-                0.1025390625,
-                0.087890625,
-                0.05859375,
-                0.05859375,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.05859375,
-                0.0439453125,
-                0.029296875,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.029296875,
-                0.0439453125,
-                0.0439453125,
-                0.029296875,
-                0.0146484375
+              0.05859375,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.05859375,
+              0.05859375,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.0732421875,
+              0.087890625,
+              0.087890625,
+              0.0732421875,
+              0.087890625,
+              0.087890625,
+              0.0732421875,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.05859375,
+              0,
+              0,
+              0.0146484375,
+              0,
+              0.029296875,
+              0.1318359375,
+              0.439453125,
+              0.76171875,
+              0.0146484375,
+              -0.1025390625,
+              -0.146484375,
+              -0.1025390625,
+              -0.0732421875,
+              -0.029296875,
+              -0.0146484375,
+              -0.029296875,
+              -0.0146484375,
+              -0.029296875,
+              -0.029296875,
+              -0.0439453125,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.029296875,
+              -0.0146484375,
+              -0.029296875,
+              -0.05859375,
+              -0.0439453125,
+              -0.0439453125,
+              -0.029296875,
+              -0.0146484375,
+              0,
+              -0.029296875,
+              -0.0146484375,
+              0.029296875,
+              0.05859375,
+              0.0732421875,
+              0.0732421875,
+              0.1318359375,
+              0.146484375,
+              0.1611328125,
+              0.146484375,
+              0.1318359375,
+              0.087890625,
+              0.0439453125,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0,
+              0.029296875,
+              0.0146484375,
+              0,
+              0,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              -0.0146484375,
+              -0.0146484375,
+              0.0146484375,
+              0,
+              0.0146484375,
+              0,
+              0.0146484375,
+              -0.0146484375,
+              0.0146484375,
+              0,
+              -0.0146484375,
+              -0.029296875,
+              -0.0146484375,
+              0,
+              0,
+              -0.0146484375,
+              -0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.05859375,
+              0.0146484375,
+              0,
+              -0.0146484375,
+              -0.0146484375,
+              -0.0146484375,
+              0,
+              0,
+              -0.029296875,
+              -0.0439453125,
+              -0.0146484375,
+              0.0146484375,
+              0.1611328125,
+              0.556640625,
+              0.46875,
+              0.0146484375,
+              -0.1025390625,
+              -0.1611328125,
+              -0.1025390625,
+              -0.0732421875,
+              -0.0732421875,
+              -0.0732421875,
+              -0.0732421875,
+              -0.05859375,
+              -0.05859375,
+              -0.05859375,
+              -0.0732421875,
+              -0.0439453125,
+              -0.05859375,
+              -0.0439453125,
+              -0.0732421875,
+              -0.0732421875,
+              -0.05859375,
+              -0.05859375,
+              -0.05859375,
+              -0.029296875,
+              -0.0439453125,
+              -0.05859375,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0146484375,
+              0,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.1025390625,
+              0.1171875,
+              0.1171875,
+              0.1171875,
+              0.087890625,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.0439453125,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.0439453125,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.0439453125,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0,
+              -0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              -0.0146484375,
+              0.0439453125,
+              0.029296875,
+              0.05859375,
+              0.05859375,
+              0.05859375,
+              0.0732421875,
+              0.0732421875,
+              0.05859375,
+              0,
+              0,
+              0.0146484375,
+              0.0146484375,
+              0,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0439453125,
+              0.2197265625,
+              0.615234375,
+              0.52734375,
+              0.0146484375,
+              -0.0732421875,
+              -0.087890625,
+              -0.05859375,
+              -0.0439453125,
+              -0.0146484375,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              -0.0439453125,
+              -0.0146484375,
+              -0.0146484375,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              -0.0439453125,
+              -0.029296875,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              0,
+              0,
+              -0.0146484375,
+              0,
+              0,
+              0.029296875,
+              0.0439453125,
+              0.1025390625,
+              0.1025390625,
+              0.1171875,
+              0.146484375,
+              0.146484375,
+              0.146484375,
+              0.1171875,
+              0.087890625,
+              0.0732421875,
+              0.087890625,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.087890625,
+              0.05859375,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.029296875,
+              0.0732421875,
+              0.0732421875,
+              0.0732421875,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.0732421875,
+              0.0439453125,
+              0.0439453125,
+              0.0732421875,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.029296875,
+              0.0439453125,
+              0.05859375,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0732421875,
+              0.0732421875,
+              0.087890625,
+              0.087890625,
+              0.1025390625,
+              0.1025390625,
+              0.0732421875,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.0146484375,
+              0.0146484375,
+              0.0439453125,
+              0.029296875,
+              0.0146484375,
+              0.0732421875,
+              0.29296875,
+              0.673828125,
+              0.439453125,
+              0.0146484375,
+              -0.1025390625,
+              -0.1025390625,
+              -0.029296875,
+              -0.0439453125,
+              -0.029296875,
+              -0.0146484375,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              -0.0146484375,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.029296875,
+              -0.0439453125,
+              0,
+              0,
+              -0.0439453125,
+              -0.029296875,
+              -0.0146484375,
+              -0.029296875,
+              -0.0146484375,
+              0,
+              0.029296875,
+              0.0439453125,
+              0.087890625,
+              0.087890625,
+              0.1025390625,
+              0.146484375,
+              0.146484375,
+              0.1611328125,
+              0.146484375,
+              0.1171875,
+              0.1025390625,
+              0.087890625,
+              0.087890625,
+              0.0732421875,
+              0.05859375,
+              0.05859375,
+              0.0732421875,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.05859375,
+              0.0439453125,
+              0.05859375,
+              0.05859375,
+              0.0732421875,
+              0.0732421875,
+              0.05859375,
+              0.05859375,
+              0.05859375,
+              0.0732421875,
+              0.0439453125,
+              0.05859375,
+              0.0732421875,
+              0.05859375,
+              0.05859375,
+              0.0732421875,
+              0.05859375,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.05859375,
+              0.029296875,
+              0.0439453125,
+              0.05859375,
+              0.05859375,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.05859375,
+              0.0732421875,
+              0.0732421875,
+              0.087890625,
+              0.0732421875,
+              0.1025390625,
+              0.1318359375,
+              0.087890625,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0,
+              0.0146484375,
+              0.1318359375,
+              0.498046875,
+              0.7177734375,
+              0.0439453125,
+              -0.087890625,
+              -0.1171875,
+              -0.087890625,
+              -0.05859375,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0146484375,
+              -0.0439453125,
+              -0.05859375,
+              -0.0439453125,
+              -0.0439453125,
+              -0.029296875,
+              -0.0146484375,
+              -0.0439453125,
+              -0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.05859375,
+              0.0732421875,
+              0.1025390625,
+              0.1318359375,
+              0.146484375,
+              0.1318359375,
+              0.1318359375,
+              0.1171875,
+              0.05859375,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.05859375,
+              0.0439453125,
+              0.029296875,
+              0.05859375,
+              0.05859375,
+              0.0146484375,
+              0.05859375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.05859375,
+              0.0439453125,
+              0.0146484375,
+              0,
+              0.029296875,
+              0.029296875,
+              0,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0,
+              -0.0146484375,
+              0,
+              0.0146484375,
+              0.0146484375,
+              0,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.0439453125,
+              0.0732421875,
+              0.05859375,
+              0.05859375,
+              0.05859375,
+              0.029296875,
+              0,
+              0.029296875,
+              0,
+              0,
+              0.029296875,
+              0.0146484375,
+              0,
+              0.0146484375,
+              0,
+              0.0732421875,
+              0.263671875,
+              0.7177734375,
+              0.46875,
+              -0.029296875,
+              -0.146484375,
+              -0.1171875,
+              -0.0732421875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0732421875,
+              -0.05859375,
+              -0.029296875,
+              -0.0439453125,
+              -0.05859375,
+              -0.05859375,
+              -0.0732421875,
+              -0.0732421875,
+              -0.05859375,
+              -0.0439453125,
+              -0.05859375,
+              -0.0439453125,
+              -0.05859375,
+              -0.05859375,
+              -0.05859375,
+              -0.0439453125,
+              -0.05859375,
+              -0.0146484375,
+              -0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.0732421875,
+              0.087890625,
+              0.1171875,
+              0.1611328125,
+              0.17578125,
+              0.146484375,
+              0.1171875,
+              0.1025390625,
+              0.05859375,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.0732421875,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0732421875,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.0146484375,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.029296875,
+              0.0146484375,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.0439453125,
+              0.087890625,
+              0.0732421875,
+              0.0732421875,
+              0.05859375,
+              0.0732421875,
+              0.0732421875,
+              0.05859375,
+              0,
+              0,
+              0.029296875,
+              0.0146484375,
+              0,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.1171875,
+              0.4541015625,
+              0.8056640625,
+              0.1171875,
+              -0.1025390625,
+              -0.146484375,
+              -0.1171875,
+              -0.05859375,
+              -0.0439453125,
+              -0.0146484375,
+              -0.029296875,
+              -0.0439453125,
+              -0.05859375,
+              -0.0146484375,
+              -0.0146484375,
+              -0.0439453125,
+              -0.05859375,
+              -0.029296875,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.029296875,
+              -0.0439453125,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              0.0439453125,
+              0.1025390625,
+              0.1025390625,
+              0.1171875,
+              0.1611328125,
+              0.205078125,
+              0.1611328125,
+              0.1904296875,
+              0.1318359375,
+              0.087890625,
+              0.05859375,
+              0.05859375,
+              0.0732421875,
+              0.0439453125,
+              0.0146484375,
+              0.0439453125,
+              0.05859375,
+              0.05859375,
+              0.05859375,
+              0.05859375,
+              0.0439453125,
+              0.05859375,
+              0.0732421875,
+              0.0439453125,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.0732421875,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.029296875,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.05859375,
+              0.05859375,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.087890625,
+              0.1025390625,
+              0.087890625,
+              0.087890625,
+              0.087890625,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.1025390625,
+              0.3662109375,
+              0.7177734375,
+              0.234375,
+              -0.0732421875,
+              -0.1318359375,
+              -0.1025390625,
+              -0.0439453125,
+              -0.0439453125,
+              -0.029296875,
+              -0.0439453125,
+              -0.029296875,
+              -0.0146484375,
+              -0.0439453125,
+              -0.0146484375,
+              -0.0146484375,
+              -0.0439453125,
+              -0.0439453125,
+              -0.029296875,
+              -0.029296875,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0146484375,
+              0,
+              -0.029296875,
+              -0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.0439453125,
+              0.0732421875,
+              0.087890625,
+              0.1318359375,
+              0.1611328125,
+              0.1611328125,
+              0.1611328125,
+              0.1318359375,
+              0.1171875,
+              0.0732421875,
+              0.05859375,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0732421875,
+              0.0732421875,
+              0.0732421875,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0,
+              0,
+              0.0146484375,
+              0,
+              0,
+              0.0146484375,
+              0,
+              -0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.2197265625,
+              0.6298828125,
+              0.5126953125,
+              0.0146484375,
+              -0.1025390625,
+              -0.1171875,
+              -0.05859375,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0439453125,
+              -0.05859375,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0439453125,
+              -0.05859375,
+              -0.05859375,
+              -0.05859375,
+              -0.05859375,
+              -0.05859375,
+              -0.0732421875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.05859375,
+              -0.05859375,
+              -0.05859375,
+              -0.05859375,
+              -0.0439453125,
+              -0.0146484375,
+              0,
+              0,
+              0.029296875,
+              0.0439453125,
+              0.0732421875,
+              0.1025390625,
+              0.1171875,
+              0.1318359375,
+              0.1318359375,
+              0.1171875,
+              0.087890625,
+              0.0732421875,
+              0.05859375,
+              0.05859375,
+              0.05859375,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.05859375,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0,
+              0.0146484375,
+              0.029296875,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.029296875,
+              0.0146484375,
+              0.029296875,
+              0.0439453125,
+              0.0732421875,
+              0.05859375,
+              0.0732421875,
+              0.1025390625,
+              0.05859375,
+              0.0146484375,
+              0,
+              0,
+              0.0439453125,
+              0,
+              0,
+              0.0146484375,
+              0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.1171875,
+              0.41015625,
+              0.7177734375,
+              0.146484375,
+              -0.0439453125,
+              -0.1025390625,
+              -0.0732421875,
+              -0.0439453125,
+              -0.05859375,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0439453125,
+              -0.05859375,
+              -0.05859375,
+              -0.0439453125,
+              -0.029296875,
+              -0.0439453125,
+              -0.0732421875,
+              -0.05859375,
+              -0.029296875,
+              -0.05859375,
+              -0.05859375,
+              -0.0439453125,
+              -0.029296875,
+              -0.0439453125,
+              -0.0439453125,
+              -0.0146484375,
+              0.0146484375,
+              0.029296875,
+              0.05859375,
+              0.0732421875,
+              0.1025390625,
+              0.1171875,
+              0.146484375,
+              0.146484375,
+              0.1318359375,
+              0.1025390625,
+              0.087890625,
+              0.05859375,
+              0.05859375,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.05859375,
+              0.0439453125,
+              0.029296875,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.029296875,
+              0.0439453125,
+              0.0439453125,
+              0.029296875,
+              0.0146484375
             ],
 
-        },
-        "result": {
+          },
+          "result": {
             "FangChan": {
-                "prediction_AD": "0.0",
-                "preds": {}
+              "prediction_AD": "0.0",
+              "preds": {}
             },
             "FeiDa": {
-                "prediction_AD": "0.0189",
-                "preds": {}
+              "prediction_AD": "0.0189",
+              "preds": {}
             },
             "GengSi": {
-                "prediction_AD": "0.9779",
-                "preds": {
-                    "下壁/前侧壁/下侧壁/侧壁心肌梗死": "0.998"
-                }
+              "prediction_AD": "0.9779",
+              "preds": {
+                "下壁/前侧壁/下侧壁/侧壁心肌梗死": "0.998"
+              }
             },
             "GuoSu": {
-                "prediction_AD": "0.4077",
-                "preds": {}
+              "prediction_AD": "0.4077",
+              "preds": {}
             },
             "JieLv": {
-                "prediction_AD": "1",
-                "preds": {
-                    "窦性心律": "0.9488"
-                }
+              "prediction_AD": "1",
+              "preds": {
+                "窦性心律": "0.9488"
+              }
             },
             "ZuZhi": {
-                "prediction_AD": "0.7334",
-                "preds": {
-                    "房室阻滞": "0.7958"
-                }
+              "prediction_AD": "0.7334",
+              "preds": {
+                "房室阻滞": "0.7958"
+              }
             }
+          }
         }
-    }
-}
-var data = obj
+      }
+      var data = obj
       // 基于准备好的dom，初始化echarts实例
       var myChart = this.$echarts.init(document.getElementById("myChart"));
       // 绘制图表配置
@@ -3096,17 +3169,17 @@ var data = obj
       };
       myChart.setOption(Ioption);
       // 窗口大小自适应方案
-      setTimeout(function() {
-        window.onresize = function() {
+      setTimeout(function () {
+        window.onresize = function () {
           myChart.resize();
         };
       }, 200);
     },
 
-     //散点图
-     drawscatter(){
-      var obj ={
-        "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphLorenz
+    //散点图
+    drawscatter() {
+      var obj = {
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphLorenz
       }
       var dom = document.getElementById('scatter');
       var myChart = echarts.init(dom, null, {
@@ -3118,29 +3191,32 @@ var data = obj
       var option;
 
       option = {
-       title:{
-          text:'Lorenz散点图-全部心搏',
-          left:'1%',
-       },
+        title: {
+          text: 'Lorenz散点图-全部心搏',
+          left: '1%',
+        },
         grid: {left: '18%',},
         xAxis: {},
         yAxis: {},
-        series: [{
-          symbolSize: 2,
-          data: obj.data,
-          name:"Lorenz-散点图 全部心搏",
-          type: 'scatter'
-        }]
+        series: [
+          {
+            symbolSize: 2,
+            data: obj.data,
+            name: "Lorenz-散点图 全部心搏",
+            type: 'scatter'
+
+          }
+        ]
       };
 
       if (option && typeof option === 'object') {
         myChart.setOption(option);
       }
 
-       window.addEventListener('resize', myChart.resize);
-     },
+      window.addEventListener('resize', myChart.resize);
+    },
 
-     drawBar(){
+    drawBar() {
       var dom = document.getElementById('bar');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
@@ -3150,18 +3226,18 @@ var data = obj
 
       var option;
 
-    option = {
-    title:{
-        text:'心率直方图',
-        left:'1%',
-     },
+      option = {
+        title: {
+          text: '心率直方图',
+          left: '1%',
+        },
         grid: {left: '18%',},
-      tooltip: {
-        trigger: 'axis'
-      },
+        tooltip: {
+          trigger: 'axis'
+        },
         xAxis: {
           type: 'category',
-          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartRatesFrequency
+          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartRatesFrequency
 
         },
         yAxis: {
@@ -3169,20 +3245,20 @@ var data = obj
         },
         series: [
           {
-            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartRatesFrequency_Count,
+            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartRatesFrequency_Count,
             type: 'bar'
           }
         ]
       };
 
-    if (option && typeof option === 'object') {
-      myChart.setOption(option);
-    }
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
 
-    window.addEventListener('resize', myChart.resize);
-     },
-     //NN间期直方图
-     drawBar1(){
+      window.addEventListener('resize', myChart.resize);
+    },
+    //NN间期直方图
+    drawBar1() {
       var dom = document.getElementById('bar1');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
@@ -3192,38 +3268,38 @@ var data = obj
 
       var option;
 
-    option = {
-        title:{
-        text:'NN间期直方图',
-        left:'1%',
-     },
+      option = {
+        title: {
+          text: 'NN间期直方图',
+          left: '1%',
+        },
         grid: {left: '18%',},
-      tooltip: {
-        trigger: 'axis'
-      },
+        tooltip: {
+          trigger: 'axis'
+        },
         xAxis: {
           type: 'category',
-          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterFrequency,
+          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphNNinterFrequency,
         },
         yAxis: {
           type: 'value'
         },
         series: [
           {
-            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterFrequency_Count,
+            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphNNinterFrequency_Count,
             type: 'bar'
           }
         ]
       };
 
-    if (option && typeof option === 'object') {
-      myChart.setOption(option);
-    }
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
 
-    window.addEventListener('resize', myChart.resize);
-     },
+      window.addEventListener('resize', myChart.resize);
+    },
 //NN间期差值直方图
-     drawBar2(){
+    drawBar2() {
       var dom = document.getElementById('bar2');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
@@ -3233,18 +3309,18 @@ var data = obj
 
       var option;
 
-    option = {
-        title:{
-        text:'NN间期差值直方图',
-        left:'1%',
-     },
+      option = {
+        title: {
+          text: 'NN间期差值直方图',
+          left: '1%',
+        },
         grid: {left: '18%',},
-      tooltip: {
-        trigger: 'axis'
-      },
+        tooltip: {
+          trigger: 'axis'
+        },
         xAxis: {
           type: 'category',
-          data:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterSubFrequency
+          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphNNinterSubFrequency
 
         },
         yAxis: {
@@ -3252,25 +3328,24 @@ var data = obj
         },
         series: [
           {
-            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphNNinterSubFrequency_Count,
+            data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphNNinterSubFrequency_Count,
             type: 'bar'
           }
         ]
       };
 
-    if (option && typeof option === 'object') {
-      myChart.setOption(option);
-    }
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
 
-    window.addEventListener('resize', myChart.resize);
-     },
-
-    btnClear(){
+      window.addEventListener('resize', myChart.resize);
+    },
+    btnClear() {
       sessionStorage.clear();
     },
-    btnClearSelf(){
-      sessionStorage.removeItem(this.$route.query.pId+'data');
-      sessionStorage.removeItem(this.$route.query.pId+'show');
+    btnClearSelf() {
+      sessionStorage.removeItem(this.$route.query.pId + 'data');
+      sessionStorage.removeItem(this.$route.query.pId + 'show');
       window.location.reload();
     },
     btnClick() {
@@ -3284,9 +3359,9 @@ var data = obj
       let title = this.exportPDFtitle;
       html2Canvas(document.querySelector("#pdfDom"), {
         //清晰度，越大越好
-        scale:2,
+        scale: 2,
         allowTaint: true
-      }).then(function(canvas) {
+      }).then(function (canvas) {
         // 获取canvas画布的宽高
         let contentWidth = canvas.width;
         let contentHeight = canvas.height;
@@ -3317,82 +3392,87 @@ var data = obj
           }
         }
         PDF.save(title + ".pdf");
-        // console.log("*-*-*-*-*-*--*-*-*-*-")
-        // console.log(_self.pId)
-        // // 将pdf输入为base格式的字符串
-        // var buffer = PDF.output("datauristring")
-        // // 将base64格式的字符串转换为file文件
-        // var myfile = _self.dataURLtoFile(buffer, pdfName)
-        // name = _self.upload_pdf(myfile)
-        // console.log("*-*-*-*-*-*--*-*-*-*-")
+        console.log("*-*-*-*-*-*--*-*-*-*-")
+        console.log(_self.pId)
+        // 将pdf输入为base格式的字符串
+        var buffer = PDF.output("datauristring")
+        // 将base64格式的字符串转换为file文件
+        var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
+        name = _self.upload_pdf(myfile)
+        console.log("*-*-*-*-*-*--*-*-*-*-")
 
       });
-       sessionStorage.removeItem(this.$route.query.pId+'data');
-       sessionStorage.removeItem(this.$route.query.pId+'show');
+      sessionStorage.removeItem(this.$route.query.pId + 'data');
+      sessionStorage.removeItem(this.$route.query.pId + 'show');
     },
+
+
+
     //上传pdf
-    // upload_pdf(file) {
-    //   // var url ='';
-    //   var formdata = new FormData()
-    //   formdata.append("file", file); // 文件对象
-    //   console.log("上传pdf-1")
-    //   //多个参数的情况
-    //   // formdata.append("name", name);
-    //   var msg='';
-    //   // 之后ajax传递数据
-    //   $.ajax({
-    //     url: "http://219.155.7.235:5050/pdfTest",  //url地址
-    //     type: 'POST' ,                 //上传方式
-    //     data: formdata,                   // 上传formdata封装的数据
-    //     dataType: 'JSON',
-    //     cache: false,                  // 不缓存
-    //     async:false,                   // 开启的异步 保证返回信息
-    //     processData: false,            // jQuery不要去处理发送的数据
-    //     contentType: false,            // jQuery不要去设置Content-Type请求头
-    //     success:function (data) {
-    //       console.log("上传pdf-success")
-    //       if (data.status == 0) {
-    //         //var url= data.url;
-    //         //跳转pdf界面 uploadUrl为服务器地址
-    //         window.open(uploadUrl+url)
-    //       }else{
-    //         // layer.alert("文件上传失败");
-    //         alert("文件上传失败");
-    //
-    //       }
-    //     },
-    //     error:function (data) {           //失败回调
-    //       layer.msg('数据不能为空', {icon: 5});
-    //       console.log(data);
-    //     }
-    //   });
+    upload_pdf(file) {
+      // var url ='';
+      var formdata = new FormData()
+      formdata.append("file", file); // 文件对象
+      console.log("上传pdf-1")
+      //多个参数的情况
+      // formdata.append("name", name);
+      var msg = '';
+      // 之后ajax传递数据
+      pdfDownload2(formdata).then(res => {
+        console.log(res);
+      })
+      /*      $.ajax({
+              url: "http://219.155.7.235:5050/pdfTest",  //url地址
+              type: 'POST' ,                 //上传方式
+              data: formdata,                   // 上传formdata封装的数据
+              dataType: 'JSON',
+              cache: false,                  // 不缓存
+              async:false,                   // 开启的异步 保证返回信息
+              processData: false,            // jQuery不要去处理发送的数据
+              contentType: false,            // jQuery不要去设置Content-Type请求头
+              success:function (data) {
+                console.log("上传pdf-success")
+                if (data.status == 0) {
+                  //var url= data.url;
+                  //跳转pdf界面 uploadUrl为服务器地址
+                  window.open(uploadUrl+url)
+                }else{
+                  // layer.alert("文件上传失败");
+                  alert("文件上传失败");
+                }
+              },
+              error:function (data) {           //失败回调
+                layer.msg('数据不能为空', {icon: 5});
+                console.log(data);
+              }
+            });*/
       //返回值
-      //return url;
-    // },
+      // return url;
+    },
     //将base64转换为文件对象
-    // dataURLtoFile(dataurl, filename) {
-    //   var arr = dataurl.split(',');
-    //   var mime = arr[0].match(/:(.*?);/)[1];
-    //   var bstr = atob(arr[1]);
-    //   var n = bstr.length;
-    //   var u8arr = new Uint8Array(n);
-    //   while(n--){
-    //     u8arr[n] = bstr.charCodeAt(n);
-    //   }
-    //   //转换成file对象
-    //   return new File([u8arr], filename, {type:mime});
-    //   //转换成成blob对象
-    //   //return new Blob([u8arr],{type:mime});
-    // },
+    dataURLtoFile(dataurl, filename) {
+      var arr = dataurl.split(',');
+      var mime = arr[0].match(/:(.*?);/)[1];
+      var bstr = atob(arr[1]);
+      var n = bstr.length;
+      var u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      //转换成file对象
+      return new File([u8arr], filename, {type: mime});
+      //转换成成blob对象
+      //return new Blob([u8arr],{type:mime});
+    },
 
     getDate() {
-      var str= new Date();
+      var str = new Date();
       console.log("++++++++++++++")
       console.log(this.diagnosisData)
-      if(this.diagnosisData!=null){
-        this.dataTime=this.diagnosisData
-      }else{
-        this.dataTime= str.getFullYear() + "-"
+      if (this.diagnosisData != null) {
+        this.dataTime = this.diagnosisData
+      } else {
+        this.dataTime = str.getFullYear() + "-"
           + (str.getMonth() + 1) + "-" + str.getDate();
 
         console.log("---------------------")
@@ -3402,37 +3482,37 @@ var data = obj
     },
 
     //保存结果
-    btnUpload(){
+    btnUpload() {
       var form = {
         pId: this.pId,
-        diagnosisStatus:'未确定',
+        diagnosisStatus: '未确定',
         reportType: this.ecg_type,
         diagnosisConclusion: this.froms.textarea.text1,
         reportTime: this.dataTime,
         diagnosisDoctor: this.doctorName,
       }
 
-      getReportByPId(this.pId).then(res=>{
+      getReportByPId(this.pId).then(res => {
 
-          if (res.data == null){
-            addReport(form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.getList();
-              console.log("新增成功！")
-            });
-          }else{
-            form["reportId"]=res.data.reportId
-            console.log(form)
-            updateReport(form).then(response=>{
-              this.$modal.msgSuccess("修改成功");
-              this.getList();
-              console.log("修改成功！")
-            })
-          }
-        })
-      }
+        if (res.data == null) {
+          addReport(form).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.getList();
+            console.log("新增成功！")
+          });
+        } else {
+          form["reportId"] = res.data.reportId
+          console.log(form)
+          updateReport(form).then(response => {
+            this.$modal.msgSuccess("修改成功");
+            this.getList();
+            console.log("修改成功！")
+          })
+        }
+      })
+    }
 
-    },
+  },
 }
 </script>
 
@@ -3442,6 +3522,7 @@ var data = obj
   padding: 0;
   box-sizing: border-box;
 }
+
 .clearfix::after {
   content: "";
   display: block;
@@ -3449,27 +3530,31 @@ var data = obj
   clear: both;
   visibility: hidden;
 }
+
 .clearfix {
   /* IE6、7 专有 */
   *zoom: 1;
 }
-.page{
-  padding-top: 50px ;
+
+.page {
+  padding-top: 50px;
   padding-bottom: 50px;
   margin-top: 5px;
   width: 794px;
   height: 1127px;
 }
 
-.main .time{
+.main .time {
   font-size: 6px;
   margin-top: 10px;
   margin-left: 65%;
 }
+
 h1 {
   text-align: center;
   margin-bottom: 5px;
 }
+
 h2 {
   text-align: center;
 }
@@ -3481,22 +3566,27 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box1-top {
   background-color: rgb(240, 240, 240);
   border-bottom: 1px solid black;
 }
+
 .box1-bottom {
   display: flex;
   justify-content: space-between;
 }
+
 .box1-bottom1 {
   float: left;
   padding-left: 3vw;
 }
+
 .box1-bottom2 {
   float: left;
   margin: 0;
 }
+
 .box1-bottom3 {
   float: right;
 }
@@ -3508,33 +3598,40 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box2-top {
   width: 100%;
 
 }
+
 .box2-right {
   width: 100%;
   border-left: 1px solid black;
 }
+
 .box2-title h2 {
   text-align: left;
   padding-left: 2vw;
   background-color: rgb(240, 240, 240);
   border-bottom: 1px solid black;
 }
-.box2-bottom{
-  border-top:1px solid black;
+
+.box2-bottom {
+  border-top: 1px solid black;
 }
+
 .box2-left-bottom,
 .box2-1-outer {
   padding-left: 2vw;
   display: flex;
 }
-.box2-right-bottom{
+
+.box2-right-bottom {
   flex: 3;
 }
-.box2-left-bottom .box2-1{
-  flex:4
+
+.box2-left-bottom .box2-1 {
+  flex: 4
 }
 
 .box3 {
@@ -3545,6 +3642,7 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box3 span {
   font-weight: 700;
 }
@@ -3556,22 +3654,26 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box4-left {
   float: left;
   width: 50%;
   border-right: 1px solid black;
 }
+
 .box4-right {
   float: right;
   width: 50%;
   /* border-left: 3px solid black; */
 }
+
 .box4-top h2 {
   text-align: left;
   padding-left: 2vw;
   background-color: rgb(240, 240, 240);
   border-bottom: 1px solid black;
 }
+
 .box4-left-bottom,
 .box4-right-bottom {
   padding-left: 2vw;
@@ -3585,12 +3687,15 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box5 h2 {
   text-align: left;
 }
+
 .box5 div {
   display: flex;
 }
+
 .box5 span {
   flex: 5;
 }
@@ -3603,17 +3708,20 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box6-top {
-  padding-top:5px ;
+  padding-top: 5px;
   padding-bottom: 5px;
   height: 35%;
   display: flex;
   align-items: center;
 }
+
 .box6-top h2,
 .box6-top span {
   float: left;
 }
+
 .box6-1 {
   display: flex;
 }
@@ -3630,21 +3738,26 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box7-top {
   height: 35%;
   display: flex;
   align-items: center;
 }
+
 .box7-top span {
   margin-left: 10vw;
 }
+
 .box7-top h2,
 .box7-top span {
   float: left;
 }
+
 .box7-1 {
   display: flex;
 }
+
 .box7-1 div {
   flex: 4;
 }
@@ -3657,13 +3770,16 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box8 h2 {
   text-align: left;
 }
+
 .box8-1 {
   margin: 5px 0;
 }
-.box8-1-1{
+
+.box8-1-1 {
   width: 682px;
   height: 120px;
   border: none;
@@ -3674,6 +3790,7 @@ h2 {
   font-family: "Helvetica Neue";
   word-wrap: break-word;
 }
+
 .box8 .bottom {
   position: relative;
   top: 0;
@@ -3684,6 +3801,7 @@ h2 {
   text-align: right;
 
 }
+
 .box8-2 {
   display: inline-block;
   width: 100px;
@@ -3691,7 +3809,7 @@ h2 {
   border: none;
   border-bottom: 1px solid black;
   margin-right: 10px;
-  outline:none
+  outline: none
 }
 
 .box9 {
@@ -3701,6 +3819,7 @@ h2 {
   border: 1px solid black;
   font-size: 13px;
 }
+
 .box9-bottom {
   display: flex;
   justify-content: space-between;
@@ -3725,6 +3844,7 @@ h2 {
   display: flex;
   justify-content: space-between;
 }
+
 .box11-1,
 .box11-2,
 .box11-3,
@@ -3734,11 +3854,13 @@ h2 {
   float: left;
   text-align: center;
 }
+
 .box11-3 span,
 .box11-4 span,
 .box11-5 span {
   margin-left: 1vw;
 }
+
 .box12 {
   width: 90%;
   margin: 0 auto;
@@ -3747,35 +3869,37 @@ h2 {
   font-size: 13px;
 }
 
-.box13{
+.box13 {
   width: 90%;
-  height:350px;
+  height: 350px;
   margin: 0 auto;
   padding: 5px 10px;
   border: 1px solid black;
   font-size: 13px;
 }
 
-.box13-left{
-  float:left;
-  width:50%;
-  height:100%;
+.box13-left {
+  float: left;
+  width: 50%;
+  height: 100%;
 }
-.box13-right{
-  float:right;
-  width:50%;
-  height:100%;
+
+.box13-right {
+  float: right;
+  width: 50%;
+  height: 100%;
   border-left: 1px solid black;
 }
 
 .flex-box {
   display: flex;
 }
+
 .flex-box-child {
   flex: 2;
 }
 
-::v-deep el-table-column{
+::v-deep el-table-column {
   background: #00afff;
   padding: 0;
 }

@@ -61,6 +61,7 @@ public class GenerateSms {
         AjaxResult ajax = AjaxResult.success();
         ajax.put("uuid", uuid);
         ajax.put("smsCode", code);
+        ajax.put("codeResult", codeResult);
         return ajax;
     }
 
