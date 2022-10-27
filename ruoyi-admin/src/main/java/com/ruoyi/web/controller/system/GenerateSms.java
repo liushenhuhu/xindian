@@ -61,6 +61,7 @@ public class GenerateSms {
         AjaxResult ajax = AjaxResult.success();
         ajax.put("uuid", uuid);
         ajax.put("smsCode", code);
+        ajax.put("codeResult", codeResult);
         return ajax;
     }
 
@@ -113,7 +114,7 @@ public class GenerateSms {
         //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
         headers.put("Authorization", "APPCODE " + appcode);
         Map<String, String> querys = new HashMap<String, String>();
-        querys.put("content", "【迈雅科技】您正在登录验证，验证码" + code + "，切勿将验证码泄露于他人，本条验证码有效期15分钟。");
+        querys.put("content", "【迈雅】您正在登录验证，验证码" + code + "，切勿将验证码泄露于他人，本条验证码有效期15分钟。");
         querys.put("mobile", telephone);
         String bodys = "";
         redisCache.setCacheObject(telephone, code, 15, TimeUnit.MINUTES);
