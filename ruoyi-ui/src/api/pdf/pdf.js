@@ -10,3 +10,10 @@ export function pdfDownload(data) {
 }
 
 
+export function pdfDownload2(data) {
+  return request({
+    url: '/pdf/file/uploadPdf',
+    method: 'post',
+    data: data
+  })
+}

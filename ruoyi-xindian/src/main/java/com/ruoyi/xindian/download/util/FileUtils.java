@@ -7,7 +7,7 @@ import java.io.*;
 public class FileUtils {
 
     //这是本地存入的格式，上传到服务器的话，格式类似于，"/root/images/pc/"
-    public static String UPLOAD_FOLDER = "D:/images/pc/";
+    public static String UPLOAD_FOLDER = "D:/pdf/pc/";
 
     /**
      * 将文件转换成Byte数组

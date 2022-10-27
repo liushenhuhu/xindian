@@ -46,14 +46,14 @@ public class PdfDownloadController extends BaseController {
 
     @RequestMapping(value = "/file/uploadPdf",method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult upLoadPlanFile(@RequestParam("pdf") MultipartFile uploadFile) {
+    public AjaxResult upLoadPlanFile(@RequestParam("file") MultipartFile uploadFile) {
         long startTime = System.currentTimeMillis();
         String pathForDb = null;
         String type = null;//文件类型
         String fileName;
 
         //这是本地存入的格式，上传到服务器的话，格式类似于，"/root/images/pc/"
-        String basePath = "D:/images/pc/";
+        String basePath = "D:/pdf/pc/";
 
 
         long size;
@@ -88,7 +88,7 @@ public class PdfDownloadController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return AjaxResult.error("图片上传失败");
+            return AjaxResult.error("PDF上传失败");
         }
         long endTime = System.currentTimeMillis();
         log.debug("上传用时：" + String.valueOf(endTime - startTime) + "ms");
