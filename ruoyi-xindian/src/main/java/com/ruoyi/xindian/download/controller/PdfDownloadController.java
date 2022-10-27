@@ -53,7 +53,8 @@ public class PdfDownloadController extends BaseController {
         String fileName;
 
         //这是本地存入的格式，上传到服务器的话，格式类似于，"/root/images/pc/"
-        String basePath = "D:/pdf/pc/";
+//        String basePath = "D:/pdf/pc/";
+        String basePath = "/home/chenpeng/workspace/system/xindian/data/pdf";
 
 
         long size;
