@@ -1069,7 +1069,7 @@ export default {
     this.line1();
     this.line2();
     // this.line3();
-    this.line4();
+    //this.line4();
     this.drawscatter();
     this.drawBar();
     this.drawBar1();
@@ -1698,151 +1698,256 @@ export default {
           "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
         };
 
-        var dom = document.getElementById('line4');
-        var myChart = echarts.init(dom, null, {
-          renderer: 'canvas',
-          useDirtyRect: false
-        });
-        var app = {};
-        var option;
-        var data=obj.data;
-        var time=data.map(function (item) {
-          return item[0];
-        })
-        var datatime=[];
-        for (var i=0;i<time.length;i++)
-        {
-          datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5)))
+      var dom = document.getElementById('line4');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
+      var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5)))
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
         }
-        var datax=[]
-        for (var i=0;i<24*60;i++){
-          datax.push(i)
-        }
-        var data2=data
-        for(i=0;i<data2.length;i++)
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
+      var datax=[];
+      var datay=[];
+      for (var i=0;i<24*60;i++){
+        datax.push(i)
+      }
+      // //   for (var i=0;i<24*60;i++){
+      // //     datay.push(undefined)
+      // // }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
+      // var j;
+      // for(i=0;i<data2.length-1;i++)
+      // {
+      //   if(data2[i+1][0]-data2[i][0]<50)
+      //   {
+      //     datay.push(data2[i][1])
+      //   }
+      //   else
+      //   {
+      //     for(j=i;j<data2[i][0]-1;j++)
+      //     {
+      //       datay.push(undefined)
+      //     }
+      //     datay[data2[i][0]-1]=data2[i][1];
+      //   }
+      // }
+      //   for(var j=datay.length-1;j<24*60;j++)
+      //   {
+      //     datay.push(undefined)
+      //   }
+      //   console.log(datay)
+      //   console.log(datatime)
+      //   console.log(datax)
+      var option1=[]
+      var temp
+      for(i=0;i<24;i++)
+      {
+        if(i<10)
         {
-          data2[i][0]=datatime[i]
+          temp='0'+i
         }
-        console.log(datatime)
-        var option1=[]
-        for(i=0;i<data.length;i=i+20)
+        else
         {
-          option1.push(
+          temp=i+''
+        }
+        option1.push(
+          {
+            xAxis: i*60,
+            label: {
+              position: 'start', // 表现内容展示的位置
+              color: '#8C8C8C' , // 展示内容颜色
+              formatter: temp
+            },
+          },
+        )
+      }
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '24小时心率变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis',
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //type: 'time',
+            show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // boundaryGap:true,
+            // data:timex
+            data: datax
+          },
+          yAxis: {
+            show: false,
+            // scale:true
+            data:datay,
+          },
+          // toolbox: {
+          //     right: 10,
+          //     feature: {
+          //         dataZoom: {
+          //             yAxisIndex: 'none'
+          //         },
+          //         restore: {},
+          //         saveAsImage: {}
+          //     }
+          // },
+          dataZoom: [
             {
-              xAxis: datatime[i],
+              startValue: 0,
+            },
+            {
+              type: 'inside'
+            }
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+
+            ],
+            outOfRange: {
+              color: '#AA069F'
+            }
+          },
+          series: {
+            name: '50次心搏均值心率',
+            type: 'scatter',       //type: scatter表示散点图
+            // smooth:'true',
+            data: data2,
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              symbol: ['none', 'none'],
+              lineStyle: {
+                color: '#aaa69d',
+                width: 1
+              },
               label: {
                 position: 'start', // 表现内容展示的位置
-                color: '#8C8C8C' , // 展示内容颜色
-                formatter: time[i]
+                color: '#8C8C8C'  // 展示内容颜色
               },
-            },
-          )
-        }
-        myChart.setOption(
-          (option = {
-            title: {
-              text: '心搏均值心率变化图',
-              left: '1%'
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              left: '5%',
-              right: '15%',
-              bottom: '10%'
-            },
-            xAxis: {
-              //type: 'time',
-              show:false,
-              // data: data.map(function (item) {
-              //   return item[0];
-              // })
-              // boundaryGap:true,
-              // data:timex
-              data: datax
-            },
-            yAxis: {
-              show: false,
-              // scale:true
-            },
-            // toolbox: {
-            //     right: 10,
-            //     feature: {
-            //         dataZoom: {
-            //             yAxisIndex: 'none'
-            //         },
-            //         restore: {},
-            //         saveAsImage: {}
-            //     }
-            // },
-            dataZoom: [
-              {
-                startValue: 0,
-              },
-              {
-                type: 'inside'
-              }
-            ],
-            visualMap: {
-              top: 50,
-              right: 10,
-              pieces: [
-                {
-                  gt: 0,
-                  lte: 60,
-                  color: '#3867d6'
-                },
-                {
-                  gt: 60,
-                  lte: 100,
-                  color: '#34ace0'
-                },
-                {
-                  gt: 100,
-                  lte: 120,
-                  color: '#fa8231'
-                },
-                {
-                  gt: 120,
-                  lte: 150,
-                  color: '#FD0100'
-                },
-
-              ],
-              outOfRange: {
-                color: '#AA069F'
-              }
-            },
-            series: {
-              name: '心搏均值心率',
-              type: 'line',
-              // smooth:'true',
-              data: data2,
-              // data: data.map(function (item) {
-              //   return item[1];
-              // }),
-              markLine: {
-                silent: true,
-                symbol: ['none', 'none'],
-                lineStyle: {
-                  color: '#aaa69d',
-                  width: 1
-                },
-                label: {
-                  position: 'start', // 表现内容展示的位置
-                  color: '#8C8C8C'  // 展示内容颜色
-                },
-                data: option1,
-              }
+              data:option1,
+              // [
+              //     {
+              //         xAxis: 1,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[1]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 10,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[10]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 40,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[40]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 99,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[99]
+              //         },
+              //     },
+              // ]
             }
-          })
-        );
+          }
+        })
+      );
 
-        if (option && typeof option === 'object') {
-          myChart.setOption(option);
-        }
-        window.addEventListener('resize', myChart.resize);
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      window.addEventListener('resize', myChart.resize);
     },
 
     //echarts测试

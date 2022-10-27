@@ -60,7 +60,7 @@
             <div class="header-left" >
                 <div class="header-1">
                 <div class="header-1-1">
-                  <strong>自动分析结果，需医师确认</strong>
+                  <strong>AI分析结果，需医师确认</strong>
                 </div>
                 <div class="header-1-1">
                   <div
