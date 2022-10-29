@@ -114,6 +114,9 @@
     </div>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">保存数据</el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="upload_pdf">
+      上传到服务器
+    </el-button>
   </div>
 </template>
 
@@ -123,12 +126,13 @@ import JsPDF from 'jspdf'
 import echarts from 'echarts'
 import $ from 'jquery';
 import {addReport, getReportByPId, updateReport} from "@/api/report/report";
+import {pdfDownload2} from "@/api/pdf/pdf";
 
 export default {
   name: "index",
   data() {
     return {
-      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.patientName+"静态心电报告",
+      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.patientName+"静态心电报告_"+this.$route.query.pId,
       pId:null,
       data:{
         name:(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.patientName,
@@ -2077,9 +2081,74 @@ export default {
             }
           }
         }
-        PDF.save(title + '.pdf')
-      })
+        PDF.save(title + '.pdf');
+        // 将pdf输入为base格式的字符串
+        var buffer = PDF.output("datauristring")
+        // 将base64格式的字符串转换为file文件
+        var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
+        name = _self.upload_pdf(myfile)
+      });
+      sessionStorage.removeItem(this.$route.query.pId + 'data');
+      sessionStorage.removeItem(this.$route.query.pId + 'show');
     },
+
+    //上传pdf
+    upload_pdf(file) {
+      // var url ='';
+      var formdata = new FormData()
+      formdata.append("file", file); // 文件对象
+      console.log("上传pdf-1")
+      //多个参数的情况
+      // formdata.append("name", name);
+      var msg = '';
+      // 之后ajax传递数据
+      pdfDownload2(formdata).then(res => {
+        console.log(res);
+      })
+      /*      $.ajax({
+              url: "http://219.155.7.235:5050/pdfTest",  //url地址
+              type: 'POST' ,                 //上传方式
+              data: formdata,                   // 上传formdata封装的数据
+              dataType: 'JSON',
+              cache: false,                  // 不缓存
+              async:false,                   // 开启的异步 保证返回信息
+              processData: false,            // jQuery不要去处理发送的数据
+              contentType: false,            // jQuery不要去设置Content-Type请求头
+              success:function (data) {
+                console.log("上传pdf-success")
+                if (data.status == 0) {
+                  //var url= data.url;
+                  //跳转pdf界面 uploadUrl为服务器地址
+                  window.open(uploadUrl+url)
+                }else{
+                  // layer.alert("文件上传失败");
+                  alert("文件上传失败");
+                }
+              },
+              error:function (data) {           //失败回调
+                layer.msg('数据不能为空', {icon: 5});
+                console.log(data);
+              }
+            });*/
+      //返回值
+      // return url;
+    },
+    //将base64转换为文件对象
+    dataURLtoFile(dataurl, filename) {
+      var arr = dataurl.split(',');
+      var mime = arr[0].match(/:(.*?);/)[1];
+      var bstr = atob(arr[1]);
+      var n = bstr.length;
+      var u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      //转换成file对象
+      return new File([u8arr], filename, {type: mime});
+      //转换成成blob对象
+      //return new Blob([u8arr],{type:mime});
+    },
+
     getDate() {
       var str= new Date();
       this.data.dataTime= str.getFullYear() + "-"

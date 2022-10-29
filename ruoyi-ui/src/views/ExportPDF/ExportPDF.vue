@@ -645,6 +645,8 @@
 
           </div>
         </div>
+
+
         <div class="page">
           <div class="main">
             <div class="box9 clearfix">
@@ -728,6 +730,50 @@
                 </div>
               </div>
             </div>
+            <div class="box12" id="line5" style="height: 300px"></div>
+            <div class="box12" id="line6" style="height: 300px"></div>
+            <div class="box12" id="line7" style="height: 300px"></div>
+          </div>
+        </div>
+        <div class="page">
+          <div class="main">
+            <div class="box9 clearfix">
+              <div class="box9-top">
+                <h2>概要数据统计表</h2>
+              </div>
+              <div class="box9-bottom">
+                <div class="box9-1">
+                  <div class="box9-2">
+                    姓名:
+                    <strong>{{ froms.patientInfo.name }}</strong>
+                  </div>
+                  <div class="box9-2">
+                    性别:
+                    <strong>{{ froms.patientInfo.sex }}</strong>
+                  </div>
+                </div>
+                <div class="box9-1">
+                  <div class="box9-2">
+                    年龄:
+                    <strong>{{ froms.patientInfo.age }}</strong>
+                  </div>
+                  <div class="box9-2">
+                    单号:
+                    <strong>{{ froms.patientInfo.no }}</strong>
+                  </div>
+                </div>
+                <div class="box9-1">
+                  <div class="box9-2">
+                    住院号:
+                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>
+                  </div>
+                  <div class="box9-2">
+                    科室:
+                    <strong>{{ froms.patientInfo.department }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="box13 clearfix">
               <div class="box13-left">
                 <div id="scatter" style="width:98% ;height:98%;float:right"></div>
@@ -748,20 +794,20 @@
         </div>
       </div>
     </div>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 7% ;margin-bottom: 15px" @click="btnClear">
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 1% ;margin-bottom: 15px" @click="btnClear">
       清除所有缓并刷新
     </el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px"
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px"
                @click="btnClearSelf">清除本页缓存并刷新
     </el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnClick">
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnClick">
       导出PDF
     </el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnUpload">
       保存诊断结果
     </el-button>
 
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="upload_pdf">
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="upload_pdf">
       上传到服务器
     </el-button>
   </div>
@@ -782,7 +828,7 @@ export default {
   name: "ExportPDF",
   data() {
     return {
-      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.姓名 + "心电报告",
+      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.姓名 + "心电报告_"+this.$route.query.pId,
       hospitalName: this.$route.query.hospitalName,
       pId: null,
       _th: null,
@@ -1066,12 +1112,13 @@ export default {
     }
   },
   mounted() {
-    this.drawLine();
     this.line();
     this.line1();
     this.line2();
     this.line3();
     this.line4();
+    this.line5();
+    this.line6();
     this.drawscatter();
     this.drawBar();
     this.drawBar1();
@@ -1275,13 +1322,152 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-    //10次心搏均值心率
+    //5次心搏均值心率
     line1() {
+      var obj = {
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_5
+      };
+
+      var dom = document.getElementById('line1');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
+      var option;
+      // $.get('line2.json', function (data) {
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '5次心搏均值心率变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // data:obj.data[0]
+            data: obj.data.map(function (item) {
+              return item[0];
+            })
+          },
+          yAxis: {
+            show: false,
+            // scale:true
+          },
+          // toolbox: {
+          //     right: 10,
+          //     feature: {
+          //         dataZoom: {
+          //             yAxisIndex: 'none'
+          //         },
+          //         restore: {},
+          //         saveAsImage: {}
+          //     }
+          // },
+          dataZoom: [
+            {
+              startValue: 0,
+            },
+            {
+              type: 'inside'
+            }
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+            ],
+            outOfRange: {
+              color: '#AA069F'
+            }
+          },
+          series: {
+            name: '5次心搏均值心率',
+            type: 'line',
+            // smooth:'true',
+            data: obj.data.map(function (item) {
+              return item[1];
+            }),
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              lineStyle: {
+
+                color: '#aaa69d',
+                width: 1
+              },
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C'  // 展示内容颜色
+              },
+
+              data: [
+                {
+                  yAxis: 60
+                },
+                {
+                  yAxis: 100
+                },
+                {
+                  yAxis: 120
+                },
+                {
+                  yAxis: 150
+                },
+                {
+                  yAxis: 180
+                }
+              ]
+            }
+          }
+        })
+      );
+      // });
+
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      window.addEventListener('resize', myChart.resize);
+    },
+    //10次心搏均值心率
+    line2() {
       var obj = {
         "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_10
       };
 
-      var dom = document.getElementById('line1');
+      var dom = document.getElementById('line2');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
@@ -1414,151 +1600,11 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-    //50次心搏均值心率
-    line2() {
-      var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_50
-      };
-
-      var dom = document.getElementById('line2');
-      var myChart = echarts.init(dom, null, {
-        renderer: 'canvas',
-        useDirtyRect: false
-      });
-      var app = {};
-      var option;
-      // $.get('line2.json', function (data) {
-      myChart.setOption(
-        (option = {
-          title: {
-            text: '50次心搏均值心率变化图',
-            left: '1%'
-          },
-          tooltip: {
-            trigger: 'axis'
-          },
-          grid: {
-            left: '5%',
-            right: '15%',
-            bottom: '10%'
-          },
-          xAxis: {
-            //show:false,
-            // data: data.map(function (item) {
-            //   return item[0];
-            // })
-            // data:obj.data[0]
-            data: obj.data.map(function (item) {
-              return item[0];
-            })
-          },
-          yAxis: {
-            show: false,
-            // scale:true
-          },
-          // toolbox: {
-          //     right: 10,
-          //     feature: {
-          //         dataZoom: {
-          //             yAxisIndex: 'none'
-          //         },
-          //         restore: {},
-          //         saveAsImage: {}
-          //     }
-          // },
-          dataZoom: [
-            {
-              startValue: 0,
-            },
-            {
-              type: 'inside'
-            }
-          ],
-          visualMap: {
-            top: 50,
-            right: 10,
-            pieces: [
-              {
-                gt: 0,
-                lte: 60,
-                color: '#3867d6'
-              },
-              {
-                gt: 60,
-                lte: 100,
-                color: '#34ace0'
-              },
-              {
-                gt: 100,
-                lte: 120,
-                color: '#fa8231'
-              },
-              {
-                gt: 120,
-                lte: 150,
-                color: '#FD0100'
-              },
-            ],
-            outOfRange: {
-              color: '#AA069F'
-            }
-          },
-          series: {
-            name: '50次心搏均值心率',
-            type: 'line',
-            // smooth:'true',
-            data: obj.data.map(function (item) {
-              return item[1];
-            }),
-            // data: data.map(function (item) {
-            //   return item[1];
-            // }),
-            markLine: {
-              silent: true,
-              lineStyle: {
-
-                color: '#aaa69d',
-                width: 1
-              },
-              label: {
-                position: 'start', // 表现内容展示的位置
-                color: '#8C8C8C'  // 展示内容颜色
-              },
-
-              data: [
-                {
-                  yAxis: 60
-                },
-                {
-                  yAxis: 100
-                },
-                {
-                  yAxis: 120
-                },
-                {
-                  yAxis: 150
-                },
-                {
-                  yAxis: 180
-                }
-              ]
-            }
-          }
-        })
-      );
-      // });
-
-      if (option && typeof option === 'object') {
-        myChart.setOption(option);
-      }
-      window.addEventListener('resize', myChart.resize);
-    },
-
+    //0-6
     line3() {
       var obj = {
-          "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_100
-        }
-      ;
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+      };
 
       var dom = document.getElementById('line3');
       var myChart = echarts.init(dom, null, {
@@ -1567,172 +1613,89 @@ export default {
       });
       var app = {};
       var option;
-      // $.get('line2.json', function (data) {
-      myChart.setOption(
-        (option = {
-          title: {
-            text: '100次心搏均值心率变化图',
-            left: '1%'
-          },
-          tooltip: {
-            trigger: 'axis'
-          },
-          grid: {
-            left: '5%',
-            right: '15%',
-            bottom: '10%'
-          },
-          xAxis: {
-            //show:false,
-            // data: data.map(function (item) {
-            //   return item[0];
-            // })
-            // data:obj.data[0]
-            data: obj.data.map(function (item) {
-              return item[0];
-            })
-          },
-          yAxis: {
-            show: false,
-            // scale:true
-          },
-          // toolbox: {
-          //     right: 10,
-          //     feature: {
-          //         dataZoom: {
-          //             yAxisIndex: 'none'
-          //         },
-          //         restore: {},
-          //         saveAsImage: {}
-          //     }
-          // },
-          dataZoom: [
-            {
-              startValue: 0,
-            },
-            {
-              type: 'inside'
-            }
-          ],
-          visualMap: {
-            top: 50,
-            right: 10,
-            pieces: [
-              {
-                gt: 0,
-                lte: 60,
-                color: '#3867d6'
-              },
-              {
-                gt: 60,
-                lte: 100,
-                color: '#34ace0'
-              },
-              {
-                gt: 100,
-                lte: 120,
-                color: '#fa8231'
-              },
-              {
-                gt: 120,
-                lte: 150,
-                color: '#FD0100'
-              },
-            ],
-            outOfRange: {
-              color: '#AA069F'
-            }
-          },
-          series: {
-            name: '100次心搏均值心率',
-            type: 'line',
-            // smooth:'true',
-            data: obj.data.map(function (item) {
-              return item[1];
-            }),
-            // data: data.map(function (item) {
-            //   return item[1];
-            // }),
-            markLine: {
-              silent: true,
-              lineStyle: {
-
-                color: '#aaa69d',
-                width: 1
-              },
-              label: {
-                position: 'start', // 表现内容展示的位置
-                color: '#8C8C8C'  // 展示内容颜色
-              },
-
-              data: [
-                {
-                  yAxis: 60
-                },
-                {
-                  yAxis: 100
-                },
-                {
-                  yAxis: 120
-                },
-                {
-                  yAxis: 150
-                },
-                {
-                  yAxis: 180
-                }
-              ]
-            }
-          }
-        })
-      );
-      // });
-
-      if (option && typeof option === 'object') {
-        myChart.setOption(option);
-      }
-      window.addEventListener('resize', myChart.resize);
-    },
-
-
-    line4() {
-      var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
-      };
-
-      var dom = document.getElementById('line4');
-      var myChart = echarts.init(dom, null, {
-        renderer: 'canvas',
-        useDirtyRect: false
-      });
-      var app = {};
-      var option;
-      var data = obj.data;
-      var time = data.map(function (item) {
+      var data = obj.data
+      var time=data.map(function (item) {
         return item[0];
       })
-      var datatime = [];
-      for (var i = 0; i < time.length; i++) {
-        datatime.push(parseInt(time[i].slice(0, 2)) * 60 + parseInt(time[i].slice(3, 5)))
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5)))
       }
-      var datax = []
-      for (var i = 0; i < 24 * 60; i++) {
-        datax.push(i)
-      }
-      var data2 = data
-      for (i = 0; i < data2.length; i++) {
-        data2[i][0] = datatime[i]
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
       }
       console.log(datatime)
-      var option1 = []
-      for (i = 0; i < data.length; i = i + 20) {
+      time=data.map(function (item) {
+        return item[0];
+      })
+      var datax=[];
+      var datay=[];
+      for (var i=0;i<=6*60;i++){
+        datax.push(i)
+      }
+      // //   for (var i=0;i<24*60;i++){
+      // //     datay.push(undefined)
+      // // }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
+      // var j;
+      // for(i=0;i<data2.length-1;i++)
+      // {
+      //   if(data2[i+1][0]-data2[i][0]<50)
+      //   {
+      //     datay.push(data2[i][1])
+      //   }
+      //   else
+      //   {
+      //     for(j=i;j<data2[i][0]-1;j++)
+      //     {
+      //       datay.push(undefined)
+      //     }
+      //     datay[data2[i][0]-1]=data2[i][1];
+      //   }
+      // }
+      //   for(var j=datay.length-1;j<24*60;j++)
+      //   {
+      //     datay.push(undefined)
+      //   }
+      //   console.log(datay)
+      //   console.log(datatime)
+      //   console.log(datax)
+      var option1=[]
+      var temp
+      for(i=0;i<24;i++)
+      {
+        if(i<10)
+        {
+          temp='0'+i+":00"
+        }
+        else
+        {
+          temp=i+":00"
+        }
         option1.push(
           {
-            xAxis: datatime[i],
+            xAxis: i*60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C', // 展示内容颜色
-              formatter: time[i]
+              color: '#8C8C8C' , // 展示内容颜色
+              formatter: temp
             },
           },
         )
@@ -1740,11 +1703,11 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '心搏均值心率变化图',
+            text: '0-6时心率变化图',
             left: '1%'
           },
           tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
           },
           grid: {
             left: '5%',
@@ -1753,7 +1716,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show: false,
+            show:false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -1764,6 +1727,7 @@ export default {
           yAxis: {
             show: false,
             // scale:true
+            data:datay,
           },
           // toolbox: {
           //     right: 10,
@@ -1814,8 +1778,8 @@ export default {
             }
           },
           series: {
-            name: '心搏均值心率',
-            type: 'line',
+            name: '0-6时心率变化图',
+            type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
             data: data2,
             // data: data.map(function (item) {
@@ -1832,7 +1796,57 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data: option1,
+              data:option1,
+              // [
+              //     {
+              //         xAxis: 1,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[1]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 10,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[10]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 40,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[40]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 99,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[99]
+              //         },
+              //     },
+              // ]
             }
           }
         })
@@ -1843,1337 +1857,680 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
-    // line4(){
-    //   var obj ={
-    //       "data":(JSON.parse(sessionStorage.getItem(this.$route.query.pId+"data"))).result.GraphHeartsTime
-    //     }
-    //   ;
-    //
-    //   var dom = document.getElementById('line4');
-    //   var myChart = echarts.init(dom, null, {
-    //     renderer: 'canvas',
-    //     useDirtyRect: false
-    //   });
-    //   var app = {};
-    //   var option;
-    //   var data = obj.data;
-    //   var time = data.map(function (item){
-    //     return item[0];
-    //   })
-    //   // for (var i=0 ;i<time.length;i++){
-    //   //   time.push(time[1]);
-    //   // }
-    //   // $.get('line2.json', function (data) {
-    //   myChart.setOption(
-    //     (option = {
-    //       title: {
-    //         text: '心搏均值心率变化图',
-    //         left: '1%'
-    //       },
-    //       tooltip: {
-    //         trigger: 'axis'
-    //       },
-    //       grid: {
-    //         left: '5%',
-    //         right: '15%',
-    //         bottom: '10%'
-    //       },
-    //       xAxis: {
-    //         show:false,
-    //         // data: data.map(function (item) {
-    //         //   return item[0];
-    //         // })
-    //         // data:obj.data[0]
-    //         data: time
-    //       },
-    //       yAxis: {
-    //         show:false,
-    //         // scale:true
-    //       },
-    //       // toolbox: {
-    //       //     right: 10,
-    //       //     feature: {
-    //       //         dataZoom: {
-    //       //             yAxisIndex: 'none'
-    //       //         },
-    //       //         restore: {},
-    //       //         saveAsImage: {}
-    //       //     }
-    //       // },
-    //       dataZoom: [
-    //         {
-    //           startValue: 0,
-    //         },
-    //         {
-    //           type: 'inside'
-    //         }
-    //       ],
-    //       visualMap: {
-    //         top: 50,
-    //         right: 10,
-    //         pieces: [
-    //           {
-    //             gt: 0,
-    //             lte: 60,
-    //             color: '#3867d6'
-    //           },
-    //           {
-    //             gt: 60,
-    //             lte: 100,
-    //             color: '#34ace0'
-    //           },
-    //           {
-    //             gt: 100,
-    //             lte: 120,
-    //             color: '#fa8231'
-    //           },
-    //           {
-    //             gt: 120,
-    //             lte: 150,
-    //             color: '#FD0100'
-    //           },
-    //         ],
-    //         outOfRange: {
-    //           color: '#AA069F'
-    //         }
-    //       },
-    //       series: {
-    //         name: '心搏均值心率',
-    //         type: 'line',
-    //         // smooth:'true',
-    //         data: obj.data.map(function (item){
-    //           return item[1];
-    //         }),
-    //         // data: data.map(function (item) {
-    //         //   return item[1];
-    //         // }),
-    //         markLine: {
-    //           silent: true,
-    //           symbol:['none','none'],
-    //           lineStyle: {
-    //             color: '#aaa69d',
-    //             width: 1
-    //           },
-    //           label: {
-    //             position: 'start', // 表现内容展示的位置
-    //             color: '#8C8C8C'  // 展示内容颜色
-    //           },
-    //
-    //           data: [
-    //             {
-    //               xAxis: 1,
-    //
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[1]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 10,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[10]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 40,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[40]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 66,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[66]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 66,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[66]
-    //               },
-    //             },
-    //             {
-    //               xAxis: 99,
-    //               label: {
-    //                 position: 'start', // 表现内容展示的位置
-    //                 color: '#8C8C8C' , // 展示内容颜色
-    //                 formatter: time[99]
-    //               },
-    //             },
-    //           ]
-    //         }
-    //       }
-    //     })
-    //   );
-    //   // });
-    //
-    //   if (option && typeof option === 'object') {
-    //     myChart.setOption(option);
-    //   }
-    //   window.addEventListener('resize', myChart.resize);
-    // },
-
-
-    //echarts测试
-    drawLine() {
+    //6-12
+    line4() {
       var obj = {
-        "result": {
-          "data": {
-            "I": [
-              0.05859375,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.05859375,
-              0.05859375,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.0732421875,
-              0.087890625,
-              0.087890625,
-              0.0732421875,
-              0.087890625,
-              0.087890625,
-              0.0732421875,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.05859375,
-              0,
-              0,
-              0.0146484375,
-              0,
-              0.029296875,
-              0.1318359375,
-              0.439453125,
-              0.76171875,
-              0.0146484375,
-              -0.1025390625,
-              -0.146484375,
-              -0.1025390625,
-              -0.0732421875,
-              -0.029296875,
-              -0.0146484375,
-              -0.029296875,
-              -0.0146484375,
-              -0.029296875,
-              -0.029296875,
-              -0.0439453125,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.029296875,
-              -0.0146484375,
-              -0.029296875,
-              -0.05859375,
-              -0.0439453125,
-              -0.0439453125,
-              -0.029296875,
-              -0.0146484375,
-              0,
-              -0.029296875,
-              -0.0146484375,
-              0.029296875,
-              0.05859375,
-              0.0732421875,
-              0.0732421875,
-              0.1318359375,
-              0.146484375,
-              0.1611328125,
-              0.146484375,
-              0.1318359375,
-              0.087890625,
-              0.0439453125,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0,
-              0.029296875,
-              0.0146484375,
-              0,
-              0,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              -0.0146484375,
-              -0.0146484375,
-              0.0146484375,
-              0,
-              0.0146484375,
-              0,
-              0.0146484375,
-              -0.0146484375,
-              0.0146484375,
-              0,
-              -0.0146484375,
-              -0.029296875,
-              -0.0146484375,
-              0,
-              0,
-              -0.0146484375,
-              -0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.05859375,
-              0.0146484375,
-              0,
-              -0.0146484375,
-              -0.0146484375,
-              -0.0146484375,
-              0,
-              0,
-              -0.029296875,
-              -0.0439453125,
-              -0.0146484375,
-              0.0146484375,
-              0.1611328125,
-              0.556640625,
-              0.46875,
-              0.0146484375,
-              -0.1025390625,
-              -0.1611328125,
-              -0.1025390625,
-              -0.0732421875,
-              -0.0732421875,
-              -0.0732421875,
-              -0.0732421875,
-              -0.05859375,
-              -0.05859375,
-              -0.05859375,
-              -0.0732421875,
-              -0.0439453125,
-              -0.05859375,
-              -0.0439453125,
-              -0.0732421875,
-              -0.0732421875,
-              -0.05859375,
-              -0.05859375,
-              -0.05859375,
-              -0.029296875,
-              -0.0439453125,
-              -0.05859375,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0146484375,
-              0,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.1025390625,
-              0.1171875,
-              0.1171875,
-              0.1171875,
-              0.087890625,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.0439453125,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.0439453125,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.0439453125,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0,
-              -0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              -0.0146484375,
-              0.0439453125,
-              0.029296875,
-              0.05859375,
-              0.05859375,
-              0.05859375,
-              0.0732421875,
-              0.0732421875,
-              0.05859375,
-              0,
-              0,
-              0.0146484375,
-              0.0146484375,
-              0,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0439453125,
-              0.2197265625,
-              0.615234375,
-              0.52734375,
-              0.0146484375,
-              -0.0732421875,
-              -0.087890625,
-              -0.05859375,
-              -0.0439453125,
-              -0.0146484375,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              -0.0439453125,
-              -0.0146484375,
-              -0.0146484375,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              -0.0439453125,
-              -0.029296875,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              0,
-              0,
-              -0.0146484375,
-              0,
-              0,
-              0.029296875,
-              0.0439453125,
-              0.1025390625,
-              0.1025390625,
-              0.1171875,
-              0.146484375,
-              0.146484375,
-              0.146484375,
-              0.1171875,
-              0.087890625,
-              0.0732421875,
-              0.087890625,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.087890625,
-              0.05859375,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.029296875,
-              0.0732421875,
-              0.0732421875,
-              0.0732421875,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.0732421875,
-              0.0439453125,
-              0.0439453125,
-              0.0732421875,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.029296875,
-              0.0439453125,
-              0.05859375,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0732421875,
-              0.0732421875,
-              0.087890625,
-              0.087890625,
-              0.1025390625,
-              0.1025390625,
-              0.0732421875,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.0146484375,
-              0.0146484375,
-              0.0439453125,
-              0.029296875,
-              0.0146484375,
-              0.0732421875,
-              0.29296875,
-              0.673828125,
-              0.439453125,
-              0.0146484375,
-              -0.1025390625,
-              -0.1025390625,
-              -0.029296875,
-              -0.0439453125,
-              -0.029296875,
-              -0.0146484375,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              -0.0146484375,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.029296875,
-              -0.0439453125,
-              0,
-              0,
-              -0.0439453125,
-              -0.029296875,
-              -0.0146484375,
-              -0.029296875,
-              -0.0146484375,
-              0,
-              0.029296875,
-              0.0439453125,
-              0.087890625,
-              0.087890625,
-              0.1025390625,
-              0.146484375,
-              0.146484375,
-              0.1611328125,
-              0.146484375,
-              0.1171875,
-              0.1025390625,
-              0.087890625,
-              0.087890625,
-              0.0732421875,
-              0.05859375,
-              0.05859375,
-              0.0732421875,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.05859375,
-              0.0439453125,
-              0.05859375,
-              0.05859375,
-              0.0732421875,
-              0.0732421875,
-              0.05859375,
-              0.05859375,
-              0.05859375,
-              0.0732421875,
-              0.0439453125,
-              0.05859375,
-              0.0732421875,
-              0.05859375,
-              0.05859375,
-              0.0732421875,
-              0.05859375,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.05859375,
-              0.029296875,
-              0.0439453125,
-              0.05859375,
-              0.05859375,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.05859375,
-              0.0732421875,
-              0.0732421875,
-              0.087890625,
-              0.0732421875,
-              0.1025390625,
-              0.1318359375,
-              0.087890625,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0,
-              0.0146484375,
-              0.1318359375,
-              0.498046875,
-              0.7177734375,
-              0.0439453125,
-              -0.087890625,
-              -0.1171875,
-              -0.087890625,
-              -0.05859375,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0146484375,
-              -0.0439453125,
-              -0.05859375,
-              -0.0439453125,
-              -0.0439453125,
-              -0.029296875,
-              -0.0146484375,
-              -0.0439453125,
-              -0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.05859375,
-              0.0732421875,
-              0.1025390625,
-              0.1318359375,
-              0.146484375,
-              0.1318359375,
-              0.1318359375,
-              0.1171875,
-              0.05859375,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.05859375,
-              0.0439453125,
-              0.029296875,
-              0.05859375,
-              0.05859375,
-              0.0146484375,
-              0.05859375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.05859375,
-              0.0439453125,
-              0.0146484375,
-              0,
-              0.029296875,
-              0.029296875,
-              0,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0,
-              -0.0146484375,
-              0,
-              0.0146484375,
-              0.0146484375,
-              0,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.0439453125,
-              0.0732421875,
-              0.05859375,
-              0.05859375,
-              0.05859375,
-              0.029296875,
-              0,
-              0.029296875,
-              0,
-              0,
-              0.029296875,
-              0.0146484375,
-              0,
-              0.0146484375,
-              0,
-              0.0732421875,
-              0.263671875,
-              0.7177734375,
-              0.46875,
-              -0.029296875,
-              -0.146484375,
-              -0.1171875,
-              -0.0732421875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0732421875,
-              -0.05859375,
-              -0.029296875,
-              -0.0439453125,
-              -0.05859375,
-              -0.05859375,
-              -0.0732421875,
-              -0.0732421875,
-              -0.05859375,
-              -0.0439453125,
-              -0.05859375,
-              -0.0439453125,
-              -0.05859375,
-              -0.05859375,
-              -0.05859375,
-              -0.0439453125,
-              -0.05859375,
-              -0.0146484375,
-              -0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.0732421875,
-              0.087890625,
-              0.1171875,
-              0.1611328125,
-              0.17578125,
-              0.146484375,
-              0.1171875,
-              0.1025390625,
-              0.05859375,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.0732421875,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0732421875,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.0146484375,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.029296875,
-              0.0146484375,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.0439453125,
-              0.087890625,
-              0.0732421875,
-              0.0732421875,
-              0.05859375,
-              0.0732421875,
-              0.0732421875,
-              0.05859375,
-              0,
-              0,
-              0.029296875,
-              0.0146484375,
-              0,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.1171875,
-              0.4541015625,
-              0.8056640625,
-              0.1171875,
-              -0.1025390625,
-              -0.146484375,
-              -0.1171875,
-              -0.05859375,
-              -0.0439453125,
-              -0.0146484375,
-              -0.029296875,
-              -0.0439453125,
-              -0.05859375,
-              -0.0146484375,
-              -0.0146484375,
-              -0.0439453125,
-              -0.05859375,
-              -0.029296875,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.029296875,
-              -0.0439453125,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              0.0439453125,
-              0.1025390625,
-              0.1025390625,
-              0.1171875,
-              0.1611328125,
-              0.205078125,
-              0.1611328125,
-              0.1904296875,
-              0.1318359375,
-              0.087890625,
-              0.05859375,
-              0.05859375,
-              0.0732421875,
-              0.0439453125,
-              0.0146484375,
-              0.0439453125,
-              0.05859375,
-              0.05859375,
-              0.05859375,
-              0.05859375,
-              0.0439453125,
-              0.05859375,
-              0.0732421875,
-              0.0439453125,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.0732421875,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.029296875,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.05859375,
-              0.05859375,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.087890625,
-              0.1025390625,
-              0.087890625,
-              0.087890625,
-              0.087890625,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.1025390625,
-              0.3662109375,
-              0.7177734375,
-              0.234375,
-              -0.0732421875,
-              -0.1318359375,
-              -0.1025390625,
-              -0.0439453125,
-              -0.0439453125,
-              -0.029296875,
-              -0.0439453125,
-              -0.029296875,
-              -0.0146484375,
-              -0.0439453125,
-              -0.0146484375,
-              -0.0146484375,
-              -0.0439453125,
-              -0.0439453125,
-              -0.029296875,
-              -0.029296875,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0146484375,
-              0,
-              -0.029296875,
-              -0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.0439453125,
-              0.0732421875,
-              0.087890625,
-              0.1318359375,
-              0.1611328125,
-              0.1611328125,
-              0.1611328125,
-              0.1318359375,
-              0.1171875,
-              0.0732421875,
-              0.05859375,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0732421875,
-              0.0732421875,
-              0.0732421875,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0,
-              0,
-              0.0146484375,
-              0,
-              0,
-              0.0146484375,
-              0,
-              -0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.2197265625,
-              0.6298828125,
-              0.5126953125,
-              0.0146484375,
-              -0.1025390625,
-              -0.1171875,
-              -0.05859375,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0439453125,
-              -0.05859375,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0439453125,
-              -0.05859375,
-              -0.05859375,
-              -0.05859375,
-              -0.05859375,
-              -0.05859375,
-              -0.0732421875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.05859375,
-              -0.05859375,
-              -0.05859375,
-              -0.05859375,
-              -0.0439453125,
-              -0.0146484375,
-              0,
-              0,
-              0.029296875,
-              0.0439453125,
-              0.0732421875,
-              0.1025390625,
-              0.1171875,
-              0.1318359375,
-              0.1318359375,
-              0.1171875,
-              0.087890625,
-              0.0732421875,
-              0.05859375,
-              0.05859375,
-              0.05859375,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.05859375,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0,
-              0.0146484375,
-              0.029296875,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.029296875,
-              0.0146484375,
-              0.029296875,
-              0.0439453125,
-              0.0732421875,
-              0.05859375,
-              0.0732421875,
-              0.1025390625,
-              0.05859375,
-              0.0146484375,
-              0,
-              0,
-              0.0439453125,
-              0,
-              0,
-              0.0146484375,
-              0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.1171875,
-              0.41015625,
-              0.7177734375,
-              0.146484375,
-              -0.0439453125,
-              -0.1025390625,
-              -0.0732421875,
-              -0.0439453125,
-              -0.05859375,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0439453125,
-              -0.05859375,
-              -0.05859375,
-              -0.0439453125,
-              -0.029296875,
-              -0.0439453125,
-              -0.0732421875,
-              -0.05859375,
-              -0.029296875,
-              -0.05859375,
-              -0.05859375,
-              -0.0439453125,
-              -0.029296875,
-              -0.0439453125,
-              -0.0439453125,
-              -0.0146484375,
-              0.0146484375,
-              0.029296875,
-              0.05859375,
-              0.0732421875,
-              0.1025390625,
-              0.1171875,
-              0.146484375,
-              0.146484375,
-              0.1318359375,
-              0.1025390625,
-              0.087890625,
-              0.05859375,
-              0.05859375,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.05859375,
-              0.0439453125,
-              0.029296875,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.029296875,
-              0.0439453125,
-              0.0439453125,
-              0.029296875,
-              0.0146484375
-            ],
-
-          },
-          "result": {
-            "FangChan": {
-              "prediction_AD": "0.0",
-              "preds": {}
-            },
-            "FeiDa": {
-              "prediction_AD": "0.0189",
-              "preds": {}
-            },
-            "GengSi": {
-              "prediction_AD": "0.9779",
-              "preds": {
-                "下壁/前侧壁/下侧壁/侧壁心肌梗死": "0.998"
-              }
-            },
-            "GuoSu": {
-              "prediction_AD": "0.4077",
-              "preds": {}
-            },
-            "JieLv": {
-              "prediction_AD": "1",
-              "preds": {
-                "窦性心律": "0.9488"
-              }
-            },
-            "ZuZhi": {
-              "prediction_AD": "0.7334",
-              "preds": {
-                "房室阻滞": "0.7958"
-              }
-            }
-          }
-        }
-      }
-      var data = obj
-      // 基于准备好的dom，初始化echarts实例
-      var myChart = this.$echarts.init(document.getElementById("myChart"));
-      // 绘制图表配置
-      var Iupy = [];
-      var timeupx = [];
-      var k;
-      for (k = 0; k <= 1000; k++) {
-        timeupx.push(k / 100 + "秒");
-      }
-      Iupy = data.result.data.I
-      var Ioption = {
-        animation: true,
-        color: "rgb(114,113,189)",
-        title: {
-          text: "电位（mV）",
-          textStyle: {
-            fontSize: 13
-          }
-        },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross"
-          }
-        },
-        grid: {
-          left: 50 /*"50px"*/,
-          right: 15 /*"15px"*/,
-          top: 25,
-          bottom: 30
-        },
-        // legend: {
-        //   data: ["当前电位"],
-        //   textStyle: {
-        //     color: "black"
-        //   } /*图例(legend)说明文字的颜色*/,
-        //   color: "rgb(114,113,189)",
-        //   left: "right"
-        // },
-        xAxis: {
-          boundaryGap: true,
-          data: timeupx,
-          axisLabel: {
-            //修改坐标系字体颜色
-            interval: 99,
-            show: true,
-            textStyle: {
-              color: "black"
-            }
-          },
-          splitLine: {
-            show: false,
-            lineStyle: {
-              type: "dashed",
-              opacity: 0.7
-            },
-            interval: 10
-          } /*网格线*/
-        },
-        yAxis: {
-          min: 1.4,
-          max: -1.4,
-          boundaryGap: true,
-          splitNumber: 4,
-          axisLabel: {
-            //修改坐标系字体颜色
-            show: true,
-            textStyle: {
-              color: "black"
-            }
-          },
-          splitLine: {
-            show: false,
-            lineStyle: {
-              type: "dashed",
-              opacity: 0.7
-            }
-          }
-        },
-        series: {
-          itemStyle: {
-            normal: {
-              lineStyle: {
-                color: "rgb(114,113,189)"
-              },
-              color: "#66b3ff" /*图例(legend)的颜色,不是图例说明文字的颜色*/
-            }
-          },
-          areaStyle: {
-            color: "rgb(114,113,189)",
-            origin: "start"
-          },
-          symbol: "none",
-          name: "当前电位",
-          color: ["rgb(114,113,189)"],
-          type: "line",
-          data: Iupy,
-          smooth: 0 //显示为平滑的曲线*/
-        }
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
       };
-      myChart.setOption(Ioption);
-      // 窗口大小自适应方案
-      setTimeout(function () {
-        window.onresize = function () {
-          myChart.resize();
-        };
-      }, 200);
+
+      var dom = document.getElementById('line4');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
+      var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-6*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
+      var datax=[];
+      var datay=[];
+      for (var i=6*60;i<=12*60;i++){
+        datax.push(i)
+      }
+      // //   for (var i=0;i<24*60;i++){
+      // //     datay.push(undefined)
+      // // }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
+      var option1=[]
+      var temp
+      for(i=6;i<=12;i++)
+      {
+        if(i<10)
+        {
+          temp='0'+i+":00"
+        }
+        else
+        {
+          temp=i+":00"
+        }
+        option1.push(
+          {
+            xAxis: (i-6)*60,
+            label: {
+              position: 'start', // 表现内容展示的位置
+              color: '#8C8C8C' , // 展示内容颜色
+              formatter: temp
+            },
+          },
+        )
+      }
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '6-12时心率变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis',
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //type: 'time',
+            show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // boundaryGap:true,
+            // data:timex
+            data: datax
+          },
+          yAxis: {
+            show: false,
+            // scale:true
+            data:datay,
+          },
+
+          dataZoom: [
+            {
+              startValue: 0,
+            },
+            {
+              type: 'inside'
+            }
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+
+            ],
+            outOfRange: {
+              color: '#AA069F'
+            }
+          },
+          series: {
+            name: '6-12时心率变化图',
+            type: 'scatter',       //type: scatter表示散点图
+            // smooth:'true',
+            data: data2,
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              symbol: ['none', 'none'],
+              lineStyle: {
+                color: '#aaa69d',
+                width: 1
+              },
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C'  // 展示内容颜色
+              },
+              data:option1,
+              // [
+              //     {
+              //         xAxis: 1,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[1]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 10,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[10]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 40,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[40]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 99,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[99]
+              //         },
+              //     },
+              // ]
+            }
+          }
+        })
+      );
+
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      window.addEventListener('resize', myChart.resize);
+    },
+    //12-18
+    line5() {
+      var obj = {
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+      };
+
+      var dom = document.getElementById('line5');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
+      var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-12*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
+      var datax=[];
+      var datay=[];
+      for (var i=12*60;i<=18*60;i++){
+        datax.push(i)
+      }
+      // //   for (var i=0;i<24*60;i++){
+      // //     datay.push(undefined)
+      // // }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
+      var option1=[]
+      var temp
+      for(i=12;i<=18;i++)
+      {
+        if(i<10)
+        {
+          temp='0'+i+":00"
+        }
+        else
+        {
+          temp=i+":00"
+        }
+        option1.push(
+          {
+            xAxis: (i-12)*60,
+            label: {
+              position: 'start', // 表现内容展示的位置
+              color: '#8C8C8C' , // 展示内容颜色
+              formatter: temp
+            },
+          },
+        )
+      }
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '12-18时心率变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis',
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //type: 'time',
+            show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // boundaryGap:true,
+            // data:timex
+            data: datax
+          },
+          yAxis: {
+            show: false,
+            // scale:true
+            data:datay,
+          },
+
+          dataZoom: [
+            {
+              startValue: 0,
+            },
+            {
+              type: 'inside'
+            }
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+
+            ],
+            outOfRange: {
+              color: '#AA069F'
+            }
+          },
+          series: {
+            name: '12-18时心率变化图',
+            type: 'scatter',       //type: scatter表示散点图
+            // smooth:'true',
+            data: data2,
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              symbol: ['none', 'none'],
+              lineStyle: {
+                color: '#aaa69d',
+                width: 1
+              },
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C'  // 展示内容颜色
+              },
+              data:option1,
+              // [
+              //     {
+              //         xAxis: 1,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[1]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 10,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[10]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 40,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[40]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 99,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[99]
+              //         },
+              //     },
+              // ]
+            }
+          }
+        })
+      );
+
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      window.addEventListener('resize', myChart.resize);
+    },
+    //18-24
+    line6(){
+      var obj = {
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+      };
+
+      var dom = document.getElementById('line6');
+      var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+      });
+      var app = {};
+      var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-18*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
+      var datax=[];
+      var datay=[];
+      for (var i=18*60;i<=24*60;i++){
+        datax.push(i)
+      }
+      // //   for (var i=0;i<24*60;i++){
+      // //     datay.push(undefined)
+      // // }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
+      var option1=[]
+      var temp
+      for(i=18;i<=24;i++)
+      {
+        if(i<10)
+        {
+          temp='0'+i+":00"
+        }
+        else
+        {
+          temp=i+":00"
+        }
+        option1.push(
+          {
+            xAxis: (i-18)*60,
+            label: {
+              position: 'start', // 表现内容展示的位置
+              color: '#8C8C8C' , // 展示内容颜色
+              formatter: temp
+            },
+          },
+        )
+      }
+      myChart.setOption(
+        (option = {
+          title: {
+            text: '18-24时心率变化图',
+            left: '1%'
+          },
+          tooltip: {
+            trigger: 'axis',
+          },
+          grid: {
+            left: '5%',
+            right: '15%',
+            bottom: '10%'
+          },
+          xAxis: {
+            //type: 'time',
+            show:false,
+            // data: data.map(function (item) {
+            //   return item[0];
+            // })
+            // boundaryGap:true,
+            // data:timex
+            data: datax
+          },
+          yAxis: {
+            show: false,
+            // scale:true
+            data:datay,
+          },
+
+          dataZoom: [
+            {
+              startValue: 0,
+            },
+            {
+              type: 'inside'
+            }
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 60,
+                color: '#3867d6'
+              },
+              {
+                gt: 60,
+                lte: 100,
+                color: '#34ace0'
+              },
+              {
+                gt: 100,
+                lte: 120,
+                color: '#fa8231'
+              },
+              {
+                gt: 120,
+                lte: 150,
+                color: '#FD0100'
+              },
+
+            ],
+            outOfRange: {
+              color: '#AA069F'
+            }
+          },
+          series: {
+            name: '18-24时心率变化图',
+            type: 'scatter',       //type: scatter表示散点图
+            // smooth:'true',
+            data: data2,
+            // data: data.map(function (item) {
+            //   return item[1];
+            // }),
+            markLine: {
+              silent: true,
+              symbol: ['none', 'none'],
+              lineStyle: {
+                color: '#aaa69d',
+                width: 1
+              },
+              label: {
+                position: 'start', // 表现内容展示的位置
+                color: '#8C8C8C'  // 展示内容颜色
+              },
+              data:option1,
+              // [
+              //     {
+              //         xAxis: 1,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[1]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 10,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[10]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 40,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[40]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 66,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[66]
+              //         },
+              //     },
+              //     {
+              //         xAxis: 99,
+              //         label: {
+              //             position: 'start', // 表现内容展示的位置
+              //             color: '#8C8C8C' , // 展示内容颜色
+              //             formatter: time[99]
+              //         },
+              //     },
+              // ]
+            }
+          }
+        })
+      );
+
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      window.addEventListener('resize', myChart.resize);
     },
 
     //散点图
@@ -3392,22 +2749,17 @@ export default {
           }
         }
         PDF.save(title + ".pdf");
-        console.log("*-*-*-*-*-*--*-*-*-*-")
-        console.log(_self.pId)
         // 将pdf输入为base格式的字符串
         var buffer = PDF.output("datauristring")
         // 将base64格式的字符串转换为file文件
         var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
         name = _self.upload_pdf(myfile)
-        console.log("*-*-*-*-*-*--*-*-*-*-")
+
 
       });
       sessionStorage.removeItem(this.$route.query.pId + 'data');
       sessionStorage.removeItem(this.$route.query.pId + 'show');
     },
-
-
-
     //上传pdf
     upload_pdf(file) {
       // var url ='';
