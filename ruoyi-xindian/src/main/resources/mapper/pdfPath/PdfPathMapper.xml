@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.pdfPath.mapper.PdfPathMapper">
+    
+    <resultMap type="PdfPath" id="PdfPathResult">
+        <result property="pathId"    column="path_id"    />
+        <result property="pId"    column="p_id"    />
+        <result property="pdfPath"    column="pdf_path"    />
+        <result property="pathTime"    column="path_time"    />
+    </resultMap>
+
+    <sql id="selectPdfPathVo">
+        select path_id, p_id, pdf_path, path_time from pdf_path
+    </sql>
+
+    <select id="selectPdfPathList" parameterType="PdfPath" resultMap="PdfPathResult">
+        <include refid="selectPdfPathVo"/>
+        <where>  
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+            <if test="pdfPath != null  and pdfPath != ''"> and pdf_path = #{pdfPath}</if>
+            <if test="pathTime != null "> and path_time = #{pathTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPdfPathByPathId" parameterType="Long" resultMap="PdfPathResult">
+        <include refid="selectPdfPathVo"/>
+        where path_id = #{pathId}
+    </select>
+        
+    <insert id="insertPdfPath" parameterType="PdfPath" useGeneratedKeys="true" keyProperty="pathId">
+        insert into pdf_path
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pId != null">p_id,</if>
+            <if test="pdfPath != null">pdf_path,</if>
+            <if test="pathTime != null">path_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pId != null">#{pId},</if>
+            <if test="pdfPath != null">#{pdfPath},</if>
+            <if test="pathTime != null">#{pathTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePdfPath" parameterType="PdfPath">
+        update pdf_path
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pId != null">p_id = #{pId},</if>
+            <if test="pdfPath != null">pdf_path = #{pdfPath},</if>
+            <if test="pathTime != null">path_time = #{pathTime},</if>
+        </trim>
+        where path_id = #{pathId}
+    </update>
+
+    <delete id="deletePdfPathByPathId" parameterType="Long">
+        delete from pdf_path where path_id = #{pathId}
+    </delete>
+
+    <delete id="deletePdfPathByPathIds" parameterType="String">
+        delete from pdf_path where path_id in 
+        <foreach item="pathId" collection="array" open="(" separator="," close=")">
+            #{pathId}
+        </foreach>
+    </delete>
+</mapper>

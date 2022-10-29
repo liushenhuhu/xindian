@@ -807,9 +807,6 @@
       保存诊断结果
     </el-button>
 
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="upload_pdf">
-      上传到服务器
-    </el-button>
   </div>
 
 </template>

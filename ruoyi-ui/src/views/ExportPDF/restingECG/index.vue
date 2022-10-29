@@ -114,9 +114,7 @@
     </div>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">导出PDF</el-button>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">保存数据</el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="upload_pdf">
-      上传到服务器
-    </el-button>
+
   </div>
 </template>
 
@@ -2042,6 +2040,7 @@ export default {
       });
     },
     btnClick(){
+      var _self = this
       // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
       let top = document.getElementById('pdfDom');
       if (top != null) {
