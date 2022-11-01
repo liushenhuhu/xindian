@@ -65,8 +65,8 @@ public class PdfDownloadController extends BaseController {
         String[] split = s[1].split("\\.");
         String pId = split[0];
         //这是本地存入的格式，上传到服务器的话，格式类似于，"/root/images/pc/"
-        String basePath = "D:/pdf/" + pathName;
-//        String basePath = "/home/chenpeng/workspace/system/xindian/data/pdf/" + pathName;
+//        String basePath = "D:/pdf/" + pathName;
+        String basePath = "/home/chenpeng/workspace/system/xindian/data/pdf/" + pathName;
 
 
         long size;
