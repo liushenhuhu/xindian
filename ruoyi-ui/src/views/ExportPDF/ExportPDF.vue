@@ -803,6 +803,9 @@
     <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnClick">
       导出PDF
     </el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnClickPDF">
+      上传PDF
+    </el-button>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnUpload">
       保存诊断结果
     </el-button>
@@ -2746,17 +2749,72 @@ export default {
           }
         }
         PDF.save(title + ".pdf");
-        // 将pdf输入为base格式的字符串
+/*        // 将pdf输入为base格式的字符串
         var buffer = PDF.output("datauristring")
         // 将base64格式的字符串转换为file文件
         var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
-        name = _self.upload_pdf(myfile)
+        name = _self.upload_pdf(myfile)*/
 
 
       });
       sessionStorage.removeItem(this.$route.query.pId + 'data');
       sessionStorage.removeItem(this.$route.query.pId + 'show');
     },
+
+    btnClickPDF() {
+      var _self = this
+      // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
+      let top = document.getElementById("pdfDom");
+      if (top != null) {
+        top.scrollIntoView();
+        top = null;
+      }
+      let title = this.exportPDFtitle;
+      html2Canvas(document.querySelector("#pdfDom"), {
+        //清晰度，越大越好
+        scale: 2,
+        allowTaint: true
+      }).then(function (canvas) {
+        // 获取canvas画布的宽高
+        let contentWidth = canvas.width;
+        let contentHeight = canvas.height;
+        // 一页pdf显示html页面生成的canvas高度;
+        let pageHeight = (contentWidth / 592.28) * 841.89;
+        // 未生成pdf的html页面高度
+        let leftHeight = contentHeight;
+        // 页面偏移
+        let position = 0;
+        // html页面生成的canvas在pdf中图片的宽高（本例为：横向a4纸[841.89,592.28]，纵向需调换尺寸）
+        let imgWidth = 592.28;
+        let imgHeight = (592.28 / contentWidth) * contentHeight;
+        let pageData = canvas.toDataURL("image/jpeg", 1.0);
+        let PDF = new JsPDF("", "pt", "a4");
+        // 两个高度需要区分: 一个是html页面的实际高度，和生成pdf的页面高度
+        // 当内容未超过pdf一页显示的范围，无需分页
+        if (leftHeight < pageHeight) {
+          PDF.addImage(pageData, "JPEG", 0, 0, imgWidth, imgHeight);
+        } else {
+          while (leftHeight > 0) {
+            PDF.addImage(pageData, "JPEG", 0, position, imgWidth, imgHeight);
+            leftHeight -= pageHeight;
+            position -= 841.89;
+            // 避免添加空白页
+            if (leftHeight > 0) {
+              PDF.addPage();
+            }
+          }
+        }
+        // PDF.save(title + ".pdf");
+        // 将pdf输入为base格式的字符串
+        var buffer = PDF.output("datauristring")
+        // 将base64格式的字符串转换为file文件
+        var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
+        name = _self.upload_pdf(myfile)
+      });
+      sessionStorage.removeItem(this.$route.query.pId + 'data');
+      sessionStorage.removeItem(this.$route.query.pId + 'show');
+    },
+
     //上传pdf
     upload_pdf(file) {
       // var url ='';
@@ -2769,6 +2827,11 @@ export default {
       // 之后ajax传递数据
       pdfDownload2(formdata).then(res => {
         console.log(res);
+        if (res.code === 200) {
+          this.$modal.msgSuccess("上传成功");
+        } else {
+          this.$modal.msgError("上传失败");
+        }
       })
       /*      $.ajax({
               url: "http://219.155.7.235:5050/pdfTest",  //url地址
