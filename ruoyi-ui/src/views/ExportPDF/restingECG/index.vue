@@ -2163,7 +2163,6 @@ export default {
       // 之后ajax传递数据
       pdfDownload2(formdata).then(res => {
         console.log(res);
-        console.log(res);
         if (res.code === 200) {
           this.$modal.msgSuccess("上传成功");
         } else {

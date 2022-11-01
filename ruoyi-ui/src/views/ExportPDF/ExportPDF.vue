@@ -2788,10 +2788,10 @@ export default {
         }
         // PDF.save(title + ".pdf");
         // 将pdf输入为base格式的字符串
-        //var buffer = PDF.output("datauristring")
+        var buffer = PDF.output("datauristring")
         // 将base64格式的字符串转换为file文件
-        //var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
-        //name = _self.upload_pdf(myfile)
+        var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
+        name = _self.upload_pdf(myfile)
 
       });
       sessionStorage.removeItem(this.$route.query.pId + 'data');
@@ -2859,38 +2859,15 @@ export default {
         // 之后ajax传递数据
         pdfDownload2(formdata).then(res => {
           console.log(res);
+          if (res.code === 200) {
+            this.$modal.msgSuccess("上传成功");
+          } else {
+            this.$modal.msgError("上传失败");
+          }
         })
 
       });
 
-
-      /*      $.ajax({
-              url: "http://219.155.7.235:5050/pdfTest",  //url地址
-              type: 'POST' ,                 //上传方式
-              data: formdata,                   // 上传formdata封装的数据
-              dataType: 'JSON',
-              cache: false,                  // 不缓存
-              async:false,                   // 开启的异步 保证返回信息
-              processData: false,            // jQuery不要去处理发送的数据
-              contentType: false,            // jQuery不要去设置Content-Type请求头
-              success:function (data) {
-                console.log("上传pdf-success")
-                if (data.status == 0) {
-                  //var url= data.url;
-                  //跳转pdf界面 uploadUrl为服务器地址
-                  window.open(uploadUrl+url)
-                }else{
-                  // layer.alert("文件上传失败");
-                  alert("文件上传失败");
-                }
-              },
-              error:function (data) {           //失败回调
-                layer.msg('数据不能为空', {icon: 5});
-                console.log(data);
-              }
-            });*/
-      //返回值
-      // return url;
     },
     //将base64转换为文件对象
     dataURLtoFile(dataurl, filename) {
