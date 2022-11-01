@@ -465,6 +465,187 @@
             </div>
           </div>
         </div>
+<!--        <div class="page">-->
+<!--          <div class="main">-->
+<!--            <div class="box9 clearfix">-->
+<!--              <div class="box9-top">-->
+<!--                <h2>概要数据统计表</h2>-->
+<!--              </div>-->
+<!--              <div class="box9-bottom">-->
+<!--                <div class="box9-1">-->
+<!--                  <div class="box9-2">-->
+<!--                    姓名:-->
+<!--                    <strong>{{ froms.patientInfo.name }}</strong>-->
+<!--                  </div>-->
+<!--                  <div class="box9-2">-->
+<!--                    性别:-->
+<!--                    <strong>{{ froms.patientInfo.sex }}</strong>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="box9-1">-->
+<!--                  <div class="box9-2">-->
+<!--                    年龄:-->
+<!--                    <strong>{{ froms.patientInfo.age }}</strong>-->
+<!--                  </div>-->
+<!--                  <div class="box9-2">-->
+<!--                    单号:-->
+<!--                    <strong>{{ froms.patientInfo.no }}</strong>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="box9-1">-->
+<!--                  <div class="box9-2">-->
+<!--                    住院号:-->
+<!--                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>-->
+<!--                  </div>-->
+<!--                  <div class="box9-2">-->
+<!--                    科室:-->
+<!--                    <strong>{{ froms.patientInfo.department }}</strong>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="box10" id="myChart">图形数据</div>-->
+<!--            <div class="box11 clearfix">-->
+<!--              <el-table-->
+<!--                :data="tableData"-->
+<!--                style="width: 100%"-->
+<!--                size="mini"-->
+<!--                :cell-style="columnStyle">-->
+<!--                <el-table-column-->
+<!--                  prop="time"-->
+<!--                  label="时间"-->
+<!--                  width="48">-->
+<!--                </el-table-column>-->
+<!--                <el-table-column-->
+<!--                  prop="heartBeatNumber"-->
+<!--                  label="心搏数"-->
+<!--                  width="48">-->
+<!--                </el-table-column>-->
+
+<!--                <el-table-column-->
+<!--                  label="心律(bpm)"-->
+<!--                >-->
+<!--                  <el-table-column-->
+<!--                    prop="heartRate.fastest"-->
+<!--                    label="最高"-->
+<!--                    width="42">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="heartRate.average"-->
+<!--                    label="平均"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="heartRate.slowest"-->
+<!--                    label="最低"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                </el-table-column>-->
+
+<!--                <el-table-column label="室性异位">-->
+<!--                  <el-table-column-->
+<!--                    prop="ventricularEctopic.total"-->
+<!--                    label="总数"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="ventricularEctopic.percentage"-->
+<!--                    label="%"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="ventricularEctopic.singleShot"-->
+<!--                    label="单发"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="ventricularEctopic.pair"-->
+<!--                    label="成对"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="ventricularEctopic.VT"-->
+<!--                    label="室速"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="ventricularEctopic.escape"-->
+<!--                    label="逸搏"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                </el-table-column>-->
+
+<!--                <el-table-column label="室性上异位">-->
+<!--                  <el-table-column-->
+<!--                    prop="supraventricularEctopic.total"-->
+<!--                    label="总数"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="supraventricularEctopic.percentage"-->
+<!--                    label="%"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="supraventricularEctopic.singleShot"-->
+<!--                    label="单发"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="supraventricularEctopic.pair"-->
+<!--                    label="成对"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="supraventricularEctopic.supraventricularTachycardia"-->
+<!--                    label="室上速"-->
+<!--                    width="40">-->
+<!--                  </el-table-column>-->
+<!--                </el-table-column>-->
+<!--                <el-table-column-->
+<!--                  prop="asystole"-->
+<!--                  label="停搏"-->
+<!--                  width="38">-->
+<!--                </el-table-column>-->
+<!--              </el-table>-->
+<!--              &lt;!&ndash;            <div class="box11-1">&ndash;&gt;-->
+<!--              &lt;!&ndash;              <span>时间</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;            <div class="box11-2">&ndash;&gt;-->
+<!--              &lt;!&ndash;              <span>心搏数</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;            <div class="box11-3">&ndash;&gt;-->
+<!--              &lt;!&ndash;              <span>心率</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;              <div class="box11-3-1">&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>最高</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>平均</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>最低</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;              </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;            <div class="box11-4">&ndash;&gt;-->
+<!--              &lt;!&ndash;              <span>室性异位</span>&ndash;&gt;-->
+
+<!--              &lt;!&ndash;              </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;            <div class="box11-5">&ndash;&gt;-->
+<!--              &lt;!&ndash;              <span>室上性异位</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;              <div class="box11-5-1">&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>总数</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>%</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>单发</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>成对室上速</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;              </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--              &lt;!&ndash;            <div class="box11-6">&ndash;&gt;-->
+<!--              &lt;!&ndash;              <span>停搏</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--            </div>-->
+<!--            <div class="box12" id="container" style="height: 300px"></div>-->
+<!--            <div class="box12" id="line1" style="height: 300px"></div>-->
+
+<!--          </div>-->
+<!--        </div>-->
+
         <div class="page">
           <div class="main">
             <div class="box9 clearfix">
@@ -504,237 +685,57 @@
                 </div>
               </div>
             </div>
-            <div class="box10" id="myChart">图形数据</div>
-            <div class="box11 clearfix">
-              <el-table
-                :data="tableData"
-                style="width: 100%"
-                size="mini"
-                :cell-style="columnStyle">
-                <el-table-column
-                  prop="time"
-                  label="时间"
-                  width="48">
-                </el-table-column>
-                <el-table-column
-                  prop="heartBeatNumber"
-                  label="心搏数"
-                  width="48">
-                </el-table-column>
-
-                <el-table-column
-                  label="心律(bpm)"
-                >
-                  <el-table-column
-                    prop="heartRate.fastest"
-                    label="最高"
-                    width="42">
-                  </el-table-column>
-                  <el-table-column
-                    prop="heartRate.average"
-                    label="平均"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="heartRate.slowest"
-                    label="最低"
-                    width="40">
-                  </el-table-column>
-                </el-table-column>
-
-                <el-table-column label="室性异位">
-                  <el-table-column
-                    prop="ventricularEctopic.total"
-                    label="总数"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="ventricularEctopic.percentage"
-                    label="%"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="ventricularEctopic.singleShot"
-                    label="单发"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="ventricularEctopic.pair"
-                    label="成对"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="ventricularEctopic.VT"
-                    label="室速"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="ventricularEctopic.escape"
-                    label="逸搏"
-                    width="40">
-                  </el-table-column>
-                </el-table-column>
-
-                <el-table-column label="室性上异位">
-                  <el-table-column
-                    prop="supraventricularEctopic.total"
-                    label="总数"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="supraventricularEctopic.percentage"
-                    label="%"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="supraventricularEctopic.singleShot"
-                    label="单发"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="supraventricularEctopic.pair"
-                    label="成对"
-                    width="40">
-                  </el-table-column>
-                  <el-table-column
-                    prop="supraventricularEctopic.supraventricularTachycardia"
-                    label="室上速"
-                    width="40">
-                  </el-table-column>
-                </el-table-column>
-                <el-table-column
-                  prop="asystole"
-                  label="停搏"
-                  width="38">
-                </el-table-column>
-              </el-table>
-              <!--            <div class="box11-1">-->
-              <!--              <span>时间</span>-->
-              <!--            </div>-->
-              <!--            <div class="box11-2">-->
-              <!--              <span>心搏数</span>-->
-              <!--            </div>-->
-              <!--            <div class="box11-3">-->
-              <!--              <span>心率</span>-->
-              <!--              <div class="box11-3-1">-->
-              <!--                <span>最高</span>-->
-              <!--                <span>平均</span>-->
-              <!--                <span>最低</span>-->
-              <!--              </div>-->
-              <!--            </div>-->
-              <!--            <div class="box11-4">-->
-              <!--              <span>室性异位</span>-->
-
-              <!--              </div>-->
-              <!--            </div>-->
-              <!--            <div class="box11-5">-->
-              <!--              <span>室上性异位</span>-->
-              <!--              <div class="box11-5-1">-->
-              <!--                <span>总数</span>-->
-              <!--                <span>%</span>-->
-              <!--                <span>单发</span>-->
-              <!--                <span>成对室上速</span>-->
-              <!--              </div>-->
-              <!--            </div>-->
-              <!--            <div class="box11-6">-->
-              <!--              <span>停搏</span>-->
-              <!--            </div>-->
-            </div>
-            <div class="box12" id="container" style="height: 300px"></div>
-            <div class="box12" id="line1" style="height: 300px"></div>
-
+<!--            <div class="box12" id="line2" style="height: 300px"></div>-->
+            <div class="box12" id="line3" style="height: 225px"></div>
+            <div class="box12" id="line4" style="height: 225px"></div>
+            <div class="box12" id="line5" style="height: 225px"></div>
+            <div class="box12" id="line6" style="height: 225px"></div>
           </div>
         </div>
-
-
-        <div class="page">
-          <div class="main">
-            <div class="box9 clearfix">
-              <div class="box9-top">
-                <h2>概要数据统计表</h2>
-              </div>
-              <div class="box9-bottom">
-                <div class="box9-1">
-                  <div class="box9-2">
-                    姓名:
-                    <strong>{{ froms.patientInfo.name }}</strong>
-                  </div>
-                  <div class="box9-2">
-                    性别:
-                    <strong>{{ froms.patientInfo.sex }}</strong>
-                  </div>
-                </div>
-                <div class="box9-1">
-                  <div class="box9-2">
-                    年龄:
-                    <strong>{{ froms.patientInfo.age }}</strong>
-                  </div>
-                  <div class="box9-2">
-                    单号:
-                    <strong>{{ froms.patientInfo.no }}</strong>
-                  </div>
-                </div>
-                <div class="box9-1">
-                  <div class="box9-2">
-                    住院号:
-                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>
-                  </div>
-                  <div class="box9-2">
-                    科室:
-                    <strong>{{ froms.patientInfo.department }}</strong>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="box12" id="line2" style="height: 300px"></div>
-            <div class="box12" id="line3" style="height: 300px"></div>
-            <div class="box12" id="line4" style="height: 300px"></div>
-          </div>
-        </div>
-        <div class="page">
-          <div class="main">
-            <div class="box9 clearfix">
-              <div class="box9-top">
-                <h2>概要数据统计表</h2>
-              </div>
-              <div class="box9-bottom">
-                <div class="box9-1">
-                  <div class="box9-2">
-                    姓名:
-                    <strong>{{ froms.patientInfo.name }}</strong>
-                  </div>
-                  <div class="box9-2">
-                    性别:
-                    <strong>{{ froms.patientInfo.sex }}</strong>
-                  </div>
-                </div>
-                <div class="box9-1">
-                  <div class="box9-2">
-                    年龄:
-                    <strong>{{ froms.patientInfo.age }}</strong>
-                  </div>
-                  <div class="box9-2">
-                    单号:
-                    <strong>{{ froms.patientInfo.no }}</strong>
-                  </div>
-                </div>
-                <div class="box9-1">
-                  <div class="box9-2">
-                    住院号:
-                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>
-                  </div>
-                  <div class="box9-2">
-                    科室:
-                    <strong>{{ froms.patientInfo.department }}</strong>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="box12" id="line5" style="height: 300px"></div>
-            <div class="box12" id="line6" style="height: 300px"></div>
-            <div class="box12" id="line7" style="height: 300px"></div>
-          </div>
-        </div>
+<!--        <div class="page">-->
+<!--          <div class="main">-->
+<!--            <div class="box9 clearfix">-->
+<!--              <div class="box9-top">-->
+<!--                <h2>概要数据统计表</h2>-->
+<!--              </div>-->
+<!--              <div class="box9-bottom">-->
+<!--                <div class="box9-1">-->
+<!--                  <div class="box9-2">-->
+<!--                    姓名:-->
+<!--                    <strong>{{ froms.patientInfo.name }}</strong>-->
+<!--                  </div>-->
+<!--                  <div class="box9-2">-->
+<!--                    性别:-->
+<!--                    <strong>{{ froms.patientInfo.sex }}</strong>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="box9-1">-->
+<!--                  <div class="box9-2">-->
+<!--                    年龄:-->
+<!--                    <strong>{{ froms.patientInfo.age }}</strong>-->
+<!--                  </div>-->
+<!--                  <div class="box9-2">-->
+<!--                    单号:-->
+<!--                    <strong>{{ froms.patientInfo.no }}</strong>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="box9-1">-->
+<!--                  <div class="box9-2">-->
+<!--                    住院号:-->
+<!--                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>-->
+<!--                  </div>-->
+<!--                  <div class="box9-2">-->
+<!--                    科室:-->
+<!--                    <strong>{{ froms.patientInfo.department }}</strong>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--&lt;!&ndash;            <div class="box12" id="line5" style="height: 300px"></div>&ndash;&gt;-->
+<!--            <div class="box12" id="line6" style="height: 300px"></div>-->
+<!--            <div class="box12" id="line7" style="height: 300px"></div>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="page">
           <div class="main">
             <div class="box9 clearfix">
@@ -828,7 +829,7 @@ export default {
   name: "ExportPDF",
   data() {
     return {
-      exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.姓名 + "心电报告_"+this.$route.query.pId,
+      exportPDFtitle: this.$route.query.patientName + "心电报告_"+this.$route.query.pId,
       hospitalName: this.$route.query.hospitalName,
       pId: null,
       _th: null,
@@ -1112,9 +1113,9 @@ export default {
     }
   },
   mounted() {
-    this.line();
-    this.line1();
-    this.line2();
+    //this.line();
+    //this.line1();
+    //this.line2();
     this.line3();
     this.line4();
     this.line5();
@@ -1646,37 +1647,11 @@ export default {
       for (var i=0;i<=6*60;i++){
         datax.push(i)
       }
-      // //   for (var i=0;i<24*60;i++){
-      // //     datay.push(undefined)
-      // // }
       var data2=data
       for(i=0;i<data2.length;i++)
       {
         data2[i][0]=datatime[i];
       }
-      // var j;
-      // for(i=0;i<data2.length-1;i++)
-      // {
-      //   if(data2[i+1][0]-data2[i][0]<50)
-      //   {
-      //     datay.push(data2[i][1])
-      //   }
-      //   else
-      //   {
-      //     for(j=i;j<data2[i][0]-1;j++)
-      //     {
-      //       datay.push(undefined)
-      //     }
-      //     datay[data2[i][0]-1]=data2[i][1];
-      //   }
-      // }
-      //   for(var j=datay.length-1;j<24*60;j++)
-      //   {
-      //     datay.push(undefined)
-      //   }
-      //   console.log(datay)
-      //   console.log(datatime)
-      //   console.log(datax)
       var option1=[]
       var temp
       for(i=0;i<24;i++)
@@ -1708,6 +1683,7 @@ export default {
           },
           tooltip: {
             trigger: 'axis',
+
           },
           grid: {
             left: '5%',
@@ -1942,6 +1918,12 @@ export default {
           },
           tooltip: {
             trigger: 'axis',
+            // formatter: function (params) {
+            //   console.log(params); //通过对象的点语法拿到自己想要的内容,通过连接+,将想要的字符串进行自行的拼接,用<br/>来换行
+            //   let res = "";
+            //   res = params.name + "<br/>" + "￥" + params.data;
+            //   return `<div class="tooltip">${res}</div>`; //最后返回拼接好的值
+            // },
           },
           grid: {
             left: '5%',
@@ -2806,11 +2788,10 @@ export default {
         }
         // PDF.save(title + ".pdf");
         // 将pdf输入为base格式的字符串
-        var buffer = PDF.output("datauristring")
+        //var buffer = PDF.output("datauristring")
         // 将base64格式的字符串转换为file文件
-        var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
-        name = _self.upload_pdf(myfile)
-
+        //var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
+        //name = _self.upload_pdf(myfile)
 
       });
       sessionStorage.removeItem(this.$route.query.pId + 'data');
@@ -2820,16 +2801,69 @@ export default {
     //上传pdf
     upload_pdf(file) {
       // var url ='';
-      var formdata = new FormData()
-      formdata.append("file", file); // 文件对象
-      console.log("上传pdf-1")
-      //多个参数的情况
-      // formdata.append("name", name);
-      var msg = '';
-      // 之后ajax传递数据
-      pdfDownload2(formdata).then(res => {
-        console.log(res);
-      })
+
+      var _self = this
+      // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
+      let top = document.getElementById("pdfDom");
+      if (top != null) {
+        top.scrollIntoView();
+        top = null;
+      }
+      let title = this.exportPDFtitle;
+      html2Canvas(document.querySelector("#pdfDom"), {
+        //清晰度，越大越好
+        scale: 2,
+        allowTaint: true
+      }).then(function (canvas) {
+        // 获取canvas画布的宽高
+        let contentWidth = canvas.width;
+        let contentHeight = canvas.height;
+        // 一页pdf显示html页面生成的canvas高度;
+        let pageHeight = (contentWidth / 592.28) * 841.89;
+        // 未生成pdf的html页面高度
+        let leftHeight = contentHeight;
+        // 页面偏移
+        let position = 0;
+        // html页面生成的canvas在pdf中图片的宽高（本例为：横向a4纸[841.89,592.28]，纵向需调换尺寸）
+        let imgWidth = 592.28;
+        let imgHeight = (592.28 / contentWidth) * contentHeight;
+        let pageData = canvas.toDataURL("image/jpeg", 1.0);
+        let PDF = new JsPDF("", "pt", "a4");
+        // 两个高度需要区分: 一个是html页面的实际高度，和生成pdf的页面高度
+        // 当内容未超过pdf一页显示的范围，无需分页
+        if (leftHeight < pageHeight) {
+          PDF.addImage(pageData, "JPEG", 0, 0, imgWidth, imgHeight);
+        } else {
+          while (leftHeight > 0) {
+            PDF.addImage(pageData, "JPEG", 0, position, imgWidth, imgHeight);
+            leftHeight -= pageHeight;
+            position -= 841.89;
+            // 避免添加空白页
+            if (leftHeight > 0) {
+              PDF.addPage();
+            }
+          }
+        }
+        //PDF.save(title + ".pdf");
+        // 将pdf输入为base格式的字符串
+        var buffer = PDF.output("datauristring")
+        // 将base64格式的字符串转换为file文件
+        var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
+        //name = _self.upload_pdf(myfile)
+        var formdata = new FormData()
+        formdata.append("file", myfile); // 文件对象
+        console.log("上传pdf-1")
+        //多个参数的情况
+        // formdata.append("name", name);
+        var msg = '';
+        // 之后ajax传递数据
+        pdfDownload2(formdata).then(res => {
+          console.log(res);
+        })
+
+      });
+
+
       /*      $.ajax({
               url: "http://219.155.7.235:5050/pdfTest",  //url地址
               type: 'POST' ,                 //上传方式
@@ -2950,7 +2984,9 @@ export default {
   padding-bottom: 50px;
   margin-top: 5px;
   width: 794px;
-  height: 1127px;
+  //height: 1127px;
+  //border: 1px solid #0000ff;
+  height: 1124px;
 }
 
 .main .time {
