@@ -3,7 +3,7 @@
     width="100%"
     :height="TableHeight"
     allowfullscreen="true"
-    :src= url >
+    :src=url>
   </iframe>
 </template>
 
@@ -45,10 +45,12 @@ export default {
   activated() {
     if (this.$route.query.equipmentCode) {
       this.equipmentCode = this.$route.query.equipmentCode;
-      this.src = this.src + "screen?equipmentCode=" + this.equipmentCode;
+      this.url = this.src + "screen?equipmentCode=" + this.equipmentCode;
       console.log(this.url)
     }
   },
+
+
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
