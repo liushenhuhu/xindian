@@ -1683,7 +1683,11 @@ export default {
           },
           tooltip: {
             trigger: 'axis',
-
+            formatter: function (params) {
+              console.log(params)
+              console.log(datatime.indexOf(params[0].data[0]))
+              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+            }
           },
           grid: {
             left: '5%',
@@ -1701,9 +1705,17 @@ export default {
             data: datax
           },
           yAxis: {
-            show: false,
-            // scale:true
-            data:datay,
+            min:0,  //取0为最小刻度
+            max: 200, //取100为最大刻度
+            show: true,
+            scale: true, //自适应
+            Interval: 1, //分割刻度
+            axisLabel:{
+              color:"#34ace0",
+              fontSize:13,
+              showMinLabel:true, //不显示最小刻度线值
+              showMaxLabel:true, //不显示最大刻度线值
+            },
           },
           // toolbox: {
           //     right: 10,
@@ -1918,12 +1930,11 @@ export default {
           },
           tooltip: {
             trigger: 'axis',
-            // formatter: function (params) {
-            //   console.log(params); //通过对象的点语法拿到自己想要的内容,通过连接+,将想要的字符串进行自行的拼接,用<br/>来换行
-            //   let res = "";
-            //   res = params.name + "<br/>" + "￥" + params.data;
-            //   return `<div class="tooltip">${res}</div>`; //最后返回拼接好的值
-            // },
+            formatter: function (params) {
+              console.log(params)
+              console.log(datatime.indexOf(params[0].data[0]))
+              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+            }
           },
           grid: {
             left: '5%',
@@ -1941,9 +1952,17 @@ export default {
             data: datax
           },
           yAxis: {
-            show: false,
-            // scale:true
-            data:datay,
+            min:0,  //取0为最小刻度
+            max: 200, //取100为最大刻度
+            show: true,
+            scale: true, //自适应
+            Interval: 1, //分割刻度
+            axisLabel:{
+              color:"#34ace0",
+              fontSize:13,
+              showMinLabel:true, //不显示最小刻度线值
+              showMaxLabel:true, //不显示最大刻度线值
+            },
           },
 
           dataZoom: [
@@ -2149,6 +2168,11 @@ export default {
           },
           tooltip: {
             trigger: 'axis',
+            formatter: function (params) {
+              console.log(params)
+              console.log(datatime.indexOf(params[0].data[0]))
+              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+            }
           },
           grid: {
             left: '5%',
@@ -2166,9 +2190,17 @@ export default {
             data: datax
           },
           yAxis: {
-            show: false,
-            // scale:true
-            data:datay,
+            min:0,  //取0为最小刻度
+            max: 200, //取100为最大刻度
+            show: true,
+            scale: true, //自适应
+            Interval: 1, //分割刻度
+            axisLabel:{
+              color:"#34ace0",
+              fontSize:13,
+              showMinLabel:true, //不显示最小刻度线值
+              showMaxLabel:true, //不显示最大刻度线值
+            },
           },
 
           dataZoom: [
@@ -2374,6 +2406,11 @@ export default {
           },
           tooltip: {
             trigger: 'axis',
+            formatter: function (params) {
+              console.log(params)
+              console.log(datatime.indexOf(params[0].data[0]))
+              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+            }
           },
           grid: {
             left: '5%',
@@ -2391,9 +2428,19 @@ export default {
             data: datax
           },
           yAxis: {
-            show: false,
             // scale:true
-            data:datay,
+           // data:datay,
+            min:0,  //取0为最小刻度
+            max: 200, //取100为最大刻度
+            show: true,
+            scale: true, //自适应
+            Interval: 1, //分割刻度
+            axisLabel:{
+              color:"#34ace0",
+              fontSize:13,
+              showMinLabel:true, //不显示最小刻度线值
+              showMaxLabel:true, //不显示最大刻度线值
+            },
           },
 
           dataZoom: [
