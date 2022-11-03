@@ -189,9 +189,9 @@
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
-            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+<!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSource }}</span>
-            </el-form-item>
+            </el-form-item>-->
 
           </el-form>
         </template>

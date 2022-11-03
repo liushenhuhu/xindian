@@ -186,9 +186,9 @@
             <el-form-item label="患者性别" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSex }}</span>
             </el-form-item>
-            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+<!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSource }}</span>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="患者电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
@@ -196,9 +196,9 @@
               <span>{{ scope.row.familyPhone }}</span>
             </el-form-item>
 
-            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+<!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>
+            </el-form-item>-->
 
           </el-form>
         </template>
