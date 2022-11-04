@@ -2,6 +2,8 @@ package com.ruoyi.xindian.appData.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +31,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/appData/appData")
-public class AppDataController extends BaseController
-{
+public class AppDataController extends BaseController {
     @Autowired
     private IAppDataService appDataService;
 
@@ -39,8 +40,7 @@ public class AppDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AppData appData)
-    {
+    public TableDataInfo list(AppData appData) {
         startPage();
         List<AppData> list = appDataService.selectAppDataList(appData);
         return getDataTable(list);
@@ -51,8 +51,7 @@ public class AppDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:list')")
     @PostMapping("/list1")
-    public TableDataInfo list1(@RequestBody AppData appData)
-    {
+    public TableDataInfo list1(@RequestBody AppData appData) {
         startPage();
         List<AppData> list = appDataService.selectAppDataList(appData);
         return getDataTable(list);
@@ -64,8 +63,7 @@ public class AppDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('appData:appData:export')")
     @Log(title = "app相关数据", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, AppData appData)
-    {
+    public void export(HttpServletResponse response, AppData appData) {
         List<AppData> list = appDataService.selectAppDataList(appData);
         ExcelUtil<AppData> util = new ExcelUtil<AppData>(AppData.class);
         util.exportExcel(response, list, "app相关数据数据");
@@ -76,8 +74,7 @@ public class AppDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:query')")
     @GetMapping(value = "/{appDataId}")
-    public AjaxResult getInfo(@PathVariable("appDataId") Long appDataId)
-    {
+    public AjaxResult getInfo(@PathVariable("appDataId") Long appDataId) {
         return AjaxResult.success(appDataService.selectAppDataByAppDataId(appDataId));
     }
 
@@ -87,8 +84,7 @@ public class AppDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('appData:appData:add')")
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody AppData appData)
-    {
+    public AjaxResult add(@RequestBody AppData appData) {
         return toAjax(appDataService.insertAppData(appData));
     }
 
@@ -98,8 +94,7 @@ public class AppDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('appData:appData:edit')")
     @Log(title = "app相关数据", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody AppData appData)
-    {
+    public AjaxResult edit(@RequestBody AppData appData) {
         return toAjax(appDataService.updateAppData(appData));
     }
 
@@ -108,9 +103,27 @@ public class AppDataController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
     @Log(title = "app相关数据", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{appDataIds}")
-    public AjaxResult remove(@PathVariable Long[] appDataIds)
-    {
+    @DeleteMapping("/{appDataIds}")
+    public AjaxResult remove(@PathVariable Long[] appDataIds) {
         return toAjax(appDataService.deleteAppDataByAppDataIds(appDataIds));
     }
+
+    /**
+     * 删除app相关数据
+     */
+    @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
+    @Log(title = "app相关数据", businessType = BusinessType.DELETE)
+    @GetMapping("/del/{appDataIds}")
+    public AjaxResult del(@PathVariable String appDataIds) {
+        String[] split = appDataIds.split(",");
+        Long[] ids = new Long[split.length];
+        for (int i = 0; i < split.length; i++) {
+            ids[i] = Long.parseLong(split[i]);
+        }
+
+        int ans = appDataService.deleteAppDataByAppDataIds(ids);
+        return toAjax(ans);
+    }
+
+
 }

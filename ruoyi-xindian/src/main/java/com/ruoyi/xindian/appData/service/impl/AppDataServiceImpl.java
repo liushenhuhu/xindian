@@ -90,4 +90,9 @@ public class AppDataServiceImpl implements IAppDataService
     {
         return appDataMapper.deleteAppDataByAppDataId(appDataId);
     }
+
+    @Override
+    public int deleteDataByAppDataIds(String[] appDataIds) {
+        return appDataMapper.deleteDataByAppDataIds(appDataIds);
+    }
 }

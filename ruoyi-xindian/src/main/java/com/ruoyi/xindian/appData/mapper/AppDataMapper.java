@@ -58,4 +58,6 @@ public interface AppDataMapper
      * @return 结果
      */
     public int deleteAppDataByAppDataIds(Long[] appDataIds);
+
+    public int deleteDataByAppDataIds(String[] appDataIds);
 }

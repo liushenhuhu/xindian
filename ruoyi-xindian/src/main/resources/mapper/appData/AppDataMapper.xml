@@ -78,4 +78,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{appDataId}
         </foreach>
     </delete>
+
+    <delete id="deleteDataByAppDataIds" parameterType="String">
+        delete from app_data where app_data_id in
+        <foreach item="appDataId" collection="array" open="(" separator="," close=")">
+            #{appDataId}
+        </foreach>
+    </delete>
 </mapper>

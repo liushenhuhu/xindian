@@ -58,4 +58,6 @@ public interface IAppDataService
      * @return 结果
      */
     public int deleteAppDataByAppDataId(Long appDataId);
+
+    public int deleteDataByAppDataIds(String[] appDataIds);
 }
