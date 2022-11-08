@@ -127,10 +127,11 @@ public class EquipmentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('equipment:equipment:edit')")
     @Log(title = "设备", businessType = BusinessType.UPDATE)
     @PostMapping("/updateEquipmentStatus")
-    public void updateEquipmentStatus(@RequestBody String[] equipmentList) {
+    public String updateEquipmentStatus(@RequestBody String[] equipmentList) {
         equipmentService.updateEquipmentStatusAll();
         if (equipmentList.length != 0) {
             equipmentService.updateEquipmentStatus(equipmentList);
         }
+        return "down";
     }
 }

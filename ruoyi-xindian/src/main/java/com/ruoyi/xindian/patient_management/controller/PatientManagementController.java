@@ -152,7 +152,7 @@ public class PatientManagementController extends BaseController {
     @PreAuthorize("@ss.hasPermi('patient_management:patient_management:edit')")
     @Log(title = "患者管理", businessType = BusinessType.UPDATE)
     @PostMapping("/updateStatus")
-    public void updateStatus(@RequestBody String[] pIds) {
+    public String updateStatus(@RequestBody String[] pIds) {
 
         patientManagementService.updateStatusAll();
         patientService.updateMonitoringStatus();
@@ -172,6 +172,7 @@ public class PatientManagementController extends BaseController {
                 }
             }
         }
+        return "down";
     }
 
     /**
