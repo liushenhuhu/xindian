@@ -2,11 +2,13 @@ package com.ruoyi.xindian.patient_management.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.xindian.equipment.controller.EquipmentController;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.patient_management.domain.OnlineParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,9 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
@@ -39,35 +43,44 @@ public class OnlineController extends BaseController {
     @Autowired
     private EquipmentController equipmentController;
 
-    @PostMapping("/update1")
-    @ResponseBody
-    public AjaxResult update1(@RequestBody OnlineParam onlineParam) {
+    @GetMapping("/updateAll")
+    public AjaxResult updateAll() {
+        AjaxResult result1 = update1();
+        AjaxResult result2 = update2();
+        Map<String, Object> map = new HashMap<>();
+        map.put("res1", result1);
+        map.put("res2", result2);
+        return AjaxResult.success(map);
+    }
+
+    @GetMapping("/update1")
+    public AjaxResult update1() {
+        SysUser userInfo = patientManagementController.getUserInfo();
+        System.out.println(userInfo);
+        OnlineParam onlineParam = new OnlineParam("所有");
+        if (userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
+            onlineParam.setHospName(userInfo.getHospitalName());
+        }
         String url = "http://219.155.7.235:5003/get_device";
-        //LinkedMultiValueMap一个键对应多个值，对应format-data的传入类型
-        LinkedMultiValueMap<String, String> request = new LinkedMultiValueMap<>();
-        //入参
-        request.add("hospName", onlineParam.getHospName());
-        request.add("ts", "0");
         //请求
         RestTemplate restTemplate = new RestTemplate();
-
-        // 设置restTemplate编码为utf-8
-        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        MediaType type = MediaType.parseMediaType("application/json;charset=UTF-8");
-
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+        map.add("hospName", onlineParam.getHospName());
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(type);
-        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-
-//        String result = restTemplate.postForObject(url, request, String.class);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
-
-
-
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<OnlineParam> request = new HttpEntity<OnlineParam>(onlineParam, headers);
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(url, request, String.class);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            return AjaxResult.error("请求失败");
+        }
         String responseEntityBody = responseEntity.getBody();
         System.out.println("responseEntity.getBody() = " + responseEntity.getBody());
         String splitData = splitData(responseEntityBody, "[", "]");
-        String[] devList = splitData.split(",");
+        String s = removeDoubleQuotes(splitData);
+        String[] devList = s.split(",");
         String res = equipmentController.updateEquipmentStatus(devList);
         Map<String, Object> resMap = new HashMap<>();
         resMap.put("devList", devList);
@@ -84,14 +97,18 @@ public class OnlineController extends BaseController {
         request.set("ts", "0");
         //请求
         RestTemplate restTemplate = new RestTemplate();
-/*        String result = restTemplate.postForObject(url, request, String.class);
-        System.out.println(result);*/
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(url, request, String.class);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            return AjaxResult.error("请求失败");
+        }
         String responseEntityBody = responseEntity.getBody();
         System.out.println("responseEntity.getBody() = " + responseEntity.getBody());
-
         String splitData = splitData(responseEntityBody, "[", "]");
-        String[] pIdList = splitData.split(",");
+        String s = removeDoubleQuotes(splitData);
+        String[] pIdList = s.split(",");
         String res = patientManagementController.updateStatus(pIdList);
         Map<String, Object> resMap = new HashMap<>();
         resMap.put("pIdList", pIdList);
@@ -104,6 +121,11 @@ public class OnlineController extends BaseController {
         String tempStr;
         tempStr = str.substring(str.indexOf(strStart) + 1, str.lastIndexOf(strEnd));
         return tempStr;
+    }
+
+    public static String removeDoubleQuotes(String result) {
+        //去掉" "号
+        return result.replace("\"", "");
     }
 
 }

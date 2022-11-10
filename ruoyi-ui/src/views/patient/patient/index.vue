@@ -140,23 +140,12 @@
         >导出
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          plain
-          icon="el-icon-refresh"
-          size="mini"
-          @click="updateOnline"
-          v-hasPermi="['patient_management:patient_management:updateOnline']"
-        >更新在线状态
-        </el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="patientList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-<!--      <el-table-column label="患者id" align="center" prop="patientId"/>-->
+      <!--      <el-table-column label="患者id" align="center" prop="patientId"/>-->
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
       <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode" />-->
       <el-table-column label="患者年龄" align="center" prop="patientAge"/>
@@ -189,9 +178,9 @@
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
-<!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientSource }}</span>
-            </el-form-item>-->
+            <!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+                          <span>{{ scope.row.patientSource }}</span>
+                        </el-form-item>-->
 
           </el-form>
         </template>
@@ -282,15 +271,15 @@
           </el-select>
         </el-form-item>
         <el-form-item label="绑定状态" prop="bindingState">
-        <el-select v-model="form.bindingState" placeholder="请选择绑定状态">
-          <el-option
-            v-for="dict in dict.type.binding_state"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
+          <el-select v-model="form.bindingState" placeholder="请选择绑定状态">
+            <el-option
+              v-for="dict in dict.type.binding_state"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -312,6 +301,7 @@ import {
 import $ from "jquery";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
+import {updateOnlineAll} from "@/api/online/online";
 
 export default {
   name: "Patient",
@@ -360,183 +350,38 @@ export default {
       // 表单校验
       rules: {
         patientName: [
-          { required: true, message: "患者姓名不能为空", trigger: "blur" }
+          {required: true, message: "患者姓名不能为空", trigger: "blur"}
         ],
         patientPhone: [
-          { required: true, message: "患者电话不能为空", trigger: "blur" }
+          {required: true, message: "患者电话不能为空", trigger: "blur"}
         ],
         patientAge: [
-          { required: true, message: "患者年龄不能为空", trigger: "blur" }
+          {required: true, message: "患者年龄不能为空", trigger: "blur"}
         ],
         patientSex: [
-          { required: true, message: "患者性别不能为空", trigger: "change" }
+          {required: true, message: "患者性别不能为空", trigger: "change"}
         ],
         patientSource: [
-          { required: true, message: "患者来源不能为空", trigger: "blur" }
+          {required: true, message: "患者来源不能为空", trigger: "blur"}
         ],
       }
     };
   },
 
   beforeCreate() {
-    getUserInfo().then(user => {
-      console.log(user);
-      var hospitalName = '所有'
-      if (user.deptId === 200) {
-        hospitalName = user.hospitalName
-      }
-      console.log(hospitalName);
-      $.ajax({
-        type: "post",
-        url: "http://219.155.7.235:5003/get_device2",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          "ts": 0
-        }),
-        success: function (res) {
-          let pIdList;
-          pIdList = res.result.pid_list;
-          console.log(pIdList)
-          updateStatus(pIdList)
-        },
-        error: function () {
-          console.log("更新失败！")
-        }
-      })
-      $.ajax({
-        type: "post",
-        url: "http://219.155.7.235:5003/get_device",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          "hospName": hospitalName,
-          "ts": 0
-        }),
-        success: function (res) {
-          let devList;
-          devList = res.result.dev_list;
-          console.log(devList)
-          updateEquipmentStatus(devList)
-        },
-        error: function () {
-          console.log("更新失败！")
-        }
-      })
-
-    });
+    updateOnlineAll();
   },
 
   created() {
     this.getList();
   },
-  methods: {
 
+  methods: {
     refreshList() {
       console.log("refresh======")
-/*      getUserInfo().then(user => {
-        console.log(user);
-        var hospitalName = '所有'
-        if (user.deptId === 200) {
-          hospitalName = user.hospitalName
-        }
-        console.log(hospitalName);
-        $.ajax({
-          type: "post",
-          url: "http://219.155.7.235:5003/get_device2",
-          contentType: "application/json",
-          dataType: "json",
-          data: JSON.stringify({
-            "ts": 0
-          }),
-          success: function (res) {
-            let pIdList;
-            pIdList = res.result.pid_list;
-            console.log(pIdList)
-            updateStatus(pIdList)
-          },
-          error: function () {
-            console.log("更新失败！")
-          }
-        })
-        $.ajax({
-          type: "post",
-          url: "http://219.155.7.235:5003/get_device",
-          contentType: "application/json",
-          dataType: "json",
-          data: JSON.stringify({
-            "hospName": hospitalName,
-            "ts": 0
-          }),
-          success: function (res) {
-            let devList;
-            devList = res.result.dev_list;
-            console.log(devList)
-            updateEquipmentStatus(devList)
-          },
-          error: function () {
-            console.log("更新失败！")
-          }
-        })
-
-      });*/
-      this.getList();
-    },
-
-    /** 更新在线状态*/
-    updateOnline() {
-      console.log("updateOnline======")
-      getUserInfo().then(user => {
-        console.log(user);
-        var hospitalName = '所有'
-        if (user.deptId === 200) {
-          hospitalName = user.hospitalName
-        }
-        console.log(hospitalName);
-        $.ajax({
-          type: "post",
-          url: "http://219.155.7.235:5003/get_device2",
-          contentType: "application/json",
-          dataType: "json",
-          data: JSON.stringify({
-            "ts": 0
-          }),
-          success: function (res) {
-            let pIdList;
-            pIdList = res.result.pid_list;
-            console.log(pIdList)
-            updateStatus(pIdList)
-          },
-          error: function () {
-            console.log("更新失败！")
-          }
-        })
-        $.ajax({
-          type: "post",
-          url: "http://219.155.7.235:5003/get_device",
-          contentType: "application/json",
-          dataType: "json",
-          data: JSON.stringify({
-            "hospName": hospitalName,
-            "ts": 0
-          }),
-          success: function (res) {
-            let devList;
-            devList = res.result.dev_list;
-            console.log(devList)
-            updateEquipmentStatus(devList)
-          },
-          error: function () {
-            console.log("更新失败！")
-          }
-        })
-
-      });
-      this.$modal.msgSuccess("在线状态更新中，请稍候")
-      setTimeout(this.successUpdate,4000)
-    },
-    successUpdate() {
-      this.$modal.msgSuccess("在线状态更新成功，请刷新列表")
+      updateOnlineAll().then(res => {
+        this.getList();
+      })
     },
 
     /** 查询患者列表 */

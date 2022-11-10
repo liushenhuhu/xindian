@@ -106,23 +106,13 @@
         >导出
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          plain
-          icon="el-icon-refresh"
-          size="mini"
-          @click="updateOnline"
-          v-hasPermi="['patient_management:patient_management:updateOnline']"
-        >更新在线状态
-        </el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-<!--      <el-table-column label="设备id" align="center" prop="equipmentId"/>-->
+      <!--      <el-table-column label="设备id" align="center" prop="equipmentId"/>-->
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
       <el-table-column label="设备版本号" align="center" prop="equipmentVersion"/>
       <el-table-column label="设备状态" align="center" prop="equipmentStatus">
@@ -136,7 +126,7 @@
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者身份证" align="center" prop="patientCode" />
+      <el-table-column label="患者身份证" align="center" prop="patientCode"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -200,7 +190,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="患者身份证" prop="patientCode">
-          <el-input v-model="form.patientCode" placeholder="请输入患者身份证" />
+          <el-input v-model="form.patientCode" placeholder="请输入患者身份证"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -223,6 +213,7 @@ import {
 import $ from "jquery";
 import {updateMonitoringStatus} from "@/api/patient/patient";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
+import {updateOnline1, updateOnline2, updateOnlineAll} from "@/api/online/online";
 
 export default {
   name: "Equipment",
@@ -273,168 +264,24 @@ export default {
           {required: true, message: "医院代号不能为空", trigger: "blur"}
         ],
         patientCode: [
-          { required: true, message: "患者身份证不能为空", trigger: "blur" }
+          {required: true, message: "患者身份证不能为空", trigger: "blur"}
         ],
       }
     };
   },
   beforeCreate() {
-    getUserInfo().then(user => {
-      console.log(user);
-      var hospitalName = '所有'
-      if (user.deptId === 200) {
-        hospitalName = user.hospitalName
-      }
-      console.log(hospitalName);
-      $.ajax({
-        type: "post",
-        url: "http://219.155.7.235:5003/get_device2",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          "ts": 0
-        }),
-        success: function (res) {
-          let pIdList;
-          pIdList = res.result.pid_list;
-          console.log(pIdList)
-          updateStatus(pIdList)
-        },
-        error: function () {
-          console.log("更新失败！")
-        }
-      })
-      $.ajax({
-        type: "post",
-        url: "http://219.155.7.235:5003/get_device",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          "hospName": hospitalName,
-          "ts": 0
-        }),
-        success: function (res) {
-          let devList;
-          devList = res.result.dev_list;
-          console.log(devList)
-          updateEquipmentStatus(devList)
-        },
-        error: function () {
-          console.log("更新失败！")
-        }
-      })
-
-    });
+    updateOnlineAll();
   },
+
   created() {
     this.getList();
   },
   methods: {
     refreshList() {
       console.log("refresh======")
-/*      getUserInfo().then(user => {
-        console.log(user);
-        var hospitalName = '所有'
-        if (user.deptId === 200) {
-          hospitalName = user.hospitalName
-        }
-        console.log(hospitalName);
-        $.ajax({
-          type: "post",
-          url: "http://219.155.7.235:5003/get_device2",
-          contentType: "application/json",
-          dataType: "json",
-          data: JSON.stringify({
-            "ts": 0
-          }),
-          success: function (res) {
-            let pIdList;
-            pIdList = res.result.pid_list;
-            console.log(pIdList)
-            updateStatus(pIdList)
-          },
-          error: function () {
-            console.log("更新失败！")
-          }
-        })
-        $.ajax({
-          type: "post",
-          url: "http://219.155.7.235:5003/get_device",
-          contentType: "application/json",
-          dataType: "json",
-          data: JSON.stringify({
-            "hospName": hospitalName,
-            "ts": 0
-          }),
-          success: function (res) {
-            let devList;
-            devList = res.result.dev_list;
-            console.log(devList)
-            updateEquipmentStatus(devList)
-          },
-          error: function () {
-            console.log("更新失败！")
-          }
-        })
-
-      });*/
-      this.getList();
-    },
-
-    /** 更新在线状态*/
-    updateOnline() {
-      console.log("updateOnline======")
-      getUserInfo().then(user => {
-        console.log(user);
-        var hospitalName = '所有'
-        if (user.deptId === 200) {
-          hospitalName = user.hospitalName
-        }
-        console.log(hospitalName);
-        $.ajax({
-          type: "post",
-          url: "http://219.155.7.235:5003/get_device2",
-          contentType: "application/json",
-          dataType: "json",
-          data: JSON.stringify({
-            "ts": 0
-          }),
-          success: function (res) {
-            let pIdList;
-            pIdList = res.result.pid_list;
-            console.log(pIdList)
-            updateStatus(pIdList)
-          },
-          error: function () {
-            console.log("更新失败！")
-          }
-        })
-        $.ajax({
-          type: "post",
-          url: "http://219.155.7.235:5003/get_device",
-          contentType: "application/json",
-          dataType: "json",
-          data: JSON.stringify({
-            "hospName": hospitalName,
-            "ts": 0
-          }),
-          success: function (res) {
-            let devList;
-            devList = res.result.dev_list;
-            console.log(devList)
-            updateEquipmentStatus(devList)
-          },
-          error: function () {
-            console.log("更新失败！")
-          }
-        })
-
-      });
-      this.$modal.msgSuccess("在线状态更新中，请稍候")
-      setTimeout(this.successUpdate,4000)
-    },
-    successUpdate() {
-      this.$modal.msgSuccess("在线状态更新成功，请刷新列表")
+      updateOnlineAll().then(res => {
+        this.getList();
+      })
     },
 
     /** 查询设备列表 */
@@ -444,7 +291,6 @@ export default {
         this.equipmentList = response.rows;
         this.total = response.total;
         this.loading = false;
-
       })
 
     },
