@@ -29,14 +29,10 @@ export default {
     // console.log(str);
     var split1 = str.split(':');
     var str1 = split1[0];
+    // var str1 = '192.168.0.109';
     this.src = 'http://' + str1 + ':6006/';
     console.log(this.src)
 
-    /*    if (str === 'zzuecg.tpddns.cn:83') {
-          this.src = 'http://zzuecg.tpddns.cn:6006/'
-        } else {
-          this.src = 'http://192.168.0.109:6006/'
-        }*/
 
     if (this.$route.params.logId) {
       this.logId = this.$route.params.logId;

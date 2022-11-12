@@ -30,6 +30,7 @@ export default {
     // console.log(str);
     var split1 = str.split(':');
     var str1 = split1[0];
+    // var str1 = '192.168.0.109';
     this.src = 'http://' + str1 + ':6006/';
     console.log(this.src)
 
