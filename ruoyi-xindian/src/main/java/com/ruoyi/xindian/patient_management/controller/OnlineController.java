@@ -61,7 +61,8 @@ public class OnlineController extends BaseController {
         if (userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
             onlineParam.setHospName(userInfo.getHospitalName());
         }
-        String url = "http://219.155.7.235:5003/get_device";
+//        String url = "http://219.155.7.235:5003/get_device";
+        String url = "https://server.mindyard.cn:83/get_device";
         //请求
         RestTemplate restTemplate = new RestTemplate();
         MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
@@ -90,7 +91,8 @@ public class OnlineController extends BaseController {
 
     @GetMapping("/update2")
     public AjaxResult update2() {
-        String url = "http://219.155.7.235:5003/get_device2";
+//        String url = "http://219.155.7.235:5003/get_device2";
+        String url = "https://server.mindyard.cn:83/get_device2";
         //LinkedMultiValueMap一个键对应多个值，对应format-data的传入类型
         LinkedMultiValueMap<String, String> request = new LinkedMultiValueMap<>();
         //入参
