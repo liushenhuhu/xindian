@@ -521,6 +521,11 @@ export default {
           pId: row.pId,
           ecg_type: row.ecgType
         }),
+        beforeSend:function (request) {
+          // 如果后台没有跨域处理，这个自定义
+          request.setRequestHeader("user","zzu");
+          request.setRequestHeader("password","zzu123");
+        },
         success: function (data) {
           alert(name + "动态心电报告已生成")
         },

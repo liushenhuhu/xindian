@@ -208,6 +208,11 @@ export default {
         data: JSON.stringify({
           p_id: this.pId
         }),
+        beforeSend:function (request) {
+          // 如果后台没有跨域处理，这个自定义
+          request.setRequestHeader("user","zzu");
+          request.setRequestHeader("password","zzu123");
+        },
         success: function (data) {
           console.log(_th.pId)
           console.log(data)

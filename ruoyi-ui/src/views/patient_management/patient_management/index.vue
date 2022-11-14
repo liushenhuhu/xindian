@@ -522,6 +522,11 @@ export default {
           pId: row.pId,
           ecg_type: row.ecgType
         }),
+        beforeSend:function (request) {
+          request.setRequestHeader("user","zzu");
+          request.setRequestHeader("password","zzu123");
+        },
+
         success: function (data) {
           alert(name + "动态心电报告已生成")
         },
