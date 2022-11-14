@@ -65,9 +65,10 @@ public class OnlineController extends BaseController {
         String url = "https://server.mindyard.cn:83/get_device";
         //请求
         RestTemplate restTemplate = new RestTemplate();
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-        map.add("hospName", onlineParam.getHospName());
+
         HttpHeaders headers = new HttpHeaders();
+        headers.set("user", "zzu");
+        headers.set("password", "zzu123");
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<OnlineParam> request = new HttpEntity<OnlineParam>(onlineParam, headers);
         ResponseEntity<String> responseEntity = null;
@@ -93,12 +94,20 @@ public class OnlineController extends BaseController {
     public AjaxResult update2() {
 //        String url = "http://219.155.7.235:5003/get_device2";
         String url = "https://server.mindyard.cn:83/get_device2";
-        //LinkedMultiValueMap一个键对应多个值，对应format-data的传入类型
-        LinkedMultiValueMap<String, String> request = new LinkedMultiValueMap<>();
-        //入参
-        request.set("ts", "0");
-        //请求
+
+        SysUser userInfo = patientManagementController.getUserInfo();
+        System.out.println(userInfo);
+        OnlineParam onlineParam = new OnlineParam("所有");
+        if (userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
+            onlineParam.setHospName(userInfo.getHospitalName());
+        }
         RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("user", "zzu");
+        headers.set("password", "zzu123");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<OnlineParam> request = new HttpEntity<OnlineParam>(onlineParam, headers);
         ResponseEntity<String> responseEntity = null;
         try {
             responseEntity = restTemplate.postForEntity(url, request, String.class);
