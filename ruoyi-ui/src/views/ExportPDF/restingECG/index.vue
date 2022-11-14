@@ -201,7 +201,7 @@ export default {
       console.log(this.pId)
       $.ajax({
         type: "post",
-        url: "http://219.155.7.235:5003/detect_ecg",
+        url: "https://server.mindyard.cn:83/detect_ecg",
         asynsc: false,
         contentType: "application/json",
         dataType: "json",

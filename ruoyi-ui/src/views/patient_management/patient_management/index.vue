@@ -515,7 +515,7 @@ export default {
       var name = row.patientName
       $.ajax({
         type: "post",
-        url: "http://219.155.7.235:5003/analysis_decg",
+        url: "https://server.mindyard.cn:83/analysis_decg",
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
