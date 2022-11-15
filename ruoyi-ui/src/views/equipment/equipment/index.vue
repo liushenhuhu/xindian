@@ -120,7 +120,11 @@
           <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+      <el-table-column label="医院代号" align="center" prop="hospitalCode">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.hospital_name_list" :value="scope.row.hospitalCode"/>
+        </template>
+      </el-table-column>
       <el-table-column label="设备种类" align="center" prop="equipmentType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
@@ -177,7 +181,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
+          <el-select v-model="form.hospitalCode" placeholder="请选择医院代号">
+            <el-option
+              v-for="dict in dict.type.hospital_name_list"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
           <el-select v-model="form.equipmentType" placeholder="请选择设备种类">
@@ -217,7 +228,7 @@ import {updateOnline1, updateOnline2, updateOnlineAll} from "@/api/online/online
 
 export default {
   name: "Equipment",
-  dicts: ['equipment_status', 'ecg_type'],
+  dicts: ['equipment_status', 'ecg_type', 'hospital_name_list'],
   data() {
     return {
       // 遮罩层

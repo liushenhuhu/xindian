@@ -2,8 +2,12 @@ package com.ruoyi.xindian.hospital.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +37,9 @@ public class HospitalController extends BaseController
 {
     @Autowired
     private IHospitalService hospitalService;
+
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询医院列表
@@ -111,4 +118,30 @@ public class HospitalController extends BaseController
     {
         return toAjax(hospitalService.deleteHospitalByHospitalIds(hospitalIds));
     }
+
+
+    public List<Hospital> getAllHospital(Hospital hospital)
+    {
+        return hospitalService.selectHospitalList(hospital);
+    }
+
+    @GetMapping("/addDict")
+    public AjaxResult addDict() {
+        SysDictData dict = new SysDictData();
+        dict.setDictType("hospital_name_list");
+        dict.setListClass("primary");
+        dict.setCreateBy("admin");
+        Hospital hospital = new Hospital();
+        List<Hospital> allHospital = getAllHospital(hospital);
+        for (Hospital hospital1 : allHospital) {
+            dict.setDictLabel(hospital1.getHospitalName());
+            dict.setDictValue(hospital1.getHospitalCode());
+            List<SysDictData> sysDictData = dictDataService.selectDictDataList(dict);
+            if (sysDictData.isEmpty()) {
+                dictDataService.insertDictData(dict);
+            }
+        }
+        return AjaxResult.success("down");
+    }
+
 }
