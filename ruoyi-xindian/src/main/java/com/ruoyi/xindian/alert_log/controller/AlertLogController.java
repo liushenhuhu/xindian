@@ -136,4 +136,6 @@ public class AlertLogController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] logIds) {
         return toAjax(alertLogService.deleteAlertLogByLogIds(logIds));
     }
+
+
 }

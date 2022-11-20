@@ -11,12 +11,12 @@
         <result property="equipmentStatus"    column="equipment_status"    />
         <result property="hospitalCode"    column="hospital_code"    />
         <result property="equipmentType"    column="equipment_type"    />
-        <result property="patientCode"    column="patient_code"    />
+        <result property="patientPhone"    column="patient_phone"    />
         <result property="pId"    column="p_id"    />
     </resultMap>
 
     <sql id="selectEquipmentVo">
-        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code, equipment_type, patient_code, p_id from equipment
+        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code, equipment_type, patient_phone, p_id from equipment
     </sql>
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
@@ -27,7 +27,7 @@
             <if test="equipmentStatus != null  and equipmentStatus != ''"> and equipment_status like concat('%', #{equipmentStatus}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
             <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
-            <if test="patientCode != null  and patientCode != ''"> and patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone like concat('%', #{patientPhone}, '%')</if>
             <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
         </where>
         order by equipment_status desc
@@ -47,7 +47,7 @@
             <if test="equipmentStatus != null">equipment_status,</if>
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
             <if test="equipmentType != null">equipment_type,</if>
-            <if test="patientCode != null">patient_code,</if>
+            <if test="patientPhone != null">patient_phone,</if>
             <if test="pId != null">p_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -57,7 +57,7 @@
             <if test="equipmentStatus != null">#{equipmentStatus},</if>
             <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
             <if test="equipmentType != null">#{equipmentType},</if>
-            <if test="patientCode != null">#{patientCode},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
             <if test="pId != null">#{pId},</if>
         </trim>
     </insert>
@@ -70,7 +70,7 @@
             <if test="equipmentStatus != null">equipment_status = #{equipmentStatus},</if>
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>
             <if test="equipmentType != null">equipment_type = #{equipmentType},</if>
-            <if test="patientCode != null">patient_code = #{patientCode},</if>
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
             <if test="pId != null">p_id = #{pId},</if>
         </trim>
         where equipment_id = #{equipmentId}
@@ -81,7 +81,7 @@
     </update>
 
     <update id="updateEquipmentStatus">
-        update equipment set equipment_status = 'True' where equipment_code in
+        update equipment set equipment_status = 'True' where equipment_code ine
         <foreach item="equipmentCode" collection="array" open="(" separator="," close=")">
             #{equipmentCode}
         </foreach>

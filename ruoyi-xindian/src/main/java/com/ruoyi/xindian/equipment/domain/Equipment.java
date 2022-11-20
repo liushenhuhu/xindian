@@ -40,7 +40,7 @@ public class Equipment extends BaseEntity
 
     /** 患者身份证 */
     @Excel(name = "患者身份证")
-    private String patientCode;
+    private String patientPhone;
 
     /** 患者管理id */
     @Excel(name = "患者管理id")
@@ -54,13 +54,12 @@ public class Equipment extends BaseEntity
         this.pId = pId;
     }
 
-    public void setPatientCode(String patientCode)
-    {
-        this.patientCode = patientCode;
+    public String getPatientPhone() {
+        return patientPhone;
     }
-    public String getPatientCode()
-    {
-        return patientCode;
+
+    public void setPatientPhone(String patientPhone) {
+        this.patientPhone = patientPhone;
     }
 
     public void setEquipmentId(Long equipmentId)
@@ -117,6 +116,8 @@ public class Equipment extends BaseEntity
         this.equipmentType = equipmentType;
     }
 
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -126,7 +127,7 @@ public class Equipment extends BaseEntity
                 .append("equipmentStatus", getEquipmentStatus())
                 .append("hospitalCode", getHospitalCode())
                 .append("equipmentType",getEquipmentType())
-                .append("patientCode",getPatientCode())
+                .append("patientPhone",getPatientPhone())
                 .append("pId",getpId())
                 .toString();
     }

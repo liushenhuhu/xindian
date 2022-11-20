@@ -79,6 +79,10 @@ public class AlertLog extends BaseEntity
     @Excel(name = "数据")
     private String logData;
 
+    /** json数据 */
+    @Excel(name = "json数据")
+    private String logJson;
+
     public String getpId() {
         return pId;
     }
