@@ -19,8 +19,6 @@
         <result property="familyPhone"    column="family_phone"    />
         <result property="hospitalCode" column="hospital_code"  />
         <result property="hospitalName" column="hospital_name"  />
-        <result property="logData"    column="log_data"    />
-        <result property="logJson"    column="log_json"    />
     </resultMap>
 
 

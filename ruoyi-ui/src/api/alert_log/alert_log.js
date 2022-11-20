@@ -6,7 +6,7 @@ export function listAlert_log(query) {
     url: '/alert_log/alert_log/list',
     method: 'get',
     params: query,
-    timeout: 100000
+    timeout: 200000
   })
 }
 

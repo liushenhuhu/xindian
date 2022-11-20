@@ -81,7 +81,7 @@
     </update>
 
     <update id="updateEquipmentStatus">
-        update equipment set equipment_status = 'True' where equipment_code ine
+        update equipment set equipment_status = 'True' where equipment_code in
         <foreach item="equipmentCode" collection="array" open="(" separator="," close=")">
             #{equipmentCode}
         </foreach>
