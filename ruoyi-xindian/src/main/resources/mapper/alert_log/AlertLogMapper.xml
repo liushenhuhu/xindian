@@ -24,7 +24,7 @@
 
     <sql id="selectAlertLogVo">
         select log_id, log_time, log_type, event_name, event_description, al.p_id,
-               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone, hospital_name
+               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone
         from alert_log al
             inner join patient_management pm on al.p_id = pm.p_id
             inner join patient p on pm.patient_phone = p.patient_phone
@@ -71,7 +71,6 @@
             <if test="pId != null">#{pId},</if>
             <if test="logData != null">log_data,</if>
             <if test="logJson != null">log_json,</if>
-
         </trim>
     </insert>
 

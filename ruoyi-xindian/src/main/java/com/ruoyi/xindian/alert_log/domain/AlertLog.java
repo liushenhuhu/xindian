@@ -24,7 +24,7 @@ public class AlertLog extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 日志id */
-    private Long logId;
+    private String logId;
 
     /** 发生时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -75,14 +75,6 @@ public class AlertLog extends BaseEntity
     @Excel(name = "医院名称")
     private String hospitalName;
 
-    /** 数据 */
-    @Excel(name = "数据")
-    private String logData;
-
-    /** json数据 */
-    @Excel(name = "json数据")
-    private String logJson;
-
     public String getpId() {
         return pId;
     }
@@ -91,22 +83,4 @@ public class AlertLog extends BaseEntity
         this.pId = pId;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("logId", getLogId())
-                .append("logTime", getLogTime())
-                .append("logType", getLogType())
-                .append("eventName", getEventName())
-                .append("eventDescription", getEventDescription())
-                .append("pId", getpId())
-                .append("patientName", getPatientName())
-                .append("patientCode", getPatientCode())
-                .append("patientPhone", getPatientPhone())
-                .append("familyPhone", getFamilyPhone())
-                .append("hospitalCode", getHospitalCode())
-                .append("hospitalName", getHospitalName())
-                .append("logData",getLogData())
-                .toString();
-    }
 }
