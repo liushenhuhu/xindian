@@ -74,7 +74,7 @@ public class AlertLogServiceImpl implements IAlertLogService
      * @return 结果
      */
     @Override
-    public int deleteAlertLogByLogIds(Long[] logIds)
+    public int deleteAlertLogByLogIds(String[] logIds)
     {
         return alertLogMapper.deleteAlertLogByLogIds(logIds);
     }
@@ -86,7 +86,7 @@ public class AlertLogServiceImpl implements IAlertLogService
      * @return 结果
      */
     @Override
-    public int deleteAlertLogByLogId(Long logId)
+    public int deleteAlertLogByLogId(String logId)
     {
         return alertLogMapper.deleteAlertLogByLogId(logId);
     }

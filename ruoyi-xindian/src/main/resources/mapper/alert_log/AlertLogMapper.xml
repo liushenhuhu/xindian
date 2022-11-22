@@ -88,7 +88,7 @@
         where log_id = #{logId}
     </update>
 
-    <delete id="deleteAlertLogByLogId" parameterType="Long">
+    <delete id="deleteAlertLogByLogId" parameterType="string">
         delete from alert_log where log_id = #{logId}
     </delete>
 
