@@ -140,7 +140,7 @@
           v-hasPermi="['hospital:hospital:export']"
         >导出</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="refresh"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="hospitalList" @selection-change="handleSelectionChange">
@@ -250,7 +250,7 @@
 </template>
 
 <script>
-import { listHospital, getHospital, delHospital, addHospital, updateHospital } from "@/api/hospital/hospital";
+import {listHospital, getHospital, delHospital, addHospital, updateHospital, addDict} from "@/api/hospital/hospital";
 
 export default {
   name: "Hospital",
@@ -316,6 +316,12 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    /** 刷新 */
+    refresh() {
+      this.getList();
+      addDict();
+      console.log("刷新成功--字典更新完毕")
     },
     // 取消按钮
     cancel() {

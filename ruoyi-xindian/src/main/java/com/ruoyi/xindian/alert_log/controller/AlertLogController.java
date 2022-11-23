@@ -133,7 +133,9 @@ public class AlertLogController extends BaseController {
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:remove')")
     @Log(title = "预警日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{logIds}")
-    public AjaxResult remove(@PathVariable Long[] logIds) {
+    public AjaxResult remove(@PathVariable String[] logIds) {
         return toAjax(alertLogService.deleteAlertLogByLogIds(logIds));
     }
+
+
 }

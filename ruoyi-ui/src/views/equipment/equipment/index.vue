@@ -45,10 +45,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="患者身份证" prop="patientCode">
+      <el-form-item label="患者电话" prop="patientPhone">
         <el-input
-          v-model="queryParams.patientCode"
-          placeholder="请输入患者身份证"
+          v-model="queryParams.patientPhone"
+          placeholder="请输入患者电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -120,13 +120,17 @@
           <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+      <el-table-column label="医院代号" align="center" prop="hospitalCode">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.hospital_name_list" :value="scope.row.hospitalCode"/>
+        </template>
+      </el-table-column>
       <el-table-column label="设备种类" align="center" prop="equipmentType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者身份证" align="center" prop="patientCode"/>
+      <el-table-column label="患者电话" align="center" prop="patientPhone"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -177,7 +181,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
+          <el-select v-model="form.hospitalCode" placeholder="请选择医院代号">
+            <el-option
+              v-for="dict in dict.type.hospital_name_list"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
           <el-select v-model="form.equipmentType" placeholder="请选择设备种类">
@@ -189,8 +200,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="患者身份证" prop="patientCode">
-          <el-input v-model="form.patientCode" placeholder="请输入患者身份证"/>
+        <el-form-item label="患者电话" prop="patientPhone">
+          <el-input v-model="form.patientPhone" placeholder="请输入患者电话"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -217,7 +228,7 @@ import {updateOnline1, updateOnline2, updateOnlineAll} from "@/api/online/online
 
 export default {
   name: "Equipment",
-  dicts: ['equipment_status', 'ecg_type'],
+  dicts: ['equipment_status', 'ecg_type', 'hospital_name_list'],
   data() {
     return {
       // 遮罩层
@@ -251,7 +262,7 @@ export default {
         equipmentStatus: null,
         hospitalCode: null,
         equipmentType: null,
-        patientCode: null
+        patientPhone: null
       },
       // 表单参数
       form: {},
@@ -262,10 +273,7 @@ export default {
         ],
         hospitalCode: [
           {required: true, message: "医院代号不能为空", trigger: "blur"}
-        ],
-        patientCode: [
-          {required: true, message: "患者身份证不能为空", trigger: "blur"}
-        ],
+        ]
       }
     };
   },
@@ -308,7 +316,7 @@ export default {
         equipmentStatus: null,
         hospitalCode: null,
         equipmentType: null,
-        patientCode: null
+        patientPhone: null
       };
       this.resetForm("form");
     },

@@ -50,3 +50,10 @@ export function delHospital(hospitalId) {
     method: 'delete'
   })
 }
+
+export function addDict() {
+  return request({
+    url: '/hospital/hospital/addDict',
+    method: 'get'
+  })
+}

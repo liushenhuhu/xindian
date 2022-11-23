@@ -19,13 +19,12 @@
         <result property="familyPhone"    column="family_phone"    />
         <result property="hospitalCode" column="hospital_code"  />
         <result property="hospitalName" column="hospital_name"  />
-        <result property="logData"    column="log_data"    />
     </resultMap>
 
 
     <sql id="selectAlertLogVo">
         select log_id, log_time, log_type, event_name, event_description, al.p_id,
-               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone, hospital_name
+               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone
         from alert_log al
             inner join patient_management pm on al.p_id = pm.p_id
             inner join patient p on pm.patient_phone = p.patient_phone
@@ -61,6 +60,7 @@
             <if test="eventDescription != null">event_description,</if>
             <if test="pId != null">p_id,</if>
             <if test="logData != null">log_data,</if>
+            <if test="logJson != null">log_json,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="logId != null">#{logId},</if>
@@ -70,6 +70,7 @@
             <if test="eventDescription != null">#{eventDescription},</if>
             <if test="pId != null">#{pId},</if>
             <if test="logData != null">log_data,</if>
+            <if test="logJson != null">log_json,</if>
         </trim>
     </insert>
 
@@ -82,11 +83,12 @@
             <if test="eventDescription != null">event_description = #{eventDescription},</if>
             <if test="pId != null">p_id = #{pId},</if>
             <if test="logData != null">log_data = #{logData},</if>
+            <if test="logJson != null">log_json = #{logJson},</if>
         </trim>
         where log_id = #{logId}
     </update>
 
-    <delete id="deleteAlertLogByLogId" parameterType="Long">
+    <delete id="deleteAlertLogByLogId" parameterType="string">
         delete from alert_log where log_id = #{logId}
     </delete>
 

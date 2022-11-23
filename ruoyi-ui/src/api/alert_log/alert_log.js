@@ -5,7 +5,8 @@ export function listAlert_log(query) {
   return request({
     url: '/alert_log/alert_log/list',
     method: 'get',
-    params: query
+    params: query,
+    timeout: 200000
   })
 }
 

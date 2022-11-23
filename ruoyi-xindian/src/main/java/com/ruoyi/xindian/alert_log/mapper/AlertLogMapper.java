@@ -49,7 +49,7 @@ public interface AlertLogMapper
      * @param logId 预警日志主键
      * @return 结果
      */
-    public int deleteAlertLogByLogId(Long logId);
+    public int deleteAlertLogByLogId(String logId);
 
     /**
      * 批量删除预警日志
@@ -57,5 +57,5 @@ public interface AlertLogMapper
      * @param logIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteAlertLogByLogIds(Long[] logIds);
+    public int deleteAlertLogByLogIds(String[] logIds);
 }
