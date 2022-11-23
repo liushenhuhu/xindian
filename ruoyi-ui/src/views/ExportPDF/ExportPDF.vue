@@ -2586,8 +2586,37 @@ export default {
           left: '1%',
         },
         grid: {left: '18%',},
-        xAxis: {},
-        yAxis: {},
+        xAxis: {max:2000},
+        yAxis: {max:2000},
+        dataZoom: [
+          {
+            type: 'slider',
+            show: true,
+            xAxisIndex: [0],
+            start: 0,
+            end: 2000
+          },
+          {
+            type: 'slider',
+            show: true,
+            yAxisIndex: [0],
+            left: '93%',
+            start: 0,
+            end: 2000
+          },
+          {
+            type: 'inside',
+            xAxisIndex: [0],
+            start: 0,
+            end: 2000
+          },
+          {
+            type: 'inside',
+            yAxisIndex: [0],
+            start: 0,
+            end: 2000
+          }
+        ],
         series: [
           {
             symbolSize: 2,
