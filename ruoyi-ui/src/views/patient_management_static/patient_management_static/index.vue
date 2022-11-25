@@ -28,6 +28,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="患者id" prop="pId">
+        <el-input
+          v-model="queryParams.pId"
+          placeholder="请输入患者id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="医院代号" prop="hospitalCode">
         <el-input
           v-model="queryParams.hospitalCode"
@@ -341,6 +349,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        pId: null,
         patientCode: null,
         hospitalCode: null,
         equipmentCode: null,
@@ -411,7 +420,8 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'ECG'
+        ecgType: 'ECG',
+        patientPhone: null
       };
       this.resetForm("form");
     },

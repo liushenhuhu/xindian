@@ -23,6 +23,7 @@ public class PatientManagement extends BaseEntity {
     /**
      * 患者管理id
      */
+    @Excel(name = "患者管理id")
     private String pId;
 
     /**

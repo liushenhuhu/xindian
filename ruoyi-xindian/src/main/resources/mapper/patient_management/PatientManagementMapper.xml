@@ -40,6 +40,7 @@
     <select id="selectPatientManagementList" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         <where>
+            <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
@@ -58,6 +59,7 @@
     <select id="selectPatientManagementListDECG" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         <where>
+            <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
