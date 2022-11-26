@@ -73,6 +73,15 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+        <el-input
+          v-model="queryParams.intelligentDiagnosis"
+          placeholder="请输入智能诊断"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -166,6 +175,7 @@
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
         </template>
       </el-table-column>
+      <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis"/>
 
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
@@ -298,6 +308,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+          <el-input v-model="form.intelligentDiagnosis" placeholder="请输入智能诊断"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -356,7 +369,8 @@ export default {
         connectionTime: null,
         patientName: null,
         ecgType: 'ECG',
-        patientPhone: null
+        patientPhone: null,
+        intelligentDiagnosis:null
       },
       // 表单参数
       form: {},

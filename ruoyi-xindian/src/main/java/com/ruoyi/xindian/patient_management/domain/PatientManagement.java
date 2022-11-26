@@ -119,6 +119,18 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "在线状态")
     private String onlineStatus;
 
+    /** 智能诊断 */
+    @Excel(name = "智能诊断")
+    private String intelligentDiagnosis;
+
+    public String getintelligentDiagnosis() {
+        return intelligentDiagnosis;
+    }
+
+    public void setintelligentDiagnosis(String intelligentDiagnosis) {
+        this.intelligentDiagnosis = intelligentDiagnosis;
+    }
+
     public String getpId() {
         return pId;
     }
@@ -270,6 +282,7 @@ public class PatientManagement extends BaseEntity {
                 .append("hospitalName",getHospitalName())
                 .append("ecgType", getEcgType())
                 .append("onlineStatus", getOnlineStatus())
+                .append("intelligentDiagnosis", getintelligentDiagnosis())
                 .toString();
     }
 }

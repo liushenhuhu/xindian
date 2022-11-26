@@ -23,6 +23,7 @@
         <result property="hospitalName"    column="hospital_name"    />
         <result property="ecgType"    column="ecg_type"    />
         <result property="onlineStatus"    column="online_status"    />
+        <result property="intelligentDiagnosis"    column="intelligent_diagnosis"    />
     </resultMap>
 
     <sql id="selectPatientManagementVo">
@@ -30,7 +31,7 @@
                connection_time, bed_number, case_history_number,
                ecg_type, online_status, patient_name, patient_age, patient_sex, patient_source,
                m.patient_phone, family_phone,  monitoring_status,
-               equipment_status, equipment_type, hospital_name
+               equipment_status, equipment_type, hospital_name,intelligent_diagnosis
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
@@ -52,6 +53,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
         </where>
         order by online_status desc, connection_time desc
     </select>
@@ -71,6 +73,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
         </where>
         order by online_status desc, connection_time desc
     </select>
@@ -94,6 +97,7 @@
             <if test="ecgType != null">ecg_type,</if>
             <if test="onlineStatus != null">online_status,</if>
             <if test="patientPhone != null">patient_phone,</if>
+            <if test="intelligentDiagnosis != null">intelligent_diagnosis,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -105,6 +109,7 @@
             <if test="ecgType != null">#{ecgType},</if>
             <if test="onlineStatus != null">#{onlineStatus},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="intelligentDiagnosis != null">#{intelligentDiagnosis},</if>
         </trim>
     </insert>
 
@@ -120,6 +125,7 @@
             <if test="ecgType != null">ecg_type = #{ecgType},</if>
             <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
             <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="intelligentDiagnosis != null">intelligentDiagnosis = #{intelligent_diagnosis},</if>
         </trim>
         where p_id = #{pId}
     </update>
