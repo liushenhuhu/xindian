@@ -55,7 +55,7 @@
       <el-form-item label="连接时间">
         <el-date-picker
           v-model="daterangeConnectionTime"
-          style="width: 240px"
+          style="width: 205px"
           value-format="yyyy-MM-dd HH:mm:ss"
           type="datetimerange"
           range-separator="-"
@@ -90,6 +90,14 @@
             :value="dict.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="诊断结论" prop="diagnosisConclusion">
+        <el-input
+          v-model="queryParams.diagnosisConclusion"
+          placeholder="请输入诊断结论"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="诊断医生" prop="diagnosisDoctor">
         <el-input
