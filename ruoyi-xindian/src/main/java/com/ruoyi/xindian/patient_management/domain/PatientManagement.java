@@ -17,6 +17,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author hanhan
  * @date 2022-08-20
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PatientManagement extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -111,25 +114,48 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "医院名称")
     private String hospitalName;
 
-    /** 心电种类（静态动态） */
+    /**
+     * 心电种类（静态动态）
+     */
     @Excel(name = "心电种类", readConverterExp = "静=态动态")
     private String ecgType;
 
-    /** 在线状态 */
+    /**
+     * 在线状态
+     */
     @Excel(name = "在线状态")
     private String onlineStatus;
 
-    /** 智能诊断 */
+    /**
+     * 智能诊断
+     */
     @Excel(name = "智能诊断")
     private String intelligentDiagnosis;
 
-    public String getintelligentDiagnosis() {
-        return intelligentDiagnosis;
-    }
+    /**
+     * 诊断状态
+     */
+    @Excel(name = "诊断状态")
+    private String diagnosisStatus;
 
-    public void setintelligentDiagnosis(String intelligentDiagnosis) {
-        this.intelligentDiagnosis = intelligentDiagnosis;
-    }
+    /**
+     * 诊断结论
+     */
+    @Excel(name = "诊断结论")
+    private String diagnosisConclusion;
+
+    /**
+     * 诊断医生
+     */
+    @Excel(name = "诊断医生")
+    private String diagnosisDoctor;
+
+    /**
+     * 报告时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "报告时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date reportTime;
 
     public String getpId() {
         return pId;
@@ -137,152 +163,5 @@ public class PatientManagement extends BaseEntity {
 
     public void setpId(String pId) {
         this.pId = pId;
-    }
-
-    public String getPatientCode() {
-        return patientCode;
-    }
-
-    public void setPatientCode(String patientCode) {
-        this.patientCode = patientCode;
-    }
-
-    public String getHospitalCode() {
-        return hospitalCode;
-    }
-
-    public void setHospitalCode(String hospitalCode) {
-        this.hospitalCode = hospitalCode;
-    }
-
-    public String getEquipmentCode() {
-        return equipmentCode;
-    }
-
-    public void setEquipmentCode(String equipmentCode) {
-        this.equipmentCode = equipmentCode;
-    }
-
-    public Date getConnectionTime() {
-        return connectionTime;
-    }
-
-    public void setConnectionTime(Date connectionTime) {
-        this.connectionTime = connectionTime;
-    }
-
-    public String getBedNumber() {
-        return bedNumber;
-    }
-
-    public void setBedNumber(String bedNumber) {
-        this.bedNumber = bedNumber;
-    }
-
-    public String getCaseHistoryNumber() {
-        return caseHistoryNumber;
-    }
-
-    public void setCaseHistoryNumber(String caseHistoryNumber) {
-        this.caseHistoryNumber = caseHistoryNumber;
-    }
-
-    public String getPatientName() {
-        return patientName;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
-
-    public String getPatientAge() {
-        return patientAge;
-    }
-
-    public void setPatientAge(String patientAge) {
-        this.patientAge = patientAge;
-    }
-
-    public String getPatientSex() {
-        return patientSex;
-    }
-
-    public void setPatientSex(String patientSex) {
-        this.patientSex = patientSex;
-    }
-
-    public String getPatientSource() {
-        return patientSource;
-    }
-
-    public void setPatientSource(String patientSource) {
-        this.patientSource = patientSource;
-    }
-
-    public String getPatientPhone() {
-        return patientPhone;
-    }
-
-    public void setPatientPhone(String patientPhone) {
-        this.patientPhone = patientPhone;
-    }
-
-    public String getFamilyPhone() {
-        return familyPhone;
-    }
-
-    public void setFamilyPhone(String familyPhone) {
-        this.familyPhone = familyPhone;
-    }
-
-    public String getMonitoringStatus() {
-        return monitoringStatus;
-    }
-
-    public void setMonitoringStatus(String monitoringStatus) {
-        this.monitoringStatus = monitoringStatus;
-    }
-
-    public String getHospitalName() {
-        return hospitalName;
-    }
-
-    public void setHospitalName(String hospitalName) {
-        this.hospitalName = hospitalName;
-    }
-
-    public String getEcgType() {
-        return ecgType;
-    }
-
-    public void setEcgType(String ecgType) {
-        this.ecgType = ecgType;
-    }
-
-    public String getOnlineStatus() {
-        return onlineStatus;
-    }
-
-    public void setOnlineStatus(String onlineStatus) {
-        this.onlineStatus = onlineStatus;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("pId", getpId())
-                .append("patientCode", getPatientCode())
-                .append("hospitalCode", getHospitalCode())
-                .append("equipmentCode", getEquipmentCode())
-                .append("connectionTime", getConnectionTime())
-                .append("monitoringStatus", getMonitoringStatus())
-                .append("bedNumber", getBedNumber())
-                .append("caseHistoryNumber", getCaseHistoryNumber())
-                .append("patientName",getPatientName())
-                .append("hospitalName",getHospitalName())
-                .append("ecgType", getEcgType())
-                .append("onlineStatus", getOnlineStatus())
-                .append("intelligentDiagnosis", getintelligentDiagnosis())
-                .toString();
     }
 }

@@ -24,6 +24,10 @@
         <result property="ecgType"    column="ecg_type"    />
         <result property="onlineStatus"    column="online_status"    />
         <result property="intelligentDiagnosis"    column="intelligent_diagnosis"    />
+        <result property="diagnosisStatus"    column="diagnosis_status"    />
+        <result property="diagnosisConclusion"    column="diagnosis_conclusion"    />
+        <result property="diagnosisDoctor"    column="diagnosis_doctor"    />
+        <result property="reportTime"    column="report_time"    />
     </resultMap>
 
     <sql id="selectPatientManagementVo">
@@ -31,11 +35,13 @@
                connection_time, bed_number, case_history_number,
                ecg_type, online_status, patient_name, patient_age, patient_sex, patient_source,
                m.patient_phone, family_phone,  monitoring_status,
-               equipment_status, equipment_type, hospital_name,intelligent_diagnosis
+               equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
+               diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
                  inner join hospital h on m.hospital_code = h.hospital_code
+                 inner join report r on m.p_id = r.p_id
     </sql>
 
     <select id="selectPatientManagementList" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -54,6 +60,10 @@
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
+
+            <if test="diagnosisStatus != null  and diagnosisStatus != ''"> and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
+            <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
         </where>
         order by online_status desc, connection_time desc
     </select>
@@ -74,6 +84,10 @@
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
+
+            <if test="diagnosisStatus != null  and diagnosisStatus != ''"> and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
+            <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
         </where>
         order by online_status desc, connection_time desc
     </select>
