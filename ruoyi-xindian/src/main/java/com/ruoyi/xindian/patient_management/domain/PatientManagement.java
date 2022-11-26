@@ -136,7 +136,7 @@ public class PatientManagement extends BaseEntity {
      * 诊断状态
      */
     @Excel(name = "诊断状态")
-    private String diagnosisStatus;
+    private Long diagnosisStatus;
 
     /**
      * 诊断结论

@@ -203,9 +203,9 @@
       </el-table-column>
       <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
-      <el-table-column label="报告时间" align="center" prop="reportTime" width="180">
+      <el-table-column label="报告时间" align="center" prop="reportTime" width="180" show-overflow-tooltip>
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
 

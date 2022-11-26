@@ -40,8 +40,8 @@
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
-                 inner join hospital h on m.hospital_code = h.hospital_code
-                 inner join report r on m.p_id = r.p_id
+                 left join hospital h on m.hospital_code = h.hospital_code
+                 left join report r on m.p_id = r.p_id
     </sql>
 
     <select id="selectPatientManagementList" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -111,7 +111,6 @@
             <if test="ecgType != null">ecg_type,</if>
             <if test="onlineStatus != null">online_status,</if>
             <if test="patientPhone != null">patient_phone,</if>
-            <if test="intelligentDiagnosis != null">intelligent_diagnosis,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -123,7 +122,6 @@
             <if test="ecgType != null">#{ecgType},</if>
             <if test="onlineStatus != null">#{onlineStatus},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
-            <if test="intelligentDiagnosis != null">#{intelligentDiagnosis},</if>
         </trim>
     </insert>
 
@@ -139,7 +137,6 @@
             <if test="ecgType != null">ecg_type = #{ecgType},</if>
             <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
             <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
-            <if test="intelligentDiagnosis != null">intelligentDiagnosis = #{intelligent_diagnosis},</if>
         </trim>
         where p_id = #{pId}
     </update>
