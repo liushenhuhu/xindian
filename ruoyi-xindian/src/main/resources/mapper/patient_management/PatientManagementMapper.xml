@@ -68,7 +68,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
         </where>
-        order by ecg_level desc, online_status desc, connection_time desc
+        order by if(isnull(ecg_level),1,0), ecg_level, online_status desc, connection_time desc
     </select>
 
     <select id="selectPatientManagementListDECG" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -94,7 +94,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
         </where>
-        order by ecg_level, online_status desc, connection_time desc
+        order by if(isnull(ecg_level),1,0), ecg_level, online_status desc, connection_time desc
     </select>
 
 

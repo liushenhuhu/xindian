@@ -226,7 +226,11 @@
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="风险等级" align="center" prop="ecgLevel"/>
+      <el-table-column label="风险等级" align="center" prop="ecgLevel">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
+        </template>
+      </el-table-column>
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
