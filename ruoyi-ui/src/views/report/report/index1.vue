@@ -124,6 +124,7 @@
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
       <el-table-column label="报告种类" align="center" prop="reportType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.reportType"/>
@@ -196,6 +197,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+          <el-input v-model="form.intelligentDiagnosis" placeholder="请输入智能诊断" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -242,7 +246,8 @@ export default {
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
-        reportType: 'ECG'
+        reportType: 'ECG',
+        intelligentDiagnosis: null
       },
       // 表单参数
       form: {},
@@ -286,7 +291,8 @@ export default {
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
-        reportType: null
+        reportType: 'ECG',
+        intelligentDiagnosis: null
       };
       this.resetForm("form");
     },

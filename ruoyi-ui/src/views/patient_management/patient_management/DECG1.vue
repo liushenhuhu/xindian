@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
       <el-form-item label="患者姓名" prop="patientName">
         <el-input
@@ -23,6 +23,14 @@
         <el-input
           v-model="queryParams.patientCode"
           placeholder="请输入患者身份证号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="患者id" prop="pId">
+        <el-input
+          v-model="queryParams.pId"
+          placeholder="请输入患者id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -348,12 +356,13 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        patientCode: null,
+        pId: null,
         hospitalCode: null,
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
         patientPhone: null,
+        patientCode: null,
         ecgType: 'DECG1'
       },
       // 表单参数
@@ -422,12 +431,13 @@ export default {
     reset() {
       this.form = {
         pId: null,
-        patientCode: null,
         hospitalCode: null,
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'DECG'
+        patientPhone: null,
+        patientCode: null,
+        ecgType: 'DECG1'
       };
       this.resetForm("form");
     },

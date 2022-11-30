@@ -23,6 +23,12 @@
         <result property="hospitalName"    column="hospital_name"    />
         <result property="ecgType"    column="ecg_type"    />
         <result property="onlineStatus"    column="online_status"    />
+        <result property="intelligentDiagnosis"    column="intelligent_diagnosis"    />
+        <result property="diagnosisStatus"    column="diagnosis_status"    />
+        <result property="diagnosisConclusion"    column="diagnosis_conclusion"    />
+        <result property="diagnosisDoctor"    column="diagnosis_doctor"    />
+        <result property="reportTime"    column="report_time"    />
+        <result property="ecgLevel"    column="ecg_level"    />
     </resultMap>
 
     <sql id="selectPatientManagementVo">
@@ -30,16 +36,19 @@
                connection_time, bed_number, case_history_number,
                ecg_type, online_status, patient_name, patient_age, patient_sex, patient_source,
                m.patient_phone, family_phone,  monitoring_status,
-               equipment_status, equipment_type, hospital_name
+               equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
+               diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, ecg_level
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
-                 inner join hospital h on m.hospital_code = h.hospital_code
+                 left join hospital h on m.hospital_code = h.hospital_code
+                 left join report r on m.p_id = r.p_id
     </sql>
 
     <select id="selectPatientManagementList" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         <where>
+            <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
@@ -51,13 +60,21 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
+
+            <if test="diagnosisStatus != null "> and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
+            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
+            <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
+            <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
         </where>
-        order by online_status desc, connection_time desc
+        order by if(isnull(ecg_level),1,0), ecg_level, online_status desc, connection_time desc
     </select>
 
     <select id="selectPatientManagementListDECG" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         <where>
+            <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
@@ -65,14 +82,20 @@
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
-            <if test="ecgType != null  and ecgType != ''"> and ecg_type = #{ecgType} or ecg_type = "DECG2"</if>
+            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = #{ecgType} or ecg_type = "DECG2")</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
-        </where>
-        order by online_status desc, connection_time desc
-    </select>
+            <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
 
+            <if test="diagnosisStatus != null  and diagnosisStatus != ''"> and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
+            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
+            <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
+            <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
+        </where>
+        order by if(isnull(ecg_level),1,0), ecg_level, online_status desc, connection_time desc
+    </select>
 
 
     <select id="selectPatientManagementByPId" parameterType="String" resultMap="PatientManagementResult">
@@ -92,6 +115,7 @@
             <if test="ecgType != null">ecg_type,</if>
             <if test="onlineStatus != null">online_status,</if>
             <if test="patientPhone != null">patient_phone,</if>
+            <if test="ecgLevel != null">ecg_level,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -103,6 +127,7 @@
             <if test="ecgType != null">#{ecgType},</if>
             <if test="onlineStatus != null">#{onlineStatus},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="ecgLevel != null">#{ecgLevel},</if>
         </trim>
     </insert>
 
@@ -118,6 +143,7 @@
             <if test="ecgType != null">ecg_type = #{ecgType},</if>
             <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
             <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="ecgLevel != null">ecg_level = #{ecgLevel},</if>
         </trim>
         where p_id = #{pId}
     </update>

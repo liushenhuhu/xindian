@@ -104,7 +104,6 @@ public class GenerateSms {
         }
     }
 
-
     public AjaxResult getCode(String telephone, int code) {
         String host = "http://smsyun.market.alicloudapi.com";
         String path = "/sms/sms01";
@@ -128,5 +127,34 @@ public class GenerateSms {
         return AjaxResult.success(code);
     }
 
+    /*
+    * 向用户推送预警短信
+    * */
+    @PostMapping("/sms/warn")
+    @ResponseBody
+    public AjaxResult warnCode(@RequestBody LoginBody loginBody) {
+        String telephone = loginBody.getMobile();
+        String code = loginBody.getSmsCode();
+        String host = "http://smsyun.market.alicloudapi.com";
+        String path = "/sms/sms01";
+        String method = "POST";
+        String appcode = "37a5b008bed84153ad0691d0c33fe42a";
+        Map<String, String> headers = new HashMap<String, String>();
+        //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+        headers.put("Authorization", "APPCODE " + appcode);
+        Map<String, String> querys = new HashMap<String, String>();
+        querys.put("content", "【迈雅】您正在登录验证，验证码" + code + "，切勿将验证码泄露于他人，本条验证码有效期15分钟。");
+        querys.put("mobile", telephone);
+        String bodys = "";
+        redisCache.setCacheObject(telephone, code, 15, TimeUnit.MINUTES);
+        try {
+            HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
+            System.out.println(response.toString()); //获取response的body //
+            System.out.println(EntityUtils.toString(response.getEntity()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AjaxResult.success(code);
+    }
 
 }

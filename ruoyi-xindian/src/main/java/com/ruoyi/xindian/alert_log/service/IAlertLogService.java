@@ -58,4 +58,5 @@ public interface IAlertLogService {
      * @return 结果
      */
     public int deleteAlertLogByLogId(String logId);
+
 }

@@ -137,5 +137,11 @@ public class AlertLogController extends BaseController {
         return toAjax(alertLogService.deleteAlertLogByLogIds(logIds));
     }
 
+    @PostMapping("/newEquipment")
+    public AjaxResult newnewEquipment(String message){
+
+
+        return AjaxResult.success("success");
+    }
 
 }

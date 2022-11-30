@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
       <el-form-item label="患者姓名" prop="patientName">
         <el-input
@@ -28,6 +28,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="患者id" prop="pId">
+        <el-input
+          v-model="queryParams.pId"
+          placeholder="请输入患者id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="医院代号" prop="hospitalCode">
         <el-input
           v-model="queryParams.hospitalCode"
@@ -47,7 +55,7 @@
       <el-form-item label="连接时间">
         <el-date-picker
           v-model="daterangeConnectionTime"
-          style="width: 240px"
+          style="width: 205px"
           value-format="yyyy-MM-dd HH:mm:ss"
           type="datetimerange"
           range-separator="-"
@@ -55,10 +63,54 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="在线状态" prop="onlineStatus">
-        <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
+      <!--      <el-form-item label="在线状态" prop="onlineStatus">
+              <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
+                <el-option
+                  v-for="dict in dict.type.monitoring_status"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
+            </el-form-item>-->
+      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+        <el-input
+          v-model="queryParams.intelligentDiagnosis"
+          placeholder="请输入智能诊断"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="诊断状态" prop="diagnosisStatus">
+        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
           <el-option
-            v-for="dict in dict.type.monitoring_status"
+            v-for="dict in dict.type.diagnosis_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="诊断结论" prop="diagnosisConclusion">
+        <el-input
+          v-model="queryParams.diagnosisConclusion"
+          placeholder="请输入诊断结论"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="诊断医生" prop="diagnosisDoctor">
+        <el-input
+          v-model="queryParams.diagnosisDoctor"
+          placeholder="请输入诊断医生"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="风险等级" prop="ecgLevel">
+        <el-select v-model="queryParams.ecgLevel" placeholder="请选择风险等级" clearable>
+          <el-option
+            v-for="dict in dict.type.ecg_level"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -118,52 +170,81 @@
         >导出
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
+      <el-table-column label="上传时间" align="center" prop="connectionTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
-      <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
-                  <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-                  <el-table-column label="患者性别" align="center" prop="patientSex">
-                    <template slot-scope="scope">
-                      <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="患者来源" align="center" prop="patientSource"/>
-                  <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-                  <el-table-column label="家属电话" align="center" prop="familyPhone"/>
-                  <el-table-column label="监测状态" align="center" prop="monitoringStatus">
-                    <template slot-scope="scope">
-                      <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
-                    </template>
-                  </el-table-column>-->
-      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
-            <el-table-column label="设备号" align="center" prop="equipmentCode"/>-->
-      <el-table-column label="在线状态" align="center" prop="onlineStatus">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="心电种类" align="center" prop="ecgType">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
-        </template>
-      </el-table-column>
 
+      <!--      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
+            <el-table-column label="患者姓名" align="center" prop="patientName"/>
+            <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
+            <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+            <el-table-column label="患者性别" align="center" prop="patientSex">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+              </template>
+            </el-table-column>
+            <el-table-column label="患者来源" align="center" prop="patientSource"/>
+            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+            <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+            <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+              </template>
+            </el-table-column>
+            <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+            <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
+            <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+            <el-table-column label="在线状态" align="center" prop="onlineStatus">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
+              </template>
+            </el-table-column>
+            <el-table-column label="心电种类" align="center" prop="ecgType">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+              </template>
+            </el-table-column>-->
+
+
+      <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
+      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
+      <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
+      <el-table-column label="报告时间" align="center" prop="reportTime" width="180" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="风险等级" align="center" prop="ecgLevel">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
+        </template>
+      </el-table-column>
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
+            <el-form-item label="医院代号" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.hospitalCode }}</span>
+            </el-form-item>
+            <el-form-item label="患者管理id" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.pId }}</span>
+            </el-form-item>
+            <el-form-item label="患者姓名" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.patientName }}</span>
+            </el-form-item>
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
@@ -173,9 +254,9 @@
             <el-form-item label="患者性别" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSex }}</span>
             </el-form-item>
-<!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientSource }}</span>
-            </el-form-item>-->
+            <!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+                          <span>{{ scope.row.patientSource }}</span>
+                        </el-form-item>-->
             <el-form-item label="患者电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
@@ -183,9 +264,9 @@
               <span>{{ scope.row.familyPhone }}</span>
             </el-form-item>
 
-<!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>-->
+            <!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+                          <span>{{ scope.row.hospitalName }}</span>
+                        </el-form-item>-->
             <el-form-item label="设备号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.equipmentCode }}</span>
             </el-form-item>
@@ -290,6 +371,19 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+          <el-input v-model="form.intelligentDiagnosis" placeholder="请输入智能诊断"/>
+        </el-form-item>
+        <el-form-item label="风险等级">
+          <el-radio-group v-model="form.ecgLevel">
+            <el-radio
+              v-for="dict in dict.type.ecg_level"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{ dict.label }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -314,7 +408,7 @@ import {updateOnlineAll} from "@/api/online/online";
 
 export default {
   name: "Patient_management",
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level'],
   data() {
     return {
       // 遮罩层
@@ -341,13 +435,20 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        pId: null,
         patientCode: null,
         hospitalCode: null,
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
         ecgType: 'ECG',
-        patientPhone: null
+        patientPhone: null,
+        intelligentDiagnosis: null,
+        diagnosisStatus: null,
+        diagnosisConclusion: null,
+        diagnosisDoctor: null,
+        reportTime: null,
+        ecgLevel: null
       },
       // 表单参数
       form: {},
@@ -411,7 +512,13 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'ECG'
+        ecgType: 'ECG',
+        patientPhone: null,
+        diagnosisStatus: null,
+        diagnosisConclusion: null,
+        diagnosisDoctor: null,
+        reportTime: null,
+        ecgLevel: null
       };
       this.resetForm("form");
     },

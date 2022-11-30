@@ -2200,7 +2200,7 @@ export default {
     btnUpload() {
       var form = {
         pId: this.pId,
-        diagnosisStatus: '未确定',
+        diagnosisStatus: '1',
         reportType: "ECG",
         diagnosisConclusion: this.data.resultByDoctor,
         reportTime: this.data.dataTime,

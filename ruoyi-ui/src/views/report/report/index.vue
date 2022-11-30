@@ -117,13 +117,14 @@
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" />
+      <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor" />
       <el-table-column label="报告时间" align="center" prop="reportTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
       <el-table-column label="报告种类" align="center" prop="reportType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.reportType"/>
@@ -196,6 +197,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+          <el-input v-model="form.intelligentDiagnosis" placeholder="请输入智能诊断" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -243,7 +247,8 @@ export default {
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
-        reportType: 'DECG'
+        reportType: 'DECG',
+        intelligentDiagnosis: null
       },
       // 表单参数
       form: {},
@@ -287,7 +292,8 @@ export default {
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
-        reportType: null
+        reportType: 'DECG',
+        intelligentDiagnosis: null
       };
       this.resetForm("form");
     },

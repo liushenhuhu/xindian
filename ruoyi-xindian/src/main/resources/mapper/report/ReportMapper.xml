@@ -12,21 +12,23 @@
         <result property="diagnosisDoctor"    column="diagnosis_doctor"    />
         <result property="reportTime"    column="report_time"    />
         <result property="reportType"    column="report_type"    />
+        <result property="intelligentDiagnosis"    column="intelligent_diagnosis"    />
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type from report
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
         <include refid="selectReportVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
-            <if test="diagnosisStatus != null  and diagnosisStatus != ''"> and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="diagnosisStatus != null"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="reportType != null  and reportType != ''"> and report_type = #{reportType}</if>
+            <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis = #{intelligentDiagnosis}</if>
         </where>
     </select>
 
@@ -50,6 +52,7 @@
             <if test="diagnosisDoctor != null">diagnosis_doctor,</if>
             <if test="reportTime != null">report_time,</if>
             <if test="reportType != null">report_type,</if>
+            <if test="intelligentDiagnosis != null">intelligent_diagnosis,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pId != null and pId != ''">#{pId},</if>
@@ -58,6 +61,7 @@
             <if test="diagnosisDoctor != null">#{diagnosisDoctor},</if>
             <if test="reportTime != null">#{reportTime},</if>
             <if test="reportType != null">#{reportType},</if>
+            <if test="intelligentDiagnosis != null">#{intelligentDiagnosis},</if>
         </trim>
     </insert>
 
@@ -70,6 +74,7 @@
             <if test="diagnosisDoctor != null">diagnosis_doctor = #{diagnosisDoctor},</if>
             <if test="reportTime != null">report_time = #{reportTime},</if>
             <if test="reportType != null">report_type = #{reportType},</if>
+            <if test="intelligentDiagnosis != null">intelligent_diagnosis = #{intelligentDiagnosis},</if>
         </trim>
         where report_id = #{reportId}
     </update>
