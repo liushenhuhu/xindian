@@ -157,6 +157,11 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "报告时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date reportTime;
 
+    /** 风险等级  1：正常  2：阳性   3：危急值 */
+    @Excel(name = "风险等级  1：正常  2：阳性   3：危急值")
+    private Long ecgLevel;
+
+
     public String getpId() {
         return pId;
     }
