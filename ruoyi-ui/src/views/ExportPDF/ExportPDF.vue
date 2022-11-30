@@ -1164,13 +1164,22 @@ export default {
         },
         success: function (data) {
           console.log(_th.pId)
-          console.log(data)
           console.log(_th.ecg_type)
-          sessionStorage.removeItem("data");
-          sessionStorage.setItem(_th.pId + 'data', JSON.stringify(data))
-          sessionStorage.setItem(_th.pId + 'show', true)
-          loading.close()
-          window.location.reload("#pdfDom");
+          console.log(data)
+          var tem = JSON.stringify(data.result)
+          var tem1 =tem.substring(1,4)
+
+          if(tem1=="Not"){
+            alert("数据请求错误，请先点击生成报告。")
+            loading.close()
+          }
+          else {
+            sessionStorage.removeItem("data");
+            sessionStorage.setItem(_th.pId + 'data', JSON.stringify(data))
+            sessionStorage.setItem(_th.pId + 'show', true)
+            loading.close()
+            window.location.reload("#pdfDom");
+          }
         },
         error: function (data) {
           console.log("数据请求错误，请先点击生成报告。")
