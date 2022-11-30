@@ -98,6 +98,8 @@
     </select>
 
 
+
+
     <select id="selectPatientManagementByPId" parameterType="String" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         where m.p_id = #{pId}
