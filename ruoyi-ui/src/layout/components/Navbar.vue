@@ -97,10 +97,10 @@ export default {
       client:null,
       notifications: {},
       mes:{
-        info:null,
+        content:null,
         messageId:null,
         title:null,
-        t:null
+        level:null
       }
     }
   },
@@ -127,14 +127,14 @@ export default {
     closeNotification(id){
       // console.log(id)
       this.notifications[id].close();
-      // console.log(this.notifications)
+      console.log(this.notifications)
       delete this.notifications[id];
     },
     openMessageTips(message){
       let _this = this;
       // this.closeAllNotification();
       //将messageId和通知实例放入字典中
-      if(message.t==="warning"){
+      if(message.level==="warning"){
         this.notifications[message.messageId]=this.$notify({
           title: message.title,
           position: 'bottom-right',
@@ -142,15 +142,16 @@ export default {
           dangerouslyUseHTMLString: true,
           message: this.$createElement('div', null,
             [
-              this.$createElement('div', null, [this.$createElement('span', null, message.info)]),
+              this.$createElement('div', null, [this.$createElement('span', null, message.content)]),
               this.$createElement('div', null,
                 [
                   this.$createElement(
                     'button',
                     {
                       style: {
-                        padding: '10px 18px',
-                        margin: '10px 0px 20px 170px',
+                        borderRadius: '15px',
+                        padding: '10px 15px',
+                        margin: '25px 0px 0px 170px',
                         textAlign: 'center',
                         textDecoration: 'none',
                         display: 'inline-block',
@@ -159,7 +160,7 @@ export default {
                         cursor: 'pointer',
                         backgroundColor: 'white',
                         color: 'black',
-                        border: '2px solid #e7e7e7',
+                        border: '2px solid #e7e7e7'
                       },
                       on: {
                         click: _this.closeNotification.bind(_this, message.messageId)
@@ -175,7 +176,7 @@ export default {
           type: 'warning',
         });
       }
-      else if(message.t==="success"){
+      else if(message.level==="success"){
         this.notifications[message.messageId]=this.$notify({
           title: message.title,
           position: 'bottom-right',
@@ -183,7 +184,7 @@ export default {
           dangerouslyUseHTMLString: true,
           message: this.$createElement('div', null,
             [
-              this.$createElement('div', null, [this.$createElement('span', null, message.info)]),
+              this.$createElement('div', null, [this.$createElement('span', null, message.content)]),
               this.$createElement('div', null,
                 [
                   this.$createElement(
@@ -216,7 +217,7 @@ export default {
           type: 'success',
         });
       }
-      else if(message.t==="info"){
+      else if(message.level==="info"){
         this.notifications[message.messageId]=this.$notify.info({
           title: message.title,
           position: 'bottom-right',
@@ -224,7 +225,7 @@ export default {
           dangerouslyUseHTMLString: true,
           message: this.$createElement('div', null,
             [
-              this.$createElement('div', null, [this.$createElement('span', null, message.info)]),
+              this.$createElement('div', null, [this.$createElement('span', null, message.content)]),
               this.$createElement('div', null,
                 [
                   this.$createElement(
@@ -264,7 +265,7 @@ export default {
           dangerouslyUseHTMLString: true,
           message: this.$createElement('div', null,
             [
-              this.$createElement('div', null, [this.$createElement('span', null, message.info)]),
+              this.$createElement('div', null, [this.$createElement('span', null, message.content)]),
               this.$createElement('div', null,
                 [
                   this.$createElement(
@@ -297,33 +298,6 @@ export default {
         });
       }
     },
-    // new_equipment(mesg){
-    //   const h = this.$createElement;
-    //   let _this = this;
-    //   this.$notify({
-    //     title: '新设备接入',
-    //     message: h(
-    //       "p",
-    //       {
-    //         style:"width: 250px;display: flex;justify-content: space-between;",
-    //       },
-    //       [
-    //         h("span", null, mesg),
-    //         h("button", {
-    //             style: "color: #409EFF;cursor: pointer;",
-    //             on: {
-    //               click: _this.closeNotification.bind(_this, 1, 1, message),
-    //             },
-    //           },
-    //           "确定"),
-    //       ]
-    //     ),
-    //     position: 'bottom-right',
-    //     duration: 0,
-    //     type: 'warning',
-    //     showClose:true,
-    //   });
-    // },
     onConnected(frame) {
       console.log("Connected: " + frame);
       //绑定交换机exchange_pushmsg是交换机的名字rk_pushmsg是绑定的路由key
@@ -339,18 +313,17 @@ export default {
       console.log("得到的消息 msg=>" + frame.body);
       console.log(frame)
       //接收到服务器推送消息，向服务器定义的接收消息routekey路由rk_recivemsg发送确认消息
-      // this.new_equipment(frame.body)
       let res=JSON.parse(frame.body)
-      this.mes.info=res.info
+      this.mes.content=res.content
       this.mes.messageId=res.messageId
       this.mes.title=res.title
-      this.mes.t=res.t
+      this.mes.level=res.level
       this.openMessageTips(this.mes)
-      // this.client.send("/exchange/exchange_pushmsg/queue", {"content-type":"text/plain"}, frame.body);
     },
     connect() {
       //这里填你rabbitMQ的连接ip地址直接替换localhost:15674就好其它的不用改
-      this.client= Stomp.client("ws://219.155.7.235:15674/ws")
+      this.client= Stomp.client("wss://ecg.mindyard.cn:83/ws")
+      // this.client= Stomp.client("wss://219.155.7.235:15674/ws")
       // this.client= Stomp.client("ws://localhost:15674/ws")
       //填写你rabbitMQ登录的用户名和密码
       var headers = {
