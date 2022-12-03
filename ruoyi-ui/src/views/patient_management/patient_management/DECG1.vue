@@ -72,6 +72,14 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="医生电话" prop="doctorPhone">
+        <el-input
+          v-model="queryParams.doctorPhone"
+          placeholder="请输入医生电话"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -191,7 +199,9 @@
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.familyPhone }}</span>
             </el-form-item>
-
+            <el-form-item label="医生电话" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.doctorPhone }}</span>
+            </el-form-item>
 <!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalName }}</span>
             </el-form-item>-->
@@ -303,6 +313,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="医生电话" prop="doctorPhone">
+          <el-input v-model="form.doctorPhone" placeholder="请输入医生电话" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -363,7 +376,8 @@ export default {
         patientName: null,
         patientPhone: null,
         patientCode: null,
-        ecgType: 'DECG1'
+        ecgType: 'DECG1',
+        doctorPhone: null
       },
       // 表单参数
       form: {},
@@ -437,7 +451,8 @@ export default {
         patientName: null,
         patientPhone: null,
         patientCode: null,
-        ecgType: 'DECG1'
+        ecgType: 'DECG1',
+        doctorPhone: null
       };
       this.resetForm("form");
     },

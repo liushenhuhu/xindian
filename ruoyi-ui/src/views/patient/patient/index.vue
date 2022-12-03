@@ -35,13 +35,15 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="患者来源" prop="patientSource">
-        <el-input
-          v-model="queryParams.patientSource"
-          placeholder="请输入患者来源"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="医院" prop="patientSource">
+        <el-select v-model="queryParams.patientSource" placeholder="请选择医院" clearable>
+          <el-option
+            v-for="dict in dict.type.hospital_name_name_list"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="患者电话" prop="patientPhone">
         <el-input
@@ -154,7 +156,11 @@
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-      <!--      <el-table-column label="患者来源" align="center" prop="patientSource" />-->
+      <el-table-column label="医院" align="center" prop="patientSource">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.hospital_name_name_list" :value="scope.row.patientSource"/>
+        </template>
+      </el-table-column>
       <el-table-column label="患者电话" align="center" prop="patientPhone"/>
       <el-table-column label="家属电话" align="center" prop="familyPhone"/>
       <el-table-column label="最近连接设备号" align="center" prop="equipmentId"/>
@@ -178,7 +184,7 @@
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
-            <!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+            <!--            <el-form-item label="医院" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.patientSource }}</span>
                         </el-form-item>-->
 
@@ -248,8 +254,15 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="患者来源" prop="patientSource">
-          <el-input v-model="form.patientSource" placeholder="请输入患者来源"/>
+        <el-form-item label="医院" prop="patientSource">
+          <el-select v-model="form.patientSource" placeholder="请选择医院">
+            <el-option
+              v-for="dict in dict.type.hospital_name_name_list"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="患者身份证号" prop="patientCode">
           <el-input v-model="form.patientCode" placeholder="请输入患者身份证号"/>
@@ -296,7 +309,7 @@ import {
   delPatient,
   addPatient,
   updatePatient,
-  updateMonitoringStatus
+  updateMonitoringStatus, addDict
 } from "@/api/patient/patient";
 import $ from "jquery";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
@@ -305,7 +318,7 @@ import {updateOnlineAll} from "@/api/online/online";
 
 export default {
   name: "Patient",
-  dicts: ['sex', 'monitoring_status', 'binding_state'],
+  dicts: ['sex', 'monitoring_status', 'binding_state', 'hospital_name_name_list'],
   data() {
     return {
       // 遮罩层
@@ -392,6 +405,9 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+      addDict().then(res =>{
+        console.log(res)
+      })
     },
     // 取消按钮
     cancel() {

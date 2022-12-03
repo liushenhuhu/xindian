@@ -129,17 +129,20 @@ public class HospitalController extends BaseController
     public AjaxResult addDict() {
         SysDictData dict = new SysDictData();
         dict.setDictType("hospital_name_list");
-        dict.setListClass("primary");
+        dict.setListClass("default");
         dict.setCreateBy("admin");
         Hospital hospital = new Hospital();
         List<Hospital> allHospital = getAllHospital(hospital);
+        int i = 0;
         for (Hospital hospital1 : allHospital) {
+            dict.setDictSort((long) i);
             dict.setDictLabel(hospital1.getHospitalName());
             dict.setDictValue(hospital1.getHospitalCode());
             List<SysDictData> sysDictData = dictDataService.selectDictDataList(dict);
             if (sysDictData.isEmpty()) {
                 dictDataService.insertDictData(dict);
             }
+            i = i +1;
         }
         return AjaxResult.success("down");
     }
