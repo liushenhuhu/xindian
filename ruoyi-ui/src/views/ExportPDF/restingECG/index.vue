@@ -60,7 +60,7 @@
             <div class="header-left">
               <div class="header-1">
                 <div class="header-1-1">
-                  <strong>AI分析结果，需医师确认</strong>
+                  <strong>自动分析结果，仅供参考</strong>
                 </div>
                 <div class="header-1-1">
                   <div
@@ -78,6 +78,7 @@
                     <textarea
                       v-model="data.resultByDoctor"
                       placeholder="请在这里输入医生诊断结果"
+                      data-value="1111"
                       class="box-1-1"
                     />
                 </div>
@@ -87,20 +88,57 @@
           </div>
           <div class="body">
             <div class="body-1">
-              <div id="I" class="line"></div>
-              <div id="II" class="line"></div>
-              <div id="III" class="line"></div>
-              <div id="aVR" class="line"></div>
-              <div id="aVL" class="line"></div>
-              <div id="aVF" class="line"></div>
+              <div>
+                <div id="I" class="line"></div>
+                <button @click="clicktrueI"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="II" class="line"></div>
+                <button @click="clicktrueII"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="III" class="line"></div>
+                <button @click="clicktrueIII"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="aVR" class="line"></div>
+                <button @click="clicktrueaVR"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="aVL" class="line"></div>
+                <button @click="clicktrueaVL"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="aVF" class="line"></div>
+                <button @click="clicktrueaVF"  class="btn1">展开</button>
+              </div>
             </div>
             <div class="body-1">
-              <div id="V1" class="line"></div>
-              <div id="V2" class="line"></div>
-              <div id="V3" class="line"></div>
-              <div id="V4" class="line"></div>
-              <div id="V5" class="line"></div>
-              <div id="V6" class="line"></div>
+              <div>
+                <div id="V1" class="line"></div>
+                <button @click="clicktrueV1"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="V2" class="line"></div>
+                <button @click="clicktrueV2"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="V3" class="line"></div>
+                <button @click="clicktrueV3"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="V4" class="line"></div>
+                <button @click="clicktrueV4"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="V5" class="line"></div>
+                <button @click="clicktrueV5"  class="btn1">展开</button>
+              </div>
+              <div>
+                <div id="V6" class="line"></div>
+                <button @click="clicktrueV6"  class="btn1">展开</button>
+              </div>
+
             </div>
           </div>
           <div class="bottom">
@@ -112,6 +150,54 @@
         </div>
       </div>
 
+      <div  class="lineI" v-show="openI">
+        <div id="I1" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openII">
+        <div id="II1" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openIII">
+        <div id="III1" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openaVR">
+        <div id="aVR1" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openaVL">
+        <div id="aVL1" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openaVF">
+        <div id="aVF1" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openV1">
+        <div id="V11" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openV2">
+        <div id="V22" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openV3">
+        <div id="V33" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openV4">
+      <div id="V44" class="lineshow"></div>
+      <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+    </div>
+      <div  class="lineI" v-show="openV5">
+        <div id="V55" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div  class="lineI" v-show="openV6">
+        <div id="V66" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
     </div>
     <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">
       导出PDF
@@ -145,11 +231,24 @@ export default {
         gender: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.gender,
         age: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.age,
         result: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.result,
-        resultByDoctor: null,
+        resultByDoctor: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.result,
         dataTime: "",
         doctorName: "",
         diagnosisData: null,
-      }
+      },
+      openI: false,
+      openII: false,
+      openIII: false,
+      openaVR: false,
+      openaVL: false,
+      openaVF: false,
+      openV1: false,
+      openV2: false,
+      openV3: false,
+      openV4: false,
+      openV5: false,
+      openV6: false,
+
     };
   },
   created() {
@@ -186,8 +285,72 @@ export default {
     this.V5()
     this.V6()
     this.getDate();
+    this.I1()
+    this.II1()
+    this.III1()
+    this.aVR1()
+    this.aVL1()
+    this.aVF1()
+    this.V11()
+    this.V22()
+    this.V33()
+    this.V44()
+    this.V55()
+    this.V66()
   },
   methods: {
+    clicktrueI(){
+      this.openI = !this.openI;
+    },
+    clicktrueII(){
+      this.openII = !this.openII;
+    },
+
+    clicktrueIII(){
+      this.openIII = !this.openIII;
+    },
+    clicktrueaVR(){
+      this.openaVR = !this.openaVR;
+    },
+    clicktrueaVL(){
+      this.openaVL = !this.openaVL;
+    },
+    clicktrueaVF(){
+      this.openaVF = !this.openaVF;
+    },
+    clicktrueV1(){
+      this.openV1 = !this.openV1;
+    },
+    clicktrueV2(){
+      this.openV2 = !this.openV2;
+    },
+    clicktrueV3(){
+      this.openV3 = !this.openV3;
+    },
+    clicktrueV4(){
+      this.openV4 = !this.openV4;
+    },
+    clicktrueV5(){
+      this.openV5 = !this.openV5;
+    },
+    clicktrueV6(){
+      this.openV6 = !this.openV6;
+    },
+
+    clickclose(){
+      this.openI = false;
+      this.openII = false;
+      this.openIII = false;
+      this.openaVR= false;
+      this.openaVL= false;
+      this.openaVF= false;
+      this.openV1= false;
+      this.openV2= false;
+      this.openV3= false;
+      this.openV4= false;
+      this.openV5= false;
+      this.openV6= false;
+    },
     get() {
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
@@ -383,6 +546,157 @@ export default {
         ecgBc.resize();
       });
     },
+    I1() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.I
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("I1"));
+      var option = {
+        title: {
+          text: "I",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
     II() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.II
       var x = new Array();
@@ -390,6 +704,159 @@ export default {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("II"));
+      var option = {
+        title: {
+          text: "II",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+
+          }
+        ],
+
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
+    II1() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.II
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("II1"));
       var option = {
         title: {
           text: "II",
@@ -688,6 +1155,158 @@ export default {
         ecgBc.resize();
       });
     },
+    III1() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.III
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("III1"));
+      var option = {
+        title: {
+          text: "III",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
     aVR() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.aVR
       var x = new Array();
@@ -695,6 +1314,158 @@ export default {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVR"));
+      var option = {
+        title: {
+          text: "aVR",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
+    aVR1() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.aVR
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("aVR1"));
       var option = {
         title: {
           text: "aVR",
@@ -992,6 +1763,158 @@ export default {
         ecgBc.resize();
       });
     },
+    aVL1() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.aVL
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("aVL1"));
+      var option = {
+        title: {
+          text: "aVL",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
     aVF() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.aVF
       var x = new Array();
@@ -999,6 +1922,158 @@ export default {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVF"));
+      var option = {
+        title: {
+          text: "aVF",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
+    aVF1() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.aVF
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("aVF1"));
       var option = {
         title: {
           text: "aVF",
@@ -1295,6 +2370,157 @@ export default {
         ecgBc.resize();
       });
     },
+    V11() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V1
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("V11"));
+      var option = {
+        title: {
+          text: "V1",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
     V2() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V2
       var x = new Array();
@@ -1302,6 +2528,157 @@ export default {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V2"));
+      var option = {
+        title: {
+          text: "V2",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
+    V22() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V2
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("V22"));
       var option = {
         title: {
           text: "V2",
@@ -1597,6 +2974,157 @@ export default {
         ecgBc.resize();
       });
     },
+    V33() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V3
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("V33"));
+      var option = {
+        title: {
+          text: "V3",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
     V4() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V4
       var x = new Array();
@@ -1604,6 +3132,157 @@ export default {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V4"));
+      var option = {
+        title: {
+          text: "V4",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
+    V44() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V4
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("V44"));
       var option = {
         title: {
           text: "V4",
@@ -1899,6 +3578,157 @@ export default {
         ecgBc.resize();
       });
     },
+    V55() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V5
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("V55"));
+      var option = {
+        title: {
+          text: "V5",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
     V6() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V6
       var x = new Array();
@@ -1906,6 +3736,158 @@ export default {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V6"));
+      var option = {
+        title: {
+          text: "V6",
+          top: 30,
+          left: 20,
+        },
+        grid: {
+          left: '5',
+          right: '1',
+          top: '0',
+          bottom: '1',
+          containLabel: false
+        },
+        xAxis: {
+          type: 'category',
+          data: x,
+          axisLabel: {
+            show: false,
+            interval: 4,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          //  splitNumber: 3, // 横线数
+          interval: 0.1, // 刻度间隔
+          splitLine: {
+            show: true, //让网格显示
+            lineStyle: {//网格样式
+              color: ['pink'], //网格的颜色
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            }
+          },
+          max: 1,
+          min: -1
+        },
+
+        series: [
+          {
+            type: 'line',
+            smooth: true,
+            showSymbol: false,
+            data: data,
+            lineStyle: {
+              normal: {
+                color: "#000000",
+                width: 1
+              }
+            },
+            markLine: {
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#b33939',
+                width: 0.5
+              },
+              label: {
+
+                position: 'start', // 表现内容展示的位置
+                color: '#b33939'  // 展示内容颜色
+              },
+
+              data: [
+                {xAxis: 0},
+                {xAxis: 25},
+                {xAxis: 50},
+                {xAxis: 75},
+                {xAxis: 100},
+                {xAxis: 125},
+                {xAxis: 150},
+                {xAxis: 175},
+                {xAxis: 200},
+                {xAxis: 225},
+                {xAxis: 250},
+                {xAxis: 275},
+                {xAxis: 300},
+                {xAxis: 325},
+                {xAxis: 350},
+                {xAxis: 375},
+                {xAxis: 400},
+                {xAxis: 425},
+                {xAxis: 450},
+                {xAxis: 475},
+                {xAxis: 500},
+                {xAxis: 525},
+                {xAxis: 550},
+                {xAxis: 575},
+                {xAxis: 600},
+                {xAxis: 625},
+                {xAxis: 650},
+                {xAxis: 675},
+                {xAxis: 700},
+                {xAxis: 725},
+                {xAxis: 750},
+                {xAxis: 775},
+                {xAxis: 800},
+                {xAxis: 825},
+                {xAxis: 850},
+                {xAxis: 875},
+                {xAxis: 900},
+                {xAxis: 925},
+                {xAxis: 950},
+                {xAxis: 975},
+                {xAxis: 999.4},
+
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+            }
+          }
+        ],
+
+      };
+      ecgBc.setOption(option);
+      $(window).resize(function () {
+        ecgBc.resize();
+      });
+    },
+    V66() {
+      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.data.V6
+      var x = new Array();
+      for (var i = 0; i < data.length; i++) {
+        x.push(i);
+      }
+      var ecgBc = echarts.init(document.getElementById("V66"));
       var option = {
         title: {
           text: "V6",
@@ -2319,6 +4301,34 @@ export default {
   height: 100px;
   width: 98%;
   margin: 0;
+  padding: 0;
+
+}
+
+.lineI{
+  position: absolute;
+  top: 500px;
+  left: 70px;
+  height: 300px;
+  width: 90%;
+  background: white;
+  border: 2px solid black;
+  z-index: 3;
+}
+
+.lineshow{
+  height: 200px;
+  width: 70em;
+  margin-left: 1.5em;
+  margin-top: 1.5em;
   padding: 0
+}
+
+.btn1{
+  position: relative;
+  float: right;
+  bottom: 1.6em;
+  right: 1.3em;
+  z-index: 2;
 }
 </style>
