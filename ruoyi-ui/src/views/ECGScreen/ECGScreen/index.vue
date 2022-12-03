@@ -40,7 +40,7 @@ export default {
       // var str1 = '192.168.0.109';
 
       // this.src = 'http://' + str1 + ':6006?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
-      this.src = 'https://screen.mindyard.cn:83?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
+      this.src = 'https://screen.mindyard.cn:84?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
       console.log(this.src)
 
       //动态计算表格高度
@@ -67,7 +67,7 @@ export default {
       var str1 = split1[0];
       // var str1 = '192.168.0.109';
       // this.src = 'http://' + str1 + ':6006?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
-      this.src = 'https://screen.mindyard.cn:83?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
+      this.src = 'https://screen.mindyard.cn:84?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
       console.log(this.src)
 
       //动态计算表格高度
