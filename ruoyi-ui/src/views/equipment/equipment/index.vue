@@ -225,6 +225,7 @@ import $ from "jquery";
 import {updateMonitoringStatus} from "@/api/patient/patient";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
 import {updateOnline1, updateOnline2, updateOnlineAll} from "@/api/online/online";
+import {addDict} from "@/api/hospital/hospital";
 
 export default {
   name: "Equipment",
@@ -300,7 +301,7 @@ export default {
         this.total = response.total;
         this.loading = false;
       })
-
+      addDict()
     },
     // 取消按钮
     cancel() {

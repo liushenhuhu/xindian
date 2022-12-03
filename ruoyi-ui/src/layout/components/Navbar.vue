@@ -100,7 +100,9 @@ export default {
         content:null,
         messageId:null,
         title:null,
-        level:null
+        level:null,
+        logId:null,
+        logType:null
       }
     }
   },
@@ -143,6 +145,7 @@ export default {
           message: this.$createElement('div', null,
             [
               this.$createElement('div', null, [this.$createElement('span', null, message.content)]),
+              // this.$createElement('div', null, message.content),
               this.$createElement('div', null,
                 [
                   this.$createElement(
@@ -151,7 +154,7 @@ export default {
                       style: {
                         borderRadius: '15px',
                         padding: '10px 15px',
-                        margin: '25px 0px 0px 170px',
+                        margin: '25px 0px 0px 10px',
                         textAlign: 'center',
                         textDecoration: 'none',
                         display: 'inline-block',
@@ -167,7 +170,13 @@ export default {
                       }
                     },
                     "确定"
-                  )
+                  ),
+                  this.$createElement('p', {
+                    style: 'text-align: right;width:195px;dispaly:block;margin-top: 8px;color:#43c39d;cursor: pointer;',
+                    on: {
+                      click: _this.clickNotify.bind(_this, message.messageId,message.logId,message.logType)
+                    },
+                  }, '点击查看详情'),
                 ]
               )
             ]
@@ -298,6 +307,15 @@ export default {
         });
       }
     },
+    clickNotify(id,logId,logType) {
+      // console.log(row.logId);
+      // console.log(message.messageId)
+      this.closeNotification(id)
+      this.$router.push({
+        name: "lookLog",
+        params: {logId: logId, logType: logType}
+      });
+    },
     onConnected(frame) {
       console.log("Connected: " + frame);
       //绑定交换机exchange_pushmsg是交换机的名字rk_pushmsg是绑定的路由key
@@ -318,6 +336,8 @@ export default {
       this.mes.messageId=res.messageId
       this.mes.title=res.title
       this.mes.level=res.level
+      this.mes.logId=res.logId
+      this.mes.logType=res.logType
       this.openMessageTips(this.mes)
     },
     connect() {

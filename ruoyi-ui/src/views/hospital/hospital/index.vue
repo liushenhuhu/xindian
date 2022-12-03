@@ -306,6 +306,9 @@ export default {
   },
   created() {
     this.getList();
+    addDict().then(res =>{
+      console.log(res)
+    })
   },
   methods: {
     /** 查询医院列表 */
@@ -316,12 +319,13 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+      addDict().then(res =>{
+        console.log(res)
+      })
     },
     /** 刷新 */
     refresh() {
       this.getList();
-      addDict();
-      console.log("刷新成功--字典更新完毕")
     },
     // 取消按钮
     cancel() {

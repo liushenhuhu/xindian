@@ -67,3 +67,10 @@ export function updateMonitoringStatus(data) {
     timeout: 100000
   })
 }
+
+export function addDict() {
+  return request({
+    url: '/patient/patient/addDict',
+    method: 'get'
+  })
+}

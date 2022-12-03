@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.DoctorMapper">
+    
+    <resultMap type="Doctor" id="DoctorResult">
+        <result property="doctorId"    column="doctor_id"    />
+        <result property="doctorName"    column="doctor_name"    />
+        <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="departmentCode"    column="department_code"    />
+    </resultMap>
+
+    <sql id="selectDoctorVo">
+        select doctor_id, doctor_name, doctor_phone, department_code from doctor
+    </sql>
+
+    <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
+        <include refid="selectDoctorVo"/>
+        <where>  
+            <if test="doctorName != null  and doctorName != ''"> and doctor_name like concat('%', #{doctorName}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectDoctorByDoctorId" parameterType="Long" resultMap="DoctorResult">
+        <include refid="selectDoctorVo"/>
+        where doctor_id = #{doctorId}
+    </select>
+        
+    <insert id="insertDoctor" parameterType="Doctor" useGeneratedKeys="true" keyProperty="doctorId">
+        insert into doctor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="doctorName != null">doctor_name,</if>
+            <if test="doctorPhone != null and doctorPhone != ''">doctor_phone,</if>
+            <if test="departmentCode != null and departmentCode != ''">department_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="doctorName != null">#{doctorName},</if>
+            <if test="doctorPhone != null and doctorPhone != ''">#{doctorPhone},</if>
+            <if test="departmentCode != null and departmentCode != ''">#{departmentCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDoctor" parameterType="Doctor">
+        update doctor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="doctorName != null">doctor_name = #{doctorName},</if>
+            <if test="doctorPhone != null and doctorPhone != ''">doctor_phone = #{doctorPhone},</if>
+            <if test="departmentCode != null and departmentCode != ''">department_code = #{departmentCode},</if>
+        </trim>
+        where doctor_id = #{doctorId}
+    </update>
+
+    <delete id="deleteDoctorByDoctorId" parameterType="Long">
+        delete from doctor where doctor_id = #{doctorId}
+    </delete>
+
+    <delete id="deleteDoctorByDoctorIds" parameterType="String">
+        delete from doctor where doctor_id in 
+        <foreach item="doctorId" collection="array" open="(" separator="," close=")">
+            #{doctorId}
+        </foreach>
+    </delete>
+</mapper>
