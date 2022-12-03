@@ -31,7 +31,7 @@ export default {
     var split1 = str.split(':');
     var str1 = split1[0];
     // var str1 = '192.168.0.109';
-    this.src = 'https://screen.mindyard.cn:83/';
+    this.src = 'https://screen.mindyard.cn:84/';
     console.log(this.src)
 
     if (this.$route.query.equipmentCode) {
