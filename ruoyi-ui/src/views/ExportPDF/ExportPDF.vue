@@ -1617,7 +1617,7 @@ export default {
     //0-6
     line3() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H
       };
 
       var dom = document.getElementById('line3');
@@ -1861,7 +1861,7 @@ export default {
     //6-12
     line4() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H
       };
 
       var dom = document.getElementById('line4');
@@ -2099,7 +2099,7 @@ export default {
     //12-18
     line5() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H
       };
 
       var dom = document.getElementById('line5');
@@ -2337,7 +2337,7 @@ export default {
     //18-24
     line6(){
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H
       };
 
       var dom = document.getElementById('line6');

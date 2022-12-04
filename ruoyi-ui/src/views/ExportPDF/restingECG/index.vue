@@ -4226,7 +4226,8 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
   width: 100%;
-  height: 1220px;
+  //heigth:1220px;
+  height: 1000px;
   //border: 3px solid #0000ff;
 }
 
@@ -4307,6 +4308,7 @@ export default {
 
 .lineI{
   position: absolute;
+  display: inline-block;
   top: 500px;
   left: 70px;
   height: 300px;
@@ -4318,7 +4320,8 @@ export default {
 
 .lineshow{
   height: 200px;
-  width: 70em;
+  width: 78em;
+  max-width: 97%;
   margin-left: 1.5em;
   margin-top: 1.5em;
   padding: 0
