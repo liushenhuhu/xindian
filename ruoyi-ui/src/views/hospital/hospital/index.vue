@@ -145,7 +145,7 @@
 
     <el-table v-loading="loading" :data="hospitalList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="医院id" align="center" prop="hospitalId" />
+<!--      <el-table-column label="医院id" align="center" prop="hospitalId" />-->
       <el-table-column label="省份" align="center" prop="province" />
       <el-table-column label="医院名称" align="center" prop="hospitalName" />
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />

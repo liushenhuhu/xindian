@@ -103,7 +103,7 @@ public class AlertLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:query')")
     @GetMapping(value = "/{logId}")
-    public AjaxResult getInfo(@PathVariable("logId") Long logId) {
+    public AjaxResult getInfo(@PathVariable("logId") String logId) {
         return AjaxResult.success(alertLogService.selectAlertLogByLogId(logId));
     }
 

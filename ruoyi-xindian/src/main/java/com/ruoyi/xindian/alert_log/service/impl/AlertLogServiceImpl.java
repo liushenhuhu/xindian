@@ -26,7 +26,7 @@ public class AlertLogServiceImpl implements IAlertLogService
      * @return 预警日志
      */
     @Override
-    public AlertLog selectAlertLogByLogId(Long logId)
+    public AlertLog selectAlertLogByLogId(String logId)
     {
         return alertLogMapper.selectAlertLogByLogId(logId);
     }

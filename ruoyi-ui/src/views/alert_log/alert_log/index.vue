@@ -62,6 +62,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="是否标注" prop="anoStatus">
+        <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
+          <el-option
+            v-for="dict in dict.type.if_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -136,7 +146,11 @@
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
       <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
-
+      <el-table-column label="是否标注" align="center" prop="anoStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if_status" :value="scope.row.anoStatus"/>
+        </template>
+      </el-table-column>
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
@@ -236,7 +250,7 @@ import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log
 
 export default {
   name: "Alert_log",
-  dicts: ['sex'],
+  dicts: ['sex', 'if_status'],
   data() {
     return {
       // 遮罩层
@@ -269,7 +283,8 @@ export default {
         eventDescription: null,
         pId: null,
         patientName: null,
-        hospitalName: null
+        hospitalName: null,
+        anoStatus: null
       },
       // 表单参数
       form: {},
@@ -326,7 +341,8 @@ export default {
         eventDescription: null,
         pId: null,
         patientName: null,
-        hospitalName: null
+        hospitalName: null,
+        anoStatus: null
       };
       this.resetForm("form");
     },

@@ -17,7 +17,7 @@ public interface IAlertLogService {
      * @param logId 预警日志主键
      * @return 预警日志
      */
-    public AlertLog selectAlertLogByLogId(Long logId);
+    public AlertLog selectAlertLogByLogId(String logId);
 
     /**
      * 查询预警日志列表
