@@ -104,6 +104,21 @@ export const constantRoutes = [
     ]
   },
 
+  /*跳转到的个人预警日志页面*/
+  {
+    path: '',
+    component: Layout,
+    children: [
+      {
+        path: '/log',
+        hidden: true,
+        name: 'log',
+        component: () => import('@/views/alert_log/alert_log/log'),
+        meta: {title: '个人预警日志'}
+      }
+    ]
+  },
+
   /*查看日志*/
   {
     path: '',
