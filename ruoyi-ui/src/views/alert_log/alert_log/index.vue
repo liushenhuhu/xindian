@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="发生时间" prop="logTime">
-        <el-form-item label="发生时间">
+        <el-form-item >
           <el-date-picker
             v-model="daterangeLogTime"
             style="width: 240px"
