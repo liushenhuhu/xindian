@@ -79,6 +79,18 @@ public class AlertLog extends BaseEntity
     @Excel(name = "是否标注")
     private Integer anoStatus;
 
+    /**
+     * 患者年龄
+     */
+    @Excel(name = "患者年龄 ")
+    private String patientAge;
+
+    /**
+     * 患者性别
+     */
+    @Excel(name = "患者性别")
+    private String patientSex;
+
     public String getpId() {
         return pId;
     }

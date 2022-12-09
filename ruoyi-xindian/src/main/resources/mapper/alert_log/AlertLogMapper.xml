@@ -20,12 +20,14 @@
         <result property="hospitalCode" column="hospital_code"  />
         <result property="hospitalName" column="hospital_name"  />
         <result property="anoStatus"    column="ano_status"    />
+        <result property="patientAge" column="patient_age"/>
+        <result property="patientSex" column="patient_sex"/>
     </resultMap>
 
 
     <sql id="selectAlertLogVo">
         select log_id, log_time, log_type, event_name, event_description, al.p_id,
-               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone, ano_status
+               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone, ano_status, patient_age, patient_sex
         from alert_log al
             inner join patient_management pm on al.p_id = pm.p_id
             inner join patient p on pm.patient_phone = p.patient_phone
@@ -43,6 +45,8 @@
             <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null "> and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
+            <if test="patientAge != null "> and patient_age = #{patientAge}</if>
+            <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
         </where>
         order by log_time desc
     </select>

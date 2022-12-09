@@ -54,14 +54,32 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName">
-        <el-input
-          v-model="queryParams.hospitalName"
-          placeholder="请输入医院名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+<!--      <el-form-item label="患者年龄" prop="patientAge">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.patientAge"-->
+<!--          placeholder="请输入患者年龄"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+      <el-form-item label="患者性别" prop="patientSex">
+        <el-select v-model="queryParams.patientSex" placeholder="请选择患者性别" clearable>
+          <el-option
+            v-for="dict in dict.type.sex"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
+<!--      <el-form-item label="医院名称" prop="hospitalName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.hospitalName"-->
+<!--          placeholder="请输入医院名称"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="是否标注" prop="anoStatus">
         <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
           <el-option
@@ -140,11 +158,17 @@
       <el-table-column label="事件名称" align="center" prop="eventName"/>
       <el-table-column label="事件说明" align="center" prop="eventDescription"/>
       <el-table-column label="患者id" align="center" prop="pId" show-overflow-tooltip/>
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
+      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+      <el-table-column label="患者性别" align="center" prop="patientSex">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="患者姓名" align="center" prop="patientName"/>-->
       <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
             <el-table-column label="患者电话" align="center" prop="patientPhone"/>
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
-      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+<!--      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>-->
       <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
@@ -152,7 +176,7 @@
         </template>
       </el-table-column>
       <!--  隐藏的患者的个人信息    -->
-      <el-table-column type="expand">
+<!--      <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
@@ -166,12 +190,12 @@
               <span>{{ scope.row.familyPhone }}</span>
             </el-form-item>
             <br>
-<!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+&lt;!&ndash;            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>-->
+            </el-form-item>&ndash;&gt;
           </el-form>
         </template>
-      </el-table-column>
+      </el-table-column>-->
 
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
