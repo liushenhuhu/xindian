@@ -236,6 +236,15 @@
         <el-form-item label="患者管理id" prop="pId">
           <el-input v-model="form.pId" placeholder="请输入患者管理id"/>
         </el-form-item>
+        <el-form-item label="标注状态">
+          <el-radio-group v-model="form.anoStatus">
+            <el-radio
+              v-for="dict in dict.type.if_status"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

@@ -24,13 +24,12 @@
 
 
     <sql id="selectAlertLogVo">
-        select al.log_id, log_time, log_type, event_name, event_description, al.p_id,
+        select log_id, log_time, log_type, event_name, event_description, al.p_id,
                pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone, ano_status
         from alert_log al
             inner join patient_management pm on al.p_id = pm.p_id
             inner join patient p on pm.patient_phone = p.patient_phone
             inner join hospital h on pm.hospital_code = h.hospital_code
-            inner join alert_log_data ald on al.log_id = ald.log_id
     </sql>
 
     <select id="selectAlertLogList" parameterType="AlertLog" resultMap="AlertLogResult">
@@ -62,7 +61,7 @@
             <if test="eventName != null">event_name,</if>
             <if test="eventDescription != null">event_description,</if>
             <if test="pId != null">p_id,</if>
-
+            <if test="anoStatus != null">ano_status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="logId != null">#{logId},</if>
@@ -71,6 +70,7 @@
             <if test="eventName != null">#{eventName},</if>
             <if test="eventDescription != null">#{eventDescription},</if>
             <if test="pId != null">#{pId},</if>
+            <if test="anoStatus != null">#{anoStatus},</if>
         </trim>
     </insert>
 
@@ -82,6 +82,7 @@
             <if test="eventName != null">event_name = #{eventName},</if>
             <if test="eventDescription != null">event_description = #{eventDescription},</if>
             <if test="pId != null">p_id = #{pId},</if>
+            <if test="anoStatus != null">ano_status = #{anoStatus},</if>
         </trim>
         where log_id = #{logId}
     </update>
