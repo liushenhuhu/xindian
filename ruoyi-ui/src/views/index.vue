@@ -1,27 +1,28 @@
 <template>
-  <iframe
-    width="100%"
-    :height="TableHeight"
-    allowfullscreen="true"
-    src="http://192.168.0.109:6006/">
-  </iframe>
+  <div class="app-container home">
+    <el-row :gutter="20">
+      <el-col :sm="24" :lg="24">
+        <blockquote class="text-warning" style="font-size: 30px">
+          远程心电管理系统
+        </blockquote>
+
+        <hr />
+      </el-col>
+    </el-row>
+
+    <el-divider />
+
+  </div>
 </template>
 
 <script>
-let windowHeight;
 export default {
   name: "Index",
   data() {
     return {
       // 版本号
-      version: "3.8.3",
-      TableHeight: 100,
+      version: "3.8.4",
     };
-  },
-  created() {
-    //动态计算表格高度
-    let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
-    this.TableHeight = windowHeight + 180;
   },
   methods: {
     goTarget(href) {
@@ -39,14 +40,12 @@ export default {
     font-size: 17.5px;
     border-left: 5px solid #eee;
   }
-
   hr {
     margin-top: 20px;
     margin-bottom: 20px;
     border: 0;
     border-top: 1px solid #eee;
   }
-
   .col-item {
     margin-bottom: 20px;
   }
@@ -96,4 +95,3 @@ export default {
   }
 }
 </style>
-
