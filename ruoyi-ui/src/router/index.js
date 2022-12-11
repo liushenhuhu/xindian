@@ -133,22 +133,6 @@ export const constantRoutes = [
       }
     ]
   },
-
-  /*标注模块*/
-  {
-    path: '',
-    component: Layout,
-    children: [
-      {
-        path: '/ano',
-        hidden: true,
-        name: 'ano',
-        component: () => import('@/views/alert_log/alert_log/ano'),
-        meta: {title: '数据标注'}
-      }
-    ]
-  },
-
 ]
 
 // 动态路由，基于用户权限动态去加载

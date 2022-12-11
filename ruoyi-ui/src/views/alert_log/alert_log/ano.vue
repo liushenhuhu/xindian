@@ -54,14 +54,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="患者年龄" prop="patientAge">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.patientAge"-->
-<!--          placeholder="请输入患者年龄"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="患者年龄" prop="patientAge">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.patientAge"-->
+      <!--          placeholder="请输入患者年龄"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="患者性别" prop="patientSex">
         <el-select v-model="queryParams.patientSex" placeholder="请选择患者性别" clearable>
           <el-option
@@ -72,14 +72,14 @@
           />
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="医院名称" prop="hospitalName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.hospitalName"-->
-<!--          placeholder="请输入医院名称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="医院名称" prop="hospitalName">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.hospitalName"-->
+      <!--          placeholder="请输入医院名称"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item label="是否标注" prop="anoStatus">
         <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
           <el-option
@@ -164,11 +164,11 @@
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-<!--      <el-table-column label="患者姓名" align="center" prop="patientName"/>-->
+      <!--      <el-table-column label="患者姓名" align="center" prop="patientName"/>-->
       <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
             <el-table-column label="患者电话" align="center" prop="patientPhone"/>
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
-<!--      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>-->
+      <!--      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>-->
       <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
@@ -176,26 +176,26 @@
         </template>
       </el-table-column>
       <!--  隐藏的患者的个人信息    -->
-<!--      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-divider content-position="left">其他信息</el-divider>
-            <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientCode }}</span>
-            </el-form-item>
-            <el-form-item label="患者电话" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientPhone }}</span>
-            </el-form-item>
-            <el-form-item label="家属电话" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.familyPhone }}</span>
-            </el-form-item>
-            <br>
-&lt;!&ndash;            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>&ndash;&gt;
-          </el-form>
-        </template>
-      </el-table-column>-->
+      <!--      <el-table-column type="expand">
+              <template slot-scope="scope">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-divider content-position="left">其他信息</el-divider>
+                  <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
+                    <span>{{ scope.row.patientCode }}</span>
+                  </el-form-item>
+                  <el-form-item label="患者电话" width="200" style="padding-left: 40px">
+                    <span>{{ scope.row.patientPhone }}</span>
+                  </el-form-item>
+                  <el-form-item label="家属电话" width="200" style="padding-left: 40px">
+                    <span>{{ scope.row.familyPhone }}</span>
+                  </el-form-item>
+                  <br>
+      &lt;!&ndash;            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+                    <span>{{ scope.row.hospitalName }}</span>
+                  </el-form-item>&ndash;&gt;
+                </el-form>
+              </template>
+            </el-table-column>-->
 
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -273,7 +273,7 @@
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
 
 export default {
-  name: "Alert_log",
+  name: "ano",
   dicts: ['sex', 'if_status'],
   data() {
     return {
@@ -329,12 +329,7 @@ export default {
     }
     this.getList();
   },
-/*  activated() {
-    if (this.$route.query.pId) {
-      this.queryParams.pId = this.$route.query.pId;
-    }
-    this.getList();
-  },*/
+
   methods: {
     /** 查询预警日志列表 */
     getList() {
