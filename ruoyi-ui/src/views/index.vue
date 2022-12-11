@@ -2,11 +2,11 @@
   <div class="app-container home">
     <el-row :gutter="20">
       <el-col :sm="24" :lg="24">
-        <blockquote class="text-warning" style="font-size: 30px">
+        <h2>
           远程心电管理系统
-        </blockquote>
+        </h2>
 
-        <hr />
+
       </el-col>
     </el-row>
 
@@ -72,6 +72,7 @@ export default {
     margin-top: 10px;
     font-size: 26px;
     font-weight: 100;
+    color: #304156;
   }
 
   p {
