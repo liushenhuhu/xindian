@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="日志id" prop="logId">
+        <el-input
+          v-model="queryParams.logId"
+          placeholder="请输入日志id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="发生时间" prop="logTime">
         <el-form-item >
           <el-date-picker
@@ -286,6 +294,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        logId: null,
         logTime: null,
         logType: null,
         eventName: null,

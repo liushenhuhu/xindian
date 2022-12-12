@@ -1,8 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="日志id" prop="logId">
+        <el-input
+          v-model="queryParams.logId"
+          placeholder="请输入日志id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="发生时间" prop="logTime">
-        <el-form-item>
+        <el-form-item >
           <el-date-picker
             v-model="daterangeLogTime"
             style="width: 240px"
@@ -166,9 +174,9 @@
               <span>{{ scope.row.familyPhone }}</span>
             </el-form-item>
             <br>
-<!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>-->
+            <!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+                          <span>{{ scope.row.hospitalName }}</span>
+                        </el-form-item>-->
           </el-form>
         </template>
       </el-table-column>
@@ -236,6 +244,15 @@
         <el-form-item label="患者管理id" prop="pId">
           <el-input v-model="form.pId" placeholder="请输入患者管理id"/>
         </el-form-item>
+        <el-form-item label="标注状态">
+          <el-radio-group v-model="form.anoStatus">
+            <el-radio
+              v-for="dict in dict.type.if_status"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -277,6 +294,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        logId: null,
         logTime: null,
         logType: null,
         eventName: null,
@@ -305,12 +323,12 @@ export default {
     }
     this.getList();
   },
-  activated() {
-    if (this.$route.query.pId) {
-      this.queryParams.pId = this.$route.query.pId;
-    }
-    this.getList();
-  },
+  /*  activated() {
+      if (this.$route.query.pId) {
+        this.queryParams.pId = this.$route.query.pId;
+      }
+      this.getList();
+    },*/
   methods: {
     /** 查询预警日志列表 */
     getList() {
