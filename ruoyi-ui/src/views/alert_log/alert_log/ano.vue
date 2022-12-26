@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="日志id" prop="logId">
+        <el-input
+          v-model="queryParams.logId"
+          placeholder="请输入日志id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="发生时间" prop="logTime">
         <el-form-item>
           <el-date-picker
@@ -148,7 +156,6 @@
 
     <el-table v-loading="loading" :data="alert_logList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <!--      <el-table-column label="日志id" align="center" prop="logId" />-->
       <el-table-column label="发生时间" align="center" prop="logTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -158,6 +165,7 @@
       <el-table-column label="事件名称" align="center" prop="eventName"/>
       <el-table-column label="事件说明" align="center" prop="eventDescription"/>
       <el-table-column label="患者id" align="center" prop="pId" show-overflow-tooltip/>
+      <el-table-column label="日志id" align="center" prop="logId" show-overflow-tooltip/>
       <el-table-column label="患者年龄" align="center" prop="patientAge"/>
       <el-table-column label="患者性别" align="center" prop="patientSex">
         <template slot-scope="scope">
@@ -301,6 +309,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        logId: null,
         logTime: null,
         logType: null,
         eventName: null,
