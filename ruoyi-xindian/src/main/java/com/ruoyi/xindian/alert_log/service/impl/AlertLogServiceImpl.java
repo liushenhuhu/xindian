@@ -90,4 +90,26 @@ public class AlertLogServiceImpl implements IAlertLogService
     {
         return alertLogMapper.deleteAlertLogByLogId(logId);
     }
+
+    @Override
+    public List<AlertLog> selectAnoListByUserId(AlertLog alertLog) {
+        return alertLogMapper.selectAnoListByUserId(alertLog);
+    }
+
+    @Override
+    public int insertAno(String pId) {
+        return alertLogMapper.insertAno(pId);
+    }
+
+    @Override
+    public int insertAnoUser(String userId, String pId) {
+        return alertLogMapper.insertAnoUser(userId, pId);
+    }
+
+    @Override
+    public int updateAno(String userId, String pId) {
+        return alertLogMapper.updateAno(userId, pId);
+    }
+
+
 }

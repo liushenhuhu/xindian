@@ -34,6 +34,15 @@
             inner join hospital h on pm.hospital_code = h.hospital_code
     </sql>
 
+    <sql id="selectAnoVo">
+        select al.log_id, log_time, alu.log_type, alu.event_name, alu.event_description, al.p_id, patient_name,
+               alu.ano_status, patient_age, patient_sex
+        from alert_log al
+                inner join patient_management pm on al.p_id = pm.p_id
+                inner join patient p on pm.patient_phone = p.patient_phone
+                inner join alert_log_user alu on al.log_id = alu.log_id
+    </sql>
+
     <select id="selectAlertLogList" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         <where>
@@ -48,6 +57,24 @@
             <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
             <if test="patientAge != null "> and patient_age = #{patientAge}</if>
             <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
+        </where>
+        order by log_time desc
+    </select>
+
+    <select id="selectAnoListByUserId" parameterType="AlertLog" resultMap="AlertLogResult">
+        <include refid="selectAnoVo"/>
+        <where>
+            <if test="logId != null "> and log_id = #{logId}</if>
+            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''"> and log_time between #{params.beginLogTime} and #{params.endLogTime}</if>
+            <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
+            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''"> and event_description like concat('%', #{eventDescription}, '%')</if>
+            <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
+            <if test="patientAge != null "> and patient_age = #{patientAge}</if>
+            <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
         </where>
         order by log_time desc
     </select>
@@ -78,6 +105,32 @@
             <if test="anoStatus != null">#{anoStatus},</if>
         </trim>
     </insert>
+
+    <insert id="insertAno" parameterType="string">
+        insert into alert_log_user(log_id, log_noise, log_noise_level, log_type, event_name, event_description)
+        select alert_log.log_id,
+               aln.log_noise,
+               aln.log_noise_level,
+               alert_log.log_type,
+               alert_log.event_name,
+               alert_log.event_description
+        from alert_log
+                 inner join alert_log_noise aln on alert_log.log_id = aln.log_id
+        where p_id = #{params};
+    </insert>
+
+    <insert id="insertAnoUser" parameterType="string">
+        insert into ano_user
+        values (#{param1}, #{param2});
+    </insert>
+
+    <update id="updateAno" parameterType="string">
+        update alert_log_user
+        set user_id = #{param1}
+        where log_id in (
+            select log_id from alert_log where p_id = #{param2}
+        );
+    </update>
 
     <update id="updateAlertLog" parameterType="AlertLog">
         update alert_log

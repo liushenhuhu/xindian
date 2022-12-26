@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.alert_log.mapper;
 
 import java.util.List;
+
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.xindian.alert_log.domain.AlertLog;
  * @author hanhan
  * @date 2022-08-20
  */
-public interface AlertLogMapper
-{
+public interface AlertLogMapper {
     /**
      * 查询预警日志
      *
@@ -58,4 +58,19 @@ public interface AlertLogMapper
      * @return 结果
      */
     public int deleteAlertLogByLogIds(String[] logIds);
+
+
+    /**
+     * 查询标注数据
+     *
+     * @param alertLog 预警日志
+     * @return 标注数据集合
+     */
+    public List<AlertLog> selectAnoListByUserId(AlertLog alertLog);
+
+    public int insertAno(String pId);
+
+    public int insertAnoUser(String userId, String pId);
+
+    public int updateAno(String userId, String pId);
 }

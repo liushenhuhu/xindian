@@ -91,6 +91,9 @@ public class AlertLog extends BaseEntity
     @Excel(name = "患者性别")
     private String patientSex;
 
+    private Integer userId;
+
+
     public String getpId() {
         return pId;
     }

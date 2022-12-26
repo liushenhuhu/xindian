@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.alert_log.domain.AssignedAno;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -14,14 +15,7 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -59,6 +53,11 @@ public class AlertLogController extends BaseController {
             alertLog.setHospitalName(hospitalName);
             startPage();
             list = alertLogService.selectAlertLogList(alertLog);
+        } else if (getDeptId() == 106) {
+            Long userId = getUserId();
+            alertLog.setUserId(Math.toIntExact(userId));
+            startPage();
+            list = alertLogService.selectAnoListByUserId(alertLog);
         } else {
             startPage();
             list = alertLogService.selectAlertLogList(alertLog);
@@ -138,9 +137,24 @@ public class AlertLogController extends BaseController {
     }
 
     @PostMapping("/newEquipment")
-    public AjaxResult newnewEquipment(String message){
+    public AjaxResult newEquipment(String message) {
+        return AjaxResult.success("success");
+    }
 
-
+    @PostMapping("/assignedAno")
+    public AjaxResult assignedAno(@RequestBody AssignedAno assignedAno) {
+//        List<String> pIdList = assignedAno.getPIdList();
+//        String pId = assignedAno.getPId();
+        String pId = assignedAno.getPatientId();
+        String userId = assignedAno.getUserId();
+        alertLogService.insertAnoUser(userId, pId);
+        alertLogService.insertAno(pId);
+        alertLogService.updateAno(userId, pId);
+//        for (String pId : pIdList) {
+//            alertLogService.insertAnoUser(userId, pId);
+//            alertLogService.insertAno(pId);
+//            alertLogService.updateAno(userId, pId);
+//        }
         return AjaxResult.success("success");
     }
 

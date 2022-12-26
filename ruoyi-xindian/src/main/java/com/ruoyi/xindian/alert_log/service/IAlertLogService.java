@@ -59,4 +59,11 @@ public interface IAlertLogService {
      */
     public int deleteAlertLogByLogId(String logId);
 
+    public List<AlertLog> selectAnoListByUserId(AlertLog alertLog);
+
+    public int insertAno(String pId);
+
+    public int insertAnoUser(String userId, String pId);
+
+    public int updateAno(String userId, String pId);
 }
