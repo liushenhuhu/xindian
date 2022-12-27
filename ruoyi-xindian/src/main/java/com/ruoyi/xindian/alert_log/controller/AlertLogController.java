@@ -106,6 +106,8 @@ public class AlertLogController extends BaseController {
         return AjaxResult.success(alertLogService.selectAlertLogByLogId(logId));
     }
 
+
+
     /**
      * 新增预警日志
      */
