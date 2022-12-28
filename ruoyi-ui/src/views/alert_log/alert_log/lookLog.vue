@@ -55,7 +55,7 @@ export default {
       this.logType = this.$route.params.logType;
       this.userId = this.$route.params.userId;
       console.log(this.logId)
-      this.url = this.src + "look_log?logId=" + this.logId + "&logType=" + this.logType + "&userId" + this.userId;
+      this.url = this.src + "look_log?logId=" + this.logId + "&logType=" + this.logType + "&userId=" + this.userId;
       console.log(this.url)
     } else {
       console.log("该日志不存在")
