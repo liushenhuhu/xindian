@@ -49,6 +49,7 @@ export function assigned_ano(data) {
   return request({
     url: '/alert_log/alert_log/assignedAno',
     method: 'post',
-    data: data
+    data: data,
+    timeout: 200000
   })
 }

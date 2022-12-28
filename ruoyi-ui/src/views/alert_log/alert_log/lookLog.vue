@@ -37,8 +37,9 @@ export default {
     if (this.$route.params.logId) {
       this.logId = this.$route.params.logId;
       this.logType = this.$route.params.logType;
+      this.userId = this.$route.params.userId;
       console.log(this.logId)
-      this.url = this.src + "look_log?logId=" + this.logId + "&logType=" + this.logType;
+      this.url = this.src + "look_log?logId=" + this.logId + "&logType=" + this.logType + "&userId=" + this.userId;
       console.log(this.url)
     } else {
       console.log("该日志不存在")
@@ -52,8 +53,9 @@ export default {
     if (this.$route.params.logId) {
       this.logId = this.$route.params.logId;
       this.logType = this.$route.params.logType;
+      this.userId = this.$route.params.userId;
       console.log(this.logId)
-      this.url = this.src + "look_log?logId=" + this.logId + "&logType=" + this.logType;
+      this.url = this.src + "look_log?logId=" + this.logId + "&logType=" + this.logType + "&userId" + this.userId;
       console.log(this.url)
     } else {
       console.log("该日志不存在")

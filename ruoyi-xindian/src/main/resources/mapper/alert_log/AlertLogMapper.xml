@@ -22,6 +22,7 @@
         <result property="anoStatus"    column="ano_status"    />
         <result property="patientAge" column="patient_age"/>
         <result property="patientSex" column="patient_sex"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
 
@@ -36,7 +37,7 @@
 
     <sql id="selectAnoVo">
         select al.log_id, log_time, alu.log_type, alu.event_name, alu.event_description, al.p_id, patient_name,
-               alu.ano_status, patient_age, patient_sex
+               alu.ano_status, patient_age, patient_sex, user_id
         from alert_log al
                 inner join patient_management pm on al.p_id = pm.p_id
                 inner join patient p on pm.patient_phone = p.patient_phone
@@ -115,7 +116,7 @@
                alert_log.event_name,
                alert_log.event_description
         from alert_log
-                 inner join alert_log_noise aln on alert_log.log_id = aln.log_id
+                 left join alert_log_noise aln on alert_log.log_id = aln.log_id
         where p_id = #{params};
     </insert>
 
