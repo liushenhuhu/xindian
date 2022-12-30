@@ -5,7 +5,8 @@ export function listLog_user(query) {
   return request({
     url: '/log_user/log_user/list',
     method: 'get',
-    params: query
+    params: query,
+    timeout: 200000
   })
 }
 

@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.ano.mapper.AnoUserMapper">
-    
+
     <resultMap type="AnoUser" id="AnoUserResult">
-        <result property="anoUserId"    column="ano_user_id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="pId"    column="p_id"    />
+        <result property="anoUserId" column="ano_user_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="pId" column="p_id"/>
     </resultMap>
 
     <sql id="selectAnoUserVo">
-        select ano_user_id, user_id, p_id from ano_user
+        select ano_user_id, user_id, p_id
+        from ano_user
     </sql>
 
     <select id="selectAnoUserList" parameterType="AnoUser" resultMap="AnoUserResult">
         <include refid="selectAnoUserVo"/>
-        <where>  
-            <if test="userId != null "> and user_id like concat('%', #{userId}, '%')</if>
-            <if test="pId != null  and pId != ''"> and p_id like concat('%', #{pId}, '%')</if>
+        <where>
+            <if test="userId != null ">and user_id like concat('%', #{userId}, '%')</if>
+            <if test="pId != null  and pId != ''">and p_id like concat('%', #{pId}, '%')</if>
         </where>
     </select>
-    
+
     <select id="selectAnoUserByAnoUserId" parameterType="Long" resultMap="AnoUserResult">
         <include refid="selectAnoUserVo"/>
         where ano_user_id = #{anoUserId}
     </select>
-        
+
     <insert id="insertAnoUser" parameterType="AnoUser" useGeneratedKeys="true" keyProperty="anoUserId">
         insert into ano_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
             <if test="pId != null">p_id,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
             <if test="pId != null">#{pId},</if>
-         </trim>
+        </trim>
     </insert>
 
     <insert id="insertAno" parameterType="string">
-        insert into alert_log_user(log_id, log_noise, log_noise_level, log_type, event_name, event_description, user_id)
+        insert into alert_log_user(log_id, p_id, log_noise, log_type, event_name, event_description, user_id)
         select alert_log.log_id,
+               alert_log.p_id,
                aln.log_noise,
-               aln.log_noise_level,
                alert_log.log_type,
                alert_log.event_name,
                alert_log.event_description,
@@ -63,11 +64,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteAnoUserByAnoUserId" parameterType="Long">
-        delete from ano_user where ano_user_id = #{anoUserId}
+        delete
+        from ano_user
+        where ano_user_id = #{anoUserId}
     </delete>
 
     <delete id="deleteAnoUserByAnoUserIds" parameterType="String">
-        delete from ano_user where ano_user_id in 
+        delete from ano_user where ano_user_id in
         <foreach item="anoUserId" collection="array" open="(" separator="," close=")">
             #{anoUserId}
         </foreach>
