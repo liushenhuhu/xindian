@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.log_user.mapper.AlertLogUserMapper">
+    
+    <resultMap type="AlertLogUser" id="AlertLogUserResult">
+        <result property="logId"    column="log_id"    />
+        <result property="logTime"    column="log_time"    />
+        <result property="logType"    column="log_type"    />
+        <result property="eventName"    column="event_name"    />
+        <result property="eventDescription"    column="event_description"    />
+        <result property="pId"    column="p_id"    />
+        <result property="anoStatus"    column="ano_status"    />
+        <result property="patientAge" column="patient_age"/>
+        <result property="patientSex" column="patient_sex"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <sql id="selectAlertLogUserVo">
+        select al.log_id, log_time, alu.log_type, alu.event_name, alu.event_description, al.p_id,
+               alu.ano_status, patient_age, patient_sex, user_id
+        from alert_log al
+                 inner join patient_management pm on al.p_id = pm.p_id
+                 inner join patient p on pm.patient_phone = p.patient_phone
+                 inner join alert_log_user alu on al.log_id = alu.log_id
+    </sql>
+
+    <select id="selectAlertLogUserList" parameterType="AlertLogUser" resultMap="AlertLogUserResult">
+        <include refid="selectAlertLogUserVo"/>
+        <where>
+            <if test="logId != null "> and al.log_id = #{logId}</if>
+            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''"> and log_time between #{params.beginLogTime} and #{params.endLogTime}</if>
+            <if test="logType != null  and logType != ''"> and alu.log_type like concat('%', #{logType}, '%')</if>
+            <if test="eventName != null  and eventName != ''"> and alu.event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''"> and alu.event_description like concat('%', #{eventDescription}, '%')</if>
+            <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="anoStatus != null "> and alu.ano_status = #{anoStatus}</if>
+            <if test="patientAge != null "> and patient_age = #{patientAge}</if>
+            <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+        order by log_time desc
+    </select>
+    
+    <select id="selectAlertLogUserByLogId" parameterType="String" resultMap="AlertLogUserResult">
+        <include refid="selectAlertLogUserVo"/>
+        where log_id = #{logId}
+    </select>
+        
+    <insert id="insertAlertLogUser" parameterType="AlertLogUser">
+        insert into alert_log_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logId != null">log_id,</if>
+            <if test="logNoise != null">log_noise,</if>
+            <if test="logNoiseLevel != null">log_noise_level,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="logType != null">log_type,</if>
+            <if test="eventName != null">event_name,</if>
+            <if test="eventDescription != null">event_description,</if>
+            <if test="anoStatus != null">ano_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logId != null">#{logId},</if>
+            <if test="logNoise != null">#{logNoise},</if>
+            <if test="logNoiseLevel != null">#{logNoiseLevel},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="logType != null">#{logType},</if>
+            <if test="eventName != null">#{eventName},</if>
+            <if test="eventDescription != null">#{eventDescription},</if>
+            <if test="anoStatus != null">#{anoStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAlertLogUser" parameterType="AlertLogUser">
+        update alert_log_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logNoise != null">log_noise = #{logNoise},</if>
+            <if test="logNoiseLevel != null">log_noise_level = #{logNoiseLevel},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="logType != null">log_type = #{logType},</if>
+            <if test="eventName != null">event_name = #{eventName},</if>
+            <if test="eventDescription != null">event_description = #{eventDescription},</if>
+            <if test="anoStatus != null">ano_status = #{anoStatus},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteAlertLogUserByLogId" parameterType="String">
+        delete from alert_log_user where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteAlertLogUserByLogIds" parameterType="String">
+        delete from alert_log_user where log_id in 
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+</mapper>

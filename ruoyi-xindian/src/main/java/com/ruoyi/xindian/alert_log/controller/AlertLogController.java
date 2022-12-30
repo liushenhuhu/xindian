@@ -65,6 +65,30 @@ public class AlertLogController extends BaseController {
         return getDataTable(list);
     }
 
+    /**
+     * 查询预警日志列表
+     */
+    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
+    @GetMapping("/listAno")
+    public TableDataInfo listAno(AlertLog alertLog) {
+        List<AlertLog> list = new ArrayList<>();
+        if (getDeptId() == 200) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalName = sysUser.getHospitalName();
+            alertLog.setHospitalName(hospitalName);
+            startPage();
+            list = alertLogService.selectAlertLogList(alertLog);
+        } else if (getDeptId() == 106) {
+            Long userId = getUserId();
+            alertLog.setUserId(Math.toIntExact(userId));
+            startPage();
+            list = alertLogService.selectAnoListByUserId(alertLog);
+        } else {
+            startPage();
+            list = alertLogService.selectAlertLogList(alertLog);
+        }
+        return getDataTable(list);
+    }
 
     /**
      * 查询预警日志列表
@@ -106,8 +130,6 @@ public class AlertLogController extends BaseController {
         return AjaxResult.success(alertLogService.selectAlertLogByLogId(logId));
     }
 
-
-
     /**
      * 新增预警日志
      */
@@ -145,19 +167,10 @@ public class AlertLogController extends BaseController {
 
     @PostMapping("/assignedAno")
     public AjaxResult assignedAno(@RequestBody AssignedAno assignedAno) {
-//        List<String> pIdList = assignedAno.getPIdList();
-//        String pId = assignedAno.getPId();
-        String pId = assignedAno.getPatientId();
+        String pId = assignedAno.getpId();
         String userId = assignedAno.getUserId();
-        alertLogService.insertAnoUser(userId, pId);
         alertLogService.insertAno(pId);
-        alertLogService.updateAno(userId, pId);
-//        for (String pId : pIdList) {
-//            alertLogService.insertAnoUser(userId, pId);
-//            alertLogService.insertAno(pId);
-//            alertLogService.updateAno(userId, pId);
-//        }
-        return AjaxResult.success("success");
+        return toAjax(alertLogService.updateAno(userId, pId));
     }
 
 }

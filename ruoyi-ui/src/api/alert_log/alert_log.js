@@ -45,11 +45,11 @@ export function delAlert_log(logId) {
 }
 
 
-export function assigned_ano(data) {
-  return request({
-    url: '/alert_log/alert_log/assignedAno',
-    method: 'post',
-    data: data,
-    timeout: 200000
-  })
-}
+// export function assigned_ano(data) {
+//   return request({
+//     url: '/alert_log/alert_log/assignedAno',
+//     method: 'post',
+//     data: data,
+//     timeout: 200000
+//   })
+// }

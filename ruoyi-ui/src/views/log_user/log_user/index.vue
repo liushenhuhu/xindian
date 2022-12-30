@@ -54,22 +54,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者姓名" prop="patientName">
-        <el-input
-          v-model="queryParams.patientName"
-          placeholder="请输入患者姓名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <!--      <el-form-item label="患者年龄" prop="patientAge">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.patientAge"-->
-      <!--          placeholder="请输入患者年龄"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
       <el-form-item label="患者性别" prop="patientSex">
         <el-select v-model="queryParams.patientSex" placeholder="请选择患者性别" clearable>
           <el-option
@@ -80,14 +64,6 @@
           />
         </el-select>
       </el-form-item>
-      <!--      <el-form-item label="医院名称" prop="hospitalName">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.hospitalName"-->
-      <!--          placeholder="请输入医院名称"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
       <el-form-item label="是否标注" prop="anoStatus">
         <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
           <el-option
@@ -97,6 +73,14 @@
             :value="dict.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="账号id" prop="userId">
+        <el-input
+          v-model="queryParams.userId"
+          placeholder="请输入账号id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -112,7 +96,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['alert_log:alert_log:add']"
+          v-hasPermi="['log_user:log_user:add']"
         >新增
         </el-button>
       </el-col>
@@ -124,7 +108,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['alert_log:alert_log:edit']"
+          v-hasPermi="['log_user:log_user:edit']"
         >修改
         </el-button>
       </el-col>
@@ -136,7 +120,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['alert_log:alert_log:remove']"
+          v-hasPermi="['log_user:log_user:remove']"
         >删除
         </el-button>
       </el-col>
@@ -147,14 +131,14 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['alert_log:alert_log:export']"
+          v-hasPermi="['log_user:log_user:export']"
         >导出
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="alert_logList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="log_userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="发生时间" align="center" prop="logTime" width="180">
         <template slot-scope="scope">
@@ -172,39 +156,12 @@
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-      <!--      <el-table-column label="患者姓名" align="center" prop="patientName"/>-->
-      <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
-            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-            <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
-      <!--      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>-->
-      <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+      <el-table-column label="账号id" align="center" prop="userId"/>
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if_status" :value="scope.row.anoStatus"/>
         </template>
       </el-table-column>
-      <!--  隐藏的患者的个人信息    -->
-      <!--      <el-table-column type="expand">
-              <template slot-scope="scope">
-                <el-form label-position="left" inline class="demo-table-expand">
-                  <el-divider content-position="left">其他信息</el-divider>
-                  <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
-                    <span>{{ scope.row.patientCode }}</span>
-                  </el-form-item>
-                  <el-form-item label="患者电话" width="200" style="padding-left: 40px">
-                    <span>{{ scope.row.patientPhone }}</span>
-                  </el-form-item>
-                  <el-form-item label="家属电话" width="200" style="padding-left: 40px">
-                    <span>{{ scope.row.familyPhone }}</span>
-                  </el-form-item>
-                  <br>
-      &lt;!&ndash;            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
-                    <span>{{ scope.row.hospitalName }}</span>
-                  </el-form-item>&ndash;&gt;
-                </el-form>
-              </template>
-            </el-table-column>-->
-
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -221,7 +178,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['alert_log:alert_log:edit']"
+            v-hasPermi="['log_user:log_user:edit']"
           >修改
           </el-button>
           <el-button
@@ -229,7 +186,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['alert_log:alert_log:remove']"
+            v-hasPermi="['log_user:log_user:remove']"
           >删除
           </el-button>
         </template>
@@ -244,20 +201,20 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改预警日志对话框 -->
+    <!-- 添加或修改标注分配对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
-        <el-form-item label="发生时间" prop="logTime">
-          <el-date-picker clearable
-                          v-model="form.logTime"
-                          type="datetime"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          placeholder="请选择发生时间">
-          </el-date-picker>
+        <el-form-item label="日志id" prop="logId">
+          <el-input v-model="form.logId" placeholder="请输入日志id"/>
         </el-form-item>
-        <el-form-item label="预警类型" prop="logType">
-          <el-input v-model="form.logType" placeholder="请输入预警类型"/>
+        <el-form-item label="噪声" prop="logNoise">
+          <el-input v-model="form.logNoise" placeholder="请输入噪声"/>
+        </el-form-item>
+        <el-form-item label="噪声等级" prop="logNoiseLevel">
+          <el-input v-model="form.logNoiseLevel" placeholder="请输入噪声等级"/>
+        </el-form-item>
+        <el-form-item label="账号id" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入账号id"/>
         </el-form-item>
         <el-form-item label="事件名称" prop="eventName">
           <el-input v-model="form.eventName" placeholder="请输入事件名称"/>
@@ -265,8 +222,15 @@
         <el-form-item label="事件说明" prop="eventDescription">
           <el-input v-model="form.eventDescription" placeholder="请输入事件说明"/>
         </el-form-item>
-        <el-form-item label="患者管理id" prop="pId">
-          <el-input v-model="form.pId" placeholder="请输入患者管理id"/>
+        <el-form-item label="是否标注">
+          <el-radio-group v-model="form.anoStatus">
+            <el-radio
+              v-for="dict in dict.type.if_status"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{ dict.label }}
+            </el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -278,17 +242,11 @@
 </template>
 
 <script>
-import {
-  listAlert_log,
-  getAlert_log,
-  delAlert_log,
-  addAlert_log,
-  updateAlert_log,
-  listAlert_log_ano
-} from "@/api/alert_log/alert_log";
+import {listLog_user, getLog_user, delLog_user, addLog_user, updateLog_user} from "@/api/log_user/log_user";
+import {listAlert_log_ano} from "@/api/alert_log/alert_log";
 
 export default {
-  name: "ano",
+  name: "Log_user",
   dicts: ['sex', 'if_status'],
   data() {
     return {
@@ -304,14 +262,12 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-      // 预警日志表格数据
-      alert_logList: [],
+      // 标注分配表格数据
+      log_userList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 时间范围
-      daterangeLogTime: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -322,32 +278,21 @@ export default {
         eventName: null,
         eventDescription: null,
         pId: null,
-        patientName: null,
         hospitalName: null,
-        anoStatus: null
+        anoStatus: null,
+        userId: null
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-        logNumber: [
-          {required: true, message: "日志号不能为空", trigger: "blur"}
-        ],
-        pId: [
-          {required: true, message: "患者id不能为空", trigger: "blur"}
-        ]
-      }
+      rules: {}
     };
   },
   created() {
-    if (this.$route.query.pId) {
-      this.queryParams.pId = this.$route.query.pId;
-    }
     this.getList();
   },
-
   methods: {
-    /** 查询预警日志列表 */
+    /** 查询标注分配列表 */
     getList() {
       this.loading = true;
       this.queryParams.params = {};
@@ -355,8 +300,8 @@ export default {
         this.queryParams.params["beginLogTime"] = this.daterangeLogTime[0];
         this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
       }
-      listAlert_log_ano(this.queryParams).then(response => {
-        this.alert_logList = response.rows;
+      listLog_user(this.queryParams).then(response => {
+        this.log_userList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -375,9 +320,9 @@ export default {
         eventName: null,
         eventDescription: null,
         pId: null,
-        patientName: null,
         hospitalName: null,
-        anoStatus: null
+        anoStatus: null,
+        userId: null
       };
       this.resetForm("form");
     },
@@ -401,16 +346,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加预警日志";
+      this.title = "添加标注分配";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const logId = row.logId || this.ids
-      getAlert_log(logId).then(response => {
+      getLog_user(logId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改预警日志";
+        this.title = "修改标注分配";
       });
     },
     /** 提交按钮 */
@@ -418,13 +363,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.logId != null) {
-            updateAlert_log(this.form).then(response => {
+            updateLog_user(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addAlert_log(this.form).then(response => {
+            addLog_user(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -436,8 +381,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const logIds = row.logId || this.ids;
-      this.$modal.confirm('是否确认删除预警日志编号为"' + logIds + '"的数据项？').then(function () {
-        return delAlert_log(logIds);
+      this.$modal.confirm('是否确认删除标注分配编号为"' + logIds + '"的数据项？').then(function () {
+        return delLog_user(logIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -446,11 +391,10 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('alert_log/alert_log/export', {
+      this.download('log_user/log_user/export', {
         ...this.queryParams
-      }, `alert_log_${new Date().getTime()}.xlsx`)
+      }, `log_user_${new Date().getTime()}.xlsx`)
     },
-
     /** 查看日志*/
     handleLook(row) {
       console.log(row.logId);
@@ -458,7 +402,7 @@ export default {
         name: "lookLog",
         params: {logId: row.logId, logType: row.logType, userId: row.userId}
       });
-    },
+    }
   }
 };
 </script>
