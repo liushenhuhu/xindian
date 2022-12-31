@@ -325,7 +325,7 @@ export default {
         this.hospitalList = response.rows;
         this.total = response.total;
         _this.hospitalList=[]
-        console.log(response)
+        // console.log(JSON.stringify(response))
         for(var k=0;k<response.rows.length;k++){
           var dir={}
           dir["logId"]=response.rows[k].logId
@@ -333,11 +333,14 @@ export default {
             dir[_this.columnData[i].label]=""
           }
           // var left=1
-          for(var j=0;i<response.rows[k].labelList.length;i++){
+          for(var j=0;j<response.rows[k].labelList.length;j++){
             // if(response.rows[k].labelList[j].value() !== ""){
             //   left=0
             // }
-            dir[response.rows[k].labelList[j].key()]=response.rows[k].labelList[j].value()
+            for(var key in JSON.parse(JSON.stringify(response.rows[k].labelList[j]))){
+              dir[key]=JSON.parse(JSON.stringify(response.rows[k].labelList[j]))[key]
+            }
+            //
           }
           // if(left===0){
           //   _this.hospitalList.push(dir)
