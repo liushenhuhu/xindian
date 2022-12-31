@@ -82,6 +82,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-refresh-right"
+            @click="refresh(scope.row)"
+            v-hasPermi="['ano:ano:edit']"
+          >更新
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['ano:ano:edit']"
@@ -126,7 +134,7 @@
 </template>
 
 <script>
-import {listAno, getAno, delAno, addAno, updateAno, assigned_ano} from "@/api/ano/ano";
+import {listAno, getAno, delAno, addAno, updateAno, assigned_ano, re_assigned_ano} from "@/api/ano/ano";
 
 export default {
   name: "Ano",
@@ -141,7 +149,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: true,
+      showSearch: false,
       // 总条数
       total: 0,
       // ano表格数据
@@ -220,6 +228,20 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改ano";
+      });
+    },
+    refresh(row) {
+      this.reset();
+      const anoUserId = row.anoUserId || this.ids
+      getAno(anoUserId).then(response => {
+        this.form = response.data;
+        re_assigned_ano(this.form).then(res => {
+          if (res === 0) {
+            this.$modal.msgSuccess("无更新");
+          } else {
+            this.$modal.msgSuccess("更新成功");
+          }
+        })
       });
     },
     /** 提交按钮 */

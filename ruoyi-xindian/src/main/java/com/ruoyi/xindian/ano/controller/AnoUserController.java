@@ -110,4 +110,11 @@ public class AnoUserController extends BaseController
         String userId = assignedAno.getUserId();
         return toAjax(anoUserService.insertAno(userId, pId));
     }
+
+    @PostMapping("/reAssignedAno")
+    public int reAssignedAno(@RequestBody AssignedAno assignedAno) {
+        String pId = assignedAno.getpId();
+        String userId = assignedAno.getUserId();
+        return anoUserService.insertAno(userId, pId);
+    }
 }

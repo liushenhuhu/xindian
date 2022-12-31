@@ -51,3 +51,12 @@ export function assigned_ano(data) {
     timeout: 200000
   })
 }
+
+export function re_assigned_ano(data) {
+  return request({
+    url: '/ano/ano/reAssignedAno',
+    method: 'post',
+    data: data,
+    timeout: 200000
+  })
+}

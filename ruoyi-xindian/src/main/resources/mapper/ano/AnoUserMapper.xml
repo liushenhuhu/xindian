@@ -29,7 +29,7 @@
     </select>
 
     <insert id="insertAnoUser" parameterType="AnoUser" useGeneratedKeys="true" keyProperty="anoUserId">
-        insert into ano_user
+        insert ignore into ano_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
             <if test="pId != null">p_id,</if>
@@ -41,7 +41,7 @@
     </insert>
 
     <insert id="insertAno" parameterType="string">
-        insert into alert_log_user(log_id, p_id, log_noise, log_type, event_name, event_description, user_id)
+        insert ignore into alert_log_user(log_id, p_id, log_noise, log_type, event_name, event_description, user_id)
         select alert_log.log_id,
                alert_log.p_id,
                aln.log_noise,
