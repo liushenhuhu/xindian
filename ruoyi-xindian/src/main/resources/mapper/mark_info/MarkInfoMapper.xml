@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.mark_info.mapper.MarkInfoMapper">
+
+    <resultMap type="MarkInfo" id="PatientResult">
+        <result property="logId" column="log_id"/>
+    </resultMap>
+
+    <resultMap type="User" id="UserResult">
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <sql id="selectPatientVo">
+        select log_id,
+               GROUP_CONCAT(log_noise_level order by user_id) as allLabel,GROUP_CONCAT(user_id order by user_id) as allUsers
+        from alert_log_user
+    </sql>
+
+    <select id="selectMarkInfoByLogId" parameterType="Patient" resultMap="PatientResult">
+        <include refid="selectPatientVo"/>
+        group by log_id
+    </select>
+
+    <select id="getUsers" parameterType="String" resultMap="UserResult">
+        select user_id from ano_user GROUP BY user_id ORDER BY user_id asc
+    </select>
+
+    <select id="selectPatientByPatientCode" parameterType="String" resultMap="PatientResult">
+        <include refid="selectPatientVo"/>
+        where patient_code = #{patientCode}
+    </select>
+
+    <select id="selectPatientByPatientName" parameterType="String" resultMap="PatientResult">
+        <include refid="selectPatientVo"/>
+        where patient_name = #{patientName}
+    </select>
+
+    <select id="selectPatientByNameAndPhone" parameterType="patient" resultMap="PatientResult">
+        <include refid="selectPatientVo"/>
+        where patient_name = #{patientName} and patient_phone = #{patientPhone}
+    </select>
+
+    <insert id="insertPatient" parameterType="Patient">
+        insert into patient
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">patient_id,</if>
+            <if test="patientName != null and patientName != ''">patient_name,</if>
+            <if test="patientCode != null and patientCode != ''">patient_code,</if>
+            <if test="patientAge != null">patient_age,</if>
+            <if test="patientSex != null">patient_sex,</if>
+            <if test="patientSource != null">patient_source,</if>
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="familyPhone != null">family_phone,</if>
+            <if test="equipmentId != null">equipment_id,</if>
+            <if test="monitoringStatus != null">monitoring_status,</if>
+            <if test="bindingState != null">binding_state,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">#{patientId},</if>
+            <if test="patientName != null and patientName != ''">#{patientName},</if>
+            <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
+            <if test="patientAge != null">#{patientAge},</if>
+            <if test="patientSex != null">#{patientSex},</if>
+            <if test="patientSource != null">#{patientSource},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="familyPhone != null">#{familyPhone},</if>
+            <if test="equipmentId != null">#{equipmentId},</if>
+            <if test="monitoringStatus != null">#{monitoringStatus},</if>
+            <if test="bindingState != null">#{bindingState},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePatient" parameterType="Patient">
+        update patient
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientName != null and patientName != ''">patient_name = #{patientName},</if>
+            <if test="patientCode != null and patientCode != ''">patient_code = #{patientCode},</if>
+            <if test="patientAge != null">patient_age = #{patientAge},</if>
+            <if test="patientSex != null">patient_sex = #{patientSex},</if>
+            <if test="patientSource != null">patient_source = #{patientSource},</if>
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="familyPhone != null">family_phone = #{familyPhone},</if>
+            <if test="equipmentId != null">equipment_id = #{equipmentId},</if>
+            <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
+            <if test="bindingState != null">binding_state = #{bindingState},</if>
+        </trim>
+        where patient_id = #{patientId}
+    </update>
+
+    <update id="updateMonitoringStatus">
+        update patient
+        set monitoring_status = 0;
+    </update>
+
+    <update id="updateMonitoringStatus2">
+        update patient
+        set monitoring_status = 1
+        where equipment_id = #{param}
+    </update>
+
+    <delete id="deletePatientByPatientId" parameterType="Long">
+        delete
+        from patient
+        where patient_id = #{patientId}
+    </delete>
+
+    <delete id="deletePatientByPatientIds" parameterType="String">
+        delete from patient where patient_id in
+        <foreach item="patientId" collection="array" open="(" separator="," close=")">
+            #{patientId}
+        </foreach>
+    </delete>
+</mapper>
