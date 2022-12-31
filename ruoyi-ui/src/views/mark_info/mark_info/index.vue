@@ -321,7 +321,7 @@ export default {
           _this.columnData.push({name:response[i].userId,label:response[i].userId})
         }
       });
-      getLists().then(response => {
+      getLists(this.queryParams).then(response => {
         this.hospitalList = response.rows;
         this.total = response.total;
         _this.hospitalList=[]
