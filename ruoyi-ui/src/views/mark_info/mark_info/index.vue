@@ -443,7 +443,9 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-      if (this.queryParams.province === null){
+      console.log(this.queryParams.province)
+      console.log(this.queryParams.ifStatistics)
+      if (this.queryParams.province === null || this.queryParams.province === ""){
         if(this.queryParams.ifStatistics === "True"){
           this.getNotSame();
         }
