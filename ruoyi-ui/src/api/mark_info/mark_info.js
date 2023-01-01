@@ -17,3 +17,19 @@ export function getUsers() {
     method: 'get'
   })
 }
+
+export function getUserLists(query){
+  return request({
+    url: '/mark_info/mark_info/'+query.province,
+    method: 'get',
+    params: query
+  })
+}
+
+export function getNotS(query){
+  return request({
+    url: '/mark_info/mark_info/NotSame',
+    method: 'get',
+    params: query
+  })
+}
