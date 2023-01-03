@@ -1,8 +1,12 @@
 package com.ruoyi.xindian.mark_info.controller;
 
 
+import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.page.PageDomain;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.page.TableSupport;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.mark_info.domain.MarkInfo;
 import com.ruoyi.xindian.mark_info.domain.User;
@@ -21,7 +25,12 @@ public class MarkInfoController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list() {
         startPage();
+//        PageDomain pageDomain = TableSupport.buildPageRequest();
+//        Integer pageNum = pageDomain.getPageNum();
+//        Integer pageSize = pageDomain.getPageSize();
+//        int index=(pageNum-1)*pageSize;
         List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
+//        List<MarkInfo> reslist=new ArrayList<>();
         Map<String,String> map = null;
         List<Map<String,String>> listMap=null;
         for (MarkInfo markInfo : list) {
@@ -35,11 +44,127 @@ public class MarkInfoController extends BaseController {
             }
             markInfo.setLabelList(listMap);
         }
+//        for(int i=index;i<index+pageSize&&i<list.size();i++){
+//            reslist.add(list.get(i));
+//        }
+//        TableDataInfo rspData = new TableDataInfo();
+//        rspData.setCode(HttpStatus.SUCCESS);
+//        rspData.setMsg("查询成功");
+//        rspData.setRows(reslist);
+//        rspData.setTotal(list.size());
+//        return rspData;
         return getDataTable(list);
     }
     @GetMapping("/users")
     public List<User> users() {
         return iMarkInfoService.getUsers();
+    }
+    //根据ID查询
+    @GetMapping("/{id}")
+    public TableDataInfo List_id(@PathVariable("id") String id){
+//        startPage();
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = pageDomain.getPageNum();
+        Integer pageSize = pageDomain.getPageSize();
+        int index=(pageNum-1)*pageSize;
+        List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
+        List<MarkInfo> resList = new ArrayList<>();
+        List<MarkInfo> reList = new ArrayList<>();
+        Map<String,String> map = null;
+        List<Map<String,String>> listMap=null;
+
+        for (MarkInfo markInfo : list) {
+            if(",".equals(markInfo.getAllLabel())){
+                continue;
+            }
+            listMap=new ArrayList<>();
+            List<String> info = Arrays.asList(markInfo.getAllLabel().split(",", -1));
+            List<String> users = Arrays.asList(markInfo.getAllUsers().split(",", -1));
+
+            for(int i=0;i<info.size();i++) {
+                if(id.equals(users.get(i)) && !info.get(i).equals("")) {
+                    for(int j=0;j<info.size();j++) {
+                        map=new HashMap<>();
+                        map.put(users.get(j),info.get(j));
+                        listMap.add(map);
+                    }
+                    markInfo.setLabelList(listMap);
+                    resList.add(markInfo);
+                    break;
+                }
+            }
+        }
+        for(int i=index;i<index+pageSize&&i<resList.size();i++){
+            reList.add(resList.get(i));
+        }
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("查询成功");
+        rspData.setRows(reList);
+        rspData.setTotal(resList.size());
+        return rspData;
+    }
+//    获取不同标注
+    @GetMapping("/NotSame")
+    public TableDataInfo NotSame() {
+//        startPage();
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = pageDomain.getPageNum();
+        Integer pageSize = pageDomain.getPageSize();
+        int index=(pageNum-1)*pageSize;
+
+        List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
+        List<MarkInfo> resList = new ArrayList<>();
+        List<MarkInfo> reList = new ArrayList<>();
+        Map<String,String> map = null;
+        List<Map<String,String>> listMap=null;
+
+        for (MarkInfo markInfo : list) {
+            listMap=new ArrayList<>();
+            List<String> info = Arrays.asList(markInfo.getAllLabel().split(",", -1));
+            List<String> users = Arrays.asList(markInfo.getAllUsers().split(",", -1));
+            if (isSame(info)){
+                continue;
+            }
+            for(int i=0;i<info.size();i++){
+                map=new HashMap<>();
+                map.put(users.get(i),info.get(i));
+                listMap.add(map);
+            }
+            markInfo.setLabelList(listMap);
+            resList.add(markInfo);
+        }
+        for(int i=index;i<index+pageSize&&i<resList.size();i++){
+            reList.add(resList.get(i));
+        }
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("查询成功");
+        rspData.setRows(reList);
+        rspData.setTotal(resList.size());
+        return rspData;
+
+
+//        return getDataTable(resList);
+    }
+    public boolean isSame(List<String> info){
+        if(info.size()==1){
+            return true;
+        }
+        long count=info.stream().distinct().count();
+        int flag=0;
+        for (String s : info) {
+            if("".equals(s)){
+                flag=1;
+                break;
+            }
+        }
+        if(flag==1){
+            return count == 2 || count==1;
+        }
+        else{
+            return count == 1;
+        }
     }
 
 }
