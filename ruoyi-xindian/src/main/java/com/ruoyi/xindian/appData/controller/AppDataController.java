@@ -3,6 +3,8 @@ package com.ruoyi.xindian.appData.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class AppDataController extends BaseController {
     @Autowired
     private IAppDataService appDataService;
+
+    @Autowired
+    private IPatientService patientService;
 
     /**
      * 查询app相关数据列表
@@ -85,6 +90,15 @@ public class AppDataController extends BaseController {
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody AppData appData) {
+        Patient patient = new Patient();
+        patient.setPatientName(appData.getPatientName());
+        patient.setPatientPhone(appData.getPatientPhone());
+        patient.setPatientSex(appData.getPatientSex());
+        patient.setPatientAge(appData.getPatientAge());
+        List<Patient> patientList = patientService.selectPatientList(patient);
+        if (null == patientList || patientList.size() == 0) {
+            patientService.insertPatient(patient);
+        }
         return toAjax(appDataService.insertAppData(appData));
     }
 

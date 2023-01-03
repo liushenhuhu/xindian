@@ -1,6 +1,5 @@
 package com.ruoyi.framework.web.service;
 
-import com.ruoyi.system.mapper.SysUserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
@@ -34,7 +33,6 @@ public class SysRegisterService {
 
     @Autowired
     private RedisCache redisCache;
-
 
     /**
      * 注册
