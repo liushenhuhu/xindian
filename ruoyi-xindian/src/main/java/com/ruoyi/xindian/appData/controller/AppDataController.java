@@ -3,6 +3,9 @@ package com.ruoyi.xindian.appData.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -39,6 +42,13 @@ public class AppDataController extends BaseController {
 
     @Autowired
     private IPatientService patientService;
+
+    @Autowired
+    private ISysUserService userService;
+
+    @Autowired
+    private ISysRoleService roleService;
+
 
     /**
      * 查询app相关数据列表
@@ -90,15 +100,30 @@ public class AppDataController extends BaseController {
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody AppData appData) {
-        Patient patient = new Patient();
-        patient.setPatientName(appData.getPatientName());
-        patient.setPatientPhone(appData.getPatientPhone());
-        patient.setPatientSex(appData.getPatientSex());
-        patient.setPatientAge(appData.getPatientAge());
-        List<Patient> patientList = patientService.selectPatientList(patient);
-        if (null == patientList || patientList.size() == 0) {
-            patientService.insertPatient(patient);
+        Long userId = getUserId();
+        SysRole role = roleService.selectRoleById(userId);
+        if (role.getRoleId() == 100) {
+            Patient patient = new Patient();
+            patient.setPatientName(appData.getPatientName());
+            patient.setPatientPhone(appData.getPatientPhone());
+            patient.setPatientSex(appData.getPatientSex());
+            patient.setPatientAge(appData.getPatientAge());
+            List<Patient> patientList = patientService.selectPatientList(patient);
+            if (null == patientList || patientList.size() == 0) {
+                patientService.insertPatient(patient);
+            }
         }
+        return toAjax(appDataService.insertAppData(appData));
+    }
+
+
+    /**
+     * 新增app相关数据（医生）
+     */
+    @PreAuthorize("@ss.hasPermi('appData:appData:add')")
+    @Log(title = "app相关数据", businessType = BusinessType.INSERT)
+    @PostMapping("/doctor")
+    public AjaxResult add_doctor(@RequestBody AppData appData) {
         return toAjax(appDataService.insertAppData(appData));
     }
 
