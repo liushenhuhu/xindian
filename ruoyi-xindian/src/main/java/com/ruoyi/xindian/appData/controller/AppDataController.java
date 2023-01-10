@@ -101,8 +101,9 @@ public class AppDataController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody AppData appData) {
         Long userId = getUserId();
-        SysRole role = roleService.selectRoleById(userId);
-        if (role.getRoleId() == 100) {
+        List<SysRole> sysRoles = roleService.selectRolesByUserId(userId);
+        SysRole sysRole = sysRoles.get(0);
+        if (sysRole.getRoleId() == 100) {
             Patient patient = new Patient();
             patient.setPatientName(appData.getPatientName());
             patient.setPatientPhone(appData.getPatientPhone());
@@ -118,7 +119,7 @@ public class AppDataController extends BaseController {
 
 
     /**
-     * 新增app相关数据（医生）
+     * 新增app相关数据
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:add')")
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
