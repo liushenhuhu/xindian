@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.Set;
 
+import com.ruoyi.xindian.appData.domain.AppData;
+import com.ruoyi.xindian.appData.service.IAppDataService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class SysLoginController {
     @Autowired
     private SysPermissionService permissionService;
 
+    @Autowired
+    private IAppDataService appDataService;
+
     /**
      * 登录方法
      *
@@ -49,6 +54,15 @@ public class SysLoginController {
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
+
+        AppData appData = new AppData();
+        appData.setUserName(loginBody.getUsername());
+        List<AppData> appDataList = appDataService.selectAppDataList(appData);
+        if (null == appDataList || appDataList.size() == 0) {
+            ajax.put("BindingState", false);
+        } else {
+            ajax.put("BindingState", true);
+        }
         return ajax;
     }
 
@@ -67,6 +81,15 @@ public class SysLoginController {
         String smsCode = loginBody.getSmsCode();
         String uuid = loginBody.getUuid();
         AjaxResult ajax = loginService.smsLogin(mobile, smsCode, uuid);
+
+        AppData appData = new AppData();
+        appData.setUserName(loginBody.getUsername());
+        List<AppData> appDataList = appDataService.selectAppDataList(appData);
+        if (null == appDataList || appDataList.size() == 0) {
+            ajax.put("BindingState", false);
+        } else {
+            ajax.put("BindingState", true);
+        }
         return ajax;
     }
 
