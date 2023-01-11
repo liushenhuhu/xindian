@@ -319,8 +319,9 @@ export default {
     },
     onConnected(frame) {
       console.log("Connected: " + frame);
-      //绑定交换机exchange_pushmsg是交换机的名字rk_pushmsg是绑定的路由key
+      //绑定交换机exchange_pushmsg是交换机的名字 queue是绑定的路由key
       var exchange = "/exchange/exchange_pushmsg/queue";
+      // var exchange = "/exchange/patientMessage/132";
       //创建随机队列用上面的路由key绑定交换机,放入收到消息后的回调函数和失败的回调函数
       this.client.subscribe(exchange, this.responseCallback, this.onFailed);
       console.log(frame)
@@ -333,6 +334,7 @@ export default {
       console.log(frame)
       //接收到服务器推送消息，向服务器定义的接收消息routekey路由rk_recivemsg发送确认消息
       let res=JSON.parse(frame.body)
+      console.log(res)
       this.mes.content=res.content
       this.mes.messageId=res.messageId
       this.mes.title=res.title

@@ -83,7 +83,7 @@ public class SysLoginController {
         AjaxResult ajax = loginService.smsLogin(mobile, smsCode, uuid);
 
         AppData appData = new AppData();
-        appData.setUserName(loginBody.getUsername());
+        appData.setUserName(loginBody.getMobile());
         List<AppData> appDataList = appDataService.selectAppDataList(appData);
         if (null == appDataList || appDataList.size() == 0) {
             ajax.put("BindingState", false);
