@@ -169,10 +169,25 @@ public class AppDataController extends BaseController {
         for (int i = 0; i < split.length; i++) {
             ids[i] = Long.parseLong(split[i]);
         }
-
         int ans = appDataService.deleteAppDataByAppDataIds(ids);
         return toAjax(ans);
     }
 
+    /**
+     * 删除app相关数据（手机号）
+     */
+    @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
+    @Log(title = "app相关数据", businessType = BusinessType.DELETE)
+    @GetMapping("/delByPhone/{patientPhone}")
+    public AjaxResult delByPhone(@PathVariable String patientPhone) {
+        AppData appData = appDataService.selectAppDataByPatientPhone(patientPhone);
+        return toAjax(delByData(appData));
+    }
+
+    private int delByData(AppData appData) {
+        int res1 = appDataService.deleteAppDataByAppDataId(appData.getAppDataId());
+        int res2 = patientService.deletePatientByPatientPhone(appData.getPatientPhone());
+        return res1 + res2;
+    }
 
 }

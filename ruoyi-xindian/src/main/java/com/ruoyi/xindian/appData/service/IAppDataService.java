@@ -20,6 +20,14 @@ public interface IAppDataService
     public AppData selectAppDataByAppDataId(Long appDataId);
 
     /**
+     * 查询app相关数据(手机号)
+     *
+     * @param patientPhone 手机号
+     * @return app相关数据
+     */
+    public AppData selectAppDataByPatientPhone(String patientPhone);
+
+    /**
      * 查询app相关数据列表
      * 
      * @param appData app相关数据

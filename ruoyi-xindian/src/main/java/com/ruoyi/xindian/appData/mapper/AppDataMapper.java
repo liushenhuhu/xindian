@@ -60,4 +60,6 @@ public interface AppDataMapper
     public int deleteAppDataByAppDataIds(Long[] appDataIds);
 
     public int deleteDataByAppDataIds(String[] appDataIds);
+
+    public AppData selectAppDataByPatientPhone(String patientPhone);
 }

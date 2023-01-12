@@ -80,4 +80,6 @@ public interface PatientMapper
     public void updateMonitoringStatus2(String equipment);
 
     public Patient selectPatientByNameAndPhone(Patient patient);
+
+    public int delPatientByPatientPhone(String patientPhone);
 }

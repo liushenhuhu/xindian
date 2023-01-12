@@ -34,7 +34,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAppDataVo"/>
         where app_data_id = #{appDataId}
     </select>
-        
+
+    <select id="selectAppDataByPatientPhone" parameterType="string" resultMap="AppDataResult">
+        <include refid="selectAppDataVo"/>
+        where patient_phone = #{patientPhone}
+    </select>
+
     <insert id="insertAppData" parameterType="AppData" useGeneratedKeys="true" keyProperty="appDataId">
         insert into app_data
         <trim prefix="(" suffix=")" suffixOverrides=",">

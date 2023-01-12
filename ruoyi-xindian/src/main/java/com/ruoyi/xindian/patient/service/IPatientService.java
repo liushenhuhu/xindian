@@ -59,6 +59,15 @@ public interface IPatientService
      */
     public int deletePatientByPatientId(Long patientId);
 
+
+    /**
+     * 删除患者信息(手机号)
+     *
+     * @param patientPhone 患者主键
+     * @return 结果
+     */
+    public int deletePatientByPatientPhone(String patientPhone);
+
     /**
      * 查询患者
      *

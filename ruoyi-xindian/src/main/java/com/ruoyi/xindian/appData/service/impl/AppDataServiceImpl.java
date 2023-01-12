@@ -31,6 +31,11 @@ public class AppDataServiceImpl implements IAppDataService
         return appDataMapper.selectAppDataByAppDataId(appDataId);
     }
 
+    @Override
+    public AppData selectAppDataByPatientPhone(String patientPhone) {
+        return appDataMapper.selectAppDataByPatientPhone(patientPhone);
+    }
+
     /**
      * 查询app相关数据列表
      * 

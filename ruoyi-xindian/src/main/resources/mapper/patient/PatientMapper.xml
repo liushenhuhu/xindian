@@ -156,4 +156,10 @@
             #{patientId}
         </foreach>
     </delete>
+
+    <delete id="delPatientByPatientPhone" parameterType="String">
+        delete
+        from patient
+        where patient_phone = #{patientPhone}
+    </delete>
 </mapper>
