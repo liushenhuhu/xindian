@@ -1199,7 +1199,7 @@ export default {
       console.log(JSON.stringify(_th.ecg_type))
       $.ajax({
         type: "post",
-        url: "https://server.mindyard.cn:83/get_analysis_decg",
+        url: "https://server.mindyard.cn:84/get_analysis_decg_app",
         asynsc: false,
         contentType: "application/json",
         dataType: "json",

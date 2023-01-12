@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.pmEcgData.mapper.PmEcgDataMapper">
+
+    <resultMap type="PmEcgData" id="PmEcgDataResult">
+        <result property="pId" column="p_id"/>
+        <result property="ecgAnalysisData" column="ecg_analysis_data"/>
+    </resultMap>
+
+    <sql id="selectPmEcgDataVo">
+        select p_id, ecg_analysis_data
+        from pm_ecg_data
+    </sql>
+
+    <select id="selectPmEcgDataList" parameterType="PmEcgData" resultMap="PmEcgDataResult">
+        <include refid="selectPmEcgDataVo"/>
+        <where>
+            <if test="ecgAnalysisData != null  and ecgAnalysisData != ''">and ecg_analysis_data = #{ecgAnalysisData}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPmEcgDataByPId" parameterType="String" resultMap="PmEcgDataResult">
+        <include refid="selectPmEcgDataVo"/>
+        where p_id = #{pId}
+    </select>
+
+    <insert id="insertPmEcgData" parameterType="PmEcgData">
+        insert into pm_ecg_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pId != null">p_id,</if>
+            <if test="ecgAnalysisData != null">ecg_analysis_data,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pId != null">#{pId},</if>
+            <if test="ecgAnalysisData != null">#{ecgAnalysisData},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmEcgData" parameterType="PmEcgData">
+        update pm_ecg_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ecgAnalysisData != null">ecg_analysis_data = #{ecgAnalysisData},</if>
+        </trim>
+        where p_id = #{pId}
+    </update>
+
+    <delete id="deletePmEcgDataByPId" parameterType="String">
+        delete
+        from pm_ecg_data
+        where p_id = #{pId}
+    </delete>
+
+    <delete id="deletePmEcgDataByPIds" parameterType="String">
+        delete from pm_ecg_data where p_id in
+        <foreach item="pId" collection="array" open="(" separator="," close=")">
+            #{pId}
+        </foreach>
+    </delete>
+</mapper>
