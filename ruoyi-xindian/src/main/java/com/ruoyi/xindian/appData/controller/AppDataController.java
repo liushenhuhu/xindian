@@ -152,9 +152,23 @@ public class AppDataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
     @Log(title = "app相关数据", businessType = BusinessType.DELETE)
+    @DeleteMapping("/doctor/{appDataIds}")
+    public AjaxResult remove_doctor(@PathVariable Long[] appDataIds) {
+        return toAjax(appDataService.deleteAppDataByAppDataIds(appDataIds));
+    }
+
+    /**
+     * 删除app相关数据
+     */
+    @Log(title = "app相关数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{appDataIds}")
     public AjaxResult remove(@PathVariable Long[] appDataIds) {
-        return toAjax(appDataService.deleteAppDataByAppDataIds(appDataIds));
+        int res = 0;
+        for (Long appDataId : appDataIds) {
+            AppData appData = appDataService.selectAppDataByAppDataId(appDataId);
+            res = delByData(appData);
+        }
+        return toAjax(res);
     }
 
     /**
