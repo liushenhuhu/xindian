@@ -145,4 +145,10 @@ public class Constants
      * 短信验证码有效期（分钟）
      */
     public static final Integer SMS_EXPIRATION = 15;
+
+    /**
+     * 登录用户编号 redis key
+     */
+    public static final String LOGIN_USERID_KEY = "login_userid:";
+
 }

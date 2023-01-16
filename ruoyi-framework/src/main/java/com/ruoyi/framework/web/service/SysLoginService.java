@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.framework.smsConfig.SmsCodeAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +39,11 @@ import java.util.Map;
  */
 @Component
 public class SysLoginService {
+
+    // 是否允许账户多终端同时登录（true允许 false不允许）
+    @Value("${token.soloLogin}")
+    private boolean soloLogin;
+
     @Autowired
     private TokenService tokenService;
 
@@ -85,6 +91,17 @@ public class SysLoginService {
         }
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+
+//        if (!soloLogin) {
+//            // 如果用户不允许多终端同时登录，清除缓存信息
+//            String userIdKey = Constants.LOGIN_USERID_KEY + loginUser.getUser().getUserId();
+//            String userKey = redisCache.getCacheObject(userIdKey);
+//            if (StringUtils.isNotEmpty(userKey)) {
+//                redisCache.deleteObject(userIdKey);
+//                redisCache.deleteObject(userKey);
+//            }
+//        }
+
         recordLoginInfo(loginUser.getUserId());
         // 生成token
         return tokenService.createToken(loginUser);
@@ -152,6 +169,17 @@ public class SysLoginService {
         }
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(mobile, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+
+//        if (!soloLogin) {
+//            // 如果用户不允许多终端同时登录，清除缓存信息
+//            String userIdKey = Constants.LOGIN_USERID_KEY + loginUser.getUser().getUserId();
+//            String userKey = redisCache.getCacheObject(userIdKey);
+//            if (StringUtils.isNotEmpty(userKey)) {
+//                redisCache.deleteObject(userIdKey);
+//                redisCache.deleteObject(userKey);
+//            }
+//        }
+
         AjaxResult ajax = AjaxResult.success();
 
         // 生成token
