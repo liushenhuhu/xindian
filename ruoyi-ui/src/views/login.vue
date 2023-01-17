@@ -345,7 +345,7 @@ export default {
       },
       loading: false,
       // 验证码开关
-      captchaOnOff: true,
+      captchaOnOff: false,
       // 手机登陆开关
       isSmsLogin: false,
       //注册开关
