@@ -71,14 +71,18 @@ public class PatientManagementController extends BaseController {
             startPage();
             if (patientManagement.getEcgType().equals("DECG1")){
                 list = patientManagementService.selectPatientManagementListDECG(patientManagement);
-            }else{
+            } else if (patientManagement.getEcgType().equals("JECG12")) {
+                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+            } else {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
         } else {
             startPage();
             if (patientManagement.getEcgType().equals("DECG1")){
                 list = patientManagementService.selectPatientManagementListDECG(patientManagement);
-            }else{
+            } else if (patientManagement.getEcgType().equals("JECG12")) {
+                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+            } else {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
         }

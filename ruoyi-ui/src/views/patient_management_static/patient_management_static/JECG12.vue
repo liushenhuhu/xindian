@@ -125,6 +125,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="pId" prop="pId">
+        <el-input
+          v-model="queryParams.pId"
+          placeholder="请输入pId"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -239,6 +247,7 @@
           <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
         </template>
       </el-table-column>
+      <el-table-column label="心电类型" align="center" prop="ecgType"/>
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
@@ -454,7 +463,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'ECG',
+        ecgType: 'JECG12',
         patientPhone: null,
         intelligentDiagnosis: null,
         diagnosisStatus: null,
