@@ -451,7 +451,7 @@ export default {
         patientName: null,
         patientPhone: null,
         patientCode: null,
-        ecgType: null,
+        ecgType: 'DECG12YXD',
         doctorPhone: null
       };
       this.resetForm("form");
