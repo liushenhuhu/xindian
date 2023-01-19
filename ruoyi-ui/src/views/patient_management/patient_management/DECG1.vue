@@ -376,7 +376,7 @@ export default {
         patientName: null,
         patientPhone: null,
         patientCode: null,
-        ecgType: 'DECG1',
+        ecgType: 'DECGsingleZZ',
         doctorPhone: null
       },
       // 表单参数
@@ -451,7 +451,7 @@ export default {
         patientName: null,
         patientPhone: null,
         patientCode: null,
-        ecgType: 'DECG1',
+        ecgType: 'DECGsingleZZ',
         doctorPhone: null
       };
       this.resetForm("form");
