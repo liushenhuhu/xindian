@@ -69,8 +69,8 @@ public class PatientManagementController extends BaseController {
             String hospitalName = sysUser.getHospitalName();
             patientManagement.setHospitalName(hospitalName);
             startPage();
-            if (patientManagement.getEcgType().equals("DECGsingleZZ")){
-                list = patientManagementService.selectPatientManagementListDECG(patientManagement);
+            if (patientManagement.getEcgType().equals("DECGsingle")){
+                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
             } else if (patientManagement.getEcgType().equals("JECG12")) {
                 list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
             } else {
@@ -79,7 +79,7 @@ public class PatientManagementController extends BaseController {
         } else {
             startPage();
             if (patientManagement.getEcgType().equals("DECGsingleZZ")){
-                list = patientManagementService.selectPatientManagementListDECG(patientManagement);
+                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
             } else if (patientManagement.getEcgType().equals("JECG12")) {
                 list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
             } else {

@@ -73,7 +73,7 @@
         order by if(isnull(ecg_level),1,0), ecg_level, online_status desc, connection_time desc
     </select>
 
-    <select id="selectPatientManagementListDECG" parameterType="PatientManagement" resultMap="PatientManagementResult">
+    <select id="selectPatientManagementListDECGsingle" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
@@ -84,7 +84,7 @@
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = #{ecgType} or ecg_type = "DECGsingleGZ")</if>
+            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "DECGsingleZZ" or ecg_type = "DECGsingleGZ")</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>

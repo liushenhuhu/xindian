@@ -98,7 +98,7 @@ export const constantRoutes = [
         path: '/lookList',
         hidden: true,
         name: 'lookList',
-        component: () => import('@/views/patient_management/patient_management/index'),
+        component: () => import('@/views/patient_management/patient_management/DECG12YXD'),
         meta: {title: '监测列表'}
       }
     ]
