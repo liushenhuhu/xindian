@@ -194,7 +194,7 @@ public class PatientManagementController extends BaseController {
     public AjaxResult getPatientManagementByPhone(@PathVariable String patientPhone) {
         PatientManagement patientManagement = new PatientManagement();
         patientManagement.setPatientPhone(patientPhone);
-        List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementList(patientManagement);
+        List<PatientManagement> patientManagements = patientManagementService.selectListOrderByTime(patientManagement);
         return AjaxResult.success(patientManagements);
     }
 
