@@ -117,7 +117,7 @@ public class PatientManagement extends BaseEntity {
     /**
      * 心电种类（静态动态）
      */
-    @Excel(name = "心电种类", readConverterExp = "静=态动态")
+    @Excel(name = "心电种类")
     private String ecgType;
 
     /**

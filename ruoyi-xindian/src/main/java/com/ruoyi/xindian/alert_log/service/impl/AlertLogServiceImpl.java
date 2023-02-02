@@ -111,5 +111,15 @@ public class AlertLogServiceImpl implements IAlertLogService
         return alertLogMapper.updateAno(userId, pId);
     }
 
+    @Override
+    public List<AlertLog> selectAlertLogList12(AlertLog alertLog) {
+        return alertLogMapper.selectAlertLogList12(alertLog);
+    }
+
+    @Override
+    public List<AlertLog> selectAlertLogListSingle(AlertLog alertLog) {
+        return alertLogMapper.selectAlertLogListSingle(alertLog);
+    }
+
 
 }

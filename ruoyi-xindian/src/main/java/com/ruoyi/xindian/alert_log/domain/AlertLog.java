@@ -91,6 +91,12 @@ public class AlertLog extends BaseEntity
     @Excel(name = "患者性别")
     private String patientSex;
 
+    /**
+     * 心电种类（静态动态）
+     */
+    @Excel(name = "心电种类", readConverterExp = "静态动态")
+    private String ecgType;
+
     private Integer userId;
 
 

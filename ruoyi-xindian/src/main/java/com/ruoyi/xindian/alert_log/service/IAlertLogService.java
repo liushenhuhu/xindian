@@ -66,4 +66,20 @@ public interface IAlertLogService {
     public int insertAnoUser(String userId, String pId);
 
     public int updateAno(String userId, String pId);
+
+    /**
+     * 查询预警日志列表
+     *
+     * @param alertLog 预警日志
+     * @return 预警日志集合
+     */
+    public List<AlertLog> selectAlertLogList12(AlertLog alertLog);
+
+    /**
+     * 查询预警日志列表
+     *
+     * @param alertLog 预警日志
+     * @return 预警日志集合
+     */
+    public List<AlertLog> selectAlertLogListSingle(AlertLog alertLog);
 }
