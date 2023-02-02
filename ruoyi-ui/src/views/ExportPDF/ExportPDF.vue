@@ -3954,7 +3954,7 @@ export default {
     btnUpload() {
       var form = {
         pId: this.pId,
-        diagnosisStatus: '未确定',
+        diagnosisStatus: 0,
         reportType: this.ecg_type,
         diagnosisConclusion: this.froms.textarea.text1,
         reportTime: this.dataTime,
