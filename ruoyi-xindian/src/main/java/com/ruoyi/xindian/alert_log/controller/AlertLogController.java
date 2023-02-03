@@ -52,12 +52,12 @@ public class AlertLogController extends BaseController {
             String hospitalName = sysUser.getHospitalName();
             alertLog.setHospitalName(hospitalName);
             startPage();
-            if (alertLog.getEcgType().equals("12")) {
+            if (null == alertLog.getEcgType()) {
+                list = alertLogService.selectAlertLogList(alertLog);
+            } else if (alertLog.getEcgType().equals("12")) {
                 list = alertLogService.selectAlertLogList12(alertLog);
             } else if (alertLog.getEcgType().equals("single")) {
                 list = alertLogService.selectAlertLogListSingle(alertLog);
-            } else {
-                list = alertLogService.selectAlertLogList(alertLog);
             }
         } else if (getDeptId() == 106) {
             Long userId = getUserId();
@@ -66,12 +66,12 @@ public class AlertLogController extends BaseController {
             list = alertLogService.selectAnoListByUserId(alertLog);
         } else {
             startPage();
-            if (alertLog.getEcgType().equals("12")) {
+            if (null == alertLog.getEcgType()) {
+                list = alertLogService.selectAlertLogList(alertLog);
+            } else if (alertLog.getEcgType().equals("12")) {
                 list = alertLogService.selectAlertLogList12(alertLog);
             } else if (alertLog.getEcgType().equals("single")) {
                 list = alertLogService.selectAlertLogListSingle(alertLog);
-            } else {
-                list = alertLogService.selectAlertLogList(alertLog);
             }
         }
         return getDataTable(list);
