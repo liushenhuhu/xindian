@@ -266,7 +266,7 @@
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
 
 export default {
-  name: "Alert_log",
+  name: "log",
   dicts: ['sex', 'if_status'],
   data() {
     return {
@@ -302,7 +302,8 @@ export default {
         pId: null,
         patientName: null,
         hospitalName: null,
-        anoStatus: null
+        anoStatus: null,
+        ecgType: null
       },
       // 表单参数
       form: {},
@@ -318,17 +319,11 @@ export default {
     };
   },
   created() {
-    if (this.$route.query.pId) {
-      this.queryParams.pId = this.$route.query.pId;
+    if (this.$route.params.pId) {
+      this.queryParams.pId = this.$route.params.pId;
     }
     this.getList();
   },
-  /*  activated() {
-      if (this.$route.query.pId) {
-        this.queryParams.pId = this.$route.query.pId;
-      }
-      this.getList();
-    },*/
   methods: {
     /** 查询预警日志列表 */
     getList() {

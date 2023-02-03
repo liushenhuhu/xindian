@@ -217,7 +217,7 @@
             size="mini"
             type="text"
             icon="el-icon-loading"
-            @click="monitoring(scope.row)"
+            @click="monitoring(scope.row);isRed1=!isRed1"
             v-hasPermi="['patient:patient:monitoring']"
           >实时监测
           </el-button>
@@ -225,7 +225,7 @@
             size="mini"
             type="text"
             icon="el-icon-download"
-            @click="handleInform(scope.row)"
+            @click="isRed2=!isRed2;handleInform(scope.row)"
             v-hasPermi="['patient:patient:downloadInform']"
           >生成报告
           </el-button>
@@ -233,7 +233,7 @@
             size="mini"
             type="text"
             icon="el-icon-magic-stick"
-            @click="downloadInform(scope.row)"
+            @click="isRed3=!isRed3;downloadInform(scope.row)"
             v-hasPermi="['patient:patient:inform']"
           >下载报告
           </el-button>
@@ -241,7 +241,7 @@
             size="mini"
             type="text"
             icon="el-icon-s-order"
-            @click="handleAlert(scope.row)"
+            @click="isRed4=!isRed4;handleAlert(scope.row)"
             v-hasPermi="['patient:patient:alert']"
           >预警日志
           </el-button>
@@ -249,7 +249,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleUpdate(scope.row);isRed5=!isRed5"
             v-hasPermi="['patient_management:patient_management:edit']"
           >修改
           </el-button>
@@ -379,6 +379,11 @@ export default {
         ecgType: 'DECGsingleZZ',
         doctorPhone: null
       },
+      isRed1: false,
+      isRed2: false,
+      isRed3: false,
+      isRed4: false,
+      isRed5: false,
       // 表单参数
       form: {},
       // 表单校验
@@ -527,7 +532,9 @@ export default {
     },
     /** 跳转到预警日志*/
     handleAlert(row) {
-      this.$router.push({path: "/log", query: {pId: row.pId}});
+      this.$router.push({
+        name: "log",
+        params: {pId: row.pId}});
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {
@@ -569,3 +576,13 @@ export default {
   }
 };
 </script>
+
+<style type="text/css">
+.red {
+  color: red;
+}
+
+.blue {
+  color: blue;
+}
+</style>
