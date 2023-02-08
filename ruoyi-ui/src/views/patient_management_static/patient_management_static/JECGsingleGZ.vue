@@ -309,9 +309,9 @@
             icon="el-icon-s-order"
             @click="lookECG(scope.row)"
             v-hasPermi="['patient:patient:alert']"
-          >查看心电图
+          >查看报告
           </el-button>
-          <el-button
+<!--          <el-button
             size="mini"
             type="text"
             icon="el-icon-download"
@@ -326,7 +326,7 @@
             @click="downloadInform(scope.row)"
             v-hasPermi="['patient:patient:inform']"
           >下载报告
-          </el-button>
+          </el-button>-->
           <el-button
             size="mini"
             type="text"
