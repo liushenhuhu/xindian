@@ -10,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,7 +26,6 @@ import java.util.*;
 @CrossOrigin
 @Log4j
 public class PdfDownloadController extends BaseController {
-
 
     @Autowired
     private IPdfPathService pdfPathService;
@@ -133,5 +136,32 @@ public class PdfDownloadController extends BaseController {
         return AjaxResult.success(map);
     }
 
+    @GetMapping("/preview/{pId}")
+    public void pdfStreamHandler(HttpServletRequest request, HttpServletResponse response, @PathVariable("pId") String pId) {
+        //PDF文件地址
+//        File file = new File("/repository/DECG/report/fcea3150-cf9d-4f98-bdd5-395aa4405825/fcea3150-cf9d-4f98-bdd5-395aa4405825.pdf");
+        System.out.println(pId);
+        File file = new File("C:\\Users\\Lenovo\\Desktop\\fcea3150-cf9d-4f98-bdd5-395aa4405825.pdf");
+        if (file.exists()) {
+            byte[] data = null;
+            FileInputStream input=null;
+            try {
+                input= new FileInputStream(file);
+                data = new byte[input.available()];
+                input.read(data);
+                response.getOutputStream().write(data);
+            } catch (Exception e) {
+                System.out.println("pdf文件处理异常：" + e);
+            }finally{
+                try {
+                    if(input!=null){
+                        input.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
