@@ -70,7 +70,7 @@
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
         </where>
-        order by if(isnull(ecg_level),1,0), ecg_level, online_status desc, connection_time desc
+        order by online_status desc, connection_time desc
     </select>
 
     <select id="selectListOrderByTime" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -153,7 +153,7 @@
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
 
         </where>
-        order by if(isnull(ecg_level),1,0), ecg_level, online_status desc, connection_time desc
+        order by online_status desc, connection_time desc
     </select>
 
     <select id="selectPatientManagementByPId" parameterType="String" resultMap="PatientManagementResult">
