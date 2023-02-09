@@ -341,7 +341,7 @@ import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 
 export default {
-  name: "Patient_management",
+  name: "lookList",
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type'],
   data() {
     return {
@@ -376,7 +376,7 @@ export default {
         patientName: null,
         patientPhone: null,
         patientCode: null,
-        ecgType: 'DECG1',
+        ecgType: null,
         doctorPhone: null
       },
       // 表单参数
@@ -401,15 +401,13 @@ export default {
   },
 
   created() {
-    if (this.$route.params.patientName) {
-      this.queryParams.patientName = this.$route.params.patientName;
+    if (this.$route.params.patientPhone) {
       this.queryParams.patientPhone = this.$route.params.patientPhone;
     }
     this.getList();
   },
   activated() {
-    if (this.$route.params.patientName) {
-      this.queryParams.patientName = this.$route.params.patientName;
+    if (this.$route.params.patientPhone) {
       this.queryParams.patientPhone = this.$route.params.patientPhone;
     }
     this.getList();
@@ -451,7 +449,7 @@ export default {
         patientName: null,
         patientPhone: null,
         patientCode: null,
-        ecgType: 'DECG12YXD',
+        ecgType: null,
         doctorPhone: null
       };
       this.resetForm("form");

@@ -504,7 +504,7 @@ export default {
     lookList(row) {
       this.$router.push({
         name: "lookList",
-        params: {patientName: row.patientName, patientPhone: row.patientPhone}
+        params: {patientPhone: row.patientPhone}
       });
     },
 
