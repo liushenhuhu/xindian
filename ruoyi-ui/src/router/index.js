@@ -133,7 +133,19 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '',
+    component: Layout,
+    children: [
+      {
+        path: '/static_single',
+        hidden: true,
+        name: 'static_single',
+        component: () => import('@/views/staticECG/staticECG'),
+        meta: {title: '静态单导心电图'}
+      }
+    ]
+  },
   {
     path: '',
     component: Layout,

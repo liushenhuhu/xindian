@@ -342,7 +342,7 @@
             </div>
             <div class="box6">
               <div class="box6-top clearfix">
-                <h2>房颤/房扑分析</h2>
+                <h2>房颤分析</h2>
                 <span style="margin-left: 7vw;">
                   总数:
                   <strong>{{ froms.atrialFibrillationAnalysis.total }}</strong> 次
@@ -361,10 +361,9 @@
                   </div>
                   <div></div>
                 </div>
-
                 <div class="box6-1">
                   <div>
-                    房颤总时长（秒）:
+                    房颤总时长:
                     <strong>{{ froms.atrialFibrillationAnalysis.duration }}</strong>
                   </div>
                   <div>
@@ -376,7 +375,7 @@
                 </div>
                 <div class="box6-1">
                   <div>
-                    房扑总时长（秒）:
+                    房扑总时长:
                     <strong>{{ froms.atrialFibrillationAnalysis.totaltiemfangpu }}</strong>
                   </div>
                   <div></div>
@@ -384,55 +383,55 @@
               </div>
 
             </div>
-<!--            <div class="box7">-->
-<!--              <div class="box7-top">-->
-<!--                <h2>起搏分析</h2>-->
-<!--                <span>-->
-<!--                  总数:-->
-<!--                  <strong>{{ froms.pacingAnalysis.total }}</strong> 次-->
-<!--                </span>-->
-<!--                <span>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.pacingAnalysisPercentage }}</strong> %-->
-<!--                </span>-->
-<!--              </div>-->
-<!--              <div class="box7-1">-->
-<!--                <div>-->
-<!--                  心房起搏数:-->
-<!--                  <strong>{{ froms.pacingAnalysis.atrialPace }}</strong>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.atrialPacePercentage }}</strong> %-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  双腔起搏:-->
-<!--                  <strong>{{ froms.pacingAnalysis.dual_chamberPacing }}</strong>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.dual_chamberPacingPercentage }}</strong> %-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="box7-1">-->
-<!--                <div>-->
-<!--                  心室起搏数:-->
-<!--                  <strong>{{ froms.pacingAnalysis.ventricularPace }}</strong>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.ventricularPacePercentage }}</strong> %-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  错误起搏:-->
-<!--                  <strong>{{ froms.pacingAnalysis.wrongPacing }}</strong>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.wrongPacingPercentage }}</strong> %-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
+            <div class="box7">
+              <div class="box7-top">
+                <h2>起搏分析</h2>
+                <span>
+                  总数:
+                  <strong>{{ froms.pacingAnalysis.total }}</strong> 次
+                </span>
+                <span>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.pacingAnalysisPercentage }}</strong> %
+                </span>
+              </div>
+              <div class="box7-1">
+                <div>
+                  心房起搏数:
+                  <strong>{{ froms.pacingAnalysis.atrialPace }}</strong>
+                </div>
+                <div>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.atrialPacePercentage }}</strong> %
+                </div>
+                <div>
+                  双腔起搏:
+                  <strong>{{ froms.pacingAnalysis.dual_chamberPacing }}</strong>
+                </div>
+                <div>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.dual_chamberPacingPercentage }}</strong> %
+                </div>
+              </div>
+              <div class="box7-1">
+                <div>
+                  心室起搏数:
+                  <strong>{{ froms.pacingAnalysis.ventricularPace }}</strong>
+                </div>
+                <div>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.ventricularPacePercentage }}</strong> %
+                </div>
+                <div>
+                  错误起搏:
+                  <strong>{{ froms.pacingAnalysis.wrongPacing }}</strong>
+                </div>
+                <div>
+                  百分比:
+                  <strong>{{ froms.pacingAnalysis.wrongPacingPercentage }}</strong> %
+                </div>
+              </div>
+            </div>
             <div class="box8 clearfix">
               <h2>结论:</h2>
               <div class="box8-1">
@@ -1151,9 +1150,9 @@ export default {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
         console.log(response.data)
-        // this.froms.textarea.text1 = response.data.diagnosisConclusion
-        // this.doctorName = response.data.diagnosisDoctor
-        // this.diagnosisData = response.data.reportTime
+        this.froms.textarea.text1 = response.data.diagnosisConclusion
+        this.doctorName = response.data.diagnosisDoctor
+        this.diagnosisData = response.data.reportTime
         console.log("-------------------------------")
         console.log(this.diagnosisData)
       });
@@ -1678,29 +1677,54 @@ export default {
     //0-6
     line3() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
-        "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
-        "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H_All
       };
-      console.log(obj.fangpudata)
-      console.log(obj.fangchandata)
       console.log(obj.data)
-      var dataAll0=obj.fangpudata[1].concat(obj.data[1].concat(obj.fangchandata[1]))
-      // var dataAll0=obj.fangchandata[0]
-
-
-
       var dom = document.getElementById('line3');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
       });
+      var app = {};
       var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5)))
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
       var datax=[];
+      var datay=[];
       for (var i=0;i<=6*60;i++){
         datax.push(i)
       }
-
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
       var option1=[]
       var temp
       for(i=0;i<24;i++)
@@ -1713,7 +1737,6 @@ export default {
         {
           temp=i+":00"
         }
-        console.log(temp)
         option1.push(
           {
             xAxis: i*60,
@@ -1728,7 +1751,7 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '0-6时1分钟平均心率图',
+            text: '0-6时心率变化图',
             left: '1%'
           },
           tooltip: {
@@ -1819,7 +1842,7 @@ export default {
             name: '0-6时心率变化图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
-            data: dataAll0,
+            data: data2,
             // data: data.map(function (item) {
             //   return item[1];
             // }),
@@ -1898,27 +1921,57 @@ export default {
     //6-12
     line4() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
-        "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
-        "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H_All
       };
-      var dataAll1=obj.fangpudata[2].concat(obj.data[2].concat(obj.fangchandata[2]))
-      console.log(obj.data[1])
+
       var dom = document.getElementById('line4');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
       });
+      var app = {};
       var option;
-
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-6*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
       var datax=[];
+      var datay=[];
       for (var i=6*60;i<=12*60;i++){
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
-
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
       var option1=[]
       var temp
       for(i=6;i<=12;i++)
@@ -2024,10 +2077,10 @@ export default {
             }
           },
           series: {
-            name: '6-12时1分钟平均心率图',
+            name: '6-12时心率变化图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
-            data: dataAll1,
+            data: data2,
             // data: data.map(function (item) {
             //   return item[1];
             // }),
@@ -2106,25 +2159,57 @@ export default {
     //12-18
     line5() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
-        "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
-        "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H_All
       };
-      var dataAll2=obj.fangpudata[3].concat(obj.data[3].concat(obj.fangchandata[3]))
-      console.log(obj.data[2])
+
       var dom = document.getElementById('line5');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
       });
+      var app = {};
       var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-12*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
       var datax=[];
+      var datay=[];
       for (var i=12*60;i<=18*60;i++){
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
       var option1=[]
       var temp
       for(i=12;i<=18;i++)
@@ -2230,10 +2315,10 @@ export default {
             }
           },
           series: {
-            name: '12-18时1分钟平均心率图',
+            name: '12-18时心率变化图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
-            data: dataAll2,
+            data: data2,
             // data: data.map(function (item) {
             //   return item[1];
             // }),
@@ -2312,25 +2397,57 @@ export default {
     //18-24
     line6(){
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
-        "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
-        "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H_All
       };
-      var dataAll3=obj.fangpudata[4].concat(obj.data[4].concat(obj.fangchandata[4]))
-      console.log(obj.data[3])
+
       var dom = document.getElementById('line6');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
       });
+      var app = {};
       var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-18*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
       var datax=[];
+      var datay=[];
       for (var i=18*60;i<=24*60;i++){
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
       var option1=[]
       var temp
       for(i=18;i<=24;i++)
@@ -2357,7 +2474,7 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '18-24时1分钟平均心率图',
+            text: '18-24时心率变化图',
             left: '1%'
           },
           tooltip: {
@@ -2438,10 +2555,10 @@ export default {
             }
           },
           series: {
-            name: '18-24时1分钟平均心率图',
+            name: '18-24时心率变化图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
-            data: dataAll3,
+            data: data2,
             // data: data.map(function (item) {
             //   return item[1];
             // }),
@@ -2517,24 +2634,57 @@ export default {
       }
       window.addEventListener('resize', myChart.resize);
     },
+
     //25-30
     line7() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
-        "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
-        "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H_All
       };
-      var dataAll4=obj.fangpudata[5].concat(obj.data[5].concat(obj.fangchandata[5]))
-      console.log(obj.data[4])
+
       var dom = document.getElementById('line7');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
       });
+      var app = {};
       var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-24*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
       var datax=[];
+      var datay=[];
       for (var i=0;i<=6*60;i++){
         datax.push(i)
+      }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
       }
       var option1=[]
       var temp
@@ -2562,7 +2712,7 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '0-6时1分钟平均心率图',
+            text: '0-6时心率变化图',
             left: '1%'
           },
           tooltip: {
@@ -2650,10 +2800,10 @@ export default {
             }
           },
           series: {
-            name: '0-6时1分钟平均心率图',
+            name: '0-6时心率变化图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
-            data: dataAll4,
+            data: data2,
             // data: data.map(function (item) {
             //   return item[1];
             // }),
@@ -2732,26 +2882,57 @@ export default {
     //31-36
     line8() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
-        "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
-        "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H_All
       };
-      var dataAll5=obj.fangpudata[6].concat(obj.data[6].concat(obj.fangchandata[6]))
-      console.log(obj.data[5])
+
       var dom = document.getElementById('line8');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
       });
+      var app = {};
       var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-30*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
       var datax=[];
+      var datay=[];
       for (var i=6*60;i<=12*60;i++){
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
-
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
       var option1=[]
       var temp
       for(i=6;i<=12;i++)
@@ -2778,7 +2959,7 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '6-12时1分钟平均心率图',
+            text: '6-12时心率变化图',
             left: '1%'
           },
           tooltip: {
@@ -2857,10 +3038,10 @@ export default {
             }
           },
           series: {
-            name: '6-12时1分钟平均心率图',
+            name: '6-12时心率变化图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
-            data: dataAll5,
+            data: data2,
             // data: data.map(function (item) {
             //   return item[1];
             // }),
@@ -2939,26 +3120,57 @@ export default {
     //12-18
     line9() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
-        "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
-        "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H_All
       };
-      var dataAll6=obj.fangpudata[7].concat(obj.data[7].concat(obj.fangchandata[7]))
-      console.log(obj.data[6])
+
       var dom = document.getElementById('line9');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
       });
+      var app = {};
       var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-36*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
       var datax=[];
+      var datay=[];
       for (var i=12*60;i<=18*60;i++){
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
-
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
       var option1=[]
       var temp
       for(i=12;i<=18;i++)
@@ -2985,7 +3197,7 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '12-18时1分钟平均心率图',
+            text: '12-18时心率变化图',
             left: '1%'
           },
           tooltip: {
@@ -3064,10 +3276,10 @@ export default {
             }
           },
           series: {
-            name: '12-18时1分钟平均心率图',
+            name: '12-18时心率变化图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
-            data: dataAll6,
+            data: data2,
             // data: data.map(function (item) {
             //   return item[1];
             // }),
@@ -3146,26 +3358,57 @@ export default {
     //18-24
     line10(){
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
-        "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
-        "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartsTime_mean_6H_All
       };
-      var dataAll7=obj.fangpudata[8].concat(obj.data[8].concat(obj.fangchandata[8]))
-      console.log(obj.data[7])
+
       var dom = document.getElementById('line10');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
         useDirtyRect: false
       });
-
+      var app = {};
       var option;
+      var data = obj.data
+      var time=data.map(function (item) {
+        return item[0];
+      })
+      var datatime=[];
+      for (var i=0;i<time.length;i++)
+      {
+        datatime.push(parseInt(time[i].slice(0,2))*60+parseInt(time[i].slice(3,5))-42*60)
+      }
+      var temp1;
+      var temp2;
+      for(i=0;i<datatime.length-1;i++){
+        for(var j=0;j<datatime.length- 1 - i;j++){
+          if(datatime[j]>datatime[j+1])
+          {
+            temp1=datatime[j]
+            temp2=data[j];
+            datatime[j]=datatime[j+1]
+            data[j]=data[j+1]
+            datatime[j+1]=temp1
+            data[j+1]=temp2
+          }
+        }
+      }
+      console.log(datatime)
+      time=data.map(function (item) {
+        return item[0];
+      })
       var datax=[];
+      var datay=[];
       for (var i=18*60;i<=24*60;i++){
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
+      var data2=data
+      for(i=0;i<data2.length;i++)
+      {
+        data2[i][0]=datatime[i];
+      }
       var option1=[]
       var temp
       for(i=18;i<=24;i++)
@@ -3192,7 +3435,7 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '18-24时1分钟平均心率图',
+            text: '18-24时心率变化图',
             left: '1%'
           },
           tooltip: {
@@ -3273,10 +3516,10 @@ export default {
             }
           },
           series: {
-            name: '18-24时1分钟平均心率图',
+            name: '18-24时心率变化图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
-            data: dataAll7,
+            data: data2,
             // data: data.map(function (item) {
             //   return item[1];
             // }),
@@ -3356,9 +3599,8 @@ export default {
     //散点图
     drawscatter() {
       var obj = {
-        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.Lorenz_graph
+        "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphLorenz
       }
-      console.log(obj.data)
       var dom = document.getElementById('scatter');
       var myChart = echarts.init(dom, null, {
         renderer: 'canvas',
@@ -3444,7 +3686,7 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_hist_graph
+          data: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.GraphHeartRatesFrequency
 
         },
         yAxis: {
@@ -3505,7 +3747,7 @@ export default {
 
       window.addEventListener('resize', myChart.resize);
     },
-    //NN间期差值直方图
+//NN间期差值直方图
     drawBar2() {
       var dom = document.getElementById('bar2');
       var myChart = echarts.init(dom, null, {
@@ -3784,7 +4026,7 @@ export default {
 }
 
 .main .time {
-  font-size: 10px;
+  font-size: 6px;
   margin-top: 10px;
   margin-left: 65%;
 }
@@ -3832,7 +4074,7 @@ h2 {
 
 .box2 {
   width: 90%;
-  height: 220px;
+  height: 200px;
   margin: 0 auto;
   border: 1px solid black;
   font-size: 13px;
@@ -3941,7 +4183,7 @@ h2 {
 
 .box6 {
   width: 90%;
-  height: 80px;
+  height: 60px;
   margin: 0 auto;
   padding: 2px 5px;
   border: 1px solid black;
