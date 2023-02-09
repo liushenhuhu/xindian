@@ -33,27 +33,27 @@
                   <strong>病人编号:</strong> -
                 </div>
                 <div class="header-1-1">
-                  <strong>HR:</strong> - bpm
+                  <strong>HR:</strong> {{ data.hr }} bpm
                 </div>
                 <div class="header-1-1">
-                  <strong>PR:</strong> - ms
+                  <strong>PR:</strong> {{ data.pr }} ms
                 </div>
               </div>
               <div class="header-1">
                 <div class="header-1-1">
-                  <strong>QRS:</strong> - ms
+                  <strong>QRS:</strong> {{ data.qrs }} ms
                 </div>
                 <div class="header-1-1">
-                  <strong>QT/QTc:</strong> - ms/ - ms
+                  <strong>QT/QTc:</strong> {{ data.qt }} ms/ - ms
                 </div>
                 <div class="header-1-1">
-                  <strong>P/QRS/T:</strong> -/-/- deg
+                  <strong>P/QRS/T:</strong> {{ data.p }}/-/- deg
                 </div>
                 <div class="header-1-1">
-                  <strong>PV5/SV1:</strong> -/- mV
+                  <strong>PV5/SV1:</strong> {{ data.pv5 }}/- mV
                 </div>
                 <div class="header-1-1">
-                  <strong>RV5+SV1:</strong> - mV
+                  <strong>RV5+SV1:</strong> {{ data.rv5 }} mV
                 </div>
               </div>
             </div>
@@ -150,64 +150,64 @@
         </div>
       </div>
 
-      <div  class="lineI" v-show="openI">
-        <div id="I1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openII">
-        <div id="II1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openIII">
-        <div id="III1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openaVR">
-        <div id="aVR1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openaVL">
-        <div id="aVL1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openaVF">
-        <div id="aVF1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openV1">
-        <div id="V11" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openV2">
-        <div id="V22" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openV3">
-        <div id="V33" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openV4">
-        <div id="V44" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openV5">
-        <div id="V55" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
-      <div  class="lineI" v-show="openV6">
-        <div id="V66" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-      </div>
+<!--      <div  class="lineI" v-show="openI">-->
+<!--        <div id="I1" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openII">-->
+<!--        <div id="II1" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openIII">-->
+<!--        <div id="III1" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openaVR">-->
+<!--        <div id="aVR1" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openaVL">-->
+<!--        <div id="aVL1" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openaVF">-->
+<!--        <div id="aVF1" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openV1">-->
+<!--        <div id="V11" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openV2">-->
+<!--        <div id="V22" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openV3">-->
+<!--        <div id="V33" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openV4">-->
+<!--        <div id="V44" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openV5">-->
+<!--        <div id="V55" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
+<!--      <div  class="lineI" v-show="openV6">-->
+<!--        <div id="V66" class="lineshow"></div>-->
+<!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
+<!--      </div>-->
     </div>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">
-      导出PDF
-    </el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnClickPDF">
-      上传PDF
-    </el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">
-      保存数据
-    </el-button>
+<!--    <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">-->
+<!--      导出PDF-->
+<!--    </el-button>-->
+<!--    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnClickPDF">-->
+<!--      上传PDF-->
+<!--    </el-button>-->
+<!--    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">-->
+<!--      保存数据-->
+<!--    </el-button>-->
 
   </div>
 </template>
@@ -221,17 +221,17 @@ import {addReport, getReportByPId, updateReport} from "@/api/report/report";
 import {pdfDownload2} from "@/api/pdf/pdf";
 
 export default {
-  name: "index",
+  name: "static_single",
   data() {
     return {
       exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.patientName + "静态心电报告_" + this.$route.query.pId,
       pId: null,
       data: {
-        name: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.patientName,
-        gender: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.gender,
-        age: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.age,
-        result: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.result,
-        resultByDoctor: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.result,
+        name: "",
+        gender: "",
+        age: "",
+        result: "",
+        resultByDoctor: "",
         dataTime: "",
         doctorName: "",
         diagnosisData: null,
@@ -272,6 +272,7 @@ export default {
     }
   },
   mounted() {
+    this. getall();
     this.I()
     this.II()
     this.III()
@@ -352,7 +353,19 @@ export default {
       this.openV5= false;
       this.openV6= false;
     },
-
+    getall(){
+      this.data.age = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.age
+      this.data.gender = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.gender
+      this.data.name = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.patientName
+      this.data.result = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.intelligent_diagnosis
+      this.data.hr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["平均心率"]
+      this.data.pr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
+      this.data.qrs = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
+      this.data.qt = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
+      this.data.p = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
+      this.data.pv5 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
+      this.data.rv5 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
+    },
     get() {
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
@@ -367,7 +380,7 @@ export default {
       $.ajax({
         type: "post",
         url: "https://screen.mindyard.cn:84/get_jecg_single",
-        asynsc: false,
+        // asynsc: false,
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
@@ -400,12 +413,15 @@ export default {
 
     I() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
+      var HR = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["平均心率"]
+      console.log(HR)
+      console.log(data)
       var x = new Array();
       function getNewArray (array, subGroupLength) {
-        let index = 0;
+        let i = 0;
         let newArray = [];
-        while(index < array.length) {
-          newArray.push(array.slice(index, index += subGroupLength));
+        while(i < array.length) {
+          newArray.push(array.slice(i, i += subGroupLength));
         }
         return newArray;
       }
@@ -414,10 +430,11 @@ export default {
       for (var i = 0; i < nArr[0].length; i++) {
         x.push(i);
       }
+      console.log(x)
       var ecgBc = echarts.init(document.getElementById("I"));
       var option = {
         title: {
-          text: "I",
+          text: "",
           top: 5,
           left: 5,
         },
@@ -753,10 +770,10 @@ export default {
     II() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
       function getNewArray (array, subGroupLength) {
-        let index = 0;
+        let i = 0;
         let newArray = [];
-        while(index < array.length) {
-          newArray.push(array.slice(index, index += subGroupLength));
+        while(i < array.length) {
+          newArray.push(array.slice(i, i += subGroupLength));
         }
         return newArray;
       }
@@ -769,7 +786,7 @@ export default {
       var ecgBc = echarts.init(document.getElementById("II"));
       var option = {
         title: {
-          text: "II",
+          text: "",
           top: 5,
           left: 5,
         },
@@ -1109,10 +1126,10 @@ export default {
     III() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
       function getNewArray (array, subGroupLength) {
-        let index = 0;
+        let i = 0;
         let newArray = [];
-        while(index < array.length) {
-          newArray.push(array.slice(index, index += subGroupLength));
+        while(i < array.length) {
+          newArray.push(array.slice(i, i += subGroupLength));
         }
         return newArray;
       }
@@ -1125,7 +1142,7 @@ export default {
       var ecgBc = echarts.init(document.getElementById("III"));
       var option = {
         title: {
-          text: "III",
+          text: "",
           top: 5,
           left: 5,
         },
@@ -1463,10 +1480,10 @@ export default {
     aVR() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
       function getNewArray (array, subGroupLength) {
-        let index = 0;
+        let i = 0;
         let newArray = [];
-        while(index < array.length) {
-          newArray.push(array.slice(index, index += subGroupLength));
+        while(i < array.length) {
+          newArray.push(array.slice(i, i += subGroupLength));
         }
         return newArray;
       }
@@ -1479,7 +1496,7 @@ export default {
       var ecgBc = echarts.init(document.getElementById("aVR"));
       var option = {
         title: {
-          text: "IV",
+          text: "",
           top: 5,
           left: 5,
         },
@@ -1817,10 +1834,10 @@ export default {
     aVL() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
       function getNewArray (array, subGroupLength) {
-        let index = 0;
+        let i = 0;
         let newArray = [];
-        while(index < array.length) {
-          newArray.push(array.slice(index, index += subGroupLength));
+        while(i < array.length) {
+          newArray.push(array.slice(i, i += subGroupLength));
         }
         return newArray;
       }
@@ -1833,7 +1850,7 @@ export default {
       var ecgBc = echarts.init(document.getElementById("aVL"));
       var option = {
         title: {
-          text: "V",
+          text: "",
           top: 5,
           left: 5,
         },
@@ -2171,10 +2188,10 @@ export default {
     aVF() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
       function getNewArray (array, subGroupLength) {
-        let index = 0;
+        let i = 0;
         let newArray = [];
-        while(index < array.length) {
-          newArray.push(array.slice(index, index += subGroupLength));
+        while(i < array.length) {
+          newArray.push(array.slice(i, i += subGroupLength));
         }
         return newArray;
       }
@@ -2187,7 +2204,7 @@ export default {
       var ecgBc = echarts.init(document.getElementById("aVF"));
       var option = {
         title: {
-          text: "VI",
+          text: "",
           top: 5,
           left: 5,
         },
@@ -4602,8 +4619,8 @@ export default {
 }
 
 .line {
-  height: 4.2vw;
-  width: 98%;
+  height: 4.95vw;
+  width: 49.35vw;
   margin: 0;
   padding: 0;
 
