@@ -32,6 +32,17 @@ public class PdfPathServiceImpl implements IPdfPathService
     }
 
     /**
+     * 查询pdf保存路径
+     *
+     * @return pdf保存路径
+     */
+    @Override
+    public PdfPath selectPdfPathByPId(String pId)
+    {
+        return pdfPathMapper.selectPdfPathByPId(pId);
+    }
+
+    /**
      * 查询pdf保存路径列表
      * 
      * @param pdfPath pdf保存路径

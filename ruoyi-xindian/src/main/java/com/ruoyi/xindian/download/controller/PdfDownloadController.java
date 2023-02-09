@@ -141,6 +141,10 @@ public class PdfDownloadController extends BaseController {
         //PDF文件地址
 //        File file = new File("/repository/DECG/report/fcea3150-cf9d-4f98-bdd5-395aa4405825/fcea3150-cf9d-4f98-bdd5-395aa4405825.pdf");
         System.out.println(pId);
+        PdfPath pdfPath = pdfPathService.selectPdfPathByPId(pId);
+        String path = pdfPath.getPdfPath();
+        System.out.println(path);
+
         File file = new File("C:\\Users\\Lenovo\\Desktop\\fcea3150-cf9d-4f98-bdd5-395aa4405825.pdf");
         if (file.exists()) {
             byte[] data = null;

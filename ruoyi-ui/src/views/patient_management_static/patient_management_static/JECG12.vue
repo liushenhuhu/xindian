@@ -636,7 +636,6 @@ export default {
     downloadInform(row) {
       let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
-
     }
   }
 };
