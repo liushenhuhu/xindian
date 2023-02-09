@@ -20,6 +20,13 @@ public interface IPdfPathService
     public PdfPath selectPdfPathByPathId(Long pathId);
 
     /**
+     * 查询pdf保存路径
+     *
+     * @return pdf保存路径
+     */
+    public PdfPath selectPdfPathByPId(String pId);
+
+    /**
      * 查询pdf保存路径列表
      * 
      * @param pdfPath pdf保存路径

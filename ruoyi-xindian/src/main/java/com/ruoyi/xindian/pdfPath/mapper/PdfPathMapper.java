@@ -58,4 +58,6 @@ public interface PdfPathMapper
      * @return 结果
      */
     public int deletePdfPathByPathIds(Long[] pathIds);
+
+    PdfPath selectPdfPathByPId(String pId);
 }

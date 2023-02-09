@@ -28,6 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectPdfPathVo"/>
         where path_id = #{pathId}
     </select>
+
+    <select id="selectPdfPathByPId" parameterType="string" resultMap="PdfPathResult">
+        <include refid="selectPdfPathVo"/>
+        where p_id = #{pId}
+    </select>
         
     <insert id="insertPdfPath" parameterType="PdfPath" useGeneratedKeys="true" keyProperty="pathId">
         insert into pdf_path
