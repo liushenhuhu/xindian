@@ -376,7 +376,7 @@ export default {
         patientName: null,
         patientPhone: null,
         patientCode: null,
-        ecgType: 'DECGsingleZZ',
+        ecgType: 'DECGsingle',
         doctorPhone: null
       },
       isRed1: false,
