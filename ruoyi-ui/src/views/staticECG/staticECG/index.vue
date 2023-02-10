@@ -199,15 +199,15 @@
 <!--        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>-->
 <!--      </div>-->
     </div>
-<!--    <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">-->
-<!--      导出PDF-->
-<!--    </el-button>-->
-<!--    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnClickPDF">-->
-<!--      上传PDF-->
-<!--    </el-button>-->
-<!--    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">-->
-<!--      保存数据-->
-<!--    </el-button>-->
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">
+      导出PDF
+    </el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnClickPDF">
+      上传PDF
+    </el-button>
+    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">
+      保存数据
+    </el-button>
 
   </div>
 </template>
@@ -413,10 +413,15 @@ export default {
 
     I() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
-      var HR = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["平均心率"]
-      console.log(HR)
       console.log(data)
-      var x = new Array();
+      console.log(data.length)
+      // if(data.length<2000){
+      //   for(var k=data.length;k<2000-data.length;k++){
+      //     data[k]=0;
+      //     console.log(k)
+      //   }
+      // }
+      var x = [];
       function getNewArray (array, subGroupLength) {
         let i = 0;
         let newArray = [];
@@ -427,7 +432,7 @@ export default {
       }
       var nArr= getNewArray(data, 2000);
       console.log(nArr)
-      for (var i = 0; i < nArr[0].length; i++) {
+      for (var i = 0; i < 2000; i++) {
         x.push(i);
       }
       console.log(x)
@@ -448,15 +453,16 @@ export default {
         xAxis: {
           type: 'category',
           data: x,
+          // position:"bottom",
           axisLabel: {
-            show: true,
-            interval: 4,
+            show: false,//x 轴刻度数字
+            interval: 4,//中间隔4个数字
           },
           axisTick: {
-            show: false
+            show: false//x轴刻度线
           },
           axisLine: {
-            show: false
+            show: false//x轴线
           },
           splitLine: {
             show: true, //让网格显示
@@ -470,7 +476,7 @@ export default {
         yAxis: {
           type: 'value',
           axisLabel: {
-            show: true,
+            show: false,
           },
           axisTick: {
             show: false
@@ -510,10 +516,9 @@ export default {
               lineStyle: {
                 type: "solid",
                 color: '#b33939',
-                width: 0.5
+                width: 1
               },
               label: {
-
                 position: 'start', // 表现内容展示的位置
                 color: '#b33939'  // 展示内容颜色
               },
@@ -778,9 +783,8 @@ export default {
         return newArray;
       }
       var nArr= getNewArray(data, 2000);
-      console.log(nArr)
       var x = new Array();
-      for (var i = 0; i < nArr[0].length; i++) {
+      for (var i = 0; i < 2000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("II"));
@@ -862,7 +866,7 @@ export default {
               lineStyle: {
                 type: "solid",
                 color: '#b33939',
-                width: 0.5
+                width: 1
               },
               label: {
 
@@ -1134,9 +1138,8 @@ export default {
         return newArray;
       }
       var nArr= getNewArray(data, 2000);
-      console.log(nArr)
       var x = new Array();
-      for (var i = 0; i < nArr[0].length; i++) {
+      for (var i = 0; i < 2000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("III"));
@@ -1218,7 +1221,7 @@ export default {
               lineStyle: {
                 type: "solid",
                 color: '#b33939',
-                width: 0.5
+                width: 1
               },
               label: {
 
@@ -1488,9 +1491,9 @@ export default {
         return newArray;
       }
       var nArr= getNewArray(data, 2000);
-      console.log(nArr)
+
       var x = new Array();
-      for (var i = 0; i < nArr[0].length; i++) {
+      for (var i = 0; i < 2000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVR"));
@@ -1572,7 +1575,7 @@ export default {
               lineStyle: {
                 type: "solid",
                 color: '#b33939',
-                width: 0.5
+                width: 1
               },
               label: {
 
@@ -1842,9 +1845,8 @@ export default {
         return newArray;
       }
       var nArr= getNewArray(data, 2000);
-      console.log(nArr)
       var x = new Array();
-      for (var i = 0; i < nArr[0].length; i++) {
+      for (var i = 0; i < 2000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVL"));
@@ -1926,7 +1928,7 @@ export default {
               lineStyle: {
                 type: "solid",
                 color: '#b33939',
-                width: 0.5
+                width: 1
               },
               label: {
 
@@ -2196,9 +2198,8 @@ export default {
         return newArray;
       }
       var nArr= getNewArray(data, 2000);
-      console.log(nArr)
       var x = new Array();
-      for (var i = 0; i < nArr[0].length; i++) {
+      for (var i = 0; i <2000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVF"));
@@ -2280,7 +2281,7 @@ export default {
               lineStyle: {
                 type: "solid",
                 color: '#b33939',
-                width: 0.5
+                width: 1
               },
               label: {
 
@@ -4619,8 +4620,8 @@ export default {
 }
 
 .line {
-  height: 4.95vw;
-  width: 49.35vw;
+  height: 4vw;
+  width: 80vw;
   margin: 0;
   padding: 0;
 

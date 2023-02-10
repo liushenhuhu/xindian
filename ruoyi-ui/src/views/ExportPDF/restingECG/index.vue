@@ -44,16 +44,16 @@
                   <strong>QRS:</strong> {{ data.qrs }} ms
                 </div>
                 <div class="header-1-1">
-                  <strong>QT/QTc:</strong> {{ data.qt }} ms/ - ms
+                  <strong>QT/QTc:</strong> {{ data.qt }} ms/ {{ data.qtc }} ms
                 </div>
                 <div class="header-1-1">
-                  <strong>P/QRS/T:</strong> {{ data.p }}/-/- deg
+                  <strong>P/QRS/T:</strong> {{ data.p }}/{{ data.qrs_deg }}/{{ data.t }} deg
                 </div>
                 <div class="header-1-1">
-                  <strong>PV5/SV1:</strong> {{ data.pv5 }}/- mV
+                  <strong>PV5/SV1:</strong> {{ data.pv5 }}/{{ data.sv1 }} mV
                 </div>
                 <div class="header-1-1">
-                  <strong>RV5/SV1:</strong> {{ data.rv5 }} mV
+                  <strong>RV5/SV1:</strong> {{ data.rv5_sv1 }} mV
                 </div>
               </div>
             </div>
@@ -306,7 +306,6 @@ export default {
     clicktrueII(){
       this.openII = !this.openII;
     },
-
     clicktrueIII(){
       this.openIII = !this.openIII;
     },
@@ -377,7 +376,7 @@ export default {
           request.setRequestHeader("user","zzu");
           request.setRequestHeader("password","zzu123");
         },
-        success: function (data) {
+        success: function (data)        {
           console.log(_th.pId)
           console.log(data)
           console.log(JSON.stringify(data))
@@ -403,19 +402,33 @@ export default {
       this.data.name = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.patientName
       this.data.result = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.intelligent_diagnosis
       this.data.hr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["平均心率"]
-      this.data.pr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
-      this.data.qrs = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
-      this.data.qt = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
-      this.data.p = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
-      this.data.pv5 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
-      this.data.rv5 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data[""]
+      this.data.pr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["PR_dis_avg"]
+      if(this.data.pr=="nan")this.data.pr=0
+      this.data.qrs = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QRS_dis_avg"]
+      if(this.data.qrs=="nan")this.data.pr=0
+      this.data.qt = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QT_dis_avg"]
+      if(this.data.qt=="nan")this.data.pr=0
+      this.data.qtc = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QTc2"]
+      if(this.data.qtc=="nan")this.data.pr=0
+      this.data.p = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["P_deg"]
+      if(this.data.p=="nan")this.data.pr=0
+      this.data.qrs_deg = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QRS_deg"]
+      if(this.data.qrs_deg=="nan")this.data.pr=0
+      this.data.t = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["T_deg"]
+      if(this.data.t=="nan")this.data.pr=0
+      this.data.pv5 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["PV5_mv"]
+      if(this.data.pv5=="nan")this.data.pr=0
+      this.data.sv1 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["SV1_mv"]
+      if(this.data.sv1=="nan")this.data.pr=0
+      this.data.rv5_sv1 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["RV5_SV1"]
+      if(this.data.rv5_sv1=="nan")this.data.pr=0
     },
     I() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.I
       console.log(this.pId)
       console.log(data)
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("I"));
@@ -548,174 +561,6 @@ export default {
                 {xAxis: 975},
                 {xAxis: 1000},
 
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-
                 {yAxis: -1},
                 {yAxis: -0.5},
                 {yAxis: 0},
@@ -734,7 +579,7 @@ export default {
     I1() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.I
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("I1"));
@@ -1052,7 +897,7 @@ export default {
     II() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("II"));
@@ -1372,7 +1217,7 @@ export default {
     II1() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("II1"));
@@ -1692,7 +1537,7 @@ export default {
     III() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.III
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("III"));
@@ -2011,7 +1856,7 @@ export default {
     III1() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.III
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("III1"));
@@ -2330,7 +2175,7 @@ export default {
     aVR() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVR
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVR"));
@@ -2649,7 +2494,7 @@ export default {
     aVR1() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVR
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVR1"));
@@ -2967,7 +2812,7 @@ export default {
     aVL() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVL
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVL"));
@@ -3286,7 +3131,7 @@ export default {
     aVL1() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVL
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVL1"));
@@ -3605,7 +3450,7 @@ export default {
     aVF() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVF
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVF"));
@@ -3924,7 +3769,7 @@ export default {
     aVF1() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVF
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("aVF1"));
@@ -4243,7 +4088,7 @@ export default {
     V1() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V1
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V1"));
@@ -4561,7 +4406,7 @@ export default {
     V11() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V1
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V11"));
@@ -4879,7 +4724,7 @@ export default {
     V2() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V2
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V2"));
@@ -5197,7 +5042,7 @@ export default {
     V22() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V2
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V22"));
@@ -5515,7 +5360,7 @@ export default {
     V3() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V3
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V3"));
@@ -5832,7 +5677,7 @@ export default {
     V33() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V3
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V33"));
@@ -6150,7 +5995,7 @@ export default {
     V4() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V4
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V4"));
@@ -6468,7 +6313,7 @@ export default {
     V44() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V4
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V44"));
@@ -6786,7 +6631,7 @@ export default {
     V5() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V5
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V5"));
@@ -7103,7 +6948,7 @@ export default {
     V55() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V5
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V55"));
@@ -7420,7 +7265,7 @@ export default {
     V6() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V6
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V6"));
@@ -7738,7 +7583,7 @@ export default {
     V66() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V6
       var x = new Array();
-      for (var i = 0; i < data.length; i++) {
+      for (var i = 0; i < 1000; i++) {
         x.push(i);
       }
       var ecgBc = echarts.init(document.getElementById("V66"));
@@ -8271,6 +8116,7 @@ export default {
 
 .header-1 .header-1-1 {
   height: 30px;
+  width: 230px;
 }
 
 .box-1-1 {
@@ -8319,8 +8165,8 @@ export default {
 }
 
 .line {
-  height: 100px;
-  width: 98%;
+  height: 4vw;
+  width: 40vw;
   margin: 0;
   padding: 0;
 
@@ -8331,7 +8177,7 @@ export default {
   display: inline-block;
   top: 500px;
   left: 70px;
-  height: 300px;
+  height: 13vw;
   width: 90%;
   background: white;
   border: 2px solid black;
@@ -8339,8 +8185,8 @@ export default {
 }
 
 .lineshow{
-  height: 200px;
-  width: 78em;
+  height: 7.6vw;
+  width: 76vw;
   max-width: 97%;
   margin-left: 1.5em;
   margin-top: 1.5em;
@@ -8351,7 +8197,7 @@ export default {
   position: relative;
   float: right;
   bottom: 1.6em;
-  right: 1.3em;
+  right: 4vw;
   z-index: 2;
 }
 </style>
