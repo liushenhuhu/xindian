@@ -13,10 +13,11 @@
         <result property="reportTime"    column="report_time"    />
         <result property="reportType"    column="report_type"    />
         <result property="intelligentDiagnosis"    column="intelligent_diagnosis"    />
+        <result property="dPhone"    column="d_phone"    />
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis from report
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis, d_phone from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
@@ -29,6 +30,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="reportType != null  and reportType != ''"> and report_type = #{reportType}</if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis = #{intelligentDiagnosis}</if>
+            <if test="dPhone != null  and dPhone != ''"> and d_phone = #{dPhone}</if>
         </where>
     </select>
 
@@ -53,6 +55,7 @@
             <if test="reportTime != null">report_time,</if>
             <if test="reportType != null">report_type,</if>
             <if test="intelligentDiagnosis != null">intelligent_diagnosis,</if>
+            <if test="dPhone != null">d_phone,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pId != null and pId != ''">#{pId},</if>
@@ -62,6 +65,7 @@
             <if test="reportTime != null">#{reportTime},</if>
             <if test="reportType != null">#{reportType},</if>
             <if test="intelligentDiagnosis != null">#{intelligentDiagnosis},</if>
+            <if test="dPhone != null">#{dPhone},</if>
         </trim>
     </insert>
 
@@ -75,6 +79,7 @@
             <if test="reportTime != null">report_time = #{reportTime},</if>
             <if test="reportType != null">report_type = #{reportType},</if>
             <if test="intelligentDiagnosis != null">intelligent_diagnosis = #{intelligentDiagnosis},</if>
+            <if test="dPhone != null">d_phone = #{dPhone},</if>
         </trim>
         where report_id = #{reportId}
     </update>
