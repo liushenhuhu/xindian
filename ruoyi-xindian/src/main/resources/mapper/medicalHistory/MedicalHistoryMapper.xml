@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.medical.mapper.MedicalHistoryMapper">
+    
+    <resultMap type="MedicalHistory" id="MedicalHistoryResult">
+        <result property="medicalHistoryId"    column="medical_history_id"    />
+        <result property="height"    column="height"    />
+        <result property="weight"    column="weight"    />
+        <result property="pastMedicalHistory"    column="past_medical_history"    />
+        <result property="livingHabit"    column="living_habit"    />
+        <result property="patientPhone"    column="patient_phone"    />
+    </resultMap>
+
+    <sql id="selectMedicalHistoryVo">
+        select medical_history_id, height, weight, past_medical_history, living_habit, patient_phone from medical_history
+    </sql>
+
+    <select id="selectMedicalHistoryList" parameterType="MedicalHistory" resultMap="MedicalHistoryResult">
+        <include refid="selectMedicalHistoryVo"/>
+        <where>  
+            <if test="height != null "> and height = #{height}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="pastMedicalHistory != null "> and past_medical_history = #{pastMedicalHistory}</if>
+            <if test="livingHabit != null  and livingHabit != ''"> and living_habit like concat('%', #{livingHabit}, '%')</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone like concat('%', #{patientPhone}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectMedicalHistoryByMedicalHistoryId" parameterType="Long" resultMap="MedicalHistoryResult">
+        <include refid="selectMedicalHistoryVo"/>
+        where medical_history_id = #{medicalHistoryId}
+    </select>
+
+    <select id="selectMedicalHistoryByPatientPhone" parameterType="string" resultMap="MedicalHistoryResult">
+        <include refid="selectMedicalHistoryVo"/>
+        where patient_phone = #{patientPhone}
+    </select>
+
+    <insert id="insertMedicalHistory" parameterType="MedicalHistory" useGeneratedKeys="true" keyProperty="medicalHistoryId">
+        insert into medical_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="height != null">height,</if>
+            <if test="weight != null">weight,</if>
+            <if test="pastMedicalHistory != null">past_medical_history,</if>
+            <if test="livingHabit != null">living_habit,</if>
+            <if test="patientPhone != null">patient_phone,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="height != null">#{height},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="pastMedicalHistory != null">#{pastMedicalHistory},</if>
+            <if test="livingHabit != null">#{livingHabit},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMedicalHistory" parameterType="MedicalHistory">
+        update medical_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="height != null">height = #{height},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="pastMedicalHistory != null">past_medical_history = #{pastMedicalHistory},</if>
+            <if test="livingHabit != null">living_habit = #{livingHabit},</if>
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+        </trim>
+        where medical_history_id = #{medicalHistoryId}
+    </update>
+
+    <delete id="deleteMedicalHistoryByMedicalHistoryId" parameterType="Long">
+        delete from medical_history where medical_history_id = #{medicalHistoryId}
+    </delete>
+
+    <delete id="deleteMedicalHistoryByMedicalHistoryIds" parameterType="String">
+        delete from medical_history where medical_history_id in 
+        <foreach item="medicalHistoryId" collection="array" open="(" separator="," close=")">
+            #{medicalHistoryId}
+        </foreach>
+    </delete>
+</mapper>

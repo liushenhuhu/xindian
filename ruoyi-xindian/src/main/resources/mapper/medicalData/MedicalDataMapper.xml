@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.medical.mapper.MedicalDataMapper">
+    
+    <resultMap type="MedicalData" id="MedicalDataResult">
+        <result property="medicalDataId"    column="medical_data_id"    />
+        <result property="medicalName"    column="medical_name"    />
+        <result property="medicalCode"    column="medical_code"    />
+    </resultMap>
+
+    <sql id="selectMedicalDataVo">
+        select medical_data_id, medical_name, medical_code from medical_data
+    </sql>
+
+    <select id="selectMedicalDataList" parameterType="MedicalData" resultMap="MedicalDataResult">
+        <include refid="selectMedicalDataVo"/>
+        <where>  
+            <if test="medicalName != null  and medicalName != ''"> and medical_name like concat('%', #{medicalName}, '%')</if>
+            <if test="medicalCode != null "> and medical_code = #{medicalCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectMedicalDataByMedicalDataId" parameterType="Long" resultMap="MedicalDataResult">
+        <include refid="selectMedicalDataVo"/>
+        where medical_data_id = #{medicalDataId}
+    </select>
+        
+    <insert id="insertMedicalData" parameterType="MedicalData" useGeneratedKeys="true" keyProperty="medicalDataId">
+        insert into medical_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="medicalName != null">medical_name,</if>
+            <if test="medicalCode != null">medical_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="medicalName != null">#{medicalName},</if>
+            <if test="medicalCode != null">#{medicalCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMedicalData" parameterType="MedicalData">
+        update medical_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="medicalName != null">medical_name = #{medicalName},</if>
+            <if test="medicalCode != null">medical_code = #{medicalCode},</if>
+        </trim>
+        where medical_data_id = #{medicalDataId}
+    </update>
+
+    <delete id="deleteMedicalDataByMedicalDataId" parameterType="Long">
+        delete from medical_data where medical_data_id = #{medicalDataId}
+    </delete>
+
+    <delete id="deleteMedicalDataByMedicalDataIds" parameterType="String">
+        delete from medical_data where medical_data_id in 
+        <foreach item="medicalDataId" collection="array" open="(" separator="," close=")">
+            #{medicalDataId}
+        </foreach>
+    </delete>
+</mapper>
