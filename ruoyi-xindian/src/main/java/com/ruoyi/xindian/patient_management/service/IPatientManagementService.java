@@ -2,6 +2,7 @@ package com.ruoyi.xindian.patient_management.service;
 
 import java.util.List;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 
 /**
  * 患者管理Service接口
@@ -68,4 +69,6 @@ public interface IPatientManagementService
     void updateStatusAll();
 
     void updateStatus(String[] pIds);
+
+    public List<SingleHistoryInfo> selectSingleHistoryInfoList(SingleHistoryInfo singleHistoryInfo);
 }

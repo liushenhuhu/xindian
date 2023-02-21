@@ -98,7 +98,15 @@ public class ReportController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Report report)
     {
-        return toAjax(reportService.updateReport(report));
+        String s = report.getpId();
+        Report report1 = reportService.selectReportByPId(s);
+        report1.setDiagnosisDoctor(report.getDiagnosisDoctor());
+        report1.setdPhone(report.getdPhone());
+        if(report.getDiagnosisConclusion()!=null)
+            report1.setDiagnosisConclusion(report.getDiagnosisConclusion());
+        if(report.getDiagnosisStatus()!=null)
+            report1.setDiagnosisStatus(report.getDiagnosisStatus());
+        return toAjax(reportService.updateReport(report1));
     }
 
     /**

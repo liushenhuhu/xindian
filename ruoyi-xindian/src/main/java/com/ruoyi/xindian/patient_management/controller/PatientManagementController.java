@@ -13,6 +13,7 @@ import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -195,5 +196,21 @@ public class PatientManagementController extends BaseController {
         return AjaxResult.success(patientManagements);
     }
 
-
+    @GetMapping("history_info/{patientPhone}")
+    public AjaxResult getHistoryInfoBypatientPhone(@PathVariable String patientPhone) {
+        SingleHistoryInfo Info = new SingleHistoryInfo();
+        Info.setPatientPhone(patientPhone);
+        List<SingleHistoryInfo> infos = patientManagementService.selectSingleHistoryInfoList(Info);
+        for (SingleHistoryInfo info : infos) {
+            if(info.getApBeat()==null) info.setApBeat((long) 0);
+            if(info.getPvBeat()==null) info.setPvBeat((long) 0);
+            if(info.getAtrialFibrillation()==null) info.setAtrialFibrillation((long) 0);
+            if(info.getAtrialFlutter()==null) info.setAtrialFlutter((long) 0);
+            if(info.getLeftBlock()==null) info.setLeftBlock((long) 0);
+            if(info.getRightBlock()==null) info.setRightBlock((long) 0);
+            if(info.getBradycardia()==null) info.setBradycardia((long) 0);
+            if(info.getTachycardia()==null) info.setTachycardia((long) 0);
+        }
+        return AjaxResult.success(infos);
+    }
 }

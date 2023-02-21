@@ -31,6 +31,28 @@
         <result property="ecgLevel"    column="ecg_level"    />
         <result property="doctorPhone"    column="doctor_phone"    />
     </resultMap>
+    <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
+        <result property="ecgId"    column="ecg_id"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="normalEcg"    column="normal_ecg"    />
+        <result property="apBeat"    column="ap_beat"    />
+        <result property="pvBeat"    column="pv_beat"    />
+        <result property="atrialFibrillation"    column="atrial_fibrillation"    />
+        <result property="atrialFlutter"    column="atrial_flutter"    />
+        <result property="leftBlock"    column="left_block"    />
+        <result property="rightBlock"    column="right_block"    />
+        <result property="bradycardia"    column="bradycardia"    />
+        <result property="tachycardia"    column="tachycardia"    />
+    </resultMap>
+    <sql id="selectSingleHistoryInfoVo">
+        select ecg_id, patient_phone, normal_ecg, ap_beat, pv_beat, atrial_fibrillation, atrial_flutter, left_block, right_block, bradycardia, tachycardia from single_history_info
+    </sql>
+    <select id="selectSingleHistoryInfoList" parameterType="SingleHistoryInfo" resultMap="SingleHistoryInfoResult">
+        <include refid="selectSingleHistoryInfoVo"/>
+        <where>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+        </where>
+    </select>
 
     <sql id="selectPatientManagementVo">
         select m.p_id, m.patient_code, m.hospital_code, m.equipment_code,
@@ -232,4 +254,6 @@
             #{pId}
         </foreach>
     </delete>
+
+
 </mapper>

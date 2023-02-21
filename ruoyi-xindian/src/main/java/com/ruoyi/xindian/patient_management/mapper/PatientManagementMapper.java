@@ -2,6 +2,7 @@ package com.ruoyi.xindian.patient_management.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 
 /**
  * 患者管理Mapper接口
@@ -69,5 +70,10 @@ public interface PatientManagementMapper
     public void updateStatusAll();
 
     public void updateStatus(String[] pIds);
+
+    /**
+     * 通过phone获取历史信息
+     */
+    public List<SingleHistoryInfo> selectSingleHistoryInfoList(SingleHistoryInfo singleHistoryInfo);
 
 }

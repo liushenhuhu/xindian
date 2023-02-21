@@ -39,7 +39,7 @@
                   <strong>PR:</strong> {{ data.pr }} ms
                 </div>
               </div>
-              <div class="header-1">
+              <div class="header-1" style="width: 25vw">
                 <div class="header-1-1">
                   <strong>QRS:</strong> {{ data.qrs }} ms
                 </div>
@@ -57,7 +57,7 @@
                 </div>
               </div>
             </div>
-            <div class="header-left">
+            <div class="header-left" style="padding-left: 0;">
               <div class="header-1">
                 <div class="header-1-1">
                   <strong>自动分析结果，仅供参考</strong>
@@ -90,53 +90,53 @@
             <div class="body-1">
               <div>
                 <div id="I" class="line"></div>
-                <button @click="clicktrueI"  class="btn1">展开</button>
+                <button @click="clicktrueI" class="btn1">展开</button>
               </div>
               <div>
                 <div id="II" class="line"></div>
-                <button @click="clicktrueII"  class="btn1">展开</button>
+                <button @click="clicktrueII" class="btn1">展开</button>
               </div>
               <div>
                 <div id="III" class="line"></div>
-                <button @click="clicktrueIII"  class="btn1">展开</button>
+                <button @click="clicktrueIII" class="btn1">展开</button>
               </div>
               <div>
                 <div id="aVR" class="line"></div>
-                <button @click="clicktrueaVR"  class="btn1">展开</button>
+                <button @click="clicktrueaVR" class="btn1">展开</button>
               </div>
               <div>
                 <div id="aVL" class="line"></div>
-                <button @click="clicktrueaVL"  class="btn1">展开</button>
+                <button @click="clicktrueaVL" class="btn1">展开</button>
               </div>
               <div>
                 <div id="aVF" class="line"></div>
-                <button @click="clicktrueaVF"  class="btn1">展开</button>
+                <button @click="clicktrueaVF" class="btn1">展开</button>
               </div>
             </div>
             <div class="body-1">
               <div>
                 <div id="V1" class="line"></div>
-                <button @click="clicktrueV1"  class="btn1">展开</button>
+                <button @click="clicktrueV1" class="btn1">展开</button>
               </div>
               <div>
                 <div id="V2" class="line"></div>
-                <button @click="clicktrueV2"  class="btn1">展开</button>
+                <button @click="clicktrueV2" class="btn1">展开</button>
               </div>
               <div>
                 <div id="V3" class="line"></div>
-                <button @click="clicktrueV3"  class="btn1">展开</button>
+                <button @click="clicktrueV3" class="btn1">展开</button>
               </div>
               <div>
                 <div id="V4" class="line"></div>
-                <button @click="clicktrueV4"  class="btn1">展开</button>
+                <button @click="clicktrueV4" class="btn1">展开</button>
               </div>
               <div>
                 <div id="V5" class="line"></div>
-                <button @click="clicktrueV5"  class="btn1">展开</button>
+                <button @click="clicktrueV5" class="btn1">展开</button>
               </div>
               <div>
                 <div id="V6" class="line"></div>
-                <button @click="clicktrueV6"  class="btn1">展开</button>
+                <button @click="clicktrueV6" class="btn1">展开</button>
               </div>
 
             </div>
@@ -150,51 +150,51 @@
         </div>
       </div>
 
-      <div  class="lineI" v-show="openI">
+      <div class="lineI" v-show="openI">
         <div id="I1" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openII">
+      <div class="lineI" v-show="openII">
         <div id="II1" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openIII">
+      <div class="lineI" v-show="openIII">
         <div id="III1" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openaVR">
+      <div class="lineI" v-show="openaVR">
         <div id="aVR1" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openaVL">
+      <div class="lineI" v-show="openaVL">
         <div id="aVL1" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openaVF">
+      <div class="lineI" v-show="openaVF">
         <div id="aVF1" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openV1">
+      <div class="lineI" v-show="openV1">
         <div id="V11" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openV2">
+      <div class="lineI" v-show="openV2">
         <div id="V22" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openV3">
+      <div class="lineI" v-show="openV3">
         <div id="V33" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openV4">
-      <div id="V44" class="lineshow"></div>
-      <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
-    </div>
-      <div  class="lineI" v-show="openV5">
+      <div class="lineI" v-show="openV4">
+        <div id="V44" class="lineshow"></div>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+      </div>
+      <div class="lineI" v-show="openV5">
         <div id="V55" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
-      <div  class="lineI" v-show="openV6">
+      <div class="lineI" v-show="openV6">
         <div id="V66" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
@@ -231,6 +231,17 @@ export default {
         gender: "",
         age: "",
         result: "",
+        hr: "",
+        pr: "",
+        qrs: "",
+        qt: "",
+        qtc: "",
+        p: "",
+        qrs_deg: "",
+        t: "",
+        pv5: "",
+        sv1: "",
+        rv5_sv1: "",
         resultByDoctor: "",
         dataTime: "",
         doctorName: "",
@@ -300,56 +311,56 @@ export default {
     this.V66()
   },
   methods: {
-    clicktrueI(){
+    clicktrueI() {
       this.openI = !this.openI;
     },
-    clicktrueII(){
+    clicktrueII() {
       this.openII = !this.openII;
     },
-    clicktrueIII(){
+    clicktrueIII() {
       this.openIII = !this.openIII;
     },
-    clicktrueaVR(){
+    clicktrueaVR() {
       this.openaVR = !this.openaVR;
     },
-    clicktrueaVL(){
+    clicktrueaVL() {
       this.openaVL = !this.openaVL;
     },
-    clicktrueaVF(){
+    clicktrueaVF() {
       this.openaVF = !this.openaVF;
     },
-    clicktrueV1(){
+    clicktrueV1() {
       this.openV1 = !this.openV1;
     },
-    clicktrueV2(){
+    clicktrueV2() {
       this.openV2 = !this.openV2;
     },
-    clicktrueV3(){
+    clicktrueV3() {
       this.openV3 = !this.openV3;
     },
-    clicktrueV4(){
+    clicktrueV4() {
       this.openV4 = !this.openV4;
     },
-    clicktrueV5(){
+    clicktrueV5() {
       this.openV5 = !this.openV5;
     },
-    clicktrueV6(){
+    clicktrueV6() {
       this.openV6 = !this.openV6;
     },
 
-    clickclose(){
+    clickclose() {
       this.openI = false;
       this.openII = false;
       this.openIII = false;
-      this.openaVR= false;
-      this.openaVL= false;
-      this.openaVF= false;
-      this.openV1= false;
-      this.openV2= false;
-      this.openV3= false;
-      this.openV4= false;
-      this.openV5= false;
-      this.openV6= false;
+      this.openaVR = false;
+      this.openaVL = false;
+      this.openaVF = false;
+      this.openV1 = false;
+      this.openV2 = false;
+      this.openV3 = false;
+      this.openV4 = false;
+      this.openV5 = false;
+      this.openV6 = false;
     },
     get() {
       const loading = this.$loading({
@@ -371,12 +382,12 @@ export default {
         data: JSON.stringify({
           pid: this.pId
         }),
-        beforeSend:function (request) {
+        beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
-          request.setRequestHeader("user","zzu");
-          request.setRequestHeader("password","zzu123");
+          request.setRequestHeader("user", "zzu");
+          request.setRequestHeader("password", "zzu123");
         },
-        success: function (data)        {
+        success: function (data) {
           console.log(_th.pId)
           console.log(data)
           console.log(JSON.stringify(data))
@@ -396,32 +407,22 @@ export default {
         }
       })
     },
-    getall(){
+    getall() {
       this.data.age = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.age
       this.data.gender = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.gender
       this.data.name = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.patientName
       this.data.result = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.intelligent_diagnosis
       this.data.hr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["平均心率"]
       this.data.pr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["PR_dis_avg"]
-      if(this.data.pr=="nan")this.data.pr=0
       this.data.qrs = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QRS_dis_avg"]
-      if(this.data.qrs=="nan")this.data.pr=0
       this.data.qt = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QT_dis_avg"]
-      if(this.data.qt=="nan")this.data.pr=0
       this.data.qtc = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QTc2"]
-      if(this.data.qtc=="nan")this.data.pr=0
       this.data.p = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["P_deg"]
-      if(this.data.p=="nan")this.data.pr=0
       this.data.qrs_deg = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QRS_deg"]
-      if(this.data.qrs_deg=="nan")this.data.pr=0
       this.data.t = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["T_deg"]
-      if(this.data.t=="nan")this.data.pr=0
       this.data.pv5 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["PV5_mv"]
-      if(this.data.pv5=="nan")this.data.pr=0
       this.data.sv1 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["SV1_mv"]
-      if(this.data.sv1=="nan")this.data.pr=0
       this.data.rv5_sv1 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["RV5_SV1"]
-      if(this.data.rv5_sv1=="nan")this.data.pr=0
     },
     I() {
       var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.I
@@ -8112,11 +8113,12 @@ export default {
   flex: 1;
   float: left;
   padding-left: 3vw;
+  width: 12vw;
 }
 
 .header-1 .header-1-1 {
   height: 30px;
-  width: 230px;
+  width: 32vw;
 }
 
 .box-1-1 {
@@ -8172,7 +8174,7 @@ export default {
 
 }
 
-.lineI{
+.lineI {
   position: absolute;
   display: inline-block;
   top: 500px;
@@ -8184,7 +8186,7 @@ export default {
   z-index: 3;
 }
 
-.lineshow{
+.lineshow {
   height: 7.6vw;
   width: 76vw;
   max-width: 97%;
@@ -8193,7 +8195,7 @@ export default {
   padding: 0
 }
 
-.btn1{
+.btn1 {
   position: relative;
   float: right;
   bottom: 1.6em;

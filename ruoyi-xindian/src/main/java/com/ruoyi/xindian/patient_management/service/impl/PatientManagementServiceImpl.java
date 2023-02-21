@@ -2,6 +2,7 @@ package com.ruoyi.xindian.patient_management.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
@@ -18,6 +19,7 @@ import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 public class PatientManagementServiceImpl implements IPatientManagementService {
     @Autowired
     private PatientManagementMapper patientManagementMapper;
+
 
     /**
      * 查询患者管理
@@ -109,6 +111,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     @Override
     public void updateStatus(String[] pIds) {
         patientManagementMapper.updateStatus(pIds);
+    }
+
+    @Override
+    public List<SingleHistoryInfo> selectSingleHistoryInfoList(SingleHistoryInfo singleHistoryInfo) {
+        return patientManagementMapper.selectSingleHistoryInfoList(singleHistoryInfo);
     }
 
 }

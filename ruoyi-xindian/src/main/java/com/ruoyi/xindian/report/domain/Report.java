@@ -56,6 +56,10 @@ public class Report extends BaseEntity
     @Excel(name = "智能诊断")
     private String intelligentDiagnosis;
 
+    /** 医生电话 */
+    @Excel(name = "医生电话")
+    private String dPhone;
+
     public String getpId() {
         return pId;
     }
@@ -63,6 +67,10 @@ public class Report extends BaseEntity
     public void setpId(String pId) {
         this.pId = pId;
     }
+
+    public void setdPhone(String dPhone) { this.dPhone = dPhone;}
+
+    public String getdPhone() {return dPhone;}
 
 
 }
