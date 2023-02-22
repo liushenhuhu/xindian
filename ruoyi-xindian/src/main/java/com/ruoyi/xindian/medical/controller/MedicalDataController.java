@@ -1,25 +1,19 @@
 package com.ruoyi.xindian.medical.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.xindian.medical.domain.MedicalData;
 import com.ruoyi.xindian.medical.service.IMedicalDataService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 病数据Controller
@@ -40,6 +34,18 @@ public class MedicalDataController extends BaseController
     @PreAuthorize("@ss.hasPermi('medicalData:medicalData:list')")
     @GetMapping("/list")
     public TableDataInfo list(MedicalData medicalData)
+    {
+        startPage();
+        List<MedicalData> list = medicalDataService.selectMedicalDataList(medicalData);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询所有病
+     */
+    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:list')")
+    @PostMapping("/allMedicalData")
+    public TableDataInfo allMedicalData(@RequestBody MedicalData medicalData)
     {
         startPage();
         List<MedicalData> list = medicalDataService.selectMedicalDataList(medicalData);
