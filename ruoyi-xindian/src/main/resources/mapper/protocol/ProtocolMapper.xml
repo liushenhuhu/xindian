@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.procotol.mapper.ProtocolMapper">
+    
+    <resultMap type="Protocol" id="ProtocolResult">
+        <result property="protocolId"    column="protocol_id"    />
+        <result property="protocolName"    column="protocol_name"    />
+        <result property="protocolVersion"    column="protocol_version"    />
+        <result property="protocolContent"    column="protocol_content"    />
+    </resultMap>
+
+    <sql id="selectProtocolVo">
+        select protocol_id, protocol_name, protocol_version, protocol_content from protocol
+    </sql>
+
+    <select id="selectProtocolList" parameterType="Protocol" resultMap="ProtocolResult">
+        <include refid="selectProtocolVo"/>
+        <where>  
+            <if test="protocolName != null  and protocolName != ''"> and protocol_name like concat('%', #{protocolName}, '%')</if>
+            <if test="protocolVersion != null "> and protocol_version = #{protocolVersion}</if>
+            <if test="protocolContent != null  and protocolContent != ''"> and protocol_content = #{protocolContent}</if>
+        </where>
+    </select>
+    
+    <select id="selectProtocolByProtocolId" parameterType="Long" resultMap="ProtocolResult">
+        <include refid="selectProtocolVo"/>
+        where protocol_id = #{protocolId}
+    </select>
+        
+    <insert id="insertProtocol" parameterType="Protocol" useGeneratedKeys="true" keyProperty="protocolId">
+        insert into protocol
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="protocolName != null">protocol_name,</if>
+            <if test="protocolVersion != null">protocol_version,</if>
+            <if test="protocolContent != null">protocol_content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="protocolName != null">#{protocolName},</if>
+            <if test="protocolVersion != null">#{protocolVersion},</if>
+            <if test="protocolContent != null">#{protocolContent},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProtocol" parameterType="Protocol">
+        update protocol
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="protocolName != null">protocol_name = #{protocolName},</if>
+            <if test="protocolVersion != null">protocol_version = #{protocolVersion},</if>
+            <if test="protocolContent != null">protocol_content = #{protocolContent},</if>
+        </trim>
+        where protocol_id = #{protocolId}
+    </update>
+
+    <delete id="deleteProtocolByProtocolId" parameterType="Long">
+        delete from protocol where protocol_id = #{protocolId}
+    </delete>
+
+    <delete id="deleteProtocolByProtocolIds" parameterType="String">
+        delete from protocol where protocol_id in 
+        <foreach item="protocolId" collection="array" open="(" separator="," close=")">
+            #{protocolId}
+        </foreach>
+    </delete>
+</mapper>

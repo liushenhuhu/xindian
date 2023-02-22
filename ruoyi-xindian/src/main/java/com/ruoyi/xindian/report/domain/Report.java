@@ -60,6 +60,14 @@ public class Report extends BaseEntity
     @Excel(name = "医生电话")
     private String dPhone;
 
+    /** 处置建议 */
+    @Excel(name = "处置建议")
+    private String handlingSuggestion;
+
+    /** 保健建议 */
+    @Excel(name = "保健建议")
+    private String healthAdvice;
+
     public String getpId() {
         return pId;
     }
