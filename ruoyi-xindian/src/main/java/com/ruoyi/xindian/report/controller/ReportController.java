@@ -1,7 +1,11 @@
 package com.ruoyi.xindian.report.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.model.LoginUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,6 +106,9 @@ public class ReportController extends BaseController
         Report report1 = reportService.selectReportByPId(s);
         report1.setDiagnosisDoctor(report.getDiagnosisDoctor());
         report1.setdPhone(report.getdPhone());
+        //医生结论
+        report1.setHandlingSuggestion(report.getHandlingSuggestion());
+        report1.setHealthAdvice(report.getHealthAdvice());
         if(report.getDiagnosisConclusion()!=null)
             report1.setDiagnosisConclusion(report.getDiagnosisConclusion());
         if(report.getDiagnosisStatus()!=null)
@@ -119,4 +126,37 @@ public class ReportController extends BaseController
     {
         return toAjax(reportService.deleteReportByReportIds(reportIds));
     }
+
+    /**
+     * 常用术语
+     */
+    @GetMapping("/getCommonTerms")
+    public AjaxResult getCommonTerms()
+    {
+        ArrayList<String> terms = new ArrayList<>();
+        terms.add("窦性心律正常心电图");
+        terms.add("窦房结内游走性节律");
+        terms.add("房性逸搏");
+        terms.add("房性早搏");
+        terms.add("室性逸搏");
+        terms.add("交界性逸搏");
+        terms.add("室性早搏");
+        terms.add("交界性早搏");
+        terms.add("房性心动过速");
+        terms.add("室性心动过速");
+        terms.add("室上性心动过速");
+        terms.add("交界性心动过速");
+        terms.add("心房颤动");
+        terms.add("心房扑动");
+        terms.add("完全性左束支传导阻滞");
+        terms.add("完全性右束支传导阻滞");
+        terms.add("II度I型房室传导阻滞");
+        terms.add("II度II型房室传导阻滞");
+        terms.add("III度房室传导阻滞");
+        terms.add("I度房室传导阻滞");
+        terms.add("窦性心动过缓");
+        terms.add("窦性心动过速");
+        return AjaxResult.success(terms);
+    }
+
 }

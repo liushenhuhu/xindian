@@ -9,10 +9,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="doctorName"    column="doctor_name"    />
         <result property="doctorPhone"    column="doctor_phone"    />
         <result property="departmentCode"    column="department_code"    />
+        <result property="skill"    column="skill"    />
+        <result property="introduction"    column="introduction"    />
+        <result property="serviceContent"    column="service_content"    />
+        <result property="applicablePopulation"    column="applicable_population"    />
+        <result property="chargePrice"    column="charge_price"    />
+        <result property="onlineState"    column="online_state"    />
     </resultMap>
 
     <sql id="selectDoctorVo">
-        select doctor_id, doctor_name, doctor_phone, department_code from doctor
+        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state from doctor
     </sql>
 
     <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
@@ -21,6 +27,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doctorName != null  and doctorName != ''"> and doctor_name like concat('%', #{doctorName}, '%')</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
+            <if test="skill != null  and skill != ''"> and skill = #{skill}</if>
+            <if test="introduction != null  and introduction != ''"> and introduction = #{introduction}</if>
+            <if test="serviceContent != null  and serviceContent != ''"> and service_content = #{serviceContent}</if>
+            <if test="applicablePopulation != null  and applicablePopulation != ''"> and applicable_population = #{applicablePopulation}</if>
+            <if test="chargePrice != null  and chargePrice != ''"> and charge_price = #{chargePrice}</if>
+            <if test="onlineState != null  and onlineState != ''"> and online_state = #{onlineState}</if>
         </where>
     </select>
     
@@ -35,11 +47,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doctorName != null">doctor_name,</if>
             <if test="doctorPhone != null and doctorPhone != ''">doctor_phone,</if>
             <if test="departmentCode != null and departmentCode != ''">department_code,</if>
+            <if test="skill != null">skill,</if>
+            <if test="introduction != null">introduction,</if>
+            <if test="serviceContent != null">service_content,</if>
+            <if test="applicablePopulation != null">applicable_population,</if>
+            <if test="chargePrice != null">charge_price,</if>
+            <if test="onlineState != null">online_state,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doctorName != null">#{doctorName},</if>
             <if test="doctorPhone != null and doctorPhone != ''">#{doctorPhone},</if>
             <if test="departmentCode != null and departmentCode != ''">#{departmentCode},</if>
+            <if test="skill != null">#{skill},</if>
+            <if test="introduction != null">#{introduction},</if>
+            <if test="serviceContent != null">#{serviceContent},</if>
+            <if test="applicablePopulation != null">#{applicablePopulation},</if>
+            <if test="chargePrice != null">#{chargePrice},</if>
+            <if test="onlineState != null">#{onlineState},</if>
          </trim>
     </insert>
 
@@ -49,6 +73,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="doctorName != null">doctor_name = #{doctorName},</if>
             <if test="doctorPhone != null and doctorPhone != ''">doctor_phone = #{doctorPhone},</if>
             <if test="departmentCode != null and departmentCode != ''">department_code = #{departmentCode},</if>
+            <if test="skill != null">skill = #{skill},</if>
+            <if test="introduction != null">introduction = #{introduction},</if>
+            <if test="serviceContent != null">service_content = #{serviceContent},</if>
+            <if test="applicablePopulation != null">applicable_population = #{applicablePopulation},</if>
+            <if test="chargePrice != null">charge_price = #{chargePrice},</if>
+            <if test="onlineState != null">online_state = #{onlineState},</if>
         </trim>
         where doctor_id = #{doctorId}
     </update>

@@ -88,6 +88,10 @@ public class DoctorController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Doctor doctor)
     {
+        Doctor doctor1 = new Doctor();
+        doctor1.setDoctorPhone(doctor.getDoctorPhone());
+        List<Doctor> doctors = doctorService.selectDoctorList(doctor1);
+        doctor.setDoctorId(doctors.get(0).getDoctorId());
         return toAjax(doctorService.updateDoctor(doctor));
     }
 
