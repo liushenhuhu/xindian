@@ -61,4 +61,6 @@ public interface IMedicalHistoryService
      * @return 结果
      */
     public int deleteMedicalHistoryByMedicalHistoryId(Long medicalHistoryId);
+
+    int deleteMedicalHistoryByPatientPhone(String patientPhone);
 }

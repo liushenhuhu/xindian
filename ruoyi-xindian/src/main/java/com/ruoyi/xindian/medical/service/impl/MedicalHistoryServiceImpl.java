@@ -96,4 +96,9 @@ public class MedicalHistoryServiceImpl implements IMedicalHistoryService
     {
         return medicalHistoryMapper.deleteMedicalHistoryByMedicalHistoryId(medicalHistoryId);
     }
+
+    @Override
+    public int deleteMedicalHistoryByPatientPhone(String patientPhone) {
+        return medicalHistoryMapper.deleteMedicalHistoryByPatientPhone(patientPhone);
+    }
 }

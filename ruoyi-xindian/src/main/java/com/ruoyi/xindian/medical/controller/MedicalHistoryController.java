@@ -63,8 +63,13 @@ public class MedicalHistoryController extends BaseController
         return AjaxResult.success(medicalHistoryService.selectMedicalHistoryByMedicalHistoryId(medicalHistoryId));
     }
 
+    /**
+     * 获取病史详情
+     * @param patientPhone
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:query')")
-    @GetMapping(value = "/getByPatientPhone/{medicalHistoryId}")
+    @GetMapping(value = "/getByPatientPhone/{patientPhone}")
     public AjaxResult getInfoByPatientPhone(@PathVariable("patientPhone") String patientPhone)
     {
         return AjaxResult.success(medicalHistoryService.selectMedicalHistoryByPatientPhone(patientPhone));
@@ -89,6 +94,7 @@ public class MedicalHistoryController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody MedicalHistory medicalHistory)
     {
+        System.out.println(medicalHistory);
         return toAjax(medicalHistoryService.updateMedicalHistory(medicalHistory));
     }
 
@@ -101,5 +107,13 @@ public class MedicalHistoryController extends BaseController
     public AjaxResult remove(@PathVariable Long[] medicalHistoryIds)
     {
         return toAjax(medicalHistoryService.deleteMedicalHistoryByMedicalHistoryIds(medicalHistoryIds));
+    }
+
+    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:remove')")
+    @Log(title = "病史", businessType = BusinessType.DELETE)
+    @GetMapping("delByPatientPhone/{patientPhone}")
+    public AjaxResult remove(@PathVariable("patientPhone") String patientPhone)
+    {
+        return toAjax(medicalHistoryService.deleteMedicalHistoryByPatientPhone(patientPhone));
     }
 }

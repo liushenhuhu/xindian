@@ -61,4 +61,6 @@ public interface MedicalHistoryMapper
     public int deleteMedicalHistoryByMedicalHistoryIds(Long[] medicalHistoryIds);
 
     MedicalHistory selectMedicalHistoryByPatientPhone(String patientPhone);
+
+    int deleteMedicalHistoryByPatientPhone(String patientPhone);
 }
