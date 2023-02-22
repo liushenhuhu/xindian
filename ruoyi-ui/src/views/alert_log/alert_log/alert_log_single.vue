@@ -266,7 +266,7 @@
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
 
 export default {
-  name: "Alert_log",
+  name: "Alert_log_single",
   dicts: ['sex', 'if_status'],
   data() {
     return {
