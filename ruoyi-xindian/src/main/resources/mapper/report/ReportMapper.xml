@@ -16,10 +16,11 @@
         <result property="dPhone"    column="d_phone"    />
         <result property="handlingSuggestion"    column="handling_suggestion"    />
         <result property="healthAdvice"    column="health_advice"    />
+        <result property="pPhone"    column="p_phone"    />
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis, d_phone, handling_suggestion, health_advice from report
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis, d_phone, handling_suggestion, health_advice, p_phone from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
@@ -35,6 +36,7 @@
             <if test="dPhone != null  and dPhone != ''"> and d_phone = #{dPhone}</if>
             <if test="handlingSuggestion != null  and handlingSuggestion != ''"> and handling_suggestion = #{handlingSuggestion}</if>
             <if test="healthAdvice != null  and healthAdvice != ''"> and health_advice = #{healthAdvice}</if>
+            <if test="pPhone != null  and pPhone != ''"> and p_phone = #{pPhone}</if>
         </where>
     </select>
 
@@ -62,6 +64,7 @@
             <if test="dPhone != null">d_phone,</if>
             <if test="handlingSuggestion != null">handling_suggestion,</if>
             <if test="healthAdvice != null">health_advice,</if>
+            <if test="pPhone != null">p_phone,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pId != null and pId != ''">#{pId},</if>
@@ -74,6 +77,7 @@
             <if test="dPhone != null">#{dPhone},</if>
             <if test="handlingSuggestion != null">#{handlingSuggestion},</if>
             <if test="healthAdvice != null">#{healthAdvice},</if>
+            <if test="pPhone != null">#{pPhone},</if>
         </trim>
     </insert>
 
@@ -90,6 +94,7 @@
             <if test="dPhone != null">d_phone = #{dPhone},</if>
             <if test="handlingSuggestion != null">handling_suggestion = #{handlingSuggestion},</if>
             <if test="healthAdvice != null">health_advice = #{healthAdvice},</if>
+            <if test="pPhone != null">p_phone = #{pPhone},</if>
         </trim>
         where report_id = #{reportId}
     </update>
