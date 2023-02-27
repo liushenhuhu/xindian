@@ -25,6 +25,7 @@
         <result property="remark" column="remark"/>
         <result property="hospitalName" column="hospital_name"/>
         <result property="hospitalCode" column="hospital_code"/>
+        <result property="openId" column="open_id"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -201,6 +202,7 @@
         <if test="remark != null and remark != ''">remark,</if>
         <if test="hospitalName != null and hospitalName != ''">hospital_name,</if>
         <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
+        <if test="openId != null and openId != ''">open_id,</if>
         create_time
         )values(
         <if test="userId != null and userId != ''">#{userId},</if>
@@ -217,6 +219,7 @@
         <if test="remark != null and remark != ''">#{remark},</if>
         <if test="hospitalName != null">#{hospitalName},</if>
         <if test="hospitalCode != null">#{hospitalCode},</if>
+        <if test="openId != null">#{openId},</if>
         sysdate()
         )
     </insert>

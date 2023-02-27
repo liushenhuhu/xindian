@@ -37,7 +37,10 @@ public class LoginBody
      */
     private String smsCode;
 
-
+    /**
+     * openId
+     */
+    private String openId;
 
     public String getMobile() {
         return mobile;
@@ -94,5 +97,13 @@ public class LoginBody
     public void setUuid(String uuid)
     {
         this.uuid = uuid;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 }

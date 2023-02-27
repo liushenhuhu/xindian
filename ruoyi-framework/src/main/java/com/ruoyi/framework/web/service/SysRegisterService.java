@@ -39,8 +39,10 @@ public class SysRegisterService {
      */
     public String register(RegisterBody registerBody) {
         String msg = "", username = registerBody.getUsername(), password = registerBody.getPassword(), mobile = registerBody.getMobile();
-
-
+        String openId = null;
+        if (null != registerBody.getOpenId()) {
+            openId = registerBody.getOpenId();
+        }
         boolean captchaOnOff = configService.selectCaptchaOnOff();
         // 验证码开关
         if (captchaOnOff) {
@@ -64,6 +66,7 @@ public class SysRegisterService {
             sysUser.setUserName(username);
             sysUser.setNickName(username);
             sysUser.setPhonenumber(mobile);
+            sysUser.setOpenId(openId);
             sysUser.setPassword(SecurityUtils.encryptPassword(registerBody.getPassword()));
             boolean regFlag = userService.registerUser(sysUser);
             if (!regFlag) {

@@ -1,16 +1,19 @@
 package com.ruoyi.common.core.domain.entity;
 
-import java.util.Date;
-import java.util.List;
-import javax.validation.constraints.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.annotation.Excel.Type;
 import com.ruoyi.common.annotation.Excels;
 import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.xss.Xss;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 用户对象 sys_user
@@ -99,6 +102,11 @@ public class SysUser extends BaseEntity
      */
     private String hospitalCode;
 
+    /**
+     * openId
+     */
+    private String openId;
+
     public SysUser()
     {
 
@@ -153,6 +161,14 @@ public class SysUser extends BaseEntity
     public void setDeptId(Long deptId)
     {
         this.deptId = deptId;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
     @Xss(message = "用户昵称不能包含脚本字符")
@@ -347,6 +363,7 @@ public class SysUser extends BaseEntity
                 .append("dept", getDept())
                 .append("hospitalName", getHospitalName())
                 .append("hospitalCode", getHospitalCode())
+                .append("openId", getOpenId())
                 .toString();
     }
 }
