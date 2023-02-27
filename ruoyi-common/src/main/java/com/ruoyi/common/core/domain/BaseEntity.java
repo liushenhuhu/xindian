@@ -107,7 +107,7 @@ public class BaseEntity implements Serializable
         return params;
     }
 
-    public void setParams(Map<String, Object> params)
+    public void setParams(HashMap<String, Object> params)
     {
         this.params = params;
     }
