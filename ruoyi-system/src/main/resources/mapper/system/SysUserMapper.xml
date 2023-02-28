@@ -68,6 +68,7 @@
                u.remark,
                u.hospital_name,
                u.hospital_code,
+               u.open_id,
                d.dept_id,
                d.parent_id,
                d.ancestors,
@@ -295,5 +296,11 @@
         <include refid="selectUserVo"/>
         where u.phonenumber = #{phone}
     </select>
+
+    <update id="updateUserOpenId" parameterType="SysUser">
+        update sys_user
+        set open_id = #{param1}
+        where phonenumber = #{param2}
+    </update>
 
 </mapper>
