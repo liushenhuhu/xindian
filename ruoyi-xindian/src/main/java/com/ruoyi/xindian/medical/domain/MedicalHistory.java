@@ -28,7 +28,7 @@ public class MedicalHistory extends BaseEntity
 
     /** 过往病史 */
     @Excel(name = "过往病史")
-    private Long pastMedicalHistory;
+    private String pastMedicalHistory;
 
     /** 生活习惯 */
     @Excel(name = "生活习惯")
@@ -65,16 +65,16 @@ public class MedicalHistory extends BaseEntity
     {
         return weight;
     }
-    public void setPastMedicalHistory(Long pastMedicalHistory) 
-    {
+
+    public String getPastMedicalHistory() {
+        return pastMedicalHistory;
+    }
+
+    public void setPastMedicalHistory(String pastMedicalHistory) {
         this.pastMedicalHistory = pastMedicalHistory;
     }
 
-    public Long getPastMedicalHistory() 
-    {
-        return pastMedicalHistory;
-    }
-    public void setLivingHabit(String livingHabit) 
+    public void setLivingHabit(String livingHabit)
     {
         this.livingHabit = livingHabit;
     }
