@@ -3,6 +3,8 @@ package com.ruoyi.xindian.procotol.controller;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.Anonymous;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,6 +110,7 @@ public class ProtocolController extends BaseController
      * @param protocolId
      * @return
      */
+    @Anonymous
     @GetMapping("/getProtocolVesion/{protocolId}")
     public AjaxResult getProtocolVesion(@PathVariable("protocolId") Long protocolId)
     {
