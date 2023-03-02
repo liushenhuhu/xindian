@@ -1,11 +1,13 @@
 package com.ruoyi.xindian.hospital.service.impl;
 
-import java.util.List;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.mapper.DoctorMapper;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.xindian.hospital.mapper.DoctorMapper;
-import com.ruoyi.xindian.hospital.domain.Doctor;
-import com.ruoyi.xindian.hospital.service.IDoctorService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 医生Service业务层处理
@@ -42,6 +44,17 @@ public class DoctorServiceImpl implements IDoctorService
     {
         return doctorMapper.selectDoctorList(doctor);
     }
+
+    @Override
+    public List<String> selectDoctorNameList(Doctor doctor) {
+        List<Doctor> doctors = doctorMapper.selectDoctorList(doctor);
+        List<String> doctorNameList = new ArrayList<>();
+        for (Doctor doctor1 : doctors) {
+            doctorNameList.add(doctor1.getDoctorName());
+        }
+        return doctorNameList;
+    }
+
 
     /**
      * 新增医生

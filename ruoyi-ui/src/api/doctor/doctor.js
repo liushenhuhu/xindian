@@ -9,6 +9,13 @@ export function listDoctor(query) {
   })
 }
 
+export function listDoctorName() {
+  return request({
+    url: '/doctor/doctor/nameList',
+    method: 'get',
+  })
+}
+
 // 查询医生详细
 export function getDoctor(doctorId) {
   return request({

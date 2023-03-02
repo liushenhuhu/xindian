@@ -1,7 +1,8 @@
 package com.ruoyi.xindian.hospital.service;
 
-import java.util.List;
 import com.ruoyi.xindian.hospital.domain.Doctor;
+
+import java.util.List;
 
 /**
  * 医生Service接口
@@ -26,6 +27,8 @@ public interface IDoctorService
      * @return 医生集合
      */
     public List<Doctor> selectDoctorList(Doctor doctor);
+
+    public List<String> selectDoctorNameList(Doctor doctor);
 
     /**
      * 新增医生
