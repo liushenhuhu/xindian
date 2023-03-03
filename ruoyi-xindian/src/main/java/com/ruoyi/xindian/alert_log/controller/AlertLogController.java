@@ -1,29 +1,23 @@
 package com.ruoyi.xindian.alert_log.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.system.service.ISysUserService;
-import com.ruoyi.xindian.alert_log.domain.AssignedAno;
-import com.ruoyi.xindian.hospital.domain.Hospital;
-import com.ruoyi.xindian.hospital.service.IHospitalService;
-import com.ruoyi.xindian.patient.domain.Patient;
-import com.ruoyi.xindian.patient.service.IPatientService;
-import com.ruoyi.xindian.patient_management.domain.PatientManagement;
-import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.xindian.alert_log.domain.AlertLog;
-import com.ruoyi.xindian.alert_log.service.IAlertLogService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.alert_log.domain.AlertLog;
+import com.ruoyi.xindian.alert_log.domain.AssignedAno;
+import com.ruoyi.xindian.alert_log.service.IAlertLogService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 预警日志Controller
@@ -47,8 +41,8 @@ public class AlertLogController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(AlertLog alertLog) {
         List<AlertLog> list = new ArrayList<>();
+        SysUser sysUser = userService.selectUserById(getUserId());
         if (getDeptId() == 200) {
-            SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalName = sysUser.getHospitalName();
             alertLog.setHospitalName(hospitalName);
             startPage();
@@ -64,6 +58,16 @@ public class AlertLogController extends BaseController {
             alertLog.setUserId(Math.toIntExact(userId));
             startPage();
             list = alertLogService.selectAnoListByUserId(alertLog);
+        } else if (sysUser.getRoleId() == 104) {
+            alertLog.setDoctorPhone(sysUser.getPhonenumber());
+            startPage();
+            if (null == alertLog.getEcgType()) {
+                list = alertLogService.selectAlertLogList(alertLog);
+            } else if (alertLog.getEcgType().equals("12")) {
+                list = alertLogService.selectAlertLogList12(alertLog);
+            } else if (alertLog.getEcgType().equals("single")) {
+                list = alertLogService.selectAlertLogListSingle(alertLog);
+            }
         } else {
             startPage();
             if (null == alertLog.getEcgType()) {
@@ -84,8 +88,8 @@ public class AlertLogController extends BaseController {
     @GetMapping("/listAno")
     public TableDataInfo listAno(AlertLog alertLog) {
         List<AlertLog> list = new ArrayList<>();
+        SysUser sysUser = userService.selectUserById(getUserId());
         if (getDeptId() == 200) {
-            SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalName = sysUser.getHospitalName();
             alertLog.setHospitalName(hospitalName);
             startPage();
@@ -95,6 +99,10 @@ public class AlertLogController extends BaseController {
             alertLog.setUserId(Math.toIntExact(userId));
             startPage();
             list = alertLogService.selectAnoListByUserId(alertLog);
+        } else if (sysUser.getRoleId() == 104) {
+            alertLog.setDoctorPhone(sysUser.getPhonenumber());
+            startPage();
+            list = alertLogService.selectAlertLogList(alertLog);
         } else {
             startPage();
             list = alertLogService.selectAlertLogList(alertLog);

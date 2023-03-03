@@ -24,12 +24,14 @@
         <result property="patientSex" column="patient_sex"/>
         <result property="userId" column="user_id"/>
         <result property="ecgType" column="ecg_type"/>
+        <result property="doctorPhone"    column="doctor_phone"    />
     </resultMap>
 
 
     <sql id="selectAlertLogVo">
         select log_id, log_time, log_type, event_name, event_description, al.p_id,
-               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone, family_phone, ano_status, patient_age, patient_sex, ecg_type
+               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone,
+               family_phone, ano_status, patient_age, patient_sex, ecg_type, doctor_phone
         from alert_log al
             inner join patient_management pm on al.p_id = pm.p_id
             inner join patient p on pm.patient_phone = p.patient_phone
@@ -60,6 +62,7 @@
             <if test="patientAge != null "> and patient_age = #{patientAge}</if>
             <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
             <if test="ecgType != null "> and ecg_type = #{ecgType}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
         </where>
         order by log_time desc
     </select>
@@ -79,6 +82,7 @@
             <if test="patientAge != null "> and patient_age = #{patientAge}</if>
             <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
             <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD" or ecg_type = "DECG12YXD")</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
         </where>
         order by log_time desc
     </select>
@@ -98,6 +102,7 @@
             <if test="patientAge != null "> and patient_age = #{patientAge}</if>
             <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
             <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "JECGsingleGZ" or ecg_type = "DECGsingleZZ" or ecg_type = "DECGsingleGZ")</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
         </where>
         order by log_time desc
     </select>

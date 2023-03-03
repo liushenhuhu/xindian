@@ -57,8 +57,8 @@ public class PatientManagementController extends BaseController {
 //        startPage();
 //        List<PatientManagement> list_add = new ArrayList<>();
         List<PatientManagement> list = new ArrayList<>();
+        SysUser sysUser = userService.selectUserById(getUserId());
         if (getDeptId() == 200) {
-            SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalName = sysUser.getHospitalName();
             patientManagement.setHospitalName(hospitalName);
             startPage();
@@ -68,10 +68,22 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
             } else if (patientManagement.getEcgType().equals("JECG12")) {
                 list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-            } else{
+            } else {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
 
+        } else if (sysUser.getRoleId() == 104) {
+            patientManagement.setDoctorPhone(sysUser.getPhonenumber());
+            startPage();
+            if (null == patientManagement.getEcgType()) {
+                list = patientManagementService.selectPatientManagementList(patientManagement);
+            } else if (patientManagement.getEcgType().equals("DECGsingle")) {
+                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
+            } else if (patientManagement.getEcgType().equals("JECG12")) {
+                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+            } else {
+                list = patientManagementService.selectPatientManagementList(patientManagement);
+            }
         } else {
             startPage();
             if (null == patientManagement.getEcgType()) {
@@ -202,14 +214,14 @@ public class PatientManagementController extends BaseController {
         Info.setPatientPhone(patientPhone);
         List<SingleHistoryInfo> infos = patientManagementService.selectSingleHistoryInfoList(Info);
         for (SingleHistoryInfo info : infos) {
-            if(info.getApBeat()==null) info.setApBeat((long) 0);
-            if(info.getPvBeat()==null) info.setPvBeat((long) 0);
-            if(info.getAtrialFibrillation()==null) info.setAtrialFibrillation((long) 0);
-            if(info.getAtrialFlutter()==null) info.setAtrialFlutter((long) 0);
-            if(info.getLeftBlock()==null) info.setLeftBlock((long) 0);
-            if(info.getRightBlock()==null) info.setRightBlock((long) 0);
-            if(info.getBradycardia()==null) info.setBradycardia((long) 0);
-            if(info.getTachycardia()==null) info.setTachycardia((long) 0);
+            if (info.getApBeat() == null) info.setApBeat((long) 0);
+            if (info.getPvBeat() == null) info.setPvBeat((long) 0);
+            if (info.getAtrialFibrillation() == null) info.setAtrialFibrillation((long) 0);
+            if (info.getAtrialFlutter() == null) info.setAtrialFlutter((long) 0);
+            if (info.getLeftBlock() == null) info.setLeftBlock((long) 0);
+            if (info.getRightBlock() == null) info.setRightBlock((long) 0);
+            if (info.getBradycardia() == null) info.setBradycardia((long) 0);
+            if (info.getTachycardia() == null) info.setTachycardia((long) 0);
         }
         return AjaxResult.success(infos);
     }

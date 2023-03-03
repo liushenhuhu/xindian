@@ -1,14 +1,13 @@
 package com.ruoyi.xindian.alert_log.domain;
 
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 预警日志对象 alert_log
@@ -98,6 +97,10 @@ public class AlertLog extends BaseEntity
     private String ecgType;
 
     private Integer userId;
+
+    /** 医生电话 */
+    @Excel(name = "医生电话")
+    private String doctorPhone;
 
 
     public String getpId() {

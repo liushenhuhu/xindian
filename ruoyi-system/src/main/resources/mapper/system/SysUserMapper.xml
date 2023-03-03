@@ -25,6 +25,7 @@
         <result property="remark" column="remark"/>
         <result property="hospitalName" column="hospital_name"/>
         <result property="hospitalCode" column="hospital_code"/>
+        <result property="roleId" column="role_id"/>
         <result property="openId" column="open_id"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
