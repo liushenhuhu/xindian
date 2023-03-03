@@ -1,7 +1,8 @@
 package com.ruoyi.xindian.patient.service;
 
-import java.util.List;
 import com.ruoyi.xindian.patient.domain.Patient;
+
+import java.util.List;
 
 /**
  * 患者Service接口
@@ -71,10 +72,9 @@ public interface IPatientService
     /**
      * 查询患者
      *
-     * @param patientCode 患者身份证号
      * @return 患者
      */
-    public Patient selectPatientByPatientCode(String patientCode);
+    public Patient selectPatientByPatientPhone(String patientPhone);
 
     /**
      * 查询患者

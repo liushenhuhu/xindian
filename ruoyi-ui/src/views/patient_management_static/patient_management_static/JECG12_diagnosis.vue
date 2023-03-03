@@ -57,7 +57,7 @@
       <el-form-item label="连接时间">
         <el-date-picker
           v-model="daterangeConnectionTime"
-          style="width: 240px"
+          style="width: 205px"
           value-format="yyyy-MM-dd HH:mm:ss"
           type="datetimerange"
           range-separator="-"
@@ -65,10 +65,54 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="在线状态" prop="onlineStatus">
-        <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
+      <!--      <el-form-item label="在线状态" prop="onlineStatus">
+              <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
+                <el-option
+                  v-for="dict in dict.type.monitoring_status"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
+            </el-form-item>-->
+      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+        <el-input
+          v-model="queryParams.intelligentDiagnosis"
+          placeholder="请输入智能诊断"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">
+        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
           <el-option
-            v-for="dict in dict.type.monitoring_status"
+            v-for="dict in dict.type.diagnosis_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>-->
+      <el-form-item label="诊断结论" prop="diagnosisConclusion">
+        <el-input
+          v-model="queryParams.diagnosisConclusion"
+          placeholder="请输入诊断结论"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="诊断医生" prop="diagnosisDoctor">
+        <el-input
+          v-model="queryParams.diagnosisDoctor"
+          placeholder="请输入诊断医生"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="风险等级" prop="ecgLevel">
+        <el-select v-model="queryParams.ecgLevel" placeholder="请选择风险等级" clearable>
+          <el-option
+            v-for="dict in dict.type.ecg_level"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -83,6 +127,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+<!--      <el-form-item label="pId" prop="pId">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.pId"-->
+<!--          placeholder="请输入pId"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -136,54 +188,89 @@
         >导出
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-
 
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-
-      <el-table-column label="连接时间" align="center" prop="connectionTime" width="180">
+      <el-table-column label="上传时间" align="center" prop="connectionTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
-      <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
-                  <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-                  <el-table-column label="患者性别" align="center" prop="patientSex">
-                    <template slot-scope="scope">
-                      <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="患者来源" align="center" prop="patientSource"/>
-                  <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-                  <el-table-column label="家属电话" align="center" prop="familyPhone"/>
-                  <el-table-column label="监测状态" align="center" prop="monitoringStatus">
-                    <template slot-scope="scope">
-                      <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
-      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <el-table-column label="设备号" align="center" prop="equipmentCode"/>
-      <el-table-column label="在线状态" align="center" prop="onlineStatus">
+
+      <!--      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
+            <el-table-column label="患者姓名" align="center" prop="patientName"/>
+            <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
+            <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+            <el-table-column label="患者性别" align="center" prop="patientSex">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+              </template>
+            </el-table-column>
+            <el-table-column label="患者来源" align="center" prop="patientSource"/>
+            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+            <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+            <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+              </template>
+            </el-table-column>
+            <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+            <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
+            <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+            <el-table-column label="在线状态" align="center" prop="onlineStatus">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
+              </template>
+            </el-table-column>
+            <el-table-column label="心电种类" align="center" prop="ecgType">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+              </template>
+            </el-table-column>-->
+
+
+      <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
+      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
+          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
+      <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
+      <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
+      <el-table-column label="报告时间" align="center" prop="reportTime" width="180" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="风险等级" align="center" prop="ecgLevel">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="心电类型" align="center" prop="ecgType"/>-->
       <el-table-column label="心电种类" align="center" prop="ecgType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
         </template>
       </el-table-column>
 
+
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
+            <el-form-item label="医院代号" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.hospitalCode }}</span>
+            </el-form-item>
+            <el-form-item label="患者管理id" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.pId }}</span>
+            </el-form-item>
+            <el-form-item label="患者姓名" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.patientName }}</span>
+            </el-form-item>
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
@@ -202,13 +289,16 @@
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.familyPhone }}</span>
             </el-form-item>
-            <el-form-item label="医生电话" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.doctorPhone }}</span>
-            </el-form-item>
 
             <!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.hospitalName }}</span>
                         </el-form-item>-->
+            <el-form-item label="设备号" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.equipmentCode }}</span>
+            </el-form-item>
+            <el-form-item label="医生电话" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.doctorPhone }}</span>
+            </el-form-item>
 
           </el-form>
         </template>
@@ -220,16 +310,16 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-loading"
-            @click="monitoring(scope.row);isRed1=!isRed1"
-            v-hasPermi="['patient:patient:monitoring']"
-          >实时监测
+            icon="el-icon-s-order"
+            @click="lookECG(scope.row)"
+            v-hasPermi="['patient:patient:alert']"
+          >查看报告
           </el-button>
-          <el-button
+<!--          <el-button
             size="mini"
             type="text"
             icon="el-icon-download"
-            @click="isRed2=!isRed2;handleInform(scope.row)"
+            @click="handleInform(scope.row)"
             v-hasPermi="['patient:patient:downloadInform']"
           >生成报告
           </el-button>
@@ -237,23 +327,15 @@
             size="mini"
             type="text"
             icon="el-icon-magic-stick"
-            @click="isRed3=!isRed3;downloadInform(scope.row)"
+            @click="downloadInform(scope.row)"
             v-hasPermi="['patient:patient:inform']"
           >下载报告
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-order"
-            @click="isRed4=!isRed4;handleAlert(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
-          >预警日志
-          </el-button>
+          </el-button>-->
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row);isRed5=!isRed5"
+            @click="handleUpdate(scope.row)"
             v-hasPermi="['patient_management:patient_management:edit']"
           >修改
           </el-button>
@@ -317,8 +399,21 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+          <el-input v-model="form.intelligentDiagnosis" placeholder="请输入智能诊断"/>
+        </el-form-item>
+        <el-form-item label="风险等级">
+          <el-radio-group v-model="form.ecgLevel">
+            <el-radio
+              v-for="dict in dict.type.ecg_level"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{ dict.label }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="医生电话" prop="doctorPhone">
-          <el-input v-model="form.doctorPhone" placeholder="请输入医生电话"/>
+          <el-input v-model="form.doctorPhone" placeholder="请输入医生电话" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -339,14 +434,12 @@ import {
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
-import {getToken} from "@/utils/auth";
-import {updateMonitoringStatus} from "@/api/patient/patient";
-import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
+import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 
 export default {
   name: "Patient_management",
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'hospital_name_name_list'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
   data() {
     return {
       // 遮罩层
@@ -379,15 +472,16 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'DECG12YXD',
+        ecgType: 'JECG12',
         patientPhone: null,
+        intelligentDiagnosis: null,
+        diagnosisStatus: 1,
+        diagnosisConclusion: null,
+        diagnosisDoctor: null,
+        reportTime: null,
+        ecgLevel: null,
         doctorPhone: null
       },
-      // isRed1: false,
-      // isRed2: false,
-      // isRed3: false,
-      // isRed4: false,
-      // isRed5: false,
       // 表单参数
       form: {},
       // 表单校验
@@ -410,26 +504,17 @@ export default {
   },
 
   created() {
-    if (this.$route.params.patientName) {
-      this.queryParams.patientName = this.$route.params.patientName;
-      this.queryParams.patientPhone = this.$route.params.patientPhone;
-    }
-    this.getList();
-  },
-  activated() {
-    if (this.$route.params.patientName) {
-      this.queryParams.patientName = this.$route.params.patientName;
-      this.queryParams.patientPhone = this.$route.params.patientPhone;
-    }
     this.getList();
   },
   methods: {
+
     refreshList() {
       console.log("refresh======")
       updateOnlineAll().then(res => {
         this.getList();
       })
     },
+
 
     /** 查询患者管理列表 */
     getList() {
@@ -459,8 +544,13 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'DECG12YXD',
+        ecgType: 'ECG',
         patientPhone: null,
+        diagnosisStatus: null,
+        diagnosisConclusion: null,
+        diagnosisDoctor: null,
+        reportTime: null,
+        ecgLevel: null,
         doctorPhone: null
       };
       this.resetForm("form");
@@ -534,67 +624,21 @@ export default {
         ...this.queryParams
       }, `patient_management_${new Date().getTime()}.xlsx`)
     },
-    /** 跳转到预警日志*/
-    handleAlert(row) {
-      this.$router.push({
-        name: "log",
-        params: {pId: row.pId}});
+    /** 查看心电图*/
+    lookECG(row) {
+      this.$router.push({path: "/restingECG", query: {pId: row.pId}});
     },
-    /** 跳转到心电图实时监测*/
-    monitoring(row) {
-      this.$router.push({
-        path: "/monitoring",
-        query: {equipmentCode: row.equipmentCode}});
-    },
-
     /** 生成报告*/
     handleInform(row) {
-      var name = row.patientName
-      $.ajax({
-        type: "post",
-        url: "https://server.mindyard.cn:84/analysis_decg",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          pId: row.pId,
-          ecg_type: row.ecgType
-        }),
-        beforeSend: function (request) {
-          request.setRequestHeader("user", "zzu");
-          request.setRequestHeader("password", "zzu123");
-        },
-
-        success: function (data) {
-          alert(name + "动态心电报告已生成")
-        },
-        error: function (data) {
-          console.log(name + "动态心电报告生成出错,请重新请求或联系管理员")
-        }
-      })
-      alert(name + "动态报告生成中，请稍后...")
-    },
-
-    /** 下载报告*/
-    downloadInform(row) {
-      let routeUrl = this.$router.resolve({
-        path: "/ExportPDF",
-        query: {pId: row.pId, hospitalName: row.hospitalName, ecg_type: row.ecgType, patientName: row.patientName}
-      });
+      let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
 
+    },
+    /** 下载报告*/
+    downloadInform(row) {
+      let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
+      window.open(routeUrl.href, '_blank');
     }
   }
-}
-;
+};
 </script>
-
-<style type="text/css">
-.red {
-  color: red;
-}
-
-.blue {
-  color: blue;
-}
-</style>
-

@@ -1,11 +1,12 @@
 package com.ruoyi.xindian.patient.service.impl;
 
-import java.util.List;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.mapper.PatientMapper;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.xindian.patient.mapper.PatientMapper;
-import com.ruoyi.xindian.patient.domain.Patient;
-import com.ruoyi.xindian.patient.service.IPatientService;
+
+import java.util.List;
 
 /**
  * 患者Service业务层处理
@@ -98,8 +99,8 @@ public class PatientServiceImpl implements IPatientService
 
 
     @Override
-    public Patient selectPatientByPatientCode(String patientCode) {
-        return patientMapper.selectPatientByPatientCode(patientCode);
+    public Patient selectPatientByPatientPhone(String patientPhone) {
+        return patientMapper.selectPatientByPatientPhone(patientPhone);
     }
 
     @Override

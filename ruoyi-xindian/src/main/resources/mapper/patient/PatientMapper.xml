@@ -71,9 +71,9 @@
         where patient_id = #{patientId}
     </select>
 
-    <select id="selectPatientByPatientCode" parameterType="String" resultMap="PatientResult">
+    <select id="selectPatientByPatientPhone" parameterType="String" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
-        where patient_code = #{patientCode}
+        where patient_phone = #{patientPhone}
     </select>
 
     <select id="selectPatientByPatientName" parameterType="String" resultMap="PatientResult">
