@@ -16,6 +16,7 @@
         <result property="equipmentId" column="equipment_id"/>
         <result property="monitoringStatus" column="monitoring_status"/>
         <result property="bindingState" column="binding_state"/>
+        <result property="birthDay"    column="birth_day"    />
     </resultMap>
 
     <sql id="selectPatientVo">
@@ -29,7 +30,8 @@
                family_phone,
                equipment_id,
                monitoring_status,
-               binding_state
+               binding_state,
+               birth_day
         from patient
     </sql>
 
@@ -62,6 +64,7 @@
                 #{monitoringStatus}, '%')
             </if>
             <if test="bindingState != null  and bindingState != ''">and binding_state = #{bindingState}</if>
+            <if test="birthDay != null "> and birth_day = #{birthDay}</if>
         </where>
         order by monitoring_status desc, patient_id desc
     </select>
@@ -100,6 +103,7 @@
             <if test="equipmentId != null">equipment_id,</if>
             <if test="monitoringStatus != null">monitoring_status,</if>
             <if test="bindingState != null">binding_state,</if>
+            <if test="birthDay != null">birth_day,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
@@ -113,6 +117,7 @@
             <if test="equipmentId != null">#{equipmentId},</if>
             <if test="monitoringStatus != null">#{monitoringStatus},</if>
             <if test="bindingState != null">#{bindingState},</if>
+            <if test="birthDay != null">#{birthDay},</if>
         </trim>
     </insert>
 
@@ -129,6 +134,7 @@
             <if test="equipmentId != null">equipment_id = #{equipmentId},</if>
             <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
             <if test="bindingState != null">binding_state = #{bindingState},</if>
+            <if test="birthDay != null">birth_day = #{birthDay},</if>
         </trim>
         where patient_id = #{patientId}
     </update>
