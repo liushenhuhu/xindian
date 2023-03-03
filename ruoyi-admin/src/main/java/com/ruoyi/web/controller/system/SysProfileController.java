@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.framework.web.service.SysLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,9 @@ public class SysProfileController extends BaseController
 {
     @Autowired
     private ISysUserService userService;
+
+    @Autowired
+    private SysLoginService loginService;
 
     @Autowired
     private TokenService tokenService;
@@ -102,6 +106,30 @@ public class SysProfileController extends BaseController
         {
             return AjaxResult.error("修改密码失败，旧密码错误");
         }
+        if (SecurityUtils.matchesPassword(newPassword, password))
+        {
+            return AjaxResult.error("新密码不能与旧密码相同");
+        }
+        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0)
+        {
+            // 更新缓存用户密码
+            loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
+            tokenService.setLoginUser(loginUser);
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("修改密码异常，请联系管理员");
+    }
+    /**
+     * 验证码修改密码
+     */
+    @Log(title = "个人信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/updatePwdByPhone")
+    public AjaxResult updatePwdByPhone(String newPassword)
+    {
+        LoginUser loginUser = getLoginUser();
+        String userName = loginUser.getUsername();
+        String password = loginUser.getPassword();
+
         if (SecurityUtils.matchesPassword(newPassword, password))
         {
             return AjaxResult.error("新密码不能与旧密码相同");
