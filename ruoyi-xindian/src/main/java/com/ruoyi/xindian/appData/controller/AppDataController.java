@@ -1,32 +1,23 @@
 package com.ruoyi.xindian.appData.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.common.core.domain.entity.SysRole;
-import com.ruoyi.system.service.ISysRoleService;
-import com.ruoyi.system.service.ISysUserService;
-import com.ruoyi.xindian.patient.domain.Patient;
-import com.ruoyi.xindian.patient.service.IPatientService;
-import org.apache.commons.beanutils.ConvertUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * app相关数据Controller
@@ -114,16 +105,33 @@ public class AppDataController extends BaseController {
                 patientService.insertPatient(patient);
             }
         }*/
+        int res = 0;
         Patient patient = new Patient();
+        Patient patientSel = new Patient();
+        patientSel.setPatientPhone(appData.getPatientPhone());
         patient.setPatientName(appData.getPatientName());
         patient.setPatientPhone(appData.getPatientPhone());
         patient.setPatientSex(appData.getPatientSex());
         patient.setPatientAge(appData.getPatientAge());
-        List<Patient> patientList = patientService.selectPatientList(patient);
+        List<Patient> patientList = patientService.selectPatientList(patientSel);
         if (null == patientList || patientList.size() == 0) {
             patientService.insertPatient(patient);
+        } else {
+            Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+            patient.setPatientId(patient1.getPatientId());
+            patientService.updatePatient(patient);
         }
-        return toAjax(appDataService.insertAppData(appData));
+        AppData appDataSel = new AppData();
+        appDataSel.setPatientPhone(appData.getPatientPhone());
+        List<AppData> appDataList = appDataService.selectAppDataList(appDataSel);
+        if (null == appDataList || appDataList.size() == 0) {
+            res = appDataService.insertAppData(appData);
+        } else {
+            AppData appData1 = appDataService.selectAppDataByPatientPhone(appData.getPatientPhone());
+            appData.setAppDataId(appData1.getAppDataId());
+            res = appDataService.updateAppData(appData);
+        }
+        return toAjax(res);
     }
 
 

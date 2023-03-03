@@ -83,7 +83,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="诊断状态" prop="diagnosisStatus">
+<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">
         <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
           <el-option
             v-for="dict in dict.type.diagnosis_status"
@@ -92,7 +92,7 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="诊断结论" prop="diagnosisConclusion">
         <el-input
           v-model="queryParams.diagnosisConclusion"
@@ -475,7 +475,7 @@ export default {
         ecgType: 'JECG12',
         patientPhone: null,
         intelligentDiagnosis: null,
-        diagnosisStatus: null,
+        diagnosisStatus: 0,
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
