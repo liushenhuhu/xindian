@@ -473,7 +473,7 @@ export default {
         ecgType: 'JECGsingleGZ',
         patientPhone: null,
         intelligentDiagnosis: null,
-        diagnosisStatus: 0,
+        diagnosisStatus: 1,
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
