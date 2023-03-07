@@ -108,17 +108,26 @@ public class AppDataController extends BaseController {
         int res = 0;
         Patient patient = new Patient();
         Patient patientSel = new Patient();
+
+//        Patient patient2 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+//        patient.setPatientId(patient2.getPatientId());
+//        patient.setBirthDay(appData.getBirthDay());
+//        patientService.updatePatient(patient);
+
         patientSel.setPatientPhone(appData.getPatientPhone());
         patient.setPatientName(appData.getPatientName());
         patient.setPatientPhone(appData.getPatientPhone());
         patient.setPatientSex(appData.getPatientSex());
-        patient.setPatientAge(appData.getPatientAge());
+        if(appData.getPatientAge() != null){
+            patient.setPatientAge(appData.getPatientAge());
+        }
         List<Patient> patientList = patientService.selectPatientList(patientSel);
         if (null == patientList || patientList.size() == 0) {
             patientService.insertPatient(patient);
         } else {
             Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
             patient.setPatientId(patient1.getPatientId());
+            patient.setBirthDay(appData.getBirthDay());
             patientService.updatePatient(patient);
         }
         AppData appDataSel = new AppData();

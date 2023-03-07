@@ -96,6 +96,14 @@ public class Patient extends BaseEntity {
         return patientId;
     }
 
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
+    }
+
     public void setPatientName(String patientName) {
         this.patientName = patientName;
     }

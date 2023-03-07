@@ -1,9 +1,12 @@
 package com.ruoyi.xindian.appData.domain;
 
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
 
 /**
  * app相关数据对象 app_data
@@ -42,80 +45,95 @@ public class AppData extends BaseEntity
     @Excel(name = "用户名")
     private String userName;
 
-    public void setAppDataId(Long appDataId) 
+    /** 患者出生日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "患者出生日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date birthDay;
+
+    public void setAppDataId(Long appDataId)
     {
         this.appDataId = appDataId;
     }
 
-    public Long getAppDataId() 
+    public Long getAppDataId()
     {
         return appDataId;
     }
-    public void setPatientName(String patientName) 
+    public void setPatientName(String patientName)
     {
         this.patientName = patientName;
     }
 
-    public String getPatientName() 
+    public String getPatientName()
     {
         return patientName;
     }
-    public void setPatientSex(String patientSex) 
+    public void setPatientSex(String patientSex)
     {
         this.patientSex = patientSex;
     }
 
-    public String getPatientSex() 
+    public String getPatientSex()
     {
         return patientSex;
     }
-    public void setPatientAge(String patientAge) 
+    public void setPatientAge(String patientAge)
     {
         this.patientAge = patientAge;
     }
 
-    public String getPatientAge() 
+    public String getPatientAge()
     {
         return patientAge;
     }
-    public void setPatientCode(String patientCode) 
+    public void setPatientCode(String patientCode)
     {
         this.patientCode = patientCode;
     }
 
-    public String getPatientCode() 
+    public String getPatientCode()
     {
         return patientCode;
     }
-    public void setPatientPhone(String patientPhone) 
+    public void setPatientPhone(String patientPhone)
     {
         this.patientPhone = patientPhone;
     }
 
-    public String getPatientPhone() 
+    public String getPatientPhone()
     {
         return patientPhone;
     }
-    public void setUserName(String userName) 
+    public void setUserName(String userName)
     {
         this.userName = userName;
     }
 
-    public String getUserName() 
+    public String getUserName()
     {
         return userName;
+    }
+    public void setBirthDay(Date birthDay)
+    {
+        this.birthDay = birthDay;
+    }
+
+    public Date getBirthDay()
+    {
+        return birthDay;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("appDataId", getAppDataId())
-            .append("patientName", getPatientName())
-            .append("patientSex", getPatientSex())
-            .append("patientAge", getPatientAge())
-            .append("patientCode", getPatientCode())
-            .append("patientPhone", getPatientPhone())
-            .append("userName", getUserName())
-            .toString();
+                .append("appDataId", getAppDataId())
+                .append("patientName", getPatientName())
+                .append("patientSex", getPatientSex())
+                .append("patientAge", getPatientAge())
+                .append("patientCode", getPatientCode())
+                .append("patientPhone", getPatientPhone())
+                .append("userName", getUserName())
+                .append("birthDay", getBirthDay())
+                .toString();
     }
 }
