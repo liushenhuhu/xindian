@@ -118,6 +118,7 @@ public class AppDataController extends BaseController {
         patient.setPatientName(appData.getPatientName());
         patient.setPatientPhone(appData.getPatientPhone());
         patient.setPatientSex(appData.getPatientSex());
+        patient.setBirthDay(appData.getBirthDay());
         if(appData.getPatientAge() != null){
             patient.setPatientAge(appData.getPatientAge());
         }
@@ -127,7 +128,6 @@ public class AppDataController extends BaseController {
         } else {
             Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
             patient.setPatientId(patient1.getPatientId());
-            patient.setBirthDay(appData.getBirthDay());
             patientService.updatePatient(patient);
         }
         AppData appDataSel = new AppData();
