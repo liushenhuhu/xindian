@@ -57,8 +57,9 @@ public class PatientManagementController extends BaseController {
 //        startPage();
 //        List<PatientManagement> list_add = new ArrayList<>();
         List<PatientManagement> list = new ArrayList<>();
+//        Long userId = getUserId();
         SysUser sysUser = userService.selectUserById(getUserId());
-        if (getDeptId() == 200) {
+        if (getDeptId()!=null && getDeptId() == 200) {
             String hospitalName = sysUser.getHospitalName();
             patientManagement.setHospitalName(hospitalName);
             startPage();
@@ -72,7 +73,7 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
 
-        } else if (sysUser.getRoleId() == 104) {
+        } else if (sysUser != null && sysUser.getRoleId()!=null && sysUser.getRoleId() == 104) {
             patientManagement.setDoctorPhone(sysUser.getPhonenumber());
             startPage();
             if (null == patientManagement.getEcgType()) {

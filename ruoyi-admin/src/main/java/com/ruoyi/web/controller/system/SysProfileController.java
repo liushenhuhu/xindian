@@ -124,11 +124,13 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping("/updatePwdByPhone")
-    public AjaxResult updatePwdByPhone(String newPassword)
+    public AjaxResult updatePwdByPhone(String newPassword,String mobile, String code, String uuid)
     {
         LoginUser loginUser = getLoginUser();
         String userName = loginUser.getUsername();
         String password = loginUser.getPassword();
+//        SysLoginService sysLoginService = new SysLoginService();
+//        sysLoginService.checkSmsCode(mobile, code, uuid);
 
         if (SecurityUtils.matchesPassword(newPassword, password))
         {

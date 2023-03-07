@@ -193,7 +193,7 @@ public class SysLoginService {
      *
      * @param
      */
-    private void checkSmsCode(String mobile, String inputCode, String uuid) {
+    public void checkSmsCode(String mobile, String inputCode, String uuid) {
 
         String verifyKey = Constants.SMS_CAPTCHA_CODE_KEY + uuid;
 
