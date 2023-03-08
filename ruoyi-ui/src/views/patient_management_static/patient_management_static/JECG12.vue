@@ -101,14 +101,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="诊断医生" prop="diagnosisDoctor">
-        <el-input
-          v-model="queryParams.diagnosisDoctor"
-          placeholder="请输入诊断医生"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="诊断医生" prop="field101">
+        <el-select v-model="queryParams.DoctorName" placeholder="请选择诊断医生" clearable :style="{width: '100%'}">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
+
       <el-form-item label="风险等级" prop="ecgLevel">
         <el-select v-model="queryParams.ecgLevel" placeholder="请选择风险等级" clearable>
           <el-option
@@ -127,14 +130,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="pId" prop="pId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.pId"-->
-<!--          placeholder="请输入pId"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="pId" prop="pId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.pId"-->
+      <!--          placeholder="请输入pId"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -249,7 +252,7 @@
           <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
         </template>
       </el-table-column>
-<!--      <el-table-column label="心电类型" align="center" prop="ecgType"/>-->
+      <!--      <el-table-column label="心电类型" align="center" prop="ecgType"/>-->
       <el-table-column label="心电种类" align="center" prop="ecgType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
@@ -315,22 +318,22 @@
             v-hasPermi="['patient:patient:alert']"
           >查看报告
           </el-button>
-<!--          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-download"
-            @click="handleInform(scope.row)"
-            v-hasPermi="['patient:patient:downloadInform']"
-          >生成报告
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-magic-stick"
-            @click="downloadInform(scope.row)"
-            v-hasPermi="['patient:patient:inform']"
-          >下载报告
-          </el-button>-->
+          <!--          <el-button
+                      size="mini"
+                      type="text"
+                      icon="el-icon-download"
+                      @click="handleInform(scope.row)"
+                      v-hasPermi="['patient:patient:downloadInform']"
+                    >生成报告
+                    </el-button>
+                    <el-button
+                      size="mini"
+                      type="text"
+                      icon="el-icon-magic-stick"
+                      @click="downloadInform(scope.row)"
+                      v-hasPermi="['patient:patient:inform']"
+                    >下载报告
+                    </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -413,7 +416,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="医生电话" prop="doctorPhone">
-          <el-input v-model="form.doctorPhone" placeholder="请输入医生电话" />
+          <el-input v-model="form.doctorPhone" placeholder="请输入医生电话"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -436,12 +439,18 @@ import axios from "axios";
 import $ from "jquery";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
+import {addReport} from "@/api/report/report";
+import {listDoctorName} from "@/api/doctor/doctor";
+
 
 export default {
   name: "Patient_management",
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
   data() {
     return {
+      isRouterAlive:true,
+      //诊断医生
+      options: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -480,6 +489,7 @@ export default {
         diagnosisDoctor: null,
         reportTime: null,
         ecgLevel: null,
+        DoctorName: null,
         doctorPhone: null
       },
       // 表单参数
@@ -498,12 +508,22 @@ export default {
       }
     };
   },
-
   beforeCreate() {
     updateOnlineAll();
   },
 
   created() {
+    listDoctorName().then(response => {
+      console.log(response)
+      for (var i = 0; i < response.length; i++) {
+        var obj = {}
+        obj.value = response[i];
+        obj.label = response[i];
+        console.log(obj)
+        this.options[i] = obj;
+        console.log(this.options)
+      }
+    });
     this.getList();
   },
   methods: {
@@ -626,7 +646,7 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/restingECG", query: {pId: row.pId}});
+      this.$router.push({path: "/restingECG", query: {pId: row.pId},meta: {reload: ''}});
     },
     /** 生成报告*/
     handleInform(row) {

@@ -43,3 +43,4 @@ export function delLog_user(logId) {
     method: 'delete'
   })
 }
+

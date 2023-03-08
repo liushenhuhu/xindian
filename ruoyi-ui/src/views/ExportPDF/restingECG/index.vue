@@ -89,54 +89,42 @@
           <div class="body">
             <div class="body-1">
               <div>
-                <div id="I" class="line"></div>
-                <button @click="clicktrueI" class="btn1">展开</button>
+                <div id="I" class="line" @dblclick="clicktrueI"></div>
               </div>
               <div>
-                <div id="II" class="line"></div>
-                <button @click="clicktrueII" class="btn1">展开</button>
+                <div id="II" class="line" @dblclick="clicktrueII"></div>
               </div>
               <div>
-                <div id="III" class="line"></div>
-                <button @click="clicktrueIII" class="btn1">展开</button>
+                <div id="III" class="line" @dblclick="clicktrueIII"></div>
               </div>
               <div>
-                <div id="aVR" class="line"></div>
-                <button @click="clicktrueaVR" class="btn1">展开</button>
+                <div id="aVR" class="line" @dblclick="clicktrueaVR"></div>
               </div>
               <div>
-                <div id="aVL" class="line"></div>
-                <button @click="clicktrueaVL" class="btn1">展开</button>
+                <div id="aVL" class="line" @dblclick="clicktrueaVL"></div>
               </div>
               <div>
-                <div id="aVF" class="line"></div>
-                <button @click="clicktrueaVF" class="btn1">展开</button>
+                <div id="aVF" class="line"  @dblclick="clicktrueaVF"></div>
               </div>
             </div>
             <div class="body-1">
               <div>
-                <div id="V1" class="line"></div>
-                <button @click="clicktrueV1" class="btn1">展开</button>
+                <div id="V1" class="line"  @dblclick="clicktrueV1"></div>
               </div>
               <div>
-                <div id="V2" class="line"></div>
-                <button @click="clicktrueV2" class="btn1">展开</button>
+                <div id="V2" class="line"  @dblclick="clicktrueV2"></div>
               </div>
               <div>
-                <div id="V3" class="line"></div>
-                <button @click="clicktrueV3" class="btn1">展开</button>
+                <div id="V3" class="line"  @dblclick="clicktrueV3"></div>
               </div>
               <div>
-                <div id="V4" class="line"></div>
-                <button @click="clicktrueV4" class="btn1">展开</button>
+                <div id="V4" class="line"  @dblclick="clicktrueV4"></div>
               </div>
               <div>
-                <div id="V5" class="line"></div>
-                <button @click="clicktrueV5" class="btn1">展开</button>
+                <div id="V5" class="line"  @dblclick="clicktrueV5"></div>
               </div>
               <div>
-                <div id="V6" class="line"></div>
-                <button @click="clicktrueV6" class="btn1">展开</button>
+                <div id="V6" class="line"  @dblclick="clicktrueV6"></div>
               </div>
 
             </div>
@@ -643,7 +631,6 @@ export default {
           max: 1,
           min: -1
         },
-
         series: [
           {
             type: 'line',
@@ -665,7 +652,6 @@ export default {
                 width: 0.5
               },
               label: {
-
                 position: 'start', // 表现内容展示的位置
                 color: '#b33939'  // 展示内容颜色
               },

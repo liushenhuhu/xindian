@@ -142,7 +142,7 @@ export const constantRoutes = [
         hidden: true,
         name: 'static_single',
         component: () => import('@/views/staticECG/staticECG'),
-        meta: {title: '静态单导心电图'}
+        meta: {title: '静态单导心电图', reload: ''}
       }
     ]
   },

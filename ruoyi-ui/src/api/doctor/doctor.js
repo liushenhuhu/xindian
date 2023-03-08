@@ -13,6 +13,7 @@ export function listDoctorName() {
   return request({
     url: '/doctor/doctor/nameList',
     method: 'get',
+    dataType:"JSON",
   })
 }
 
