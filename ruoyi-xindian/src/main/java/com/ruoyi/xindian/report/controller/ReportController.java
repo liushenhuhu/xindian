@@ -167,37 +167,37 @@ public class ReportController extends BaseController
     public AjaxResult getWeekInfo(Report rep) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        int weekIdx = calendar.get(Calendar.DAY_OF_WEEK) - 1;//1 星期一
-        if(weekIdx<0) weekIdx=0;
-        int flag=1;
-        int index=0;
+//        int weekIdx = calendar.get(Calendar.DAY_OF_WEEK) - 1;//1 星期一
+//        if(weekIdx<0) weekIdx=0;
+//        int flag=1;
+//        int index=0;
 //        ArrayList<String> weekDay = new ArrayList<>();
         HashMap<String, Integer> normal = new HashMap<>();
         HashMap<String, Integer> abnormal = new HashMap<>();
-        HashMap<String, Object> params = new HashMap<>();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String maxTime="0000";
-        String minTime="9999";
-        for (int i = 0; i < 7; i++) {
-            Date date = DateUtils.addDays(new Date(), index);
-            String formatDate = format.format(date);
-            if(maxTime.compareTo(formatDate)<0) maxTime=formatDate;
-            if(minTime.compareTo(formatDate)>0) minTime=formatDate;
-            normal.put(formatDate,0);
-            abnormal.put(formatDate,0);
-            weekIdx+=flag;
-            index+=flag;
-            if(weekIdx==8){
-                weekIdx=0;
-                flag=-1;
-                index=-1;
-            }
-        }
+//        HashMap<String, Object> params = new HashMap<>();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        String maxTime="0000";
+//        String minTime="9999";
+//        for (int i = 0; i < 7; i++) {
+//            Date date = DateUtils.addDays(new Date(), index);
+//            String formatDate = format.format(date);
+//            if(maxTime.compareTo(formatDate)<0) maxTime=formatDate;
+//            if(minTime.compareTo(formatDate)>0) minTime=formatDate;
+//            normal.put(formatDate,0);
+//            abnormal.put(formatDate,0);
+//            weekIdx+=flag;
+//            index+=flag;
+//            if(weekIdx==8){
+//                weekIdx=0;
+//                flag=-1;
+//                index=-1;
+//            }
+//        }
 
         Report report = new Report();
-        params.put("beginReportTime",minTime);
-        params.put("endReportTime",maxTime);
-        report.setParams(params);
+//        params.put("beginReportTime",minTime);
+//        params.put("endReportTime",maxTime);
+//        report.setParams(params);
         report.setPPhone(rep.getPPhone());
 //        report.set
         List<Report> reports = reportService.selectReportList(report);
@@ -207,8 +207,20 @@ public class ReportController extends BaseController
         for (Report re : reports) {
             key= new SimpleDateFormat("yyyy-MM-dd").format(re.getReportTime());
 
-            if(re.getIntelligentDiagnosis().contains("正常")) normal.put(key,normal.get(key)+1);
-            else abnormal.put(key,abnormal.get(key)+1);
+            if(re.getIntelligentDiagnosis()!=null && re.getIntelligentDiagnosis().contains("正常")){
+                if(abnormal.containsKey(key)){
+                    normal.put(key,normal.get(key)+1);
+                } else{
+                    normal.put(key,1);
+                }
+            }
+            else {
+                if(abnormal.containsKey(key)){
+                    abnormal.put(key,abnormal.get(key)+1);
+                } else{
+                    abnormal.put(key,1);
+                }
+            }
         }
         result.put("normal",normal);
         result.put("abnormal",abnormal);
