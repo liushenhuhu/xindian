@@ -104,27 +104,27 @@
                 <div id="aVL" class="line" @dblclick="clicktrueaVL"></div>
               </div>
               <div>
-                <div id="aVF" class="line"  @dblclick="clicktrueaVF"></div>
+                <div id="aVF" class="line" @dblclick="clicktrueaVF"></div>
               </div>
             </div>
             <div class="body-1">
               <div>
-                <div id="V1" class="line"  @dblclick="clicktrueV1"></div>
+                <div id="V1" class="line" @dblclick="clicktrueV1"></div>
               </div>
               <div>
-                <div id="V2" class="line"  @dblclick="clicktrueV2"></div>
+                <div id="V2" class="line" @dblclick="clicktrueV2"></div>
               </div>
               <div>
-                <div id="V3" class="line"  @dblclick="clicktrueV3"></div>
+                <div id="V3" class="line" @dblclick="clicktrueV3"></div>
               </div>
               <div>
-                <div id="V4" class="line"  @dblclick="clicktrueV4"></div>
+                <div id="V4" class="line" @dblclick="clicktrueV4"></div>
               </div>
               <div>
-                <div id="V5" class="line"  @dblclick="clicktrueV5"></div>
+                <div id="V5" class="line" @dblclick="clicktrueV5"></div>
               </div>
               <div>
-                <div id="V6" class="line"  @dblclick="clicktrueV6"></div>
+                <div id="V6" class="line" @dblclick="clicktrueV6"></div>
               </div>
 
             </div>
@@ -134,10 +134,12 @@
             <strong>日期:</strong><input class="box8-2" v-if="data.diagnosisData!=null"
                                        v-model="data.diagnosisData"></input>
             <input class="box8-2" v-else v-model="data.dataTime"></input>
+            <el-button type="primary" round style="position: absolute;right: 47%;top: 1vw" @click="btnUpload">
+              保存数据
+            </el-button>
           </div>
         </div>
       </div>
-
       <div class="lineI" v-show="openI">
         <div id="I1" class="lineshow"></div>
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
@@ -187,32 +189,18 @@
         <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
       </div>
     </div>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 42.5% ;margin-bottom: 15px" @click="btnClick">
-      导出PDF
-    </el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 2% ;margin-bottom: 15px" @click="btnClickPDF">
-      上传PDF
-    </el-button>
-    <el-button type="primary" round style="margin-top: 20px; margin-left: 5% ;margin-bottom: 15px" @click="btnUpload">
-      保存数据
-    </el-button>
-
   </div>
 </template>
 
 <script>
-import html2Canvas from 'html2canvas'
-import JsPDF from 'jspdf'
 import echarts from 'echarts'
 import $ from 'jquery';
 import {addReport, getReportByPId, updateReport} from "@/api/report/report";
-import {pdfDownload2} from "@/api/pdf/pdf";
 
 export default {
   name: "index",
   data() {
     return {
-      // exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.patientName + "静态心电报告_" + this.$route.query.pId,
       pId: null,
       data: {
         name: "",
@@ -234,6 +222,21 @@ export default {
         dataTime: "",
         doctorName: "",
         diagnosisData: null,
+      },
+      data12: {
+        x :[],
+        dataI: [],
+        dataII: [],
+        dataIII: [],
+        dataaVR: [],
+        dataaVL: [],
+        dataaVF: [],
+        dataV1: [],
+        dataV2: [],
+        dataV3: [],
+        dataV4: [],
+        dataV5: [],
+        dataV6: [],
       },
       openI: false,
       openII: false,
@@ -271,32 +274,7 @@ export default {
     }
   },
   mounted() {
-    this.getall();
-    this.I()
-    this.II()
-    this.III()
-    this.aVR()
-    this.aVL()
-    this.aVF()
-    this.V1()
-    this.V2()
-    this.V3()
-    this.V4()
-    this.V5()
-    this.V6()
-    this.getDate();
-    this.I1()
-    this.II1()
-    this.III1()
-    this.aVR1()
-    this.aVL1()
-    this.aVF1()
-    this.V11()
-    this.V22()
-    this.V33()
-    this.V44()
-    this.V55()
-    this.V66()
+
   },
   methods: {
     clicktrueI() {
@@ -350,6 +328,7 @@ export default {
       this.openV5 = false;
       this.openV6 = false;
     },
+
     get() {
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
@@ -364,7 +343,6 @@ export default {
       $.ajax({
         type: "post",
         url: "https://screen.mindyard.cn:84/get_jecg_12",
-        // asynsc: false,
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
@@ -378,13 +356,7336 @@ export default {
         success: function (data) {
           console.log(_th.pId)
           console.log(data)
-          console.log(JSON.stringify(data))
-          console.log("成功11111111111111111111111111111111")
-          sessionStorage.removeItem("data");
-          sessionStorage.setItem(_th.pId + 'data', JSON.stringify(data))
-          sessionStorage.setItem(_th.pId + 'show', true)
           loading.close()
-          window.location.reload("#pdfDom");
+          _th.data.age = data.result.age
+          _th.data.gender = data.result.gender
+          _th.data.name = data.result.patientName
+          _th.data.result = data.result.intelligent_diagnosis
+          _th.data.hr = data.result.ecg_analysis_data["平均心率"]
+          _th.data.pr = data.result.ecg_analysis_data["PR_dis_avg"]
+          _th.data.qrs = data.result.ecg_analysis_data["QRS_dis_avg"]
+          _th.data.qt = data.result.ecg_analysis_data["QT_dis_avg"]
+          _th.data.qtc = data.result.ecg_analysis_data["QTc2"]
+          _th.data.p = data.result.ecg_analysis_data["P_deg"]
+          _th.data.qrs_deg = data.result.ecg_analysis_data["QRS_deg"]
+          _th.data.t = data.result.ecg_analysis_data["T_deg"]
+          _th.data.pv5 = data.result.ecg_analysis_data["PV5_mv"]
+          _th.data.sv1 = data.result.ecg_analysis_data["SV1_mv"]
+          _th.data.rv5_sv1 = data.result.ecg_analysis_data["RV5_SV1"]
+          _th.data12.dataI = data.result.I
+          _th.data12.dataII = data.result.II
+          _th.data12.dataIII = data.result.III
+          _th.data12.dataaVR = data.result.aVR
+          _th.data12.dataaVL = data.result.aVL
+          _th.data12.dataaVF = data.result.aVF
+          _th.data12.dataV1 = data.result.V1
+          _th.data12.dataV2 = data.result.V2
+          _th.data12.dataV3 = data.result.V3
+          _th.data12.dataV4 = data.result.V4
+          _th.data12.dataV5 = data.result.V5
+          _th.data12.dataV6 = data.result.V6
+
+          for (var i = 0; i < 1000; i++) {
+            _th.data12.x.push(i);
+          }
+          var chartI = echarts.init(document.getElementById("I"));
+          chartI.clear()
+          chartI.setOption({
+            title: {
+              text: "I",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color:"#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataI,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartI.resize();
+          });
+          var chartII = echarts.init(document.getElementById("II"));
+          chartII.clear()
+          chartII.setOption({
+            title: {
+              text: "II",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color:"#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataII,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartII.resize();
+          });
+          var chartIII = echarts.init(document.getElementById("III"));
+          chartIII.clear()
+          chartIII.setOption({
+            title: {
+              text: "III",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataIII,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartIII.resize();
+          });
+          var chartaVR = echarts.init(document.getElementById("aVR"));
+          chartaVR.clear()
+          chartaVR.setOption({
+            title: {
+              text: "aVR",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataaVR,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartaVR.resize();
+          });
+          var chartaVL = echarts.init(document.getElementById("aVL"));
+          chartaVL.clear()
+          chartaVL.setOption({
+            title: {
+              text: "aVL",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataaVL,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartaVL.resize();
+          });
+          var chartaVF = echarts.init(document.getElementById("aVF"));
+          chartaVF.clear()
+          chartaVF.setOption({
+            title: {
+              text: "aVF",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataaVF,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartaVF.resize();
+          });
+          var chartV1 = echarts.init(document.getElementById("V1"));
+          chartV1.clear()
+          chartV1.setOption({
+            title: {
+              text: "V1",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataV1,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV1.resize();
+          });
+          var chartV2 = echarts.init(document.getElementById("V2"));
+          chartV2.clear()
+          chartV2.setOption({
+            title: {
+              text: "V2",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataV2,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV2.resize();
+          });
+          var chartV3 = echarts.init(document.getElementById("V3"));
+          chartV3.clear()
+          chartV3.setOption({
+            title: {
+              text: "V3",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataV3,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV3.resize();
+          });
+          var chartV4 = echarts.init(document.getElementById("V4"));
+          chartV4.clear()
+          chartV4.setOption({
+            title: {
+              text: "V4",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataV4,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV4.resize();
+          });
+          var chartV5 = echarts.init(document.getElementById("V5"));
+          chartV5.clear()
+          chartV5.setOption({
+            title: {
+              text: "V5",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataV5,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV5.resize();
+          });
+          var chartV6 = echarts.init(document.getElementById("V6"));
+          chartV6.clear()
+          chartV6.setOption({
+            title: {
+              text: "V6",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data:  _th.data12.dataV6,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartV6.resize();
+          });
+          //放大之后的心电图
+          var chartI1 = echarts.init(document.getElementById("I1"));
+          chartI1.clear()
+          chartI1.setOption({
+            title: {
+              text: "I",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data:  _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataI,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+            $(window).resize(function () {
+              chartI1.resize();
+            });
+          var chartII1 = echarts.init(document.getElementById("II1"));
+          chartII1.clear()
+          chartII1.setOption({
+            title: {
+              text: "II",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataII,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartII1.resize();
+          });
+          var chartIII1 = echarts.init(document.getElementById("III1"));
+          chartIII1.clear()
+          chartIII1.setOption({
+            title: {
+              text: "III",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataIII,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartIII1.resize();
+          });
+          var chartaVR1 = echarts.init(document.getElementById("aVR1"));
+          chartaVR1.clear()
+          chartaVR1.setOption({
+            title: {
+              text: "aVR",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataaVR,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartaVR1.resize();
+          });
+          var chartaVL1 = echarts.init(document.getElementById("aVL1"));
+          chartaVL1.clear()
+          chartaVL1.setOption({
+            title: {
+              text: "aVL",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataaVL,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartaVL1.resize();
+          });
+          var chartaVF1 = echarts.init(document.getElementById("aVF1"));
+          chartaVF1.clear()
+          chartaVF1.setOption({
+            title: {
+              text: "aVF",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataaVF,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartaVF1.resize();
+          });
+          var chartV11 = echarts.init(document.getElementById("V11"));
+          chartV11.clear()
+          chartV11.setOption({
+            title: {
+              text: "V1",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataV1,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV11.resize();
+          });
+          var chartV22 = echarts.init(document.getElementById("V22"));
+          chartV22.clear()
+          chartV22.setOption({
+            title: {
+              text: "V2",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataV2,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV22.resize();
+          });
+          var chartV33 = echarts.init(document.getElementById("V33"));
+          chartV33.clear()
+          chartV33.setOption({
+            title: {
+              text: "V3",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataV3,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV33.resize();
+          });
+          var chartV44 = echarts.init(document.getElementById("V44"));
+          chartV44.clear()
+          chartV44.setOption({
+            title: {
+              text: "V4",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataV4,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV44.resize();
+          });
+          var chartV55 = echarts.init(document.getElementById("V55"));
+          chartV55.clear()
+          chartV55.setOption( {
+            title: {
+              text: "V5",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataV5,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chartV55.resize();
+          });
+          var chartV66 = echarts.init(document.getElementById("V66"));
+          chartV66.clear()
+          chartV66.setOption({
+            title: {
+              text: "V6",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '5',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.data12.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 1, //网格的宽度
+                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                }
+              },
+              max: 1,
+              min: -1
+            },
+
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.data12.dataV6,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 0.5
+                  },
+                  label: {
+
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 25},
+                    {xAxis: 50},
+                    {xAxis: 75},
+                    {xAxis: 100},
+                    {xAxis: 125},
+                    {xAxis: 150},
+                    {xAxis: 175},
+                    {xAxis: 200},
+                    {xAxis: 225},
+                    {xAxis: 250},
+                    {xAxis: 275},
+                    {xAxis: 300},
+                    {xAxis: 325},
+                    {xAxis: 350},
+                    {xAxis: 375},
+                    {xAxis: 400},
+                    {xAxis: 425},
+                    {xAxis: 450},
+                    {xAxis: 475},
+                    {xAxis: 500},
+                    {xAxis: 525},
+                    {xAxis: 550},
+                    {xAxis: 575},
+                    {xAxis: 600},
+                    {xAxis: 625},
+                    {xAxis: 650},
+                    {xAxis: 675},
+                    {xAxis: 700},
+                    {xAxis: 725},
+                    {xAxis: 750},
+                    {xAxis: 775},
+                    {xAxis: 800},
+                    {xAxis: 825},
+                    {xAxis: 850},
+                    {xAxis: 875},
+                    {xAxis: 900},
+                    {xAxis: 925},
+                    {xAxis: 950},
+                    {xAxis: 975},
+                    {xAxis: 1000},
+
+                    {xAxis: 1000},
+                    {xAxis: 1025},
+                    {xAxis: 1050},
+                    {xAxis: 1075},
+                    {xAxis: 1100},
+                    {xAxis: 1125},
+                    {xAxis: 1150},
+                    {xAxis: 1175},
+                    {xAxis: 1200},
+                    {xAxis: 1225},
+                    {xAxis: 1250},
+                    {xAxis: 1275},
+                    {xAxis: 1300},
+                    {xAxis: 1325},
+                    {xAxis: 1350},
+                    {xAxis: 1375},
+                    {xAxis: 1400},
+                    {xAxis: 1425},
+                    {xAxis: 1450},
+                    {xAxis: 1475},
+                    {xAxis: 1500},
+                    {xAxis: 1525},
+                    {xAxis: 1550},
+                    {xAxis: 1575},
+                    {xAxis: 1600},
+                    {xAxis: 1625},
+                    {xAxis: 1650},
+                    {xAxis: 1675},
+                    {xAxis: 1700},
+                    {xAxis: 1725},
+                    {xAxis: 1750},
+                    {xAxis: 1775},
+                    {xAxis: 1800},
+                    {xAxis: 1825},
+                    {xAxis: 1850},
+                    {xAxis: 1875},
+                    {xAxis: 1900},
+                    {xAxis: 1925},
+                    {xAxis: 1950},
+                    {xAxis: 1975},
+
+
+                    {xAxis: 2000},
+                    {xAxis: 2025},
+                    {xAxis: 2050},
+                    {xAxis: 2075},
+                    {xAxis: 2100},
+                    {xAxis: 2125},
+                    {xAxis: 2150},
+                    {xAxis: 2175},
+                    {xAxis: 2200},
+                    {xAxis: 2225},
+                    {xAxis: 2250},
+                    {xAxis: 2275},
+                    {xAxis: 2300},
+                    {xAxis: 2325},
+                    {xAxis: 2350},
+                    {xAxis: 2375},
+                    {xAxis: 2400},
+                    {xAxis: 2425},
+                    {xAxis: 2450},
+                    {xAxis: 2475},
+                    {xAxis: 2500},
+                    {xAxis: 2525},
+                    {xAxis: 2550},
+                    {xAxis: 2575},
+                    {xAxis: 2600},
+                    {xAxis: 2625},
+                    {xAxis: 2650},
+                    {xAxis: 2675},
+                    {xAxis: 2700},
+                    {xAxis: 2725},
+                    {xAxis: 2750},
+                    {xAxis: 2775},
+                    {xAxis: 2800},
+                    {xAxis: 2825},
+                    {xAxis: 2850},
+                    {xAxis: 2875},
+                    {xAxis: 2900},
+                    {xAxis: 2925},
+                    {xAxis: 2950},
+                    {xAxis: 2975},
+
+                    {xAxis: 3000},
+                    {xAxis: 3025},
+                    {xAxis: 3050},
+                    {xAxis: 3075},
+                    {xAxis: 3100},
+                    {xAxis: 3125},
+                    {xAxis: 3150},
+                    {xAxis: 3175},
+                    {xAxis: 3200},
+                    {xAxis: 3225},
+                    {xAxis: 3250},
+                    {xAxis: 3275},
+                    {xAxis: 3300},
+                    {xAxis: 3325},
+                    {xAxis: 3350},
+                    {xAxis: 3375},
+                    {xAxis: 3400},
+                    {xAxis: 3425},
+                    {xAxis: 3450},
+                    {xAxis: 3475},
+                    {xAxis: 3500},
+                    {xAxis: 3525},
+                    {xAxis: 3550},
+                    {xAxis: 3575},
+                    {xAxis: 3600},
+                    {xAxis: 3625},
+                    {xAxis: 3650},
+                    {xAxis: 3675},
+                    {xAxis: 3700},
+                    {xAxis: 3725},
+                    {xAxis: 3750},
+                    {xAxis: 3775},
+                    {xAxis: 3800},
+                    {xAxis: 3825},
+                    {xAxis: 3850},
+                    {xAxis: 3875},
+                    {xAxis: 3900},
+                    {xAxis: 3925},
+                    {xAxis: 3950},
+                    {xAxis: 3975},
+                    {xAxis: 4000},
+
+
+                    {xAxis: 4025},
+                    {xAxis: 4050},
+                    {xAxis: 4075},
+                    {xAxis: 4100},
+                    {xAxis: 4125},
+                    {xAxis: 4150},
+                    {xAxis: 4175},
+                    {xAxis: 4200},
+                    {xAxis: 4225},
+                    {xAxis: 4250},
+                    {xAxis: 4275},
+                    {xAxis: 4300},
+                    {xAxis: 4325},
+                    {xAxis: 4350},
+                    {xAxis: 4375},
+                    {xAxis: 4400},
+                    {xAxis: 4425},
+                    {xAxis: 4450},
+                    {xAxis: 4475},
+                    {xAxis: 4500},
+                    {xAxis: 4525},
+                    {xAxis: 4550},
+                    {xAxis: 4575},
+                    {xAxis: 4600},
+                    {xAxis: 4625},
+                    {xAxis: 4650},
+                    {xAxis: 4675},
+                    {xAxis: 4700},
+                    {xAxis: 4725},
+                    {xAxis: 4750},
+                    {xAxis: 4775},
+                    {xAxis: 4800},
+                    {xAxis: 4825},
+                    {xAxis: 4850},
+                    {xAxis: 4875},
+                    {xAxis: 4900},
+                    {xAxis: 4925},
+                    {xAxis: 4950},
+                    {xAxis: 4975},
+                    {xAxis: 5000},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+                }
+              }
+            ],
+
+          });
+          $(window).resize(function () {
+            chartV66.resize();
+          });
         },
         error: function (data) {
           alert("数据请求错误,请刷新页面或联系管理员")
@@ -395,7642 +7696,7 @@ export default {
         }
       })
     },
-    getall() {
-      this.data.age = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.age
-      this.data.gender = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.gender
-      this.data.name = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.patientName
-      this.data.result = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.intelligent_diagnosis
-      this.data.hr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["平均心率"]
-      this.data.pr = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["PR_dis_avg"]
-      this.data.qrs = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QRS_dis_avg"]
-      this.data.qt = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QT_dis_avg"]
-      this.data.qtc = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QTc2"]
-      this.data.p = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["P_deg"]
-      this.data.qrs_deg = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["QRS_deg"]
-      this.data.t = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["T_deg"]
-      this.data.pv5 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["PV5_mv"]
-      this.data.sv1 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["SV1_mv"]
-      this.data.rv5_sv1 = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.ecg_analysis_data["RV5_SV1"]
-    },
-    I() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.I
-      console.log(this.pId)
-      console.log(data)
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("I"));
-      var option = {
-        title: {
-          text: "I",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    I1() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.I
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("I1"));
-      var option = {
-        title: {
-          text: "I",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    II() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("II"));
-      var option = {
-        title: {
-          text: "II",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    II1() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.II
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("II1"));
-      var option = {
-        title: {
-          text: "II",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    III() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.III
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("III"));
-      var option = {
-        title: {
-          text: "III",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    III1() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.III
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("III1"));
-      var option = {
-        title: {
-          text: "III",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    aVR() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVR
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("aVR"));
-      var option = {
-        title: {
-          text: "aVR",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    aVR1() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVR
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("aVR1"));
-      var option = {
-        title: {
-          text: "aVR",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    aVL() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVL
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("aVL"));
-      var option = {
-        title: {
-          text: "aVL",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    aVL1() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVL
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("aVL1"));
-      var option = {
-        title: {
-          text: "aVL",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    aVF() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVF
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("aVF"));
-      var option = {
-        title: {
-          text: "aVF",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    aVF1() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.aVF
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("aVF1"));
-      var option = {
-        title: {
-          text: "aVF",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V1() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V1
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V1"));
-      var option = {
-        title: {
-          text: "V1",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V11() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V1
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V11"));
-      var option = {
-        title: {
-          text: "V1",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V2() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V2
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V2"));
-      var option = {
-        title: {
-          text: "V2",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V22() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V2
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V22"));
-      var option = {
-        title: {
-          text: "V2",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V3() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V3
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V3"));
-      var option = {
-        title: {
-          text: "V3",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V33() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V3
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V33"));
-      var option = {
-        title: {
-          text: "V3",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V4() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V4
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V4"));
-      var option = {
-        title: {
-          text: "V4",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V44() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V4
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V44"));
-      var option = {
-        title: {
-          text: "V4",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V5() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V5
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V5"));
-      var option = {
-        title: {
-          text: "V5",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V55() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V5
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V55"));
-      var option = {
-        title: {
-          text: "V5",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V6() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V6
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V6"));
-      var option = {
-        title: {
-          text: "V6",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    V66() {
-      var data = (JSON.parse(sessionStorage.getItem(this.pId + "data"))).result.V6
-      var x = new Array();
-      for (var i = 0; i < 1000; i++) {
-        x.push(i);
-      }
-      var ecgBc = echarts.init(document.getElementById("V66"));
-      var option = {
-        title: {
-          text: "V6",
-          top: 5,
-          left: 5,
-        },
-        grid: {
-          left: '5',
-          right: '1',
-          top: '1',
-          bottom: '1',
-          containLabel: false
-        },
-        xAxis: {
-          type: 'category',
-          data: x,
-          axisLabel: {
-            show: false,
-            interval: 4,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          //  splitNumber: 3, // 横线数
-          interval: 0.1, // 刻度间隔
-          splitLine: {
-            show: true, //让网格显示
-            lineStyle: {//网格样式
-              color: ['pink'], //网格的颜色
-              width: 1, //网格的宽度
-              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-            }
-          },
-          max: 1,
-          min: -1
-        },
-
-        series: [
-          {
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            data: data,
-            lineStyle: {
-              normal: {
-                color: "#000000",
-                width: 1
-              }
-            },
-            markLine: {
-              symbol: "none",
-              silent: true,
-              lineStyle: {
-                type: "solid",
-                color: '#b33939',
-                width: 0.5
-              },
-              label: {
-
-                position: 'start', // 表现内容展示的位置
-                color: '#b33939'  // 展示内容颜色
-              },
-
-              data: [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-
-
-                {xAxis: 2000},
-                {xAxis: 2025},
-                {xAxis: 2050},
-                {xAxis: 2075},
-                {xAxis: 2100},
-                {xAxis: 2125},
-                {xAxis: 2150},
-                {xAxis: 2175},
-                {xAxis: 2200},
-                {xAxis: 2225},
-                {xAxis: 2250},
-                {xAxis: 2275},
-                {xAxis: 2300},
-                {xAxis: 2325},
-                {xAxis: 2350},
-                {xAxis: 2375},
-                {xAxis: 2400},
-                {xAxis: 2425},
-                {xAxis: 2450},
-                {xAxis: 2475},
-                {xAxis: 2500},
-                {xAxis: 2525},
-                {xAxis: 2550},
-                {xAxis: 2575},
-                {xAxis: 2600},
-                {xAxis: 2625},
-                {xAxis: 2650},
-                {xAxis: 2675},
-                {xAxis: 2700},
-                {xAxis: 2725},
-                {xAxis: 2750},
-                {xAxis: 2775},
-                {xAxis: 2800},
-                {xAxis: 2825},
-                {xAxis: 2850},
-                {xAxis: 2875},
-                {xAxis: 2900},
-                {xAxis: 2925},
-                {xAxis: 2950},
-                {xAxis: 2975},
-
-                {xAxis: 3000},
-                {xAxis: 3025},
-                {xAxis: 3050},
-                {xAxis: 3075},
-                {xAxis: 3100},
-                {xAxis: 3125},
-                {xAxis: 3150},
-                {xAxis: 3175},
-                {xAxis: 3200},
-                {xAxis: 3225},
-                {xAxis: 3250},
-                {xAxis: 3275},
-                {xAxis: 3300},
-                {xAxis: 3325},
-                {xAxis: 3350},
-                {xAxis: 3375},
-                {xAxis: 3400},
-                {xAxis: 3425},
-                {xAxis: 3450},
-                {xAxis: 3475},
-                {xAxis: 3500},
-                {xAxis: 3525},
-                {xAxis: 3550},
-                {xAxis: 3575},
-                {xAxis: 3600},
-                {xAxis: 3625},
-                {xAxis: 3650},
-                {xAxis: 3675},
-                {xAxis: 3700},
-                {xAxis: 3725},
-                {xAxis: 3750},
-                {xAxis: 3775},
-                {xAxis: 3800},
-                {xAxis: 3825},
-                {xAxis: 3850},
-                {xAxis: 3875},
-                {xAxis: 3900},
-                {xAxis: 3925},
-                {xAxis: 3950},
-                {xAxis: 3975},
-                {xAxis: 4000},
-
-
-                {xAxis: 4025},
-                {xAxis: 4050},
-                {xAxis: 4075},
-                {xAxis: 4100},
-                {xAxis: 4125},
-                {xAxis: 4150},
-                {xAxis: 4175},
-                {xAxis: 4200},
-                {xAxis: 4225},
-                {xAxis: 4250},
-                {xAxis: 4275},
-                {xAxis: 4300},
-                {xAxis: 4325},
-                {xAxis: 4350},
-                {xAxis: 4375},
-                {xAxis: 4400},
-                {xAxis: 4425},
-                {xAxis: 4450},
-                {xAxis: 4475},
-                {xAxis: 4500},
-                {xAxis: 4525},
-                {xAxis: 4550},
-                {xAxis: 4575},
-                {xAxis: 4600},
-                {xAxis: 4625},
-                {xAxis: 4650},
-                {xAxis: 4675},
-                {xAxis: 4700},
-                {xAxis: 4725},
-                {xAxis: 4750},
-                {xAxis: 4775},
-                {xAxis: 4800},
-                {xAxis: 4825},
-                {xAxis: 4850},
-                {xAxis: 4875},
-                {xAxis: 4900},
-                {xAxis: 4925},
-                {xAxis: 4950},
-                {xAxis: 4975},
-                {xAxis: 5000},
-                {yAxis: -1},
-                {yAxis: -0.5},
-                {yAxis: 0},
-                {yAxis: 0.5},
-                {yAxis: 1},
-              ]
-            }
-          }
-        ],
-
-      };
-      ecgBc.setOption(option);
-      $(window).resize(function () {
-        ecgBc.resize();
-      });
-    },
-    btnClick() {
-      var _self = this
-      // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
-      let top = document.getElementById('pdfDom');
-      if (top != null) {
-        top.scrollIntoView();
-        top = null;
-      }
-      let title = this.exportPDFtitle;
-      html2Canvas(document.querySelector('#pdfDom'), {
-        allowTaint: true
-      }).then(function (canvas) {
-        // 获取canvas画布的宽高
-        let contentWidth = canvas.width;
-        let contentHeight = canvas.height;
-        // 一页pdf显示html页面生成的canvas高度;
-        let pageHeight = contentWidth / 841.89 * 592.28;
-        // 未生成pdf的html页面高度
-        let leftHeight = contentHeight;
-        // 页面偏移
-        let position = 0;
-        // html页面生成的canvas在pdf中图片的宽高（本例为：横向a4纸[841.89,592.28]，纵向需调换尺寸）
-        let imgWidth = 841.89;
-        let imgHeight = 841.89 / contentWidth * contentHeight;
-        let pageData = canvas.toDataURL('image/jpeg', 1.0);
-        let PDF = new JsPDF('l', 'pt', 'a4');
-        // 两个高度需要区分: 一个是html页面的实际高度，和生成pdf的页面高度
-        // 当内容未超过pdf一页显示的范围，无需分页
-        if (leftHeight < pageHeight) {
-          PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
-        } else {
-          while (leftHeight > 0) {
-            PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
-            leftHeight -= pageHeight;
-            position -= 592.28;
-            // 避免添加空白页
-            if (leftHeight > 0) {
-              PDF.addPage();
-            }
-          }
-        }
-        PDF.save(title + '.pdf');
-        /*        // 将pdf输入为base格式的字符串
-                var buffer = PDF.output("datauristring")
-                // 将base64格式的字符串转换为file文件
-                var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
-                name = _self.upload_pdf(myfile)*/
-      });
-      sessionStorage.removeItem(this.$route.query.pId + 'data');
-      sessionStorage.removeItem(this.$route.query.pId + 'show');
-    },
-
-    btnClickPDF() {
-      var _self = this
-      // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
-      let top = document.getElementById("pdfDom");
-      if (top != null) {
-        top.scrollIntoView();
-        top = null;
-      }
-      let title = this.exportPDFtitle;
-      html2Canvas(document.querySelector("#pdfDom"), {
-        //清晰度，越大越好
-        scale: 2,
-        allowTaint: true
-      }).then(function (canvas) {
-        // 获取canvas画布的宽高
-        let contentWidth = canvas.width;
-        let contentHeight = canvas.height;
-        // 一页pdf显示html页面生成的canvas高度;
-        let pageHeight = (contentWidth / 592.28) * 841.89;
-        // 未生成pdf的html页面高度
-        let leftHeight = contentHeight;
-        // 页面偏移
-        let position = 0;
-        // html页面生成的canvas在pdf中图片的宽高（本例为：横向a4纸[841.89,592.28]，纵向需调换尺寸）
-        let imgWidth = 592.28;
-        let imgHeight = (592.28 / contentWidth) * contentHeight;
-        let pageData = canvas.toDataURL("image/jpeg", 1.0);
-        let PDF = new JsPDF("", "pt", "a4");
-        // 两个高度需要区分: 一个是html页面的实际高度，和生成pdf的页面高度
-        // 当内容未超过pdf一页显示的范围，无需分页
-        if (leftHeight < pageHeight) {
-          PDF.addImage(pageData, "JPEG", 0, 0, imgWidth, imgHeight);
-        } else {
-          while (leftHeight > 0) {
-            PDF.addImage(pageData, "JPEG", 0, position, imgWidth, imgHeight);
-            leftHeight -= pageHeight;
-            position -= 841.89;
-            // 避免添加空白页
-            if (leftHeight > 0) {
-              PDF.addPage();
-            }
-          }
-        }
-        // PDF.save(title + ".pdf");
-        // 将pdf输入为base格式的字符串
-        var buffer = PDF.output("datauristring")
-        // 将base64格式的字符串转换为file文件
-        var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
-        name = _self.upload_pdf(myfile)
-      });
-      sessionStorage.removeItem(this.$route.query.pId + 'data');
-      sessionStorage.removeItem(this.$route.query.pId + 'show');
-    },
-    //上传pdf
-    upload_pdf(file) {
-      // var url ='';
-      var formdata = new FormData()
-      formdata.append("file", file); // 文件对象
-      console.log("上传pdf-1")
-      //多个参数的情况
-      // formdata.append("name", name);
-      var msg = '';
-      // 之后ajax传递数据
-      pdfDownload2(formdata).then(res => {
-        console.log(res);
-        if (res.code === 200) {
-          this.$modal.msgSuccess("上传成功");
-        } else {
-          this.$modal.msgError("上传失败");
-        }
-      })
-    },
-    //将base64转换为文件对象
-    dataURLtoFile(dataurl, filename) {
-      var arr = dataurl.split(',');
-      var mime = arr[0].match(/:(.*?);/)[1];
-      var bstr = atob(arr[1]);
-      var n = bstr.length;
-      var u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      //转换成file对象
-      return new File([u8arr], filename, {type: mime});
-      //转换成成blob对象
-      //return new Blob([u8arr],{type:mime});
-    },
-
-    getDate() {
-      var str = new Date();
-      this.data.dataTime = str.getFullYear() + "-"
-        + (str.getMonth() + 1) + "-" + str.getDate();
-      console.log(this.dataTime);
-    },
+    //保存数据
     btnUpload() {
       var form = {
         pId: this.pId,
@@ -8073,13 +7739,13 @@ export default {
 }
 
 .page {
-  padding-top: 50px;
-  padding-bottom: 50px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  //padding-top: 50px;
+  //padding-bottom: 50px;
+  //margin-top: 10px;
+  //margin-bottom: 10px;
   width: 100%;
   //heigth:1220px;
-  height: 1000px;
+  height: 45vw;
   //border: 3px solid #0000ff;
 }
 
@@ -8175,10 +7841,10 @@ export default {
 .lineshow {
   height: 7.6vw;
   width: 76vw;
-  max-width: 97%;
-  margin-left: 1.5em;
-  margin-top: 1.5em;
-  padding: 0
+position: absolute;
+  top: 61%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .btn1 {
@@ -8188,4 +7854,21 @@ export default {
   right: 4vw;
   z-index: 2;
 }
+
+.chartsBig{
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 10vw;
+  width: 80vw;
+border: 1px solid #00afff;
+  //z-index: 1000;
+  background-color: #00afff;
+  //display: none;
+}
+
+
+
+
 </style>

@@ -636,7 +636,7 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/staticECG", query: {pId: row.pId,reload: 'one'},meta: {reload: ''}});
+      this.$router.push({path: "/staticECG", query: {pId: row.pId,}});
     },
     /** 生成报告*/
     handleInform(row) {

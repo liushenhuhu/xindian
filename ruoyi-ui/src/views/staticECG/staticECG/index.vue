@@ -206,7 +206,6 @@ export default {
       this.openV5 = false;
       this.openV6 = false;
     },
-
     click_close() {
       // this.reload()
       console.log(this.$route)
@@ -216,7 +215,6 @@ export default {
       }
       console.log("重新刷新！")
     },
-
     get() {
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
@@ -1293,11 +1291,9 @@ export default {
                     opacity: 0.5,
                   },
                   label: {
-
                     position: 'start', // 表现内容展示的位置
                     color: '#b33939'  // 展示内容颜色
                   },
-
                   data: [
                     {xAxis: 0},
                     {xAxis: 25},
@@ -1445,7 +1441,6 @@ export default {
     },
   },
 };
-
 </script>
 
 <style lang="scss" scoped>
