@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <router-view v-if="isRouterAlive"></router-view>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
       <el-form-item label="患者姓名" prop="patientName">
@@ -437,9 +438,15 @@ import {updateOnlineAll} from "@/api/online/online";
 
 export default {
   name: "Patient_management",
+  provide () {    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
+    return {
+      reload: this.reload
+    }
+  },
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
   data() {
     return {
+      isRouterAlive: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -505,7 +512,12 @@ export default {
     this.getList();
   },
   methods: {
-
+    reload () {
+      this.isRouterAlive = false;            //先关闭，
+      this.$nextTick(function () {
+        this.isRouterAlive = true;         //再打开
+      })
+    },
     refreshList() {
       console.log("refresh======")
       updateOnlineAll().then(res => {
@@ -624,7 +636,7 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/staticECG", query: {pId: row.pId}});
+      this.$router.push({path: "/staticECG", query: {pId: row.pId,reload: 'one'},meta: {reload: ''}});
     },
     /** 生成报告*/
     handleInform(row) {
