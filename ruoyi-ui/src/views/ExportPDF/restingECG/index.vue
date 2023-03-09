@@ -31,7 +31,7 @@
               <div class="header-4">
                 <div class="header-4-1"><strong>自动分析结果，仅供参考</strong></div>
                 <div class="header-4-1">
-                  <div style="width: 100%;height: 6vw;border: 1px solid #c4c4c4">{{data.result}}</div>
+                  <div style="width: 100%;height: 6vw;border: 1px solid #c4c4c4">{{ data.result }}</div>
                 </div>
                 <div class="header-4-1"><strong>医师诊断</strong></div>
                 <div class="header-4-1-1">
@@ -95,7 +95,8 @@
             <div class="bottom-left">
               <strong>医师:</strong>
               <el-input v-model="data.doctorName" clearable
-                        :style="{width: '10%',border: '1px solid black',}"></el-input><span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
+                        :style="{width: '10%',border: '1px solid black',}"></el-input>
+              <span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
               <strong>日期:</strong>
               <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
                         :style="{width: '10%',border: '1px solid black',}"></el-input>
@@ -108,51 +109,96 @@
       </div>
       <div class="lineI" v-show="openI">
         <div id="I1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;margin-top: 10.5vw;height: 2vw;width: 3vw;font-size: 1vw;">关闭
+        </button>
       </div>
       <div class="lineI" v-show="openII">
         <div id="II1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openIII">
         <div id="III1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openaVR">
         <div id="aVR1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openaVL">
         <div id="aVL1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openaVF">
         <div id="aVF1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openV1">
         <div id="V11" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openV2">
         <div id="V22" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openV3">
         <div id="V33" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openV4">
         <div id="V44" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openV5">
         <div id="V55" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openV6">
         <div id="V66" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
     </div>
   </div>
@@ -7826,8 +7872,8 @@ export default {
 }
 
 .lineshow {
-  height: 8.6vw;
-  width: 86vw;
+  height: 8vw;
+  width: 80vw;
   position: absolute;
   top: 50%;
   left: 50%;

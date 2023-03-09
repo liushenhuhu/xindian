@@ -87,27 +87,51 @@
       </div>
       <div class="lineI" v-show="openI">
         <div id="I1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openII">
         <div id="II1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openIII">
         <div id="III1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openaVR">
         <div id="aVR1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openaVL">
         <div id="aVL1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
       <div class="lineI" v-show="openaVF">
         <div id="aVF1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
+        <button @click="clickclose" style="margin-left: 46vw;
+margin-top: 10.5vw;
+height: 2vw;
+width: 3vw;
+font-size: 1vw;">关闭</button>
       </div>
     </div>
   </div>
@@ -3603,8 +3627,8 @@ export default {
   z-index: 3;
 }
 .lineshow {
-  height:4.3vw;
-  width: 86vw;
+  height:4vw;
+  width: 80vw;
   position: absolute;
   top: 50%;
   left: 50%;
