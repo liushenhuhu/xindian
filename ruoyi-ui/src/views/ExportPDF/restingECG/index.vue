@@ -6,86 +6,48 @@
           <div class="header">
             <div class="header-left">
               <div class="header-1">
-                <div class="header-1-1">
-                  <strong>姓名:</strong> {{ data.name }}
-                </div>
-                <div class="header-1-1">
-                  <strong>性别:</strong> {{ data.gender }}
-                </div>
-                <div class="header-1-1">
-                  <strong>年龄:</strong> {{ data.age }} 岁
-                </div>
-                <div class="header-1-1">
-                  <strong>送检科室:</strong> -
-                </div>
-                <div class="header-1-1">
-                  <strong>申请单号:</strong> -
-                </div>
+                <div class="header-1-1"><strong>姓名:</strong>{{ data.name }}</div>
+                <div class="header-1-1"><strong>性别:</strong>{{ data.gender }}</div>
+                <div class="header-1-1"><strong>年龄:</strong>{{ data.age }}岁</div>
+                <div class="header-1-1"><strong>送检科室:</strong> -</div>
+                <div class="header-1-1"><strong>申请单号:</strong> -</div>
               </div>
-              <div class="header-1">
-                <div class="header-1-1">
-                  <strong>门诊号:</strong> -
-                </div>
-                <div class="header-1-1">
-                  <strong>住院号:</strong> -
-                </div>
-                <div class="header-1-1">
-                  <strong>病人编号:</strong> -
-                </div>
-                <div class="header-1-1">
-                  <strong>HR:</strong> {{ data.hr }} bpm
-                </div>
-                <div class="header-1-1">
-                  <strong>PR:</strong> {{ data.pr }} ms
-                </div>
+              <div class="header-2">
+                <div class="header-2-1"><strong>门诊号:</strong> -</div>
+                <div class="header-2-1"><strong>住院号:</strong> -</div>
+                <div class="header-2-1"><strong>病人编号:</strong> -</div>
+                <div class="header-2-1"><strong>HR:</strong>{{ data.hr }}bpm</div>
+                <div class="header-2-1"><strong>PR:</strong>{{ data.pr }}ms</div>
               </div>
-              <div class="header-1" style="width: 25vw">
-                <div class="header-1-1">
-                  <strong>QRS:</strong> {{ data.qrs }} ms
+              <div class="header-3">
+                <div class="header-3-1"><strong>QRS:</strong>{{ data.qrs }}ms</div>
+                <div class="header-3-1"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>
+                <div class="header-3-1"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg</div>
+                <div class="header-3-1"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>
+                <div class="header-3-1"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>
+              </div>
+            </div>
+            <div class="header-right">
+              <div class="header-4">
+                <div class="header-4-1"><strong>自动分析结果，仅供参考</strong></div>
+                <div class="header-4-1">
+                  <div style="width: 100%;height: 6vw;border: 1px solid #c4c4c4">{{data.result}}</div>
                 </div>
-                <div class="header-1-1">
-                  <strong>QT/QTc:</strong> {{ data.qt }} ms/ {{ data.qtc }} ms
-                </div>
-                <div class="header-1-1">
-                  <strong>P/QRS/T:</strong> {{ data.p }}/{{ data.qrs_deg }}/{{ data.t }} deg
-                </div>
-                <div class="header-1-1">
-                  <strong>PV5/SV1:</strong> {{ data.pv5 }}/{{ data.sv1 }} mV
-                </div>
-                <div class="header-1-1">
-                  <strong>RV5/SV1:</strong> {{ data.rv5_sv1 }} mV
+                <div class="header-4-1"><strong>医师诊断</strong></div>
+                <div class="header-4-1-1">
+                  <el-input
+                    type="textarea"
+                    v-model="data.resultByDoctor"
+                    placeholder="请在这里输入医生诊断结果"
+                    data-value="1111"
+                    :rows="4"
+                    class="font">
+                  </el-input>
                 </div>
               </div>
             </div>
-            <div class="header-left" style="padding-left: 0;">
-              <div class="header-1">
-                <div class="header-1-1">
-                  <strong>自动分析结果，仅供参考</strong>
-                </div>
-                <div class="header-1-1">
-                  <div
-                    class="box8-1-1"
-                  >{{ data.result }}
-                  </div>
-                </div>
-
-                <div class="header-1-1"></div>
-
-                <div class="header-1-1">
-                  <strong>医师诊断</strong>
-                </div>
-                <div>
-                    <textarea
-                      v-model="data.resultByDoctor"
-                      placeholder="请在这里输入医生诊断结果"
-                      data-value="1111"
-                      class="box-1-1"
-                    />
-                </div>
-              </div>
-            </div>
-
           </div>
+          <div style="padding-left: 2vw;font-size: 1vw">10mm/mV 25mm/s</div>
           <div class="body">
             <div class="body-1">
               <div>
@@ -130,63 +92,67 @@
             </div>
           </div>
           <div class="bottom">
-            <strong>医师:</strong><input class="box8-2" v-model="data.doctorName"></input>
-            <strong>日期:</strong><input class="box8-2" v-if="data.diagnosisData!=null"
-                                       v-model="data.diagnosisData"></input>
-            <input class="box8-2" v-else v-model="data.dataTime"></input>
-            <el-button type="primary" round style="position: absolute;right: 47%;top: 1vw" @click="btnUpload">
-              保存数据
-            </el-button>
+            <div class="bottom-left">
+              <strong>医师:</strong>
+              <el-input v-model="data.doctorName" clearable
+                        :style="{width: '10%',border: '1px solid black',}"></el-input><span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
+              <strong>日期:</strong>
+              <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
+                        :style="{width: '10%',border: '1px solid black',}"></el-input>
+              <el-input v-else v-model="data.dataTime" clearable
+                        :style="{width: '10%',border: '1px solid black',}"></el-input>
+            </div>
+            <el-button type="success" plain class="anNiu" @click="btnUpload">保存数据</el-button>
           </div>
         </div>
       </div>
       <div class="lineI" v-show="openI">
         <div id="I1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openII">
         <div id="II1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openIII">
         <div id="III1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openaVR">
         <div id="aVR1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openaVL">
         <div id="aVL1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openaVF">
         <div id="aVF1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openV1">
         <div id="V11" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openV2">
         <div id="V22" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openV3">
         <div id="V33" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openV4">
         <div id="V44" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openV5">
         <div id="V55" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
       <div class="lineI" v-show="openV6">
         <div id="V66" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left:49%;margin-top: 2%">关闭</button>
+        <button @click="clickclose" style="margin-left:49%;margin-top: 13%">关闭</button>
       </div>
     </div>
   </div>
@@ -224,7 +190,7 @@ export default {
         diagnosisData: null,
       },
       data12: {
-        x :[],
+        x: [],
         dataI: [],
         dataII: [],
         dataIII: [],
@@ -441,7 +407,7 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color:"#f8c1bf", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 1, //网格的宽度
                   type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                 }
@@ -455,7 +421,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataI,
+                data: _th.data12.dataI,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -563,7 +529,7 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color:"#f8c1bf", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 1, //网格的宽度
                   type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                 }
@@ -599,7 +565,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataII,
+                data: _th.data12.dataII,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -912,7 +878,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataIII,
+                data: _th.data12.dataIII,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1224,7 +1190,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataaVR,
+                data: _th.data12.dataaVR,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1536,7 +1502,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataaVL,
+                data: _th.data12.dataaVL,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1848,7 +1814,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataaVF,
+                data: _th.data12.dataaVF,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -2160,7 +2126,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataV1,
+                data: _th.data12.dataV1,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -2471,7 +2437,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataV2,
+                data: _th.data12.dataV2,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -2782,7 +2748,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataV3,
+                data: _th.data12.dataV3,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -3092,7 +3058,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataV4,
+                data: _th.data12.dataV4,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -3403,7 +3369,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataV5,
+                data: _th.data12.dataV5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -3713,7 +3679,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:  _th.data12.dataV6,
+                data: _th.data12.dataV6,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -3975,7 +3941,7 @@ export default {
             },
             xAxis: {
               type: 'category',
-              data:  _th.data12.x,
+              data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -4264,9 +4230,9 @@ export default {
               }
             ],
           });
-            $(window).resize(function () {
-              chartI1.resize();
-            });
+          $(window).resize(function () {
+            chartI1.resize();
+          });
           var chartII1 = echarts.init(document.getElementById("II1"));
           chartII1.clear()
           chartII1.setOption({
@@ -7067,7 +7033,7 @@ export default {
           });
           var chartV55 = echarts.init(document.getElementById("V55"));
           chartV55.clear()
-          chartV55.setOption( {
+          chartV55.setOption({
             title: {
               text: "V5",
               top: 5,
@@ -7739,53 +7705,83 @@ export default {
 }
 
 .page {
-  //padding-top: 50px;
-  //padding-bottom: 50px;
-  //margin-top: 10px;
-  //margin-bottom: 10px;
   width: 100%;
-  //heigth:1220px;
-  height: 45vw;
+  height: 52vw;
   //border: 3px solid #0000ff;
 }
 
 .header {
+  width: 100%;
+  height: 15vw;
   display: flex;
-  justify-content: space-between;
-  font-size: 20px;
-  margin-bottom: 3vh;
+  flex-wrap: nowrap;
+  padding-left: 2vw;
+  margin-bottom: 2vw;
+  font-size: 1vw;
+  color: #000000;
 }
 
 .header-left {
+  width: 60%;
+  height: 100%;
   display: flex;
-  flex: 1;
+  flex-wrap: nowrap
 }
 
 .header-1 {
-  flex: 1;
-  float: left;
-  padding-left: 3vw;
-  width: 12vw;
+  width: 28%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
 }
 
-.header-1 .header-1-1 {
-  height: 30px;
-  width: 32vw;
+.header-2 {
+  width: 28%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
 }
 
-.box-1-1 {
-  wrap: "physical";
-  //resize:none;
-  overflow-y: auto;
-  width: 99%;
-  height: 80px;
-  font-size: 20px;
-  border: none;
-  overflow: hidden;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+.header-3 {
+  width: 44%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+.header-right {
+  width: 40%;
+  height: 100%;
+}
+
+.header-4 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.header-4-1-1 {
+  width: 100%;
+  height: 6vw;
+}
+
+.font {
+  font-size: 1vw;
+  font-weight: 700;
+  color: #6f0600;
+  background-color: #fff;
 }
 
 .body {
+  margin-left: 2vw;
   display: flex;
 }
 
@@ -7794,28 +7790,19 @@ export default {
 }
 
 .bottom {
-  position: relative;
-  top: 0;
-  bottom: 0px;
-  right: 3px;
-  margin-top: 3px;
-  margin-bottom: 1px;
-  text-align: right;
-  font-size: 20px;
+  width: 100%;
+  height: 5vw;
+  //border: 1px solid #000000;
+  margin-top: 2vw;
 }
 
-.box8-2 {
-  display: inline-block;
-  width: 150px;
-  height: 20px;
-  border: none;
-  font-size: 20px;
-  text-align: center;
-  border-bottom: 1px solid black;
-  margin-right: 10px;
-  margin-top: 20px;
-  outline: none
 
+.anNiu {
+  height: 2vw;
+  width: 5vw;
+  float: right;
+  margin-right: 4vw;
+  font-size: 1vw;
 }
 
 .line {
@@ -7829,46 +7816,36 @@ export default {
 .lineI {
   position: absolute;
   display: inline-block;
-  top: 500px;
-  left: 70px;
+  top: 22vw;
+  left: 1vw;
   height: 13vw;
-  width: 90%;
+  width: 98%;
   background: white;
   border: 2px solid black;
   z-index: 3;
 }
 
 .lineshow {
-  height: 7.6vw;
-  width: 76vw;
-position: absolute;
-  top: 61%;
+  height: 8.6vw;
+  width: 86vw;
+  position: absolute;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.btn1 {
-  position: relative;
-  float: right;
-  bottom: 1.6em;
-  right: 4vw;
-  z-index: 2;
-}
-
-.chartsBig{
+.chartsBig {
   position: absolute;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   height: 10vw;
   width: 80vw;
-border: 1px solid #00afff;
+  border: 1px solid #00afff;
   //z-index: 1000;
   background-color: #00afff;
   //display: none;
 }
-
-
 
 
 </style>
