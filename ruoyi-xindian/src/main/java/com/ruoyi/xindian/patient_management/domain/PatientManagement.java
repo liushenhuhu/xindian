@@ -165,6 +165,24 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "医生电话")
     private String doctorPhone;
 
+    /** 医生电话 */
+    @Excel(name = "医生电话")
+    private String birthDay;
+
+    /** 起搏器 */
+    @Excel(name = "起搏器")
+    private String pacemaker;
+
+    /** 上传时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "上传时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date uploadTime;
+
+    /** 监护时长 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "监护时长", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date guardianshipDuration;
+
     public String getpId() {
         return pId;
     }

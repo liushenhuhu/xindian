@@ -9,18 +9,26 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
+import com.ruoyi.xindian.hospital.domain.Department;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDepartmentService;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.domain.Details;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.domain.PatientManagmentDept;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,14 +47,13 @@ public class PatientManagementController extends BaseController {
     private IPatientService patientService;
 
     @Autowired
-    private IHospitalService hospitalService;
+    private IDoctorService doctorService;
 
     @Autowired
-    private IEquipmentService iEquipmentService;
+    private IDepartmentService departmentService;
 
     @Autowired
     private ISysUserService userService;
-
 
     /**
      * 查询患者管理列表
@@ -57,6 +64,7 @@ public class PatientManagementController extends BaseController {
 //        startPage();
 //        List<PatientManagement> list_add = new ArrayList<>();
         List<PatientManagement> list = new ArrayList<>();
+        ArrayList<PatientManagmentDept> resList = new ArrayList<>();
 //        Long userId = getUserId();
         SysUser sysUser = userService.selectUserById(getUserId());
         if (getDeptId()!=null && getDeptId() == 200) {
@@ -97,7 +105,25 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
         }
-        return getDataTable(list);
+        PatientManagmentDept patientManagmentDept=new PatientManagmentDept();
+        Doctor doctor = new Doctor();
+        Department department = new Department();
+        for (PatientManagement management : list) {
+//            patientManagmentDept= (PatientManagmentDept) management;
+            BeanUtils.copyProperties(management,patientManagmentDept);
+
+            if(patientManagmentDept.getDoctorPhone()!=null){
+                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
+                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+                if(doctors.get(0).getDepartmentCode()!=null) {
+                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
+                    List<Department> departments = departmentService.selectDepartmentList(department);
+                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                }
+            }
+            resList.add(patientManagmentDept);
+        }
+        return getDataTable(resList);
     }
 
     /**
@@ -211,7 +237,29 @@ public class PatientManagementController extends BaseController {
 
     @GetMapping("history_info/{patientPhone}")
     public AjaxResult getHistoryInfoBypatientPhone(@PathVariable String patientPhone) {
+
         SingleHistoryInfo Info = new SingleHistoryInfo();
+        HashMap<String, Object> res = new HashMap<>();
+        // 详情
+        HashMap<String, String> description = new HashMap<>();
+        description.put("normalEcg", Details.normal);
+        //房性早搏
+        description.put("apBeat",Details.AP);
+        //室性早搏
+        description.put("pvBeat",Details.PV);
+        //心房颤动
+        description.put("atrialFibrillation",Details.Atrial_fibrillation);
+        //心房扑动
+        description.put("atrialFlutter",Details.Atrial_flutter);
+        //左束支传导阻滞
+        description.put("leftBlock",Details.Left_bundle_branch_block);
+        //右束支传导阻滞
+        description.put("rightBlock",Details.Right_bundle_branch_block);
+        //心动过缓
+        description.put("bradycardia",Details.bradycardia);
+        //心动过速
+        description.put("tachycardia",Details.tachycardia);
+
         Info.setPatientPhone(patientPhone);
         List<SingleHistoryInfo> infos = patientManagementService.selectSingleHistoryInfoList(Info);
         for (SingleHistoryInfo info : infos) {
@@ -224,6 +272,8 @@ public class PatientManagementController extends BaseController {
             if (info.getBradycardia() == null) info.setBradycardia((long) 0);
             if (info.getTachycardia() == null) info.setTachycardia((long) 0);
         }
-        return AjaxResult.success(infos);
+        res.put("infoNumber",infos);
+        res.put("description",description);
+        return AjaxResult.success(res);
     }
 }

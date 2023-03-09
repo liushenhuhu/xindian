@@ -30,6 +30,11 @@
         <result property="reportTime"    column="report_time"    />
         <result property="ecgLevel"    column="ecg_level"    />
         <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="birthDay"    column="birth_day"    />
+        <result property="pacemaker"    column="pacemaker"    />
+        <result property="uploadTime"    column="upload_time"    />
+        <result property="guardianshipDuration"    column="guardianship_duration"    />
+
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
         <result property="ecgId"    column="ecg_id"    />
@@ -60,7 +65,7 @@
                ecg_type, online_status, patient_name, patient_age, patient_sex, patient_source,
                m.patient_phone, family_phone,  monitoring_status,
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
-               diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, ecg_level, doctor_phone
+               diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, ecg_level, doctor_phone, birth_day, pacemaker, upload_time, guardianship_duration
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
@@ -91,6 +96,9 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
+            <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
+            <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
         </where>
         order by online_status desc, connection_time desc
     </select>
