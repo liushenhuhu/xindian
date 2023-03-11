@@ -31,7 +31,7 @@
               <div class="header-4">
                 <div class="header-4-1"><strong>自动分析结果，仅供参考</strong></div>
                 <div class="header-4-1">
-                  <div style="width: 100%;height: 6vw;border: 1px solid #c4c4c4">{{data.result}}</div>
+                  <div style="width: 100%;height: 6vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
                 </div>
                 <div class="header-4-1"><strong>医师诊断</strong></div>
                 <div class="header-4-1-1">
@@ -50,36 +50,25 @@
           <div style="font-size: 1vw">10mm/mV 25mm/s</div>
           <div class="body">
             <div class="body-1">
-              <div>
-                <div id="I" class="line" @dblclick="clicktrueI"></div>
-              </div>
-              <div>
-                <div id="II" class="line" @dblclick="clicktrueII"></div>
-              </div>
-              <div>
-                <div id="III" class="line" @dblclick="clicktrueIII"></div>
-              </div>
-              <div>
-                <div id="aVR" class="line" @dblclick="clicktrueaVR"></div>
-              </div>
-              <div>
-                <div id="aVL" class="line" @dblclick="clicktrueaVL"></div>
-              </div>
-              <div>
-                <div id="aVF" class="line" @dblclick="clicktrueaVF"></div>
-              </div>
+              <div><div id="I" class="line" @dblclick="clicktrueI"></div></div>
+              <div><div id="II" class="line" @dblclick="clicktrueII"></div></div>
+              <div><div id="III" class="line" @dblclick="clicktrueIII"></div></div>
+              <div><div id="aVR" class="line" @dblclick="clicktrueaVR"></div></div>
+              <div><div id="aVL" class="line" @dblclick="clicktrueaVL"></div></div>
+              <div><div id="aVF" class="line" @dblclick="clicktrueaVF"></div></div>
             </div>
           </div>
           <div class="bottom">
             <div class="bottom-left">
               <strong>医师:</strong>
               <el-input v-model="data.doctorName" clearable
-                        :style="{width: '10%',border: '1px solid black',}"></el-input><span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
+                        :style="{width: '15%',border: '1px solid black',}"></el-input>
+              <span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
               <strong>日期:</strong>
               <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
-                        :style="{width: '10%',border: '1px solid black',}"></el-input>
+                        :style="{width: '15%',border: '1px solid black',}"></el-input>
               <el-input v-else v-model="data.dataTime" clearable
-                        :style="{width: '10%',border: '1px solid black',}"></el-input>
+                        :style="{width: '15%',border: '1px solid black',}"></el-input>
             </div>
             <el-button type="success" plain class="anNiu" @click="btnUpload">保存数据</el-button>
           </div>
@@ -87,51 +76,27 @@
       </div>
       <div class="lineI" v-show="openI">
         <div id="I1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left: 46vw;
-margin-top: 10.5vw;
-height: 2vw;
-width: 3vw;
-font-size: 1vw;">关闭</button>
+        <button @click="clickclose" class="noName">关闭</button>
       </div>
       <div class="lineI" v-show="openII">
         <div id="II1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left: 46vw;
-margin-top: 10.5vw;
-height: 2vw;
-width: 3vw;
-font-size: 1vw;">关闭</button>
+        <button @click="clickclose" class="noName">关闭</button>
       </div>
       <div class="lineI" v-show="openIII">
         <div id="III1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left: 46vw;
-margin-top: 10.5vw;
-height: 2vw;
-width: 3vw;
-font-size: 1vw;">关闭</button>
+        <button @click="clickclose" class="noName">关闭</button>
       </div>
       <div class="lineI" v-show="openaVR">
         <div id="aVR1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left: 46vw;
-margin-top: 10.5vw;
-height: 2vw;
-width: 3vw;
-font-size: 1vw;">关闭</button>
+        <button @click="clickclose" class="noName">关闭</button>
       </div>
       <div class="lineI" v-show="openaVL">
         <div id="aVL1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left: 46vw;
-margin-top: 10.5vw;
-height: 2vw;
-width: 3vw;
-font-size: 1vw;">关闭</button>
+        <button @click="clickclose" class="noName">关闭</button>
       </div>
       <div class="lineI" v-show="openaVF">
         <div id="aVF1" class="lineshow"></div>
-        <button @click="clickclose" style="margin-left: 46vw;
-margin-top: 10.5vw;
-height: 2vw;
-width: 3vw;
-font-size: 1vw;">关闭</button>
+        <button @click="clickclose" class="noName">关闭</button>
       </div>
     </div>
   </div>
@@ -141,12 +106,12 @@ font-size: 1vw;">关闭</button>
 import echarts from 'echarts'
 import $ from 'jquery';
 import {addReport, getReportByPId, updateReport} from "@/api/report/report";
+
 export default {
   name: "static_single",
   inject: ['reload'],
   data() {
     return {
-      // exportPDFtitle: (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.patientName + "静态心电报告_" + this.$route.query.pId,
       pId: null,
       reloads: false,
       data: {
@@ -229,6 +194,7 @@ export default {
       var _th = this
       console.log("执行")
       console.log(this.pId)
+      this.data.dataTime=this.$options.methods.getData();
       $.ajax({
         type: "post",
         url: "https://screen.mindyard.cn:84/get_jecg_single",
@@ -261,11 +227,11 @@ export default {
           // this.data.pv5 = data.result.ecg_analysis_data[""]
           // this.data.rv5 = data.result.ecg_analysis_data[""]
           _th.data.datas = data.result.II
-          console.log("获取到的导联数据",_th.data.datas)
-          console.log("获取到的导联数据长度",_th.data.datas.length)
+          console.log("获取到的导联数据", _th.data.datas)
+          console.log("获取到的导联数据长度", _th.data.datas.length)
           var x = [];
           var nArr = _th.getNewArray(_th.data.datas, 2000);
-          console.log("数据以2000一条分好组",nArr)
+          console.log("数据以2000一条分好组", nArr)
           for (var i = 0; i < 2000; i++) {
             x.push(i);
           }
@@ -278,7 +244,7 @@ export default {
               left: 0,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -465,7 +431,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -651,7 +617,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -835,7 +801,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -1019,7 +985,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -1203,7 +1169,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -1388,7 +1354,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -1400,36 +1366,47 @@ export default {
                 type: 'cross'
               }
             },
-            dataZoom: [{
-              type: 'inside', // 放大和缩小
-              orient: 'vertical',
-              filterMode: "none",//或者”empty“
-            }, {
-              type: 'inside',
-              filterMode: "none",//或者”empty“
-            },
+
+            dataZoom: [
               {
-                // start: 0,//默认为0
-                // end: 100,//默认为100
-                type: 'slider',
-                show: true,
-                // xAxisIndex: [0],
-                handleSize: 0,//滑动条的 左右2个滑动条的大小
-                startValue: 0, // 初始显示值
-                endValue: 500000, // 结束显示值,自己定
-                height: 5,//组件高度
-                left: '10%', //左边的距离
-                right: '10%',//右边的距离
-                bottom: '1%',//底边的距离
-                borderColor: "#000000",
-                fillerColor: '#b33939',
-                borderRadius: 5,
-                backgroundColor: '#62be38',//两边未选中的滑动条区域的颜色
-                showDataShadow: false,//是否显示数据阴影 默认auto
-                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                realtime: true, //是否实时更新
-                filterMode: "none",//或者”empty“
-              }],
+                type: 'inside',
+                start: 0,
+                end: 35
+              },
+              {
+                start: 0,
+                end: 35
+              }
+            ],
+            // dataZoom: [{
+            //   type: 'inside', // 放大和缩小
+            //   orient: 'vertical',
+            //   filterMode: "none",//或者”empty“
+            // }, {
+            //   type: 'inside',
+            //   filterMode: "none",//或者”empty“
+            // }, {
+            //     start: 0,//默认为0
+            //     end: 1000,//默认为100
+            //     type: 'slider',
+            //     show: true,
+            //     xAxisIndex: [0],
+            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
+            //     startValue: 0, // 初始显示值
+            //     endValue: 500000, // 结束显示值,自己定
+            //     height: 5,//组件高度
+            //     left: '10%', //左边的距离
+            //     right: '10%',//右边的距离
+            //     bottom: '1%',//底边的距离
+            //     borderColor: "#000000",
+            //     fillerColor: '#000000',
+            //     borderRadius: 5,
+            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
+            //     showDataShadow: false,//是否显示数据阴影 默认auto
+            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+            //     realtime: true, //是否实时更新
+            //     filterMode: "none",//或者”empty“
+            //   }],
             xAxis: {
               type: 'category',
               data: x,
@@ -1583,132 +1560,7 @@ export default {
                     {xAxis: 1925},
                     {xAxis: 1950},
                     {xAxis: 1975},
-
-
                     {xAxis: 2000},
-                    {xAxis: 2025},
-                    {xAxis: 2050},
-                    {xAxis: 2075},
-                    {xAxis: 2100},
-                    {xAxis: 2125},
-                    {xAxis: 2150},
-                    {xAxis: 2175},
-                    {xAxis: 2200},
-                    {xAxis: 2225},
-                    {xAxis: 2250},
-                    {xAxis: 2275},
-                    {xAxis: 2300},
-                    {xAxis: 2325},
-                    {xAxis: 2350},
-                    {xAxis: 2375},
-                    {xAxis: 2400},
-                    {xAxis: 2425},
-                    {xAxis: 2450},
-                    {xAxis: 2475},
-                    {xAxis: 2500},
-                    {xAxis: 2525},
-                    {xAxis: 2550},
-                    {xAxis: 2575},
-                    {xAxis: 2600},
-                    {xAxis: 2625},
-                    {xAxis: 2650},
-                    {xAxis: 2675},
-                    {xAxis: 2700},
-                    {xAxis: 2725},
-                    {xAxis: 2750},
-                    {xAxis: 2775},
-                    {xAxis: 2800},
-                    {xAxis: 2825},
-                    {xAxis: 2850},
-                    {xAxis: 2875},
-                    {xAxis: 2900},
-                    {xAxis: 2925},
-                    {xAxis: 2950},
-                    {xAxis: 2975},
-
-                    {xAxis: 3000},
-                    {xAxis: 3025},
-                    {xAxis: 3050},
-                    {xAxis: 3075},
-                    {xAxis: 3100},
-                    {xAxis: 3125},
-                    {xAxis: 3150},
-                    {xAxis: 3175},
-                    {xAxis: 3200},
-                    {xAxis: 3225},
-                    {xAxis: 3250},
-                    {xAxis: 3275},
-                    {xAxis: 3300},
-                    {xAxis: 3325},
-                    {xAxis: 3350},
-                    {xAxis: 3375},
-                    {xAxis: 3400},
-                    {xAxis: 3425},
-                    {xAxis: 3450},
-                    {xAxis: 3475},
-                    {xAxis: 3500},
-                    {xAxis: 3525},
-                    {xAxis: 3550},
-                    {xAxis: 3575},
-                    {xAxis: 3600},
-                    {xAxis: 3625},
-                    {xAxis: 3650},
-                    {xAxis: 3675},
-                    {xAxis: 3700},
-                    {xAxis: 3725},
-                    {xAxis: 3750},
-                    {xAxis: 3775},
-                    {xAxis: 3800},
-                    {xAxis: 3825},
-                    {xAxis: 3850},
-                    {xAxis: 3875},
-                    {xAxis: 3900},
-                    {xAxis: 3925},
-                    {xAxis: 3950},
-                    {xAxis: 3975},
-                    {xAxis: 4000},
-
-
-                    {xAxis: 4025},
-                    {xAxis: 4050},
-                    {xAxis: 4075},
-                    {xAxis: 4100},
-                    {xAxis: 4125},
-                    {xAxis: 4150},
-                    {xAxis: 4175},
-                    {xAxis: 4200},
-                    {xAxis: 4225},
-                    {xAxis: 4250},
-                    {xAxis: 4275},
-                    {xAxis: 4300},
-                    {xAxis: 4325},
-                    {xAxis: 4350},
-                    {xAxis: 4375},
-                    {xAxis: 4400},
-                    {xAxis: 4425},
-                    {xAxis: 4450},
-                    {xAxis: 4475},
-                    {xAxis: 4500},
-                    {xAxis: 4525},
-                    {xAxis: 4550},
-                    {xAxis: 4575},
-                    {xAxis: 4600},
-                    {xAxis: 4625},
-                    {xAxis: 4650},
-                    {xAxis: 4675},
-                    {xAxis: 4700},
-                    {xAxis: 4725},
-                    {xAxis: 4750},
-                    {xAxis: 4775},
-                    {xAxis: 4800},
-                    {xAxis: 4825},
-                    {xAxis: 4850},
-                    {xAxis: 4875},
-                    {xAxis: 4900},
-                    {xAxis: 4925},
-                    {xAxis: 4950},
-                    {xAxis: 4975},
-                    {xAxis: 5000},
 
                     {yAxis: -1},
                     {yAxis: -0.5},
@@ -1732,7 +1584,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -1744,36 +1596,47 @@ export default {
                 type: 'cross'
               }
             },
-            dataZoom: [{
-              type: 'inside', // 放大和缩小
-              orient: 'vertical',
-              filterMode: "none",//或者”empty“
-            }, {
-              type: 'inside',
-              filterMode: "none",//或者”empty“
-            },
+            dataZoom: [
               {
-                // start: 0,//默认为0
-                // end: 100,//默认为100
-                type: 'slider',
-                show: true,
-                // xAxisIndex: [0],
-                handleSize: 0,//滑动条的 左右2个滑动条的大小
-                startValue: 0, // 初始显示值
-                endValue: 500000, // 结束显示值,自己定
-                height: 5,//组件高度
-                left: '10%', //左边的距离
-                right: '10%',//右边的距离
-                bottom: '1%',//底边的距离
-                borderColor: "#000000",
-                fillerColor: '#b33939',
-                borderRadius: 5,
-                backgroundColor: '#62be38',//两边未选中的滑动条区域的颜色
-                showDataShadow: false,//是否显示数据阴影 默认auto
-                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                realtime: true, //是否实时更新
-                filterMode: "none",//或者”empty“
-              }],
+                type: 'inside',
+                start: 0,
+                end: 35
+              },
+              {
+                start: 0,
+                end: 35
+              }
+            ],
+            // dataZoom: [{
+            //   type: 'inside', // 放大和缩小
+            //   orient: 'vertical',
+            //   filterMode: "none",//或者”empty“
+            // }, {
+            //   type: 'inside',
+            //   filterMode: "none",//或者”empty“
+            // },
+            //   {
+            //     // start: 0,//默认为0
+            //     // end: 100,//默认为100
+            //     type: 'slider',
+            //     show: true,
+            //     // xAxisIndex: [0],
+            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
+            //     startValue: 0, // 初始显示值
+            //     endValue: 500000, // 结束显示值,自己定
+            //     height: 5,//组件高度
+            //     left: '10%', //左边的距离
+            //     right: '10%',//右边的距离
+            //     bottom: '1%',//底边的距离
+            //     borderColor: "#000000",
+            //     fillerColor: '#000000',
+            //     borderRadius: 5,
+            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
+            //     showDataShadow: false,//是否显示数据阴影 默认auto
+            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+            //     realtime: true, //是否实时更新
+            //     filterMode: "none",//或者”empty“
+            //   }],
             xAxis: {
               type: 'category',
               data: x,
@@ -1928,132 +1791,7 @@ export default {
                     {xAxis: 1925},
                     {xAxis: 1950},
                     {xAxis: 1975},
-
-
                     {xAxis: 2000},
-                    {xAxis: 2025},
-                    {xAxis: 2050},
-                    {xAxis: 2075},
-                    {xAxis: 2100},
-                    {xAxis: 2125},
-                    {xAxis: 2150},
-                    {xAxis: 2175},
-                    {xAxis: 2200},
-                    {xAxis: 2225},
-                    {xAxis: 2250},
-                    {xAxis: 2275},
-                    {xAxis: 2300},
-                    {xAxis: 2325},
-                    {xAxis: 2350},
-                    {xAxis: 2375},
-                    {xAxis: 2400},
-                    {xAxis: 2425},
-                    {xAxis: 2450},
-                    {xAxis: 2475},
-                    {xAxis: 2500},
-                    {xAxis: 2525},
-                    {xAxis: 2550},
-                    {xAxis: 2575},
-                    {xAxis: 2600},
-                    {xAxis: 2625},
-                    {xAxis: 2650},
-                    {xAxis: 2675},
-                    {xAxis: 2700},
-                    {xAxis: 2725},
-                    {xAxis: 2750},
-                    {xAxis: 2775},
-                    {xAxis: 2800},
-                    {xAxis: 2825},
-                    {xAxis: 2850},
-                    {xAxis: 2875},
-                    {xAxis: 2900},
-                    {xAxis: 2925},
-                    {xAxis: 2950},
-                    {xAxis: 2975},
-
-                    {xAxis: 3000},
-                    {xAxis: 3025},
-                    {xAxis: 3050},
-                    {xAxis: 3075},
-                    {xAxis: 3100},
-                    {xAxis: 3125},
-                    {xAxis: 3150},
-                    {xAxis: 3175},
-                    {xAxis: 3200},
-                    {xAxis: 3225},
-                    {xAxis: 3250},
-                    {xAxis: 3275},
-                    {xAxis: 3300},
-                    {xAxis: 3325},
-                    {xAxis: 3350},
-                    {xAxis: 3375},
-                    {xAxis: 3400},
-                    {xAxis: 3425},
-                    {xAxis: 3450},
-                    {xAxis: 3475},
-                    {xAxis: 3500},
-                    {xAxis: 3525},
-                    {xAxis: 3550},
-                    {xAxis: 3575},
-                    {xAxis: 3600},
-                    {xAxis: 3625},
-                    {xAxis: 3650},
-                    {xAxis: 3675},
-                    {xAxis: 3700},
-                    {xAxis: 3725},
-                    {xAxis: 3750},
-                    {xAxis: 3775},
-                    {xAxis: 3800},
-                    {xAxis: 3825},
-                    {xAxis: 3850},
-                    {xAxis: 3875},
-                    {xAxis: 3900},
-                    {xAxis: 3925},
-                    {xAxis: 3950},
-                    {xAxis: 3975},
-                    {xAxis: 4000},
-
-
-                    {xAxis: 4025},
-                    {xAxis: 4050},
-                    {xAxis: 4075},
-                    {xAxis: 4100},
-                    {xAxis: 4125},
-                    {xAxis: 4150},
-                    {xAxis: 4175},
-                    {xAxis: 4200},
-                    {xAxis: 4225},
-                    {xAxis: 4250},
-                    {xAxis: 4275},
-                    {xAxis: 4300},
-                    {xAxis: 4325},
-                    {xAxis: 4350},
-                    {xAxis: 4375},
-                    {xAxis: 4400},
-                    {xAxis: 4425},
-                    {xAxis: 4450},
-                    {xAxis: 4475},
-                    {xAxis: 4500},
-                    {xAxis: 4525},
-                    {xAxis: 4550},
-                    {xAxis: 4575},
-                    {xAxis: 4600},
-                    {xAxis: 4625},
-                    {xAxis: 4650},
-                    {xAxis: 4675},
-                    {xAxis: 4700},
-                    {xAxis: 4725},
-                    {xAxis: 4750},
-                    {xAxis: 4775},
-                    {xAxis: 4800},
-                    {xAxis: 4825},
-                    {xAxis: 4850},
-                    {xAxis: 4875},
-                    {xAxis: 4900},
-                    {xAxis: 4925},
-                    {xAxis: 4950},
-                    {xAxis: 4975},
-                    {xAxis: 5000},
 
                     {yAxis: -1},
                     {yAxis: -0.5},
@@ -2077,7 +1815,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -2089,36 +1827,47 @@ export default {
                 type: 'cross'
               }
             },
-            dataZoom: [{
-              type: 'inside', // 放大和缩小
-              orient: 'vertical',
-              filterMode: "none",//或者”empty“
-            }, {
-              type: 'inside',
-              filterMode: "none",//或者”empty“
-            },
+            dataZoom: [
               {
-                // start: 0,//默认为0
-                // end: 100,//默认为100
-                type: 'slider',
-                show: true,
-                // xAxisIndex: [0],
-                handleSize: 0,//滑动条的 左右2个滑动条的大小
-                startValue: 0, // 初始显示值
-                endValue: 500000, // 结束显示值,自己定
-                height: 5,//组件高度
-                left: '10%', //左边的距离
-                right: '10%',//右边的距离
-                bottom: '1%',//底边的距离
-                borderColor: "#000000",
-                fillerColor: '#b33939',
-                borderRadius: 5,
-                backgroundColor: '#62be38',//两边未选中的滑动条区域的颜色
-                showDataShadow: false,//是否显示数据阴影 默认auto
-                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                realtime: true, //是否实时更新
-                filterMode: "none",//或者”empty“
-              }],
+                type: 'inside',
+                start: 0,
+                end: 35
+              },
+              {
+                start: 0,
+                end: 35
+              }
+            ],
+            // dataZoom: [{
+            //   type: 'inside', // 放大和缩小
+            //   orient: 'vertical',
+            //   filterMode: "none",//或者”empty“
+            // }, {
+            //   type: 'inside',
+            //   filterMode: "none",//或者”empty“
+            // },
+            //   {
+            //     // start: 0,//默认为0
+            //     // end: 100,//默认为100
+            //     type: 'slider',
+            //     show: true,
+            //     // xAxisIndex: [0],
+            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
+            //     startValue: 0, // 初始显示值
+            //     endValue: 500000, // 结束显示值,自己定
+            //     height: 5,//组件高度
+            //     left: '10%', //左边的距离
+            //     right: '10%',//右边的距离
+            //     bottom: '1%',//底边的距离
+            //     borderColor: "#000000",
+            //     fillerColor: '#000000',
+            //     borderRadius: 5,
+            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
+            //     showDataShadow: false,//是否显示数据阴影 默认auto
+            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+            //     realtime: true, //是否实时更新
+            //     filterMode: "none",//或者”empty“
+            //   }],
             xAxis: {
               type: 'category',
               data: x,
@@ -2272,132 +2021,7 @@ export default {
                     {xAxis: 1925},
                     {xAxis: 1950},
                     {xAxis: 1975},
-
-
                     {xAxis: 2000},
-                    {xAxis: 2025},
-                    {xAxis: 2050},
-                    {xAxis: 2075},
-                    {xAxis: 2100},
-                    {xAxis: 2125},
-                    {xAxis: 2150},
-                    {xAxis: 2175},
-                    {xAxis: 2200},
-                    {xAxis: 2225},
-                    {xAxis: 2250},
-                    {xAxis: 2275},
-                    {xAxis: 2300},
-                    {xAxis: 2325},
-                    {xAxis: 2350},
-                    {xAxis: 2375},
-                    {xAxis: 2400},
-                    {xAxis: 2425},
-                    {xAxis: 2450},
-                    {xAxis: 2475},
-                    {xAxis: 2500},
-                    {xAxis: 2525},
-                    {xAxis: 2550},
-                    {xAxis: 2575},
-                    {xAxis: 2600},
-                    {xAxis: 2625},
-                    {xAxis: 2650},
-                    {xAxis: 2675},
-                    {xAxis: 2700},
-                    {xAxis: 2725},
-                    {xAxis: 2750},
-                    {xAxis: 2775},
-                    {xAxis: 2800},
-                    {xAxis: 2825},
-                    {xAxis: 2850},
-                    {xAxis: 2875},
-                    {xAxis: 2900},
-                    {xAxis: 2925},
-                    {xAxis: 2950},
-                    {xAxis: 2975},
-
-                    {xAxis: 3000},
-                    {xAxis: 3025},
-                    {xAxis: 3050},
-                    {xAxis: 3075},
-                    {xAxis: 3100},
-                    {xAxis: 3125},
-                    {xAxis: 3150},
-                    {xAxis: 3175},
-                    {xAxis: 3200},
-                    {xAxis: 3225},
-                    {xAxis: 3250},
-                    {xAxis: 3275},
-                    {xAxis: 3300},
-                    {xAxis: 3325},
-                    {xAxis: 3350},
-                    {xAxis: 3375},
-                    {xAxis: 3400},
-                    {xAxis: 3425},
-                    {xAxis: 3450},
-                    {xAxis: 3475},
-                    {xAxis: 3500},
-                    {xAxis: 3525},
-                    {xAxis: 3550},
-                    {xAxis: 3575},
-                    {xAxis: 3600},
-                    {xAxis: 3625},
-                    {xAxis: 3650},
-                    {xAxis: 3675},
-                    {xAxis: 3700},
-                    {xAxis: 3725},
-                    {xAxis: 3750},
-                    {xAxis: 3775},
-                    {xAxis: 3800},
-                    {xAxis: 3825},
-                    {xAxis: 3850},
-                    {xAxis: 3875},
-                    {xAxis: 3900},
-                    {xAxis: 3925},
-                    {xAxis: 3950},
-                    {xAxis: 3975},
-                    {xAxis: 4000},
-
-
-                    {xAxis: 4025},
-                    {xAxis: 4050},
-                    {xAxis: 4075},
-                    {xAxis: 4100},
-                    {xAxis: 4125},
-                    {xAxis: 4150},
-                    {xAxis: 4175},
-                    {xAxis: 4200},
-                    {xAxis: 4225},
-                    {xAxis: 4250},
-                    {xAxis: 4275},
-                    {xAxis: 4300},
-                    {xAxis: 4325},
-                    {xAxis: 4350},
-                    {xAxis: 4375},
-                    {xAxis: 4400},
-                    {xAxis: 4425},
-                    {xAxis: 4450},
-                    {xAxis: 4475},
-                    {xAxis: 4500},
-                    {xAxis: 4525},
-                    {xAxis: 4550},
-                    {xAxis: 4575},
-                    {xAxis: 4600},
-                    {xAxis: 4625},
-                    {xAxis: 4650},
-                    {xAxis: 4675},
-                    {xAxis: 4700},
-                    {xAxis: 4725},
-                    {xAxis: 4750},
-                    {xAxis: 4775},
-                    {xAxis: 4800},
-                    {xAxis: 4825},
-                    {xAxis: 4850},
-                    {xAxis: 4875},
-                    {xAxis: 4900},
-                    {xAxis: 4925},
-                    {xAxis: 4950},
-                    {xAxis: 4975},
-                    {xAxis: 5000},
 
                     {yAxis: -1},
                     {yAxis: -0.5},
@@ -2421,7 +2045,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -2433,39 +2057,50 @@ export default {
                 type: 'cross'
               }
             },
-            dataZoom: [{
-              type: 'inside', // 放大和缩小
-              orient: 'vertical',
-              filterMode: "none",//或者”empty“
-            }, {
-              type: 'inside',
-              filterMode: "none",//或者”empty“
-            },
+            dataZoom: [
               {
-                // start: 0,//默认为0
-                // end: 100,//默认为100
-                type: 'slider',
-                show: true,
-                // xAxisIndex: [0],
-                handleSize: 0,//滑动条的 左右2个滑动条的大小
-                startValue: 0, // 初始显示值
-                endValue: 500000, // 结束显示值,自己定
-                height: 5,//组件高度
-                left: '10%', //左边的距离
-                right: '10%',//右边的距离
-                bottom: '1%',//底边的距离
-                borderColor: "#000000",
-                fillerColor: '#b33939',
-                borderRadius: 5,
-                backgroundColor: '#62be38',//两边未选中的滑动条区域的颜色
-                showDataShadow: false,//是否显示数据阴影 默认auto
-                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                realtime: true, //是否实时更新
-                filterMode: "none",//或者”empty“
-              }],
+                type: 'inside',
+                start: 0,
+                end: 35
+              },
+              {
+                start: 0,
+                end: 35
+              }
+            ],
+            // dataZoom: [{
+            //   type: 'inside', // 放大和缩小
+            //   orient: 'vertical',
+            //   filterMode: "none",//或者”empty“
+            // }, {
+            //   type: 'inside',
+            //   filterMode: "none",//或者”empty“
+            // },
+            //   {
+            //     // start: 0,//默认为0
+            //     // end: 100,//默认为100
+            //     type: 'slider',
+            //     show: true,
+            //     // xAxisIndex: [0],
+            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
+            //     startValue: 0, // 初始显示值
+            //     endValue: 500000, // 结束显示值,自己定
+            //     height: 5,//组件高度
+            //     left: '10%', //左边的距离
+            //     right: '10%',//右边的距离
+            //     bottom: '1%',//底边的距离
+            //     borderColor: "#000000",
+            //     fillerColor: '#000000',
+            //     borderRadius: 5,
+            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
+            //     showDataShadow: false,//是否显示数据阴影 默认auto
+            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+            //     realtime: true, //是否实时更新
+            //     filterMode: "none",//或者”empty“
+            //   }],
             xAxis: {
               type: 'category',
-              data:x,
+              data: x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -2616,132 +2251,8 @@ export default {
                     {xAxis: 1925},
                     {xAxis: 1950},
                     {xAxis: 1975},
-
-
                     {xAxis: 2000},
-                    {xAxis: 2025},
-                    {xAxis: 2050},
-                    {xAxis: 2075},
-                    {xAxis: 2100},
-                    {xAxis: 2125},
-                    {xAxis: 2150},
-                    {xAxis: 2175},
-                    {xAxis: 2200},
-                    {xAxis: 2225},
-                    {xAxis: 2250},
-                    {xAxis: 2275},
-                    {xAxis: 2300},
-                    {xAxis: 2325},
-                    {xAxis: 2350},
-                    {xAxis: 2375},
-                    {xAxis: 2400},
-                    {xAxis: 2425},
-                    {xAxis: 2450},
-                    {xAxis: 2475},
-                    {xAxis: 2500},
-                    {xAxis: 2525},
-                    {xAxis: 2550},
-                    {xAxis: 2575},
-                    {xAxis: 2600},
-                    {xAxis: 2625},
-                    {xAxis: 2650},
-                    {xAxis: 2675},
-                    {xAxis: 2700},
-                    {xAxis: 2725},
-                    {xAxis: 2750},
-                    {xAxis: 2775},
-                    {xAxis: 2800},
-                    {xAxis: 2825},
-                    {xAxis: 2850},
-                    {xAxis: 2875},
-                    {xAxis: 2900},
-                    {xAxis: 2925},
-                    {xAxis: 2950},
-                    {xAxis: 2975},
 
-                    {xAxis: 3000},
-                    {xAxis: 3025},
-                    {xAxis: 3050},
-                    {xAxis: 3075},
-                    {xAxis: 3100},
-                    {xAxis: 3125},
-                    {xAxis: 3150},
-                    {xAxis: 3175},
-                    {xAxis: 3200},
-                    {xAxis: 3225},
-                    {xAxis: 3250},
-                    {xAxis: 3275},
-                    {xAxis: 3300},
-                    {xAxis: 3325},
-                    {xAxis: 3350},
-                    {xAxis: 3375},
-                    {xAxis: 3400},
-                    {xAxis: 3425},
-                    {xAxis: 3450},
-                    {xAxis: 3475},
-                    {xAxis: 3500},
-                    {xAxis: 3525},
-                    {xAxis: 3550},
-                    {xAxis: 3575},
-                    {xAxis: 3600},
-                    {xAxis: 3625},
-                    {xAxis: 3650},
-                    {xAxis: 3675},
-                    {xAxis: 3700},
-                    {xAxis: 3725},
-                    {xAxis: 3750},
-                    {xAxis: 3775},
-                    {xAxis: 3800},
-                    {xAxis: 3825},
-                    {xAxis: 3850},
-                    {xAxis: 3875},
-                    {xAxis: 3900},
-                    {xAxis: 3925},
-                    {xAxis: 3950},
-                    {xAxis: 3975},
-                    {xAxis: 4000},
-
-
-                    {xAxis: 4025},
-                    {xAxis: 4050},
-                    {xAxis: 4075},
-                    {xAxis: 4100},
-                    {xAxis: 4125},
-                    {xAxis: 4150},
-                    {xAxis: 4175},
-                    {xAxis: 4200},
-                    {xAxis: 4225},
-                    {xAxis: 4250},
-                    {xAxis: 4275},
-                    {xAxis: 4300},
-                    {xAxis: 4325},
-                    {xAxis: 4350},
-                    {xAxis: 4375},
-                    {xAxis: 4400},
-                    {xAxis: 4425},
-                    {xAxis: 4450},
-                    {xAxis: 4475},
-                    {xAxis: 4500},
-                    {xAxis: 4525},
-                    {xAxis: 4550},
-                    {xAxis: 4575},
-                    {xAxis: 4600},
-                    {xAxis: 4625},
-                    {xAxis: 4650},
-                    {xAxis: 4675},
-                    {xAxis: 4700},
-                    {xAxis: 4725},
-                    {xAxis: 4750},
-                    {xAxis: 4775},
-                    {xAxis: 4800},
-                    {xAxis: 4825},
-                    {xAxis: 4850},
-                    {xAxis: 4875},
-                    {xAxis: 4900},
-                    {xAxis: 4925},
-                    {xAxis: 4950},
-                    {xAxis: 4975},
-                    {xAxis: 5000},
                     {yAxis: -1},
                     {yAxis: -0.5},
                     {yAxis: 0},
@@ -2764,7 +2275,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -2776,36 +2287,47 @@ export default {
                 type: 'cross'
               }
             },
-            dataZoom: [{
-              type: 'inside', // 放大和缩小
-              orient: 'vertical',
-              filterMode: "none",//或者”empty“
-            }, {
-              type: 'inside',
-              filterMode: "none",//或者”empty“
-            },
+            dataZoom: [
               {
-                // start: 0,//默认为0
-                // end: 100,//默认为100
-                type: 'slider',
-                show: true,
-                // xAxisIndex: [0],
-                handleSize: 0,//滑动条的 左右2个滑动条的大小
-                startValue: 0, // 初始显示值
-                endValue: 500000, // 结束显示值,自己定
-                height: 5,//组件高度
-                left: '10%', //左边的距离
-                right: '10%',//右边的距离
-                bottom: '1%',//底边的距离
-                borderColor: "#000000",
-                fillerColor: '#b33939',
-                borderRadius: 5,
-                backgroundColor: '#62be38',//两边未选中的滑动条区域的颜色
-                showDataShadow: false,//是否显示数据阴影 默认auto
-                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                realtime: true, //是否实时更新
-                filterMode: "none",//或者”empty“
-              }],
+                type: 'inside',
+                start: 0,
+                end: 35
+              },
+              {
+                start: 0,
+                end: 35
+              }
+            ],
+            // dataZoom: [{
+            //   type: 'inside', // 放大和缩小
+            //   orient: 'vertical',
+            //   filterMode: "none",//或者”empty“
+            // }, {
+            //   type: 'inside',
+            //   filterMode: "none",//或者”empty“
+            // },
+            //   {
+            //     // start: 0,//默认为0
+            //     // end: 100,//默认为100
+            //     type: 'slider',
+            //     show: true,
+            //     // xAxisIndex: [0],
+            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
+            //     startValue: 0, // 初始显示值
+            //     endValue: 500000, // 结束显示值,自己定
+            //     height: 5,//组件高度
+            //     left: '10%', //左边的距离
+            //     right: '10%',//右边的距离
+            //     bottom: '1%',//底边的距离
+            //     borderColor: "#000000",
+            //     fillerColor: '#000000',
+            //     borderRadius: 5,
+            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
+            //     showDataShadow: false,//是否显示数据阴影 默认auto
+            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+            //     realtime: true, //是否实时更新
+            //     filterMode: "none",//或者”empty“
+            //   }],
             xAxis: {
               type: 'category',
               data: x,
@@ -2857,7 +2379,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data:nArr[4],
+                data: nArr[4],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -2959,132 +2481,7 @@ export default {
                     {xAxis: 1925},
                     {xAxis: 1950},
                     {xAxis: 1975},
-
-
                     {xAxis: 2000},
-                    {xAxis: 2025},
-                    {xAxis: 2050},
-                    {xAxis: 2075},
-                    {xAxis: 2100},
-                    {xAxis: 2125},
-                    {xAxis: 2150},
-                    {xAxis: 2175},
-                    {xAxis: 2200},
-                    {xAxis: 2225},
-                    {xAxis: 2250},
-                    {xAxis: 2275},
-                    {xAxis: 2300},
-                    {xAxis: 2325},
-                    {xAxis: 2350},
-                    {xAxis: 2375},
-                    {xAxis: 2400},
-                    {xAxis: 2425},
-                    {xAxis: 2450},
-                    {xAxis: 2475},
-                    {xAxis: 2500},
-                    {xAxis: 2525},
-                    {xAxis: 2550},
-                    {xAxis: 2575},
-                    {xAxis: 2600},
-                    {xAxis: 2625},
-                    {xAxis: 2650},
-                    {xAxis: 2675},
-                    {xAxis: 2700},
-                    {xAxis: 2725},
-                    {xAxis: 2750},
-                    {xAxis: 2775},
-                    {xAxis: 2800},
-                    {xAxis: 2825},
-                    {xAxis: 2850},
-                    {xAxis: 2875},
-                    {xAxis: 2900},
-                    {xAxis: 2925},
-                    {xAxis: 2950},
-                    {xAxis: 2975},
-
-                    {xAxis: 3000},
-                    {xAxis: 3025},
-                    {xAxis: 3050},
-                    {xAxis: 3075},
-                    {xAxis: 3100},
-                    {xAxis: 3125},
-                    {xAxis: 3150},
-                    {xAxis: 3175},
-                    {xAxis: 3200},
-                    {xAxis: 3225},
-                    {xAxis: 3250},
-                    {xAxis: 3275},
-                    {xAxis: 3300},
-                    {xAxis: 3325},
-                    {xAxis: 3350},
-                    {xAxis: 3375},
-                    {xAxis: 3400},
-                    {xAxis: 3425},
-                    {xAxis: 3450},
-                    {xAxis: 3475},
-                    {xAxis: 3500},
-                    {xAxis: 3525},
-                    {xAxis: 3550},
-                    {xAxis: 3575},
-                    {xAxis: 3600},
-                    {xAxis: 3625},
-                    {xAxis: 3650},
-                    {xAxis: 3675},
-                    {xAxis: 3700},
-                    {xAxis: 3725},
-                    {xAxis: 3750},
-                    {xAxis: 3775},
-                    {xAxis: 3800},
-                    {xAxis: 3825},
-                    {xAxis: 3850},
-                    {xAxis: 3875},
-                    {xAxis: 3900},
-                    {xAxis: 3925},
-                    {xAxis: 3950},
-                    {xAxis: 3975},
-                    {xAxis: 4000},
-
-
-                    {xAxis: 4025},
-                    {xAxis: 4050},
-                    {xAxis: 4075},
-                    {xAxis: 4100},
-                    {xAxis: 4125},
-                    {xAxis: 4150},
-                    {xAxis: 4175},
-                    {xAxis: 4200},
-                    {xAxis: 4225},
-                    {xAxis: 4250},
-                    {xAxis: 4275},
-                    {xAxis: 4300},
-                    {xAxis: 4325},
-                    {xAxis: 4350},
-                    {xAxis: 4375},
-                    {xAxis: 4400},
-                    {xAxis: 4425},
-                    {xAxis: 4450},
-                    {xAxis: 4475},
-                    {xAxis: 4500},
-                    {xAxis: 4525},
-                    {xAxis: 4550},
-                    {xAxis: 4575},
-                    {xAxis: 4600},
-                    {xAxis: 4625},
-                    {xAxis: 4650},
-                    {xAxis: 4675},
-                    {xAxis: 4700},
-                    {xAxis: 4725},
-                    {xAxis: 4750},
-                    {xAxis: 4775},
-                    {xAxis: 4800},
-                    {xAxis: 4825},
-                    {xAxis: 4850},
-                    {xAxis: 4875},
-                    {xAxis: 4900},
-                    {xAxis: 4925},
-                    {xAxis: 4950},
-                    {xAxis: 4975},
-                    {xAxis: 5000},
 
                     {yAxis: -1},
                     {yAxis: -0.5},
@@ -3108,7 +2505,7 @@ export default {
               left: 5,
             },
             grid: {
-              left: '5',
+              left: '1',
               right: '1',
               top: '1',
               bottom: '1',
@@ -3120,36 +2517,47 @@ export default {
                 type: 'cross'
               }
             },
-            dataZoom: [{
-              type: 'inside', // 放大和缩小
-              orient: 'vertical',
-              filterMode: "none",//或者”empty“
-            }, {
-              type: 'inside',
-              filterMode: "none",//或者”empty“
-            },
+            dataZoom: [
               {
-                // start: 0,//默认为0
-                // end: 100,//默认为100
-                type: 'slider',
-                show: true,
-                // xAxisIndex: [0],
-                handleSize: 0,//滑动条的 左右2个滑动条的大小
-                startValue: 0, // 初始显示值
-                endValue: 500000, // 结束显示值,自己定
-                height: 5,//组件高度
-                left: '10%', //左边的距离
-                right: '10%',//右边的距离
-                bottom: '1%',//底边的距离
-                borderColor: "#000000",
-                fillerColor: '#b33939',
-                borderRadius: 5,
-                backgroundColor: '#62be38',//两边未选中的滑动条区域的颜色
-                showDataShadow: false,//是否显示数据阴影 默认auto
-                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                realtime: true, //是否实时更新
-                filterMode: "none",//或者”empty“
-              }],
+                type: 'inside',
+                start: 0,
+                end: 35
+              },
+              {
+                start: 0,
+                end: 35
+              }
+            ],
+            // dataZoom: [{
+            //   type: 'inside', // 放大和缩小
+            //   orient: 'vertical',
+            //   filterMode: "none",//或者”empty“
+            // }, {
+            //   type: 'inside',
+            //   filterMode: "none",//或者”empty“
+            // },
+            //   {
+            //     start: 0,//默认为0
+            //     end: 100,//默认为100
+            //     type: 'slider',
+            //     show: true,
+            //     // xAxisIndex: [0],
+            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
+            //     startValue: 0, // 初始显示值
+            //     endValue:50000, // 结束显示值,自己定
+            //     height: 5,//组件高度
+            //     left: '10%', //左边的距离
+            //     right: '10%',//右边的距离
+            //     bottom: '1%',//底边的距离
+            //     borderColor: "#000000",
+            //     fillerColor: '#000000',
+            //     borderRadius: 5,
+            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
+            //     showDataShadow: false,//是否显示数据阴影 默认auto
+            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+            //     realtime: true, //是否实时更新
+            //     filterMode: "none",//或者”empty“
+            //   }],
             xAxis: {
               type: 'category',
               data: x,
@@ -3303,132 +2711,7 @@ export default {
                     {xAxis: 1925},
                     {xAxis: 1950},
                     {xAxis: 1975},
-
-
                     {xAxis: 2000},
-                    {xAxis: 2025},
-                    {xAxis: 2050},
-                    {xAxis: 2075},
-                    {xAxis: 2100},
-                    {xAxis: 2125},
-                    {xAxis: 2150},
-                    {xAxis: 2175},
-                    {xAxis: 2200},
-                    {xAxis: 2225},
-                    {xAxis: 2250},
-                    {xAxis: 2275},
-                    {xAxis: 2300},
-                    {xAxis: 2325},
-                    {xAxis: 2350},
-                    {xAxis: 2375},
-                    {xAxis: 2400},
-                    {xAxis: 2425},
-                    {xAxis: 2450},
-                    {xAxis: 2475},
-                    {xAxis: 2500},
-                    {xAxis: 2525},
-                    {xAxis: 2550},
-                    {xAxis: 2575},
-                    {xAxis: 2600},
-                    {xAxis: 2625},
-                    {xAxis: 2650},
-                    {xAxis: 2675},
-                    {xAxis: 2700},
-                    {xAxis: 2725},
-                    {xAxis: 2750},
-                    {xAxis: 2775},
-                    {xAxis: 2800},
-                    {xAxis: 2825},
-                    {xAxis: 2850},
-                    {xAxis: 2875},
-                    {xAxis: 2900},
-                    {xAxis: 2925},
-                    {xAxis: 2950},
-                    {xAxis: 2975},
-
-                    {xAxis: 3000},
-                    {xAxis: 3025},
-                    {xAxis: 3050},
-                    {xAxis: 3075},
-                    {xAxis: 3100},
-                    {xAxis: 3125},
-                    {xAxis: 3150},
-                    {xAxis: 3175},
-                    {xAxis: 3200},
-                    {xAxis: 3225},
-                    {xAxis: 3250},
-                    {xAxis: 3275},
-                    {xAxis: 3300},
-                    {xAxis: 3325},
-                    {xAxis: 3350},
-                    {xAxis: 3375},
-                    {xAxis: 3400},
-                    {xAxis: 3425},
-                    {xAxis: 3450},
-                    {xAxis: 3475},
-                    {xAxis: 3500},
-                    {xAxis: 3525},
-                    {xAxis: 3550},
-                    {xAxis: 3575},
-                    {xAxis: 3600},
-                    {xAxis: 3625},
-                    {xAxis: 3650},
-                    {xAxis: 3675},
-                    {xAxis: 3700},
-                    {xAxis: 3725},
-                    {xAxis: 3750},
-                    {xAxis: 3775},
-                    {xAxis: 3800},
-                    {xAxis: 3825},
-                    {xAxis: 3850},
-                    {xAxis: 3875},
-                    {xAxis: 3900},
-                    {xAxis: 3925},
-                    {xAxis: 3950},
-                    {xAxis: 3975},
-                    {xAxis: 4000},
-
-
-                    {xAxis: 4025},
-                    {xAxis: 4050},
-                    {xAxis: 4075},
-                    {xAxis: 4100},
-                    {xAxis: 4125},
-                    {xAxis: 4150},
-                    {xAxis: 4175},
-                    {xAxis: 4200},
-                    {xAxis: 4225},
-                    {xAxis: 4250},
-                    {xAxis: 4275},
-                    {xAxis: 4300},
-                    {xAxis: 4325},
-                    {xAxis: 4350},
-                    {xAxis: 4375},
-                    {xAxis: 4400},
-                    {xAxis: 4425},
-                    {xAxis: 4450},
-                    {xAxis: 4475},
-                    {xAxis: 4500},
-                    {xAxis: 4525},
-                    {xAxis: 4550},
-                    {xAxis: 4575},
-                    {xAxis: 4600},
-                    {xAxis: 4625},
-                    {xAxis: 4650},
-                    {xAxis: 4675},
-                    {xAxis: 4700},
-                    {xAxis: 4725},
-                    {xAxis: 4750},
-                    {xAxis: 4775},
-                    {xAxis: 4800},
-                    {xAxis: 4825},
-                    {xAxis: 4850},
-                    {xAxis: 4875},
-                    {xAxis: 4900},
-                    {xAxis: 4925},
-                    {xAxis: 4950},
-                    {xAxis: 4975},
-                    {xAxis: 5000},
 
                     {yAxis: -1},
                     {yAxis: -0.5},
@@ -3452,6 +2735,14 @@ export default {
           console.log(data)
         }
       })
+    },
+    //获取当前时间
+    getData() {
+      var str = new Date();
+      var nowTime = str.getFullYear() + "-"
+        + (str.getMonth() + 1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes() + ":" + str.getSeconds();
+      console.log(nowTime);
+      return nowTime;
     },
     //截断数据（一条数据现在2000）
     getNewArray(array, subGroupLength) {
@@ -3505,7 +2796,7 @@ export default {
 .page {
   margin-top: 0.5vw;
   width: 100%;
-  height:52vw;
+  height: 52vw;
   //border: 3px solid #0000ff;
 }
 
@@ -3619,21 +2910,23 @@ export default {
   position: absolute;
   display: inline-block;
   top: 22vw;
-  left: 1vw;
-  height: 13vw;
-  width: 98%;
+  left: 0.5vw;
+  height: 15vw;
+  width: 83vw;
   background: white;
-  border: 2px solid black;
+  border: 1px solid black;
   z-index: 3;
 }
+
 .lineshow {
-  height:4vw;
-  width: 80vw;
+  height:11vw;
+  width: 82vw;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .chartsBig {
   position: absolute;
   top: 40%;
@@ -3645,5 +2938,13 @@ export default {
   //z-index: 1000;
   background-color: #00afff;
   //display: none;
+}
+
+.noName {
+  margin-left: 40vw;
+  margin-top: 12.8vw;
+  height: 2vw;
+  width: 3vw;
+  font-size: 1vw;
 }
 </style>
