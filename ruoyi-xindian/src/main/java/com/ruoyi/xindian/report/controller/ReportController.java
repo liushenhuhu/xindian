@@ -6,8 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.report.domain.ReportM;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +44,9 @@ public class ReportController extends BaseController
     @Autowired
     private IReportService reportService;
 
+    @Autowired
+    private IPatientManagementService patientManagementService;
+
     /**
      * 查询报告列表
      */
@@ -49,7 +56,18 @@ public class ReportController extends BaseController
     {
         startPage();
         List<Report> list = reportService.selectReportList(report);
-        return getDataTable(list);
+        ArrayList<ReportM> resList = new ArrayList<>();
+        ReportM reportM;
+        PatientManagement patientManagement;
+        for (Report r : list) {
+            reportM=new ReportM();
+            patientManagement = patientManagementService.selectPatientManagementByPId(r.getpId());
+            BeanUtils.copyProperties(r,reportM);
+            if(patientManagement != null)
+                reportM.setPatientPhone(patientManagement.getPatientPhone());
+            resList.add(reportM);
+        }
+        return getDataTable(resList);
     }
 
     /**

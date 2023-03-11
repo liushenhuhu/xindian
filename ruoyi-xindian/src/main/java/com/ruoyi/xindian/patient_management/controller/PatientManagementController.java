@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.patient_management.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -105,17 +106,18 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
         }
-        PatientManagmentDept patientManagmentDept=new PatientManagmentDept();
+        PatientManagmentDept patientManagmentDept;
         Doctor doctor = new Doctor();
         Department department = new Department();
         for (PatientManagement management : list) {
 //            patientManagmentDept= (PatientManagmentDept) management;
-            BeanUtils.copyProperties(management,patientManagmentDept);
+            patientManagmentDept = new PatientManagmentDept();
+            BeanUtils.copyProperties(management, patientManagmentDept);
 
-            if(patientManagmentDept.getDoctorPhone()!=null){
+            if (patientManagmentDept.getDoctorPhone() != null) {
                 doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
                 List<Doctor> doctors = doctorService.selectDoctorList(doctor);
-                if(doctors.get(0).getDepartmentCode()!=null) {
+                if (doctors.get(0).getDepartmentCode() != null) {
                     department.setDepartmentCode(doctors.get(0).getDepartmentCode());
                     List<Department> departments = departmentService.selectDepartmentList(department);
                     patientManagmentDept.setDept(departments.get(0).getDepartmentName());
@@ -123,7 +125,7 @@ public class PatientManagementController extends BaseController {
             }
             resList.add(patientManagmentDept);
         }
-        return getDataTable(resList);
+        return getTable(resList,new PageInfo(list).getTotal());
     }
 
     /**

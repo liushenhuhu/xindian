@@ -190,6 +190,12 @@
         <include refid="selectPatientManagementVo"/>
         where m.p_id = #{pId}
     </select>
+<!--    getPhoneByPId-->
+    <select id="getPhoneByPId" parameterType="String" resultMap="PatientManagementResult">
+        select patient_phone from patient_management
+        where p_id = #{pId}
+    </select>
+
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">
         insert into patient_management

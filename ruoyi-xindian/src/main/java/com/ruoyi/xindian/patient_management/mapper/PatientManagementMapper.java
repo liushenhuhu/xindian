@@ -21,6 +21,14 @@ public interface PatientManagementMapper
     public PatientManagement selectPatientManagementByPId(String pId);
 
     /**
+     * 通过pId获取患者电话
+     * @param pId
+     * @return
+     */
+
+    public  PatientManagement getPhoneByPId(String pId);
+
+    /**
      * 查询患者管理列表
      *
      * @param patientManagement 患者管理

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper">
+    
+    <resultMap type="AssociatedHospital" id="AssociatedHospitalResult">
+        <result property="hId"    column="h_id"    />
+        <result property="hospitalId"    column="hospital_id"    />
+        <result property="lowerLevelHospitalId"    column="lower_level_hospital_id"    />
+    </resultMap>
+
+    <sql id="selectAssociatedHospitalVo">
+        select h_id, hospital_id, lower_level_hospital_id from associated_hospital
+    </sql>
+
+    <select id="selectAssociatedHospitalList" parameterType="AssociatedHospital" resultMap="AssociatedHospitalResult">
+        <include refid="selectAssociatedHospitalVo"/>
+        <where>  
+            <if test="hospitalId != null "> and hospital_id = #{hospitalId}</if>
+            <if test="lowerLevelHospitalId != null "> and lower_level_hospital_id = #{lowerLevelHospitalId}</if>
+        </where>
+    </select>
+    
+    <select id="selectAssociatedHospitalByHId" parameterType="Long" resultMap="AssociatedHospitalResult">
+        <include refid="selectAssociatedHospitalVo"/>
+        where h_id = #{hId}
+    </select>
+        
+    <insert id="insertAssociatedHospital" parameterType="AssociatedHospital" useGeneratedKeys="true" keyProperty="hId">
+        insert into associated_hospital
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hospitalId != null">hospital_id,</if>
+            <if test="lowerLevelHospitalId != null">lower_level_hospital_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hospitalId != null">#{hospitalId},</if>
+            <if test="lowerLevelHospitalId != null">#{lowerLevelHospitalId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssociatedHospital" parameterType="AssociatedHospital">
+        update associated_hospital
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hospitalId != null">hospital_id = #{hospitalId},</if>
+            <if test="lowerLevelHospitalId != null">lower_level_hospital_id = #{lowerLevelHospitalId},</if>
+        </trim>
+        where h_id = #{hId}
+    </update>
+
+    <delete id="deleteAssociatedHospitalByHId" parameterType="Long">
+        delete from associated_hospital where h_id = #{hId}
+    </delete>
+
+    <delete id="deleteAssociatedHospitalByHIds" parameterType="String">
+        delete from associated_hospital where h_id in 
+        <foreach item="hId" collection="array" open="(" separator="," close=")">
+            #{hId}
+        </foreach>
+    </delete>
+</mapper>

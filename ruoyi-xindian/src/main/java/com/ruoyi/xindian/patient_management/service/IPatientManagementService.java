@@ -71,4 +71,6 @@ public interface IPatientManagementService
     void updateStatus(String[] pIds);
 
     public List<SingleHistoryInfo> selectSingleHistoryInfoList(SingleHistoryInfo singleHistoryInfo);
+
+    public  PatientManagement getPhoneByPId(String pId);
 }

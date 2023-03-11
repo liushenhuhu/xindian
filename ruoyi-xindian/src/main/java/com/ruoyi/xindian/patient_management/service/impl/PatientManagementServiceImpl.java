@@ -91,7 +91,10 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     public int deletePatientManagementByPIds(String[] pIds) {
         return patientManagementMapper.deletePatientManagementByPIds(pIds);
     }
-
+    @Override
+    public  PatientManagement getPhoneByPId(String pId){
+        return patientManagementMapper.getPhoneByPId(pId);
+    }
     /**
      * 删除患者管理信息
      *
@@ -117,5 +120,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     public List<SingleHistoryInfo> selectSingleHistoryInfoList(SingleHistoryInfo singleHistoryInfo) {
         return patientManagementMapper.selectSingleHistoryInfoList(singleHistoryInfo);
     }
+
+
 
 }
