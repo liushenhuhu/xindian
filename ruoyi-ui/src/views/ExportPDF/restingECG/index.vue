@@ -7828,7 +7828,7 @@ export default {
   top: 22vw;
   left: 0.5vw;
   height: 13vw;
-  width:83vw;
+  width: 83vw;
   background: white;
   border: 1px solid black;
   z-index: 3;

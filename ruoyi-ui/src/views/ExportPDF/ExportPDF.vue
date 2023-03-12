@@ -138,10 +138,10 @@
                       最长心动过缓周期持续时间:
                       <strong>{{ froms.heartbeat.longestBradycardiaCycleDuration }}</strong> s
                     </div>
-                    <div class="box2-1">
-                      最长心动过缓心搏数:
-                      <strong>{{ froms.heartbeat.longestBradycardia }}</strong> 次
-                    </div>
+                    <!--                    <div class="box2-1">-->
+                    <!--                      最长心动过缓心搏数:-->
+                    <!--                      <strong>{{ froms.heartbeat.longestBradycardia }}</strong> 次-->
+                    <!--                    </div>-->
                   </div>
                   <div class="box2-right-bottom">
                     <div class="box2-1">
@@ -168,21 +168,21 @@
                       最长心动过速周期持续时间:
                       <strong>{{ froms.heartbeat.longestTachycardiaCycleDuration }}</strong> s
                     </div>
-                    <div class="box2-1">
-                      最长心动过速心搏数:
-                      <strong>{{ froms.heartbeat.longestTachycardia }}</strong> 次
-                    </div>
+                    <!--                    <div class="box2-1">-->
+                    <!--                      最长心动过速心搏数:-->
+                    <!--                      <strong>{{ froms.heartbeat.longestTachycardia }}</strong> 次-->
+                    <!--                    </div>-->
                   </div>
                 </div>
 
               </div>
             </div>
-            <div class="box3">
-              <span>停搏(>2.0秒)</span>&emsp;&emsp;总计&nbsp
-              <strong>{{ froms.asystole.total }}</strong>;&nbsp;次，最长一次：&nbsp;&nbsp;
-              <strong>{{ froms.asystole.longest }}</strong>&nbsp;&nbsp;秒，发生于：&nbsp;
-              <strong>{{ froms.asystole.longestTime }}&nbsp;</strong>
-            </div>
+            <!--            <div class="box3">-->
+            <!--              <span>停搏(>2.0秒)</span>&emsp;&emsp;总计&nbsp-->
+            <!--              <strong>{{ froms.asystole.total }}</strong>;&nbsp;次，最长一次：&nbsp;&nbsp;-->
+            <!--              <strong>{{ froms.asystole.longest }}</strong>&nbsp;&nbsp;秒，发生于：&nbsp;-->
+            <!--              <strong>{{ froms.asystole.longestTime }}&nbsp;</strong>-->
+            <!--            </div>-->
             <div class="box4 clearfix">
               <div class="box4-left">
                 <div class="box4-top">
@@ -194,40 +194,40 @@
                       总数:
                       <strong>{{ froms.ventricularEctopicHeartRate.total }}</strong> 次
                     </div>
-                    <div class="box4-1 flex-box-child">
-                      室性百分比:
-                      <strong>{{ froms.ventricularEctopicHeartRate.ventricularPercentage }}</strong>
-                    </div>
+                    <!--                    <div class="box4-1 flex-box-child">-->
+                    <!--                      室性百分比:-->
+                    <!--                      <strong>{{ froms.ventricularEctopicHeartRate.ventricularPercentage }}</strong>-->
+                    <!--                    </div>-->
                   </div>
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       单发:
                       <strong>{{ froms.ventricularEctopicHeartRate.singleShot }}</strong> 次
                     </div>
-                    <div class="box4-1 flex-box-child">
-                      平均/小时:
-                      <strong></strong>
-                    </div>
+                    <!--                    <div class="box4-1 flex-box-child">-->
+                    <!--                      平均/小时:-->
+                    <!--                      <strong></strong>-->
+                    <!--                    </div>-->
                   </div>
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       成对:
                       <strong>{{ froms.ventricularEctopicHeartRate.pair }}</strong> 次
                     </div>
-                    <div class="box4-1 flex-box-child">
-                      平均/1000:
-                      <strong></strong>
-                    </div>
+                    <!--                    <div class="box4-1 flex-box-child">-->
+                    <!--                      平均/1000:-->
+                    <!--                      <strong></strong>-->
+                    <!--                    </div>-->
                   </div>
 
                   <div class="box4-1">
                     短阵性室速:
                     <strong>{{ froms.ventricularEctopicHeartRate.burstVT }}</strong> 阵
                   </div>
-                  <div class="box4-1">
-                    RONT:
-                    <strong>{{ froms.ventricularEctopicHeartRate.RONT }}</strong> 次
-                  </div>
+                  <!--                  <div class="box4-1">-->
+                  <!--                    RONT:-->
+                  <!--                    <strong>{{ froms.ventricularEctopicHeartRate.RONT }}</strong> 次-->
+                  <!--                  </div>-->
                   <div class="box4-1">
                     二联律:
                     <strong>{{ froms.ventricularEctopicHeartRate.doubletLaw }}</strong> 阵
@@ -236,18 +236,18 @@
                     三联律:
                     <strong>{{ froms.ventricularEctopicHeartRate.tripleLaw }}</strong> 阵
                   </div>
-                  <div class="box4-1">
-                    室性逸搏:
-                    <strong>{{ froms.ventricularEctopicHeartRate.ventricularEscape }}</strong> 次
-                  </div>
-                  <div class="box4-1">
-                    最快室速:
-                    <strong>{{ froms.ventricularEctopicHeartRate.fastestVT }}</strong> bpm,&emsp;发生于
-                  </div>
-                  <div class="box4-1">
-                    最长室速:
-                    <strong>{{ froms.ventricularEctopicHeartRate.longestVT }}</strong> 次心搏,发生于
-                  </div>
+                  <!--                  <div class="box4-1">-->
+                  <!--                    室性逸搏:-->
+                  <!--                    <strong>{{ froms.ventricularEctopicHeartRate.ventricularEscape }}</strong> 次-->
+                  <!--                  </div>-->
+                  <!--                  <div class="box4-1">-->
+                  <!--                    最快室速:-->
+                  <!--                    <strong>{{ froms.ventricularEctopicHeartRate.fastestVT }}</strong> bpm,&emsp;发生于-->
+                  <!--                  </div>-->
+                  <!--                  <div class="box4-1">-->
+                  <!--                    最长室速:-->
+                  <!--                    <strong>{{ froms.ventricularEctopicHeartRate.longestVT }}</strong> 次心搏,发生于-->
+                  <!--                  </div>-->
                 </div>
               </div>
               <div class="box4-right">
@@ -260,36 +260,36 @@
                       总数:
                       <strong>{{ froms.supraventricularEctopicHeartRate.total }}</strong> 次
                     </div>
-                    <div class="box4-1 flex-box-child">
-                      室上性百分比:
-                      <strong>{{ froms.supraventricularEctopicHeartRate.supraventricularPercentage }}</strong>
-                    </div>
+                    <!--                    <div class="box4-1 flex-box-child">-->
+                    <!--                      室上性百分比:-->
+                    <!--                      <strong>{{ froms.supraventricularEctopicHeartRate.supraventricularPercentage }}</strong>-->
+                    <!--                    </div>-->
                   </div>
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       单发:
                       <strong>{{ froms.supraventricularEctopicHeartRate.singleShot }}</strong> 次
                     </div>
-                    <div class="box4-1 flex-box-child">
-                      平均/小时:
-                      <strong></strong>
-                    </div>
+                    <!--                    <div class="box4-1 flex-box-child">-->
+                    <!--                      平均/小时:-->
+                    <!--                      <strong></strong>-->
+                    <!--                    </div>-->
                   </div>
                   <div class="flex-box">
                     <div class="box4-1 flex-box-child">
                       成对:
                       <strong>{{ froms.supraventricularEctopicHeartRate.pair }}</strong> 次
                     </div>
-                    <div class="box4-1 flex-box-child">
-                      平均/1000:
-                      <strong></strong>
-                    </div>
+                    <!--                    <div class="box4-1 flex-box-child">-->
+                    <!--                      平均/1000:-->
+                    <!--                      <strong></strong>-->
+                    <!--                    </div>-->
                   </div>
-                  <div class="box4-1">
-                    短阵性室上速:
-                    <strong>{{ froms.supraventricularEctopicHeartRate.paroxysmalSupraventricularTachycardia }}</strong>
-                    阵
-                  </div>
+                  <!--                  <div class="box4-1">-->
+                  <!--                    短阵性室上速:-->
+                  <!--                    <strong>{{ froms.supraventricularEctopicHeartRate.paroxysmalSupraventricularTachycardia }}</strong>-->
+                  <!--                    阵-->
+                  <!--                  </div>-->
                   <div class="box4-1">
                     二联律:
                     <strong>{{ froms.supraventricularEctopicHeartRate.doubletLaw }}</strong> 阵
@@ -298,15 +298,15 @@
                     三联律:
                     <strong>{{ froms.supraventricularEctopicHeartRate.tripleLaw }}</strong> 阵
                   </div>
-                  <div class="box4-1">
-                    最快室上速:
-                    <strong>{{ froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity }}</strong> bpm,&emsp;发生于
-                  </div>
-                  <div class="box4-1">
-                    最长室上速:
-                    <strong>{{ froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity }}</strong>
-                    次心搏,发生于
-                  </div>
+                  <!--                  <div class="box4-1">-->
+                  <!--                    最快室上速:-->
+                  <!--                    <strong>{{ froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity }}</strong> bpm,&emsp;发生于-->
+                  <!--                  </div>-->
+                  <!--                  <div class="box4-1">-->
+                  <!--                    最长室上速:-->
+                  <!--                    <strong>{{ froms.supraventricularEctopicHeartRate.fastestSupraventricularVelocity }}</strong>-->
+                  <!--                    次心搏,发生于-->
+                  <!--                  </div>-->
                 </div>
               </div>
             </div>
@@ -343,22 +343,22 @@
             <div class="box6">
               <div class="box6-top clearfix">
                 <h2>房颤/房扑分析</h2>
-                <span style="margin-left: 7vw;">
-                  总数:
-                  <strong>{{ froms.atrialFibrillationAnalysis.total }}</strong> 次
-                </span>
+<!--                <span style="margin-left: 7vw;">-->
+<!--                  总数:-->
+<!--                  <strong>{{ froms.atrialFibrillationAnalysis.total }}</strong> 次-->
+<!--                </span>-->
               </div>
               <div class="box6-bottom">
                 <div class="box6-1">
-                  <div>
-                    发生阵数:
-                    <strong>{{ froms.atrialFibrillationAnalysis.number }}</strong> 阵
-                  </div>
-                  <div>
-                    大于
-                    <strong>1500ms</strong> 的心搏有
-                    <strong>{{ froms.atrialFibrillationAnalysis.num_1500 }}</strong> 次
-                  </div>
+<!--                  <div>-->
+<!--                    发生阵数:-->
+<!--                    <strong>{{ froms.atrialFibrillationAnalysis.number }}</strong> 阵-->
+<!--                  </div>-->
+<!--                  <div>-->
+<!--                    大于-->
+<!--                    <strong>1500ms</strong> 的心搏有-->
+<!--                    <strong>{{ froms.atrialFibrillationAnalysis.num_1500 }}</strong> 次-->
+<!--                  </div>-->
                   <div></div>
                 </div>
 
@@ -367,11 +367,11 @@
                     房颤总时长（秒）:
                     <strong>{{ froms.atrialFibrillationAnalysis.duration }}</strong>
                   </div>
-                  <div>
-                    大于
-                    <strong>2000ms</strong> 的心搏有
-                    <strong>{{ froms.atrialFibrillationAnalysis.num_2000 }}</strong> 次
-                  </div>
+<!--                  <div>-->
+<!--                    大于-->
+<!--                    <strong>2000ms</strong> 的心搏有-->
+<!--                    <strong>{{ froms.atrialFibrillationAnalysis.num_2000 }}</strong> 次-->
+<!--                  </div>-->
                   <div></div>
                 </div>
                 <div class="box6-1">
@@ -384,55 +384,55 @@
               </div>
 
             </div>
-<!--            <div class="box7">-->
-<!--              <div class="box7-top">-->
-<!--                <h2>起搏分析</h2>-->
-<!--                <span>-->
-<!--                  总数:-->
-<!--                  <strong>{{ froms.pacingAnalysis.total }}</strong> 次-->
-<!--                </span>-->
-<!--                <span>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.pacingAnalysisPercentage }}</strong> %-->
-<!--                </span>-->
-<!--              </div>-->
-<!--              <div class="box7-1">-->
-<!--                <div>-->
-<!--                  心房起搏数:-->
-<!--                  <strong>{{ froms.pacingAnalysis.atrialPace }}</strong>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.atrialPacePercentage }}</strong> %-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  双腔起搏:-->
-<!--                  <strong>{{ froms.pacingAnalysis.dual_chamberPacing }}</strong>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.dual_chamberPacingPercentage }}</strong> %-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="box7-1">-->
-<!--                <div>-->
-<!--                  心室起搏数:-->
-<!--                  <strong>{{ froms.pacingAnalysis.ventricularPace }}</strong>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.ventricularPacePercentage }}</strong> %-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  错误起搏:-->
-<!--                  <strong>{{ froms.pacingAnalysis.wrongPacing }}</strong>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  百分比:-->
-<!--                  <strong>{{ froms.pacingAnalysis.wrongPacingPercentage }}</strong> %-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
+            <!--            <div class="box7">-->
+            <!--              <div class="box7-top">-->
+            <!--                <h2>起搏分析</h2>-->
+            <!--                <span>-->
+            <!--                  总数:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.total }}</strong> 次-->
+            <!--                </span>-->
+            <!--                <span>-->
+            <!--                  百分比:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.pacingAnalysisPercentage }}</strong> %-->
+            <!--                </span>-->
+            <!--              </div>-->
+            <!--              <div class="box7-1">-->
+            <!--                <div>-->
+            <!--                  心房起搏数:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.atrialPace }}</strong>-->
+            <!--                </div>-->
+            <!--                <div>-->
+            <!--                  百分比:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.atrialPacePercentage }}</strong> %-->
+            <!--                </div>-->
+            <!--                <div>-->
+            <!--                  双腔起搏:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.dual_chamberPacing }}</strong>-->
+            <!--                </div>-->
+            <!--                <div>-->
+            <!--                  百分比:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.dual_chamberPacingPercentage }}</strong> %-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--              <div class="box7-1">-->
+            <!--                <div>-->
+            <!--                  心室起搏数:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.ventricularPace }}</strong>-->
+            <!--                </div>-->
+            <!--                <div>-->
+            <!--                  百分比:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.ventricularPacePercentage }}</strong> %-->
+            <!--                </div>-->
+            <!--                <div>-->
+            <!--                  错误起搏:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.wrongPacing }}</strong>-->
+            <!--                </div>-->
+            <!--                <div>-->
+            <!--                  百分比:-->
+            <!--                  <strong>{{ froms.pacingAnalysis.wrongPacingPercentage }}</strong> %-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
             <div class="box8 clearfix">
               <h2>结论:</h2>
               <div class="box8-1">
@@ -473,186 +473,186 @@
             </div>
           </div>
         </div>
-<!--        <div class="page">-->
-<!--          <div class="main">-->
-<!--            <div class="box9 clearfix">-->
-<!--              <div class="box9-top">-->
-<!--                <h2>概要数据统计表</h2>-->
-<!--              </div>-->
-<!--              <div class="box9-bottom">-->
-<!--                <div class="box9-1">-->
-<!--                  <div class="box9-2">-->
-<!--                    姓名:-->
-<!--                    <strong>{{ froms.patientInfo.name }}</strong>-->
-<!--                  </div>-->
-<!--                  <div class="box9-2">-->
-<!--                    性别:-->
-<!--                    <strong>{{ froms.patientInfo.sex }}</strong>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div class="box9-1">-->
-<!--                  <div class="box9-2">-->
-<!--                    年龄:-->
-<!--                    <strong>{{ froms.patientInfo.age }}</strong>-->
-<!--                  </div>-->
-<!--                  <div class="box9-2">-->
-<!--                    单号:-->
-<!--                    <strong>{{ froms.patientInfo.no }}</strong>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div class="box9-1">-->
-<!--                  <div class="box9-2">-->
-<!--                    住院号:-->
-<!--                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>-->
-<!--                  </div>-->
-<!--                  <div class="box9-2">-->
-<!--                    科室:-->
-<!--                    <strong>{{ froms.patientInfo.department }}</strong>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="box10" id="myChart">图形数据</div>-->
-<!--            <div class="box11 clearfix">-->
-<!--              <el-table-->
-<!--                :data="tableData"-->
-<!--                style="width: 100%"-->
-<!--                size="mini"-->
-<!--                :cell-style="columnStyle">-->
-<!--                <el-table-column-->
-<!--                  prop="time"-->
-<!--                  label="时间"-->
-<!--                  width="48">-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                  prop="heartBeatNumber"-->
-<!--                  label="心搏数"-->
-<!--                  width="48">-->
-<!--                </el-table-column>-->
+        <!--        <div class="page">-->
+        <!--          <div class="main">-->
+        <!--            <div class="box9 clearfix">-->
+        <!--              <div class="box9-top">-->
+        <!--                <h2>概要数据统计表</h2>-->
+        <!--              </div>-->
+        <!--              <div class="box9-bottom">-->
+        <!--                <div class="box9-1">-->
+        <!--                  <div class="box9-2">-->
+        <!--                    姓名:-->
+        <!--                    <strong>{{ froms.patientInfo.name }}</strong>-->
+        <!--                  </div>-->
+        <!--                  <div class="box9-2">-->
+        <!--                    性别:-->
+        <!--                    <strong>{{ froms.patientInfo.sex }}</strong>-->
+        <!--                  </div>-->
+        <!--                </div>-->
+        <!--                <div class="box9-1">-->
+        <!--                  <div class="box9-2">-->
+        <!--                    年龄:-->
+        <!--                    <strong>{{ froms.patientInfo.age }}</strong>-->
+        <!--                  </div>-->
+        <!--                  <div class="box9-2">-->
+        <!--                    单号:-->
+        <!--                    <strong>{{ froms.patientInfo.no }}</strong>-->
+        <!--                  </div>-->
+        <!--                </div>-->
+        <!--                <div class="box9-1">-->
+        <!--                  <div class="box9-2">-->
+        <!--                    住院号:-->
+        <!--                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>-->
+        <!--                  </div>-->
+        <!--                  <div class="box9-2">-->
+        <!--                    科室:-->
+        <!--                    <strong>{{ froms.patientInfo.department }}</strong>-->
+        <!--                  </div>-->
+        <!--                </div>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--            <div class="box10" id="myChart">图形数据</div>-->
+        <!--            <div class="box11 clearfix">-->
+        <!--              <el-table-->
+        <!--                :data="tableData"-->
+        <!--                style="width: 100%"-->
+        <!--                size="mini"-->
+        <!--                :cell-style="columnStyle">-->
+        <!--                <el-table-column-->
+        <!--                  prop="time"-->
+        <!--                  label="时间"-->
+        <!--                  width="48">-->
+        <!--                </el-table-column>-->
+        <!--                <el-table-column-->
+        <!--                  prop="heartBeatNumber"-->
+        <!--                  label="心搏数"-->
+        <!--                  width="48">-->
+        <!--                </el-table-column>-->
 
-<!--                <el-table-column-->
-<!--                  label="心律(bpm)"-->
-<!--                >-->
-<!--                  <el-table-column-->
-<!--                    prop="heartRate.fastest"-->
-<!--                    label="最高"-->
-<!--                    width="42">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="heartRate.average"-->
-<!--                    label="平均"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="heartRate.slowest"-->
-<!--                    label="最低"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                </el-table-column>-->
+        <!--                <el-table-column-->
+        <!--                  label="心律(bpm)"-->
+        <!--                >-->
+        <!--                  <el-table-column-->
+        <!--                    prop="heartRate.fastest"-->
+        <!--                    label="最高"-->
+        <!--                    width="42">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="heartRate.average"-->
+        <!--                    label="平均"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="heartRate.slowest"-->
+        <!--                    label="最低"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                </el-table-column>-->
 
-<!--                <el-table-column label="室性异位">-->
-<!--                  <el-table-column-->
-<!--                    prop="ventricularEctopic.total"-->
-<!--                    label="总数"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="ventricularEctopic.percentage"-->
-<!--                    label="%"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="ventricularEctopic.singleShot"-->
-<!--                    label="单发"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="ventricularEctopic.pair"-->
-<!--                    label="成对"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="ventricularEctopic.VT"-->
-<!--                    label="室速"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="ventricularEctopic.escape"-->
-<!--                    label="逸搏"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                </el-table-column>-->
+        <!--                <el-table-column label="室性异位">-->
+        <!--                  <el-table-column-->
+        <!--                    prop="ventricularEctopic.total"-->
+        <!--                    label="总数"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="ventricularEctopic.percentage"-->
+        <!--                    label="%"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="ventricularEctopic.singleShot"-->
+        <!--                    label="单发"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="ventricularEctopic.pair"-->
+        <!--                    label="成对"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="ventricularEctopic.VT"-->
+        <!--                    label="室速"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="ventricularEctopic.escape"-->
+        <!--                    label="逸搏"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                </el-table-column>-->
 
-<!--                <el-table-column label="室性上异位">-->
-<!--                  <el-table-column-->
-<!--                    prop="supraventricularEctopic.total"-->
-<!--                    label="总数"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="supraventricularEctopic.percentage"-->
-<!--                    label="%"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="supraventricularEctopic.singleShot"-->
-<!--                    label="单发"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="supraventricularEctopic.pair"-->
-<!--                    label="成对"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="supraventricularEctopic.supraventricularTachycardia"-->
-<!--                    label="室上速"-->
-<!--                    width="40">-->
-<!--                  </el-table-column>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column-->
-<!--                  prop="asystole"-->
-<!--                  label="停搏"-->
-<!--                  width="38">-->
-<!--                </el-table-column>-->
-<!--              </el-table>-->
-<!--              &lt;!&ndash;            <div class="box11-1">&ndash;&gt;-->
-<!--              &lt;!&ndash;              <span>时间</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--              &lt;!&ndash;            <div class="box11-2">&ndash;&gt;-->
-<!--              &lt;!&ndash;              <span>心搏数</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--              &lt;!&ndash;            <div class="box11-3">&ndash;&gt;-->
-<!--              &lt;!&ndash;              <span>心率</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;              <div class="box11-3-1">&ndash;&gt;-->
-<!--              &lt;!&ndash;                <span>最高</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;                <span>平均</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;                <span>最低</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;              </div>&ndash;&gt;-->
-<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--              &lt;!&ndash;            <div class="box11-4">&ndash;&gt;-->
-<!--              &lt;!&ndash;              <span>室性异位</span>&ndash;&gt;-->
+        <!--                <el-table-column label="室性上异位">-->
+        <!--                  <el-table-column-->
+        <!--                    prop="supraventricularEctopic.total"-->
+        <!--                    label="总数"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="supraventricularEctopic.percentage"-->
+        <!--                    label="%"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="supraventricularEctopic.singleShot"-->
+        <!--                    label="单发"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="supraventricularEctopic.pair"-->
+        <!--                    label="成对"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                  <el-table-column-->
+        <!--                    prop="supraventricularEctopic.supraventricularTachycardia"-->
+        <!--                    label="室上速"-->
+        <!--                    width="40">-->
+        <!--                  </el-table-column>-->
+        <!--                </el-table-column>-->
+        <!--                <el-table-column-->
+        <!--                  prop="asystole"-->
+        <!--                  label="停搏"-->
+        <!--                  width="38">-->
+        <!--                </el-table-column>-->
+        <!--              </el-table>-->
+        <!--              &lt;!&ndash;            <div class="box11-1">&ndash;&gt;-->
+        <!--              &lt;!&ndash;              <span>时间</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            <div class="box11-2">&ndash;&gt;-->
+        <!--              &lt;!&ndash;              <span>心搏数</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            <div class="box11-3">&ndash;&gt;-->
+        <!--              &lt;!&ndash;              <span>心率</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;              <div class="box11-3-1">&ndash;&gt;-->
+        <!--              &lt;!&ndash;                <span>最高</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;                <span>平均</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;                <span>最低</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;              </div>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            <div class="box11-4">&ndash;&gt;-->
+        <!--              &lt;!&ndash;              <span>室性异位</span>&ndash;&gt;-->
 
-<!--              &lt;!&ndash;              </div>&ndash;&gt;-->
-<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--              &lt;!&ndash;            <div class="box11-5">&ndash;&gt;-->
-<!--              &lt;!&ndash;              <span>室上性异位</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;              <div class="box11-5-1">&ndash;&gt;-->
-<!--              &lt;!&ndash;                <span>总数</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;                <span>%</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;                <span>单发</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;                <span>成对室上速</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;              </div>&ndash;&gt;-->
-<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--              &lt;!&ndash;            <div class="box11-6">&ndash;&gt;-->
-<!--              &lt;!&ndash;              <span>停搏</span>&ndash;&gt;-->
-<!--              &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--            </div>-->
-<!--            <div class="box12" id="container" style="height: 300px"></div>-->
-<!--            <div class="box12" id="line1" style="height: 300px"></div>-->
+        <!--              &lt;!&ndash;              </div>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            <div class="box11-5">&ndash;&gt;-->
+        <!--              &lt;!&ndash;              <span>室上性异位</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;              <div class="box11-5-1">&ndash;&gt;-->
+        <!--              &lt;!&ndash;                <span>总数</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;                <span>%</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;                <span>单发</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;                <span>成对室上速</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;              </div>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            <div class="box11-6">&ndash;&gt;-->
+        <!--              &lt;!&ndash;              <span>停搏</span>&ndash;&gt;-->
+        <!--              &lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--            </div>-->
+        <!--            <div class="box12" id="container" style="height: 300px"></div>-->
+        <!--            <div class="box12" id="line1" style="height: 300px"></div>-->
 
-<!--          </div>-->
-<!--        </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
 
         <div class="page">
           <div class="main">
@@ -693,7 +693,7 @@
                 </div>
               </div>
             </div>
-<!--            <div class="box12" id="line2" style="height: 300px"></div>-->
+            <!--            <div class="box12" id="line2" style="height: 300px"></div>-->
             <div class="box12" id="line3" style="height: 225px"></div>
             <div class="box12" id="line4" style="height: 225px"></div>
             <div class="box12" id="line5" style="height: 225px"></div>
@@ -746,50 +746,50 @@
             <div class="box12" id="line10" style="height: 225px"></div>
           </div>
         </div>
-<!--        <div class="page">-->
-<!--          <div class="main">-->
-<!--            <div class="box9 clearfix">-->
-<!--              <div class="box9-top">-->
-<!--                <h2>概要数据统计表</h2>-->
-<!--              </div>-->
-<!--              <div class="box9-bottom">-->
-<!--                <div class="box9-1">-->
-<!--                  <div class="box9-2">-->
-<!--                    姓名:-->
-<!--                    <strong>{{ froms.patientInfo.name }}</strong>-->
-<!--                  </div>-->
-<!--                  <div class="box9-2">-->
-<!--                    性别:-->
-<!--                    <strong>{{ froms.patientInfo.sex }}</strong>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div class="box9-1">-->
-<!--                  <div class="box9-2">-->
-<!--                    年龄:-->
-<!--                    <strong>{{ froms.patientInfo.age }}</strong>-->
-<!--                  </div>-->
-<!--                  <div class="box9-2">-->
-<!--                    单号:-->
-<!--                    <strong>{{ froms.patientInfo.no }}</strong>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div class="box9-1">-->
-<!--                  <div class="box9-2">-->
-<!--                    住院号:-->
-<!--                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>-->
-<!--                  </div>-->
-<!--                  <div class="box9-2">-->
-<!--                    科室:-->
-<!--                    <strong>{{ froms.patientInfo.department }}</strong>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--&lt;!&ndash;            <div class="box12" id="line5" style="height: 300px"></div>&ndash;&gt;-->
-<!--            <div class="box12" id="line6" style="height: 300px"></div>-->
-<!--            <div class="box12" id="line7" style="height: 300px"></div>-->
-<!--          </div>-->
-<!--        </div>-->
+        <!--        <div class="page">-->
+        <!--          <div class="main">-->
+        <!--            <div class="box9 clearfix">-->
+        <!--              <div class="box9-top">-->
+        <!--                <h2>概要数据统计表</h2>-->
+        <!--              </div>-->
+        <!--              <div class="box9-bottom">-->
+        <!--                <div class="box9-1">-->
+        <!--                  <div class="box9-2">-->
+        <!--                    姓名:-->
+        <!--                    <strong>{{ froms.patientInfo.name }}</strong>-->
+        <!--                  </div>-->
+        <!--                  <div class="box9-2">-->
+        <!--                    性别:-->
+        <!--                    <strong>{{ froms.patientInfo.sex }}</strong>-->
+        <!--                  </div>-->
+        <!--                </div>-->
+        <!--                <div class="box9-1">-->
+        <!--                  <div class="box9-2">-->
+        <!--                    年龄:-->
+        <!--                    <strong>{{ froms.patientInfo.age }}</strong>-->
+        <!--                  </div>-->
+        <!--                  <div class="box9-2">-->
+        <!--                    单号:-->
+        <!--                    <strong>{{ froms.patientInfo.no }}</strong>-->
+        <!--                  </div>-->
+        <!--                </div>-->
+        <!--                <div class="box9-1">-->
+        <!--                  <div class="box9-2">-->
+        <!--                    住院号:-->
+        <!--                    <strong>{{ froms.patientInfo.hospitalNumber }}</strong>-->
+        <!--                  </div>-->
+        <!--                  <div class="box9-2">-->
+        <!--                    科室:-->
+        <!--                    <strong>{{ froms.patientInfo.department }}</strong>-->
+        <!--                  </div>-->
+        <!--                </div>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--&lt;!&ndash;            <div class="box12" id="line5" style="height: 300px"></div>&ndash;&gt;-->
+        <!--            <div class="box12" id="line6" style="height: 300px"></div>-->
+        <!--            <div class="box12" id="line7" style="height: 300px"></div>-->
+        <!--          </div>-->
+        <!--        </div>-->
         <div class="page">
           <div class="main">
             <div class="box9 clearfix">
@@ -833,18 +833,18 @@
               <div class="box13-left">
                 <div id="scatter" style="width:98% ;height:98%;float:right"></div>
               </div>
-              <div class="box13-right">
-                <div id="bar" style="width:98% ;height:98%"></div>
-              </div>
+              <!--              <div class="box13-right">-->
+              <!--                <div id="bar" style="width:98% ;height:98%"></div>-->
+              <!--              </div>-->
             </div>
-            <div class="box13 clearfix">
-              <div class="box13-left">
-                <div id="bar1" style="width:98% ;height:98%;float:right"></div>
-              </div>
-              <div class="box13-right">
-                <div id="bar2" style="width:98% ;height:98%"></div>
-              </div>
-            </div>
+<!--            <div class="box13 clearfix">-->
+<!--              <div class="box13-left">-->
+<!--                <div id="bar1" style="width:98% ;height:98%;float:right"></div>-->
+<!--              </div>-->
+<!--              <div class="box13-right">-->
+<!--                <div id="bar2" style="width:98% ;height:98%"></div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </div>
       </div>
@@ -883,7 +883,7 @@ export default {
   name: "ExportPDF",
   data() {
     return {
-      exportPDFtitle: this.$route.query.patientName + "心电报告_"+this.$route.query.pId,
+      exportPDFtitle: this.$route.query.patientName + "心电报告_" + this.$route.query.pId,
       hospitalName: this.$route.query.hospitalName,
       pId: null,
       _th: null,
@@ -1217,23 +1217,22 @@ export default {
           pId: this.pId,
           ecg_type: this.ecg_type,
         }),
-        beforeSend:function (request) {
+        beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
-          request.setRequestHeader("user","zzu");
-          request.setRequestHeader("password","zzu123");
+          request.setRequestHeader("user", "zzu");
+          request.setRequestHeader("password", "zzu123");
         },
         success: function (data) {
           console.log(_th.pId)
           console.log(_th.ecg_type)
           console.log(data)
           var tem = JSON.stringify(data.result)
-          var tem1 =tem.substring(1,4)
+          var tem1 = tem.substring(1, 4)
 
-          if(tem1=="Not"||tem1==null){
+          if (tem1 == "Not" || tem1 == null) {
             alert("数据请求错误，请先点击生成报告。")
             loading.close()
-          }
-          else {
+          } else {
             sessionStorage.removeItem("data");
             sessionStorage.setItem(_th.pId + 'data', JSON.stringify(data))
             sessionStorage.setItem(_th.pId + 'show', true)
@@ -1685,9 +1684,8 @@ export default {
       console.log(obj.fangpudata)
       console.log(obj.fangchandata)
       console.log(obj.data)
-      var dataAll0=obj.fangpudata[1].concat(obj.data[1].concat(obj.fangchandata[1]))
+      var dataAll0 = obj.fangpudata[1].concat(obj.data[1].concat(obj.fangchandata[1]))
       // var dataAll0=obj.fangchandata[0]
-
 
 
       var dom = document.getElementById('line3');
@@ -1696,30 +1694,26 @@ export default {
         useDirtyRect: false
       });
       var option;
-      var datax=[];
-      for (var i=0;i<=6*60;i++){
+      var datax = [];
+      for (var i = 0; i <= 6 * 60; i++) {
         datax.push(i)
       }
 
-      var option1=[]
+      var option1 = []
       var temp
-      for(i=0;i<24;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i+":00"
-        }
-        else
-        {
-          temp=i+":00"
+      for (i = 0; i < 24; i++) {
+        if (i < 10) {
+          temp = '0' + i + ":00"
+        } else {
+          temp = i + ":00"
         }
         console.log(temp)
         option1.push(
           {
-            xAxis: i*60,
+            xAxis: i * 60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
+              color: '#8C8C8C', // 展示内容颜色
               formatter: temp
             },
           },
@@ -1736,7 +1730,7 @@ export default {
             formatter: function (params) {
               console.log(params)
               console.log(datatime.indexOf(params[0].data[0]))
-              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+              return "时间：" + time[datatime.indexOf(params[0].data[0])] + "</br>" + "心率：" + params[0].data[1]
             }
           },
           grid: {
@@ -1746,7 +1740,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -1755,16 +1749,16 @@ export default {
             data: datax
           },
           yAxis: {
-            min:0,  //取0为最小刻度
+            min: 0,  //取0为最小刻度
             max: 200, //取100为最大刻度
             show: true,
             scale: true, //自适应
             Interval: 1, //分割刻度
-            axisLabel:{
-              color:"#34ace0",
-              fontSize:13,
-              showMinLabel:true, //不显示最小刻度线值
-              showMaxLabel:true, //不显示最大刻度线值
+            axisLabel: {
+              color: "#34ace0",
+              fontSize: 13,
+              showMinLabel: true, //不显示最小刻度线值
+              showMaxLabel: true, //不显示最大刻度线值
             },
           },
           // toolbox: {
@@ -1816,7 +1810,7 @@ export default {
             }
           },
           series: {
-            name: '0-6时心率变化图',
+            name: '0-6时1分钟平均心率图',
             type: 'scatter',       //type: scatter表示散点图
             // smooth:'true',
             data: dataAll0,
@@ -1834,7 +1828,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
+              data: option1,
               // [
               //     {
               //         xAxis: 1,
@@ -1902,7 +1896,7 @@ export default {
         "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
         "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
       };
-      var dataAll1=obj.fangpudata[2].concat(obj.data[2].concat(obj.fangchandata[2]))
+      var dataAll1 = obj.fangpudata[2].concat(obj.data[2].concat(obj.fangchandata[2]))
       console.log(obj.data[1])
       var dom = document.getElementById('line4');
       var myChart = echarts.init(dom, null, {
@@ -1911,32 +1905,28 @@ export default {
       });
       var option;
 
-      var datax=[];
-      for (var i=6*60;i<=12*60;i++){
+      var datax = [];
+      for (var i = 6 * 60; i <= 12 * 60; i++) {
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
 
-      var option1=[]
+      var option1 = []
       var temp
-      for(i=6;i<=12;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i+":00"
-        }
-        else
-        {
-          temp=i+":00"
+      for (i = 6; i <= 12; i++) {
+        if (i < 10) {
+          temp = '0' + i + ":00"
+        } else {
+          temp = i + ":00"
         }
         option1.push(
           {
-            xAxis: (i-6)*60,
+            xAxis: (i - 6) * 60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
+              color: '#8C8C8C', // 展示内容颜色
               formatter: temp
             },
           },
@@ -1945,7 +1935,7 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '6-12时心率变化图',
+            text: '6-12时1分钟平均心率图',
             left: '1%'
           },
           tooltip: {
@@ -1953,7 +1943,7 @@ export default {
             formatter: function (params) {
               console.log(params)
               console.log(datatime.indexOf(params[0].data[0]))
-              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+              return "时间：" + time[datatime.indexOf(params[0].data[0])] + "</br>" + "心率：" + params[0].data[1]
             }
           },
           grid: {
@@ -1963,7 +1953,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -1972,16 +1962,16 @@ export default {
             data: datax
           },
           yAxis: {
-            min:0,  //取0为最小刻度
+            min: 0,  //取0为最小刻度
             max: 200, //取100为最大刻度
             show: true,
             scale: true, //自适应
             Interval: 1, //分割刻度
-            axisLabel:{
-              color:"#34ace0",
-              fontSize:13,
-              showMinLabel:true, //不显示最小刻度线值
-              showMaxLabel:true, //不显示最大刻度线值
+            axisLabel: {
+              color: "#34ace0",
+              fontSize: 13,
+              showMinLabel: true, //不显示最小刻度线值
+              showMaxLabel: true, //不显示最大刻度线值
             },
           },
 
@@ -2042,7 +2032,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
+              data: option1,
               // [
               //     {
               //         xAxis: 1,
@@ -2110,7 +2100,7 @@ export default {
         "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
         "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
       };
-      var dataAll2=obj.fangpudata[3].concat(obj.data[3].concat(obj.fangchandata[3]))
+      var dataAll2 = obj.fangpudata[3].concat(obj.data[3].concat(obj.fangchandata[3]))
       console.log(obj.data[2])
       var dom = document.getElementById('line5');
       var myChart = echarts.init(dom, null, {
@@ -2118,31 +2108,27 @@ export default {
         useDirtyRect: false
       });
       var option;
-      var datax=[];
-      for (var i=12*60;i<=18*60;i++){
+      var datax = [];
+      for (var i = 12 * 60; i <= 18 * 60; i++) {
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
-      var option1=[]
+      var option1 = []
       var temp
-      for(i=12;i<=18;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i+":00"
-        }
-        else
-        {
-          temp=i+":00"
+      for (i = 12; i <= 18; i++) {
+        if (i < 10) {
+          temp = '0' + i + ":00"
+        } else {
+          temp = i + ":00"
         }
         option1.push(
           {
-            xAxis: (i-12)*60,
+            xAxis: (i - 12) * 60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
+              color: '#8C8C8C', // 展示内容颜色
               formatter: temp
             },
           },
@@ -2151,7 +2137,7 @@ export default {
       myChart.setOption(
         (option = {
           title: {
-            text: '12-18时心率变化图',
+            text: '12-18时1分钟平均心率图',
             left: '1%'
           },
           tooltip: {
@@ -2159,7 +2145,7 @@ export default {
             formatter: function (params) {
               console.log(params)
               console.log(datatime.indexOf(params[0].data[0]))
-              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+              return "时间：" + time[datatime.indexOf(params[0].data[0])] + "</br>" + "心率：" + params[0].data[1]
             }
           },
           grid: {
@@ -2169,7 +2155,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -2178,16 +2164,16 @@ export default {
             data: datax
           },
           yAxis: {
-            min:0,  //取0为最小刻度
+            min: 0,  //取0为最小刻度
             max: 200, //取100为最大刻度
             show: true,
             scale: true, //自适应
             Interval: 1, //分割刻度
-            axisLabel:{
-              color:"#34ace0",
-              fontSize:13,
-              showMinLabel:true, //不显示最小刻度线值
-              showMaxLabel:true, //不显示最大刻度线值
+            axisLabel: {
+              color: "#34ace0",
+              fontSize: 13,
+              showMinLabel: true, //不显示最小刻度线值
+              showMaxLabel: true, //不显示最大刻度线值
             },
           },
 
@@ -2248,7 +2234,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
+              data: option1,
               // [
               //     {
               //         xAxis: 1,
@@ -2310,13 +2296,13 @@ export default {
       window.addEventListener('resize', myChart.resize);
     },
     //18-24
-    line6(){
+    line6() {
       var obj = {
         "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
         "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
         "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
       };
-      var dataAll3=obj.fangpudata[4].concat(obj.data[4].concat(obj.fangchandata[4]))
+      var dataAll3 = obj.fangpudata[4].concat(obj.data[4].concat(obj.fangchandata[4]))
       console.log(obj.data[3])
       var dom = document.getElementById('line6');
       var myChart = echarts.init(dom, null, {
@@ -2324,31 +2310,27 @@ export default {
         useDirtyRect: false
       });
       var option;
-      var datax=[];
-      for (var i=18*60;i<=24*60;i++){
+      var datax = [];
+      for (var i = 18 * 60; i <= 24 * 60; i++) {
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
-      var option1=[]
+      var option1 = []
       var temp
-      for(i=18;i<=24;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i+":00"
-        }
-        else
-        {
-          temp=i+":00"
+      for (i = 18; i <= 24; i++) {
+        if (i < 10) {
+          temp = '0' + i + ":00"
+        } else {
+          temp = i + ":00"
         }
         option1.push(
           {
-            xAxis: (i-18)*60,
+            xAxis: (i - 18) * 60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
+              color: '#8C8C8C', // 展示内容颜色
               formatter: temp
             },
           },
@@ -2365,7 +2347,7 @@ export default {
             formatter: function (params) {
               console.log(params)
               console.log(datatime.indexOf(params[0].data[0]))
-              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+              return "时间：" + time[datatime.indexOf(params[0].data[0])] + "</br>" + "心率：" + params[0].data[1]
             }
           },
           grid: {
@@ -2375,7 +2357,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -2385,17 +2367,17 @@ export default {
           },
           yAxis: {
             // scale:true
-           // data:datay,
-            min:0,  //取0为最小刻度
+            // data:datay,
+            min: 0,  //取0为最小刻度
             max: 200, //取100为最大刻度
             show: true,
             scale: true, //自适应
             Interval: 1, //分割刻度
-            axisLabel:{
-              color:"#34ace0",
-              fontSize:13,
-              showMinLabel:true, //不显示最小刻度线值
-              showMaxLabel:true, //不显示最大刻度线值
+            axisLabel: {
+              color: "#34ace0",
+              fontSize: 13,
+              showMinLabel: true, //不显示最小刻度线值
+              showMaxLabel: true, //不显示最大刻度线值
             },
           },
 
@@ -2456,7 +2438,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
+              data: option1,
               // [
               //     {
               //         xAxis: 1,
@@ -2524,7 +2506,7 @@ export default {
         "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
         "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
       };
-      var dataAll4=obj.fangpudata[5].concat(obj.data[5].concat(obj.fangchandata[5]))
+      var dataAll4 = obj.fangpudata[5].concat(obj.data[5].concat(obj.fangchandata[5]))
       console.log(obj.data[4])
       var dom = document.getElementById('line7');
       var myChart = echarts.init(dom, null, {
@@ -2532,28 +2514,24 @@ export default {
         useDirtyRect: false
       });
       var option;
-      var datax=[];
-      for (var i=0;i<=6*60;i++){
+      var datax = [];
+      for (var i = 0; i <= 6 * 60; i++) {
         datax.push(i)
       }
-      var option1=[]
+      var option1 = []
       var temp
-      for(i=0;i<24;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i+":00"
-        }
-        else
-        {
-          temp=i+":00"
+      for (i = 0; i < 24; i++) {
+        if (i < 10) {
+          temp = '0' + i + ":00"
+        } else {
+          temp = i + ":00"
         }
         option1.push(
           {
-            xAxis: i*60,
+            xAxis: i * 60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
+              color: '#8C8C8C', // 展示内容颜色
               formatter: temp
             },
           },
@@ -2570,7 +2548,7 @@ export default {
             formatter: function (params) {
               console.log(params)
               console.log(datatime.indexOf(params[0].data[0]))
-              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+              return "时间：" + time[datatime.indexOf(params[0].data[0])] + "</br>" + "心率：" + params[0].data[1]
             }
           },
           grid: {
@@ -2580,7 +2558,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -2589,16 +2567,16 @@ export default {
             data: datax
           },
           yAxis: {
-            min:0,  //取0为最小刻度
+            min: 0,  //取0为最小刻度
             max: 200, //取100为最大刻度
             show: true,
             scale: true, //自适应
             Interval: 1, //分割刻度
-            axisLabel:{
-              color:"#34ace0",
-              fontSize:13,
-              showMinLabel:true, //不显示最小刻度线值
-              showMaxLabel:true, //不显示最大刻度线值
+            axisLabel: {
+              color: "#34ace0",
+              fontSize: 13,
+              showMinLabel: true, //不显示最小刻度线值
+              showMaxLabel: true, //不显示最大刻度线值
             },
           },
           // toolbox: {
@@ -2668,7 +2646,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
+              data: option1,
               // [
               //     {
               //         xAxis: 1,
@@ -2736,7 +2714,7 @@ export default {
         "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
         "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
       };
-      var dataAll5=obj.fangpudata[6].concat(obj.data[6].concat(obj.fangchandata[6]))
+      var dataAll5 = obj.fangpudata[6].concat(obj.data[6].concat(obj.fangchandata[6]))
       console.log(obj.data[5])
       var dom = document.getElementById('line8');
       var myChart = echarts.init(dom, null, {
@@ -2744,32 +2722,28 @@ export default {
         useDirtyRect: false
       });
       var option;
-      var datax=[];
-      for (var i=6*60;i<=12*60;i++){
+      var datax = [];
+      for (var i = 6 * 60; i <= 12 * 60; i++) {
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
 
-      var option1=[]
+      var option1 = []
       var temp
-      for(i=6;i<=12;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i+":00"
-        }
-        else
-        {
-          temp=i+":00"
+      for (i = 6; i <= 12; i++) {
+        if (i < 10) {
+          temp = '0' + i + ":00"
+        } else {
+          temp = i + ":00"
         }
         option1.push(
           {
-            xAxis: (i-6)*60,
+            xAxis: (i - 6) * 60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
+              color: '#8C8C8C', // 展示内容颜色
               formatter: temp
             },
           },
@@ -2786,7 +2760,7 @@ export default {
             formatter: function (params) {
               console.log(params)
               console.log(datatime.indexOf(params[0].data[0]))
-              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+              return "时间：" + time[datatime.indexOf(params[0].data[0])] + "</br>" + "心率：" + params[0].data[1]
             }
           },
           grid: {
@@ -2796,7 +2770,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -2805,16 +2779,16 @@ export default {
             data: datax
           },
           yAxis: {
-            min:0,  //取0为最小刻度
+            min: 0,  //取0为最小刻度
             max: 200, //取100为最大刻度
             show: true,
             scale: true, //自适应
             Interval: 1, //分割刻度
-            axisLabel:{
-              color:"#34ace0",
-              fontSize:13,
-              showMinLabel:true, //不显示最小刻度线值
-              showMaxLabel:true, //不显示最大刻度线值
+            axisLabel: {
+              color: "#34ace0",
+              fontSize: 13,
+              showMinLabel: true, //不显示最小刻度线值
+              showMaxLabel: true, //不显示最大刻度线值
             },
           },
 
@@ -2875,7 +2849,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
+              data: option1,
               // [
               //     {
               //         xAxis: 1,
@@ -2943,7 +2917,7 @@ export default {
         "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
         "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
       };
-      var dataAll6=obj.fangpudata[7].concat(obj.data[7].concat(obj.fangchandata[7]))
+      var dataAll6 = obj.fangpudata[7].concat(obj.data[7].concat(obj.fangchandata[7]))
       console.log(obj.data[6])
       var dom = document.getElementById('line9');
       var myChart = echarts.init(dom, null, {
@@ -2951,32 +2925,28 @@ export default {
         useDirtyRect: false
       });
       var option;
-      var datax=[];
-      for (var i=12*60;i<=18*60;i++){
+      var datax = [];
+      for (var i = 12 * 60; i <= 18 * 60; i++) {
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
 
-      var option1=[]
+      var option1 = []
       var temp
-      for(i=12;i<=18;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i+":00"
-        }
-        else
-        {
-          temp=i+":00"
+      for (i = 12; i <= 18; i++) {
+        if (i < 10) {
+          temp = '0' + i + ":00"
+        } else {
+          temp = i + ":00"
         }
         option1.push(
           {
-            xAxis: (i-12)*60,
+            xAxis: (i - 12) * 60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
+              color: '#8C8C8C', // 展示内容颜色
               formatter: temp
             },
           },
@@ -2993,7 +2963,7 @@ export default {
             formatter: function (params) {
               console.log(params)
               console.log(datatime.indexOf(params[0].data[0]))
-              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+              return "时间：" + time[datatime.indexOf(params[0].data[0])] + "</br>" + "心率：" + params[0].data[1]
             }
           },
           grid: {
@@ -3003,7 +2973,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -3012,16 +2982,16 @@ export default {
             data: datax
           },
           yAxis: {
-            min:0,  //取0为最小刻度
+            min: 0,  //取0为最小刻度
             max: 200, //取100为最大刻度
             show: true,
             scale: true, //自适应
             Interval: 1, //分割刻度
-            axisLabel:{
-              color:"#34ace0",
-              fontSize:13,
-              showMinLabel:true, //不显示最小刻度线值
-              showMaxLabel:true, //不显示最大刻度线值
+            axisLabel: {
+              color: "#34ace0",
+              fontSize: 13,
+              showMinLabel: true, //不显示最小刻度线值
+              showMaxLabel: true, //不显示最大刻度线值
             },
           },
 
@@ -3082,7 +3052,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
+              data: option1,
               // [
               //     {
               //         xAxis: 1,
@@ -3144,13 +3114,13 @@ export default {
       window.addEventListener('resize', myChart.resize);
     },
     //18-24
-    line10(){
+    line10() {
       var obj = {
         "data": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.hr_graph_1min,
         "fangchandata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangchan_times_idx_graph,
         "fangpudata": (JSON.parse(sessionStorage.getItem(this.$route.query.pId + "data"))).result.fangpu_times_idx_graph,
       };
-      var dataAll7=obj.fangpudata[8].concat(obj.data[8].concat(obj.fangchandata[8]))
+      var dataAll7 = obj.fangpudata[8].concat(obj.data[8].concat(obj.fangchandata[8]))
       console.log(obj.data[7])
       var dom = document.getElementById('line10');
       var myChart = echarts.init(dom, null, {
@@ -3159,31 +3129,27 @@ export default {
       });
 
       var option;
-      var datax=[];
-      for (var i=18*60;i<=24*60;i++){
+      var datax = [];
+      for (var i = 18 * 60; i <= 24 * 60; i++) {
         datax.push(i)
       }
       // //   for (var i=0;i<24*60;i++){
       // //     datay.push(undefined)
       // // }
-      var option1=[]
+      var option1 = []
       var temp
-      for(i=18;i<=24;i++)
-      {
-        if(i<10)
-        {
-          temp='0'+i+":00"
-        }
-        else
-        {
-          temp=i+":00"
+      for (i = 18; i <= 24; i++) {
+        if (i < 10) {
+          temp = '0' + i + ":00"
+        } else {
+          temp = i + ":00"
         }
         option1.push(
           {
-            xAxis: (i-18)*60,
+            xAxis: (i - 18) * 60,
             label: {
               position: 'start', // 表现内容展示的位置
-              color: '#8C8C8C' , // 展示内容颜色
+              color: '#8C8C8C', // 展示内容颜色
               formatter: temp
             },
           },
@@ -3200,7 +3166,7 @@ export default {
             formatter: function (params) {
               console.log(params)
               console.log(datatime.indexOf(params[0].data[0]))
-              return "时间："+time[datatime.indexOf(params[0].data[0])]+"</br>"+"心率："+ params[0].data[1]
+              return "时间：" + time[datatime.indexOf(params[0].data[0])] + "</br>" + "心率：" + params[0].data[1]
             }
           },
           grid: {
@@ -3210,7 +3176,7 @@ export default {
           },
           xAxis: {
             //type: 'time',
-            show:false,
+            show: false,
             // data: data.map(function (item) {
             //   return item[0];
             // })
@@ -3221,16 +3187,16 @@ export default {
           yAxis: {
             // scale:true
             // data:datay,
-            min:0,  //取0为最小刻度
+            min: 0,  //取0为最小刻度
             max: 200, //取100为最大刻度
             show: true,
             scale: true, //自适应
             Interval: 1, //分割刻度
-            axisLabel:{
-              color:"#34ace0",
-              fontSize:13,
-              showMinLabel:true, //不显示最小刻度线值
-              showMaxLabel:true, //不显示最大刻度线值
+            axisLabel: {
+              color: "#34ace0",
+              fontSize: 13,
+              showMinLabel: true, //不显示最小刻度线值
+              showMaxLabel: true, //不显示最大刻度线值
             },
           },
 
@@ -3291,7 +3257,7 @@ export default {
                 position: 'start', // 表现内容展示的位置
                 color: '#8C8C8C'  // 展示内容颜色
               },
-              data:option1,
+              data: option1,
               // [
               //     {
               //         xAxis: 1,
@@ -3373,9 +3339,9 @@ export default {
           text: 'Lorenz散点图-全部心搏',
           left: '1%',
         },
-        grid: {left: '18%',},
-        xAxis: {max:2000},
-        yAxis: {max:2000},
+        grid: {left: '7%',},
+        xAxis: {max: 2000},
+        yAxis: {max: 2000},
         dataZoom: [
           {
             type: 'slider',
@@ -3599,11 +3565,11 @@ export default {
           }
         }
         PDF.save(title + ".pdf");
-/*        // 将pdf输入为base格式的字符串
-        var buffer = PDF.output("datauristring")
-        // 将base64格式的字符串转换为file文件
-        var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
-        name = _self.upload_pdf(myfile)*/
+        /*        // 将pdf输入为base格式的字符串
+                var buffer = PDF.output("datauristring")
+                // 将base64格式的字符串转换为file文件
+                var myfile = _self.dataURLtoFile(buffer, title + ".pdf")
+                name = _self.upload_pdf(myfile)*/
 
 
       });
@@ -3669,21 +3635,21 @@ export default {
     //上传pdf
     upload_pdf(file) {
       // var url ='';
-        var formdata = new FormData()
-        formdata.append("file", file); // 文件对象
-        console.log("上传pdf-1")
-        //多个参数的情况
-        // formdata.append("name", name);
-        var msg = '';
-        // 之后ajax传递数据
-        pdfDownload2(formdata).then(res => {
-          console.log(res);
-          if (res.code === 200) {
-            this.$modal.msgSuccess("上传成功");
-          } else {
-            this.$modal.msgError("上传失败");
-          }
-        })
+      var formdata = new FormData()
+      formdata.append("file", file); // 文件对象
+      console.log("上传pdf-1")
+      //多个参数的情况
+      // formdata.append("name", name);
+      var msg = '';
+      // 之后ajax传递数据
+      pdfDownload2(formdata).then(res => {
+        console.log(res);
+        if (res.code === 200) {
+          this.$modal.msgSuccess("上传成功");
+        } else {
+          this.$modal.msgError("上传失败");
+        }
+      })
 
     },
     //将base64转换为文件对象
@@ -3888,7 +3854,7 @@ h2 {
 
 .box4 {
   width: 90%;
-  height: 200px;
+  height: 128px;
   margin: 0 auto;
   border: 1px solid black;
   font-size: 13px;
@@ -4110,7 +4076,7 @@ h2 {
 
 .box13 {
   width: 90%;
-  height: 350px;
+  height: 500px;
   margin: 0 auto;
   padding: 5px 10px;
   border: 1px solid black;
@@ -4119,7 +4085,7 @@ h2 {
 
 .box13-left {
   float: left;
-  width: 50%;
+  width: 100%;
   height: 100%;
 }
 

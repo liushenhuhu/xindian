@@ -50,12 +50,24 @@
           <div style="font-size: 1vw">10mm/mV 25mm/s</div>
           <div class="body">
             <div class="body-1">
-              <div><div id="I" class="line" @dblclick="clicktrueI"></div></div>
-              <div><div id="II" class="line" @dblclick="clicktrueII"></div></div>
-              <div><div id="III" class="line" @dblclick="clicktrueIII"></div></div>
-              <div><div id="aVR" class="line" @dblclick="clicktrueaVR"></div></div>
-              <div><div id="aVL" class="line" @dblclick="clicktrueaVL"></div></div>
-              <div><div id="aVF" class="line" @dblclick="clicktrueaVF"></div></div>
+              <div>
+                <div id="I" class="line" @dblclick="clicktrueI"></div>
+              </div>
+              <div>
+                <div id="II" class="line" @dblclick="clicktrueII"></div>
+              </div>
+              <div>
+                <div id="III" class="line" @dblclick="clicktrueIII"></div>
+              </div>
+              <div>
+                <div id="aVR" class="line" @dblclick="clicktrueaVR"></div>
+              </div>
+              <div>
+                <div id="aVL" class="line" @dblclick="clicktrueaVL"></div>
+              </div>
+              <div>
+                <div id="aVF" class="line" @dblclick="clicktrueaVF"></div>
+              </div>
             </div>
           </div>
           <div class="bottom">
@@ -194,7 +206,7 @@ export default {
       var _th = this
       console.log("执行")
       console.log(this.pId)
-      this.data.dataTime=this.$options.methods.getData();
+      this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
         url: "https://screen.mindyard.cn:84/get_jecg_single",
@@ -2919,7 +2931,7 @@ export default {
 }
 
 .lineshow {
-  height:11vw;
+  height: 11vw;
   width: 82vw;
   position: absolute;
   top: 50%;
