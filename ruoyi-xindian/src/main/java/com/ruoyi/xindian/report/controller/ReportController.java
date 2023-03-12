@@ -5,6 +5,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
@@ -67,7 +68,7 @@ public class ReportController extends BaseController
                 reportM.setPatientPhone(patientManagement.getPatientPhone());
             resList.add(reportM);
         }
-        return getDataTable(resList);
+        return getTable(resList,new PageInfo(list).getTotal());
     }
 
     /**
