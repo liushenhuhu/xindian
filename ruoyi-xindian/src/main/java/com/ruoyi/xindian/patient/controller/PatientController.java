@@ -14,12 +14,15 @@ import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +46,7 @@ public class PatientController extends BaseController
 
     @Autowired
     private ISysDictDataService dictDataService;
+
 
     /**
      * 查询患者列表
@@ -94,6 +98,20 @@ public class PatientController extends BaseController
     public AjaxResult getInfo(@PathVariable("patientId") Long patientId)
     {
         return AjaxResult.success(patientService.selectPatientByPatientId(patientId));
+    }
+
+    /**
+     * 获取患者详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('patient:patient:query')")
+    @GetMapping(value = "/getInfoByPhone/{patientPhone}")
+    public AjaxResult getInfoByPhone(@PathVariable("patientPhone") String patientPhone)
+    {
+        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
+        Date birthDay = patient.getBirthDay();
+        if(birthDay != null)
+            patient.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+        return AjaxResult.success(patient);
     }
 
 

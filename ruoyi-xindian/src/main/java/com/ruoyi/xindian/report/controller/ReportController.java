@@ -7,9 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.report.domain.ReportM;
+import com.ruoyi.xindian.util.DateUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
@@ -44,6 +47,8 @@ public class ReportController extends BaseController
 {
     @Autowired
     private IReportService reportService;
+    @Autowired
+    private IPatientService patientService;
 
     @Autowired
     private IPatientManagementService patientManagementService;
@@ -60,12 +65,24 @@ public class ReportController extends BaseController
         ArrayList<ReportM> resList = new ArrayList<>();
         ReportM reportM;
         PatientManagement patientManagement;
+        Patient patient;
+        Date birthDay;
         for (Report r : list) {
             reportM=new ReportM();
             patientManagement = patientManagementService.selectPatientManagementByPId(r.getpId());
             BeanUtils.copyProperties(r,reportM);
-            if(patientManagement != null)
+            if(patientManagement != null){
                 reportM.setPatientPhone(patientManagement.getPatientPhone());
+                patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
+                birthDay = patient.getBirthDay();
+                if(birthDay != null)
+                    reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+                else {
+                    reportM.setPatientAge(patient.getPatientAge());
+                }
+                reportM.setPatientName(patient.getPatientName());
+                reportM.setPatientSex(patient.getPatientSex());
+            }
             resList.add(reportM);
         }
         return getTable(resList,new PageInfo(list).getTotal());
