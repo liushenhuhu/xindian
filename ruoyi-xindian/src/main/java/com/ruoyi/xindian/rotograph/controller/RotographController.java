@@ -115,11 +115,11 @@ public class RotographController extends BaseController
 
 
     @PostMapping("/uploadFile")
-    public AjaxResult uploadFile(MultipartFile file) throws Exception
+    public AjaxResult uploadFile(Rotograph rotograph) throws Exception
     {
         try
         {
-//            MultipartFile file = rotograph.getFile();
+            MultipartFile file = rotograph.getFile();
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
             // 上传并返回新文件名称
