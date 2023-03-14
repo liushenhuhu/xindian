@@ -4,6 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtil {
+    /**
+     * 通过出生日期获取年龄
+     * @param birth
+     * @return
+     */
     public static int getAge(Date birth) {
         Calendar cal = Calendar.getInstance();
         int thisYear = cal.get(Calendar.YEAR);
