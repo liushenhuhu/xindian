@@ -5,4 +5,7 @@ import lombok.Data;
 @Data
 public class ReportM extends Report {
     private String patientPhone;
+    private String patientName;
+    private String patientSex;
+    private String patientAge;
 }

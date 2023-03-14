@@ -59,7 +59,7 @@ public class PatientManagementController extends BaseController {
     /**
      * 查询患者管理列表
      */
-    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
+//    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/list")
     public TableDataInfo list(PatientManagement patientManagement) {
 //        startPage();

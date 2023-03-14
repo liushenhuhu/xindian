@@ -192,5 +192,4 @@ public class AlertLogController extends BaseController {
         alertLogService.insertAno(pId);
         return toAjax(alertLogService.updateAno(userId, pId));
     }
-
 }

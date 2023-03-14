@@ -9,14 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="设备版本号" prop="equipmentVersion">
-        <el-input
-          v-model="queryParams.equipmentVersion"
-          placeholder="请输入设备版本号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="设备版本号" prop="equipmentVersion">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.equipmentVersion"-->
+<!--          placeholder="请输入设备版本号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="设备状态" prop="equipmentStatus">
         <el-select v-model="queryParams.equipmentStatus" placeholder="请选择设备状态" clearable>
           <el-option
@@ -114,7 +114,7 @@
       <el-table-column type="selection" width="55" align="center"/>
       <!--      <el-table-column label="设备id" align="center" prop="equipmentId"/>-->
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
-      <el-table-column label="设备版本号" align="center" prop="equipmentVersion"/>
+<!--      <el-table-column label="设备版本号" align="center" prop="equipmentVersion"/>-->
       <el-table-column label="设备状态" align="center" prop="equipmentStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
@@ -167,9 +167,9 @@
         <el-form-item label="设备号" prop="equipmentCode">
           <el-input v-model="form.equipmentCode" placeholder="请输入设备号"/>
         </el-form-item>
-        <el-form-item label="设备版本号" prop="equipmentVersion">
-          <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号"/>
-        </el-form-item>
+<!--        <el-form-item label="设备版本号" prop="equipmentVersion">-->
+<!--          <el-input v-model="form.equipmentVersion" placeholder="请输入设备版本号"/>-->
+<!--        </el-form-item>-->
         <el-form-item label="设备状态" prop="equipmentStatus">
           <el-select v-model="form.equipmentStatus" placeholder="请选择设备状态">
             <el-option
@@ -274,6 +274,15 @@ export default {
         ],
         hospitalCode: [
           {required: true, message: "医院代号不能为空", trigger: "blur"}
+        ],
+        equipmentStatus: [
+          {required: true, message: "设备状态不能为空", trigger: "blur"}
+        ],
+        equipmentType: [
+          {required: true, message: "设备种类不能为空", trigger: "blur"}
+        ],
+        patientPhone: [
+          {required: true, message: "患者电话不能为空", trigger: "blur"}
         ]
       }
     };
