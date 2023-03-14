@@ -4,65 +4,106 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.alert_log.mapper.AlertLogMapper">
 
-<!--    <cache eviction="FIFO" flushInterval="5000" readOnly="false" size="1024"/>-->
+    <!--    <cache eviction="FIFO" flushInterval="5000" readOnly="false" size="1024"/>-->
 
     <resultMap type="AlertLog" id="AlertLogResult">
-        <result property="logId"    column="log_id"    />
-        <result property="logTime"    column="log_time"    />
-        <result property="logType"    column="log_type"    />
-        <result property="eventName"    column="event_name"    />
-        <result property="eventDescription"    column="event_description"    />
-        <result property="pId"    column="p_id"    />
-        <result property="patientName" column="patient_name"    />
-        <result property="patientCode" column="patient_code"    />
-        <result property="patientPhone" column="patient_phone"  />
-        <result property="familyPhone"    column="family_phone"    />
-        <result property="hospitalCode" column="hospital_code"  />
-        <result property="hospitalName" column="hospital_name"  />
-        <result property="anoStatus"    column="ano_status"    />
+        <result property="logId" column="log_id"/>
+        <result property="logTime" column="log_time"/>
+        <result property="logType" column="log_type"/>
+        <result property="eventName" column="event_name"/>
+        <result property="eventDescription" column="event_description"/>
+        <result property="pId" column="p_id"/>
+        <result property="patientName" column="patient_name"/>
+        <result property="patientCode" column="patient_code"/>
+        <result property="patientPhone" column="patient_phone"/>
+        <result property="familyPhone" column="family_phone"/>
+        <result property="hospitalCode" column="hospital_code"/>
+        <result property="hospitalName" column="hospital_name"/>
+        <result property="anoStatus" column="ano_status"/>
         <result property="patientAge" column="patient_age"/>
         <result property="patientSex" column="patient_sex"/>
         <result property="userId" column="user_id"/>
         <result property="ecgType" column="ecg_type"/>
-        <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="doctorPhone" column="doctor_phone"/>
     </resultMap>
 
 
     <sql id="selectAlertLogVo">
-        select log_id, log_time, log_type, event_name, event_description, al.p_id,
-               pm.hospital_code, pm.patient_code, patient_name, pm.patient_phone,
-               family_phone, ano_status, patient_age, patient_sex, ecg_type, doctor_phone
+        select log_id,
+               log_time,
+               log_type,
+               event_name,
+               event_description,
+               al.p_id,
+               pm.hospital_code,
+               pm.patient_code,
+               patient_name,
+               pm.patient_phone,
+               family_phone,
+               ano_status,
+               patient_age,
+               patient_sex,
+               ecg_type,
+               doctor_phone
         from alert_log al
-            inner join patient_management pm on al.p_id = pm.p_id
+                 inner join patient_management pm on al.p_id = pm.p_id
+                 inner join patient p on pm.patient_phone = p.patient_phone
+                 inner join hospital h on pm.hospital_code = h.hospital_code
+    </sql>
+
+    <sql id="selectAlertLogCount">
+        select count(0)
+        from alert_log al
+        inner join patient_management pm on al.p_id = pm.p_id
+        <if test="patientName != null ">
             inner join patient p on pm.patient_phone = p.patient_phone
+        </if>
+        <if test="hospitalName != null ">
             inner join hospital h on pm.hospital_code = h.hospital_code
+        </if>
     </sql>
 
     <sql id="selectAnoVo">
-        select al.log_id, log_time, alu.log_type, alu.event_name, alu.event_description, al.p_id, patient_name,
-               alu.ano_status, patient_age, patient_sex, user_id, ecg_type
+        select al.log_id,
+               log_time,
+               alu.log_type,
+               alu.event_name,
+               alu.event_description,
+               al.p_id,
+               patient_name,
+               alu.ano_status,
+               patient_age,
+               patient_sex,
+               user_id,
+               ecg_type
         from alert_log al
-                inner join patient_management pm on al.p_id = pm.p_id
-                inner join patient p on pm.patient_phone = p.patient_phone
-                inner join alert_log_user alu on al.log_id = alu.log_id
+                 inner join patient_management pm on al.p_id = pm.p_id
+                 inner join patient p on pm.patient_phone = p.patient_phone
+                 inner join alert_log_user alu on al.log_id = alu.log_id
     </sql>
 
     <select id="selectAlertLogList" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         <where>
-            <if test="logId != null "> and log_id = #{logId}</if>
-            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''"> and log_time between #{params.beginLogTime} and #{params.endLogTime}</if>
-            <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
-            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
-            <if test="eventDescription != null  and eventDescription != ''"> and event_description like concat('%', #{eventDescription}, '%')</if>
-            <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
-            <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
-            <if test="hospitalName != null "> and hospital_name like concat('%', #{hospitalName}, '%')</if>
-            <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
-            <if test="patientAge != null "> and patient_age = #{patientAge}</if>
-            <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
-            <if test="ecgType != null "> and ecg_type = #{ecgType}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="logId != null ">and log_id = #{logId}</if>
+            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
+                and log_time between #{params.beginLogTime} and #{params.endLogTime}
+            </if>
+            <if test="logType != null  and logType != ''">and log_type like concat('%', #{logType}, '%')</if>
+            <if test="eventName != null  and eventName != ''">and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
+                #{eventDescription}, '%')
+            </if>
+            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
+            <if test="patientAge != null ">and patient_age = #{patientAge}</if>
+            <if test="patientSex != null ">and patient_sex = #{patientSex}</if>
+            <if test="ecgType != null ">and ecg_type = #{ecgType}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone like concat('%', #{doctorPhone},
+                '%')
+            </if>
         </where>
         order by log_time desc
     </select>
@@ -70,58 +111,121 @@
     <select id="selectAlertLogList12" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         <where>
-            <if test="logId != null "> and log_id = #{logId}</if>
-            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''"> and log_time between #{params.beginLogTime} and #{params.endLogTime}</if>
-            <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
-            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
-            <if test="eventDescription != null  and eventDescription != ''"> and event_description like concat('%', #{eventDescription}, '%')</if>
-            <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
-            <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
-            <if test="hospitalName != null "> and hospital_name like concat('%', #{hospitalName}, '%')</if>
-            <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
-            <if test="patientAge != null "> and patient_age = #{patientAge}</if>
-            <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD" or ecg_type = "DECG12YXD")</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="logId != null ">and log_id = #{logId}</if>
+            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
+                and log_time between #{params.beginLogTime} and #{params.endLogTime}
+            </if>
+            <if test="logType != null  and logType != ''">and log_type like concat('%', #{logType}, '%')</if>
+            <if test="eventName != null  and eventName != ''">and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
+                #{eventDescription}, '%')
+            </if>
+            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
+            <if test="patientAge != null ">and patient_age = #{patientAge}</if>
+            <if test="patientSex != null ">and patient_sex = #{patientSex}</if>
+            <if test="ecgType != null  and ecgType != ''">and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD" or
+                ecg_type = "DECG12YXD")
+            </if>
+            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone like concat('%', #{doctorPhone},
+                '%')
+            </if>
         </where>
         order by log_time desc
+    </select>
+
+    <select id="selectAlertLogList12_COUNT" parameterType="AlertLog" resultType="long">
+        <include refid="selectAlertLogCount"/>
+        <where>
+            <if test="ecgType != null  and ecgType != ''">and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD" or
+                ecg_type = "DECG12YXD")
+            </if>
+            <if test="logId != null ">and log_id = #{logId}</if>
+            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
+                and log_time between #{params.beginLogTime} and #{params.endLogTime}
+            </if>
+            <if test="logType != null  and logType != ''">and log_type like concat('%', #{logType}, '%')</if>
+            <if test="eventName != null  and eventName != ''">and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
+                #{eventDescription}, '%')
+            </if>
+            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
+        </where>
     </select>
 
     <select id="selectAlertLogListSingle" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         <where>
-            <if test="logId != null "> and log_id = #{logId}</if>
-            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''"> and log_time between #{params.beginLogTime} and #{params.endLogTime}</if>
-            <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
-            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
-            <if test="eventDescription != null  and eventDescription != ''"> and event_description like concat('%', #{eventDescription}, '%')</if>
-            <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
-            <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
-            <if test="hospitalName != null "> and hospital_name like concat('%', #{hospitalName}, '%')</if>
-            <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
-            <if test="patientAge != null "> and patient_age = #{patientAge}</if>
-            <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "JECGsingleGZ" or ecg_type = "DECGsingleZZ" or ecg_type = "DECGsingleGZ")</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="logId != null ">and log_id = #{logId}</if>
+            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
+                and log_time between #{params.beginLogTime} and #{params.endLogTime}
+            </if>
+            <if test="logType != null  and logType != ''">and log_type like concat('%', #{logType}, '%')</if>
+            <if test="eventName != null  and eventName != ''">and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
+                #{eventDescription}, '%')
+            </if>
+            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
+            <if test="patientAge != null ">and patient_age = #{patientAge}</if>
+            <if test="patientSex != null ">and patient_sex = #{patientSex}</if>
+            <if test="ecgType != null  and ecgType != ''">and (ecg_type = "JECGsingleGZ" or ecg_type = "DECGsingleZZ" or
+                ecg_type = "DECGsingleGZ")
+            </if>
+            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone like concat('%', #{doctorPhone},
+                '%')
+            </if>
         </where>
         order by log_time desc
     </select>
 
+    <select id="selectAlertLogListSingle_COUNT" parameterType="AlertLog" resultType="long">
+        <include refid="selectAlertLogCount"/>
+        <where>
+            <if test="ecgType != null  and ecgType != ''">and (ecg_type = "JECGsingleGZ" or ecg_type = "DECGsingleZZ" or
+                ecg_type = "DECGsingleGZ")
+            </if>
+            <if test="logId != null ">and log_id = #{logId}</if>
+            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
+                and log_time between #{params.beginLogTime} and #{params.endLogTime}
+            </if>
+            <if test="logType != null  and logType != ''">and log_type like concat('%', #{logType}, '%')</if>
+            <if test="eventName != null  and eventName != ''">and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
+                #{eventDescription}, '%')
+            </if>
+            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
+            <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
+        </where>
+    </select>
     <select id="selectAnoListByUserId" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAnoVo"/>
         <where>
-            <if test="logId != null "> and log_id = #{logId}</if>
-            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''"> and log_time between #{params.beginLogTime} and #{params.endLogTime}</if>
-            <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
-            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
-            <if test="eventDescription != null  and eventDescription != ''"> and event_description like concat('%', #{eventDescription}, '%')</if>
-            <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
-            <if test="patientName != null "> and patient_name like concat('%', #{patientName}, '%')</if>
-            <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
-            <if test="patientAge != null "> and patient_age = #{patientAge}</if>
-            <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="ecgType != null "> and ecg_type = #{ecgType}</if>
+            <if test="logId != null ">and log_id = #{logId}</if>
+            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
+                and log_time between #{params.beginLogTime} and #{params.endLogTime}
+            </if>
+            <if test="logType != null  and logType != ''">and log_type like concat('%', #{logType}, '%')</if>
+            <if test="eventName != null  and eventName != ''">and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
+                #{eventDescription}, '%')
+            </if>
+            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
+            <if test="patientAge != null ">and patient_age = #{patientAge}</if>
+            <if test="patientSex != null ">and patient_sex = #{patientSex}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="ecgType != null ">and ecg_type = #{ecgType}</if>
         </where>
         order by log_time desc
     </select>
@@ -175,7 +279,9 @@
         update alert_log_user
         set user_id = #{param1}
         where log_id in (
-            select log_id from alert_log where p_id = #{param2}
+            select log_id
+            from alert_log
+            where p_id = #{param2}
         );
     </update>
 
@@ -193,7 +299,9 @@
     </update>
 
     <delete id="deleteAlertLogByLogId" parameterType="string">
-        delete from alert_log where log_id = #{logId}
+        delete
+        from alert_log
+        where log_id = #{logId}
     </delete>
 
     <delete id="deleteAlertLogByLogIds" parameterType="String">

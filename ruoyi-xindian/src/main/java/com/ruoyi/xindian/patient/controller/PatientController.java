@@ -185,7 +185,7 @@ public class PatientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:remove')")
     @Log(title = "患者", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{patientPhone}")
+    @DeleteMapping("/delByPatientPhone/{patientPhone}")
     public AjaxResult delPatient(@PathVariable String patientPhone)
     {
         return toAjax(patientService.deletePatientByPatientPhone(patientPhone));
