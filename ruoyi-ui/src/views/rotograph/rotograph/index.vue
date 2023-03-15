@@ -373,9 +373,8 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加轮播广告";
+      this.$router.push({path: "/addAD"});
+      window.open(routeUrl.href, '_blank');
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
