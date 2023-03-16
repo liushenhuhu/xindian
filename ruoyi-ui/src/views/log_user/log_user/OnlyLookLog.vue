@@ -234,9 +234,9 @@ export default {
     this.getMessage()
   },
   methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
-    },
+    // goTarget(href) {
+    //   window.open(href, "_blank");
+    // },
     getMessage() {
       var x = []//x轴
       var seriesdata = []//标记线
@@ -269,12 +269,11 @@ export default {
           request.setRequestHeader("password", "zzu123");
         },
         success: function (jsonResult) {
-          console.log("请求返回的数据：", jsonResult);
+          console.log("请求数据成功：", jsonResult);
           _th.message.pid = jsonResult.result.patientid;
           _th.message.age = Number(jsonResult.result.age).toFixed(0);
           _th.message.sex = jsonResult.result.sex;
           _th.message.time = jsonResult.result.clockTime;
-
           _th.lead.I = jsonResult.result.I;
           _th.lead.II = jsonResult.result.II;
           _th.lead.III = jsonResult.result.III;
@@ -1693,27 +1692,65 @@ export default {
           }
         },
         error: function (data) {
+          console.log("请求数据失败：",data)
           _th.$message.error("数据获取失败");
         }
       });
     },
     //红绿颜色的判断
     light(data) {
-      this.noise.list = data.result.noise
+      var lightlevel = {
+        'V1': 'V1light',
+        'V2': 'V2light',
+        'V3': 'V3light',
+        'V4': 'V4light',
+        'V5': 'V5light',
+        'V6': 'V6light',
+        'aVL': 'aVLlight',
+        'aVF': 'aVFlight',
+        'aVR': 'aVRlight',
+        'I': 'Ilight',
+        'II': 'IIlight',
+        'III': 'IIIlight',
+      }
+      this.noise.list=data.result.noise
+      for(var k in lightlevel){
+        if(data.result[k].length===0)this.noise.list[lightlevel[k]]=null
+      }
       console.log("红绿颜色的判断值：",this.noise.list)
       for (var key in this.noise.list) {
         if (this.noise.list[key] === 1) {
           let temp = document.getElementById(key)
           temp.style.backgroundColor = "red"
-        } else {
+        } else if(this.noise.list[key] === 0) {
           let temp = document.getElementById(key)
           temp.style.backgroundColor = "greenyellow"
+        }else {
+          let temp = document.getElementById(key)
+          temp.style.backgroundColor = "transparent"
         }
       }
     },
     //ABCD等级的判断
     level(data) {
+      var level = {
+        'V1': 'V1level',
+        'V2': 'V2level',
+        'V3': 'V3level',
+        'V4': 'V4level',
+        'V5': 'V5level',
+        'V6': 'V6level',
+        'aVL': 'aVLlevel',
+        'aVF': 'aVFlevel',
+        'aVR': 'aVRlevel',
+        'I': 'Ilevel',
+        'II': 'IIlevel',
+        'III': 'IIIlevel',
+      }
       this.noise_level = data.result.noise_level
+      for(var k in level){
+        if(data.result[k].length===0)this.noise_level[level[k]]=null
+      }
       console.log("传的ABCD的等级：", this.noise_level)
     },
     //展开框
