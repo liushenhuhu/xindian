@@ -525,7 +525,9 @@ export default {
     },
     /** 跳转到预警日志*/
     handleAlert(row) {
-      this.$router.push({path: "/log", query: {pId: row.pId}});
+      this.$router.push({
+        name: "log",
+        params: {pId: row.pId}});
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {

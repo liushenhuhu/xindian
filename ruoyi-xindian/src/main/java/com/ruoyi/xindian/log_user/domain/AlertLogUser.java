@@ -1,13 +1,11 @@
 package com.ruoyi.xindian.log_user.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 
 import java.util.Date;
 
@@ -83,5 +81,93 @@ public class AlertLogUser extends BaseEntity
 
     public void setpId(String pId) {
         this.pId = pId;
+    }
+
+    public String getLogId() {
+        return logId;
+    }
+
+    public void setLogId(String logId) {
+        this.logId = logId;
+    }
+
+    public Date getLogTime() {
+        return logTime;
+    }
+
+    public void setLogTime(Date logTime) {
+        this.logTime = logTime;
+    }
+
+    public Long getLogNoise() {
+        return logNoise;
+    }
+
+    public void setLogNoise(Long logNoise) {
+        this.logNoise = logNoise;
+    }
+
+    public String getLogNoiseLevel() {
+        return logNoiseLevel;
+    }
+
+    public void setLogNoiseLevel(String logNoiseLevel) {
+        this.logNoiseLevel = logNoiseLevel;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getLogType() {
+        return logType;
+    }
+
+    public void setLogType(String logType) {
+        this.logType = logType;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public Long getAnoStatus() {
+        return anoStatus;
+    }
+
+    public void setAnoStatus(Long anoStatus) {
+        this.anoStatus = anoStatus;
+    }
+
+    public String getPatientAge() {
+        return patientAge;
+    }
+
+    public void setPatientAge(String patientAge) {
+        this.patientAge = patientAge;
+    }
+
+    public String getPatientSex() {
+        return patientSex;
+    }
+
+    public void setPatientSex(String patientSex) {
+        this.patientSex = patientSex;
     }
 }
