@@ -128,7 +128,7 @@ export const constantRoutes = [
         path: '/lookLog',
         hidden: true,
         name: 'lookLog',
-        component: () => import('@/views/alert_log/alert_log/lookLog'),
+        component: () => import('@/views/log_user/log_user/OnlyLookLog'),
         meta: {title: '查看日志'}
       }
     ]
