@@ -128,7 +128,7 @@ public class RotographController extends BaseController
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
             ajax.put("fileName", fileName);
-            ajax.put("newFileName", FileUtils.getName(fileName));
+            ajax.put("newFileName", FileUtils.getName(fileName))                                                                ;
             ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
         }

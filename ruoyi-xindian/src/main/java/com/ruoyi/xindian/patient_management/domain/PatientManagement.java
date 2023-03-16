@@ -183,6 +183,8 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "监护时长", width = 30, dateFormat = "yyyy-MM-dd")
     private Date guardianshipDuration;
 
+    private Long samplingRate;
+
     public String getpId() {
         return pId;
     }
