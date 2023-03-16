@@ -125,10 +125,23 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
+        path: '/OnlyLookLog',
+        hidden: true,
+        name: 'LookLog',
+        component: () => import('@/views/log_user/log_user/OnlyLookLog'),
+        meta: {title: '查看日志'}
+      }
+    ]
+  },
+  {
+    path: '',
+    component: Layout,
+    children: [
+      {
         path: '/lookLog',
         hidden: true,
-        name: 'lookLog',
-        component: () => import('@/views/log_user/log_user/OnlyLookLog'),
+        name: 'lookLog1',
+        component: () => import('@/views/alert_log/alert_log/lookLog'),
         meta: {title: '查看日志'}
       }
     ]

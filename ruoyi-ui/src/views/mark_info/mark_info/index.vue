@@ -525,7 +525,7 @@ export default {
       console.log(row.logId);
       this.$router.push({
         name: "lookLog",
-        params: {logId: row.logId, logType: row.logType}
+        params: {logId: row.logId, logType: row.logType, userId:0}
       });
     },
   }

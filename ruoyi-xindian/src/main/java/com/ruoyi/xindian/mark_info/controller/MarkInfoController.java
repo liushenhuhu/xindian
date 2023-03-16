@@ -25,14 +25,9 @@ public class MarkInfoController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list() {
         startPage();
-//        PageDomain pageDomain = TableSupport.buildPageRequest();
-//        Integer pageNum = pageDomain.getPageNum();
-//        Integer pageSize = pageDomain.getPageSize();
-//        int index=(pageNum-1)*pageSize;
         List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
-//        List<MarkInfo> reslist=new ArrayList<>();
-        Map<String,String> map = null;
-        List<Map<String,String>> listMap=null;
+        Map<String,String> map;
+        List<Map<String,String>> listMap;
         for (MarkInfo markInfo : list) {
             listMap=new ArrayList<>();
             List<String> info = Arrays.asList(markInfo.getAllLabel().split(",", -1));
@@ -44,15 +39,6 @@ public class MarkInfoController extends BaseController {
             }
             markInfo.setLabelList(listMap);
         }
-//        for(int i=index;i<index+pageSize&&i<list.size();i++){
-//            reslist.add(list.get(i));
-//        }
-//        TableDataInfo rspData = new TableDataInfo();
-//        rspData.setCode(HttpStatus.SUCCESS);
-//        rspData.setMsg("查询成功");
-//        rspData.setRows(reslist);
-//        rspData.setTotal(list.size());
-//        return rspData;
         return getDataTable(list);
     }
     @GetMapping("/users")
@@ -116,8 +102,8 @@ public class MarkInfoController extends BaseController {
         List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
         List<MarkInfo> resList = new ArrayList<>();
         List<MarkInfo> reList = new ArrayList<>();
-        Map<String,String> map = null;
-        List<Map<String,String>> listMap=null;
+        Map<String,String> map;
+        List<Map<String,String>> listMap;
 
         for (MarkInfo markInfo : list) {
             listMap=new ArrayList<>();
@@ -149,7 +135,7 @@ public class MarkInfoController extends BaseController {
     }
     public boolean isSame(List<String> info){
         if(info.size()==1){
-            return true;
+            return "".equals(info.get(0));
         }
         long count=info.stream().distinct().count();
         int flag=0;
