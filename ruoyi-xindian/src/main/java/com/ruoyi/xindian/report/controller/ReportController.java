@@ -2,19 +2,15 @@ package com.ruoyi.xindian.report.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
-import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.util.DateUtil;
-import org.apache.commons.lang.time.DateUtils;
-import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,30 +167,55 @@ public class ReportController extends BaseController
     @GetMapping("/getCommonTerms")
     public AjaxResult getCommonTerms()
     {
-        ArrayList<String> terms = new ArrayList<>();
-        terms.add("窦性心律正常心电图");
-        terms.add("窦房结内游走性节律");
-        terms.add("房性逸搏");
-        terms.add("房性早搏");
-        terms.add("室性逸搏");
-        terms.add("交界性逸搏");
-        terms.add("室性早搏");
-        terms.add("交界性早搏");
-        terms.add("房性心动过速");
-        terms.add("室性心动过速");
-        terms.add("室上性心动过速");
-        terms.add("交界性心动过速");
-        terms.add("心房颤动");
-        terms.add("心房扑动");
-        terms.add("完全性左束支传导阻滞");
-        terms.add("完全性右束支传导阻滞");
-        terms.add("II度I型房室传导阻滞");
-        terms.add("II度II型房室传导阻滞");
-        terms.add("III度房室传导阻滞");
-        terms.add("I度房室传导阻滞");
-        terms.add("窦性心动过缓");
-        terms.add("窦性心动过速");
-        return AjaxResult.success(terms);
+        //正常
+        String[] normal;
+        //心律
+        String[] heart_rhythm;
+        //心律不齐
+        String[] arrhythmia;
+        //早搏逸搏
+        String[] premature_escape;
+        //颤动扑动
+        String[] flutter;
+        //ST、T改变
+        String[] ST_T_change;
+        //房室肥大
+        String[] atrioventricular_hypertrophy;
+        //心肌梗死
+        String[] myocardial_infarction;
+        //传导阻滞
+        String[] conduction_block;
+        //危急值
+        String[] critical_value;
+        //其它
+        String[] other;
+        //返回map
+        HashMap<String, String[]> resMap = new HashMap<>();
+        normal="正常心电图,大致正常心电图".split(",");
+        heart_rhythm="窦性心律,异位心律,房性心律,室性心律,交界性心律,起搏心律".split(",");
+        arrhythmia="窦性心律不齐, 心动过速, 心动过缓, 室性心动过速, 室上性心动过速, 交界性心动过速, 房性心动过速".split(", ");
+        premature_escape="房性逸搏, 房性早搏, 房性停搏, 室性逸搏, 室性早搏, 交界性逸搏, 交界性早搏, 交界性停搏, 窦性停搏, 心室停搏, 全心停搏".split(", ");
+        flutter="心房颤动, 心房扑动, 心室颤动, 心室扑动".split(", ");
+        ST_T_change="ST改变, ST-T改变, T波异常, QT间期延长, QTc间期延长, 可见U波".split(", ");
+        atrioventricular_hypertrophy="左心室肥大,左心房肥大,右心室肥大,右心房肥大,双心室肥大,双心房肥大".split(",");
+        myocardial_infarction="亚急性,急性,陈旧性,前间壁心肌梗死,间壁心肌梗死,前侧壁心肌梗死,广泛前壁心肌梗死,前壁心肌梗死,下壁心肌梗死,下后壁心肌梗死,后壁心肌梗死,下侧壁心肌梗死,高侧壁心肌梗死,侧壁心肌梗死,心内膜下心肌梗死,右室心肌梗死,非ST抬高型心肌梗死,心尖部心肌梗死".split(",");
+        conduction_block="I度房室传导阻滞，II度房室传导阻滞，II度I型房室传导阻滞，II度II型房室传导阻滞，III度房室传导阻滞，窦房传导阻滞，高度房室传导阻滞，左前分支传导阻滞，左后分支传导阻滞，完全性左束支传导阻滞，不完全性左束支传导阻滞，完全性右束支传导阻滞，不完全性右束支传导阻滞，非特异性室内传导阻滞，室内差异性传导".split("，");
+        critical_value="心电图危急值".split(",");
+        other="预激综合症, 心室预激波, 早期复极".split(", ");
+
+        resMap.put("正常",normal);
+        resMap.put("心律",heart_rhythm);
+        resMap.put("心律不齐",arrhythmia);
+        resMap.put("早搏逸搏",premature_escape);
+        resMap.put("颤动扑动",flutter);
+        resMap.put("ST、T改变",ST_T_change);
+        resMap.put("房室肥大",atrioventricular_hypertrophy);
+        resMap.put("心肌梗死",myocardial_infarction);
+        resMap.put("传导阻滞",conduction_block);
+        resMap.put("危急值",critical_value);
+        resMap.put("其它",other);
+
+        return AjaxResult.success(resMap);
     }
     /**
      * 获取时间信息
