@@ -202,7 +202,7 @@
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
 
         </where>
-        order by if(isnull(ecg_level),1,0), ecg_level, online_status desc, connection_time desc
+        order by  online_status desc, connection_time desc
     </select>
 
     <select id="selectPatientManagementListJECG12" parameterType="PatientManagement" resultMap="PatientManagementResult">
