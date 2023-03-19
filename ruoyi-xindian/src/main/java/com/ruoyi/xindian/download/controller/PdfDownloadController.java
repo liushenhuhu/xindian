@@ -144,7 +144,7 @@ public class PdfDownloadController extends BaseController {
         //File file = new File("C:\\Users\\Lenovo\\Desktop\\fcea3150-cf9d-4f98-bdd5-395aa4405825.pdf");
         File file = new File(path);
         if (file.exists()) {
-            byte[] data = null;
+            byte[] data;
             FileInputStream input=null;
             try {
                 input= new FileInputStream(file);
@@ -164,5 +164,35 @@ public class PdfDownloadController extends BaseController {
             }
         }
     }
+    @GetMapping("/getPdf")
+    public void readPDF(HttpServletRequest request,HttpServletResponse response) {
+        //PDF文件地址
+        String pId = request.getParameter("pId");
+        String ecgType = request.getParameter("ecgType");//DECG_single DECG
+        String path="/repository/"+ecgType+"/report/"+pId+"/"+pId+".pdf";
+        File file = new File("E:/log/123.pdf");
+//        File file = new File(path);
+        if (file.exists()) {
+            byte[] data;
+            FileInputStream input=null;
+            try {
+                input= new FileInputStream(file);
+                data = new byte[input.available()];
+                input.read(data);
+                response.getOutputStream().write(data);
+            } catch (Exception e) {
+                System.out.println("pdf文件处理异常：" + e);
+            }finally{
+                try {
+                    if(input!=null){
+                        input.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
 }

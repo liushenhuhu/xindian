@@ -237,7 +237,7 @@
             icon="el-icon-magic-stick"
             @click="isRed3=!isRed3;downloadInform(scope.row)"
             v-hasPermi="['patient:patient:inform']"
-          >下载报告
+          >查看报告
           </el-button>
           <el-button
             size="mini"
@@ -341,6 +341,7 @@ import {getToken} from "@/utils/auth";
 import {updateMonitoringStatus} from "@/api/patient/patient";
 import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
+import pdf from "vue-pdf"
 
 export default {
   name: "Patient_management",
@@ -561,7 +562,24 @@ export default {
           request.setRequestHeader("password","zzu123");
         },
         success: function (data) {
-          alert(name + "动态心电报告已生成")
+          console.log(data)
+          let code=data.code;
+          switch (code){
+            case '300':
+              alert("报告生成成功！");
+              break;
+            case '301':
+              alert("参数错误！");
+              break;
+            case '302':
+              alert("分析错误！");
+              break;
+            case '303':
+              alert("采集时长过短！");
+              break;
+            default:
+              alert("请求生成报告失败！");
+          }
         },
         error: function (data) {
           console.log(name + "动态心电报告生成出错,请重新请求或联系管理员")
@@ -570,10 +588,17 @@ export default {
       alert(name + "动态报告生成中，请稍后...")
     },
 
-    /** 下载报告*/
+    /** 查看报告*/
     downloadInform(row) {
-      let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName ,ecg_type:row.ecgType, patientName:row.patientName}});
-      window.open(routeUrl.href, '_blank');
+      // let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName ,ecg_type:row.ecgType, patientName:row.patientName}});
+      // window.open(routeUrl.href, '_blank');
+      // row.pId="ZHIZIsingle_D29987E8555A-1678663291710";
+      // let routeUrl = this.$router.resolve({path: "/DECGReport/DECG_single/report/"+row.pId+"/"+row.pId+".pdf"});
+      // window.open(routeUrl.href, '_blank');
+      // // this.$router.push("/DECGReport/DECG_single/"+row.pId+"/"+row.pId+".pdf");
+      this.$router.push({
+        name: "lookPdf",
+        params: {pId: row.pId,ecgTpye:"DECG_single"}});
     }
   }
 };

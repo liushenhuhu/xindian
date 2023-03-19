@@ -14,10 +14,11 @@
         <result property="equipmentType"    column="equipment_type"    />
         <result property="patientPhone"    column="patient_phone"    />
         <result property="pId"    column="p_id"    />
+        <result property="onOffStatus"    column="on_off_status"    />
     </resultMap>
 
     <sql id="selectEquipmentVo">
-        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code, department_code, equipment_type, patient_phone, p_id from equipment
+        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code, department_code, equipment_type, patient_phone, p_id, on_off_status from equipment
     </sql>
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
@@ -39,6 +40,13 @@
         <include refid="selectEquipmentVo"/>
         where equipment_id = #{equipmentId}
     </select>
+
+    <select id="selectEquipmentByEquipmentCode" parameterType="Equipment" resultMap="EquipmentResult">
+        <include refid="selectEquipmentVo"/>
+        where equipment_code = #{equipmentCode}
+    </select>
+
+
 
     <insert id="insertEquipment" parameterType="Equipment">
         insert into equipment

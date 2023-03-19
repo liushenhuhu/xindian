@@ -94,4 +94,9 @@ public class EquipmentServiceImpl implements IEquipmentService {
     public void updateEquipmentStatus(String[] statusList) {
         equipmentMapper.updateEquipmentStatus(statusList);
     }
+
+    @Override
+    public Equipment selectEquipmentByEquipmentCode(String equipmentCode){
+        return equipmentMapper.selectEquipmentByEquipmentCode(equipmentCode);
+    }
 }
