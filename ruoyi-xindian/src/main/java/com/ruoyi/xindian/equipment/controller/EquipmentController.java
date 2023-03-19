@@ -3,6 +3,7 @@ package com.ruoyi.xindian.equipment.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -134,4 +135,15 @@ public class EquipmentController extends BaseController {
         }
         return "down";
     }
+    /**
+     * 获取开关机状态
+     */
+    @GetMapping("/getOnOffStatus")
+    public AjaxResult getOnOffStatus(HttpServletRequest request) {
+        String equipmentCode = request.getParameter("equipmentCode");
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentCode);
+        return AjaxResult.success(equipment);
+
+    }
+
 }

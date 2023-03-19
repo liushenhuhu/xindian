@@ -164,6 +164,20 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
+        path: '/lookPdf',
+        hidden: true,
+        name: 'lookPdf',
+        component: () => import('@/views/patient_management/patient_management/lookPdf'),
+        meta: {title: '查看pdf'}
+      }
+    ]
+  },
+  //查看pdf
+  {
+    path: '',
+    component: Layout,
+    children: [
+      {
         path: '/ano',
         hidden: true,
         name: 'ano',

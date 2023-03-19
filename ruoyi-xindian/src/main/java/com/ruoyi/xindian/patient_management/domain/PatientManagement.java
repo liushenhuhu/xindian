@@ -184,6 +184,8 @@ public class PatientManagement extends BaseEntity {
     private Date guardianshipDuration;
 
     private Long samplingRate;
+    /**检测状态*/
+    private String detectionState;
 
     public String getpId() {
         return pId;

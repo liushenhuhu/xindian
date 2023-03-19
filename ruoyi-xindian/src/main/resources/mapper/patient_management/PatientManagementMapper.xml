@@ -35,6 +35,7 @@
         <result property="uploadTime"    column="upload_time"    />
         <result property="guardianshipDuration"    column="guardianship_duration"    />
         <result property="samplingRate"    column="sampling_rate"    />
+        <result property="detectionState"    column="detection_state"    />
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -67,7 +68,7 @@
                m.patient_phone, family_phone,  monitoring_status,
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
                diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, ecg_level, doctor_phone,
-               birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate
+               birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
@@ -336,6 +337,7 @@
             <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
             <if test="ecgLevel != null">ecg_level = #{ecgLevel},</if>
             <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
+            <if test="detectionState != null">detection_state = #{detectionState},</if>
         </trim>
         where p_id = #{pId}
     </update>

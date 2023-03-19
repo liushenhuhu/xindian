@@ -62,4 +62,6 @@ public interface EquipmentMapper
     void updateEquipmentStatusAll();
 
     void updateEquipmentStatus(String[] equipmentList);
+
+    public Equipment selectEquipmentByEquipmentCode(String equipmentCode);
 }
