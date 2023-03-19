@@ -25,6 +25,7 @@
         <result property="remark" column="remark"/>
         <result property="hospitalName" column="hospital_name"/>
         <result property="hospitalCode" column="hospital_code"/>
+        <result property="departmentCode" column="department_code"/>
         <result property="roleId" column="role_id"/>
         <result property="openId" column="open_id"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
@@ -69,6 +70,7 @@
                u.remark,
                u.hospital_name,
                u.hospital_code,
+               u.department_code,
                u.open_id,
                d.dept_id,
                d.parent_id,
@@ -204,6 +206,7 @@
         <if test="remark != null and remark != ''">remark,</if>
         <if test="hospitalName != null and hospitalName != ''">hospital_name,</if>
         <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
+        <if test="departmentCode != null and departmentCode != ''">department_code,</if>
         <if test="openId != null and openId != ''">open_id,</if>
         create_time
         )values(
@@ -221,6 +224,7 @@
         <if test="remark != null and remark != ''">#{remark},</if>
         <if test="hospitalName != null">#{hospitalName},</if>
         <if test="hospitalCode != null">#{hospitalCode},</if>
+        <if test="departmentCode != null">#{departmentCode},</if>
         <if test="openId != null">#{openId},</if>
         sysdate()
         )
@@ -244,6 +248,7 @@
             <if test="remark != null">remark = #{remark},</if>
             <if test="hospitalName != null">hospital_name = #{hospitalName},</if>
             <if test="hospitalCode != null">hospital_code = #{hospitalCode},</if>
+            <if test="departmentCode != null">department_code = #{departmentCode},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}

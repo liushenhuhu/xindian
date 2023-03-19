@@ -1,15 +1,14 @@
 package com.ruoyi.xindian.patient_management.domain;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 患者管理对象 patient_management
@@ -46,6 +45,8 @@ public class PatientManagement extends BaseEntity {
      */
     @Excel(name = "设备号")
     private String equipmentCode;
+
+    private List<String> equipmentCodeList;
 
     /**
      * 连接时间

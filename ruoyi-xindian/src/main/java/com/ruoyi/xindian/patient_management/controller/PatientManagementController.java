@@ -9,12 +9,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
-import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.Details;
@@ -56,6 +56,9 @@ public class PatientManagementController extends BaseController {
     @Autowired
     private ISysUserService userService;
 
+    @Autowired
+    private IEquipmentService equipmentService;
+
     /**
      * 查询患者管理列表
      */
@@ -68,9 +71,9 @@ public class PatientManagementController extends BaseController {
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
 //        Long userId = getUserId();
         SysUser sysUser = userService.selectUserById(getUserId());
-        if (getDeptId()!=null && getDeptId() == 200) {
-            String hospitalName = sysUser.getHospitalName();
-            patientManagement.setHospitalName(hospitalName);
+        if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 101) {
+            String hospitalCode = sysUser.getHospitalCode();
+            patientManagement.setHospitalCode(hospitalCode);
             startPage();
             if (null == patientManagement.getEcgType()) {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
@@ -82,8 +85,28 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
 
-        } else if (sysUser != null && sysUser.getRoleId()!=null && sysUser.getRoleId() == 104) {
+        } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 104) {
             patientManagement.setDoctorPhone(sysUser.getPhonenumber());
+            startPage();
+            if (null == patientManagement.getEcgType()) {
+                list = patientManagementService.selectPatientManagementList(patientManagement);
+            } else if (patientManagement.getEcgType().equals("DECGsingle")) {
+                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
+            } else if (patientManagement.getEcgType().equals("JECG12")) {
+                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+            } else {
+                list = patientManagementService.selectPatientManagementList(patientManagement);
+            }
+        } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 106) {
+            Equipment equipment = new Equipment();
+            equipment.setHospitalCode(sysUser.getHospitalCode());
+            equipment.setDepartmentCode(sysUser.getDepartmentCode());
+            List<Equipment> equipmentList = equipmentService.selectEquipmentList(equipment);
+            List<String> equipmentCodeList = new ArrayList<>();
+            for (Equipment equipment1 : equipmentList) {
+                equipmentCodeList.add(equipment1.getEquipmentCode());
+            }
+            patientManagement.setEquipmentCodeList(equipmentCodeList);
             startPage();
             if (null == patientManagement.getEcgType()) {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
@@ -125,7 +148,7 @@ public class PatientManagementController extends BaseController {
             }
             resList.add(patientManagmentDept);
         }
-        return getTable(resList,new PageInfo(list).getTotal());
+        return getTable(resList, new PageInfo(list).getTotal());
     }
 
     /**
@@ -139,8 +162,8 @@ public class PatientManagementController extends BaseController {
         List<PatientManagement> list = new ArrayList<>();
         if (getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
-            String hospitalName = sysUser.getHospitalName();
-            patientManagement.setHospitalName(hospitalName);
+            String hospitalCode = sysUser.getHospitalCode();
+            patientManagement.setHospitalCode(hospitalCode);
             list = patientManagementService.selectPatientManagementList(patientManagement);
         } else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
@@ -246,21 +269,21 @@ public class PatientManagementController extends BaseController {
         HashMap<String, String> description = new HashMap<>();
         description.put("normalEcg", Details.normal);
         //房性早搏
-        description.put("apBeat",Details.AP);
+        description.put("apBeat", Details.AP);
         //室性早搏
-        description.put("pvBeat",Details.PV);
+        description.put("pvBeat", Details.PV);
         //心房颤动
-        description.put("atrialFibrillation",Details.Atrial_fibrillation);
+        description.put("atrialFibrillation", Details.Atrial_fibrillation);
         //心房扑动
-        description.put("atrialFlutter",Details.Atrial_flutter);
+        description.put("atrialFlutter", Details.Atrial_flutter);
         //左束支传导阻滞
-        description.put("leftBlock",Details.Left_bundle_branch_block);
+        description.put("leftBlock", Details.Left_bundle_branch_block);
         //右束支传导阻滞
-        description.put("rightBlock",Details.Right_bundle_branch_block);
+        description.put("rightBlock", Details.Right_bundle_branch_block);
         //心动过缓
-        description.put("bradycardia",Details.bradycardia);
+        description.put("bradycardia", Details.bradycardia);
         //心动过速
-        description.put("tachycardia",Details.tachycardia);
+        description.put("tachycardia", Details.tachycardia);
 
         Info.setPatientPhone(patientPhone);
         List<SingleHistoryInfo> infos = patientManagementService.selectSingleHistoryInfoList(Info);
@@ -274,8 +297,8 @@ public class PatientManagementController extends BaseController {
             if (info.getBradycardia() == null) info.setBradycardia((long) 0);
             if (info.getTachycardia() == null) info.setTachycardia((long) 0);
         }
-        res.put("infoNumber",infos);
-        res.put("description",description);
+        res.put("infoNumber", infos);
+        res.put("description", description);
         return AjaxResult.success(res);
     }
 }

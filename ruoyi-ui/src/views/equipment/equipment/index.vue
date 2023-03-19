@@ -35,6 +35,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="科室代号" prop="departmentCode">
+        <el-input
+          v-model="queryParams.departmentCode"
+          placeholder="请输入医院代号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="设备种类" prop="equipmentType">
         <el-select v-model="queryParams.equipmentType" placeholder="请选择设备种类" clearable>
           <el-option
@@ -125,6 +133,7 @@
           <dict-tag :options="dict.type.hospital_name_list" :value="scope.row.hospitalCode"/>
         </template>
       </el-table-column>
+      <el-table-column label="科室代号" align="center" prop="departmentCode"/>
       <el-table-column label="设备种类" align="center" prop="equipmentType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
@@ -189,6 +198,9 @@
               :value="dict.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="科室代号" prop="departmentCode">
+          <el-input v-model="form.departmentCode" placeholder="请输入科室代号"/>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
           <el-select v-model="form.equipmentType" placeholder="请选择设备种类">
@@ -262,6 +274,7 @@ export default {
         equipmentVersion: null,
         equipmentStatus: null,
         hospitalCode: null,
+        departmentCode: null,
         equipmentType: null,
         patientPhone: null
       },
@@ -275,15 +288,18 @@ export default {
         hospitalCode: [
           {required: true, message: "医院代号不能为空", trigger: "blur"}
         ],
+        departmentCode: [
+          {required: true, message: "科室代号不能为空", trigger: "blur"}
+        ],
         equipmentStatus: [
           {required: true, message: "设备状态不能为空", trigger: "blur"}
         ],
         equipmentType: [
           {required: true, message: "设备种类不能为空", trigger: "blur"}
         ],
-        patientPhone: [
-          {required: true, message: "患者电话不能为空", trigger: "blur"}
-        ]
+        // patientPhone: [
+        //   {required: true, message: "患者电话不能为空", trigger: "blur"}
+        // ]
       }
     };
   },
@@ -325,6 +341,7 @@ export default {
         equipmentVersion: null,
         equipmentStatus: null,
         hospitalCode: null,
+        departmentCode: null,
         equipmentType: null,
         patientPhone: null
       };

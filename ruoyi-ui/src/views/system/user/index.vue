@@ -248,14 +248,6 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="医院名称" prop="hospitalName">
-              <el-input v-model="form.hospitalName" placeholder="请输入医院名称" maxlength="50"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <!--            <el-form-item label="医院代号" prop="hospitalCode">
-                          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号" maxlength="50" />
-                        </el-form-item>-->
             <el-form-item label="医院代号" prop="hospitalCode">
               <el-select v-model="form.hospitalCode" placeholder="请选择医院代号">
                 <el-option
@@ -267,7 +259,11 @@
               </el-select>
             </el-form-item>
           </el-col>
-
+          <el-col :span="12">
+            <el-form-item label="科室代号" prop="departmentCode">
+              <el-input v-model="form.departmentCode" placeholder="请输入科室代号" maxlength="50"/>
+            </el-form-item>
+          </el-col>
         </el-row>
 
         <el-row>

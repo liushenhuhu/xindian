@@ -103,6 +103,11 @@ public class SysUser extends BaseEntity
     private String hospitalCode;
 
     /**
+     * 科室代号
+     */
+    private String departmentCode;
+
+    /**
      * openId
      */
     private String openId;
@@ -115,6 +120,14 @@ public class SysUser extends BaseEntity
     public SysUser(Long userId)
     {
         this.userId = userId;
+    }
+
+    public String getDepartmentCode() {
+        return departmentCode;
+    }
+
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
     }
 
     public String getHospitalName() {

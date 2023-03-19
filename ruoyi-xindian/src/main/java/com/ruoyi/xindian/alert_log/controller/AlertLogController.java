@@ -42,9 +42,9 @@ public class AlertLogController extends BaseController {
     public TableDataInfo list(AlertLog alertLog) {
         List<AlertLog> list = new ArrayList<>();
         SysUser sysUser = userService.selectUserById(getUserId());
-        if (getDeptId() == 200) {
-            String hospitalName = sysUser.getHospitalName();
-            alertLog.setHospitalName(hospitalName);
+        if (sysUser != null && sysUser.getRoleId()!=null && sysUser.getRoleId() == 101) {
+            String hospitalCode = sysUser.getHospitalCode();
+            alertLog.setHospitalCode(hospitalCode);
             startPage();
             if (null == alertLog.getEcgType()) {
                 list = alertLogService.selectAlertLogList(alertLog);
@@ -58,7 +58,7 @@ public class AlertLogController extends BaseController {
             alertLog.setUserId(Math.toIntExact(userId));
             startPage();
             list = alertLogService.selectAnoListByUserId(alertLog);
-        } else if (sysUser.getRoleId() == 104) {
+        } else if (sysUser != null && sysUser.getRoleId()!=null && sysUser.getRoleId() == 104) {
             alertLog.setDoctorPhone(sysUser.getPhonenumber());
             startPage();
             if (null == alertLog.getEcgType()) {
@@ -89,9 +89,9 @@ public class AlertLogController extends BaseController {
     public TableDataInfo listAno(AlertLog alertLog) {
         List<AlertLog> list = new ArrayList<>();
         SysUser sysUser = userService.selectUserById(getUserId());
-        if (getDeptId() == 200) {
-            String hospitalName = sysUser.getHospitalName();
-            alertLog.setHospitalName(hospitalName);
+        if (sysUser != null && sysUser.getRoleId()!=null && sysUser.getRoleId() == 101) {
+            String hospitalCode = sysUser.getHospitalCode();
+            alertLog.setHospitalCode(hospitalCode);
             startPage();
             list = alertLogService.selectAlertLogList(alertLog);
         } else if (getDeptId() == 106) {
@@ -99,7 +99,7 @@ public class AlertLogController extends BaseController {
             alertLog.setUserId(Math.toIntExact(userId));
             startPage();
             list = alertLogService.selectAnoListByUserId(alertLog);
-        } else if (sysUser.getRoleId() == 104) {
+        } else if (sysUser != null && sysUser.getRoleId()!=null && sysUser.getRoleId() == 104) {
             alertLog.setDoctorPhone(sysUser.getPhonenumber());
             startPage();
             list = alertLogService.selectAlertLogList(alertLog);
