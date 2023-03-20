@@ -319,4 +319,58 @@ public class ReportController extends BaseController
         result.put("abnormal",abnormal);
         return AjaxResult.success(result);
     }
+
+    @GetMapping("/doctorFinishList")
+    public TableDataInfo doctorFinishList(Report report)
+    {
+        startPage();
+        List<Report> patientPhone = reportService.groupByPatientPhone(report.getdPhone());
+
+        ArrayList<ReportM> resList = new ArrayList<>();
+        ReportM reportM;
+        PatientManagement patientManagement;
+        Patient patient;
+        Date birthDay;
+        MedicalHistory medicalHistory;
+        MedicalData medicalData=new MedicalData();
+        //病种
+        ArrayList<String> medical = new ArrayList<>();
+        //病种和id映射
+        HashMap<String, String> medicalHashMap = new HashMap<>();
+        List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
+        for (MedicalData data : medicalData1) {
+            medicalHashMap.put(data.getMedicalCode().toString(),data.getMedicalName());
+        }
+
+        for (Report r : patientPhone) {
+            medical.clear();
+            reportM=new ReportM();
+            patient = patientService.selectPatientByPatientPhone(r.getPPhone());
+            medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(r.getPPhone());
+
+            if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
+                String[] split = medicalHistory.getPastMedicalHistory().split(",");
+                for (String s : split) {
+                    medical.add(medicalHashMap.get(s));
+                }
+                reportM.setMedicalHistory(medical);
+            }
+            else{
+                medical.add("无");
+                reportM.setMedicalHistory(medical);
+            }
+            birthDay = patient.getBirthDay();
+            if(birthDay != null)
+                reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+            else {
+                reportM.setPatientAge(patient.getPatientAge());
+            }
+            reportM.setPatientName(patient.getPatientName());
+            reportM.setPatientSex(patient.getPatientSex());
+            reportM.setPatientPhone(r.getPPhone());
+            resList.add(reportM);
+        }
+        return getTable(resList,new PageInfo(patientPhone).getTotal());
+    }
+
 }
