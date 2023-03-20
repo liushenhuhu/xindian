@@ -22,6 +22,7 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.PatientManagmentDept;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

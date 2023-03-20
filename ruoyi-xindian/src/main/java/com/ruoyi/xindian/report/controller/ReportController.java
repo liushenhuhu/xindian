@@ -5,6 +5,10 @@ import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.xindian.medical.domain.MedicalData;
+import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.service.IMedicalDataService;
+import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
@@ -49,6 +53,12 @@ public class ReportController extends BaseController
     @Autowired
     private IPatientManagementService patientManagementService;
 
+    @Autowired
+    private IMedicalHistoryService medicalHistoryService;
+
+    @Autowired
+    private IMedicalDataService medicalDataService;
+
     /**
      * 查询报告列表
      */
@@ -63,11 +73,37 @@ public class ReportController extends BaseController
         PatientManagement patientManagement;
         Patient patient;
         Date birthDay;
+        MedicalHistory medicalHistory;
+        MedicalData medicalData=new MedicalData();
+        //病种
+        ArrayList<String> medical = new ArrayList<>();
+        //病种和id映射
+        HashMap<String, String> medicalHashMap = new HashMap<>();
+        List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
+        for (MedicalData data : medicalData1) {
+            medicalHashMap.put(data.getMedicalCode().toString(),data.getMedicalName());
+        }
+
         for (Report r : list) {
+            medical.clear();
             reportM=new ReportM();
             patientManagement = patientManagementService.selectPatientManagementByPId(r.getpId());
+
             BeanUtils.copyProperties(r,reportM);
             if(patientManagement != null){
+                medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientManagement.getPatientPhone());
+                if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
+                    String[] split = medicalHistory.getPastMedicalHistory().split(",");
+                    for (String s : split) {
+                        medical.add(medicalHashMap.get(s));
+                    }
+                    reportM.setMedicalHistory(medical);
+                }
+                else{
+                    medical.add("无");
+                    reportM.setMedicalHistory(medical);
+                }
+
                 reportM.setPatientPhone(patientManagement.getPatientPhone());
                 patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
                 birthDay = patient.getBirthDay();
