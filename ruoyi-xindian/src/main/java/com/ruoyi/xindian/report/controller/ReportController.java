@@ -190,7 +190,7 @@ public class ReportController extends BaseController
             notDealWith.setRefuseTime(calendar.getTime());
             notDealWith.setRefuseReason(report.getDiagnosisConclusion());
             notDealWithService.insertNotDealWith(notDealWith);
-            report.setDiagnosisConclusion("");
+//            report.setDiagnosisConclusion("");
             return toAjax(reportService.updateReport(report));
         }
         //医生结论
