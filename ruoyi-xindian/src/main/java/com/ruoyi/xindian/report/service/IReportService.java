@@ -66,4 +66,9 @@ public interface IReportService
      * @return 结果
      */
     public int deleteReportByReportId(Long reportId);
+
+    /**
+     * 按电话分组
+     */
+    public List<Report> groupByPatientPhone(String dPhone);
 }

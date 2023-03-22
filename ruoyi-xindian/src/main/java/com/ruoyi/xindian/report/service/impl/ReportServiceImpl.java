@@ -95,4 +95,9 @@ public class ReportServiceImpl implements IReportService
     {
         return reportMapper.deleteReportByReportId(reportId);
     }
+
+    @Override
+    public List<Report> groupByPatientPhone(String dPhone) {
+        return reportMapper.groupByPatientPhone(dPhone);
+    }
 }

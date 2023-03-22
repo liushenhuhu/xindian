@@ -5,11 +5,17 @@ import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.xindian.medical.domain.MedicalData;
+import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.service.IMedicalDataService;
+import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
+import com.ruoyi.xindian.report.service.INotDealWithService;
 import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,6 +55,15 @@ public class ReportController extends BaseController
     @Autowired
     private IPatientManagementService patientManagementService;
 
+    @Autowired
+    private IMedicalHistoryService medicalHistoryService;
+
+    @Autowired
+    private IMedicalDataService medicalDataService;
+
+    @Autowired
+    private INotDealWithService notDealWithService;
+
     /**
      * 查询报告列表
      */
@@ -63,11 +78,37 @@ public class ReportController extends BaseController
         PatientManagement patientManagement;
         Patient patient;
         Date birthDay;
+        MedicalHistory medicalHistory;
+        MedicalData medicalData=new MedicalData();
+        //病种
+        ArrayList<String> medical = new ArrayList<>();
+        //病种和id映射
+        HashMap<String, String> medicalHashMap = new HashMap<>();
+        List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
+        for (MedicalData data : medicalData1) {
+            medicalHashMap.put(data.getMedicalCode().toString(),data.getMedicalName());
+        }
+
         for (Report r : list) {
+            medical.clear();
             reportM=new ReportM();
             patientManagement = patientManagementService.selectPatientManagementByPId(r.getpId());
+
             BeanUtils.copyProperties(r,reportM);
             if(patientManagement != null){
+                medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientManagement.getPatientPhone());
+                if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
+                    String[] split = medicalHistory.getPastMedicalHistory().split(",");
+                    for (String s : split) {
+                        medical.add(medicalHashMap.get(s));
+                    }
+                    reportM.setMedicalHistory(medical);
+                }
+                else{
+                    medical.add("无");
+                    reportM.setMedicalHistory(medical);
+                }
+
                 reportM.setPatientPhone(patientManagement.getPatientPhone());
                 patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
                 birthDay = patient.getBirthDay();
@@ -138,16 +179,22 @@ public class ReportController extends BaseController
     {
         String s = report.getpId();
         Report report1 = reportService.selectReportByPId(s);
-        report1.setDiagnosisDoctor(report.getDiagnosisDoctor());
-        report1.setdPhone(report.getdPhone());
+        report.setReportId(report1.getReportId());
+        //拒绝逻辑
+        if(report.getDiagnosisStatus()==3){
+            NotDealWith notDealWith = new NotDealWith();
+            notDealWith.setPid(s);
+            notDealWith.setDoctorPhone(report.getdPhone());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            notDealWith.setRefuseTime(calendar.getTime());
+            notDealWith.setRefuseReason(report.getDiagnosisConclusion());
+            notDealWithService.insertNotDealWith(notDealWith);
+            report.setDiagnosisConclusion("");
+            return toAjax(reportService.updateReport(report));
+        }
         //医生结论
-        report1.setHandlingSuggestion(report.getHandlingSuggestion());
-        report1.setHealthAdvice(report.getHealthAdvice());
-        if(report.getDiagnosisConclusion()!=null)
-            report1.setDiagnosisConclusion(report.getDiagnosisConclusion());
-        if(report.getDiagnosisStatus()!=null)
-            report1.setDiagnosisStatus(report.getDiagnosisStatus());
-        return toAjax(reportService.updateReport(report1));
+        return toAjax(reportService.updateReport(report));
     }
 
     /**
@@ -283,4 +330,92 @@ public class ReportController extends BaseController
         result.put("abnormal",abnormal);
         return AjaxResult.success(result);
     }
+    @GetMapping("/getDealWithInfo")
+    public AjaxResult getDealWithInfo(Report rep) {
+
+        HashMap<String, Integer> result = new HashMap<>();
+
+        //已处理
+        rep.setDiagnosisStatus(1L);
+        List<Report> reports1 = reportService.selectReportList(rep);
+        int dealSize = reports1.size();
+        //未处理
+        rep.setDiagnosisStatus(2L);
+        List<Report> reports2 = reportService.selectReportList(rep);
+        int notDealSize = reports2.size();
+
+        NotDealWith notDealWith = new NotDealWith();
+        notDealWith.setDoctorPhone(rep.getdPhone());
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("beginRefuseTime",rep.getParams().get("beginReportTime"));
+        params.put("endRefuseTime",rep.getParams().get("endReportTime"));
+        notDealWith.setParams(params);
+        List<NotDealWith> notDealWiths = notDealWithService.selectNotDealWithList(notDealWith);
+        int refuse = notDealWiths.size();
+
+
+        result.put("已处理数据",dealSize);
+        result.put("未处理数据",notDealSize);
+        result.put("已拒绝数据",refuse);
+
+        return AjaxResult.success(result);
+    }
+
+
+
+
+
+    @GetMapping("/doctorFinishList")
+    public TableDataInfo doctorFinishList(Report report)
+    {
+        startPage();
+        List<Report> patientPhone = reportService.groupByPatientPhone(report.getdPhone());
+
+        ArrayList<ReportM> resList = new ArrayList<>();
+        ReportM reportM;
+        PatientManagement patientManagement;
+        Patient patient;
+        Date birthDay;
+        MedicalHistory medicalHistory;
+        MedicalData medicalData=new MedicalData();
+        //病种
+        ArrayList<String> medical = new ArrayList<>();
+        //病种和id映射
+        HashMap<String, String> medicalHashMap = new HashMap<>();
+        List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
+        for (MedicalData data : medicalData1) {
+            medicalHashMap.put(data.getMedicalCode().toString(),data.getMedicalName());
+        }
+
+        for (Report r : patientPhone) {
+            medical.clear();
+            reportM=new ReportM();
+            patient = patientService.selectPatientByPatientPhone(r.getPPhone());
+            medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(r.getPPhone());
+
+            if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
+                String[] split = medicalHistory.getPastMedicalHistory().split(",");
+                for (String s : split) {
+                    medical.add(medicalHashMap.get(s));
+                }
+                reportM.setMedicalHistory(medical);
+            }
+            else{
+                medical.add("无");
+                reportM.setMedicalHistory(medical);
+            }
+            birthDay = patient.getBirthDay();
+            if(birthDay != null)
+                reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+            else {
+                reportM.setPatientAge(patient.getPatientAge());
+            }
+            reportM.setPatientName(patient.getPatientName());
+            reportM.setPatientSex(patient.getPatientSex());
+            reportM.setPatientPhone(r.getPPhone());
+            resList.add(reportM);
+        }
+        return getTable(resList,new PageInfo(patientPhone).getTotal());
+    }
+
 }

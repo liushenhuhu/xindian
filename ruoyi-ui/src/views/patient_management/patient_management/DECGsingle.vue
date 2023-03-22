@@ -569,10 +569,10 @@ export default {
               alert("报告生成成功！");
               break;
             case '301':
-              alert("参数错误！");
+              alert("请求参数错误！");
               break;
             case '302':
-              alert("分析错误！");
+              alert("采集数据分析错误！");
               break;
             case '303':
               alert("采集时长过短！");

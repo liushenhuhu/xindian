@@ -60,4 +60,6 @@ public interface ReportMapper
     public int deleteReportByReportIds(Long[] reportIds);
 
     public Report selectReportByPId(String pId);
+
+    public List<Report> groupByPatientPhone(String dPhone);
 }

@@ -50,6 +50,12 @@
         where p_id = #{pId}
     </select>
 
+    <select id="groupByPatientPhone" parameterType="string" resultMap="ReportResult">
+        SELECT p_phone
+        FROM report
+        WHERE d_phone = #{dPhone} and diagnosis_status= 1 GROUP BY p_phone
+    </select>
+
 
     <insert id="insertReport" parameterType="Report" useGeneratedKeys="true" keyProperty="reportId">
         insert into report
