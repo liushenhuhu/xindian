@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.report.mapper.NotDealWithMapper">
+
+    <resultMap type="NotDealWith" id="NotDealWithResult">
+        <result property="id"    column="id"    />
+        <result property="refuseTime"    column="refuse_time"    />
+        <result property="pid"    column="pId"    />
+        <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="refuseReason"    column="refuse_reason"    />
+    </resultMap>
+
+    <sql id="selectNotDealWithVo">
+        select id, refuse_time, pId, doctor_phone, refuse_reason from Not_Deal_with
+    </sql>
+
+    <select id="selectNotDealWithList" parameterType="NotDealWith" resultMap="NotDealWithResult">
+        <include refid="selectNotDealWithVo"/>
+        <where>
+            <if test="params.beginRefuseTime != null and params.beginRefuseTime != '' and params.endRefuseTime != null and params.endRefuseTime != ''"> and refuse_time between #{params.beginRefuseTime} and #{params.endRefuseTime}</if>
+            <if test="pid != null  and pid != ''"> and pId = #{pid}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone = #{doctorPhone}</if>
+            <if test="refuseReason != null  and refuseReason != ''"> and refuse_reason = #{refuseReason}</if>
+        </where>
+    </select>
+
+    <select id="selectNotDealWithById" parameterType="Long" resultMap="NotDealWithResult">
+        <include refid="selectNotDealWithVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNotDealWith" parameterType="NotDealWith">
+        insert into Not_Deal_with
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="refuseTime != null">refuse_time,</if>
+            <if test="pid != null">pId,</if>
+            <if test="doctorPhone != null">doctor_phone,</if>
+            <if test="refuseReason != null">refuse_reason,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="refuseTime != null">#{refuseTime},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="doctorPhone != null">#{doctorPhone},</if>
+            <if test="refuseReason != null">#{refuseReason},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNotDealWith" parameterType="NotDealWith">
+        update Not_Deal_with
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="refuseTime != null">refuse_time = #{refuseTime},</if>
+            <if test="pid != null">pId = #{pid},</if>
+            <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
+            <if test="refuseReason != null">refuse_reason = #{refuseReason},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNotDealWithById" parameterType="Long">
+        delete from Not_Deal_with where id = #{id}
+    </delete>
+
+    <delete id="deleteNotDealWithByIds" parameterType="String">
+        delete from Not_Deal_with where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

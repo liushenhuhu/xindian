@@ -13,7 +13,9 @@ import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
+import com.ruoyi.xindian.report.service.INotDealWithService;
 import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,6 +60,9 @@ public class ReportController extends BaseController
 
     @Autowired
     private IMedicalDataService medicalDataService;
+
+    @Autowired
+    private INotDealWithService notDealWithService;
 
     /**
      * 查询报告列表
@@ -174,16 +179,22 @@ public class ReportController extends BaseController
     {
         String s = report.getpId();
         Report report1 = reportService.selectReportByPId(s);
-        report1.setDiagnosisDoctor(report.getDiagnosisDoctor());
-        report1.setdPhone(report.getdPhone());
+        report.setReportId(report1.getReportId());
+        //拒绝逻辑
+        if(report.getDiagnosisStatus()==3){
+            NotDealWith notDealWith = new NotDealWith();
+            notDealWith.setPid(s);
+            notDealWith.setDoctorPhone(report.getdPhone());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            notDealWith.setRefuseTime(calendar.getTime());
+            notDealWith.setRefuseReason(report.getDiagnosisConclusion());
+            notDealWithService.insertNotDealWith(notDealWith);
+            report.setDiagnosisConclusion("");
+            return toAjax(reportService.updateReport(report));
+        }
         //医生结论
-        report1.setHandlingSuggestion(report.getHandlingSuggestion());
-        report1.setHealthAdvice(report.getHealthAdvice());
-        if(report.getDiagnosisConclusion()!=null)
-            report1.setDiagnosisConclusion(report.getDiagnosisConclusion());
-        if(report.getDiagnosisStatus()!=null)
-            report1.setDiagnosisStatus(report.getDiagnosisStatus());
-        return toAjax(reportService.updateReport(report1));
+        return toAjax(reportService.updateReport(report));
     }
 
     /**
@@ -319,6 +330,40 @@ public class ReportController extends BaseController
         result.put("abnormal",abnormal);
         return AjaxResult.success(result);
     }
+    @GetMapping("/getDealWithInfo")
+    public AjaxResult getDealWithInfo(Report rep) {
+
+        HashMap<String, Integer> result = new HashMap<>();
+
+        //已处理
+        rep.setDiagnosisStatus(1L);
+        List<Report> reports1 = reportService.selectReportList(rep);
+        int dealSize = reports1.size();
+        //未处理
+        rep.setDiagnosisStatus(2L);
+        List<Report> reports2 = reportService.selectReportList(rep);
+        int notDealSize = reports2.size();
+
+        NotDealWith notDealWith = new NotDealWith();
+        notDealWith.setDoctorPhone(rep.getdPhone());
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("beginRefuseTime",rep.getParams().get("beginReportTime"));
+        params.put("endRefuseTime",rep.getParams().get("endReportTime"));
+        notDealWith.setParams(params);
+        List<NotDealWith> notDealWiths = notDealWithService.selectNotDealWithList(notDealWith);
+        int refuse = notDealWiths.size();
+
+
+        result.put("已处理数据",dealSize);
+        result.put("未处理数据",notDealSize);
+        result.put("已拒绝数据",refuse);
+
+        return AjaxResult.success(result);
+    }
+
+
+
+
 
     @GetMapping("/doctorFinishList")
     public TableDataInfo doctorFinishList(Report report)

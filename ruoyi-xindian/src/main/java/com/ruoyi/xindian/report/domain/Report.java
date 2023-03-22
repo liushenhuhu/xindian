@@ -72,6 +72,8 @@ public class Report extends BaseEntity
     @Excel(name = "患者电话")
     private String pPhone;
 
+    /**诊断状态*/
+
     public String getpId() {
         return pId;
     }
