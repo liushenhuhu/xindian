@@ -104,7 +104,7 @@
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
                 #{eventDescription}, '%')
             </if>
-            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="pId != null ">and al.p_id = #{pId}</if>
             <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
@@ -130,7 +130,7 @@
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
                 #{eventDescription}, '%')
             </if>
-            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="pId != null ">and al.p_id = #{pId}</if>
             <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
@@ -155,7 +155,7 @@
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
                 #{eventDescription}, '%')
             </if>
-            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="pId != null ">and al.p_id = #{pId}</if>
             <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
@@ -186,7 +186,7 @@
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
                 #{eventDescription}, '%')
             </if>
-            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="pId != null ">and al.p_id = #{pId}</if>
             <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
@@ -205,7 +205,7 @@
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
                 #{eventDescription}, '%')
             </if>
-            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="pId != null ">and al.p_id = #{pId}</if>
             <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
@@ -236,7 +236,7 @@
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
                 #{eventDescription}, '%')
             </if>
-            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="pId != null ">and al.p_id = #{pId}</if>
             <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="hospitalName != null ">and hospital_name like concat('%', #{hospitalName}, '%')</if>
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
@@ -254,7 +254,7 @@
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
                 #{eventDescription}, '%')
             </if>
-            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="pId != null ">and al.p_id = #{pId}</if>
             <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
             <if test="patientAge != null ">and patient_age = #{patientAge}</if>
@@ -277,7 +277,7 @@
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
                 #{eventDescription}, '%')
             </if>
-            <if test="pId != null ">and al.p_id like concat('%', #{pId}, '%')</if>
+            <if test="pId != null ">and al.p_id = #{pId}</if>
             <if test="patientName != null ">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
             <if test="patientAge != null ">and patient_age = #{patientAge}</if>
