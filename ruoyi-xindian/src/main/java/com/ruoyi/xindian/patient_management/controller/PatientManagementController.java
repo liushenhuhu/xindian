@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -147,9 +148,38 @@ public class PatientManagementController extends BaseController {
                     patientManagmentDept.setDept(departments.get(0).getDepartmentName());
                 }
             }
+            if(management.getEndTime()==null){
+                patientManagmentDept.setAcquisitionDuration("正在采集中...");
+            }
+            else {
+                patientManagmentDept.setAcquisitionDuration(twoTimeSubToString(management.getConnectionTime(),management.getEndTime()));
+            }
             resList.add(patientManagmentDept);
         }
         return getTable(resList, new PageInfo(list).getTotal());
+    }
+    //时间相减转字符串
+    public static String twoTimeSubToString(Date start, Date end){
+        long l = end.getTime() - start.getTime();
+        int allS= (int) (l/1000);
+        int ss = allS%60;
+        int mm = allS/60%60;
+        int hh = allS/3600%24;
+        int dd = allS/(3600*24);
+        String res="";
+        if(dd!=0){
+            res+=dd+"天";
+        }
+        if(hh!=0){
+            res+=hh+"小时";
+        }
+        if(mm!=0){
+            res+=mm+"分钟";
+        }
+        if(ss!=0){
+            res+=ss+"秒";
+        }
+        return res;
     }
 
     /**

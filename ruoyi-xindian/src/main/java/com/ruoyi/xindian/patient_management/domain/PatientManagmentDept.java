@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class PatientManagmentDept extends PatientManagement{
     private String Dept;
+    private String acquisitionDuration;
 }

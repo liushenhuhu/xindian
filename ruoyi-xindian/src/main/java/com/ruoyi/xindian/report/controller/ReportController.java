@@ -361,10 +361,6 @@ public class ReportController extends BaseController
         return AjaxResult.success(result);
     }
 
-
-
-
-
     @GetMapping("/doctorFinishList")
     public TableDataInfo doctorFinishList(Report report)
     {
