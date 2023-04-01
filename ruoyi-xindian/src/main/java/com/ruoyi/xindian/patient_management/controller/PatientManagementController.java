@@ -22,6 +22,7 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.PatientManagmentDept;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.util.DateUtil;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,38 +157,15 @@ public class PatientManagementController extends BaseController {
                     patientManagmentDept.setDept(departments.get(0).getDepartmentName());
                 }
             }
-            if(management.getEndTime()==null){
-                patientManagmentDept.setAcquisitionDuration("正在采集中...");
+            if(management.getTimeDuration()==null){
+                patientManagmentDept.setAcquisitionDuration("报告未生成");
             }
             else {
-                patientManagmentDept.setAcquisitionDuration(twoTimeSubToString(management.getConnectionTime(),management.getEndTime()));
+                patientManagmentDept.setAcquisitionDuration("记录时长: "+ DateUtil.timeToString(management.getTimeDuration()));
             }
             resList.add(patientManagmentDept);
         }
         return getTable(resList, new PageInfo(list).getTotal());
-    }
-    //时间相减转字符串
-    public static String twoTimeSubToString(Date start, Date end){
-        long l = end.getTime() - start.getTime();
-        int allS= (int) (l/1000);
-        int ss = allS%60;
-        int mm = allS/60%60;
-        int hh = allS/3600%24;
-        int dd = allS/(3600*24);
-        String res="";
-        if(dd!=0){
-            res+=dd+"天";
-        }
-        if(hh!=0){
-            res+=hh+"小时";
-        }
-        if(mm!=0){
-            res+=mm+"分钟";
-        }
-        if(ss!=0){
-            res+=ss+"秒";
-        }
-        return res;
     }
 
     /**
