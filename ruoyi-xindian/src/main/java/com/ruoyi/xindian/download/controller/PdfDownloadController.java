@@ -138,10 +138,11 @@ public class PdfDownloadController extends BaseController {
     @GetMapping("/readPdf/{pId}")
     public void pdfStreamHandler(HttpServletRequest request, HttpServletResponse response, @PathVariable("pId") String pId) {
         //PDF文件地址
-        PdfPath pdfPath = pdfPathService.selectPdfPathByPId(pId);
-        String path = pdfPath.getPdfPath();
-        System.out.println(path);
+//        PdfPath pdfPath = pdfPathService.selectPdfPathByPId(pId);
+//        String path = pdfPath.getPdfPath();
+//        System.out.println(path);
         //File file = new File("C:\\Users\\Lenovo\\Desktop\\fcea3150-cf9d-4f98-bdd5-395aa4405825.pdf");
+        String path="/repository/DECG_single/report/"+pId+"/"+pId+".pdf";
         File file = new File(path);
         if (file.exists()) {
             byte[] data;

@@ -188,6 +188,12 @@ public class PatientManagement extends BaseEntity {
     /**检测状态*/
     private String detectionState;
 
+    /**结束采集时间*/
+    private Date endTime;
+
+    /**报告时长*/
+    private String timeDuration;
+
     public String getpId() {
         return pId;
     }
