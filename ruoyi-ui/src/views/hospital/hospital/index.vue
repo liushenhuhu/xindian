@@ -322,6 +322,7 @@ export default {
       addDict().then(res =>{
         console.log(res)
       })
+      JSON.parse("")
     },
     /** 刷新 */
     refresh() {

@@ -31,7 +31,7 @@ public class MedicalDataController extends BaseController
     /**
      * 查询病数据列表
      */
-    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:list')")
+//    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:list')")
     @GetMapping("/list")
     public TableDataInfo list(MedicalData medicalData)
     {
@@ -43,7 +43,7 @@ public class MedicalDataController extends BaseController
     /**
      * 查询所有病
      */
-    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:list')")
+//    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:list')")
     @PostMapping("/allMedicalData")
     public TableDataInfo allMedicalData(@RequestBody MedicalData medicalData)
     {
@@ -55,7 +55,7 @@ public class MedicalDataController extends BaseController
     /**
      * 导出病数据列表
      */
-    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:export')")
+//    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:export')")
     @Log(title = "病数据", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, MedicalData medicalData)
@@ -68,7 +68,7 @@ public class MedicalDataController extends BaseController
     /**
      * 获取病数据详细信息
      */
-    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:query')")
+//    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:query')")
     @GetMapping(value = "/{medicalDataId}")
     public AjaxResult getInfo(@PathVariable("medicalDataId") Long medicalDataId)
     {
@@ -78,7 +78,7 @@ public class MedicalDataController extends BaseController
     /**
      * 新增病数据
      */
-    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:add')")
+//    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:add')")
     @Log(title = "病数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MedicalData medicalData)
@@ -89,7 +89,7 @@ public class MedicalDataController extends BaseController
     /**
      * 修改病数据
      */
-    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:edit')")
+//    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:edit')")
     @Log(title = "病数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MedicalData medicalData)
@@ -100,7 +100,7 @@ public class MedicalDataController extends BaseController
     /**
      * 删除病数据
      */
-    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:remove')")
+//    @PreAuthorize("@ss.hasPermi('medicalData:medicalData:remove')")
     @Log(title = "病数据", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{medicalDataIds}")
     public AjaxResult remove(@PathVariable Long[] medicalDataIds)

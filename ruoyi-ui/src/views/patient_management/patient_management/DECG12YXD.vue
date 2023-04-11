@@ -569,7 +569,7 @@ export default {
           let code=data.code;
           switch (code){
             case '300':
-              alert("报告生成成功！");
+              alert(name+"的报告生成成功！");
               break;
             case '301':
               alert("请求参数错误！");
