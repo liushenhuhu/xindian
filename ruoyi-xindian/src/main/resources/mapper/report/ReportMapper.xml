@@ -40,6 +40,23 @@
         </where>
     </select>
 
+    <select id="selectReportListJECG12" parameterType="Report" resultMap="ReportResult">
+        <include refid="selectReportVo"/>
+        <where>
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+            <if test="diagnosisStatus != null"> and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
+            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
+            <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
+            <if test="reportType != null  and reportType != ''"> and (report_type = "JECG12YTJ" or report_type = "JECG12YXD")</if>
+            <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis = #{intelligentDiagnosis}</if>
+            <if test="dPhone != null  and dPhone != ''"> and d_phone = #{dPhone}</if>
+            <if test="handlingSuggestion != null  and handlingSuggestion != ''"> and handling_suggestion = #{handlingSuggestion}</if>
+            <if test="healthAdvice != null  and healthAdvice != ''"> and health_advice = #{healthAdvice}</if>
+            <if test="pPhone != null  and pPhone != ''"> and p_phone = #{pPhone}</if>
+        </where>
+    </select>
+
     <select id="selectReportByReportId" parameterType="Long" resultMap="ReportResult">
         <include refid="selectReportVo"/>
         where report_id = #{reportId}

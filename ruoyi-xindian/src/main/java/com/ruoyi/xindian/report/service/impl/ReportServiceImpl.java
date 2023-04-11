@@ -48,6 +48,12 @@ public class ReportServiceImpl implements IReportService
         return reportMapper.selectReportList(report);
     }
 
+    @Override
+    public List<Report> selectReportListJECG12(Report report)
+    {
+        return reportMapper.selectReportListJECG12(report);
+    }
+
     /**
      * 新增报告
      * 

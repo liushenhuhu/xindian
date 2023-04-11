@@ -27,6 +27,9 @@ public interface ReportMapper
      */
     public List<Report> selectReportList(Report report);
 
+
+    public List<Report> selectReportListJECG12(Report report);
+
     /**
      * 新增报告
      * 

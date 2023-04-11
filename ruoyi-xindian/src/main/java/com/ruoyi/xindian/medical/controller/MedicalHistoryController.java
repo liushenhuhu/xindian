@@ -6,13 +6,17 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.xindian.medical.domain.MedicalData;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.service.IMedicalDataService;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,6 +31,8 @@ public class MedicalHistoryController extends BaseController
 {
     @Autowired
     private IMedicalHistoryService medicalHistoryService;
+    @Autowired
+    private IMedicalDataService medicalDataService;
 
     /**
      * 查询病史列表
@@ -72,7 +78,34 @@ public class MedicalHistoryController extends BaseController
     @GetMapping(value = "/getByPatientPhone/{patientPhone}")
     public AjaxResult getInfoByPatientPhone(@PathVariable("patientPhone") String patientPhone)
     {
-        return AjaxResult.success(medicalHistoryService.selectMedicalHistoryByPatientPhone(patientPhone));
+
+        MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientPhone);
+//        //病种和id映射
+//        HashMap<String, String> medicalHashMap = new HashMap<>();
+//        MedicalData medicalData=new MedicalData();
+//        List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
+//        StringBuilder med= new StringBuilder();
+//        for (MedicalData data : medicalData1) {
+//            medicalHashMap.put(data.getMedicalCode().toString(),data.getMedicalName());
+//        }
+//
+//        if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
+//            String[] split = medicalHistory.getPastMedicalHistory().split(",");
+//            for (String s : split) {
+//                if(med.toString().equals("")){
+//                    med.append(medicalHashMap.get(s));
+//                }
+//                else{
+//                    med.append(", ").append(medicalHashMap.get(s));
+//                }
+//
+//            }
+//            medicalHistory.setPastMedicalHistory(String.valueOf(med));
+//        }
+//        else{
+//            medicalHistory.setPastMedicalHistory("无");
+//        }
+        return AjaxResult.success(medicalHistory);
     }
 
     /**
