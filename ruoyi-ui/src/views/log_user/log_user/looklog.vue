@@ -1,49 +1,5 @@
 <template>
   <div class="main">
-    <div class="top">
-      <div class="topLeft">
-        <div class="message">患者信息</div>
-        <div class="messageDetail">
-          <span id="pID">患者ID：{{ message.pid }}</span>
-          <span id="logID">日志ID：{{ message.lid }}</span>
-          <span id="psex">性别：{{ message.sex }}</span>
-          <span id="pAge">年龄：{{ message.age }}</span>
-          <span id="clock">时间：{{ message.time }}</span>
-        </div>
-      </div>
-      <div class="topMiddle">
-        <div class="warning">预警类型</div>
-        <div class="warningDetail">
-          <form id="loginForm" name="loginForm" style="padding-left:1vw">
-            <template>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option-group
-                  v-for="group in options"
-                  :key="group.label"
-                  :label="group.label">
-                  <el-option
-                    v-for="item in group.options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-option-group>
-              </el-select>
-            </template>
-            <input type="button" id="btn1" value="提交" @click="uploadSelect()">
-          </form>
-        </div>
-      </div>
-      <div class="topRight">
-        <div class="warning">质量评估</div>
-        <div class="allin">
-          <button class="green" onclick="allA()">全A</button>
-          <button class="red" onclick="allB()">全B</button>
-          <button class="red" onclick="allC()">全C</button>
-          <button class="red" onclick="allD()">全D</button>
-        </div>
-      </div>
-    </div>
     <div class="bottom">
       <div class="bottomLeft">
         <div class="xinDian">心电图</div>
@@ -51,141 +7,190 @@
           <div class="container">
             <div class="chart" id="I"></div>
             <button class="btn" id="I导联" onclick="showchart(this,Iy,timex)">展开</button>
-            <span class="light" id="Ilight" onclick="changeColor(this)"></span>
+            <span class="light" id="Ilight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="II"></div>
             <button class="btn" id="II导联" onclick="showchart(this,IIy,timex)">展开</button>
-            <span class="light" id="IIlight" onclick="changeColor(this)"></span>
+            <span class="light" id="IIlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="III"></div>
             <button class="btn" id="III导联" onclick="showchart(this,IIIy,timex)">展开</button>
-            <span class="light" id="IIIlight" onclick="changeColor(this)"></span>
+            <span class="light" id="IIIlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVR"></div>
             <button class="btn" id="aVR导联" onclick="showchart(this,aVRy,timex)">展开</button>
-            <span class="light" id="aVRlight" onclick="changeColor(this)"></span>
+            <span class="light" id="aVRlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVL"></div>
             <button class="btn" id="aVL导联" onclick="showchart(this,aVLy,timex)">展开</button>
-            <span class="light" id="aVLlight" onclick="changeColor(this)"></span>
+            <span class="light" id="aVLlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVF"></div>
             <button class="btn" id="aVF导联" onclick="showchart(this,aVFy,timex)">展开</button>
-            <span class="light" id="aVFlight" onclick="changeColor(this)"></span>
+            <span class="light" id="aVFlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V1"></div>
             <button class="btn" id="V1导联" onclick="showchart(this,V1y,timex)">展开</button>
-            <span class="light" id="V1light" onclick="changeColor(this)"></span>
+            <span class="light" id="V1light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V2"></div>
             <button class="btn" id="V2导联" onclick="showchart(this,V2y,timex)">展开</button>
-            <span class="light" id="V2light" onclick="changeColor(this)"></span>
+            <span class="light" id="V2light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V3"></div>
             <button class="btn" id="V3导联" onclick="showchart(this,V3y,timex)">展开</button>
-            <span class="light" id="V3light" onclick="changeColor(this)"></span>
+            <span class="light" id="V3light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V4"></div>
             <button class="btn" id="V4导联" onclick="showchart(this,V4y,timex)">展开</button>
-            <span class="light" id="V4light" onclick="changeColor(this)"></span>
+            <span class="light" id="V4light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V5"></div>
             <button class="btn" id="V5导联" onclick="showchart(this,V5y,timex)">展开</button>
-            <span class="light" id="V5light" onclick="changeColor(this)"></span>
+            <span class="light" id="V5light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V6"></div>
             <button class="btn" id="V6导联" onclick="showchart(this,V6y,timex)">展开</button>
-            <span class="light" id="V6light" onclick="changeColor(this)"></span>
+            <span class="light" id="V6light" @click="changeColor($event)"></span>
           </div>
         </div>
       </div>
       <div class="bottomRight">
-        <div class="xinDian"></div>
+        <div class="xinDian">质量评估</div>
         <div class="quality">
           <div class="lights">
             <div class="abcd">
-              <el-radio v-model="noise_level.Ilevel" label="A">A</el-radio>
-              <el-radio v-model="noise_level.Ilevel" label="B">B</el-radio>
-              <el-radio v-model="noise_level.Ilevel" label="C">C</el-radio>
-              <el-radio v-model="noise_level.Ilevel" label="D">D</el-radio>
+              <el-radio-group v-model="noise_level.Ilevel" style="display: flex;" @change="changeRadios">
+                <el-radio id="Ilevel" label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio id="Ilevel" label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio id="Ilevel" label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio id="Ilevel" label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.IIlevel" label="A">A</el-radio>
-              <el-radio v-model="noise_level.IIlevel" label="B">B</el-radio>
-              <el-radio v-model="noise_level.IIlevel" label="C">C</el-radio>
-              <el-radio v-model="noise_level.IIlevel" label="D">D</el-radio>
+              <el-radio-group v-model="noise_level.IIlevel" style="display: flex;" @change="changeRadios">
+                <el-radio id="IIlevel" label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio id="IIlevel" label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio id="IIlevel" label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio id="IIlevel" label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.IIIlevel" label="A">A</el-radio>
-              <el-radio v-model="noise_level.IIIlevel" label="B">B</el-radio>
-              <el-radio v-model="noise_level.IIIlevel" label="C">C</el-radio>
-              <el-radio v-model="noise_level.IIIlevel" label="D">D</el-radio>
+              <el-radio v-model="noise_level.IIIlevel" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.IIIlevel" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.IIIlevel" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.IIIlevel" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.aVRlevel" label="A">A</el-radio>
-              <el-radio v-model="noise_level.aVRlevel" label="B">B</el-radio>
-              <el-radio v-model="noise_level.aVRlevel" label="C">C</el-radio>
-              <el-radio v-model="noise_level.aVRlevel" label="D">D</el-radio>
+              <el-radio v-model="noise_level.aVRlevel" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.aVRlevel" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.aVRlevel" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.aVRlevel" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.aVLlevel" label="A">A</el-radio>
-              <el-radio v-model="noise_level.aVLlevel" label="B">B</el-radio>
-              <el-radio v-model="noise_level.aVLlevel" label="C">C</el-radio>
-              <el-radio v-model="noise_level.aVLlevel" label="D">D</el-radio>
+              <el-radio v-model="noise_level.aVLlevel" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.aVLlevel" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.aVLlevel" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.aVLlevel" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.aVFlevel" label="A">A</el-radio>
-              <el-radio v-model="noise_level.aVFlevel" label="B">B</el-radio>
-              <el-radio v-model="noise_level.aVFlevel" label="C">C</el-radio>
-              <el-radio v-model="noise_level.aVFlevel" label="D">D</el-radio>
+              <el-radio v-model="noise_level.aVFlevel" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.aVFlevel" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.aVFlevel" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.aVFlevel" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V1level" label="A">A</el-radio>
-              <el-radio v-model="noise_level.V1level" label="B">B</el-radio>
-              <el-radio v-model="noise_level.V1level" label="C">C</el-radio>
-              <el-radio v-model="noise_level.V1level" label="D">D</el-radio>
+              <el-radio v-model="noise_level.V1level" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.V1level" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.V1level" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.V1level" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V2level" label="A">A</el-radio>
-              <el-radio v-model="noise_level.V2level" label="B">B</el-radio>
-              <el-radio v-model="noise_level.V2level" label="C">C</el-radio>
-              <el-radio v-model="noise_level.V2level" label="D">D</el-radio>
+              <el-radio v-model="noise_level.V2level" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.V2level" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.V2level" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.V2level" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V3level" label="A">A</el-radio>
-              <el-radio v-model="noise_level.V3level" label="B">B</el-radio>
-              <el-radio v-model="noise_level.V3level" label="C">C</el-radio>
-              <el-radio v-model="noise_level.V3level" label="D">D</el-radio>
+              <el-radio v-model="noise_level.V3level" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.V3level" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.V3level" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.V3level" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V4level" label="A">A</el-radio>
-              <el-radio v-model="noise_level.V4level" label="B">B</el-radio>
-              <el-radio v-model="noise_level.V4level" label="C">C</el-radio>
-              <el-radio v-model="noise_level.V4level" label="D">D</el-radio>
+              <el-radio v-model="noise_level.V4level" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.V4level" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.V4level" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.V4level" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V5level" label="A">A</el-radio>
-              <el-radio v-model="noise_level.V5level" label="B">B</el-radio>
-              <el-radio v-model="noise_level.V5level" label="C">C</el-radio>
-              <el-radio v-model="noise_level.V5level" label="D">D</el-radio>
+              <el-radio v-model="noise_level.V5level" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.V5level" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.V5level" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.V5level" label="D" border size="mini" class="radios">D</el-radio>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V6level" label="A">A</el-radio>
-              <el-radio v-model="noise_level.V6level" label="B">B</el-radio>
-              <el-radio v-model="noise_level.V6level" label="C">C</el-radio>
-              <el-radio v-model="noise_level.V6level" label="D">D</el-radio>
+              <el-radio v-model="noise_level.V6level" label="A" border size="mini" class="radios">A</el-radio>
+              <el-radio v-model="noise_level.V6level" label="B" border size="mini" class="radios">B</el-radio>
+              <el-radio v-model="noise_level.V6level" label="C" border size="mini" class="radios">C</el-radio>
+              <el-radio v-model="noise_level.V6level" label="D" border size="mini" class="radios">D</el-radio>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="topLeft">
+        <div class="topMiddle">
+          <div class="warning">预警类型</div>
+          <div class="warningDetail">
+            <form id="loginForm" name="loginForm" style="padding:3vw">
+              <template>
+                <el-select v-model="value" placeholder="请选择" style="width: 15vw">
+                  <el-option-group
+                    v-for="group in options"
+                    :key="group.label"
+                    :label="group.label">
+                    <el-option
+                      v-for="item in group.options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-option-group>
+                </el-select>
+              </template>
+              <el-button type="success" id="btn1" plain style="margin-left: 1vw" @click="uploadSelect()">提交</el-button>
+            </form>
+          </div>
+          <div class="allin">
+              <el-button type="success" style="width: 4vw;height: 3vw;font-size: 1vw" @click="allA">全A
+              </el-button>
+              <el-button type="danger" style="width: 4vw;height: 3vw;font-size: 1vw" @click="allB">全B
+              </el-button>
+              <el-button type="danger" style="width: 4vw;height: 3vw;font-size: 1vw" @click="allC">全C
+              </el-button>
+              <el-button type="danger" style="width: 4vw;height: 3vw;font-size: 1vw" @click="allD">全D
+              </el-button>
+            </div>
+        </div>
+        <div class="topMiddle">
+          <div class="warning">患者信息</div>
+          <div class="messageDetail">
+            <span id="pID">患者ID：{{ message.pid }}</span>
+            <span id="logID">日志ID：{{ message.lid }}</span>
+            <span id="psex">性别：{{ message.sex }}</span>
+            <span id="pAge">年龄：{{ message.age }}</span>
+            <span id="clock">时间：{{ message.time }}</span>
           </div>
         </div>
       </div>
@@ -203,16 +208,56 @@ export default {
   name: "Index",
   data() {
     return {
-      a: "",//获取到导联的id
-      b: "",//获取到导联的id
-      noise: {
-        list: [],//12导联噪声数据
-        lists: [],//12导联质量评估数据
-        //通过字典将radio和light一一对应
-//红绿框显示
+
+      //通过字典将radio和light一一对应
+      levellight : {
+        'V1level': 'V1light',
+        'V2level': 'V2light',
+        'V3level': 'V3light',
+        'V4level': 'V4light',
+        'V5level': 'V5light',
+        'V6level': 'V6light',
+        'aVLlevel': 'aVLlight',
+        'aVFlevel': 'aVFlight',
+        'aVRlevel': 'aVRlight',
+        'Ilevel': 'Ilight',
+        'IIlevel': 'IIlight',
+        'IIIlevel': 'IIIlight',
+      },lightlevel: {
+        'V1light': 'V1level',
+        'V2light': 'V2level',
+        'V3light': 'V3level',
+        'V4light': 'V4level',
+        'V5light': 'V5level',
+        'V6light': 'V6level',
+        'aVLlight': 'aVLlevel',
+        'aVFlight': 'aVFlevel',
+        'aVRlight': 'aVRlevel',
+        'Ilight': 'Ilevel',
+        'IIlight': 'IIlevel',
+        'IIIlight': 'IIIlevel',
       },
+      noise: {
+        //判断红绿颜色
+        list: {
+          IIIlight: "",
+          IIlight: "",
+          Ilight: "",
+          V1light: "",
+          V2light: "",
+          V3light: "",
+          V4light: "",
+          V5light: "",
+          V6light: "",
+          aVFlight: "",
+          aVLlight: "",
+          aVRlight: "",
+        },
+        lists: [],//12导联质量评估数据
+      },
+      //ABCD等级的判断
       noise_level: {
-        Ilevel: "B",
+        Ilevel: "",
         IIlevel: "",
         IIIlevel: "",
         aVRlevel: "",
@@ -2046,105 +2091,90 @@ export default {
     },
     //修改红绿颜色框的颜色
     changeColor(tid) {
-      this.b = tid.id;
-      let temp = document.getElementById(this.b)
-      if (this.noise.list[this.b] === 0) {
-        this.noise.list[this.b] = 1;
+      console.log("红绿颜色修改点击事件：",tid)
+      var b = tid.target.id;
+      console.log("点击获取到的导联id：",b)
+      let temp = document.getElementById(b)
+      if (this.noise.list[b] === 0) {
+        this.noise.list[b] = 1;
         temp.style.backgroundColor = "red";
-        console.log(this.noise.list)
+        this.noise_level[this.lightlevel[b]]="B"
+        console.log("点击修改之后的噪声数据：",this.noise.list)
       } else {
-        this.noise.list[this.b] = 0;
+        this.noise.list[b] = 0;
         temp.style.backgroundColor = "greenyellow";
-        console.log(this.noise.list)
+        this.noise_level[this.lightlevel[b]]="A"
+        console.log("点击修改之后的噪声数据：",this.noise.list)
       }
-
     },
     //全为A
     allA() {
-      var vueA = this
-      $("input:radio").each(function () {
-        $("input:radio[value='A']").prop('checked', 'checked')
-        vueA.noise.lists[$(this)[0].id] = 'A';
-      })
-      for (var key in this.noise.list) {
-        this.noise.list[key] = 0
-        let temp = document.getElementById(key)
+      for (var k in this.noise_level) {
+        this.noise_level[k] = "A"
+        let temp = document.getElementById(this.levellight[k])
         temp.style.backgroundColor = "greenyellow"
       }
-      console.log(this.noise.list)
+      console.log("全为A之后的：", this.noise.list)
     },
     //全为B
     allB() {
-      var vueB = this
-      $("input:radio").each(function () {
-        $("input:radio[value='B']").prop('checked', 'checked')
-        vueB.noise.list[$(this)[0].id] = 'B';
-      })
-      for (var key in this.noise.list) {
-        this.noise.list[key] = 1
-        let temp = document.getElementById(key)
+      for (var k in this.noise_level) {
+        this.noise_level[k] = "B"
+        let temp = document.getElementById(this.levellight[k])
         temp.style.backgroundColor = "red"
       }
-      console.log(this.noise.list)
+      console.log("全为B之后的：", this.noise.list)
     },
     //全为C
     allC() {
-      var vueC = this
-      $("input:radio").each(function () {
-        $("input:radio[value='C']").prop('checked', 'checked')
-        vueC.noise.lists[$(this)[0].id] = 'C';
-      })
-      for (var key in this.noise.list) {
-        this.noise.list[key] = 1
-        let temp = document.getElementById(key)
+      for (var k in this.noise_level) {
+        this.noise_level[k] = "C"
+        let temp = document.getElementById(this.levellight[k])
         temp.style.backgroundColor = "red"
       }
-      console.log(this.noise.list)
+      console.log("全为C之后的：", this.noise.list)
     },
-//全为D
+    //全为D
     allD() {
-      var vueD = this
-      $("input:radio").each(function () {
-        $("input:radio[value='D']").prop('checked', 'checked')
-        vueD.noise.list[$(this)[0].id] = 'D';
-      })
-      for (var key in this.noise.list) {
-        this.noise.list[key] = 1
-        let temp = document.getElementById(key)
+      for (var k in this.noise_level) {
+        this.noise_level[k] = "D"
+        let temp = document.getElementById(this.levellight[k])
         temp.style.backgroundColor = "red"
       }
-      console.log(this.noise.list)
+      console.log("全为D之后的：", this.noise.list)
     },
     //修改等级的程度
-    radios() {
-      var vue = this
-      $("input:radio:checked").each(function () {
-        console.log($(this)[0].id);
-        console.log($(this).val());
-        vue.noise.lists[$(this)[0].id] = $(this).val();
-        if ($(this).val() === 'A') {
-          console.log(vue.lightlevel[$(this)[0].id])
-          vue.noise.lists[vue.lightlevel[$(this)[0].id]] = 0
-          let temp = document.getElementById(vue.lightlevel[$(this)[0].id])
-          temp.style.backgroundColor = "greenyellow"
-        } else if ($(this).val() === 'B') {
-          console.log(vue.lightlevel[$(this)[0].id])
-          vue.noise.lists[vue.lightlevel[$(this)[0].id]] = 1
-          let temp = document.getElementById(vue.lightlevel[$(this)[0].id])
-          temp.style.backgroundColor = "red"
-        } else if ($(this).val() === 'C') {
-          console.log(vue.lightlevel[$(this)[0].id])
-          vue.noise.lists[vue.lightlevel[$(this)[0].id]] = 1
-          let temp = document.getElementById(vue.lightlevel[$(this)[0].id])
-          temp.style.backgroundColor = "red"
-        } else if ($(this).val() === 'D') {
-          console.log(vue.lightlevel[$(this)[0].id])
-          vue.noise.lists[vue.lightlevel[$(this)[0].id]] = 1
-          let temp = document.getElementById(vue.lightlevel[$(this)[0].id])
-          temp.style.backgroundColor = "red"
-        }
-      })
-      console.log(vue.noise.lists);
+    changeRadios(value) {
+      console.log(value)
+      // var vue=this
+      // $("input:radio:checked").each(function () {
+      //   console.log($(this))
+      //   console.log($(this)[0].id);
+      //   console.log($(this).val());
+      //   vue.noise.lists[$(this)[0].id] = $(this).val();
+      //   if ($(this).val() === 'A') {
+      //     console.log(vue.levellight[$(this)[0].id])
+      //     vue.noise.lists[vue.levellight[$(this)[0].id]] = 0
+      //     let temp = document.getElementById(vue.levellight[$(this)[0].id])
+      //     temp.style.backgroundColor = "greenyellow"
+      //   } else if ($(this).val() === 'B') {
+      //     console.log(vue.levellight[$(this)[0].id])
+      //     vue.noise.lists[vue.levellight[$(this)[0].id]] = 1
+      //     let temp = document.getElementById(vue.levellight[$(this)[0].id])
+      //     temp.style.backgroundColor = "red"
+      //   } else if ($(this).val() === 'C') {
+      //     console.log(vue.levellight[$(this)[0].id])
+      //     vue.noise.lists[vue.levellight[$(this)[0].id]] = 1
+      //     let temp = document.getElementById(vue.levellight[$(this)[0].id])
+      //     temp.style.backgroundColor = "red"
+      //   } else if ($(this).val() === 'D') {
+      //     console.log(vue.levellight[$(this)[0].id])
+      //     vue.noise.lists[vue.levellight[$(this)[0].id]] = 1
+      //     let temp = document.getElementById(vue.levellight[$(this)[0].id])
+      //     temp.style.backgroundColor = "red"
+      //   }
+      // })
+      console.log("修改之后的等级：",this.noise_level);
     },
     uploadSelect() {
 
@@ -2171,20 +2201,21 @@ export default {
 }
 
 .topLeft {
-  width: 50%;
+  width: 30%;
   height: 100%;
-  border-right: 1px solid rgba(0, 0, 0,);
-
+  border: 1px solid rgb(0, 0, 0);
+  display: flex;
+  flex-direction: column;
 }
 
 .topMiddle {
-  width: 25%;
-  height: 100%;
-  border-right: 1px solid rgba(0, 0, 0,);
+  width: 100%;
+  height: 30%;
+  //border: 1px solid rgba(0, 0, 0,);
 }
 
 .topRight {
-  width: 25%;
+  width: 100%;
   height: 100%;
 }
 
@@ -2201,7 +2232,7 @@ export default {
 .messageDetail {
   //border-right: 1px solid #ffffff;
   width: 100%;
-  height: 80%;
+  height: 75%;
   font-size: 1vw;
   color: #000000;
   //text-align: center;
@@ -2217,18 +2248,24 @@ export default {
 
 .warning {
   width: 100%;
-  height: 20%;
+  height: 18%;
   font-size: 1vw;
   font-weight: 700;
   color: #000000;
   text-align: center;
   padding: 0.8vw 0;
+  //border-bottom: 1px solid #000000;
+  //border-top: 1px solid #000000;
 }
 
 .warningDetail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
   //border: 1px solid #ff5a00;
   width: 100%;
-  height: 80%;
+  height: 35%;
   font-size: 1vw;
   color: #000000;
 
@@ -2244,7 +2281,7 @@ form input {
 .bottom {
   height: 70vw;
   width: 100%;
-  border-top: 1px solid #000000;
+  //border-top: 1px solid #000000;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -2252,9 +2289,9 @@ form input {
 }
 
 .bottomLeft {
-  width: 75%;
+  width: 50%;
   height: 100%;
-  //border-right: 1px solid #FFFFFF;
+  border: 1px solid #000000;
 }
 
 .xinDian {
@@ -2265,24 +2302,24 @@ form input {
   color: #000000;
   text-align: center;
   padding: 0.8vw 0;
-  border-right: 1px solid #000000;
+  //border-right: 1px solid #000000;
 }
 
 .echarts {
   width: 100%;
   height: 95%;
-  border-right: 1px solid #000000;
+  //border-right: 1px solid #000000;
 }
 
 .bottomLeft .echarts .container {
   width: 100%;
-  height: 8.4%;
-  border: 1px solid rgba(25, 186, 139, 0.17);
+  height: 8%;
+  //border: 1px solid rgba(25, 186, 139, 0.17);
   position: relative;
 }
 
 .bottomLeft .echarts .container .chart {
-  height: 100%;
+  height: 95%;
   width: 98%;
   //background-color: #ffffff;
 }
@@ -2321,9 +2358,9 @@ form input {
 }
 
 .bottomRight {
-  width: 25%;
+  width: 20%;
   height: 100%;
-  //border: 1px solid #FFFFFF;
+  border: 1px solid #000000;
 }
 
 .quality {
@@ -2342,18 +2379,39 @@ form input {
   justify-content: flex-start;
   align-items: stretch;
   flex-grow: 1;
-  height: 100%;
+  height: 96%;
   width: 80%;
-  //background-color: #fff;
 }
 
+.radios{
+  border: 0.5px solid rgb(0, 0, 0);
+  box-sizing: border-box;
+  color: rgb(96, 98, 102);
+  cursor: pointer;
+  display: block;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-size: 1vw;
+  font-weight: 500;
+  height: 2vw;
+  width: 3vw;
+  line-height: 1vw;
+  margin: 1.5vw 0;
+  padding: 0.3vw 0.3vw 0 0.2vw;
+  position: relative;
+  text-rendering: optimizelegibility;
+  user-select: none;
+  white-space: nowrap
+}
 .abcd {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   flex-grow: 1;
   width: 100%;
-  border-top: 1px solid #000000;
-  background-color: #71f9d5;
+  //padding: 1.5vw;
+  //margin-top: 0.3vw;
+  border-top: 0.5px solid #000000;
+  border-bottom: 0.5px solid #000000;
+  border-right: 0.5px solid #000000;
 }
 
 .allin {
@@ -2361,7 +2419,7 @@ form input {
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  height: 80%;
+  height: 40%;
   width: 100%;
   //background-color: #62be38;
 }

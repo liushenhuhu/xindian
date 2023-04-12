@@ -10,7 +10,7 @@
 <script>
 let windowHeight;
 export default {
-  name: "Index",
+  name: "LookLog",
   data() {
     return {
       // 版本号

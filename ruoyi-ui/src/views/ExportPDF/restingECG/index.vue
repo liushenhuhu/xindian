@@ -41,7 +41,7 @@
                     placeholder="请在这里输入医生诊断结果"
                     data-value="1111"
                     :rows="4"
-                    class="font">
+                    class="font">{{data.resultByDoctor}}
                   </el-input>
                 </div>
               </div>
@@ -95,7 +95,7 @@
             <div class="bottom-left">
               <strong>医师:</strong>
               <el-input v-model="data.doctorName" clearable
-                        :style="{width: '15%',border: '1px solid black',}"></el-input>
+                        :style="{width: '15%',border: '1px solid black',}">{{data.doctorName}}</el-input>
               <span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
               <strong>日期:</strong>
               <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
@@ -327,6 +327,8 @@ export default {
           console.log(_th.pId)
           console.log(data)
           loading.close()
+          _th.data.resultByDoctor=data.result.diagnosis_conclusion
+          _th.data.doctorName=data.result.diagnosis_doctor
           _th.data.age = data.result.age
           _th.data.gender = data.result.gender
           _th.data.name = data.result.patientName

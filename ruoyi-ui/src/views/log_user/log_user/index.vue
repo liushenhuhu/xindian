@@ -250,6 +250,7 @@ export default {
   dicts: ['sex', 'if_status'],
   data() {
     return {
+      daterangeLogTime:[],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -399,7 +400,7 @@ export default {
     handleLook(row) {
       console.log(row.logId);
       this.$router.push({
-        name: "lookLog1",
+        name: "lookLog",
         params: {logId: row.logId, logType: row.logType, userId: row.userId}
       });
     }

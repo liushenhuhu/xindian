@@ -439,7 +439,7 @@ export default {
     handleLook(row) {
       console.log(row.logId);
       this.$router.push({
-        name: "LookLog",
+        name: "lookLog",
         params: {logId: row.logId, logType: row.logType, userId: 0}
       });
     },
