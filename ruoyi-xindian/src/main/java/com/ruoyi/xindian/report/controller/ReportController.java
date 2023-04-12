@@ -71,8 +71,15 @@ public class ReportController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Report report)
     {
-        startPage();
-        List<Report> list = reportService.selectReportList(report);
+        List<Report> list;
+        if(Objects.equals(report.getReportType(), "JECG12")){
+            //静态12导数据
+            list = reportService.selectReportListJECG12(report);
+        } else{
+            startPage();
+            list = reportService.selectReportList(report);
+        }
+
         ArrayList<ReportM> resList = new ArrayList<>();
         ReportM reportM;
         PatientManagement patientManagement;
@@ -360,10 +367,6 @@ public class ReportController extends BaseController
 
         return AjaxResult.success(result);
     }
-
-
-
-
 
     @GetMapping("/doctorFinishList")
     public TableDataInfo doctorFinishList(Report report)

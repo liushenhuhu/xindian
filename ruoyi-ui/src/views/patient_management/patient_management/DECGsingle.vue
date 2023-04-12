@@ -344,7 +344,7 @@ import {updateOnlineAll} from "@/api/online/online";
 import pdf from "vue-pdf"
 
 export default {
-  name: "Patient_management",
+  name: "DECGsingle",
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'hospital_name_name_list'],
   data() {
     return {
@@ -415,13 +415,13 @@ export default {
     }
     this.getList();
   },
-  activated() {
-    if (this.$route.params.patientName) {
-      this.queryParams.patientName = this.$route.params.patientName;
-      this.queryParams.patientPhone = this.$route.params.patientPhone;
-    }
-    this.getList();
-  },
+  // activated() {
+  //   if (this.$route.params.patientName) {
+  //     this.queryParams.patientName = this.$route.params.patientName;
+  //     this.queryParams.patientPhone = this.$route.params.patientPhone;
+  //   }
+  //   this.getList();
+  // },
   methods: {
     refreshList() {
       console.log("refresh======")
@@ -566,7 +566,7 @@ export default {
           let code=data.code;
           switch (code){
             case '300':
-              alert("报告生成成功！");
+              alert(name+"的报告生成成功！");
               break;
             case '301':
               alert("请求参数错误！");
