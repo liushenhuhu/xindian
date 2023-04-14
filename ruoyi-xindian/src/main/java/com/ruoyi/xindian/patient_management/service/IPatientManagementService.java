@@ -1,8 +1,9 @@
 package com.ruoyi.xindian.patient_management.service;
 
-import java.util.List;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
+
+import java.util.List;
 
 /**
  * 患者管理Service接口
@@ -32,6 +33,8 @@ public interface IPatientManagementService
     public List<PatientManagement> selectListOrderByTime(PatientManagement patientManagement);
 
     public List<PatientManagement> selectPatientManagementListDECGsingle(PatientManagement patientManagement);
+
+    public List<PatientManagement> selectPatientManagementListDECG12(PatientManagement patientManagement);
 
     public List<PatientManagement> selectPatientManagementListJECG12(PatientManagement patientManagement);
 

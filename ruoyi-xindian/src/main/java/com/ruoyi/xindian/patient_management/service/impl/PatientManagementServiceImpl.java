@@ -1,13 +1,13 @@
 package com.ruoyi.xindian.patient_management.service.impl;
 
-import java.util.List;
-
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
+import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
-import com.ruoyi.xindian.patient_management.domain.PatientManagement;
-import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+
+import java.util.List;
 
 /**
  * 患者管理Service业务层处理
@@ -62,6 +62,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     @Override
     public List<PatientManagement> selectPatientManagementListJECG12(PatientManagement patientManagement) {
         return patientManagementMapper.selectPatientManagementListJECG12(patientManagement);
+    }
+
+    @Override
+    public List<PatientManagement> selectPatientManagementListDECG12(PatientManagement patientManagement) {
+        return patientManagementMapper.selectPatientManagementListDECG12(patientManagement);
     }
 
 

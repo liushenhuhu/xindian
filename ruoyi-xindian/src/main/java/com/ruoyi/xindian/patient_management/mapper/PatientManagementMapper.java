@@ -1,8 +1,9 @@
 package com.ruoyi.xindian.patient_management.mapper;
 
-import java.util.List;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
+
+import java.util.List;
 
 /**
  * 患者管理Mapper接口
@@ -44,6 +45,8 @@ public interface PatientManagementMapper
     public List<PatientManagement> selectPatientManagementListDECGsingle(PatientManagement patientManagement);
 
     public List<PatientManagement> selectPatientManagementListJECG12(PatientManagement patientManagement);
+
+    public List<PatientManagement> selectPatientManagementListDECG12(PatientManagement patientManagement);
 
     /**
      * 新增患者管理

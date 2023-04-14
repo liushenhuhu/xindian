@@ -23,7 +23,6 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagmentDept;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.util.DateUtil;
-import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -86,7 +84,9 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
             } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
                 list = patientManagementService.selectPatientManagementJECGList(patientManagement);
-            }else{
+            } else if (patientManagement.getEcgType().equals("DECG12")) {
+                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
+            } else {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
 
@@ -101,6 +101,8 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
             } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
                 list = patientManagementService.selectPatientManagementJECGList(patientManagement);
+            } else if (patientManagement.getEcgType().equals("DECG12")) {
+                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
             } else {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
@@ -123,6 +125,8 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
             } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
                 list = patientManagementService.selectPatientManagementJECGList(patientManagement);
+            } else if (patientManagement.getEcgType().equals("DECG12")) {
+                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
             } else {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
@@ -136,6 +140,8 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
             } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
                 list = patientManagementService.selectPatientManagementJECGList(patientManagement);
+            } else if (patientManagement.getEcgType().equals("DECG12")) {
+                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
             } else {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
@@ -157,11 +163,10 @@ public class PatientManagementController extends BaseController {
                     patientManagmentDept.setDept(departments.get(0).getDepartmentName());
                 }
             }
-            if(management.getTimeDuration()==null){
+            if (management.getTimeDuration() == null) {
                 patientManagmentDept.setAcquisitionDuration("报告未生成");
-            }
-            else {
-                patientManagmentDept.setAcquisitionDuration("记录时长: "+ DateUtil.timeToString(management.getTimeDuration()));
+            } else {
+                patientManagmentDept.setAcquisitionDuration("记录时长: " + DateUtil.timeToString(management.getTimeDuration()));
             }
             resList.add(patientManagmentDept);
         }

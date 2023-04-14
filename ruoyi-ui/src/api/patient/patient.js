@@ -5,7 +5,8 @@ export function listPatient(query) {
   return request({
     url: '/patient/patient/list',
     method: 'get',
-    params: query
+    params: query,
+    timeout: 100000
   })
 }
 

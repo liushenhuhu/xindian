@@ -379,7 +379,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'DECG12YXD',
+        ecgType: 'DECG12',
         patientPhone: null,
         doctorPhone: null
       },
