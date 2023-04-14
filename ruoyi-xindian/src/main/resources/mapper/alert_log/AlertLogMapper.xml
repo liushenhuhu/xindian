@@ -162,7 +162,7 @@
             <if test="patientAge != null ">and patient_age = #{patientAge}</if>
             <if test="patientSex != null ">and patient_sex = #{patientSex}</if>
             <if test="ecgType != null  and ecgType != ''">and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD" or
-                ecg_type = "DECG12YXD")
+                ecg_type = "DECG12YXD" or ecg_type = "DECG12SX")
             </if>
             <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone like concat('%', #{doctorPhone},
                 '%')
@@ -175,7 +175,7 @@
         <include refid="selectAlertLogCount"/>
         <where>
             <if test="ecgType != null  and ecgType != ''">and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD" or
-                ecg_type = "DECG12YXD")
+                ecg_type = "DECG12YXD" or ecg_type = "DECG12SX")
             </if>
             <if test="logId != null ">and log_id = #{logId}</if>
             <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
