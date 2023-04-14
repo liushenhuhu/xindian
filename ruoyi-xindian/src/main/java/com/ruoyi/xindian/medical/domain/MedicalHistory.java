@@ -20,11 +20,11 @@ public class MedicalHistory extends BaseEntity
 
     /** 身高 */
     @Excel(name = "身高")
-    private Long height;
+    private Double height;
 
     /** 体重 */
     @Excel(name = "体重")
-    private Long weight;
+    private Double weight;
 
     /** 过往病史 */
     @Excel(name = "过往病史")
@@ -47,21 +47,21 @@ public class MedicalHistory extends BaseEntity
     {
         return medicalHistoryId;
     }
-    public void setHeight(Long height) 
+    public void setHeight(Double height)
     {
         this.height = height;
     }
 
-    public Long getHeight() 
+    public Double getHeight()
     {
         return height;
     }
-    public void setWeight(Long weight) 
+    public void setWeight(Double weight)
     {
         this.weight = weight;
     }
 
-    public Long getWeight() 
+    public Double getWeight()
     {
         return weight;
     }

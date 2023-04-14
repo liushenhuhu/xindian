@@ -43,7 +43,7 @@ public class Report extends BaseEntity
     private String diagnosisDoctor;
 
     /** 报告时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:MM:ss")
     @Excel(name = "报告时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date reportTime;
 
