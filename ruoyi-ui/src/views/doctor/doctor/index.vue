@@ -17,13 +17,28 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科室代号" prop="departmentCode">
-        <el-input
-          v-model="queryParams.departmentCode"
-          placeholder="请输入科室代号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="科室" prop="departmentCode">
+<!--        <el-input-->
+<!--          v-model="queryParams.departmentCode"-->
+<!--          placeholder="请输入科室代号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+        <el-autocomplete
+          popper-class="my-autocomplete"
+          v-model="state"
+          :fetch-suggestions="querySearch"
+          placeholder="请输入科室"
+          @select="handleSelect">
+          <i
+            class="el-icon-circle-close"
+            slot="suffix"
+            @click="handleIconClick">
+          </i>
+          <template slot-scope="{ item }">
+            <div class="name">{{ item.value }}</div>
+          </template>
+        </el-autocomplete>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -78,10 +93,10 @@
     </el-row>
 
     <el-table v-loading="loading" :data="doctorList" @selection-change="handleSelectionChange">
-<!--      <el-table-column type="selection" width="55" align="center" />-->
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="医生姓名" align="center" prop="doctorName" />
       <el-table-column label="医生电话" align="center" prop="doctorPhone" />
-      <el-table-column label="科室代号" align="center" prop="departmentCode" />
+      <el-table-column label="科室" align="center" prop="departmentCode" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -119,8 +134,17 @@
         <el-form-item label="医生电话" prop="doctorPhone">
           <el-input v-model="form.doctorPhone" placeholder="请输入医生电话" />
         </el-form-item>
-        <el-form-item label="科室代号" prop="departmentCode">
-          <el-input v-model="form.departmentCode" placeholder="请输入科室代号" />
+        <el-form-item label="科室" prop="departmentCode">
+<!--          <el-input v-model="form.departmentCode" placeholder="请输入科室代号" />-->
+          <el-autocomplete
+            popper-class="my-autocomplete"
+            v-model="state"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入科室">
+            <template slot-scope="{ item }">
+              <div class="name">{{ item.value }}</div>
+            </template>
+          </el-autocomplete>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -133,11 +157,17 @@
 
 <script>
 import { listDoctor, getDoctor, delDoctor, addDoctor, updateDoctor } from "@/api/doctor/doctor";
+import { listDepartment } from "@/api/department/department";
+import item from "@/layout/components/Sidebar/Item";
 
 export default {
   name: "Doctor",
   data() {
     return {
+      //科室
+      restaurants: [],
+      state: '',
+      dirRestaurants:{},
       // 遮罩层
       loading: true,
       // 选中数组
@@ -179,8 +209,32 @@ export default {
   },
   created() {
     this.getList();
+    this.loadAll();
   },
   methods: {
+    querySearch(queryString, cb) {
+      var restaurants = this.restaurants;
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    loadAll() {
+        listDepartment(this.queryParams).then(response => {
+          response.rows.forEach(item => this.restaurants.push({"id": item.departmentCode, "value": item.departmentName}));
+        });
+    },
+    handleSelect(item) {
+      console.log(item.id);
+      this.queryParams.departmentCode=item.id
+    },
+    handleIconClick() {
+      this.state=null
+    },
     /** 查询医生列表 */
     getList() {
       this.loading = true;
@@ -208,6 +262,9 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      console.log(this.state);
+      if(typeof this.state  != 'string')
+        this.queryParams.departmentCode=null
       this.getList();
     },
     /** 重置按钮操作 */

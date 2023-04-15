@@ -134,7 +134,6 @@ export default {
     },
     openMessageTips(message){
       let _this = this;
-      // this.closeAllNotification();
       //将messageId和通知实例放入字典中
       if(message.level==="warning"){
         this.notifications[message.messageId]=this.$notify({
@@ -194,35 +193,9 @@ export default {
           message: this.$createElement('div', null,
             [
               this.$createElement('div', null, [this.$createElement('span', null, message.content)]),
-              // this.$createElement('div', null,
-              //   [
-              //     this.$createElement(
-              //       'button',
-              //       {
-              //         style: {
-              //           padding: '10px 18px',
-              //           margin: '10px 0px 20px 170px',
-              //           textAlign: 'center',
-              //           textDecoration: 'none',
-              //           display: 'inline-block',
-              //           webkitTransitionDuration: '0.4s',
-              //           transitionDuration: '0.4s',
-              //           cursor: 'pointer',
-              //           backgroundColor: 'white',
-              //           color: 'black',
-              //           border: '2px solid #e7e7e7',
-              //         },
-              //         on: {
-              //           click: _this.closeNotification.bind(_this, message.messageId)
-              //         }
-              //       },
-              //       "确定"
-              //     )
-              //   ]
-              // )
             ]
           ),
-          duration: 2000,
+          duration: 4000,
           type: 'success',
         });
       }
@@ -235,35 +208,9 @@ export default {
           message: this.$createElement('div', null,
             [
               this.$createElement('div', null, [this.$createElement('span', null, message.content)]),
-              // this.$createElement('div', null,
-              //   [
-              //     this.$createElement(
-              //       'button',
-              //       {
-              //         style: {
-              //           padding: '10px 18px',
-              //           margin: '10px 0px 20px 170px',
-              //           textAlign: 'center',
-              //           textDecoration: 'none',
-              //           display: 'inline-block',
-              //           webkitTransitionDuration: '0.4s',
-              //           transitionDuration: '0.4s',
-              //           cursor: 'pointer',
-              //           backgroundColor: 'white',
-              //           color: 'black',
-              //           border: '2px solid #e7e7e7',
-              //         },
-              //         on: {
-              //           click: _this.closeNotification.bind(_this, message.messageId)
-              //         }
-              //       },
-              //       "确定"
-              //     )
-              //   ]
-              // )
             ]
           ),
-          duration: 2000,
+          duration: 4000,
         });
       }
       else {

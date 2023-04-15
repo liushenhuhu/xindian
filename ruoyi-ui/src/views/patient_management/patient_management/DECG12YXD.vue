@@ -550,45 +550,42 @@ export default {
     /** 生成报告*/
     handleInform(row) {
       var name = row.patientName
-      $.ajax({
-        type: "post",
-        url: "https://server.mindyard.cn:84/analysis_decg",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          pId: row.pId,
-          ecg_type: row.ecgType
-        }),
-        beforeSend: function (request) {
-          request.setRequestHeader("user", "zzu");
-          request.setRequestHeader("password", "zzu123");
-        },
+      this.$confirm('是否生成'+name+'的单导联报告', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        $.ajax({
+          type: "post",
+          url: "https://server.mindyard.cn:84/analysis_decg",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            pId: row.pId,
+            ecg_type: row.ecgType
+          }),
+          beforeSend: function (request) {
+            request.setRequestHeader("user", "zzu");
+            request.setRequestHeader("password", "zzu123");
+          },
 
-        success: function (data) {
-          console.log(data)
-          let code=data.code;
-          switch (code){
-            case '300':
-              alert(name+"的报告生成成功！");
-              break;
-            case '301':
-              alert("请求参数错误！");
-              break;
-            case '302':
-              alert("采集数据分析错误！");
-              break;
-            case '303':
-              alert("采集时长过短！");
-              break;
-            default:
-              alert("请求生成报告失败！");
+          success: function (data) {
+            console.log(data)
+          },
+          error: function (data) {
+            console.log(name + "动态心电报告生成出错,请重新请求或联系管理员")
           }
-        },
-        error: function (data) {
-          console.log(name + "动态心电报告生成出错,请重新请求或联系管理员")
-        }
-      })
-      alert(name + "动态报告生成中，请稍后...")
+        })
+        this.$message({
+          type: 'info',
+          message: '正在生成中, 稍后将通过消息提醒您。'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     },
 
     /** 下载报告*/
