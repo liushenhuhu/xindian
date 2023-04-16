@@ -23,7 +23,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code &lt;= #{hospitalCode}</if>
         </where>
     </select>
-    
+
+
+    <select id="selectAllDepartment" parameterType="Department" resultMap="DepartmentResult">
+        SELECT DISTINCT department_code, department_name, hospital_code, department_id FROM department;
+    </select>
+
     <select id="selectDepartmentByDepartmentId" parameterType="Long" resultMap="DepartmentResult">
         <include refid="selectDepartmentVo"/>
         where department_id = #{departmentId}

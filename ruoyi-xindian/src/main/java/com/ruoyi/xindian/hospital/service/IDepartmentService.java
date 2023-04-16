@@ -26,6 +26,7 @@ public interface IDepartmentService
      * @return 科室集合
      */
     public List<Department> selectDepartmentList(Department department);
+    public List<Department> selectAllDepartment();
 
     /**
      * 新增科室

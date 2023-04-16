@@ -6,7 +6,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,9 @@ public class DoctorController extends BaseController
     @Autowired
     private IDoctorService doctorService;
 
+    @Autowired
+    private IDepartmentService departmentService;
+
     /**
      * 查询医生列表
      */
@@ -37,6 +42,12 @@ public class DoctorController extends BaseController
     {
         startPage();
         List<Doctor> list = doctorService.selectDoctorList(doctor);
+        Department department = new Department();
+        for (Doctor value : list) {
+            department.setDepartmentCode(value.getDepartmentCode());
+            List<Department> departments = departmentService.selectDepartmentList(department);
+            value.setDepartmentName(departments.get(0).getDepartmentName());
+        }
         return getDataTable(list);
     }
 
@@ -67,7 +78,12 @@ public class DoctorController extends BaseController
     @GetMapping(value = "/{doctorId}")
     public AjaxResult getInfo(@PathVariable("doctorId") Long doctorId)
     {
-        return AjaxResult.success(doctorService.selectDoctorByDoctorId(doctorId));
+        Doctor doctor = doctorService.selectDoctorByDoctorId(doctorId);
+        Department department = new Department();
+        department.setDepartmentCode(doctor.getDepartmentCode());
+        List<Department> departments = departmentService.selectDepartmentList(department);
+        doctor.setDepartmentName(departments.get(0).getDepartmentName());
+        return AjaxResult.success(doctor);
     }
 
     /**

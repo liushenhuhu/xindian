@@ -15,10 +15,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="applicablePopulation"    column="applicable_population"    />
         <result property="chargePrice"    column="charge_price"    />
         <result property="onlineState"    column="online_state"    />
+        <result property="hospital"    column="hospital"    />
+        <result property="img"    column="img"    />
+        <result property="professional"    column="professional"    />
     </resultMap>
 
     <sql id="selectDoctorVo">
-        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state from doctor
+        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional from doctor
     </sql>
 
     <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
@@ -33,6 +36,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="applicablePopulation != null  and applicablePopulation != ''"> and applicable_population = #{applicablePopulation}</if>
             <if test="chargePrice != null  and chargePrice != ''"> and charge_price = #{chargePrice}</if>
             <if test="onlineState != null  and onlineState != ''"> and online_state = #{onlineState}</if>
+            <if test="hospital != null  and hospital != ''"> and hospital = #{hospital}</if>
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+            <if test="professional != null  and professional != ''"> and professional = #{professional}</if>
         </where>
     </select>
     
@@ -53,6 +59,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="applicablePopulation != null">applicable_population,</if>
             <if test="chargePrice != null">charge_price,</if>
             <if test="onlineState != null">online_state,</if>
+            <if test="hospital != null">hospital,</if>
+            <if test="img != null">img,</if>
+            <if test="professional != null">professional,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doctorName != null">#{doctorName},</if>
@@ -64,6 +73,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="applicablePopulation != null">#{applicablePopulation},</if>
             <if test="chargePrice != null">#{chargePrice},</if>
             <if test="onlineState != null">#{onlineState},</if>
+            <if test="hospital != null">#{hospital},</if>
+            <if test="img != null">#{img},</if>
+            <if test="professional != null">#{professional},</if>
          </trim>
     </insert>
 
@@ -79,6 +91,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="applicablePopulation != null">applicable_population = #{applicablePopulation},</if>
             <if test="chargePrice != null">charge_price = #{chargePrice},</if>
             <if test="onlineState != null">online_state = #{onlineState},</if>
+            <if test="hospital != null">hospital = #{hospital},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="professional != null">professional = #{professional},</if>
         </trim>
         where doctor_id = #{doctorId}
     </update>

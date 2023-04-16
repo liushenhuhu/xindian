@@ -96,7 +96,9 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="医生姓名" align="center" prop="doctorName" />
       <el-table-column label="医生电话" align="center" prop="doctorPhone" />
-      <el-table-column label="科室" align="center" prop="departmentCode" />
+      <el-table-column label="医院" align="center" prop="hospital" />
+      <el-table-column label="科室" align="center" prop="departmentName" />
+      <el-table-column label="职称" align="center" prop="professional" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -126,7 +128,7 @@
     />
 
     <!-- 添加或修改医生对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="医生姓名" prop="doctorName">
           <el-input v-model="form.doctorName" placeholder="请输入医生姓名" />
@@ -134,17 +136,41 @@
         <el-form-item label="医生电话" prop="doctorPhone">
           <el-input v-model="form.doctorPhone" placeholder="请输入医生电话" />
         </el-form-item>
+        <el-form-item label="医院" prop="hospital">
+          <el-input v-model="form.hospital" placeholder="请输入医院" />
+        </el-form-item>
         <el-form-item label="科室" prop="departmentCode">
 <!--          <el-input v-model="form.departmentCode" placeholder="请输入科室代号" />-->
           <el-autocomplete
             popper-class="my-autocomplete"
-            v-model="state"
+            v-model="form.departmentName"
             :fetch-suggestions="querySearch"
-            placeholder="请输入科室">
+            placeholder="请输入科室"
+            @select="addSelect">
             <template slot-scope="{ item }">
               <div class="name">{{ item.value }}</div>
             </template>
           </el-autocomplete>
+        </el-form-item>
+        <el-form-item label="职称" prop="professional">
+          <el-input v-model="form.professional" type="textarea" autosize placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="擅长" prop="skill">
+          <el-input v-model="form.skill" type="textarea" autosize placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="简介" prop="introduction">
+          <el-input v-model="form.introduction" type="textarea" autosize placeholder="请输入内容" />
+<!--          <editor v-model="form.introduction" :min-height="100"/>-->
+        </el-form-item>
+        <el-form-item label="服务内容" prop="serviceContent">
+          <el-input v-model="form.serviceContent" type="textarea" autosize placeholder="请输入内容" />
+<!--          <editor v-model="form.serviceContent" :min-height="100"/>-->
+        </el-form-item>
+        <el-form-item label="适用人群" prop="applicablePopulation">
+          <el-input v-model="form.applicablePopulation" placeholder="请输入适用人群" />
+        </el-form-item>
+        <el-form-item label="收费价格" prop="chargePrice">
+          <el-input v-model="form.chargePrice" placeholder="请输入收费价格" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -167,6 +193,7 @@ export default {
       //科室
       restaurants: [],
       state: '',
+      addState: '',
       dirRestaurants:{},
       // 遮罩层
       loading: true,
@@ -192,7 +219,17 @@ export default {
         pageSize: 10,
         doctorName: null,
         doctorPhone: null,
-        departmentCode: null
+        departmentCode: null,
+        departmentName: null,
+        skill: null,
+        introduction: null,
+        serviceContent: null,
+        applicablePopulation: null,
+        chargePrice: null,
+        onlineState: null,
+        hospital: null,
+        img: null,
+        professional:null,
       },
       // 表单参数
       form: {},
@@ -201,9 +238,9 @@ export default {
         doctorPhone: [
           { required: true, message: "医生电话不能为空", trigger: "blur" }
         ],
-        departmentCode: [
-          { required: true, message: "科室代号不能为空", trigger: "blur" }
-        ]
+        // departmentCode: [
+        //   { required: true, message: "科室不能为空", trigger: "blur" }
+        // ]
       }
     };
   },
@@ -229,17 +266,23 @@ export default {
         });
     },
     handleSelect(item) {
-      console.log(item.id);
-      this.queryParams.departmentCode=item.id
+      this.queryParams.departmentCode=item.id;
     },
     handleIconClick() {
       this.state=null
+    },
+    addSelect(item) {
+      this.form.departmentCode=item.id;
     },
     /** 查询医生列表 */
     getList() {
       this.loading = true;
       listDoctor(this.queryParams).then(response => {
         this.doctorList = response.rows;
+        // for(var i=0;i<response.rows.length;i++){
+        //   this.restaurants.find(item => console.log(item))
+        //   this.doctorList[i].departmentCode=this.restaurants.find(item => item.id === response.rows[i].departmentCode);
+        // }
         this.total = response.total;
         this.loading = false;
       });
@@ -251,11 +294,22 @@ export default {
     },
     // 表单重置
     reset() {
+      this.state='';
       this.form = {
         doctorId: null,
         doctorName: null,
         doctorPhone: null,
-        departmentCode: null
+        departmentCode: null,
+        departmentName:null,
+        skill: null,
+        introduction: null,
+        serviceContent: null,
+        applicablePopulation: null,
+        chargePrice: null,
+        onlineState: null,
+        hospital: null,
+        img: null,
+        professional:null,
       };
       this.resetForm("form");
     },
@@ -290,9 +344,11 @@ export default {
       const doctorId = row.doctorId || this.ids
       getDoctor(doctorId).then(response => {
         this.form = response.data;
+        console.log(response.data);
         this.open = true;
         this.title = "修改医生";
       });
+      console.log(this.form.departmentName);
     },
     /** 提交按钮 */
     submitForm() {
