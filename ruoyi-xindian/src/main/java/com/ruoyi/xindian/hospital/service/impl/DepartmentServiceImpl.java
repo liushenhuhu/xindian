@@ -43,6 +43,13 @@ public class DepartmentServiceImpl implements IDepartmentService
         return departmentMapper.selectDepartmentList(department);
     }
 
+    @Override
+    public List<Department> selectAllDepartment()
+    {
+        return departmentMapper.selectAllDepartment();
+    }
+
+
     /**
      * 新增科室
      * 

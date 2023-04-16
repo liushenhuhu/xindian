@@ -1,5 +1,7 @@
 package com.ruoyi.xindian.hospital.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +46,20 @@ public class DepartmentController extends BaseController
         startPage();
         List<Department> list = departmentService.selectDepartmentList(department);
         return getDataTable(list);
+    }
+    @GetMapping("/getAllDepartment")
+    public TableDataInfo getAllDepartment()
+    {
+        Department department = new Department();
+        HashMap<String, String> Map ;
+        List<Department> list = departmentService.selectDepartmentList(department);
+        ArrayList<Object> res = new ArrayList<>();
+        for (Department dep : list) {
+            Map = new HashMap<>();
+            Map.put(dep.getDepartmentCode(),dep.getDepartmentName());
+            res.add(Map);
+        }
+        return getDataTable(res);
     }
 
     /**
@@ -101,4 +117,5 @@ public class DepartmentController extends BaseController
     {
         return toAjax(departmentService.deleteDepartmentByDepartmentIds(departmentIds));
     }
+
 }

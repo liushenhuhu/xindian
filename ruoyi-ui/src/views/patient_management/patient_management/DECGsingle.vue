@@ -547,7 +547,7 @@ export default {
     /** 生成报告*/
     handleInform(row) {
       var name = row.patientName
-      this.$confirm('是否生成'+name+'的单导联报告', '提示', {
+      this.$confirm('是否生成'+name+'的报告', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

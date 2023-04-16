@@ -30,6 +30,9 @@ public class Doctor extends BaseEntity
     @Excel(name = "科室代号")
     private String departmentCode;
 
+    @Excel(name = "科室")
+    private String departmentName;
+
     /** 擅长 */
     @Excel(name = "擅长")
     private String skill;
@@ -53,6 +56,18 @@ public class Doctor extends BaseEntity
     /** 在线状态 */
     @Excel(name = "在线状态")
     private String onlineState;
+
+    /** 医院 */
+    @Excel(name = "医院")
+    private String hospital;
+
+    /** 头像地址 */
+    @Excel(name = "头像地址")
+    private String img;
+
+    @Excel(name = "头像地址")
+    private String professional;
+
 
     public void setDoctorId(Long doctorId) 
     {
@@ -146,6 +161,44 @@ public class Doctor extends BaseEntity
         return onlineState;
     }
 
+    public void setHospital(String hospital)
+    {
+        this.hospital = hospital;
+    }
+
+    public String getHospital()
+    {
+        return hospital;
+    }
+    public void setImg(String img)
+    {
+        this.img = img;
+    }
+
+    public String getImg()
+    {
+        return img;
+    }
+    public void setDepartmentName(String departmentName)
+    {
+        this.departmentName = departmentName;
+    }
+
+    public String getDepartmentName()
+    {
+        return departmentName;
+    }
+
+    public void setProfessional(String professional)
+    {
+        this.professional = professional;
+    }
+
+    public String getProfessional()
+    {
+        return professional;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -159,6 +212,9 @@ public class Doctor extends BaseEntity
                 .append("applicablePopulation", getApplicablePopulation())
                 .append("chargePrice", getChargePrice())
                 .append("onlineState", getOnlineState())
+                .append("hospital", getHospital())
+                .append("img", getImg())
+                .append("departmentName", getDepartmentName())
                 .toString();
     }
 }

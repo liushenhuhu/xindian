@@ -10,6 +10,8 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.appData.domain.AppData;
+import com.ruoyi.xindian.appData.service.IAppDataService;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -20,10 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 患者Controller
@@ -47,6 +46,9 @@ public class PatientController extends BaseController
     @Autowired
     private ISysDictDataService dictDataService;
 
+    @Autowired
+    private IAppDataService appDataService;
+
 
     /**
      * 查询患者列表
@@ -65,6 +67,16 @@ public class PatientController extends BaseController
         } else {
             startPage();
             list = patientService.selectPatientList(patient);
+        }
+        for (Patient pat : list) {
+            if(pat.getBirthDay()!=null)
+                pat.setPatientAge(String.valueOf(DateUtil.getAge(pat.getBirthDay())));
+            if(pat.getPatientSex().length()>1){
+                    pat.setPatientSex(pat.getPatientSex().substring(0,1));
+                }
+//            if(pat.getPatientAge()==null || Objects.equals(pat.getPatientAge(), "")){
+//                pat.setPatientAge(appDataService.selectAppDataByPatientPhone(patient.getPatientPhone()).getPatientAge());
+//            }
         }
         return getDataTable(list);
     }

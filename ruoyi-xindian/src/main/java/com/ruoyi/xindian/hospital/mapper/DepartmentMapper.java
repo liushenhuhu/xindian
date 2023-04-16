@@ -27,6 +27,8 @@ public interface DepartmentMapper
      */
     public List<Department> selectDepartmentList(Department department);
 
+    public List<Department> selectAllDepartment();
+
     /**
      * 新增科室
      * 
