@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -93,5 +94,22 @@ public class DateUtil {
             res+=ss+"秒";
         }
         return res;
+    }
+    /**
+     * 判断字符串是否为合法的日期格式
+     * @param dateStr 待判断的字符串
+     * @return
+     */
+    public static boolean isValidDate(String dateStr){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try{
+            format.setLenient(false);
+            Date date =format.parse(dateStr);
+            System.out.println(date);
+        }catch(Exception e){
+            return false;
+        }
+        String yearStr=dateStr.split("-")[0];
+        return !yearStr.startsWith("0") && yearStr.length() == 4;
     }
 }

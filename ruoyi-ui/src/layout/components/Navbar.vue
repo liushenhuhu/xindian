@@ -360,7 +360,7 @@ export default {
       font-size: 18px;
       color: #5a5e66;
       vertical-align: text-bottom;
-
+      //计算a+b
       &.hover-effect {
         cursor: pointer;
         transition: background .3s;

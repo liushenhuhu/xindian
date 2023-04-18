@@ -86,6 +86,13 @@ public class DoctorController extends BaseController
         return AjaxResult.success(doctor);
     }
 
+    @GetMapping(value = "/getInfoByDoctorPhone/{doctorPhone}")
+    public AjaxResult getInfoByDoctorPhone(@PathVariable("doctorPhone") String doctorPhone)
+    {
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(doctorPhone);
+        return AjaxResult.success(doctor);
+    }
+
     /**
      * 新增医生
      */

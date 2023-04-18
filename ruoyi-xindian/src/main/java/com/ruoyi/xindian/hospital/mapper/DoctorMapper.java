@@ -18,6 +18,7 @@ public interface DoctorMapper
      * @return 医生
      */
     public Doctor selectDoctorByDoctorId(Long doctorId);
+    public Doctor selectDoctorByDoctorPhone(String doctorPhone);
 
     /**
      * 查询医生列表

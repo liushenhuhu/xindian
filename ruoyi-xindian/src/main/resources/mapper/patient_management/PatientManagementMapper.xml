@@ -119,6 +119,7 @@
             <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -155,6 +156,7 @@
             <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -192,6 +194,7 @@
             <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -224,6 +227,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
         </where>
         order by connection_time desc
     </select>
@@ -239,7 +243,7 @@
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "DECGsingleZZ" or ecg_type = "DECGsingleGZ")</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type like "DECGsingle%"</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
@@ -251,6 +255,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -272,7 +277,7 @@
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD")</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type like "JECG12%"</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
@@ -283,6 +288,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -304,7 +310,7 @@
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "DECG12SX" or ecg_type = "DECG12YXD")</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type like "DECG12%"</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
@@ -315,6 +321,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -336,7 +343,7 @@
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "DECG12SX" or ecg_type = "DECG12YXD")</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type like "DECG12%"</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
@@ -347,6 +354,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -369,7 +377,7 @@
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "DECGsingleZZ" or ecg_type = "DECGsingleGZ")</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type like "DECGsingle%"</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
@@ -379,6 +387,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -400,7 +409,7 @@
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
-            <if test="ecgType != null  and ecgType != ''"> and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD")</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type like "JECG12%"/if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
@@ -410,6 +419,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">

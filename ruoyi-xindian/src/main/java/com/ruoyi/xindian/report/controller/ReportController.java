@@ -382,7 +382,7 @@ public class ReportController extends BaseController
         MedicalHistory medicalHistory;
         MedicalData medicalData=new MedicalData();
         //病种
-        ArrayList<String> medical = new ArrayList<>();
+        ArrayList<String> medical;
         //病种和id映射
         HashMap<String, String> medicalHashMap = new HashMap<>();
         List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
@@ -391,12 +391,12 @@ public class ReportController extends BaseController
         }
 
         for (Report r : patientPhone) {
-            medical.clear();
+            medical = new ArrayList<>();
             reportM=new ReportM();
             patient = patientService.selectPatientByPatientPhone(r.getPPhone());
             medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(r.getPPhone());
 
-            if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
+            if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null && !Objects.equals(medicalHistory.getPastMedicalHistory(), "")){
                 String[] split = medicalHistory.getPastMedicalHistory().split(",");
                 for (String s : split) {
                     medical.add(medicalHashMap.get(s));

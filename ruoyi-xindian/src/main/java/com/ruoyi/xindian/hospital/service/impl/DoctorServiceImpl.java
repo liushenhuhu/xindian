@@ -33,6 +33,11 @@ public class DoctorServiceImpl implements IDoctorService
         return doctorMapper.selectDoctorByDoctorId(doctorId);
     }
 
+
+    @Override
+    public Doctor selectDoctorByDoctorPhone(String doctorPhone){
+        return doctorMapper.selectDoctorByDoctorPhone(doctorPhone);
+    }
     /**
      * 查询医生列表
      * 

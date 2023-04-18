@@ -29,6 +29,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -151,6 +153,13 @@ public class PatientManagementController extends BaseController {
         Department department = new Department();
         for (PatientManagement management : list) {
 //            patientManagmentDept= (PatientManagmentDept) management;
+            if(DateUtil.isValidDate(management.getBirthDay())){
+                try {
+                    management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
+                } catch (ParseException e) {
+                    System.out.println(1);
+                }
+            }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
