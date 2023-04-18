@@ -159,10 +159,10 @@ export default {
         console.log("-------------------------------")
         console.log(this.diagnosisData)
       });
-      var show = sessionStorage.getItem(pId + "show");
-      if (!show) {
-        this.get();
-      }
+      // var show = sessionStorage.getItem(pId + "show");
+      // if (!show) {
+      //   this.get();
+      // }
     }
   },
   mounted() {
