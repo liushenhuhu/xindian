@@ -219,7 +219,7 @@
             size="mini"
             type="text"
             icon="el-icon-loading"
-            @click="monitoring(scope.row);isRed1=!isRed1"
+            @click="monitoring(scope.row)"
             v-hasPermi="['patient:patient:monitoring']"
           >实时监测
           </el-button>
@@ -227,7 +227,7 @@
             size="mini"
             type="text"
             icon="el-icon-download"
-            @click="isRed2=!isRed2;handleInform(scope.row)"
+            @click="handleInform(scope.row)"
             v-hasPermi="['patient:patient:downloadInform']"
           >生成报告
           </el-button>
@@ -235,7 +235,7 @@
             size="mini"
             type="text"
             icon="el-icon-magic-stick"
-            @click="isRed3=!isRed3;downloadInform(scope.row)"
+            @click="downloadInform(scope.row)"
             v-hasPermi="['patient:patient:inform']"
           >查看报告
           </el-button>
@@ -243,7 +243,7 @@
             size="mini"
             type="text"
             icon="el-icon-s-order"
-            @click="isRed4=!isRed4;handleAlert(scope.row)"
+            @click="handleAlert(scope.row)"
             v-hasPermi="['patient:patient:alert']"
           >预警日志
           </el-button>
@@ -251,7 +251,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row);isRed5=!isRed5"
+            @click="handleUpdate(scope.row)"
             v-hasPermi="['patient_management:patient_management:edit']"
           >修改
           </el-button>
@@ -382,11 +382,11 @@ export default {
         ecgType: 'DECGsingle',
         doctorPhone: null
       },
-      isRed1: false,
-      isRed2: false,
-      isRed3: false,
-      isRed4: false,
-      isRed5: false,
+      // isRed1: false,
+      // isRed2: false,
+      // isRed3: false,
+      // isRed4: false,
+      // isRed5: false,
       // 表单参数
       form: {},
       // 表单校验
@@ -541,9 +541,14 @@ export default {
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {
-      this.$router.push({path: "/monitoring", query: {equipmentCode: row.equipmentCode}});
+      console.log("在线状态：",row.onlineStatus)
+      if(row.onlineStatus==0){
+        this.$modal.msgError("设备不在线！");
+      }
+      else{
+        this.$router.push({path: "/monitoring", query: {equipmentCode: row.equipmentCode}});
+      }
     },
-
     /** 生成报告*/
     handleInform(row) {
       var name = row.patientName
@@ -601,7 +606,6 @@ export default {
         });
       });
     },
-
     /** 查看报告*/
     downloadInform(row) {
       // let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName ,ecg_type:row.ecgType, patientName:row.patientName}});

@@ -146,27 +146,24 @@ export default {
     };
   },
   created() {
-    console.log("页面加载")
     var pId = this.$route.query.pId;
-    console.log("pId" + pId)
+    console.log("pId:" , pId)
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
-        console.log(response.data)
+        console.log("请求成功：",response.data)
         this.data.resultByDoctor = response.data.diagnosisConclusion
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
-        console.log("-------------------------------")
-        console.log(this.diagnosisData)
       });
-      // var show = sessionStorage.getItem(pId + "show");
-      // if (!show) {
-      //   this.get();
-      // }
+      var show = sessionStorage.getItem(pId + "show");
+      if (!show) {
+        this.get();
+      }
     }
   },
   mounted() {
-    this.get();
+    // this.get();
   },
   methods: {
     clicktrueI() {
@@ -204,8 +201,7 @@ export default {
         target: document.querySelector('#table')//loadin覆盖的dom元素节点
       });
       var _th = this
-      console.log("执行")
-      console.log(this.pId)
+      console.log("pId:",this.pId)
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
@@ -222,9 +218,7 @@ export default {
           request.setRequestHeader("password", "zzu123");
         },
         success: function (data) {
-          console.log(_th.pId)
-          console.log(data)
-          console.log("成功")
+          console.log("请求成功：",data)
           loading.close()
           // window.location.reload("#pdfDom");
           _th.data.age = data.result.age
@@ -2742,9 +2736,7 @@ export default {
         error: function (data) {
           alert("数据请求错误,请刷新页面或联系管理员")
           loading.close()
-          console.log("错误")
-          console.log(_th.pId)
-          console.log(data)
+          console.log("请求失败：",data)
         }
       })
     },
@@ -2753,7 +2745,7 @@ export default {
       var str = new Date();
       var nowTime = str.getFullYear() + "-"
         + (str.getMonth() + 1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes() + ":" + str.getSeconds();
-      console.log(nowTime);
+      console.log("获取到当前的时间：",nowTime);
       return nowTime;
     },
     //截断数据（一条数据现在2000）
@@ -2767,6 +2759,7 @@ export default {
     },
     //保存数据
     btnUpload() {
+      var _th=this
       var form = {
         pId: this.pId,
         diagnosisStatus: '1',
@@ -2776,19 +2769,18 @@ export default {
         diagnosisDoctor: this.data.doctorName,
       }
       getReportByPId(this.pId).then(res => {
-
         if (res.data == null) {
           addReport(form).then(response => {
-            this.$modal.msgSuccess("新增成功");
-            this.getList();
+            _th.$modal.msgSuccess("新增成功");
+            // _th.getList();
             console.log("新增成功！")
           });
         } else {
           form["reportId"] = res.data.reportId
-          console.log(form)
+          console.log("保存的数据：",form)
           updateReport(form).then(response => {
-            this.$modal.msgSuccess("修改成功");
-            this.getList();
+            _th.$modal.msgSuccess("修改成功");
+            // _th.getList();
             console.log("修改成功！")
           })
         }
