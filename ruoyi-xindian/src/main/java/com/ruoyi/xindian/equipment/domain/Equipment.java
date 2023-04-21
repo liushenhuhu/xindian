@@ -24,6 +24,8 @@ public class Equipment extends BaseEntity
     @Excel(name = "设备号")
     private String equipmentCode;
 
+    private String equipmentName;
+
     /** 设备版本号 */
     @Excel(name = "设备版本号")
     private String equipmentVersion;
@@ -94,6 +96,14 @@ public class Equipment extends BaseEntity
         this.equipmentCode = equipmentCode;
     }
 
+    public String getEquipmentName() {
+        return equipmentName;
+    }
+
+    public void setEquipmentName(String equipmentName) {
+        this.equipmentName = equipmentName;
+    }
+
     public void setEquipmentVersion(String equipmentVersion)
     {
         this.equipmentVersion = equipmentVersion;
@@ -150,6 +160,7 @@ public class Equipment extends BaseEntity
                 .append("equipmentType",getEquipmentType())
                 .append("patientPhone",getPatientPhone())
                 .append("pId",getpId())
+                .append("equipmentCode",getEquipmentName())
                 .toString();
     }
 }

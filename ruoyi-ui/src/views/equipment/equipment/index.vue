@@ -35,14 +35,38 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科室代号" prop="departmentCode">
-        <el-input
-          v-model="queryParams.departmentCode"
-          placeholder="请输入医院代号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+<!--      <el-form-item label="科室代号" prop="departmentCode">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.departmentCode"-->
+<!--          placeholder="请输入医院代号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+      <el-form-item label="科室" prop="departmentCode">
+        <!--        <el-input-->
+        <!--          v-model="queryParams.departmentCode"-->
+        <!--          placeholder="请输入科室代号"-->
+        <!--          clearable-->
+        <!--          @keyup.enter.native="handleQuery"-->
+        <!--        />-->
+        <el-autocomplete
+          popper-class="my-autocomplete"
+          v-model="state"
+          :fetch-suggestions="querySearch"
+          placeholder="请输入科室"
+          @select="handleSelect">
+          <i
+            class="el-icon-circle-close"
+            slot="suffix"
+            @click="handleIconClick">
+          </i>
+          <template slot-scope="{ item }">
+            <div class="name">{{ item.value }}</div>
+          </template>
+        </el-autocomplete>
       </el-form-item>
+
       <el-form-item label="设备种类" prop="equipmentType">
         <el-select v-model="queryParams.equipmentType" placeholder="请选择设备种类" clearable>
           <el-option
@@ -120,9 +144,7 @@
 
     <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <!--      <el-table-column label="设备id" align="center" prop="equipmentId"/>-->
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
-<!--      <el-table-column label="设备版本号" align="center" prop="equipmentVersion"/>-->
       <el-table-column label="设备状态" align="center" prop="equipmentStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
@@ -133,7 +155,7 @@
           <dict-tag :options="dict.type.hospital_name_list" :value="scope.row.hospitalCode"/>
         </template>
       </el-table-column>
-      <el-table-column label="科室代号" align="center" prop="departmentCode"/>
+      <el-table-column label="科室" align="center" prop="equipmentName"/>
       <el-table-column label="设备种类" align="center" prop="equipmentType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
@@ -199,9 +221,22 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="科室代号" prop="departmentCode">
-          <el-input v-model="form.departmentCode" placeholder="请输入科室代号"/>
+<!--        <el-form-item label="科室代号" prop="departmentCode">-->
+<!--          <el-input v-model="form.departmentCode" placeholder="请输入科室代号"/>-->
+<!--        </el-form-item>-->
+        <el-form-item label="科室" prop="departmentCode">
+          <el-autocomplete
+            popper-class="my-autocomplete"
+            v-model="form.equipmentName"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入科室"
+            @select="addSelect">
+            <template slot-scope="{ item }">
+              <div class="name">{{ item.value }}</div>
+            </template>
+          </el-autocomplete>
         </el-form-item>
+
         <el-form-item label="设备种类" prop="equipmentType">
           <el-select v-model="form.equipmentType" placeholder="请选择设备种类">
             <el-option
@@ -238,12 +273,18 @@ import {updateMonitoringStatus} from "@/api/patient/patient";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
 import {updateOnline1, updateOnline2, updateOnlineAll} from "@/api/online/online";
 import {addDict} from "@/api/hospital/hospital";
+import {listDepartment} from "@/api/department/department";
 
 export default {
   name: "Equipment",
   dicts: ['equipment_status', 'ecg_type', 'hospital_name_list'],
   data() {
     return {
+      //科室
+      departmentDir: {},
+
+      restaurants: [],
+      state: '',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -309,13 +350,34 @@ export default {
 
   created() {
     this.getList();
+    this.loadAll();
   },
   methods: {
+    querySearch(queryString, cb) {
+      var restaurants = this.restaurants;
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    handleSelect(item) {
+      this.queryParams.departmentCode=item.id;
+    },
+    handleIconClick() {
+      this.state=null
+    },
+    addSelect(item) {
+      this.form.departmentCode=item.id;
+    },
     refreshList() {
       console.log("refresh======")
       updateOnlineAll().then(res => {
         this.getList();
       })
+    },
+    loadAll() {
+      listDepartment(this.queryParams).then(response => {
+        response.rows.forEach(item => this.restaurants.push({"id": item.departmentCode, "value": item.departmentName}));
+      });
     },
 
     /** 查询设备列表 */
@@ -324,8 +386,10 @@ export default {
       listEquipment(this.queryParams).then(response => {
         this.equipmentList = response.rows;
         this.total = response.total;
+
         this.loading = false;
       })
+
       addDict()
     },
     // 取消按钮
@@ -335,9 +399,11 @@ export default {
     },
     // 表单重置
     reset() {
+      this.state='';
       this.form = {
         equipmentId: null,
         equipmentCode: null,
+        equipmentName: null,
         equipmentVersion: null,
         equipmentStatus: null,
         hospitalCode: null,
@@ -349,6 +415,8 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
+      if(typeof this.state  != 'string')
+        this.queryParams.departmentCode=null
       this.queryParams.pageNum = 1;
       this.getList();
     },

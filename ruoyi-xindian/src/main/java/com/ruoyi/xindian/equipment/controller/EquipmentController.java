@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.hospital.domain.Department;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,8 @@ public class EquipmentController extends BaseController {
 
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private IDepartmentService departmentService;
 
     /**
      * 查询设备列表
@@ -59,6 +64,15 @@ public class EquipmentController extends BaseController {
         } else {
             startPage();
             list = equipmentService.selectEquipmentList(equipment);
+        }
+        Department department = new Department();
+        for (Equipment value : list) {
+            if(value.getDepartmentCode()==null){
+                continue;
+            }
+            department.setDepartmentCode(value.getDepartmentCode());
+            List<Department> departments = departmentService.selectDepartmentList(department);
+            value.setEquipmentName(departments.get(0).getDepartmentName());
         }
         return getDataTable(list);
     }
@@ -89,7 +103,15 @@ public class EquipmentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('equipment:equipment:query')")
     @GetMapping(value = "/{equipmentId}")
     public AjaxResult getInfo(@PathVariable("equipmentId") Long equipmentId) {
-        return AjaxResult.success(equipmentService.selectEquipmentByEquipmentId(equipmentId));
+
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentId(equipmentId);
+        if(equipment.getDepartmentCode()!=null){
+            Department department = new Department();
+            department.setDepartmentCode(equipment.getDepartmentCode());
+            List<Department> departments = departmentService.selectDepartmentList(department);
+            equipment.setEquipmentName(departments.get(0).getDepartmentName());
+        }
+        return AjaxResult.success(equipment);
     }
 
     /**

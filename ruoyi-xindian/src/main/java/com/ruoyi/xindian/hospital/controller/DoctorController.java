@@ -90,6 +90,10 @@ public class DoctorController extends BaseController
     public AjaxResult getInfoByDoctorPhone(@PathVariable("doctorPhone") String doctorPhone)
     {
         Doctor doctor = doctorService.selectDoctorByDoctorPhone(doctorPhone);
+        Department department = new Department();
+        department.setDepartmentCode(doctor.getDepartmentCode());
+        List<Department> departments = departmentService.selectDepartmentList(department);
+        doctor.setDepartmentName(departments.get(0).getDepartmentName());
         return AjaxResult.success(doctor);
     }
 
