@@ -45,7 +45,7 @@
 
     <insert id="insertMedicalHistory" parameterType="MedicalHistory" useGeneratedKeys="true"
             keyProperty="medicalHistoryId">
-        insert into medical_history
+        replace into medical_history
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="height != null">height,</if>
             <if test="weight != null">weight,</if>
