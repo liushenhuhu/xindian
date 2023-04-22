@@ -349,6 +349,7 @@ export default {
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'hospital_name_name_list'],
   data() {
     return {
+      currentScrollPos:0,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -404,6 +405,14 @@ export default {
       }
     };
   },
+  activated() {
+    document.documentElement.scrollTop=this.currentScrollPos || 0
+  },
+
+  beforeRouteLeave(to,from,next) {
+    this.currentScrollPos = document.documentElement.scrollTop || 0
+    next()
+  },
   beforeCreate() {
     updateOnlineAll();
   },
@@ -428,6 +437,9 @@ export default {
         this.getList();
       })
     },
+
+
+
     /** 查询患者管理列表 */
     getList() {
       this.loading = true;

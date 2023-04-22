@@ -138,7 +138,6 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
-
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
 
@@ -178,6 +177,7 @@
         </template>
       </el-table-column>
 
+
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
@@ -211,6 +211,7 @@
           </el-form>
         </template>
       </el-table-column>
+
 
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -348,6 +349,8 @@ export default {
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'hospital_name_name_list'],
   data() {
     return {
+      //滚动条
+      currentScrollPos: 0,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -406,6 +409,15 @@ export default {
 
   beforeCreate() {
     updateOnlineAll();
+  },
+
+  activated() {
+    document.documentElement.scrollTop=this.currentScrollPos || 0
+  },
+
+  beforeRouteLeave(to,from,next) {
+    this.currentScrollPos = document.documentElement.scrollTop || 0
+    next()
   },
 
   created() {

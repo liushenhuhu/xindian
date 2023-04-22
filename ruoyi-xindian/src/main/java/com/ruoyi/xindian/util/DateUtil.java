@@ -105,7 +105,7 @@ public class DateUtil {
         try{
             format.setLenient(false);
             Date date =format.parse(dateStr);
-            System.out.println(date);
+//            System.out.println(date);
         }catch(Exception e){
             return false;
         }
