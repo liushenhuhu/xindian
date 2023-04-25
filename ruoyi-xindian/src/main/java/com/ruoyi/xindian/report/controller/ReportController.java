@@ -72,13 +72,8 @@ public class ReportController extends BaseController
     public TableDataInfo list(Report report)
     {
         List<Report> list;
-        if(Objects.equals(report.getReportType(), "JECG12")){
-            //静态12导数据
-            list = reportService.selectReportListJECG12(report);
-        } else{
-            startPage();
-            list = reportService.selectReportList(report);
-        }
+        startPage();
+        list = reportService.selectReportList(report);
 
         ArrayList<ReportM> resList = new ArrayList<>();
         ReportM reportM;

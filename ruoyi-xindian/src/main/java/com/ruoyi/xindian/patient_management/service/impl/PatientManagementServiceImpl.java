@@ -48,6 +48,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         return patientManagementMapper.selectPatientManagementJECGList(patientManagement);
     }
 
+    @Override
+    public List<PatientManagement> selectPatientManagementJECGsingle(PatientManagement patientManagement) {
+        return patientManagementMapper.selectPatientManagementJECGsingle(patientManagement);
+    }
+
 
     @Override
     public List<PatientManagement> selectListOrderByTime(PatientManagement patientManagement) {

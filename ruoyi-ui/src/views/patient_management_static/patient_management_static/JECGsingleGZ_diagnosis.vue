@@ -470,7 +470,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'JECGsingleGZ',
+        ecgType: 'JECGsingle',
         patientPhone: null,
         intelligentDiagnosis: null,
         diagnosisStatus: 1,

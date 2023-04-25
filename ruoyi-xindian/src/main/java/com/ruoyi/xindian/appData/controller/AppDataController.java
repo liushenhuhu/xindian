@@ -91,28 +91,9 @@ public class AppDataController extends BaseController {
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody AppData appData) {
-/*        Long userId = getUserId();
-        List<SysRole> sysRoles = roleService.selectRolesByUserId(userId);
-        SysRole sysRole = sysRoles.get(0);
-        if (sysRole.getRoleId() == 100) {
-            Patient patient = new Patient();
-            patient.setPatientName(appData.getPatientName());
-            patient.setPatientPhone(appData.getPatientPhone());
-            patient.setPatientSex(appData.getPatientSex());
-            patient.setPatientAge(appData.getPatientAge());
-            List<Patient> patientList = patientService.selectPatientList(patient);
-            if (null == patientList || patientList.size() == 0) {
-                patientService.insertPatient(patient);
-            }
-        }*/
         int res = 0;
         Patient patient = new Patient();
         Patient patientSel = new Patient();
-
-//        Patient patient2 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
-//        patient.setPatientId(patient2.getPatientId());
-//        patient.setBirthDay(appData.getBirthDay());
-//        patientService.updatePatient(patient);
 
         patientSel.setPatientPhone(appData.getPatientPhone());
         patient.setPatientName(appData.getPatientName());

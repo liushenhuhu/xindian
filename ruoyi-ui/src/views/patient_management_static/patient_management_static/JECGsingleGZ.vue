@@ -230,8 +230,6 @@
                 <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
               </template>
             </el-table-column>-->
-
-
       <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
       <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
         <template slot-scope="scope">
@@ -250,7 +248,6 @@
           <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
         </template>
       </el-table-column>
-<!--      <el-table-column label="心电类型" align="center" prop="ecgType"/>-->
       <el-table-column label="心电种类" align="center" prop="ecgType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
@@ -477,7 +474,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'JECGsingleGZ',
+        ecgType: 'JECGsingle',
         patientPhone: null,
         intelligentDiagnosis: null,
         diagnosisStatus: 0,

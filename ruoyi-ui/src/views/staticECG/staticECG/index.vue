@@ -205,7 +205,7 @@ export default {
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
-        url: "https://screen.mindyard.cn:84/get_jecg_single",
+        url: "https://screen.mindyard.cn:84/get_jecg_single_web",
         // asynsc: false,
         contentType: "application/json",
         dataType: "json",
