@@ -5,6 +5,11 @@ import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.xindian.appData.domain.AppData;
+import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.mark_info.domain.User;
 import com.ruoyi.xindian.medical.domain.MedicalData;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalDataService;
@@ -63,6 +68,9 @@ public class ReportController extends BaseController
 
     @Autowired
     private INotDealWithService notDealWithService;
+
+    @Autowired
+    private IAppDataService appDataService;
 
     /**
      * 查询报告列表
@@ -179,6 +187,19 @@ public class ReportController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Report report)
     {
+//        User currentUser = ShiroUtils.getSysUser();
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        String phonenumber = loginUser.getUser().getPhonenumber();
+        //咨询医生次数减一
+        if(phonenumber.equals(report.getPPhone())){
+            AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
+            Long questionNum = appData.getQuestionNum();
+            if(questionNum==0){
+                return AjaxResult.error("咨询次数已用完");
+            }
+            appData.setQuestionNum(questionNum-1);
+            appDataService.updateAppData(appData);
+        }
         String s = report.getpId();
         Report report1 = reportService.selectReportByPId(s);
         report.setReportId(report1.getReportId());

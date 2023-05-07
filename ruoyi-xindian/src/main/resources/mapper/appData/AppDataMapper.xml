@@ -13,11 +13,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="patientPhone"    column="patient_phone"    />
         <result property="userName"    column="user_name"    />
         <result property="birthDay"    column="birth_day"    />
+        <result property="questionNum"    column="question_num"    />
 
     </resultMap>
 
     <sql id="selectAppDataVo">
-        select app_data_id, patient_name, patient_sex, patient_age, patient_code, patient_phone, user_name, birth_day from app_data
+        select app_data_id, patient_name, patient_sex, patient_age, patient_code, patient_phone, user_name, birth_day, question_num from app_data
     </sql>
 
     <select id="selectAppDataList" parameterType="AppData" resultMap="AppDataResult">
@@ -30,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
             <if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
             <if test="birthDay != null "> and birth_day = #{birthDay}</if>
+            <if test="questionNum != null "> and question_num = #{questionNum}</if>
         </where>
     </select>
     
@@ -75,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
             <if test="userName != null">user_name = #{userName},</if>
             <if test="birthDay != null">birth_day = #{birthDay},</if>
+            <if test="questionNum != null">question_num = #{questionNum},</if>
         </trim>
         where app_data_id = #{appDataId}
     </update>

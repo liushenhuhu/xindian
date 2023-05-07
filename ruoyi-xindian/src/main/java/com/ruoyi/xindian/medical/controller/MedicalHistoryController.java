@@ -37,7 +37,7 @@ public class MedicalHistoryController extends BaseController
     /**
      * 查询病史列表
      */
-    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:list')")
+//    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:list')")
     @GetMapping("/list")
     public TableDataInfo list(MedicalHistory medicalHistory)
     {
@@ -49,7 +49,7 @@ public class MedicalHistoryController extends BaseController
     /**
      * 导出病史列表
      */
-    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:export')")
+//    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:export')")
     @Log(title = "病史", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, MedicalHistory medicalHistory)
@@ -62,7 +62,7 @@ public class MedicalHistoryController extends BaseController
     /**
      * 获取病史详细信息
      */
-    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:query')")
+//    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:query')")
     @GetMapping(value = "/{medicalHistoryId}")
     public AjaxResult getInfo(@PathVariable("medicalHistoryId") Long medicalHistoryId)
     {
@@ -74,7 +74,7 @@ public class MedicalHistoryController extends BaseController
      * @param patientPhone
      * @return
      */
-    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:query')")
+//    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:query')")
     @GetMapping(value = "/getByPatientPhone/{patientPhone}")
     public AjaxResult getInfoByPatientPhone(@PathVariable("patientPhone") String patientPhone)
     {
@@ -111,7 +111,7 @@ public class MedicalHistoryController extends BaseController
     /**
      * 新增病史
      */
-    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:add')")
+//    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:add')")
     @Log(title = "病史", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MedicalHistory medicalHistory)
@@ -122,7 +122,7 @@ public class MedicalHistoryController extends BaseController
     /**
      * 修改病史
      */
-    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:edit')")
+//    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:edit')")
     @Log(title = "病史", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MedicalHistory medicalHistory)
@@ -134,7 +134,7 @@ public class MedicalHistoryController extends BaseController
     /**
      * 删除病史
      */
-    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:remove')")
+//    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:remove')")
     @Log(title = "病史", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{medicalHistoryIds}")
     public AjaxResult remove(@PathVariable Long[] medicalHistoryIds)
@@ -142,7 +142,7 @@ public class MedicalHistoryController extends BaseController
         return toAjax(medicalHistoryService.deleteMedicalHistoryByMedicalHistoryIds(medicalHistoryIds));
     }
 
-    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:remove')")
+//    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:remove')")
     @Log(title = "病史", businessType = BusinessType.DELETE)
     @GetMapping("delByPatientPhone/{patientPhone}")
     public AjaxResult remove(@PathVariable("patientPhone") String patientPhone)

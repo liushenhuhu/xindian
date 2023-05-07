@@ -293,8 +293,9 @@ export default {
     connect() {
       //这里填你rabbitMQ的连接ip地址直接替换localhost:15674就好其它的不用改
       this.client= Stomp.client("wss://ecg.mindyard.cn:84/ws")
-      // this.client= Stomp.client("wss://202.102.249.124:15674")
-      // this.client= Stomp.client("wss://219.155.7.235:15674/ws")
+      // this.client= Stomp.client("ws://202.102.249.124:15674/ws")
+      // this.client= Stomp.client("ws://219.155.7.235:5672")
+      // this.client= Stomp.client("ws://219.155.7.235:15674/ws")
       // this.client= Stomp.client("ws://localhost:15674/ws")
       //填写你rabbitMQ登录的用户名和密码
       var headers = {

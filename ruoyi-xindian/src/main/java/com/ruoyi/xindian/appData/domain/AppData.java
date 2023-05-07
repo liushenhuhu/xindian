@@ -50,6 +50,9 @@ public class AppData extends BaseEntity
     @Excel(name = "患者出生日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date birthDay;
 
+    /** 医生咨询次数*/
+    private Long questionNum;
+
     public void setAppDataId(Long appDataId)
     {
         this.appDataId = appDataId;
@@ -58,6 +61,16 @@ public class AppData extends BaseEntity
     public Long getAppDataId()
     {
         return appDataId;
+    }
+
+    public void setQuestionNum(Long questionNum)
+    {
+        this.questionNum = questionNum;
+    }
+
+    public Long getQuestionNum()
+    {
+        return questionNum;
     }
     public void setPatientName(String patientName)
     {
