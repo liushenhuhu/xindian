@@ -190,8 +190,11 @@ public class ReportController extends BaseController
 //        User currentUser = ShiroUtils.getSysUser();
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String phonenumber = loginUser.getUser().getPhonenumber();
+        String s = report.getpId();
+        Report report1 = reportService.selectReportByPId(s);
+        report.setReportId(report1.getReportId());
         //咨询医生次数减一
-        if(phonenumber.equals(report.getPPhone())){
+        if(phonenumber.equals(report1.getPPhone())){
             AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
             Long questionNum = appData.getQuestionNum();
             if(questionNum==0){
@@ -200,11 +203,14 @@ public class ReportController extends BaseController
             appData.setQuestionNum(questionNum-1);
             appDataService.updateAppData(appData);
         }
-        String s = report.getpId();
-        Report report1 = reportService.selectReportByPId(s);
-        report.setReportId(report1.getReportId());
         //拒绝逻辑
         if(report.getDiagnosisStatus()==3){
+            //退回次数加一
+            AppData appData = appDataService.selectAppDataByPatientPhone(report1.getPPhone());
+            Long questionNum = appData.getQuestionNum();
+            appData.setQuestionNum(questionNum + 1);
+            appDataService.updateAppData(appData);
+
             NotDealWith notDealWith = new NotDealWith();
             notDealWith.setPid(s);
             notDealWith.setDoctorPhone(report.getdPhone());
@@ -366,7 +372,7 @@ public class ReportController extends BaseController
         rep.setDiagnosisStatus(2L);
         List<Report> reports2 = reportService.selectReportList(rep);
         int notDealSize = reports2.size();
-
+        //已拒绝
         NotDealWith notDealWith = new NotDealWith();
         notDealWith.setDoctorPhone(rep.getdPhone());
         HashMap<String, Object> params = new HashMap<>();

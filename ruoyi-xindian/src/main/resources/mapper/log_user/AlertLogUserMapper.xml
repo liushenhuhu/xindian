@@ -18,40 +18,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectAlertLogUserVo">
-        select al.log_id, log_time, alu.log_type, alu.event_name, alu.event_description, al.p_id,
-               alu.ano_status, patient_age, patient_sex, user_id
-        from alert_log al
-                 inner join patient_management pm on al.p_id = pm.p_id
-                 inner join patient p on pm.patient_phone = p.patient_phone
-                 inner join alert_log_user alu on al.log_id = alu.log_id
+        select log_id, log_type, event_name, event_description, p_id,
+               ano_status, user_id
+        from alert_log_user
     </sql>
-
-    <sql id="selectAlertLogUseCount">
-        select count(0)
-        from alert_log al
-        inner join alert_log_user alu on al.log_id = alu.log_id
-        <if test="patient_age != null or patientSex != null">
-            inner join patient_management pm on al.p_id = pm.p_id
-            inner join patient p on pm.patient_phone = p.patient_phone
-        </if>
-    </sql>
+<!--    #         select al.log_id, log_time, alu.log_type, alu.event_name, alu.event_description, al.p_id,-->
+<!--    #                alu.ano_status, patient_age, patient_sex, user_id-->
+<!--    #         from alert_log al-->
+<!--    #                  inner join patient_management pm on al.p_id = pm.p_id-->
+<!--    #                  inner join patient p on pm.patient_phone = p.patient_phone-->
+<!--    #                  inner join alert_log_user alu on al.log_id = alu.log_id-->
+<!--    <sql id="selectAlertLogUseCount">-->
+<!--        select count(0)-->
+<!--        from alert_log al-->
+<!--        inner join alert_log_user alu on al.log_id = alu.log_id-->
+<!--        <if test="patient_age != null or patientSex != null">-->
+<!--            inner join patient_management pm on al.p_id = pm.p_id-->
+<!--            inner join patient p on pm.patient_phone = p.patient_phone-->
+<!--        </if>-->
+<!--    </sql>-->
 
     <select id="selectAlertLogUserList" parameterType="AlertLogUser" resultMap="AlertLogUserResult">
         <include refid="selectAlertLogUserVo"/>
-        <where>
-            <if test="logId != null "> and al.log_id = #{logId}</if>
-            <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''"> and log_time between #{params.beginLogTime} and #{params.endLogTime}</if>
-            <if test="logType != null  and logType != ''"> and alu.log_type like concat('%', #{logType}, '%')</if>
-            <if test="eventName != null  and eventName != ''"> and alu.event_name like concat('%', #{eventName}, '%')</if>
-            <if test="eventDescription != null  and eventDescription != ''"> and alu.event_description like concat('%', #{eventDescription}, '%')</if>
-            <if test="pId != null "> and al.p_id like concat('%', #{pId}, '%')</if>
-            <if test="anoStatus != null "> and alu.ano_status = #{anoStatus}</if>
-            <if test="patientAge != null "> and patient_age = #{patientAge}</if>
-            <if test="patientSex != null "> and patient_sex = #{patientSex}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-        </where>
-        order by log_time desc
+            <where>
+                <if test="logId != null "> and log_id = #{logId}</if>
+                <if test="logType != null  and logType != ''"> and log_type like concat('%', #{logType}, '%')</if>
+                <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
+                <if test="eventDescription != null  and eventDescription != ''"> and event_description like concat('%', #{eventDescription}, '%')</if>
+                <if test="pId != null "> and p_id like concat('%', #{pId}, '%')</if>
+                <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
+                <if test="userId != null "> and user_id = #{userId}</if>
+            </where>
     </select>
+<!--    #         order by log_time desc-->
 
 <!--    <select id="selectAlertLogUserList_COUNT" parameterType="AlertLogUser" resultType="long">-->
 <!--        <include refid="selectAlertLogUseCount"/>-->

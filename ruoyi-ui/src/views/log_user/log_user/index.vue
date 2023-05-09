@@ -9,19 +9,19 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="发生时间" prop="logTime">
-        <el-form-item>
-          <el-date-picker
-            v-model="daterangeLogTime"
-            style="width: 240px"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetimerange"
-            range-separator="-"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          ></el-date-picker>
-        </el-form-item>
-      </el-form-item>
+<!--      <el-form-item label="发生时间" prop="logTime">-->
+<!--        <el-form-item>-->
+<!--          <el-date-picker-->
+<!--            v-model="daterangeLogTime"-->
+<!--            style="width: 240px"-->
+<!--            value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--            type="datetimerange"-->
+<!--            range-separator="-"-->
+<!--            start-placeholder="开始日期"-->
+<!--            end-placeholder="结束日期"-->
+<!--          ></el-date-picker>-->
+<!--        </el-form-item>-->
+<!--      </el-form-item>-->
       <el-form-item label="预警类型" prop="logType">
         <el-input
           v-model="queryParams.logType"
@@ -54,16 +54,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者性别" prop="patientSex">
-        <el-select v-model="queryParams.patientSex" placeholder="请选择患者性别" clearable>
-          <el-option
-            v-for="dict in dict.type.sex"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="患者性别" prop="patientSex">-->
+<!--        <el-select v-model="queryParams.patientSex" placeholder="请选择患者性别" clearable>-->
+<!--          <el-option-->
+<!--            v-for="dict in dict.type.sex"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item label="是否标注" prop="anoStatus">
         <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
           <el-option
@@ -140,22 +140,22 @@
 
     <el-table v-loading="loading" :data="log_userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="发生时间" align="center" prop="logTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="发生时间" align="center" prop="logTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="预警类型" align="center" prop="logType"/>
       <el-table-column label="事件名称" align="center" prop="eventName"/>
       <el-table-column label="事件说明" align="center" prop="eventDescription"/>
       <el-table-column label="患者id" align="center" prop="pId" show-overflow-tooltip/>
       <el-table-column label="日志id" align="center" prop="logId" show-overflow-tooltip/>
-      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-      <el-table-column label="患者性别" align="center" prop="patientSex">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="患者年龄" align="center" prop="patientAge"/>-->
+<!--      <el-table-column label="患者性别" align="center" prop="patientSex">-->
+<!--        <template slot-scope="scope">-->
+<!--          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="账号id" align="center" prop="userId"/>
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
