@@ -113,6 +113,7 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementList(patientManagement);
             }
         } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 106) {
+            // 106---科室账号
             Equipment equipment = new Equipment();
             equipment.setHospitalCode(sysUser.getHospitalCode());
             equipment.setDepartmentCode(sysUser.getDepartmentCode());

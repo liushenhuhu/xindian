@@ -444,7 +444,7 @@ import {listDoctorName} from "@/api/doctor/doctor";
 
 
 export default {
-  name: "Patient_management",
+  name: "JECG12",
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
   data() {
     return {
