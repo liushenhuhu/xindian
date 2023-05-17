@@ -8,8 +8,11 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.xindian.medical.domain.MedicalData;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.domain.MedicalHistoryDto;
 import com.ruoyi.xindian.medical.service.IMedicalDataService;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +36,9 @@ public class MedicalHistoryController extends BaseController
     private IMedicalHistoryService medicalHistoryService;
     @Autowired
     private IMedicalDataService medicalDataService;
+
+    @Autowired
+    private IPatientService patientService;
 
     /**
      * 查询病史列表
@@ -80,6 +86,21 @@ public class MedicalHistoryController extends BaseController
     {
 
         MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientPhone);
+        MedicalHistoryDto medicalHistoryDto = new MedicalHistoryDto();
+        if(medicalHistory!=null){
+            medicalHistoryDto.setMedicalHistoryId(medicalHistory.getMedicalHistoryId());
+            medicalHistoryDto.setHeight(medicalHistory.getHeight());
+            medicalHistoryDto.setWeight(medicalHistory.getWeight());
+            medicalHistoryDto.setPastMedicalHistory(medicalHistory.getPastMedicalHistory());
+            medicalHistoryDto.setLivingHabit(medicalHistory.getLivingHabit());
+            medicalHistoryDto.setPatientPhone(medicalHistory.getPatientPhone());
+            Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
+            if(patient!=null){
+                medicalHistoryDto.setGender(patient.getPatientSex());
+                medicalHistoryDto.setUserName(patient.getPatientName());
+            }
+        }
+
 //        //病种和id映射
 //        HashMap<String, String> medicalHashMap = new HashMap<>();
 //        MedicalData medicalData=new MedicalData();
@@ -105,7 +126,7 @@ public class MedicalHistoryController extends BaseController
 //        else{
 //            medicalHistory.setPastMedicalHistory("无");
 //        }
-        return AjaxResult.success(medicalHistory);
+        return AjaxResult.success(medicalHistoryDto);
     }
 
     /**
@@ -125,9 +146,13 @@ public class MedicalHistoryController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:edit')")
     @Log(title = "病史", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody MedicalHistory medicalHistory)
+    public AjaxResult edit(@RequestBody MedicalHistoryDto medicalHistory)
     {
         System.out.println(medicalHistory);
+        Patient patient = patientService.selectPatientByPatientPhone(medicalHistory.getPatientPhone());
+        patient.setPatientSex(medicalHistory.getGender());
+        patient.setPatientName(medicalHistory.getUserName());
+        patientService.updatePatient(patient);
         return toAjax(medicalHistoryService.updateMedicalHistory(medicalHistory));
     }
 

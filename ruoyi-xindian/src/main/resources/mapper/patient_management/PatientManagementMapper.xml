@@ -70,7 +70,8 @@
                m.patient_phone, family_phone,  monitoring_status,
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
                diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, ecg_level, doctor_phone,
-               birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state, end_time, time_duration
+               birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
+               end_time, time_duration, d_phone
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
@@ -114,7 +115,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone = #{doctorPhone}</if>
             <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
@@ -150,7 +151,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone = #{doctorPhone}</if>
             <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
@@ -186,7 +187,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
@@ -226,7 +227,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone = #{doctorPhone}</if>
             <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
@@ -262,7 +263,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
         </where>
         order by connection_time desc
@@ -290,7 +291,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
@@ -323,7 +324,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
@@ -356,7 +357,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
@@ -389,7 +390,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
@@ -422,7 +423,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in
@@ -454,7 +455,7 @@
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
                 and  m.equipment_code in

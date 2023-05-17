@@ -124,3 +124,7 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+#微信小程序配置
+wx-app:
+  appId: wx50da6a0dfc5c45c0
+  appSecret: 4a10ac992f6bd399982aa1ec5e67a241

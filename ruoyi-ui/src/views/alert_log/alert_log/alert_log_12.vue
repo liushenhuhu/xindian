@@ -270,6 +270,7 @@ export default {
   dicts: ['sex', 'if_status'],
   data() {
     return {
+      currentScrollPos:0,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -317,6 +318,14 @@ export default {
         ]
       }
     };
+  },
+  activated() {
+    document.documentElement.scrollTop=this.currentScrollPos || 0
+  },
+
+  beforeRouteLeave(to,from,next) {
+    this.currentScrollPos = document.documentElement.scrollTop || 0
+    next()
   },
   created() {
     if (this.$route.query.pId) {

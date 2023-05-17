@@ -136,4 +136,17 @@ public interface SysUserMapper
     public SysUser selectUserByPhone(String phone);
 
     public int updateUserOpenId(String openId, String phone);
+
+    /**
+     * 根据openId查询用户信息
+     * @param openId
+     * @return
+     */
+    public SysUser selectWxUserByOpenId(String openId);
+
+    public int insertAppData(SysUser sysUser);
+
+    public int insertPatient(SysUser sysUser);
+
+    public int insertMedical(SysUser sysUser);
 }

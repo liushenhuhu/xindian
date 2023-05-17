@@ -315,7 +315,6 @@
             type="text"
             icon="el-icon-s-order"
             @click="lookECG(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
           >查看报告
           </el-button>
           <!--          <el-button
@@ -339,7 +338,6 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['patient_management:patient_management:edit']"
           >修改
           </el-button>
           <el-button
@@ -347,7 +345,6 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['patient_management:patient_management:remove']"
           >删除
           </el-button>
         </template>
@@ -448,6 +445,7 @@ export default {
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
   data() {
     return {
+      currentScrollPos: 0,
       isRouterAlive:true,
       //诊断医生
       options: [],
@@ -509,7 +507,15 @@ export default {
     };
   },
   beforeCreate() {
-    updateOnlineAll();
+    // updateOnlineAll();
+  },
+  activated() {
+    document.documentElement.scrollTop=this.currentScrollPos || 0
+  },
+
+  beforeRouteLeave(to,from,next) {
+    this.currentScrollPos = document.documentElement.scrollTop || 0
+    next()
   },
 
   created() {

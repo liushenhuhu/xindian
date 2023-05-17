@@ -74,43 +74,15 @@ public class PatientManagementController extends BaseController {
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
 //        Long userId = getUserId();
         SysUser sysUser = userService.selectUserById(getUserId());
+
         if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 101) {
             String hospitalCode = sysUser.getHospitalCode();
             patientManagement.setHospitalCode(hospitalCode);
-            startPage();
-            if (null == patientManagement.getEcgType()) {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECGsingle")) {
-                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECG12")) {
-                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-                list = patientManagementService.selectPatientManagementJECGList(patientManagement);
-            }else if (patientManagement.getEcgType().equals("JECGsingle")) {
-                list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECG12")) {
-                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
-            } else {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
-            }
-
-        } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 104) {
-            patientManagement.setDoctorPhone(sysUser.getPhonenumber());
-            startPage();
-            if (null == patientManagement.getEcgType()) {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECGsingle")) {
-                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECG12")) {
-                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-                list = patientManagementService.selectPatientManagementJECGList(patientManagement);
-            }else if (patientManagement.getEcgType().equals("JECGsingle")) {
-                list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECG12")) {
-                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
-            } else {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
+            String phonenumber = sysUser.getPhonenumber();
+            if(!"15888888888".equals(phonenumber)){
+                patientManagement.setDoctorPhone(phonenumber);
+                if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
+                    patientManagement.setDiagnosisStatus(2L);
             }
         } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 106) {
             // 106---科室账号
@@ -123,39 +95,31 @@ public class PatientManagementController extends BaseController {
                 equipmentCodeList.add(equipment1.getEquipmentCode());
             }
             patientManagement.setEquipmentCodeList(equipmentCodeList);
-            startPage();
-            if (null == patientManagement.getEcgType()) {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECGsingle")) {
-                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECG12")) {
-                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-                list = patientManagementService.selectPatientManagementJECGList(patientManagement);
-            }else if (patientManagement.getEcgType().equals("JECGsingle")) {
-                list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECG12")) {
-                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
-            } else {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
-            }
         } else {
-            startPage();
-            if (null == patientManagement.getEcgType()) {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECGsingle")) {
-                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECG12")) {
-                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-                list = patientManagementService.selectPatientManagementJECGList(patientManagement);
-            }else if (patientManagement.getEcgType().equals("JECGsingle")) {
-                list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECG12")) {
-                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
-            } else {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
+            if(sysUser != null){
+                String phonenumber = sysUser.getPhonenumber();
+                if(!"15888888888".equals(phonenumber)){
+                    patientManagement.setDoctorPhone(phonenumber);
+                    if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
+                        patientManagement.setDiagnosisStatus(2L);
+                }
             }
+        }
+        startPage();
+        if (null == patientManagement.getEcgType()) {
+            list = patientManagementService.selectPatientManagementList(patientManagement);
+        } else if (patientManagement.getEcgType().equals("DECGsingle")) {
+            list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
+        } else if (patientManagement.getEcgType().equals("JECG12")) {
+            list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+        } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
+            list = patientManagementService.selectPatientManagementJECGList(patientManagement);
+        }else if (patientManagement.getEcgType().equals("JECGsingle")) {
+            list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
+        } else if (patientManagement.getEcgType().equals("DECG12")) {
+            list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
+        } else {
+            list = patientManagementService.selectPatientManagementList(patientManagement);
         }
         PatientManagmentDept patientManagmentDept;
         Doctor doctor = new Doctor();

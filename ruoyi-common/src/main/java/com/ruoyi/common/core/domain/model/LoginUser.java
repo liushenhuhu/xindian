@@ -66,10 +66,16 @@ public class LoginUser implements UserDetails
      */
     private Set<String> permissions;
 
+
     /**
      * 用户信息
      */
     private SysUser user;
+
+
+    private String unionId;
+
+    private String openId;
 
     public Long getUserId()
     {
@@ -256,6 +262,23 @@ public class LoginUser implements UserDetails
     public void setUser(SysUser user)
     {
         this.user = user;
+    }
+
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
     @Override

@@ -443,6 +443,7 @@ export default {
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
   data() {
     return {
+      currentScrollPos: 0,
       isRouterAlive: true,
       // 遮罩层
       loading: true,
@@ -502,7 +503,15 @@ export default {
   },
 
   beforeCreate() {
-    updateOnlineAll();
+    // updateOnlineAll();
+  },
+  activated() {
+    document.documentElement.scrollTop=this.currentScrollPos || 0
+  },
+
+  beforeRouteLeave(to,from,next) {
+    this.currentScrollPos = document.documentElement.scrollTop || 0
+    next()
   },
 
   created() {

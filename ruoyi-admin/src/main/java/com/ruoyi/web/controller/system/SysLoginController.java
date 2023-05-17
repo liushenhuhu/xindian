@@ -1,13 +1,27 @@
 package com.ruoyi.web.controller.system;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.spec.InvalidParameterSpecException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.itextpdf.text.pdf.codec.Base64;
+import com.ruoyi.common.config.WxAppConfig;
 
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,10 +31,19 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginBody;
+import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.framework.web.service.SysPermissionService;
 import com.ruoyi.system.service.ISysMenuService;
+import org.springframework.web.client.RestTemplate;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * 登录验证
@@ -29,6 +52,8 @@ import com.ruoyi.system.service.ISysMenuService;
  */
 @RestController
 public class SysLoginController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SysLoginController.class);
     @Autowired
     private SysLoginService loginService;
 
@@ -40,6 +65,101 @@ public class SysLoginController {
 
     @Autowired
     private IAppDataService appDataService;
+    @Autowired
+    private WxAppConfig wxAppConfig;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    /**
+     * 微信登录方法
+     *
+     * @param wxloginBody 登录信息
+     * @return 结果
+     */
+    @PostMapping("/wxLogin")
+    public AjaxResult wxLogin(@RequestBody WxLoginBody wxloginBody) {
+
+        logger.info("登录参数："+ JSON.toJSONString(wxloginBody));
+        String code=wxloginBody.getCode();
+        String encryptedIv = wxloginBody.getEncryptedIv();
+        String getEncryptedData = wxloginBody.getEncryptedData();
+
+        //向微信服务器发送请求获取用户信息
+        String url="https://api.weixin.qq.com/sns/jscode2session?appid="+wxAppConfig.getAppId()+"&secret="+wxAppConfig.getAppSecret()+"&js_code="+code+"&grant_type=authorization_code";
+        String res=restTemplate.getForObject(url,String.class);
+//        String tok=loginService.wxLogin(res,"124");
+        JSONObject jsonObject = JSONObject.parseObject(res);
+        logger.info("微信返回参数："+ jsonObject);
+
+        //获取session_key和openid
+        String session_key = jsonObject.getString("session_key");
+        String openid = jsonObject.getString("openid");
+
+        //解密
+        String decryptResult="";
+        try {
+            decryptResult=decrypt(session_key,encryptedIv,getEncryptedData);
+        } catch (Exception e){
+            e.printStackTrace();
+            return AjaxResult.error("数据解析失败");
+        }
+        if(StringUtils.hasText(decryptResult)){
+            String token=loginService.wxLogin(decryptResult,openid);
+            JSONObject json = JSONObject.parseObject(decryptResult);
+            String numberPhone = json.getString("phoneNumber");
+            AjaxResult result = AjaxResult.success();
+            result.put(Constants.TOKEN,token);
+            result.put("phone",numberPhone);
+            return result;
+        }else{
+            return AjaxResult.error("微信登录失败");
+        }
+    }
+
+    /**
+     * AES解密
+     */
+    private String decrypt(String sessionKey,String encryptedIv,String encryptData) throws
+            NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
+            InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException{
+        logger.info("start-------Base64.decode");
+        byte[] key= Base64.decode(sessionKey);
+        byte[] iv= Base64.decode(encryptedIv);
+        byte[] encData= Base64.decode(encryptData);
+        logger.info("end-------Base64.decode");
+        //如果秘钥不够16位，就补充
+        int base=16;
+        if(key.length%base!=0){
+            int groups= key.length/base+ 1;
+            byte[] bytes = new byte[groups * base];
+            Arrays.fill(bytes,(byte) 0);
+            System.arraycopy(key,0,bytes,0,key.length);
+            key=bytes;
+        }
+        if(iv.length%base!=0){
+            int groups= iv.length/base+ 1;
+            byte[] bytes = new byte[groups * base];
+            Arrays.fill(bytes,(byte) 0);
+            System.arraycopy(iv,0,bytes,0,iv.length);
+            iv=bytes;
+        }
+
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+        String resultStr=null;
+        try{
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+            cipher.init(Cipher.DECRYPT_MODE,keySpec,ivSpec);
+            resultStr = new String(cipher.doFinal(encData), "UTF-8");
+        }catch (Exception e){
+            logger.info("解析错误！！！");
+            e.printStackTrace();
+        }
+        return resultStr;
+    }
+
+
 
     /**
      * 登录方法
@@ -65,6 +185,8 @@ public class SysLoginController {
         }
         return ajax;
     }
+
+
 
 
     /**

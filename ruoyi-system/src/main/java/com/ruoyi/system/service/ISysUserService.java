@@ -10,6 +10,14 @@ import java.util.List;
  * @author ruoyi
  */
 public interface ISysUserService {
+
+    /**
+     * 根据openId查询用户
+     * @param openId
+     * @return
+     */
+    public SysUser selectWxUserByOpenId(String openId);
+
     /**
      * 根据条件分页查询用户列表
      *
@@ -215,4 +223,8 @@ public interface ISysUserService {
     public int updateUserOpenId(String openId, String phone);
 
     public int setUserRole(Long userId, Long roleId);
+
+    public int insertAppData(SysUser sysUser);
+    public int insertPatient(SysUser sysUser);
+    public int insertMedical(SysUser sysUser);
 }

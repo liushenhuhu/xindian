@@ -408,7 +408,7 @@ export default {
   },
 
   beforeCreate() {
-    updateOnlineAll();
+    // updateOnlineAll();
   },
 
   activated() {

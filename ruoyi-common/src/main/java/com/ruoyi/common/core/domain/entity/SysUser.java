@@ -111,6 +111,10 @@ public class SysUser extends BaseEntity
      * openId
      */
     private String openId;
+    /**
+     * unionId
+     */
+    private String unionId;
 
     public SysUser()
     {
@@ -121,6 +125,7 @@ public class SysUser extends BaseEntity
     {
         this.userId = userId;
     }
+
 
     public String getDepartmentCode() {
         return departmentCode;
@@ -182,6 +187,14 @@ public class SysUser extends BaseEntity
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 
     @Xss(message = "用户昵称不能包含脚本字符")

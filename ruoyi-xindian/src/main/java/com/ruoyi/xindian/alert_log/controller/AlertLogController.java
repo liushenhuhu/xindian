@@ -53,7 +53,7 @@ public class AlertLogController extends BaseController {
             } else if (alertLog.getEcgType().equals("single")) {
                 list = alertLogService.selectAlertLogListSingle(alertLog);
             }
-        } else if (getDeptId() == 106) {
+        } else if (getDeptId()!=null && getDeptId() == 106) {
             Long userId = getUserId();
             alertLog.setUserId(Math.toIntExact(userId));
             startPage();

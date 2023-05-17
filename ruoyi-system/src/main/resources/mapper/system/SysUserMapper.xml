@@ -28,6 +28,7 @@
         <result property="departmentCode" column="department_code"/>
         <result property="roleId" column="role_id"/>
         <result property="openId" column="open_id"/>
+        <result property="unionId" column="union_id"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -72,6 +73,7 @@
                u.hospital_code,
                u.department_code,
                u.open_id,
+               u.union_id,
                d.dept_id,
                d.parent_id,
                d.ancestors,
@@ -90,6 +92,11 @@
                  left join sys_user_role ur on u.user_id = ur.user_id
                  left join sys_role r on r.role_id = ur.role_id
     </sql>
+
+    <select id="selectWxUserByOpenId" parameterType="String" resultMap="SysUserResult">
+        <include refid="selectUserVo"/>
+        where u.open_id=#{openId}
+    </select>
 
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
         select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status,
@@ -228,6 +235,54 @@
         <if test="openId != null">#{openId},</if>
         sysdate()
         )
+    </insert>
+
+    <insert id="insertAppData" parameterType="SysUser">
+        insert into app_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickName != null">patient_name,</if>
+            <if test="sex != null">patient_sex,</if>
+            <if test="phonenumber != null">patient_phone,</if>
+            <if test="phonenumber != null">user_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickName != null">#{nickName},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="phonenumber != null">#{phonenumber},</if>
+            <if test="phonenumber != null">#{phonenumber},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertPatient" parameterType="SysUser">
+        replace into patient
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">patient_name,</if>
+            <if test="sex != null">patient_sex,</if>
+            <if test="phonenumber != null">patient_phone,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="phonenumber != null">#{phonenumber},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertMedical" parameterType="SysUser">
+        replace into medical_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            height,
+            weight,
+            past_medical_history,
+            living_habit,
+            patient_phone,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            "170",
+            "60",
+            "无",
+            "无",
+            #{phonenumber},
+        </trim>
     </insert>
 
     <update id="updateUser" parameterType="SysUser">

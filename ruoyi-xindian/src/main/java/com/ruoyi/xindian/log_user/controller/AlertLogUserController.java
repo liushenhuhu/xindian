@@ -45,7 +45,7 @@ public class AlertLogUserController extends BaseController
     public TableDataInfo list(AlertLogUser alertLogUser)
     {
         List<AlertLogUser> list = new ArrayList<>();
-        if (getDeptId() == 106) {
+        if (getDeptId() != null && getDeptId() == 106) {
             Long userId = getUserId();
             alertLogUser.setUserId((long) Math.toIntExact(userId));
             startPage();

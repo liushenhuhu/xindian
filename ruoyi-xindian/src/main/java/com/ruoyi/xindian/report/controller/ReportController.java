@@ -202,6 +202,7 @@ public class ReportController extends BaseController
             }
             appData.setQuestionNum(questionNum-1);
             appDataService.updateAppData(appData);
+            //给医生发送短信
         }
         //拒绝逻辑
         if(report.getDiagnosisStatus()==3){

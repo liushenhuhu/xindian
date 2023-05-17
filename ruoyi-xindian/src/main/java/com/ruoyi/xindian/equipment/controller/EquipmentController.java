@@ -55,7 +55,7 @@ public class EquipmentController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(Equipment equipment) {
         List<Equipment> list = new ArrayList<>();
-        if (getDeptId() == 200) {
+        if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalCode = sysUser.getHospitalCode();
             equipment.setHospitalCode(hospitalCode);
@@ -85,7 +85,7 @@ public class EquipmentController extends BaseController {
     @PostMapping("/export")
     public void export(HttpServletResponse response, Equipment equipment) {
         List<Equipment> list = new ArrayList<>();
-        if (getDeptId() == 200) {
+        if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalCode = sysUser.getHospitalCode();
             equipment.setHospitalCode(hospitalCode);
@@ -147,7 +147,7 @@ public class EquipmentController extends BaseController {
     /**
      * 修改设备
      */
-    @PreAuthorize("@ss.hasPermi('equipment:equipment:edit')")
+//    @PreAuthorize("@ss.hasPermi('equipment:equipment:edit')")
     @Log(title = "设备", businessType = BusinessType.UPDATE)
     @PostMapping("/updateEquipmentStatus")
     public String updateEquipmentStatus(@RequestBody String[] equipmentList) {

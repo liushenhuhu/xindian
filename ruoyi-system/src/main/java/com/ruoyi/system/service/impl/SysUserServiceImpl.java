@@ -57,6 +57,11 @@ public class SysUserServiceImpl implements ISysUserService {
     @Autowired
     protected Validator validator;
 
+    @Override
+    public SysUser selectWxUserByOpenId(String openId) {
+        return userMapper.selectWxUserByOpenId(openId);
+    }
+
     /**
      * 根据条件分页查询用户列表
      *
@@ -503,4 +508,18 @@ public class SysUserServiceImpl implements ISysUserService {
         return userRoleMapper.setUserRole(userId, roleId);
     }
 
+    @Override
+    public int insertAppData(SysUser sysUser) {
+        return userMapper.insertAppData(sysUser);
+    }
+
+    @Override
+    public int insertPatient(SysUser sysUser) {
+        return userMapper.insertPatient(sysUser);
+    }
+
+    @Override
+    public int insertMedical(SysUser sysUser) {
+        return userMapper.insertMedical(sysUser);
+    }
 }

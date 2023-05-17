@@ -2,8 +2,15 @@ package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.RegisterBody;
+import com.ruoyi.common.utils.*;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.smsConfig.SmsCodeAuthenticationToken;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,16 +27,13 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.CaptchaException;
 import com.ruoyi.common.exception.user.CaptchaExpireException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.MessageUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,6 +63,74 @@ public class SysLoginService {
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private SysRegisterService sysRegisterService;
+
+    @Autowired
+    private ISysRoleService sysRoleService;
+
+    /**
+     * 微信登录方法
+     */
+    public String wxLogin(String decryptResult,String openId){
+        JSONObject jsonObject = JSONObject.parseObject(decryptResult);
+        String nickName = "微信用户";
+        String numberPhone = jsonObject.getString("phoneNumber");
+//        String numberPhone="17337345179";
+        String gender = "男";
+        SysUser wxUser = userService.selectUserByPhone(numberPhone);
+        //如果没有新建
+        SysUser user = new SysUser();
+        if(wxUser==null){
+            user.setUserName(numberPhone);
+            user.setNickName(nickName);
+            user.setPhonenumber(numberPhone);
+            user.setSex(gender);
+            user.setOpenId(openId);
+            user.setCreateTime(DateUtils.getNowDate());
+//            user.setPassword(SecurityUtils.encryptPassword("123456"));
+            userService.insertUser(user);
+            Long userId = userService.selectUserByUserName(numberPhone).getUserId();
+            userService.setUserRole(userId, 100L);
+            //绑定用户
+            userService.insertAppData(user);
+            //创建用户
+            userService.insertPatient(user);
+            //新增病历
+            userService.insertMedical(user);
+        }else{
+            user=wxUser;
+//            Long userId = userService.selectUserByUserName(numberPhone).getUserId();
+//            userService.setUserRole(userId, 100L);
+            user.setOpenId(openId);
+            user.setUpdateTime(DateUtils.getNowDate());
+            userService.updateUserProfile(user);
+        }
+//        组装token
+//        LoginUser loginUser = new LoginUser();
+//        loginUser.setOpenId(openId);
+//
+//        loginUser.setUser(user);
+//        loginUser.setUserId(user.getUserId());
+
+        // 用户验证
+        Authentication authentication = null;
+        try {
+
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            authentication = authenticationManager
+                    .authenticate(new SmsCodeAuthenticationToken(numberPhone));
+        } catch (Exception e) {
+
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(numberPhone, Constants.LOGIN_FAIL, e.getMessage()));
+            throw new ServiceException(e.getMessage());
+
+        }
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(numberPhone, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+
+        return tokenService.createToken(loginUser);
+    }
     /**
      * 登录验证
      *

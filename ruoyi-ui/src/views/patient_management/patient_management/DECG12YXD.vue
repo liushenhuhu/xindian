@@ -414,7 +414,7 @@ export default {
     next()
   },
   beforeCreate() {
-    updateOnlineAll();
+    // updateOnlineAll();
   },
   created() {
     if (this.$route.params.patientName) {

@@ -84,7 +84,8 @@ public class OnlineController extends BaseController {
         String splitData = splitData(responseEntityBody, "[", "]");
         String s = removeDoubleQuotes(splitData);
         String[] devList = s.split(",");
-        String res = equipmentController.updateEquipmentStatus(devList);
+        String res="";
+        res = equipmentController.updateEquipmentStatus(devList);
         Map<String, Object> resMap = new HashMap<>();
         resMap.put("devList", devList);
         resMap.put("res", res);

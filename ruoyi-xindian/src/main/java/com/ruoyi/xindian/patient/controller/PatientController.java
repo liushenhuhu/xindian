@@ -58,9 +58,19 @@ public class PatientController extends BaseController
     public TableDataInfo list(Patient patient)
     {
         List<Patient> list = new ArrayList<>();
-        if (getDeptId() == 200) {
+        if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalName = sysUser.getHospitalName();
+            if(hospitalName==null){
+                String hospitalCode = sysUser.getHospitalCode();
+                if(hospitalCode!=null) {
+                    Hospital hospital = hospitalService.selectHospitalByHospitalCode(hospitalCode);
+                    hospitalName=hospital.getHospitalName();
+                }
+                else{
+                    return getDataTable(list);
+                }
+            }
             patient.setPatientSource(hospitalName);
             startPage();
             list = patientService.selectPatientList(patient);
@@ -68,6 +78,7 @@ public class PatientController extends BaseController
             startPage();
             list = patientService.selectPatientList(patient);
         }
+
         for (Patient pat : list) {
             if(pat.getBirthDay()!=null)
                 pat.setPatientAge(String.valueOf(DateUtil.getAge(pat.getBirthDay())));
