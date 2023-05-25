@@ -95,15 +95,12 @@ public class PatientManagementController extends BaseController {
                 equipmentCodeList.add(equipment1.getEquipmentCode());
             }
             patientManagement.setEquipmentCodeList(equipmentCodeList);
-        } else {
-            if(sysUser != null){
-                String phonenumber = sysUser.getPhonenumber();
-                if(!"15888888888".equals(phonenumber)){
-                    patientManagement.setDoctorPhone(phonenumber);
-                    if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
-                        patientManagement.setDiagnosisStatus(2L);
-                }
-            }
+        } else if(sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 104) {
+            //医生
+            String phonenumber = sysUser.getPhonenumber();
+            patientManagement.setDoctorPhone(phonenumber);
+            if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
+                patientManagement.setDiagnosisStatus(2L);
         }
         startPage();
         if (null == patientManagement.getEcgType()) {

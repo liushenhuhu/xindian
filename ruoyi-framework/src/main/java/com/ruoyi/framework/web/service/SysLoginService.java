@@ -76,8 +76,6 @@ public class SysLoginService {
         JSONObject jsonObject = JSONObject.parseObject(decryptResult);
         String nickName = "微信用户";
         String numberPhone = jsonObject.getString("phoneNumber");
-//        String numberPhone="17337345179";
-        String gender = "男";
         SysUser wxUser = userService.selectUserByPhone(numberPhone);
         //如果没有新建
         SysUser user = new SysUser();
@@ -85,19 +83,18 @@ public class SysLoginService {
             user.setUserName(numberPhone);
             user.setNickName(nickName);
             user.setPhonenumber(numberPhone);
-            user.setSex(gender);
             user.setOpenId(openId);
             user.setCreateTime(DateUtils.getNowDate());
 //            user.setPassword(SecurityUtils.encryptPassword("123456"));
             userService.insertUser(user);
             Long userId = userService.selectUserByUserName(numberPhone).getUserId();
             userService.setUserRole(userId, 100L);
-            //绑定用户
-            userService.insertAppData(user);
-            //创建用户
-            userService.insertPatient(user);
-            //新增病历
-            userService.insertMedical(user);
+//            //绑定用户
+//            userService.insertAppData(user);
+//            //创建用户
+//            userService.insertPatient(user);
+//            //新增病历
+//            userService.insertMedical(user);
         }else{
             user=wxUser;
 //            Long userId = userService.selectUserByUserName(numberPhone).getUserId();

@@ -128,3 +128,6 @@ xss:
 wx-app:
   appId: wx50da6a0dfc5c45c0
   appSecret: 4a10ac992f6bd399982aa1ec5e67a241
+wx-public:
+  appId: wx331beedb5dbfe460
+  appSecret: f4de7b81311cf445d058f0b66b21add8

@@ -68,6 +68,17 @@ public class Doctor extends BaseEntity
     @Excel(name = "头像地址")
     private String professional;
 
+    private String openId;
+
+    public void setOpenId(String openId)
+    {
+        this.openId = openId;
+    }
+
+    public String getOpenId()
+    {
+        return openId;
+    }
 
     public void setDoctorId(Long doctorId) 
     {
@@ -215,6 +226,7 @@ public class Doctor extends BaseEntity
                 .append("hospital", getHospital())
                 .append("img", getImg())
                 .append("departmentName", getDepartmentName())
+                .append("openId", getOpenId())
                 .toString();
     }
 }

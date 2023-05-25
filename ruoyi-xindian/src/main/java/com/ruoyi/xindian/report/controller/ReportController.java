@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.report.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +10,8 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.mark_info.domain.User;
 import com.ruoyi.xindian.medical.domain.MedicalData;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
@@ -22,6 +25,7 @@ import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
 import com.ruoyi.xindian.util.DateUtil;
+import com.ruoyi.xindian.util.WxUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +76,9 @@ public class ReportController extends BaseController
     @Autowired
     private IAppDataService appDataService;
 
+    @Autowired
+    private IDoctorService doctorService;
+
     /**
      * 查询报告列表
      */
@@ -84,23 +91,23 @@ public class ReportController extends BaseController
         list = reportService.selectReportList(report);
 
         ArrayList<ReportM> resList = new ArrayList<>();
-        ReportM reportM;
+
         PatientManagement patientManagement;
         Patient patient;
         Date birthDay;
         MedicalHistory medicalHistory;
         MedicalData medicalData=new MedicalData();
         //病种
-        ArrayList<String> medical = new ArrayList<>();
+        ArrayList<String> medical;
         //病种和id映射
         HashMap<String, String> medicalHashMap = new HashMap<>();
         List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
         for (MedicalData data : medicalData1) {
             medicalHashMap.put(data.getMedicalCode().toString(),data.getMedicalName());
         }
-
+        ReportM reportM;
         for (Report r : list) {
-            medical.clear();
+            medical=new ArrayList<>();
             reportM=new ReportM();
             patientManagement = patientManagementService.selectPatientManagementByPId(r.getpId());
 
@@ -110,6 +117,10 @@ public class ReportController extends BaseController
                 if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
                     String[] split = medicalHistory.getPastMedicalHistory().split(",");
                     for (String s : split) {
+                        if(medicalHashMap.get(s)==null){
+                            medical.add("无");
+                            break;
+                        }
                         medical.add(medicalHashMap.get(s));
                     }
                     reportM.setMedicalHistory(medical);
@@ -179,6 +190,8 @@ public class ReportController extends BaseController
         return toAjax(reportService.insertReport(report));
     }
 
+
+
     /**
      * 修改报告
      */
@@ -202,7 +215,21 @@ public class ReportController extends BaseController
             }
             appData.setQuestionNum(questionNum-1);
             appDataService.updateAppData(appData);
+        }
+        //患者请求医生
+        if(report.getDiagnosisStatus()==2){
             //给医生发送短信
+            WxUtil.send(report.getdPhone());
+            //给医生发送微信订阅消息
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+            if(doctor.getOpenId()!=null){
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String msg="有患者请求您诊断心电图，请及时处理。";
+                String tis="无";
+                String str_time= format.format(new Date());
+                String token = WxUtil.queryToken();
+                WxUtil.sendMsg(token,doctor.getOpenId(),msg,tis,str_time);
+            }
         }
         //拒绝逻辑
         if(report.getDiagnosisStatus()==3){
@@ -444,4 +471,14 @@ public class ReportController extends BaseController
         return getTable(resList,new PageInfo(patientPhone).getTotal());
     }
 
+    @GetMapping("/wx")
+    public AjaxResult Wx() throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String msg="有患者请求您诊断心电图，请及时处理。";
+        String tis="无";
+        String str_time= format.format(new Date());
+        String token = WxUtil.queryToken();
+        WxUtil.sendMsg(token,"o7rro4mw1ijaKRHz-Y7o32kOuMnM",msg,tis,str_time);
+        return AjaxResult.success();
+    }
 }

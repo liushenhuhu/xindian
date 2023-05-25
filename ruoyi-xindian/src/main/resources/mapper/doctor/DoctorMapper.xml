@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="hospital"    column="hospital"    />
         <result property="img"    column="img"    />
         <result property="professional"    column="professional"    />
+        <result property="openId"    column="open_id"    />
     </resultMap>
 
     <sql id="selectDoctorVo">
-        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional from doctor
+        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id from doctor
     </sql>
 
     <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
@@ -100,6 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hospital != null">hospital = #{hospital},</if>
             <if test="img != null">img = #{img},</if>
             <if test="professional != null">professional = #{professional},</if>
+            <if test="openId != null">open_id = #{openId},</if>
         </trim>
         where doctor_id = #{doctorId}
     </update>

@@ -13,8 +13,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.itextpdf.text.pdf.codec.Base64;
 import com.ruoyi.common.config.WxAppConfig;
 
+import com.ruoyi.common.core.domain.model.WxOpenId;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -65,6 +68,9 @@ public class SysLoginController {
 
     @Autowired
     private IAppDataService appDataService;
+
+    @Autowired
+    private IDoctorService doctorService;
     @Autowired
     private WxAppConfig wxAppConfig;
 
@@ -111,6 +117,12 @@ public class SysLoginController {
             AjaxResult result = AjaxResult.success();
             result.put(Constants.TOKEN,token);
             result.put("phone",numberPhone);
+            AppData appData = appDataService.selectAppDataByPatientPhone(numberPhone);
+            if (null == appData) {
+                result.put("BindingState", false);
+            } else {
+                result.put("BindingState", true);
+            }
             return result;
         }else{
             return AjaxResult.error("微信登录失败");
@@ -187,8 +199,6 @@ public class SysLoginController {
     }
 
 
-
-
     /**
      * 手机号登录方法
      *
@@ -245,5 +255,15 @@ public class SysLoginController {
         Long userId = SecurityUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
         return AjaxResult.success(menuService.buildMenus(menus));
+    }
+
+    @PostMapping("/wxOpenId")
+    public AjaxResult wxOpenId(@RequestBody WxOpenId wxOpenId) {
+        String openId = wxOpenId.getOpenId();
+        String doctorPhone = wxOpenId.getDoctorPhone();
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(doctorPhone);
+        if(doctor==null) return AjaxResult.error("该账户医生不存在！请联系管理员添加权限！");
+        doctor.setOpenId(openId);
+        return AjaxResult.success(doctorService.updateDoctor(doctor));
     }
 }

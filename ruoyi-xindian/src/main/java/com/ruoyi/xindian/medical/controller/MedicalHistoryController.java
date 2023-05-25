@@ -6,6 +6,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.xindian.appData.domain.AppData;
+import com.ruoyi.xindian.appData.service.IAppDataService;
 import com.ruoyi.xindian.medical.domain.MedicalData;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.domain.MedicalHistoryDto;
@@ -39,6 +41,9 @@ public class MedicalHistoryController extends BaseController
 
     @Autowired
     private IPatientService patientService;
+
+    @Autowired
+    private IAppDataService appDataService;
 
     /**
      * 查询病史列表
@@ -101,31 +106,37 @@ public class MedicalHistoryController extends BaseController
             }
         }
 
-//        //病种和id映射
-//        HashMap<String, String> medicalHashMap = new HashMap<>();
-//        MedicalData medicalData=new MedicalData();
-//        List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
-//        StringBuilder med= new StringBuilder();
-//        for (MedicalData data : medicalData1) {
-//            medicalHashMap.put(data.getMedicalCode().toString(),data.getMedicalName());
-//        }
-//
-//        if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
-//            String[] split = medicalHistory.getPastMedicalHistory().split(",");
-//            for (String s : split) {
-//                if(med.toString().equals("")){
-//                    med.append(medicalHashMap.get(s));
-//                }
-//                else{
-//                    med.append(", ").append(medicalHashMap.get(s));
-//                }
-//
-//            }
-//            medicalHistory.setPastMedicalHistory(String.valueOf(med));
-//        }
-//        else{
-//            medicalHistory.setPastMedicalHistory("无");
-//        }
+        //病种和id映射
+        HashMap<String, String> medicalHashMap = new HashMap<>();
+        MedicalData medicalData=new MedicalData();
+        List<MedicalData> medicalData1 = medicalDataService.selectMedicalDataList(medicalData);
+        StringBuilder med= new StringBuilder();
+        for (MedicalData data : medicalData1) {
+            medicalHashMap.put(data.getMedicalCode().toString(),data.getMedicalName());
+        }
+
+        if(medicalHistory!=null && medicalHistory.getPastMedicalHistory()!=null){
+            String[] split = medicalHistory.getPastMedicalHistory().split(",");
+            for (String s : split) {
+                if(med.toString().equals("")){
+                    med.append(medicalHashMap.get(s));
+                }
+                else{
+                    med.append(", ").append(medicalHashMap.get(s));
+                }
+
+            }
+            medicalHistoryDto.setM_data(String.valueOf(med));
+        }
+        else{
+            medicalHistoryDto.setM_data(String.valueOf(med));
+        }
+        //获取出生日期
+        AppData appData = appDataService.selectAppDataByPatientPhone(patientPhone);
+        if(appData!=null){
+            medicalHistoryDto.setBirthDay(appData.getBirthDay());
+        }
+
         return AjaxResult.success(medicalHistoryDto);
     }
 
@@ -150,9 +161,16 @@ public class MedicalHistoryController extends BaseController
     {
         System.out.println(medicalHistory);
         Patient patient = patientService.selectPatientByPatientPhone(medicalHistory.getPatientPhone());
+        AppData appData = appDataService.selectAppDataByPatientPhone(medicalHistory.getPatientPhone());
         patient.setPatientSex(medicalHistory.getGender());
         patient.setPatientName(medicalHistory.getUserName());
+        patient.setBirthDay(medicalHistory.getBirthDay());
         patientService.updatePatient(patient);
+        if(appData!=null)
+        {
+            appData.setBirthDay(medicalHistory.getBirthDay());
+            appDataService.updateAppData(appData);
+        }
         return toAjax(medicalHistoryService.updateMedicalHistory(medicalHistory));
     }
 
