@@ -9,78 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="医院名称" prop="hospitalName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.hospitalName"-->
-<!--          placeholder="请输入医院名称"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="医院代号" prop="hospitalCode">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.hospitalCode"-->
-<!--          placeholder="请输入医院代号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="医院账号" prop="hospitalAccount">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.hospitalAccount"-->
-<!--          placeholder="请输入医院账号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="医院密码" prop="hospitalPassword">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.hospitalPassword"-->
-<!--          placeholder="请输入医院密码"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="设备数量" prop="equipmentNumber">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.equipmentNumber"-->
-<!--          placeholder="请输入设备数量"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="患者总数" prop="patientNumber">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.patientNumber"-->
-<!--          placeholder="请输入患者总数"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="正在监测患者数" prop="monitoringPatientNumber">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.monitoringPatientNumber"-->
-<!--          placeholder="请输入正在监测患者数"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="账号总数" prop="accountNumber">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.accountNumber"-->
-<!--          placeholder="请输入账号总数"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="首次收到心电数据时间" prop="firstEcgTime">-->
-<!--        <el-date-picker clearable-->
-<!--                        v-model="queryParams.firstEcgTime"-->
-<!--                        type="date"-->
-<!--                        value-format="yyyy-MM-dd"-->
-<!--                        placeholder="请选择首次收到心电数据时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
+
       <el-form-item label="标注差异" prop="ifStatistics">
         <el-select v-model="queryParams.ifStatistics" placeholder="请选择是否查看标注差异" clearable>
           <el-option
@@ -91,6 +20,18 @@
           />
         </el-select>
       </el-form-item>
+
+<!--      <el-form-item label="标注标签差异" prop="ifStatistics">-->
+<!--        <el-select v-model="queryParams.ifStatistics" placeholder="请选择查看某个便签差异" clearable>-->
+<!--          <el-option-->
+<!--            v-for="dict in dict.type.if"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -98,49 +39,6 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['hospital:hospital:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['hospital:hospital:edit']"-->
-<!--        >修改</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          plain-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['hospital:hospital:remove']"-->
-<!--        >删除</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          plain-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['hospital:hospital:export']"-->
-<!--        >导出</el-button>-->
-<!--      </el-col>-->
-<!--      <right-toolbar :showSearch.sync="showSearch" @queryTable="refresh"></right-toolbar>-->
     </el-row>
 
     <el-table v-loading="loading" :data="hospitalList" @selection-change="handleSelectionChange">
@@ -163,22 +61,6 @@
           >查看日志
           </el-button>
         </template>
-<!--        <template slot-scope="scope">-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['hospital:hospital:edit']"-->
-<!--          >修改</el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['hospital:hospital:remove']"-->
-<!--          >删除</el-button>-->
-<!--        </template>-->
       </el-table-column>
     </el-table>
 
@@ -288,7 +170,7 @@ export default {
         monitoringPatientNumber: null,
         accountNumber: null,
         firstEcgTime: null,
-        ifStatistics: null
+        ifStatistics: null,
       },
       // 表单参数
       form: {},

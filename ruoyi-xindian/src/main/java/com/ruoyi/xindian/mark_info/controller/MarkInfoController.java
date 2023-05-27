@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.mark_info.controller;
 
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
@@ -11,6 +12,8 @@ import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.mark_info.domain.MarkInfo;
 import com.ruoyi.xindian.mark_info.domain.User;
 import com.ruoyi.xindian.mark_info.service.IMarkInfoService;
+import com.ruoyi.xindian.util.StrUtil;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,13 +95,17 @@ public class MarkInfoController extends BaseController {
     }
 //    获取不同标注
     @GetMapping("/NotSame")
-    public TableDataInfo NotSame() {
+    public TableDataInfo NotSame(User user) throws JSONException {
 //        startPage();
         PageDomain pageDomain = TableSupport.buildPageRequest();
         Integer pageNum = pageDomain.getPageNum();
         Integer pageSize = pageDomain.getPageSize();
         int index=(pageNum-1)*pageSize;
 
+//        String flag = user.getFlag();
+//        double threshold = user.getThreshold();
+        String flag = "noise";
+        double threshold = 0.8;
         List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
         List<MarkInfo> resList = new ArrayList<>();
         List<MarkInfo> reList = new ArrayList<>();
@@ -109,7 +116,8 @@ public class MarkInfoController extends BaseController {
             listMap=new ArrayList<>();
             List<String> info = Arrays.asList(markInfo.getAllLabel().split(",", -1));
             List<String> users = Arrays.asList(markInfo.getAllUsers().split(",", -1));
-            if (isSame(info)){
+            List<String> dataLabel = Arrays.asList(markInfo.getAllDataLabel().split(",", -1));
+            if (isSame(info) && isSameLocation(dataLabel,flag,threshold)){
                 continue;
             }
             for(int i=0;i<info.size();i++){
@@ -133,6 +141,12 @@ public class MarkInfoController extends BaseController {
 
 //        return getDataTable(resList);
     }
+
+    /**
+     * 判断噪声等级是否相同
+     * @param info
+     * @return
+     */
     public boolean isSame(List<String> info){
         if(info.size()==1){
             return "".equals(info.get(0));
@@ -152,5 +166,18 @@ public class MarkInfoController extends BaseController {
             return count == 1;
         }
     }
-
+    /**
+     * 判断噪声标签位置是否相同
+     */
+    public boolean isSameLocation(List<String> info,String flag, double threshold) throws JSONException {
+        if (info.size() == 1) {
+            return "".equals(info.get(0));
+        }
+        if("".equals(info.get(0))&&"".equals(info.get(1))){
+            return true;
+        } else if ("".equals(info.get(0)) || "".equals(info.get(1))) {
+            return false;
+        }
+        return StrUtil.isSameDir(info.get(0), info.get(1),flag,threshold);
+    }
 }

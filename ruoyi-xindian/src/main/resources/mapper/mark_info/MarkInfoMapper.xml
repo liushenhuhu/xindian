@@ -14,7 +14,9 @@
 
     <sql id="selectPatientVo">
         select log_id,
-               GROUP_CONCAT(log_noise_level order by user_id) as allLabel,GROUP_CONCAT(user_id order by user_id) as allUsers
+               GROUP_CONCAT(log_noise_level order by user_id) as allLabel,
+               GROUP_CONCAT(user_id order by user_id) as allUsers,
+               GROUP_CONCAT(data_label order by user_id) as allDataLabel
         from alert_log_user
     </sql>
 

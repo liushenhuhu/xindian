@@ -579,7 +579,6 @@ export default {
             ecg_type: row.ecgType
           }),
           beforeSend:function (request) {
-            // 如果后台没有跨域处理，这个自定义
             request.setRequestHeader("user","zzu");
             request.setRequestHeader("password","zzu123");
           },

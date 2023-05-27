@@ -41,16 +41,14 @@
     </insert>
 
     <insert id="insertAno" parameterType="string">
-        insert ignore into alert_log_user(log_id, p_id, log_noise, log_type, event_name, event_description, user_id)
+        insert ignore into alert_log_user(log_id, p_id, log_type, event_name, event_description, user_id)
         select alert_log.log_id,
                alert_log.p_id,
-               aln.log_noise,
                alert_log.log_type,
                alert_log.event_name,
                alert_log.event_description,
                #{param1} as 'user_id'
         from alert_log
-                 left join alert_log_noise aln on alert_log.log_id = aln.log_id
         where p_id = #{param2};
     </insert>
 

@@ -14,6 +14,9 @@ public class MarkInfo extends BaseEntity {
     private String allUsers;
 
 
+    private String allDataLabel;
+
+
     private List<Map<String,String>> labelList;
 
 
@@ -73,6 +76,14 @@ public class MarkInfo extends BaseEntity {
      */
     public void setAllUsers(String allUsers) {
         this.allUsers = allUsers;
+    }
+
+    public String getAllDataLabel() {
+        return allDataLabel;
+    }
+
+    public void setAllDataLabel(String allDataLabel) {
+        this.allDataLabel = allDataLabel;
     }
 
     /**

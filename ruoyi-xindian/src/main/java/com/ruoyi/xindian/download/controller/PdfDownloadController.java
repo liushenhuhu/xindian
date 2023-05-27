@@ -165,6 +165,38 @@ public class PdfDownloadController extends BaseController {
             }
         }
     }
+
+    @GetMapping("/readPdf12/{pId}")
+    public void pdfHandler(HttpServletRequest request, HttpServletResponse response, @PathVariable("pId") String pId) {
+        //PDF文件地址
+//        PdfPath pdfPath = pdfPathService.selectPdfPathByPId(pId);
+//        String path = pdfPath.getPdfPath();
+//        System.out.println(path);
+        //File file = new File("C:\\Users\\Lenovo\\Desktop\\fcea3150-cf9d-4f98-bdd5-395aa4405825.pdf");
+        String path="/repository/DECG/report/"+pId+"/"+pId+".pdf";
+        File file = new File(path);
+        if (file.exists()) {
+            byte[] data;
+            FileInputStream input=null;
+            try {
+                input= new FileInputStream(file);
+                data = new byte[input.available()];
+                input.read(data);
+                response.getOutputStream().write(data);
+            } catch (Exception e) {
+                System.out.println("pdf文件处理异常：" + e);
+            }finally{
+                try {
+                    if(input!=null){
+                        input.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     @GetMapping("/getPdf")
     public void readPDF(HttpServletRequest request,HttpServletResponse response) {
         //PDF文件地址

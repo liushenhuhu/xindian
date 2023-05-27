@@ -10,6 +10,8 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.detection.domain.Detection;
+import com.ruoyi.xindian.detection.service.IDetectionService;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.mark_info.domain.User;
@@ -78,6 +80,9 @@ public class ReportController extends BaseController
 
     @Autowired
     private IDoctorService doctorService;
+
+    @Autowired
+    private IDetectionService detectionService;
 
     /**
      * 查询报告列表
@@ -204,17 +209,23 @@ public class ReportController extends BaseController
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String phonenumber = loginUser.getUser().getPhonenumber();
         String s = report.getpId();
+        //当前报告信息
         Report report1 = reportService.selectReportByPId(s);
         report.setReportId(report1.getReportId());
         //咨询医生次数减一
         if(phonenumber.equals(report1.getPPhone())){
-            AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
-            Long questionNum = appData.getQuestionNum();
-            if(questionNum==0){
-                return AjaxResult.error("咨询次数已用完");
-            }
-            appData.setQuestionNum(questionNum-1);
-            appDataService.updateAppData(appData);
+//            AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
+//            Long questionNum = appData.getQuestionNum();
+//            if(questionNum==0){
+//                return AjaxResult.error("咨询次数已用完");
+//            }
+//            appData.setQuestionNum(questionNum-1);
+//            appDataService.updateAppData(appData);
+            Detection detection = new Detection();
+            detection.setPatientPhone(phonenumber);
+            detection.setDetectionTime(new Date());
+            detection.setDetectionPid(report1.getpId());
+            detectionService.insertDetection(detection);
         }
         //患者请求医生
         if(report.getDiagnosisStatus()==2){
@@ -234,10 +245,14 @@ public class ReportController extends BaseController
         //拒绝逻辑
         if(report.getDiagnosisStatus()==3){
             //退回次数加一
-            AppData appData = appDataService.selectAppDataByPatientPhone(report1.getPPhone());
-            Long questionNum = appData.getQuestionNum();
-            appData.setQuestionNum(questionNum + 1);
-            appDataService.updateAppData(appData);
+//            AppData appData = appDataService.selectAppDataByPatientPhone(report1.getPPhone());
+//            Long questionNum = appData.getQuestionNum();
+//            appData.setQuestionNum(questionNum + 1);
+//            appDataService.updateAppData(appData);
+            Detection detection = new Detection();
+            detection.setDetectionPid(report1.getpId());
+            List<Detection> detections = detectionService.selectDetectionList(detection);
+            detectionService.deleteDetectionByDetectionId(detections.get(detections.size()-1).getDetectionId());
 
             NotDealWith notDealWith = new NotDealWith();
             notDealWith.setPid(s);
