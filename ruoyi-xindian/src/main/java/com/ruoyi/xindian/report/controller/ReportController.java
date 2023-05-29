@@ -2,6 +2,10 @@ package com.ruoyi.xindian.report.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,6 +31,7 @@ import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
 import com.ruoyi.xindian.util.DateUtil;
+import com.ruoyi.xindian.util.StrUtil;
 import com.ruoyi.xindian.util.WxUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -212,8 +217,25 @@ public class ReportController extends BaseController
         //当前报告信息
         Report report1 = reportService.selectReportByPId(s);
         report.setReportId(report1.getReportId());
-        //咨询医生次数减一
-        if(phonenumber.equals(report1.getPPhone())){
+        //患者请求医生
+        if(report.getDiagnosisStatus()==2){
+            String dPhone=report.getdPhone();
+            //选择医院随机医生
+            if(report.getHospital()!=null){
+                Doctor doctor = new Doctor();
+                doctor.setHospital(report.getHospital());
+                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+                if(doctors!=null && doctors.size()!=0){
+                    int rand = StrUtil.randomInt(doctors.size());
+                    dPhone=doctors.get(rand).getDoctorPhone();
+                    report.setdPhone(dPhone);
+                    report.setDiagnosisDoctor(doctors.get(rand).getDoctorName());
+                } else{
+                    return AjaxResult.error("当前医院平台无医生");
+                }
+            }
+            //咨询医生次数减一
+            if(phonenumber.equals(report1.getPPhone())){
 //            AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
 //            Long questionNum = appData.getQuestionNum();
 //            if(questionNum==0){
@@ -221,29 +243,44 @@ public class ReportController extends BaseController
 //            }
 //            appData.setQuestionNum(questionNum-1);
 //            appDataService.updateAppData(appData);
-            Detection detection = new Detection();
-            detection.setPatientPhone(phonenumber);
-            detection.setDetectionTime(new Date());
-            detection.setDetectionPid(report1.getpId());
-            detectionService.insertDetection(detection);
-        }
-        //患者请求医生
-        if(report.getDiagnosisStatus()==2){
-            //给医生发送短信
-            WxUtil.send(report.getdPhone());
-            //给医生发送微信订阅消息
-            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
-            if(doctor.getOpenId()!=null){
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String msg="有患者请求您诊断心电图，请及时处理。";
-                String tis="无";
-                String str_time= format.format(new Date());
-                String token = WxUtil.queryToken();
-                WxUtil.sendMsg(token,doctor.getOpenId(),msg,tis,str_time);
+                Detection detection = new Detection();
+                detection.setPatientPhone(phonenumber);
+                detection.setDetectionTime(new Date());
+                detection.setDetectionPid(report1.getpId());
+
+                HashMap<String, Object> params = new HashMap<>();
+                Detection detection1 = new Detection();
+                LocalDate now = LocalDate.now();
+                LocalDateTime startOfDay = now.atStartOfDay();
+                LocalDateTime endofDay = now.atTime(LocalTime.MAX);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+                String start = startOfDay.format(formatter);
+                String end = endofDay.format(formatter);
+                params.put("beginDetectionTime",start);
+                params.put("endDetectionTime",end);
+                detection1.setPatientPhone(phonenumber);
+                detection1.setParams(params);
+                List<Detection> detections = detectionService.selectDetectionList(detection1);
+                if(detections.size()>=3){
+                    return AjaxResult.error("今日咨询次数已用完");
+                }
+//            return AjaxResult.success();
+                detectionService.insertDetection(detection);
+                //给医生发送短信
+                WxUtil.send(dPhone);
             }
-        }
-        //拒绝逻辑
-        if(report.getDiagnosisStatus()==3){
+            //给医生发送微信订阅消息
+//            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+//            if(doctor.getOpenId()!=null){
+//                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                String msg="有患者请求您诊断心电图，请及时处理。";
+//                String tis="无";
+//                String str_time= format.format(new Date());
+//                String token = WxUtil.queryToken();
+//                WxUtil.sendMsg(token,doctor.getOpenId(),msg,tis,str_time);
+//            }
+        } else if(report.getDiagnosisStatus()==3){ //拒绝逻辑
             //退回次数加一
 //            AppData appData = appDataService.selectAppDataByPatientPhone(report1.getPPhone());
 //            Long questionNum = appData.getQuestionNum();

@@ -50,6 +50,9 @@ public class HospitalController extends BaseController
     {
         startPage();
         List<Hospital> list = hospitalService.selectHospitalList(hospital);
+        for (Hospital hospital1 : list) {
+            hospital1.setPrice("0");
+        }
         return getDataTable(list);
     }
 

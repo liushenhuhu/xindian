@@ -65,6 +65,16 @@ public class Hospital extends BaseEntity
     @Excel(name = "是否开通数据统计")
     private String ifStatistics;
 
+    private String price;
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public void setHospitalId(Long hospitalId)
     {
         this.hospitalId = hospitalId;

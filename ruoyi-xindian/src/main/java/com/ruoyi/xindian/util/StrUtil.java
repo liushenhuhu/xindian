@@ -1,6 +1,9 @@
 package com.ruoyi.xindian.util;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Random;
+
 public class StrUtil {
 
     public static  String[] Lead={"I", "II", "III", "aVR", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"};
@@ -67,5 +70,10 @@ public class StrUtil {
             if(!isScope(intL1[i],intL2[i],threshold)) return false;
         }
         return true;
+    }
+
+    public static int randomInt(int n){
+        Random random = new Random(System.currentTimeMillis());
+        return random.nextInt(n);
     }
 }

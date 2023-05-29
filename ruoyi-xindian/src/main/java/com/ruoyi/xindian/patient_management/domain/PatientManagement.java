@@ -194,6 +194,8 @@ public class PatientManagement extends BaseEntity {
     /**报告时长*/
     private String timeDuration;
 
+    private String reportState;
+
     public String getpId() {
         return pId;
     }

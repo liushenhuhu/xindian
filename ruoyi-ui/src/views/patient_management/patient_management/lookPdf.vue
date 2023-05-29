@@ -18,7 +18,8 @@ export default {
       // 版本号
       version: "3.8.3",
       TableHeight: 100,
-      src: null
+      src: null,
+      flagCre:0
     };
   },
   created() {
@@ -36,7 +37,7 @@ export default {
 
       },
       error: function () {
-        alert("未生成报告，请先生成报告！")
+        // alert("未生成报告，请先生成报告！")
     }
     })
     this.src=_this.src
