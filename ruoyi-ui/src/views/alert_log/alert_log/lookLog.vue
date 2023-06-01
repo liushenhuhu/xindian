@@ -15,7 +15,7 @@ export default {
     return {
       // 版本号
       version: "3.8.3",
-      TableHeight: 100,
+      TableHeight: 0,
       pId: null,
       url: null,
       src: null
@@ -47,7 +47,7 @@ export default {
 
     //动态计算表格高度
     let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
-    this.TableHeight = windowHeight + 180;
+    this.TableHeight = windowHeight;
   },
   activated() {
     if (this.$route.params.logId) {

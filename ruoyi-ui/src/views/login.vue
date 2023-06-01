@@ -224,7 +224,7 @@ export default {
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">远程心电管理系统</h3>
+      <h3 class="title">心电算法网关</h3>
       <el-form-item prop="username" v-if="!isSmsLogin">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>

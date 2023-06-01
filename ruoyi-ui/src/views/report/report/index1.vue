@@ -121,7 +121,7 @@
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor" />
       <el-table-column label="报告时间" align="center" prop="reportTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>

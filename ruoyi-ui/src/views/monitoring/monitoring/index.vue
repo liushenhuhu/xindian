@@ -41,7 +41,7 @@ export default {
     }
     //动态计算表格高度
     let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
-    this.TableHeight = windowHeight + 180;
+    this.TableHeight = windowHeight;
   },
   activated() {
     if (this.$route.query.equipmentCode) {
