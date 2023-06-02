@@ -16,12 +16,16 @@
         select log_id,
                GROUP_CONCAT(log_noise_level order by user_id) as allLabel,
                GROUP_CONCAT(user_id order by user_id) as allUsers,
-               GROUP_CONCAT(data_label order by user_id) as allDataLabel
+               GROUP_CONCAT(data_label order by user_id SEPARATOR ';') as allDataLabel
         from alert_log_user
     </sql>
 
     <select id="selectMarkInfoByLogId" parameterType="Patient" resultMap="PatientResult">
-        <include refid="selectPatientVo"/>
+        select log_id,
+               GROUP_CONCAT(log_noise_level order by user_id) as allLabel,
+               GROUP_CONCAT(user_id order by user_id) as allUsers,
+               GROUP_CONCAT(data_label order by user_id SEPARATOR ';') as allDataLabel
+        from alert_log_user
         group by log_id
     </select>
 
@@ -94,6 +98,10 @@
     <update id="updateMonitoringStatus">
         update patient
         set monitoring_status = 0;
+    </update>
+
+    <update id="groupConcat">
+        SET group_concat_max_len = 1000000;
     </update>
 
     <update id="updateMonitoringStatus2">

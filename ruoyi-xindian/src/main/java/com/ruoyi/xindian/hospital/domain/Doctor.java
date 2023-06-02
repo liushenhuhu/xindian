@@ -70,6 +70,16 @@ public class Doctor extends BaseEntity
 
     private String openId;
 
+    private String unionId;
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
+    }
+
     public void setOpenId(String openId)
     {
         this.openId = openId;

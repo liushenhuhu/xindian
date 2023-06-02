@@ -266,4 +266,14 @@ public class SysLoginController {
         doctor.setOpenId(openId);
         return AjaxResult.success(doctorService.updateDoctor(doctor));
     }
+
+    @PostMapping("/wxGZHOpenId")
+    public AjaxResult wxGZHOpenId(@RequestBody WxOpenId wxOpenId) {
+        String openId = wxOpenId.getOpenId();
+        String doctorPhone = wxOpenId.getDoctorPhone();
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(doctorPhone);
+        if(doctor==null) return AjaxResult.success();
+        doctor.setOpenId(openId);
+        return AjaxResult.success(doctorService.updateDoctor(doctor));
+    }
 }

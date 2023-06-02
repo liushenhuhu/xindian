@@ -11,4 +11,6 @@ public interface MarkInfoMapper {
     public List<MarkInfo> selectMarkInfoByLogId();
 
     public List<User> getUsers();
+
+    public void groupConcat();
 }

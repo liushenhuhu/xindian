@@ -271,15 +271,14 @@ public class ReportController extends BaseController
                 WxUtil.send(dPhone);
             }
             //给医生发送微信订阅消息
-//            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
-//            if(doctor.getOpenId()!=null){
-//                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                String msg="有患者请求您诊断心电图，请及时处理。";
-//                String tis="无";
-//                String str_time= format.format(new Date());
-//                String token = WxUtil.queryToken();
-//                WxUtil.sendMsg(token,doctor.getOpenId(),msg,tis,str_time);
-//            }
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+            if(doctor.getOpenId()!=null){
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String msg="有患者请求您诊断心电图，请及时处理。";
+                String str_time= format.format(new Date());
+                String token = WxUtil.queryGZHToken();
+                WxUtil.sendGZHMsg(token,doctor.getOpenId(),msg,str_time);
+            }
         } else if(report.getDiagnosisStatus()==3){ //拒绝逻辑
             //退回次数加一
 //            AppData appData = appDataService.selectAppDataByPatientPhone(report1.getPPhone());
@@ -345,6 +344,8 @@ public class ReportController extends BaseController
         String[] critical_value;
         //其它
         String[] other;
+        //选择性建议
+        String[] ad;
         //返回map
         HashMap<String, String[]> resMap = new HashMap<>();
         normal="正常心电图,大致正常心电图".split(",");
@@ -358,6 +359,7 @@ public class ReportController extends BaseController
         conduction_block="I度房室传导阻滞，II度房室传导阻滞，II度I型房室传导阻滞，II度II型房室传导阻滞，III度房室传导阻滞，窦房传导阻滞，高度房室传导阻滞，左前分支传导阻滞，左后分支传导阻滞，完全性左束支传导阻滞，不完全性左束支传导阻滞，完全性右束支传导阻滞，不完全性右束支传导阻滞，非特异性室内传导阻滞，室内差异性传导".split("，");
         critical_value="心电图危急值".split(",");
         other="预激综合症, 心室预激波, 早期复极".split(", ");
+        ad="建议到上级医院复查, 建议做动态心电图, 建议做12导联常规心电图".split(", ");
 
         resMap.put("正常",normal);
         resMap.put("心律",heart_rhythm);
@@ -370,6 +372,7 @@ public class ReportController extends BaseController
         resMap.put("传导阻滞",conduction_block);
         resMap.put("危急值",critical_value);
         resMap.put("其它",other);
+        resMap.put("选择性建议",ad);
 
         return AjaxResult.success(resMap);
     }
@@ -526,11 +529,10 @@ public class ReportController extends BaseController
     @GetMapping("/wx")
     public AjaxResult Wx() throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String msg="有患者请求您诊断心电图，请及时处理。";
-        String tis="无";
+        String msg="17337345250";
         String str_time= format.format(new Date());
-        String token = WxUtil.queryToken();
-        WxUtil.sendMsg(token,"o7rro4mw1ijaKRHz-Y7o32kOuMnM",msg,tis,str_time);
+        String token = "69_BLN5ZhUPcDijQ1XNSwFfnTBDuKuJc0k1kTsy0SsHa_8yCn8_4aS0yt0HjzChgzAQTzuKWDwRQbVID-m8hKb9WdXclDp4wl-MD1qYQCmVIOk3ee6DC8rsus7fcp8YKVaAEAKWH";
+        WxUtil.sendGZHMsg(token,"o3aud50kI3G8KC4DJe9SSYgL7NiM",msg,str_time);
         return AjaxResult.success();
     }
 }

@@ -47,7 +47,7 @@ public class StrUtil {
     public static boolean isScope(int[] a,int[] b, double threshold){
         double intersection = Math.max(0, Math.min(a[1], b[1]) - Math.max(a[0], b[0]));
         double union = Math.max(a[1], b[1]) - Math.min(a[0], b[0]);
-        return intersection/union>=threshold;
+        return (intersection/union)>=threshold;
     }
 
     /**
@@ -60,11 +60,13 @@ public class StrUtil {
         //获取二维数组
         String list1 = str1.get(flag).toString();
         String list2 = str2.get(flag).toString();
-        if("[]".equals(list1) || "[]".equals(list2)){
+        if("[]".equals(list1) && "[]".equals(list2)){
+            return true;
+        } else if("[]".equals(list1) || "[]".equals(list2)){
             return false;
         }
         int[][] intL1 = StrToList(list1);
-        int[][] intL2 = StrToList(list1);
+        int[][] intL2 = StrToList(list2);
         if(intL1.length!=intL2.length) return false;
         for(int i=0;i<intL1.length;i++){
             if(!isScope(intL1[i],intL2[i],threshold)) return false;

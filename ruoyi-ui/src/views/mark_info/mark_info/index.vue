@@ -194,45 +194,55 @@ export default {
   methods: {
     /** 查询医院列表 */
     getList() {
-      this.loading = true;
-      var _this=this;
-      getUsers().then(response => {
-        _this.columnData=[]
-        _this.columnData.push({name: "logId", label: "logId"})
-        for(var i=0;i<response.length;i++){
-          _this.columnData.push({name:response[i].userId,label:response[i].userId})
+      if (this.queryParams.province === null || this.queryParams.province === ""){
+        if(this.queryParams.ifStatistics === "True"){
+          this.getNotSame();
         }
-      });
-      getLists(this.queryParams).then(response => {
-        this.hospitalList = response.rows;
-        this.total = response.total;
-        _this.hospitalList=[]
-        // console.log(response)
-        for(var k=0;k<response.rows.length;k++){
-          var dir={}
-          dir["logId"]=response.rows[k].logId
-          for(var i=1;i<_this.columnData.length;i++){
-            dir[_this.columnData[i].label]=""
-          }
-          // var left=1
-          for(var j=0;j<response.rows[k].labelList.length;j++){
-
-            for(var key in JSON.parse(JSON.stringify(response.rows[k].labelList[j]))){
-              // console.log("hell")
-              // if(JSON.parse(JSON.stringify(response.rows[k].labelList[j]))[key] !== ""){
-              //   left=0;
-              // }
-              dir[key]=JSON.parse(JSON.stringify(response.rows[k].labelList[j]))[key]
+        else{
+          this.loading = true;
+          var _this=this;
+          getUsers().then(response => {
+            _this.columnData=[]
+            _this.columnData.push({name: "logId", label: "logId"})
+            for(var i=0;i<response.length;i++){
+              _this.columnData.push({name:response[i].userId,label:response[i].userId})
             }
-            //
-          }
-          // if(left===0){
-          //   _this.hospitalList.push(dir)
-          // }
-          _this.hospitalList.push(dir)
+          });
+          getLists(this.queryParams).then(response => {
+            this.hospitalList = response.rows;
+            this.total = response.total;
+            _this.hospitalList=[]
+            // console.log(response)
+            for(var k=0;k<response.rows.length;k++){
+              var dir={}
+              dir["logId"]=response.rows[k].logId
+              for(var i=1;i<_this.columnData.length;i++){
+                dir[_this.columnData[i].label]=""
+              }
+              // var left=1
+              for(var j=0;j<response.rows[k].labelList.length;j++){
+
+                for(var key in JSON.parse(JSON.stringify(response.rows[k].labelList[j]))){
+                  // console.log("hell")
+                  // if(JSON.parse(JSON.stringify(response.rows[k].labelList[j]))[key] !== ""){
+                  //   left=0;
+                  // }
+                  dir[key]=JSON.parse(JSON.stringify(response.rows[k].labelList[j]))[key]
+                }
+                //
+              }
+              // if(left===0){
+              //   _this.hospitalList.push(dir)
+              // }
+              _this.hospitalList.push(dir)
+            }
+          });
+          this.loading = false;
         }
-      });
-      this.loading = false;
+      }
+      else{
+        this.getUserList();
+      }
     },
     /** 刷新 */
     refresh() {

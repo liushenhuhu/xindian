@@ -111,12 +111,16 @@ public class MarkInfoController extends BaseController {
         List<MarkInfo> reList = new ArrayList<>();
         Map<String,String> map;
         List<Map<String,String>> listMap;
-
         for (MarkInfo markInfo : list) {
+//            if(!markInfo.getLogId().equals("10e3be44-5015-5cbb-b7e9-1e3ca1c59117"))
+//                continue;
             listMap=new ArrayList<>();
             List<String> info = Arrays.asList(markInfo.getAllLabel().split(",", -1));
             List<String> users = Arrays.asList(markInfo.getAllUsers().split(",", -1));
-            List<String> dataLabel = Arrays.asList(markInfo.getAllDataLabel().split(",", -1));
+            if(markInfo.getAllDataLabel()==null){
+                continue;
+            }
+            List<String> dataLabel = Arrays.asList(markInfo.getAllDataLabel().split(";", -1));
             if (isSame(info) && isSameLocation(dataLabel,flag,threshold)){
                 continue;
             }

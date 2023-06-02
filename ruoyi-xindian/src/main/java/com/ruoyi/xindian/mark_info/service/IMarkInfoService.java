@@ -13,4 +13,6 @@ public interface IMarkInfoService {
 
     //获取用户
     public List<User> getUsers();
+
+    public void groupConcat();
 }

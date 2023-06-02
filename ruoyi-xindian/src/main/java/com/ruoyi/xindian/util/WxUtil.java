@@ -7,14 +7,27 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.utils.http.HttpUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class WxUtil {
 
+    //小程序token获取
     public static String queryToken(){
         String tokenUrl="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
         String appId = "wx331beedb5dbfe460";
         String secret = "f4de7b81311cf445d058f0b66b21add8";
+        tokenUrl = tokenUrl + "&appid=" + appId + "&secret=" + secret;
+        String result = HttpUtils.sendGet(tokenUrl);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String sccess_token = jsonObject.getString("access_token");
+        return sccess_token;
+    }
+    //公众号token获取
+    public static String queryGZHToken(){
+        String tokenUrl="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
+        String appId = "wx219c20026db0351e";
+        String secret = "c55d24177dc7f5cff61d8bebfdaa7d51";
         tokenUrl = tokenUrl + "&appid=" + appId + "&secret=" + secret;
         String result = HttpUtils.sendGet(tokenUrl);
         JSONObject jsonObject = JSONObject.parseObject(result);
@@ -27,29 +40,32 @@ public class WxUtil {
         return data;
     }
 
-    public static void sendMsg(String token, String openId, String msg, String tis, String str_time){
-        String appId = "wx331beedb5dbfe460";
-        String secret = "f4de7b81311cf445d058f0b66b21add8";
-        String msgUrl="https://api.weixin.qq.com/cgi-bin/message/subscribe/send";
+    //公众号消息
+    public static void sendGZHMsg(String token, String openId, String msg, String str_time){
+        String msgUrl="https://api.weixin.qq.com/cgi-bin/message/template/send";
         msgUrl=msgUrl+"?access_token="+token;
         //模板
         HashMap<String, Object> paraMap = new HashMap<>();
         paraMap.put("touser",openId);
-        paraMap.put("template_id","2UCux_98U1UwQp5fR0sWN_oJM6uZ0hlSyi1GOL9qJqk");
-        paraMap.put("access_token",token);
-        paraMap.put("page","pages/login/login");
+        paraMap.put("template_id","LjIAdodHTvUzCEg5COBLQvlAtyVheKJt9cFrAExVHPE");
+        HashMap<String, Object> miniprogram = new HashMap<>();
+        miniprogram.put("appid","wx331beedb5dbfe460");
+        miniprogram.put("pagepath","pages/login/login");
+        paraMap.put("miniprogram",miniprogram);
+
         //设置data
         HashMap<String, Object> data = new HashMap<>();
-        data.put("thing1",formatParam(msg));
-        data.put("thing3",formatParam(tis));
-        data.put("time2",formatParam(str_time));
+        data.put("keyword1",formatParam(msg));
+        data.put("keyword2",formatParam("有患者请求您诊断心电图，请及时处理。"));
+        data.put("keyword3",formatParam(str_time));
         paraMap.put("data",data);
 
         String jsonString = JSONUtils.toJSONString(paraMap);
+        System.out.println(jsonString);
         String result = HttpUtils.sendPost(msgUrl, jsonString);
         System.out.println(result);
     }
-
+    //发送短信
     public static void send(String telephone){
         String host = "https://dfsmsv2.market.alicloudapi.com";
         String path = "/data/send_sms_v2";
@@ -84,5 +100,28 @@ public class WxUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //小程序订阅消息
+    public static void sendMsg(String token, String openId, String msg, String tis, String str_time){
+        String msgUrl="https://api.weixin.qq.com/cgi-bin/message/template/send";
+        msgUrl=msgUrl+"?access_token="+token;
+        //模板
+        HashMap<String, Object> paraMap = new HashMap<>();
+        paraMap.put("touser",openId);
+        paraMap.put("template_id","LjIAdodHTvUzCEg5COBLQvlAtyVheKJt9cFrAExVHPE");
+        paraMap.put("access_token",token);
+        paraMap.put("page","pages/login/login");
+        //miniprogram 跳转小程序时填写，格式如{ "appid": "pagepath": { "value": any } }
+        //设置data
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("thing1",formatParam(msg));
+        data.put("thing3",formatParam(tis));
+        data.put("time2",formatParam(str_time));
+        paraMap.put("data",data);
+
+        String jsonString = JSONUtils.toJSONString(paraMap);
+        String result = HttpUtils.sendPost(msgUrl, jsonString);
+        System.out.println(result);
     }
 }

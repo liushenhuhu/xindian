@@ -24,4 +24,8 @@ public class MarkInfoServiceImpl implements IMarkInfoService {
     public List<User> getUsers() {
         return markInfoMapper.getUsers();
     }
+    @Autowired
+    public void groupConcat(){
+        markInfoMapper.groupConcat();
+    }
 }
