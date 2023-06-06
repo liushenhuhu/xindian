@@ -215,6 +215,7 @@
         <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
         <if test="departmentCode != null and departmentCode != ''">department_code,</if>
         <if test="openId != null and openId != ''">open_id,</if>
+        <if test="unionId != null and unionId != ''">union_id,</if>
         create_time
         )values(
         <if test="userId != null and userId != ''">#{userId},</if>
@@ -233,6 +234,7 @@
         <if test="hospitalCode != null">#{hospitalCode},</if>
         <if test="departmentCode != null">#{departmentCode},</if>
         <if test="openId != null">#{openId},</if>
+        <if test="unionId != null">#{unionId},</if>
         sysdate()
         )
     </insert>
@@ -304,6 +306,8 @@
             <if test="hospitalName != null">hospital_name = #{hospitalName},</if>
             <if test="hospitalCode != null">hospital_code = #{hospitalCode},</if>
             <if test="departmentCode != null">department_code = #{departmentCode},</if>
+            <if test="openId != null">open_id = #{openId},</if>
+            <if test="unionId != null">union_id = #{unionId},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}

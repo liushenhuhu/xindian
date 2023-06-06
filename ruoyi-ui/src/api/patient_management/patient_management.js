@@ -65,3 +65,11 @@ export function getUserInfo() {
     method: 'get'
   })
 }
+
+//发送短信
+export function sendMsgToPatient(phone) {
+  return request({
+    url: '/patient_management/patient_management/sendMsg/' + phone,
+    method: 'get'
+  })
+}

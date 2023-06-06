@@ -101,6 +101,7 @@ public class SysLoginController {
         //获取session_key和openid
         String session_key = jsonObject.getString("session_key");
         String openid = jsonObject.getString("openid");
+        String unionid = jsonObject.getString("unionid");
 
         //解密
         String decryptResult="";
@@ -111,7 +112,7 @@ public class SysLoginController {
             return AjaxResult.error("数据解析失败");
         }
         if(StringUtils.hasText(decryptResult)){
-            String token=loginService.wxLogin(decryptResult,openid);
+            String token=loginService.wxLogin(decryptResult,openid,unionid);
             JSONObject json = JSONObject.parseObject(decryptResult);
             String numberPhone = json.getString("phoneNumber");
             AjaxResult result = AjaxResult.success();

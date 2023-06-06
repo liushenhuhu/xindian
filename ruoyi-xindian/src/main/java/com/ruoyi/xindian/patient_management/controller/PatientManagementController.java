@@ -23,6 +23,7 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagmentDept;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.util.DateUtil;
+import com.ruoyi.xindian.util.WxUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -174,6 +175,12 @@ public class PatientManagementController extends BaseController {
         util.exportExcel(response, list, "患者管理数据");
     }
 
+    @GetMapping(value = "/sendMsg/{phone}")
+    public AjaxResult sendMsg(@PathVariable("phone") String phone)
+    {
+        WxUtil.sendAdvice(phone);
+        return AjaxResult.success();
+    }
     /**
      * 获取患者管理详细信息
      */

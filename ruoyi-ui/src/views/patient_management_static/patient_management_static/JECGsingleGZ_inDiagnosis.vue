@@ -83,16 +83,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">
-        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
-          <el-option
-            v-for="dict in dict.type.diagnosis_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>-->
+<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">-->
+<!--        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>-->
+<!--          <el-option-->
+<!--            v-for="dict in dict.type.diagnosis_status"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item label="诊断结论" prop="diagnosisConclusion">
         <el-input
           v-model="queryParams.diagnosisConclusion"
@@ -255,8 +255,6 @@
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
         </template>
       </el-table-column>
-
-
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
@@ -429,7 +427,7 @@ import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 
 export default {
-  name: "JECG12_diagnosis",
+  name: "JECGsingleGZ_inDiagnosis",
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
   data() {
     return {
@@ -464,10 +462,10 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'JECG12',
+        ecgType: 'JECGsingle',
         patientPhone: null,
         intelligentDiagnosis: null,
-        diagnosisStatus: 1,
+        diagnosisStatus: 2,
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
@@ -654,7 +652,7 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/restingECG", query: {pId: row.pId,}});
+      this.$router.push({path: "/staticECG", query: {pId: row.pId}});
     },
     /** 生成报告*/
     handleInform(row) {
@@ -666,6 +664,7 @@ export default {
     downloadInform(row) {
       let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
+
     }
   }
 };

@@ -32,6 +32,7 @@ import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
 import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.StrUtil;
+import com.ruoyi.xindian.util.ThreadUtil;
 import com.ruoyi.xindian.util.WxUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -214,6 +215,7 @@ public class ReportController extends BaseController
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String phonenumber = loginUser.getUser().getPhonenumber();
         String s = report.getpId();
+        List<Doctor> doctors = null;
         //当前报告信息
         Report report1 = reportService.selectReportByPId(s);
         report.setReportId(report1.getReportId());
@@ -224,7 +226,7 @@ public class ReportController extends BaseController
             if(report.getHospital()!=null){
                 Doctor doctor = new Doctor();
                 doctor.setHospital(report.getHospital());
-                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+                doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && doctors.size()!=0){
                     int rand = StrUtil.randomInt(doctors.size());
                     dPhone=doctors.get(rand).getDoctorPhone();
@@ -235,7 +237,7 @@ public class ReportController extends BaseController
                 }
             }
             //咨询医生次数减一
-            if(phonenumber.equals(report1.getPPhone())){
+            if(phonenumber.equals(report1.getPPhone())) {
 //            AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
 //            Long questionNum = appData.getQuestionNum();
 //            if(questionNum==0){
@@ -257,28 +259,39 @@ public class ReportController extends BaseController
 
                 String start = startOfDay.format(formatter);
                 String end = endofDay.format(formatter);
-                params.put("beginDetectionTime",start);
-                params.put("endDetectionTime",end);
+                params.put("beginDetectionTime", start);
+                params.put("endDetectionTime", end);
                 detection1.setPatientPhone(phonenumber);
                 detection1.setParams(params);
                 List<Detection> detections = detectionService.selectDetectionList(detection1);
-                if(detections.size()>=3){
+                if (detections.size() >= 3) {
                     return AjaxResult.error("今日咨询次数已用完");
                 }
 //            return AjaxResult.success();
                 detectionService.insertDetection(detection);
                 //给医生发送短信
                 WxUtil.send(dPhone);
+                //给医生发送微信订阅消息
+//                Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+//                if (doctor.getOpenId() != null) {
+//                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                    String msg = "有患者请求您诊断心电图，请及时处理。";
+//                    String str_time = format.format(new Date());
+//                    String token = WxUtil.queryGZHToken();
+//                    WxUtil.sendGZHMsg(token, doctor.getOpenId(), msg, str_time);
+//                }
+                int i = reportService.updateReport(report);
+                if(report.getHospital()!=null && doctors!=null){
+                    //定时器, 30分钟无医生诊断, 换医生诊断.
+                    ThreadUtil threadUtil = new ThreadUtil();
+                    threadUtil.setParameter(report.getpId(), doctors, reportService);
+//                    threadUtil.run();
+                    Thread thread = new Thread(threadUtil);
+                    thread.start();
+                }
+                return toAjax(i);
             }
-            //给医生发送微信订阅消息
-            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
-            if(doctor.getOpenId()!=null){
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String msg="有患者请求您诊断心电图，请及时处理。";
-                String str_time= format.format(new Date());
-                String token = WxUtil.queryGZHToken();
-                WxUtil.sendGZHMsg(token,doctor.getOpenId(),msg,str_time);
-            }
+
         } else if(report.getDiagnosisStatus()==3){ //拒绝逻辑
             //退回次数加一
 //            AppData appData = appDataService.selectAppDataByPatientPhone(report1.getPPhone());
@@ -301,8 +314,7 @@ public class ReportController extends BaseController
 //            report.setDiagnosisConclusion("");
             return toAjax(reportService.updateReport(report));
         }
-        //医生结论
-        return toAjax(reportService.updateReport(report));
+        return toAjax(1);
     }
 
     /**
@@ -528,11 +540,8 @@ public class ReportController extends BaseController
 
     @GetMapping("/wx")
     public AjaxResult Wx() throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String msg="17337345250";
-        String str_time= format.format(new Date());
-        String token = "69_BLN5ZhUPcDijQ1XNSwFfnTBDuKuJc0k1kTsy0SsHa_8yCn8_4aS0yt0HjzChgzAQTzuKWDwRQbVID-m8hKb9WdXclDp4wl-MD1qYQCmVIOk3ee6DC8rsus7fcp8YKVaAEAKWH";
-        WxUtil.sendGZHMsg(token,"o3aud50kI3G8KC4DJe9SSYgL7NiM",msg,str_time);
+        WxUtil.sendAdvice(msg);
         return AjaxResult.success();
     }
 }

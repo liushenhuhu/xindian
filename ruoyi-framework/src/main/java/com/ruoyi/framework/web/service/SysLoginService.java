@@ -72,7 +72,7 @@ public class SysLoginService {
     /**
      * 微信登录方法
      */
-    public String wxLogin(String decryptResult,String openId){
+    public String wxLogin(String decryptResult,String openId,String unionId){
         JSONObject jsonObject = JSONObject.parseObject(decryptResult);
         String nickName = "微信用户";
         String numberPhone = jsonObject.getString("phoneNumber");
@@ -85,6 +85,7 @@ public class SysLoginService {
             user.setPhonenumber(numberPhone);
             user.setOpenId(openId);
             user.setCreateTime(DateUtils.getNowDate());
+            user.setUnionId(unionId);
 //            user.setPassword(SecurityUtils.encryptPassword("123456"));
             userService.insertUser(user);
             Long userId = userService.selectUserByUserName(numberPhone).getUserId();
@@ -100,6 +101,7 @@ public class SysLoginService {
 //            Long userId = userService.selectUserByUserName(numberPhone).getUserId();
 //            userService.setUserRole(userId, 100L);
             user.setOpenId(openId);
+            user.setUnionId(unionId);
             user.setUpdateTime(DateUtils.getNowDate());
             userService.updateUserProfile(user);
         }

@@ -429,7 +429,7 @@ import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 
 export default {
-  name: "JECG12_diagnosis",
+  name: "JECG12_inDiagnosis",
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
   data() {
     return {
@@ -467,7 +467,7 @@ export default {
         ecgType: 'JECG12',
         patientPhone: null,
         intelligentDiagnosis: null,
-        diagnosisStatus: 1,
+        diagnosisStatus: 2,
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,

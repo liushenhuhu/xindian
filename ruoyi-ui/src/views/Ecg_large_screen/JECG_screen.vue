@@ -374,7 +374,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-around;
-  background-image: url("../../assets/images/head.png");
+  /*background-image: url("../../assets/images/head.png");*/
 }
 
 .title1 {
@@ -425,7 +425,7 @@ export default {
   flex-direction: column;
   position: relative;
   border: 1px solid rgba(25, 186, 139, 0.17);
-  background: url(../../assets/images/container.png);
+  /*background: url(../../assets/images/container.png);*/
   padding: 0.1vw 0.1vw;
   margin-bottom: 0.5vw;
 }

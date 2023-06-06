@@ -317,22 +317,13 @@
             @click="lookECG(scope.row)"
           >查看报告
           </el-button>
-          <!--          <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-download"
-                      @click="handleInform(scope.row)"
-                      v-hasPermi="['patient:patient:downloadInform']"
-                    >生成报告
-                    </el-button>
-                    <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-magic-stick"
-                      @click="downloadInform(scope.row)"
-                      v-hasPermi="['patient:patient:inform']"
-                    >下载报告
-                    </el-button>-->
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-position"
+            @click="sendMsg(scope.row)"
+          >发送短信
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -430,7 +421,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus, getUserInfo
+  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -643,6 +634,35 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {
       });
+    },
+    //发送短信
+    sendMsg(row){
+      const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+      var isPhoneNumberValid = reg.test(row.patientPhone);
+      if(isPhoneNumberValid) {
+        console.log("患者电话: " + row.patientPhone)
+        console.log("患者姓名: " + row.patientName)
+        this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          sendMsgToPatient(row.patientPhone).then(response => {
+            this.$message({
+              type: 'success',
+              message: '发送成功!'
+            });
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      }
+      else{
+        this.$message.error('该患者手机号不合法！！！');
+      }
     },
     /** 导出按钮操作 */
     handleExport() {

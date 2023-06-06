@@ -20,7 +20,7 @@
     </resultMap>
 
     <sql id="selectHospitalVo">
-        select hospital_id, province, hospital_name, hospital_code, hospital_account, hospital_password, equipment_number, patient_number, monitoring_patient_number, account_number, first_ecg_time, if_statistics from hospital
+        select hospital_id, province, hospital_name, hospital_code, hospital_account, hospital_password, equipment_number, patient_number, monitoring_patient_number, account_number, first_ecg_time, if_statistics, img from hospital
     </sql>
 
     <select id="selectHospitalList" parameterType="Hospital" resultMap="HospitalResult">
