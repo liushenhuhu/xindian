@@ -102,6 +102,7 @@
                         :style="{width: '30%',}"></el-input>
               <el-input v-else v-model="data.dataTime" clearable
                         :style="{width: '30%',}"></el-input>
+              <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
               <el-button type="success" plain class="anNiu" @click="btnUpload">保存数据</el-button>
             </div>
           </div>
@@ -163,6 +164,7 @@
 import echarts from 'echarts'
 import $ from 'jquery';
 import {addReport, getReportByPId, updateReport} from "@/api/report/report";
+import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 
 export default {
   name: "index",
@@ -406,7 +408,7 @@ export default {
       openV4: false,
       openV5: false,
       openV6: false,
-
+      pphone:"",
     };
   },
   created() {
@@ -418,6 +420,7 @@ export default {
         this.data.resultByDoctor = response.diagnosisConclusion
         this.data.doctorName = response.diagnosisDoctor
         this.data.diagnosisData = response.reportTime
+        this.data.pphone=response.data.pphone
       });
       var show = sessionStorage.getItem(pId + "show");
       if (!show) {
@@ -3033,6 +3036,33 @@ export default {
       var nowTime = str.getFullYear() + "-"
         + (str.getMonth() + 1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes() + ":" + str.getSeconds();
       return nowTime;
+    },
+    //发送短信
+    sendMsg(){
+      console.log("患者电话: " + this.data.pphone)
+      if(this.data.pphone) {
+        // console.log("患者姓名: " + row.patientName)
+        this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          sendMsgToPatient(this.data.pphone).then(response => {
+            this.$message({
+              type: 'success',
+              message: '发送成功!'
+            });
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      }
+      else{
+        this.$message.error('该患者手机号不合法！！！');
+      }
     },
     //保存数据
     btnUpload() {
