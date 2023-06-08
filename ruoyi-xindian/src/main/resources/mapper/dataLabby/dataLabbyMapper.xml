@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.dataLabby.mapper.dataLabbyMapper">
+    
+    <resultMap type="dataLabby" id="OrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="hospitalId"    column="hospital_id"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectOrderVo">
+        select order_id, report_id, hospital_id, del_flag from order
+    </sql>
+
+    <select id="selectOrderList" parameterType="dataLabby" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        <where>  
+            <if test="reportId != null "> and report_id = #{reportId}</if>
+            <if test="hospitalId != null "> and hospital_id = #{hospitalId}</if>
+        </where>
+        and del_flag=0
+    </select>
+    
+    <select id="selectOrderByOrderId" parameterType="Long" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where order_id = #{orderId} and del_flag=0
+    </select>
+        
+    <insert id="insertOrder" parameterType="dataLabby" useGeneratedKeys="true" keyProperty="orderId">
+        insert into order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reportId != null">report_id,</if>
+            <if test="hospitalId != null">hospital_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reportId != null">#{reportId},</if>
+            <if test="hospitalId != null">#{hospitalId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrder" parameterType="dataLabby">
+        update order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportId != null">report_id = #{reportId},</if>
+            <if test="hospitalId != null">hospital_id = #{hospitalId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deleteOrderByOrderId" parameterType="Long">
+        update order set del_flag = 1 where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteOrderByOrderIds" parameterType="String">
+        update order set del_flag = 1 where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+</mapper>

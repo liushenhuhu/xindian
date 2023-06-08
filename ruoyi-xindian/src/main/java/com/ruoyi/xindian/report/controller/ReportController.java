@@ -301,8 +301,9 @@ public class ReportController extends BaseController
             Detection detection = new Detection();
             detection.setDetectionPid(report1.getpId());
             List<Detection> detections = detectionService.selectDetectionList(detection);
-            detectionService.deleteDetectionByDetectionId(detections.get(detections.size()-1).getDetectionId());
-
+            if(detections!=null && detections.size()!=0){
+                detectionService.deleteDetectionByDetectionId(detections.get(detections.size()-1).getDetectionId());
+            }
             NotDealWith notDealWith = new NotDealWith();
             notDealWith.setPid(s);
             notDealWith.setDoctorPhone(report.getdPhone());
@@ -314,7 +315,7 @@ public class ReportController extends BaseController
 //            report.setDiagnosisConclusion("");
             return toAjax(reportService.updateReport(report));
         }
-        return toAjax(1);
+        return toAjax(reportService.updateReport(report));
     }
 
     /**
