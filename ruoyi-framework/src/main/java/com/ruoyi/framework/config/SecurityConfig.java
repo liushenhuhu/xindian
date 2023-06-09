@@ -114,6 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sms/**").permitAll()
                 .antMatchers("/data/**").permitAll()
                 .antMatchers("/medicalData/medicalData/**").permitAll()
+                .antMatchers("/rotograph/rotograph/list").anonymous()
                 .antMatchers("/login", "/wxLogin", "/wxOpenId","/wxGZHOpenId","/register", "/register_doctor", "/captchaImage").anonymous()
 
                 .antMatchers("/websocket").anonymous()

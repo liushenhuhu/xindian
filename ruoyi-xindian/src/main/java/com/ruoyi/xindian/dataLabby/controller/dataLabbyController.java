@@ -1,19 +1,25 @@
 package com.ruoyi.xindian.dataLabby.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.xindian.dataLabby.domain.dataLabbyDto;
 import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.report.service.IReportService;
+import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +56,8 @@ public class dataLabbyController extends BaseController
     private IReportService reportService;
     @Autowired
     private IDoctorService doctorService;
+    @Autowired
+    private IPatientService patientService;
 
     private final Lock lock = new ReentrantLock();
     /**
@@ -61,6 +69,19 @@ public class dataLabbyController extends BaseController
     {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String hospitalCode = loginUser.getUser().getHospitalCode();
+        //管理员
+        if("15888888888".equals(loginUser.getUser().getPhonenumber())){
+            startPage();
+            List<dataLabby> list = orderService.selectOrderList(order);
+            List<dataLabbyDto> resList=new ArrayList<>();
+            dataLabbyDto dataDto;
+            for (dataLabby data : list) {
+                dataDto = new dataLabbyDto();
+                dataDto=dataToDto(data,dataDto);
+                resList.add(dataDto);
+            }
+            return getTable(resList,new PageInfo(list).getTotal());
+        }
         if(hospitalCode==null || hospitalCode.equals("")){
             return getDataTable(null);
         }
@@ -69,7 +90,32 @@ public class dataLabbyController extends BaseController
         order.setHospitalId(hospital.getHospitalId());
         startPage();
         List<dataLabby> list = orderService.selectOrderList(order);
-        return getDataTable(list);
+        List<dataLabbyDto> resList=new ArrayList<>();
+        dataLabbyDto dataDto;
+        for (dataLabby data : list) {
+            dataDto = new dataLabbyDto();
+            dataDto=dataToDto(data,dataDto);
+            resList.add(dataDto);
+        }
+        return getTable(resList,new PageInfo(list).getTotal());
+    }
+    public dataLabbyDto dataToDto(dataLabby d,dataLabbyDto t){
+        t.setReportId(d.getReportId());
+        t.setOrderId(d.getOrderId());
+        t.setHospitalId(d.getHospitalId());
+        Report report = reportService.selectReportByReportId(d.getReportId());
+        Patient patient = patientService.selectPatientByPatientPhone(report.getPPhone());
+        t.setPatientName(patient.getPatientName());
+        t.setPId(report.getpId());
+        t.setPatientPhone(patient.getPatientPhone());
+        if(patient.getBirthDay() == null){
+            t.setPatientAge(patient.getPatientAge());
+        } else {
+            int age = DateUtil.getAge(patient.getBirthDay());
+            t.setPatientAge(String.valueOf(age));
+        }
+        t.setPatientSex(patient.getPatientSex());
+        return t;
     }
     /**
      * 导出订单列表
@@ -143,6 +189,7 @@ public class dataLabbyController extends BaseController
             Report report = reportService.selectReportByReportId(reportId);
             report.setdPhone(phonenumber);
             report.setDiagnosisDoctor(doctor.getDoctorName());
+            report.setDiagnosisStatus(2L);
             orderService.deleteOrderByOrderId(orderId);
             reportService.updateReport(report);
         } catch (Exception e){

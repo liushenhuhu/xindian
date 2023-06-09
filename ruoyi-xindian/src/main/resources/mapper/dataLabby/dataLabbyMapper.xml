@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectOrderVo">
-        select order_id, report_id, hospital_id, del_flag from order
+        select order_id, report_id, hospital_id, del_flag from dataLabby
     </sql>
 
     <select id="selectOrderList" parameterType="dataLabby" resultMap="OrderResult">
@@ -20,8 +20,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="reportId != null "> and report_id = #{reportId}</if>
             <if test="hospitalId != null "> and hospital_id = #{hospitalId}</if>
+            and del_flag=0
         </where>
-        and del_flag=0
     </select>
     
     <select id="selectOrderByOrderId" parameterType="Long" resultMap="OrderResult">
@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertOrder" parameterType="dataLabby" useGeneratedKeys="true" keyProperty="orderId">
-        insert into order
+        insert into dataLabby
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="reportId != null">report_id,</if>
             <if test="hospitalId != null">hospital_id,</if>
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateOrder" parameterType="dataLabby">
-        update order
+        update dataLabby
         <trim prefix="SET" suffixOverrides=",">
             <if test="reportId != null">report_id = #{reportId},</if>
             <if test="hospitalId != null">hospital_id = #{hospitalId},</if>
@@ -54,11 +54,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteOrderByOrderId" parameterType="Long">
-        update order set del_flag = 1 where order_id = #{orderId}
+        update dataLabby set del_flag = 1 where order_id = #{orderId}
     </delete>
 
     <delete id="deleteOrderByOrderIds" parameterType="String">
-        update order set del_flag = 1 where order_id in
+        update dataLabby set del_flag = 1 where order_id in
         <foreach item="orderId" collection="array" open="(" separator="," close=")">
             #{orderId}
         </foreach>

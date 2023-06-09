@@ -126,8 +126,8 @@ public class DetectionController extends BaseController
         detection.setPatientPhone(patientPhone);
         detection.setParams(params);
         List<Detection> detections = detectionService.selectDetectionList(detection);
-        if(detections.size()<=3){
-            int d=3-detections.size();
+        if(detections.size()<=100){
+            int d=100-detections.size();
             return AjaxResult.success(d);
         }
         else{

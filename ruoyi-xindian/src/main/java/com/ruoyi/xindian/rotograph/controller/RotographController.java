@@ -46,7 +46,7 @@ public class RotographController extends BaseController
     /**
      * 查询轮播广告列表
      */
-    @PreAuthorize("@ss.hasPermi('rotograph:rotograph:list')")
+//    @PreAuthorize("@ss.hasPermi('rotograph:rotograph:list')")
     @GetMapping("/list")
     public TableDataInfo list(Rotograph rotograph)
     {

@@ -12,13 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.xindian.appData.domain.AppData;
-import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.dataLabby.domain.dataLabby;
+import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
 import com.ruoyi.xindian.detection.domain.Detection;
 import com.ruoyi.xindian.detection.service.IDetectionService;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
-import com.ruoyi.xindian.mark_info.domain.User;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.medical.domain.MedicalData;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalDataService;
@@ -82,13 +82,16 @@ public class ReportController extends BaseController
     private INotDealWithService notDealWithService;
 
     @Autowired
-    private IAppDataService appDataService;
+    private IDataLabbyService dataLabbyService;
 
     @Autowired
     private IDoctorService doctorService;
 
     @Autowired
     private IDetectionService detectionService;
+
+    @Autowired
+    private IHospitalService hospitalService;
 
     /**
      * 查询报告列表
@@ -264,7 +267,7 @@ public class ReportController extends BaseController
                 detection1.setPatientPhone(phonenumber);
                 detection1.setParams(params);
                 List<Detection> detections = detectionService.selectDetectionList(detection1);
-                if (detections.size() >= 3) {
+                if (detections.size() >= 100) {
                     return AjaxResult.error("今日咨询次数已用完");
                 }
 //            return AjaxResult.success();
@@ -293,11 +296,6 @@ public class ReportController extends BaseController
             }
 
         } else if(report.getDiagnosisStatus()==3){ //拒绝逻辑
-            //退回次数加一
-//            AppData appData = appDataService.selectAppDataByPatientPhone(report1.getPPhone());
-//            Long questionNum = appData.getQuestionNum();
-//            appData.setQuestionNum(questionNum + 1);
-//            appDataService.updateAppData(appData);
             Detection detection = new Detection();
             detection.setDetectionPid(report1.getpId());
             List<Detection> detections = detectionService.selectDetectionList(detection);
@@ -314,9 +312,30 @@ public class ReportController extends BaseController
             notDealWithService.insertNotDealWith(notDealWith);
 //            report.setDiagnosisConclusion("");
             return toAjax(reportService.updateReport(report));
+        }else if(report.getDiagnosisStatus()==1){
+            WxUtil.sendOK(report1.getPPhone());
         }
         return toAjax(reportService.updateReport(report));
     }
+
+    /**
+     * 患者提交报告到大厅
+     *
+     */
+    @PutMapping("/dataLabby")
+    public AjaxResult dataLabby(@RequestBody Report report)
+    {
+
+        Long hospitalId = Long.valueOf(report.getHospital());
+        Long s = report.getReportId();
+        dataLabby dataLabby = new dataLabby();
+        dataLabby.setReportId(s);
+        dataLabby.setHospitalId(hospitalId);
+        report.setDiagnosisStatus(2L);
+        reportService.updateReport(report);
+        return AjaxResult.success(dataLabbyService.insertOrder(dataLabby));
+    }
+
 
     /**
      * 删除报告
@@ -372,7 +391,7 @@ public class ReportController extends BaseController
         conduction_block="I度房室传导阻滞，II度房室传导阻滞，II度I型房室传导阻滞，II度II型房室传导阻滞，III度房室传导阻滞，窦房传导阻滞，高度房室传导阻滞，左前分支传导阻滞，左后分支传导阻滞，完全性左束支传导阻滞，不完全性左束支传导阻滞，完全性右束支传导阻滞，不完全性右束支传导阻滞，非特异性室内传导阻滞，室内差异性传导".split("，");
         critical_value="心电图危急值".split(",");
         other="预激综合症, 心室预激波, 早期复极".split(", ");
-        ad="建议到上级医院复查, 建议做动态心电图, 建议做12导联常规心电图".split(", ");
+        ad="建议到上级医院复查, 建议做动态心电图, 建议做12导联常规心电图, 信号存在干扰，请重新采集".split(", ");
 
         resMap.put("正常",normal);
         resMap.put("心律",heart_rhythm);

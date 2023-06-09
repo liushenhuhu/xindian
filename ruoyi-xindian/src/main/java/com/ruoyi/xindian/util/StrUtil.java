@@ -75,7 +75,7 @@ public class StrUtil {
     }
 
     public static int randomInt(int n){
-        Random random = new Random(System.currentTimeMillis());
+        Random random = new Random();
         return random.nextInt(n);
     }
 }
