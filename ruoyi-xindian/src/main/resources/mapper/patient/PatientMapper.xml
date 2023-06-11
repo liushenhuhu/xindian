@@ -17,6 +17,7 @@
         <result property="monitoringStatus" column="monitoring_status"/>
         <result property="bindingState" column="binding_state"/>
         <result property="birthDay"    column="birth_day"    />
+        <result property="detectionNum"    column="detection_num"    />
     </resultMap>
 
     <sql id="selectPatientVo">
@@ -31,7 +32,8 @@
                equipment_id,
                monitoring_status,
                binding_state,
-               birth_day
+               birth_day,
+               detection_num
         from patient
     </sql>
 
@@ -65,6 +67,7 @@
             </if>
             <if test="bindingState != null  and bindingState != ''">and binding_state = #{bindingState}</if>
             <if test="birthDay != null "> and birth_day = #{birthDay}</if>
+            <if test="detectionNum != null "> and detection_num = #{detectionNum}</if>
         </where>
         order by monitoring_status desc, patient_id desc
     </select>
@@ -104,6 +107,7 @@
             <if test="monitoringStatus != null">monitoring_status,</if>
             <if test="bindingState != null">binding_state,</if>
             <if test="birthDay != null">birth_day,</if>
+            <if test="detectionNum != null">detection_num,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
@@ -118,6 +122,7 @@
             <if test="monitoringStatus != null">#{monitoringStatus},</if>
             <if test="bindingState != null">#{bindingState},</if>
             <if test="birthDay != null">#{birthDay},</if>
+            <if test="detectionNum != null">#{detection_num},</if>
         </trim>
     </insert>
 
@@ -135,6 +140,7 @@
             <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
             <if test="bindingState != null">binding_state = #{bindingState},</if>
             <if test="birthDay != null">birth_day = #{birthDay},</if>
+            <if test="detectionNum != null">detection_num = #{detectionNum},</if>
         </trim>
         where patient_id = #{patientId}
     </update>

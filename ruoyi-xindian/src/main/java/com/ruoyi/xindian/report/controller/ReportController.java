@@ -267,7 +267,8 @@ public class ReportController extends BaseController
                 detection1.setPatientPhone(phonenumber);
                 detection1.setParams(params);
                 List<Detection> detections = detectionService.selectDetectionList(detection1);
-                if (detections.size() >= 100) {
+                Patient patient = patientService.selectPatientByPatientPhone(phonenumber);
+                if (detections.size() >= patient.getDetectionNum()) {
                     return AjaxResult.error("今日咨询次数已用完");
                 }
 //            return AjaxResult.success();
@@ -442,13 +443,12 @@ public class ReportController extends BaseController
 //            }
 //        }
 
-        Report report = new Report();
-//        params.put("beginReportTime",minTime);
-//        params.put("endReportTime",maxTime);
-//        report.setParams(params);
-        report.setPPhone(rep.getPPhone());
-//        report.set
-        List<Report> reports = reportService.selectReportList(report);
+//        Report report = new Report();
+////        params.put("beginReportTime",minTime);
+////        params.put("endReportTime",maxTime);
+////        report.setParams(params);
+//        report.setPPhone(rep.getPPhone());
+        List<Report> reports = reportService.selectReportList(rep);
         String key="";
         HashMap<String, Object> result = new HashMap<>();
 

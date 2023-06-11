@@ -7,6 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.util.WxUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +42,9 @@ public class DetectionController extends BaseController
 {
     @Autowired
     private IDetectionService detectionService;
+
+    @Autowired
+    private IPatientService patientService;
 
     /**
      * 查询detection列表
@@ -126,8 +133,9 @@ public class DetectionController extends BaseController
         detection.setPatientPhone(patientPhone);
         detection.setParams(params);
         List<Detection> detections = detectionService.selectDetectionList(detection);
-        if(detections.size()<=100){
-            int d=100-detections.size();
+        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
+        if(detections.size()<= patient.getDetectionNum()){
+            Long d=patient.getDetectionNum()-detections.size();
             return AjaxResult.success(d);
         }
         else{

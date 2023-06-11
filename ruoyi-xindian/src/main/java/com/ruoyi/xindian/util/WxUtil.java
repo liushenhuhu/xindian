@@ -12,6 +12,9 @@ import java.util.*;
 
 public class WxUtil {
 
+    //检测次数
+    public static final int detection=3;
+
     //小程序token获取
     public static String queryToken(){
         String tokenUrl="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";

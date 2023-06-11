@@ -88,6 +88,19 @@ public class Patient extends BaseEntity {
     @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date birthDay;
 
+    /**
+     * 检测次数
+     */
+    private Long detectionNum;
+
+    public void setDetectionNum(Long detectionNum) {
+        this.detectionNum = detectionNum;
+    }
+
+    public Long getDetectionNum() {
+        return detectionNum;
+    }
+
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }

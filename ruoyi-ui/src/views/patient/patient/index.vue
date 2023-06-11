@@ -184,6 +184,9 @@
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
+            <el-form-item label="每日诊断次数" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.detectionNum }}</span>
+            </el-form-item>
             <!--            <el-form-item label="医院" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.patientSource }}</span>
                         </el-form-item>-->
@@ -293,6 +296,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="诊断次数" prop="detectionNum">
+          <el-input v-model="form.detectionNum" placeholder="请输入每日诊断次数"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -356,7 +362,8 @@ export default {
         familyPhone: null,
         equipmentId: null,
         monitoringStatus: null,
-        bindingState: null
+        bindingState: null,
+        detectionNum:null
       },
       // 表单参数
       form: {},
@@ -427,7 +434,8 @@ export default {
         familyPhone: null,
         equipmentId: null,
         monitoringStatus: null,
-        bindingState: null
+        bindingState: null,
+        detectionNum:null
       };
       this.resetForm("form");
     },
