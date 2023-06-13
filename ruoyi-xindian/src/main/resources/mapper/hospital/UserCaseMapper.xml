@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.UserCaseMapper">
+    
+    <resultMap type="UserCase" id="UserCaseResult">
+        <result property="id"    column="id"    />
+        <result property="cardId"    column="card_id"    />
+        <result property="appointmentId"    column="appointment_id"    />
+        <result property="doctorId"    column="doctor_id"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectUserCaseVo">
+        select id, card_id, appointment_id, doctor_id, content from user_case
+    </sql>
+
+    <select id="selectUserCaseList" parameterType="UserCase" resultMap="UserCaseResult">
+        <include refid="selectUserCaseVo"/>
+        <where>  
+            <if test="cardId != null "> and card_id = #{cardId}</if>
+            <if test="appointmentId != null "> and appointment_id = #{appointmentId}</if>
+            <if test="doctorId != null "> and doctor_id = #{doctorId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserCaseById" parameterType="Long" resultMap="UserCaseResult">
+        <include refid="selectUserCaseVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserCase" parameterType="UserCase" useGeneratedKeys="true" keyProperty="id">
+        insert into user_case
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cardId != null">card_id,</if>
+            <if test="appointmentId != null">appointment_id,</if>
+            <if test="doctorId != null">doctor_id,</if>
+            <if test="content != null">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cardId != null">#{cardId},</if>
+            <if test="appointmentId != null">#{appointmentId},</if>
+            <if test="doctorId != null">#{doctorId},</if>
+            <if test="content != null">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserCase" parameterType="UserCase">
+        update user_case
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cardId != null">card_id = #{cardId},</if>
+            <if test="appointmentId != null">appointment_id = #{appointmentId},</if>
+            <if test="doctorId != null">doctor_id = #{doctorId},</if>
+            <if test="content != null">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserCaseById" parameterType="Long">
+        delete from user_case where id = #{id}
+    </delete>
+
+    <delete id="deleteUserCaseByIds" parameterType="String">
+        delete from user_case where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

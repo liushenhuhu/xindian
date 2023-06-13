@@ -9,10 +9,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="phone"    column="phone"    />
         <result property="putTime"    column="put_time"    />
         <result property="msgData"    column="msg_data"    />
+        <result property="msgType"    column="msg_type"    />
     </resultMap>
 
     <sql id="selectMessageVo">
-        select id, phone, put_time, msg_data from message
+        select id, phone, put_time, msg_data, msg_type from message
     </sql>
 
     <select id="selectMessageList" parameterType="Message" resultMap="MessageResult">
@@ -21,7 +22,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="params.beginPutTime != null and params.beginPutTime != '' and params.endPutTime != null and params.endPutTime != ''"> and put_time between #{params.beginPutTime} and #{params.endPutTime}</if>
             <if test="msgData != null  and msgData != ''"> and msg_data = #{msgData}</if>
+            <if test="msgType != null  and msgType != ''"> and msg_type = #{msgType}</if>
         </where>
+        ORDER BY
+        CASE msg_type
+            WHEN '高' THEN 3
+            WHEN '中' THEN 2
+            WHEN '低' THEN 1
+        END DESC
     </select>
     
     <select id="selectMessageById" parameterType="Long" resultMap="MessageResult">
@@ -35,11 +43,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null and phone != ''">phone,</if>
             <if test="putTime != null">put_time,</if>
             <if test="msgData != null">msg_data,</if>
+            <if test="msgType != null">msg_type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="phone != null and phone != ''">#{phone},</if>
             <if test="putTime != null">#{putTime},</if>
             <if test="msgData != null">#{msgData},</if>
+            <if test="msgType != null">#{msgType},</if>
          </trim>
     </insert>
 
@@ -49,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null and phone != ''">phone = #{phone},</if>
             <if test="putTime != null">put_time = #{putTime},</if>
             <if test="msgData != null">msg_data = #{msgData},</if>
+            <if test="msgType != null">msg_type = #{msgType},</if>
         </trim>
         where id = #{id}
     </update>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.VisitPlanMapper">
+    
+    <resultMap type="VisitPlan" id="VisitPlanResult">
+        <result property="id"    column="id"    />
+        <result property="hospitalId"    column="hospital_id"    />
+        <result property="specialId"    column="special_id"    />
+        <result property="outpatientId"    column="outpatient_id"    />
+        <result property="clinicId"    column="clinic_id"    />
+        <result property="doctorId"    column="doctor_id"    />
+        <result property="time"    column="time"    />
+    </resultMap>
+
+    <sql id="selectVisitPlanVo">
+        select id, hospital_id, special_id, outpatient_id, clinic_id, doctor_id, time from visit_plan
+    </sql>
+
+    <select id="selectVisitPlanList" parameterType="VisitPlan" resultMap="VisitPlanResult">
+        <include refid="selectVisitPlanVo"/>
+        <where>  
+            <if test="hospitalId != null "> and hospital_id = #{hospitalId}</if>
+            <if test="specialId != null "> and special_id = #{specialId}</if>
+            <if test="outpatientId != null "> and outpatient_id = #{outpatientId}</if>
+            <if test="clinicId != null "> and clinic_id = #{clinicId}</if>
+            <if test="doctorId != null "> and doctor_id = #{doctorId}</if>
+            <if test="time != null "> and time = #{time}</if>
+        </where>
+    </select>
+    
+    <select id="selectVisitPlanById" parameterType="Long" resultMap="VisitPlanResult">
+        <include refid="selectVisitPlanVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVisitPlan" parameterType="VisitPlan" useGeneratedKeys="true" keyProperty="id">
+        insert into visit_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hospitalId != null">hospital_id,</if>
+            <if test="specialId != null">special_id,</if>
+            <if test="outpatientId != null">outpatient_id,</if>
+            <if test="clinicId != null">clinic_id,</if>
+            <if test="doctorId != null">doctor_id,</if>
+            <if test="time != null">time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hospitalId != null">#{hospitalId},</if>
+            <if test="specialId != null">#{specialId},</if>
+            <if test="outpatientId != null">#{outpatientId},</if>
+            <if test="clinicId != null">#{clinicId},</if>
+            <if test="doctorId != null">#{doctorId},</if>
+            <if test="time != null">#{time},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVisitPlan" parameterType="VisitPlan">
+        update visit_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hospitalId != null">hospital_id = #{hospitalId},</if>
+            <if test="specialId != null">special_id = #{specialId},</if>
+            <if test="outpatientId != null">outpatient_id = #{outpatientId},</if>
+            <if test="clinicId != null">clinic_id = #{clinicId},</if>
+            <if test="doctorId != null">doctor_id = #{doctorId},</if>
+            <if test="time != null">time = #{time},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVisitPlanById" parameterType="Long">
+        delete from visit_plan where id = #{id}
+    </delete>
+
+    <delete id="deleteVisitPlanByIds" parameterType="String">
+        delete from visit_plan where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

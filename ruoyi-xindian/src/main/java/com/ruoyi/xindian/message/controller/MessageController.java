@@ -2,6 +2,9 @@ package com.ruoyi.xindian.message.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +46,10 @@ public class MessageController extends BaseController
     {
         startPage();
         List<Message> list = messageService.selectMessageList(message);
+        for (Message mes : list) {
+            JSONObject jsonObject = JSONObject.parseObject(mes.getMsgData());
+            mes.setMsgData(jsonObject.getString("logId"));
+        }
         return getDataTable(list);
     }
 

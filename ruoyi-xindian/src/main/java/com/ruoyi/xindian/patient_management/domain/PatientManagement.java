@@ -167,7 +167,7 @@ public class PatientManagement extends BaseEntity {
     private String doctorPhone;
 
     /** 医生电话 */
-    @Excel(name = "医生电话")
+//    @Excel(name = "医生电话")
     private String birthDay;
 
     /** 起搏器 */

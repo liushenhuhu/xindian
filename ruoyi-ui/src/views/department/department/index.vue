@@ -17,8 +17,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院代号" prop="hospitalCode">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" clearable>
+      <el-form-item label="医院名称" prop="hospitalCode">
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
           <el-option
             v-for="dict in dict.type.hospital_name_list"
             :key="dict.value"

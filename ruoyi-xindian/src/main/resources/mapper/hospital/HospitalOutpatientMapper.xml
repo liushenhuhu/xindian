@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.HospitalOutpatientMapper">
+    
+    <resultMap type="HospitalOutpatient" id="HospitalOutpatientResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="specialId"    column="special_id"    />
+    </resultMap>
+
+    <sql id="selectHospitalOutpatientVo">
+        select id, name, special_id from hospital_outpatient
+    </sql>
+
+    <select id="selectHospitalOutpatientList" parameterType="HospitalOutpatient" resultMap="HospitalOutpatientResult">
+        <include refid="selectHospitalOutpatientVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="specialId != null "> and special_id = #{specialId}</if>
+        </where>
+    </select>
+    
+    <select id="selectHospitalOutpatientById" parameterType="Long" resultMap="HospitalOutpatientResult">
+        <include refid="selectHospitalOutpatientVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHospitalOutpatient" parameterType="HospitalOutpatient" useGeneratedKeys="true" keyProperty="id">
+        insert into hospital_outpatient
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="specialId != null">special_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="specialId != null">#{specialId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHospitalOutpatient" parameterType="HospitalOutpatient">
+        update hospital_outpatient
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="specialId != null">special_id = #{specialId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHospitalOutpatientById" parameterType="Long">
+        delete from hospital_outpatient where id = #{id}
+    </delete>
+
+    <delete id="deleteHospitalOutpatientByIds" parameterType="String">
+        delete from hospital_outpatient where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

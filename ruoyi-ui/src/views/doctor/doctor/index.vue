@@ -137,8 +137,17 @@
           <el-input v-model="form.doctorPhone" placeholder="请输入医生电话" />
         </el-form-item>
         <el-form-item label="医院" prop="hospital">
-          <el-input v-model="form.hospital" placeholder="请输入医院" />
+<!--          <el-input v-model="form.hospital" placeholder="请输入医院" />-->
+          <el-select v-model="form.hospital" placeholder="请选择医院名称" clearable>
+            <el-option
+              v-for="dict in dict.type.hospital_name_list"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
         </el-form-item>
+
         <el-form-item label="科室" prop="departmentCode">
 <!--          <el-input v-model="form.departmentCode" placeholder="请输入科室代号" />-->
           <el-autocomplete
@@ -188,6 +197,7 @@ import item from "@/layout/components/Sidebar/Item";
 
 export default {
   name: "Doctor",
+  dicts: ['hospital_name_list'],
   data() {
     return {
       //科室
@@ -235,12 +245,18 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        doctorName: [
+          { required: true, message: "医生姓名不能为空", trigger: "blur" }
+        ],
         doctorPhone: [
           { required: true, message: "医生电话不能为空", trigger: "blur" }
         ],
-        // departmentCode: [
-        //   { required: true, message: "科室不能为空", trigger: "blur" }
-        // ]
+        hospital: [
+          { required: true, message: "医院不能为空", trigger: "blur" }
+        ],
+        departmentCode: [
+          { required: true, message: "科室不能为空", trigger: "blur" }
+        ]
       }
     };
   },

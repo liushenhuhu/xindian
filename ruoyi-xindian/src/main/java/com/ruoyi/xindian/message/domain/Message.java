@@ -33,6 +33,19 @@ public class Message extends BaseEntity
     @Excel(name = "消息内容")
     private String msgData;
 
+    public String getMsgType() {
+        return msgType;
+    }
+
+    public void setMsgType(String msgType) {
+        this.msgType = msgType;
+    }
+
+    @Excel(name = "预警类型")
+    private String msgType;
+
+
+
     public void setId(Long id) 
     {
         this.id = id;

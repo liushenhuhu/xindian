@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.UserMedicalCardRelationMapper">
+    
+    <resultMap type="UserMedicalCardRelation" id="UserMedicalCardRelationResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="cardId"    column="card_id"    />
+    </resultMap>
+
+    <sql id="selectUserMedicalCardRelationVo">
+        select id, type, account_id, card_id from user_medical_card_relation
+    </sql>
+
+    <select id="selectUserMedicalCardRelationList" parameterType="UserMedicalCardRelation" resultMap="UserMedicalCardRelationResult">
+        <include refid="selectUserMedicalCardRelationVo"/>
+        <where>  
+            <if test="type != null "> and type = #{type}</if>
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="cardId != null "> and card_id = #{cardId}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserMedicalCardRelationById" parameterType="Long" resultMap="UserMedicalCardRelationResult">
+        <include refid="selectUserMedicalCardRelationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserMedicalCardRelation" parameterType="UserMedicalCardRelation" useGeneratedKeys="true" keyProperty="id">
+        insert into user_medical_card_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="cardId != null">card_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="cardId != null">#{cardId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserMedicalCardRelation" parameterType="UserMedicalCardRelation">
+        update user_medical_card_relation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="cardId != null">card_id = #{cardId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserMedicalCardRelationById" parameterType="Long">
+        delete from user_medical_card_relation where id = #{id}
+    </delete>
+
+    <delete id="deleteUserMedicalCardRelationByIds" parameterType="String">
+        delete from user_medical_card_relation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
