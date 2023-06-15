@@ -225,7 +225,7 @@ export default {
   methods: {
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/restingECG", query: {pId: row.msgData,}});
+      this.$router.push({path: "/staticECG", query: {pId: row.msgData,}});
     },
     sendMsg(row){
       console.log(row.phone)
