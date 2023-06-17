@@ -20,10 +20,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="professional"    column="professional"    />
         <result property="openId"    column="open_id"    />
         <result property="unionId"    column="union_id"    />
+        <result property="equipmentList"    column="equipment_list"    />
     </resultMap>
 
     <sql id="selectDoctorVo">
-        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id from doctor
+        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id, equipment_list from doctor
     </sql>
 
     <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
@@ -41,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hospital != null  and hospital != ''"> and hospital = #{hospital}</if>
             <if test="img != null  and img != ''"> and img = #{img}</if>
             <if test="professional != null  and professional != ''"> and professional = #{professional}</if>
+            <if test="equipmentList != null  and equipmentList != ''"> and equipment_list = #{equipmentList}</if>
         </where>
     </select>
     
@@ -70,6 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hospital != null">hospital,</if>
             <if test="img != null">img,</if>
             <if test="professional != null">professional,</if>
+            <if test="equipmentList != null">equipment_list,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doctorName != null">#{doctorName},</if>
@@ -84,6 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hospital != null">#{hospital},</if>
             <if test="img != null">#{img},</if>
             <if test="professional != null">#{professional},</if>
+            <if test="equipmentList != null">#{equipmentList},</if>
          </trim>
     </insert>
 
@@ -103,6 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="img != null">img = #{img},</if>
             <if test="professional != null">professional = #{professional},</if>
             <if test="openId != null">open_id = #{openId},</if>
+            <if test="equipmentList != null">equipment_list = #{equipmentList},</if>
         </trim>
         where doctor_id = #{doctorId}
     </update>

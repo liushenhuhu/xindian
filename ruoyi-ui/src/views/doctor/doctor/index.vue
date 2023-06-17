@@ -99,6 +99,7 @@
       <el-table-column label="医院" align="center" prop="hospital" />
       <el-table-column label="科室" align="center" prop="departmentName" />
       <el-table-column label="职称" align="center" prop="professional" />
+<!--      <el-table-column label="关联设备" align="center" prop="equipmentList" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -181,6 +182,9 @@
         <el-form-item label="收费价格" prop="chargePrice">
           <el-input v-model="form.chargePrice" placeholder="请输入收费价格" />
         </el-form-item>
+<!--        <el-form-item label="关联设备" prop="chargePrice">-->
+<!--          <el-input v-model="form.equipmentList" placeholder="请输入逗号分割的设备号" />-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -240,6 +244,7 @@ export default {
         hospital: null,
         img: null,
         professional:null,
+        // equipmentList:null
       },
       // 表单参数
       form: {},
@@ -326,6 +331,7 @@ export default {
         hospital: null,
         img: null,
         professional:null,
+        // equipmentList:null
       };
       this.resetForm("form");
     },

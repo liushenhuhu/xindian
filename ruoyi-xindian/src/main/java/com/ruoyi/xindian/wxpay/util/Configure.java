@@ -10,19 +10,19 @@ package com.ruoyi.xindian.wxpay.util;
 public class Configure {
 
     //小程序ID
-    private static String appID = "";
+    private static String appID = "wx50da6a0dfc5c45c0";
 
     // 小程序的secret
-    private static String secret = "";
+    private static String secret = "4a10ac992f6bd399982aa1ec5e67a241";
 
     //商户号
-    private static String mch_id = "";
+    private static String mch_id = "1645541073";
 
     // 商户支付秘钥
     private static String key = "";
 
     // 回调通知地址
-    private static String notify_url = "http://localhost:8080/api/v1/weixin/callback";
+    private static String notify_url = "http://localhost:83/dev-api/WXPay/weixin/callback";
 
     //交易类型
     private static  String trade_type = "JSAPI";

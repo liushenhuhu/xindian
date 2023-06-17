@@ -65,12 +65,22 @@ public class Doctor extends BaseEntity
     @Excel(name = "头像地址")
     private String img;
 
-    @Excel(name = "头像地址")
+    @Excel(name = "职称")
     private String professional;
+
+    private String equipmentList;
 
     private String openId;
 
     private String unionId;
+
+    public String getEquipmentList() {
+        return equipmentList;
+    }
+
+    public void setEquipmentList(String equipmentList) {
+        this.equipmentList = equipmentList;
+    }
 
     public String getUnionId() {
         return unionId;

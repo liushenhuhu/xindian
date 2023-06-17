@@ -172,7 +172,7 @@ public class WXPayController {
             order.setNotify_url(Configure.getNotify_url());
             order.setTrade_type(Configure.getTrade_type());
             //这里直接使用当前用户的openid
-            order.setOpenid("ohfYG5O2mdXZLoszDAWwqtodOZRM");
+            order.setOpenid("otRV25OnQJ36kKBAVVNOY-T1W-A8");
             order.setSign_type("MD5");
             //生成签名
             String sign = Signature.getSign(order);

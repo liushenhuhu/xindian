@@ -11,6 +11,7 @@ import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class EquipmentController extends BaseController {
     private ISysUserService userService;
     @Autowired
     private IDepartmentService departmentService;
+
+    @Autowired
+    private IDoctorService doctorService;
 
     /**
      * 查询设备列表
@@ -166,6 +170,25 @@ public class EquipmentController extends BaseController {
         Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentCode);
         return AjaxResult.success(equipment);
 
+    }
+    @GetMapping("/getEquipmentCodeListByPhone/{phone}")
+    public AjaxResult getEquipmentCodeListByPhone(@PathVariable String phone) {
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(phone);
+        if(doctor == null){
+            return AjaxResult.error("非医生无权限");
+        }
+        Equipment equipment = new Equipment();
+        equipment.setPatientPhone(phone);
+        List<Equipment> equipmentList = equipmentService.selectEquipmentList(equipment);
+        StringBuilder EquipmentCodeList= new StringBuilder();
+        for (Equipment eq : equipmentList) {
+            EquipmentCodeList.append(eq.getEquipmentCode());
+            EquipmentCodeList.append(",");
+        }
+        if(EquipmentCodeList.length()!=0){
+            EquipmentCodeList.deleteCharAt(EquipmentCodeList.length()-1);
+        }
+        return AjaxResult.success(EquipmentCodeList);
     }
 
 }

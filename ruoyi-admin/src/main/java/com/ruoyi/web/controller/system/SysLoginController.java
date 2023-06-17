@@ -124,6 +124,12 @@ public class SysLoginController {
             } else {
                 result.put("BindingState", true);
             }
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(numberPhone);
+            if(null == doctor){
+                result.put("IsDoctor",false);
+            } else {
+                result.put("IsDoctor",true);
+            }
             return result;
         }else{
             return AjaxResult.error("微信登录失败");
