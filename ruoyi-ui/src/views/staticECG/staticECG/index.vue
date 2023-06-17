@@ -1,116 +1,156 @@
 <template>
-  <div class="wrap">
-    <div id="pdfDom" style="padding: 10px;">
-      <div id="app">
-        <div class="page">
-          <div class="header">
-            <div class="header-left">
-              <div class="header-1">
-                <div class="header-1-1"><strong>姓名:</strong>{{ data.name }}</div>
-                <div class="header-1-1"><strong>性别:</strong>{{ data.gender }}</div>
-                <div class="header-1-1"><strong>年龄:</strong>{{ data.age }}岁</div>
-                <div class="header-1-1"><strong>送检科室:</strong> -</div>
-                <div class="header-1-1"><strong>申请单号:</strong> -</div>
-              </div>
-              <div class="header-2">
-                <div class="header-2-1"><strong>门诊号:</strong> -</div>
-                <div class="header-2-1"><strong>住院号:</strong> -</div>
-                <div class="header-2-1"><strong>病人编号:</strong> -</div>
-                <div class="header-2-1"><strong>HR:</strong>{{ data.hr }}bpm</div>
-                <div class="header-2-1"><strong>PR:</strong>{{ data.pr }}ms</div>
-              </div>
-              <div class="header-3">
-                <div class="header-3-1"><strong>QRS:</strong>{{ data.qrs }}ms</div>
-                <div class="header-3-1"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>
-                <div class="header-3-1"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg</div>
-                <div class="header-3-1"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>
-                <div class="header-3-1"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>
-              </div>
-            </div>
-            <div class="header-right">
-              <div class="header-4">
-                <div class="header-4-1"><strong>自动分析结果，仅供参考</strong></div>
-                <div class="header-4-1">
-                  <div style="width: 100%;height: 6vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
-                </div>
-                <div class="header-4-1"><strong>医师诊断</strong></div>
-                <div class="header-4-1-1">
-                  <el-input
-                    type="textarea"
-                    v-model="data.resultByDoctor"
-                    placeholder="请在这里输入医生诊断结果"
-                    data-value="1111"
-                    :rows="4"
-                    class="font">
-                  </el-input>
-                </div>
-              </div>
-            </div>
+  <div>
+    <div class="body">
+      <div class="left">
+        <div class="patientMessage">
+          <div class="patientMessage-1">
+            <div class="patientMessage-1-1"><strong>姓名:</strong>{{ data.name }}</div>
+            <div class="patientMessage-1-1"><strong>性别:</strong>{{ data.gender }}</div>
+            <div class="patientMessage-1-1"><strong>年龄:</strong>{{ data.age }}岁</div>
+            <div class="patientMessage-1-1"><strong>送检科室:</strong> -</div>
+            <div class="patientMessage-1-1"><strong>申请单号:</strong> -</div>
+            <div class="patientMessage-1-1"><strong>门诊号:</strong> -</div>
+            <div class="patientMessage-1-1"><strong>住院号:</strong> -</div>
+            <div class="patientMessage-1-1"><strong>病人编号:</strong> -</div>
           </div>
-          <div style="font-size: 1vw">10mm/mV 25mm/s</div>
-          <div class="body">
-            <div class="body-1">
-              <div>
-                <div id="I" class="line" @dblclick="clicktrueI"></div>
-              </div>
-              <div>
-                <div id="II" class="line" @dblclick="clicktrueII"></div>
-              </div>
-              <div>
-                <div id="III" class="line" @dblclick="clicktrueIII"></div>
-              </div>
-              <div>
-                <div id="aVR" class="line" @dblclick="clicktrueaVR"></div>
-              </div>
-              <div>
-                <div id="aVL" class="line" @dblclick="clicktrueaVL"></div>
-              </div>
-              <div>
-                <div id="aVF" class="line" @dblclick="clicktrueaVF"></div>
-              </div>
-            </div>
+          <div class="patientMessage-2">
+            <div class="patientMessage-2-1"><strong>HR:</strong>{{ data.hr }}bpm</div>
+            <div class="patientMessage-2-1"><strong>PR:</strong>{{ data.pr }}ms</div>
+            <div class="patientMessage-2-1"><strong>QRS:</strong>{{ data.qrs }}ms</div>
+            <div class="patientMessage-2-1"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>
+            <div class="patientMessage-2-1"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg</div>
+            <div class="patientMessage-2-1"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>
+            <div class="patientMessage-2-1"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>
           </div>
-          <div class="bottom">
-            <div class="bottom-left">
-              <strong>医师:</strong>
-              <el-input v-model="data.doctorName" clearable
-                        :style="{width: '30%',}">{{data.doctorName}}</el-input>
-              <span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
-              <strong>日期:</strong>
-              <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
-                        :style="{width: '30%',}"></el-input>
-              <el-input v-else v-model="data.dataTime" clearable
-                        :style="{width: '30%',}"></el-input>
-              <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
-              <el-button type="success" plain class="anNiu" @click="btnUpload">保存数据</el-button>
+        </div>
+        <div class="automaticResult">
+          <div class="doctor-1"><strong>自动分析结果，仅供参考</strong></div>
+          <div>
+            <div style="width: 100%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
+          </div>
+          <div class="doctor-1">
+            <strong>医师诊断</strong>
+            <el-button type="text" @click="dialogFormVisible = true" style="float: right">常用术语</el-button>
+          </div>
+          <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
+            <div class="text" v-for="(item,index) in items">
+              <div>{{ item.name }}</div>
+              <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
+                      v-for="(itemc,indexc) in item.label"
+                      :key="itemc"
+                      @click="putDown(itemc)">{{ itemc }}
+              </button>
             </div>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            </div>
+          </el-dialog>
+          <div>
+            <el-input
+              type="textarea"
+              v-model="data.resultByDoctor"
+              placeholder="请在这里输入医生诊断结果"
+              data-value="1111"
+              :rows="6"
+              class="font">{{ data.resultByDoctor }}
+            </el-input>
+          </div>
+          <div class="upload">
+            <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
+            <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
+          </div>
+        </div>
+        <div class="doctor">
+          <strong>医师:</strong>
+          <el-input v-model="data.doctorName" clearable
+                    :style="{width: '25%',}">{{ data.doctorName }}
+          </el-input>
+          <span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
+          <strong>日期:</strong>
+          <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
+                    :style="{width: '45%',}"></el-input>
+          <el-input v-else v-model="data.dataTime" clearable
+                    :style="{width: '45%',}"></el-input>
+        </div>
+      </div>
+      <div class="right">
+        <div class="ecg">
+          <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
+          <div>
+            <div id="1" class="line" @dblclick="showChart1()"></div>
+          </div>
+          <div>
+            <div id="2" class="line" @dblclick="showChart2($event)"></div>
+          </div>
+          <div>
+            <div id="3" class="line" @dblclick="showChart3($event)"></div>
+          </div>
+          <div>
+            <div id="4" class="line" @dblclick="showChart4($event)"></div>
+          </div>
+          <div>
+            <div id="5" class="line" @dblclick="showChart5($event)"></div>
+          </div>
+          <div>
+            <div id="6" class="line" @dblclick="showChart6($event)"></div>
+          </div>
+          <div>
+            <div id="7" class="line" @dblclick="showChart7($event)"></div>
+          </div>
+          <div>
+            <div id="8" class="line" @dblclick="showChart8($event)"></div>
+          </div>
+          <div>
+            <div id="9" class="line" @dblclick="showChart9($event)"></div>
           </div>
         </div>
       </div>
-      <div class="lineI" v-show="openI">
-        <div id="I1" class="lineshow"></div>
-        <button @click="clickclose" class="noName">关闭</button>
-      </div>
-      <div class="lineI" v-show="openII">
-        <div id="II1" class="lineshow"></div>
-        <button @click="clickclose" class="noName">关闭</button>
-      </div>
-      <div class="lineI" v-show="openIII">
-        <div id="III1" class="lineshow"></div>
-        <button @click="clickclose" class="noName">关闭</button>
-      </div>
-      <div class="lineI" v-show="openaVR">
-        <div id="aVR1" class="lineshow"></div>
-        <button @click="clickclose" class="noName">关闭</button>
-      </div>
-      <div class="lineI" v-show="openaVL">
-        <div id="aVL1" class="lineshow"></div>
-        <button @click="clickclose" class="noName">关闭</button>
-      </div>
-      <div class="lineI" v-show="openaVF">
-        <div id="aVF1" class="lineshow"></div>
-        <button @click="clickclose" class="noName">关闭</button>
-      </div>
+      <el-dialog
+        :visible.sync="videoVisible"
+        width="90%"
+      >
+        <div style="height:500px;text-align:center">
+          <div class="bigDiv" id="chartJump"></div>
+        </div>
+      </el-dialog>
+
+    </div>
+    <div class="lineI" v-show="open1">
+      <div id="I1" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
+    </div>
+    <div class="lineI" v-show="open2">
+      <div id="I2" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
+    </div>
+    <div class="lineI" v-show="open3">
+      <div id="I3" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
+    </div>
+    <div class="lineI" v-show="open4">
+      <div id="I4" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
+    </div>
+    <div class="lineI" v-show="open5">
+      <div id="I5" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
+    </div>
+    <div class="lineI" v-show="open6">
+      <div id="I6" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
+    </div>
+    <div class="lineI" v-show="open7">
+      <div id="I7" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
+    </div>
+    <div class="lineI" v-show="open8">
+      <div id="I8" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
+    </div>
+    <div class="lineI" v-show="open9">
+      <div id="I9" class="lineshow"></div>
+      <button @click="clickClose" class="noName">关闭</button>
     </div>
   </div>
 </template>
@@ -118,272 +158,214 @@
 <script>
 import echarts from 'echarts'
 import $ from 'jquery';
-import {addReport, getReportByPId, updateReport} from "@/api/report/report";
+import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/report/report";
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 
 export default {
-  name: "static_single",
-  inject: ['reload'],
+  name: "index",
   data() {
     return {
+      isActive1:false,//术语按钮的样式显示
+      videoVisible: false,//echarts弹出框显示
+      markdata: [
+        {xAxis: 0},
+        {xAxis: 25},
+        {xAxis: 50},
+        {xAxis: 75},
+        {xAxis: 100},
+        {xAxis: 125},
+        {xAxis: 150},
+        {xAxis: 175},
+        {xAxis: 200},
+        {xAxis: 225},
+        {xAxis: 250},
+        {xAxis: 275},
+        {xAxis: 300},
+        {xAxis: 325},
+        {xAxis: 350},
+        {xAxis: 375},
+        {xAxis: 400},
+        {xAxis: 425},
+        {xAxis: 450},
+        {xAxis: 475},
+        {xAxis: 500},
+        {xAxis: 525},
+        {xAxis: 550},
+        {xAxis: 575},
+        {xAxis: 600},
+        {yAxis: -1},
+        {yAxis: -0.5},
+        {yAxis: 0},
+        {yAxis: 0.5},
+        {yAxis: 1},
+      ],//没放大之前标记线
+      dialogFormVisible: false,//弹出框
+      items: "",//常用术语
+      isSelected:false,//术语按钮没有被按下
+      selectedButtons: [],//选中的按钮
       pId: null,
-      reloads: false,
       data: {
         name: "",
         gender: "",
         age: "",
         result: "",
+        hr: "",
+        pr: "",
+        qrs: "",
+        qt: "",
+        qtc: "",
+        p: "",
+        qrs_deg: "",
+        t: "",
+        pv5: "",
+        sv1: "",
+        rv5_sv1: "",
         resultByDoctor: "",
         dataTime: "",
         doctorName: "",
         diagnosisData: null,
-        datas: [],
+        bSuggest: "",
+        cSuggest: "",
       },
-      markData:[
-        {xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
-        {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
-        {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
-        {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
-        {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
-        {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
-        {xAxis: 600},
-        {xAxis: 625},
-        {xAxis: 650},
-        {xAxis: 675},
-        {xAxis: 700},
-        {xAxis: 725},
-        {xAxis: 750},
-        {xAxis: 775},
-        {xAxis: 800},
-        {xAxis: 825},
-        {xAxis: 850},
-        {xAxis: 875},
-        {xAxis: 900},
-        {xAxis: 925},
-        {xAxis: 950},
-        {xAxis: 975},
-        {xAxis: 1000},
-        {xAxis: 1000},
-        {xAxis: 1025},
-        {xAxis: 1050},
-        {xAxis: 1075},
-        {xAxis: 1100},
-        {xAxis: 1125},
-        {xAxis: 1150},
-        {xAxis: 1175},
-        {xAxis: 1200},
-        {xAxis: 1225},
-        {xAxis: 1250},
-        {xAxis: 1275},
-        {xAxis: 1300},
-        {xAxis: 1325},
-        {xAxis: 1350},
-        {xAxis: 1375},
-        {xAxis: 1400},
-        {xAxis: 1425},
-        {xAxis: 1450},
-        {xAxis: 1475},
-        {xAxis: 1500},
-        {xAxis: 1525},
-        {xAxis: 1550},
-        {xAxis: 1575},
-        {xAxis: 1600},
-        {xAxis: 1625},
-        {xAxis: 1650},
-        {xAxis: 1675},
-        {xAxis: 1700},
-        {xAxis: 1725},
-        {xAxis: 1750},
-        {xAxis: 1775},
-        {xAxis: 1800},
-        {xAxis: 1825},
-        {xAxis: 1850},
-        {xAxis: 1875},
-        {xAxis: 1900},
-        {xAxis: 1925},
-        {xAxis: 1950},
-        {xAxis: 1975},
-        {xAxis: 2000},
-
-        {yAxis: -3},
-        {yAxis: -2.5},
-        {yAxis: -2},
-        {yAxis: -1.5},
-        {yAxis: -1},
-        {yAxis: -0.5},
-        {yAxis: 0},
-        {yAxis: 0.5},
-        {yAxis: 1},
-        {yAxis: 1.5},
-        {yAxis: 2},
-        {yAxis: 2.5},
-        {yAxis: 3},
-      ],//放大之后标记线
-      markdata:[
-        {xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
-        {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
-        {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
-        {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
-        {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
-        {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
-        {xAxis: 600},
-        {xAxis: 625},
-        {xAxis: 650},
-        {xAxis: 675},
-        {xAxis: 700},
-        {xAxis: 725},
-        {xAxis: 750},
-        {xAxis: 775},
-        {xAxis: 800},
-        {xAxis: 825},
-        {xAxis: 850},
-        {xAxis: 875},
-        {xAxis: 900},
-        {xAxis: 925},
-        {xAxis: 950},
-        {xAxis: 975},
-        {xAxis: 1000},
-        {xAxis: 1000},
-        {xAxis: 1025},
-        {xAxis: 1050},
-        {xAxis: 1075},
-        {xAxis: 1100},
-        {xAxis: 1125},
-        {xAxis: 1150},
-        {xAxis: 1175},
-        {xAxis: 1200},
-        {xAxis: 1225},
-        {xAxis: 1250},
-        {xAxis: 1275},
-        {xAxis: 1300},
-        {xAxis: 1325},
-        {xAxis: 1350},
-        {xAxis: 1375},
-        {xAxis: 1400},
-        {xAxis: 1425},
-        {xAxis: 1450},
-        {xAxis: 1475},
-        {xAxis: 1500},
-        {xAxis: 1525},
-        {xAxis: 1550},
-        {xAxis: 1575},
-        {xAxis: 1600},
-        {xAxis: 1625},
-        {xAxis: 1650},
-        {xAxis: 1675},
-        {xAxis: 1700},
-        {xAxis: 1725},
-        {xAxis: 1750},
-        {xAxis: 1775},
-        {xAxis: 1800},
-        {xAxis: 1825},
-        {xAxis: 1850},
-        {xAxis: 1875},
-        {xAxis: 1900},
-        {xAxis: 1925},
-        {xAxis: 1950},
-        {xAxis: 1975},
-        {xAxis: 2000},
-
-        {yAxis: -1},
-        {yAxis: -0.5},
-        {yAxis: 0},
-        {yAxis: 0.5},
-        {yAxis: 1},
-      ],//没放大标记线
-      openI: false,
-      openII: false,
-      openIII: false,
-      openaVR: false,
-      openaVL: false,
-      openaVF: false,
-      pphone:"",
+      data12: {
+        x: [],
+        dataI: [],
+        dataII: [],
+        dataIII: [],
+        dataaVR: [],
+        dataaVL: [],
+        dataaVF: [],
+        dataV1: [],
+        dataV2: [],
+        dataV3: [],
+        dataV4: [],
+        dataV5: [],
+        dataV6: [],
+      },
+      pphone: "",
+      nArr: [],//导联数据
+      x: [],//x轴坐标
+      open1: false,
+      open2: false,
+      open3: false,
+      open4: false,
+      open5: false,
+      open6: false,
+      open7: false,
+      open8: false,
+      open9: false,
     };
   },
   created() {
     var pId = this.$route.query.pId;
-    console.log("pId:" , pId)
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
-        console.log("请求成功：",response.data)
-        this.data.resultByDoctor = response.data.diagnosisConclusion
-        this.data.doctorName = response.data.diagnosisDoctor
-        this.data.diagnosisData = response.data.reportTime
-        this.data.pphone=response.data.pphone
+        console.log("请求成功：", response.data)
+        this.data.resultByDoctor = response.diagnosisConclusion
+        this.data.doctorName = response.diagnosisDoctor
+        this.data.diagnosisData = response.reportTime
+        this.data.pphone = response.data.pphone
       });
-      var show = sessionStorage.getItem(pId + "show");
-      if (!show) {
-        this.get();
-      }
+      // var show = sessionStorage.getItem(pId + "show");
+      // if (!show) {
+      //   this.get();
+      // }
     }
   },
   mounted() {
-    // this.get();
+    this.get();
+    this.Camera();
+    // this.drawgrid();//canvas 画图
   },
   methods: {
-    clicktrueI() {
-      this.openI = !this.openI;
+    showChart1() {
+      this.open1 = !this.open1;
     },
-    clicktrueII() {
-      this.openII = !this.openII;
+    showChart2() {
+      this.open2 = !this.open2;
     },
-    clicktrueIII() {
-      this.openIII = !this.openIII;
+    showChart3() {
+      this.open3 = !this.open3;
     },
-    clicktrueaVR() {
-      this.openaVR = !this.openaVR;
+    showChart4() {
+      this.open4 = !this.open4;
     },
-    clicktrueaVL() {
-      this.openaVL = !this.openaVL;
+    showChart5() {
+      this.open5 = !this.open5;
     },
-    clicktrueaVF() {
-      this.openaVF = !this.openaVF;
+    showChart6() {
+      this.open6 = !this.open6;
     },
-    clickclose() {
-      this.openI = false;
-      this.openII = false;
-      this.openIII = false;
-      this.openaVR = false;
-      this.openaVL = false;
-      this.openaVF = false;
+    showChart7() {
+      this.open7 = !this.open7;
     },
+    showChart8() {
+      this.open8 = !this.open8;
+    },
+    showChart9() {
+      this.open9 = !this.open9;
+    },
+    clickClose() {
+      this.open1 = false;
+      this.open2 = false;
+      this.open3 = false;
+      this.open4 = false;
+      this.open5 = false;
+      this.open6 = false;
+      this.open7 = false;
+      this.open8 = false;
+      this.open9 = false;
+    },
+    //按下常用术语按钮
+    putDown(key) {
+      console.log(key)
+      if(this.isSelected){
+        this.isSelected=false
+        let index = this.data.resultByDoctor.indexOf(key);
+        console.log("if",index,this.isSelected)
+        if (index !== -1) {
+          this.selectedButtons.splice(index, 1);
+          this.data.resultByDoctor=this.selectedButtons
+        }
+        else{
+          this.data.resultByDoctor += key + ';';
+        }
+      }else{
+        this.isSelected=true
+        console.log("else",this.isSelected)
+        this.data.resultByDoctor += key + ';';
+      }
+
+
+      // if (this.items[a].label[b].checked===true) {
+      //   this.items[a].label[b].checked = false;
+      //   this.data.resultByDoctor += event.srcElement.innerText + ';';
+      // } else {
+      //   this.items[a].label[b].checked = true;
+      //   let index = this.data.resultByDoctor.indexOf(this.items[a].label[b].name);
+      //   if (index !== -1) {
+      //     this.data.resultByDoctor.splice(index, 1);
+      //   }
+      // }
+      // let index = this.checkButton.indexOf(value);
+      // if (index !== -1) {
+      //   this.checkButton.splice(index, 1);
+      // }
+      // else{
+      //   this.checkButton.push(value);
+      // }
+      // console.log("选中的术语：",this.checkButton)
+      // if (this.isActive1 == false) {
+      //   this.isActive1 = true;
+      //   this.data.resultByDoctor += event.srcElement.innerText + ';';
+      // } else {
+      //   let test = this.data.resultByDoctor.replace('value', ''); // 需要直接写 value 的值，不能写变量名
+      //   this.data.resultByDoctor = test;
+      //   this.isActive1 = false;
+      // }
+    },
+    //请求数据
     get() {
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
@@ -393,7 +375,7 @@ export default {
         target: document.querySelector('#table')//loadin覆盖的dom元素节点
       });
       var _th = this
-      console.log("pId:",this.pId)
+      console.log("pId:", this.pId)
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
@@ -402,7 +384,7 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pid: this.pId
+          pid: '2da82665-9134-b1c9-1285-a6b0806104ac'
         }),
         beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
@@ -410,7 +392,7 @@ export default {
           request.setRequestHeader("password", "zzu123");
         },
         success: function (data) {
-          console.log("请求成功：",data)
+          console.log("请求成功：", data)
           loading.close()
           // window.location.reload("#pdfDom");
           _th.data.age = data.result.age
@@ -427,15 +409,14 @@ export default {
           _th.data.datas = data.result.II
           console.log("获取到的导联数据", _th.data.datas)
           console.log("获取到的导联数据长度", _th.data.datas.length)
-          var x = [];
-          var nArr = _th.getNewArray(_th.data.datas, 2000);
-          console.log("数据以2000一条分好组", nArr)
-          for (var i = 0; i < 2000; i++) {
-            x.push(i);
+          _th.nArr = _th.getNewArray(_th.data.datas, 600);
+          console.log("数据以600一条分好组", _th.nArr)
+          for (var i = 0; i < 600; i++) {
+            _th.x.push(i);
           }
-          var chartI = echarts.init(document.getElementById("I"));
-          chartI.clear()
-          chartI.setOption({
+          var chart1 = echarts.init(document.getElementById("1"));
+          chart1.clear()
+          chart1.setOption({
             title: {
               text: "",
               top: 0,
@@ -450,7 +431,7 @@ export default {
             },
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               // position:"bottom",
               axisLabel: {
                 show: false,//x 轴刻度数字
@@ -503,7 +484,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[0],
+                data: _th.nArr[0],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -530,11 +511,11 @@ export default {
             ],
           });
           $(window).resize(function () {
-            chartI.resize();
+            chart1.resize();
           });
-          var chartII = echarts.init(document.getElementById("II"));
-          chartII.clear()
-          chartII.setOption({
+          var chart2 = echarts.init(document.getElementById("2"));
+          chart2.clear()
+          chart2.setOption({
             title: {
               text: "",
               top: 5,
@@ -549,7 +530,7 @@ export default {
             },
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -600,7 +581,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[1],
+                data: _th.nArr[1],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -628,11 +609,11 @@ export default {
 
           });
           $(window).resize(function () {
-            chartII.resize();
+            chart2.resize();
           });
-          var chartIII = echarts.init(document.getElementById("III"));
-          chartIII.clear()
-          chartIII.setOption({
+          var chart3 = echarts.init(document.getElementById("3"));
+          chart3.clear()
+          chart3.setOption({
             title: {
               text: "",
               top: 5,
@@ -647,7 +628,7 @@ export default {
             },
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -698,7 +679,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[2],
+                data: _th.nArr[2],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -724,11 +705,11 @@ export default {
             ],
           });
           $(window).resize(function () {
-            chartIII.resize();
+            chart3.resize();
           });
-          var chartaVR = echarts.init(document.getElementById("aVR"));
-          chartaVR.clear()
-          chartaVR.setOption({
+          var chart4 = echarts.init(document.getElementById("4"));
+          chart4.clear()
+          chart4.setOption({
             title: {
               text: "",
               top: 5,
@@ -743,7 +724,7 @@ export default {
             },
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -794,7 +775,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[3],
+                data: _th.nArr[3],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -820,11 +801,11 @@ export default {
             ],
           });
           $(window).resize(function () {
-            chartaVR.resize();
+            chart4.resize();
           });
-          var chartaVL = echarts.init(document.getElementById("aVL"));
-          chartaVL.clear()
-          chartaVL.setOption({
+          var chart5 = echarts.init(document.getElementById("5"));
+          chart5.clear()
+          chart5.setOption({
             title: {
               text: "",
               top: 5,
@@ -839,7 +820,7 @@ export default {
             },
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -890,7 +871,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[4],
+                data: _th.nArr[4],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -916,11 +897,11 @@ export default {
             ],
           });
           $(window).resize(function () {
-            chartaVL.resize();
+            chart5.resize();
           });
-          var chartaVF = echarts.init(document.getElementById("aVF"));
-          chartaVF.clear()
-          chartaVF.setOption({
+          var chart6 = echarts.init(document.getElementById("6"));
+          chart6.clear()
+          chart6.setOption({
             title: {
               text: "",
               top: 5,
@@ -935,7 +916,7 @@ export default {
             },
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -986,7 +967,7 @@ export default {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[5],
+                data: _th.nArr[5],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1012,12 +993,11 @@ export default {
             ],
           });
           $(window).resize(function () {
-            chartaVF.resize();
+            chart6.resize();
           });
-          //放大之后的心电图
-          var chartI1 = echarts.init(document.getElementById("I1"));
-          chartI1.clear()
-          chartI1.setOption({
+          var chart7 = echarts.init(document.getElementById("7"));
+          chart7.clear()
+          chart7.setOption({
             title: {
               text: "",
               top: 5,
@@ -1030,109 +1010,356 @@ export default {
               bottom: '1',
               containLabel: false
             },
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'cross'
+            xAxis: {
+              type: 'category',
+              data: _th.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
               }
             },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              },
+              max: 1,
+              min: -1
+            },
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[6],
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1,
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 1,
+                    opacity: 0.5,
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: _th.markdata
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chart7.resize();
+          });
+          var chart8 = echarts.init(document.getElementById("8"));
+          chart8.clear()
+          chart8.setOption({
+            title: {
+              text: "",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '1',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              },
+              max: 1,
+              min: -1
+            },
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[7],
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1,
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 1,
+                    opacity: 0.5,
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: _th.markdata
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chart8.resize();
+          });
+          var chart9 = echarts.init(document.getElementById("9"));
+          chart9.clear()
+          chart9.setOption({
+            title: {
+              text: "",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '1',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              },
+              max: 1,
+              min: -1
+            },
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[8],
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1,
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 1,
+                    opacity: 0.5,
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: _th.markdata
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chart9.resize();
+          });
+          //放大之后
+          var chart11 = echarts.init(document.getElementById("I1"));
+          chart11.clear()
+          chart11.setOption({
+            title: {
+              text: "",
+              top: 0,
+              left: 0,
+            },
+            grid: {
+              left: '1',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.x,
+              // position:"bottom",
+              axisLabel: {
+                show: false,//x 轴刻度数字
+                interval: 4,//中间隔4个数字
+              },
+              axisTick: {
+                show: false//x轴刻度线
+              },
+              axisLine: {
+                show: false//x轴线
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
 
-            dataZoom: [
-              {
-                type: 'inside',
-                start: 0,
-                end: 50
-              },
-              {
-                start: 0,
-                end: 50
-              }
-            ],
-            // dataZoom: [{
-            //   type: 'inside', // 放大和缩小
-            //   orient: 'vertical',
-            //   filterMode: "none",//或者”empty“
-            // }, {
-            //   type: 'inside',
-            //   filterMode: "none",//或者”empty“
-            // }, {
-            //     start: 0,//默认为0
-            //     end: 1000,//默认为100
-            //     type: 'slider',
-            //     show: true,
-            //     xAxisIndex: [0],
-            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
-            //     startValue: 0, // 初始显示值
-            //     endValue: 500000, // 结束显示值,自己定
-            //     height: 5,//组件高度
-            //     left: '10%', //左边的距离
-            //     right: '10%',//右边的距离
-            //     bottom: '1%',//底边的距离
-            //     borderColor: "#000000",
-            //     fillerColor: '#000000',
-            //     borderRadius: 5,
-            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
-            //     showDataShadow: false,//是否显示数据阴影 默认auto
-            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-            //     realtime: true, //是否实时更新
-            //     filterMode: "none",//或者”empty“
-            //   }],
-            xAxis: {
-              type: 'category',
-              data: x,
-              axisLabel: {
-                show: false,
-                interval: 4,
-              },
-              axisTick: {
-                show: false
-              },
-              axisLine: {
-                show: false
-              },
-              splitLine: {
-                show: true, //让网格显示
-                lineStyle: {//网格样式
-                  color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
-            },
-            yAxis: {
-              type: 'value',
-              axisLabel: {
-                show: false,
-              },
-              axisTick: {
-                show: false
-              },
-              axisLine: {
-                show: false
-              },
-              //  splitNumber: 3, // 横线数
-              interval: 0.1, // 刻度间隔
-              splitLine: {
-                show: true, //让网格显示
-                lineStyle: {//网格样式
-                  color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                 }
               },
-              max: 3,
-              min: -3
+              max: 1,
+              min: -1
             },
             series: [
               {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[0],
+                data: _th.nArr[0],
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1,
+                    // opacity: 1,
                   }
                 },
                 markLine: {
@@ -1141,23 +1368,24 @@ export default {
                   lineStyle: {
                     type: "solid",
                     color: '#b33939',
-                    width: 0.5
+                    width: 1,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
                     color: '#b33939'  // 展示内容颜色
                   },
-                  data:_th.markData
+                  data: _th.markdata
                 }
               }
             ],
           });
           $(window).resize(function () {
-            chartI1.resize();
+            chart11.resize();
           });
-          var chartII1 = echarts.init(document.getElementById("II1"));
-          chartII1.clear()
-          chartII1.setOption({
+          var chart22 = echarts.init(document.getElementById("I2"));
+          chart22.clear()
+          chart22.setOption({
             title: {
               text: "",
               top: 5,
@@ -1170,56 +1398,9 @@ export default {
               bottom: '1',
               containLabel: false
             },
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'cross'
-              }
-            },
-            dataZoom: [
-              {
-                type: 'inside',
-                start: 0,
-                end: 50
-              },
-              {
-                start: 0,
-                end: 50
-              }
-            ],
-            // dataZoom: [{
-            //   type: 'inside', // 放大和缩小
-            //   orient: 'vertical',
-            //   filterMode: "none",//或者”empty“
-            // }, {
-            //   type: 'inside',
-            //   filterMode: "none",//或者”empty“
-            // },
-            //   {
-            //     // start: 0,//默认为0
-            //     // end: 100,//默认为100
-            //     type: 'slider',
-            //     show: true,
-            //     // xAxisIndex: [0],
-            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
-            //     startValue: 0, // 初始显示值
-            //     endValue: 500000, // 结束显示值,自己定
-            //     height: 5,//组件高度
-            //     left: '10%', //左边的距离
-            //     right: '10%',//右边的距离
-            //     bottom: '1%',//底边的距离
-            //     borderColor: "#000000",
-            //     fillerColor: '#000000',
-            //     borderRadius: 5,
-            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
-            //     showDataShadow: false,//是否显示数据阴影 默认auto
-            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-            //     realtime: true, //是否实时更新
-            //     filterMode: "none",//或者”empty“
-            //   }],
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -1234,8 +1415,9 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1256,49 +1438,52 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               },
-              max: 3,
-              min: -3
+              max: 1,
+              min: -1
             },
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[1],
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 1,
+                    opacity: 0.5,
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: _th.markdata
+                }
 
-            series: [
-              {
-                type: 'line',
-                smooth: true,
-                showSymbol: false,
-                data: nArr[1],
-                lineStyle: {
-                  normal: {
-                    color: "#000000",
-                    width: 1
-                  }
-                },
-                markLine: {
-                  symbol: "none",
-                  silent: true,
-                  lineStyle: {
-                    type: "solid",
-                    color: '#b33939',
-                    width: 0.5
-                  },
-                  label: {
-                    position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
-                  },
-                  data: _th.markData
-                }
               }
             ],
+
           });
           $(window).resize(function () {
-            chartII1.resize();
+            chart22.resize();
           });
-          var chartIII1 = echarts.init(document.getElementById("III1"));
-          chartIII1.clear()
-          chartIII1.setOption({
+          var chart33 = echarts.init(document.getElementById("I3"));
+          chart33.clear()
+          chart33.setOption({
             title: {
               text: "",
               top: 5,
@@ -1311,56 +1496,9 @@ export default {
               bottom: '1',
               containLabel: false
             },
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'cross'
-              }
-            },
-            dataZoom: [
-              {
-                type: 'inside',
-                start: 0,
-                end: 50
-              },
-              {
-                start: 0,
-                end: 50
-              }
-            ],
-            // dataZoom: [{
-            //   type: 'inside', // 放大和缩小
-            //   orient: 'vertical',
-            //   filterMode: "none",//或者”empty“
-            // }, {
-            //   type: 'inside',
-            //   filterMode: "none",//或者”empty“
-            // },
-            //   {
-            //     // start: 0,//默认为0
-            //     // end: 100,//默认为100
-            //     type: 'slider',
-            //     show: true,
-            //     // xAxisIndex: [0],
-            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
-            //     startValue: 0, // 初始显示值
-            //     endValue: 500000, // 结束显示值,自己定
-            //     height: 5,//组件高度
-            //     left: '10%', //左边的距离
-            //     right: '10%',//右边的距离
-            //     bottom: '1%',//底边的距离
-            //     borderColor: "#000000",
-            //     fillerColor: '#000000',
-            //     borderRadius: 5,
-            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
-            //     showDataShadow: false,//是否显示数据阴影 默认auto
-            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-            //     realtime: true, //是否实时更新
-            //     filterMode: "none",//或者”empty“
-            //   }],
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -1375,8 +1513,9 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1397,19 +1536,20 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               },
-              max: 3,
-              min: -3
+              max: 1,
+              min: -1
             },
             series: [
               {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[2],
+                data: _th.nArr[2],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1422,23 +1562,24 @@ export default {
                   lineStyle: {
                     type: "solid",
                     color: '#b33939',
-                    width: 0.5
+                    width: 1,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
                     color: '#b33939'  // 展示内容颜色
                   },
-                  data: _th.markData
+                  data: _th.markdata
                 }
               }
             ],
           });
           $(window).resize(function () {
-            chartIII1.resize();
+            chart33.resize();
           });
-          var chartaVR1 = echarts.init(document.getElementById("aVR1"));
-          chartaVR1.clear()
-          chartaVR1.setOption({
+          var chart44 = echarts.init(document.getElementById("I4"));
+          chart44.clear()
+          chart44.setOption({
             title: {
               text: "",
               top: 5,
@@ -1451,56 +1592,9 @@ export default {
               bottom: '1',
               containLabel: false
             },
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'cross'
-              }
-            },
-            dataZoom: [
-              {
-                type: 'inside',
-                start: 0,
-                end: 50
-              },
-              {
-                start: 0,
-                end: 50
-              }
-            ],
-            // dataZoom: [{
-            //   type: 'inside', // 放大和缩小
-            //   orient: 'vertical',
-            //   filterMode: "none",//或者”empty“
-            // }, {
-            //   type: 'inside',
-            //   filterMode: "none",//或者”empty“
-            // },
-            //   {
-            //     // start: 0,//默认为0
-            //     // end: 100,//默认为100
-            //     type: 'slider',
-            //     show: true,
-            //     // xAxisIndex: [0],
-            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
-            //     startValue: 0, // 初始显示值
-            //     endValue: 500000, // 结束显示值,自己定
-            //     height: 5,//组件高度
-            //     left: '10%', //左边的距离
-            //     right: '10%',//右边的距离
-            //     bottom: '1%',//底边的距离
-            //     borderColor: "#000000",
-            //     fillerColor: '#000000',
-            //     borderRadius: 5,
-            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
-            //     showDataShadow: false,//是否显示数据阴影 默认auto
-            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-            //     realtime: true, //是否实时更新
-            //     filterMode: "none",//或者”empty“
-            //   }],
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -1515,8 +1609,9 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1537,19 +1632,20 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               },
-              max: 3,
-              min: -3
+              max: 1,
+              min: -1
             },
             series: [
               {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[3],
+                data: _th.nArr[3],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1562,23 +1658,24 @@ export default {
                   lineStyle: {
                     type: "solid",
                     color: '#b33939',
-                    width: 0.5
+                    width: 1,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
                     color: '#b33939'  // 展示内容颜色
                   },
-                  data: _th.markData
+                  data: _th.markdata
                 }
               }
             ],
           });
           $(window).resize(function () {
-            chartaVR1.resize();
+            chart44.resize();
           });
-          var chartaVL1 = echarts.init(document.getElementById("aVL1"));
-          chartaVL1.clear()
-          chartaVL1.setOption({
+          var chart55 = echarts.init(document.getElementById("I5"));
+          chart55.clear()
+          chart55.setOption({
             title: {
               text: "",
               top: 5,
@@ -1591,56 +1688,9 @@ export default {
               bottom: '1',
               containLabel: false
             },
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'cross'
-              }
-            },
-            dataZoom: [
-              {
-                type: 'inside',
-                start: 0,
-                end: 50
-              },
-              {
-                start: 0,
-                end: 50
-              }
-            ],
-            // dataZoom: [{
-            //   type: 'inside', // 放大和缩小
-            //   orient: 'vertical',
-            //   filterMode: "none",//或者”empty“
-            // }, {
-            //   type: 'inside',
-            //   filterMode: "none",//或者”empty“
-            // },
-            //   {
-            //     // start: 0,//默认为0
-            //     // end: 100,//默认为100
-            //     type: 'slider',
-            //     show: true,
-            //     // xAxisIndex: [0],
-            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
-            //     startValue: 0, // 初始显示值
-            //     endValue: 500000, // 结束显示值,自己定
-            //     height: 5,//组件高度
-            //     left: '10%', //左边的距离
-            //     right: '10%',//右边的距离
-            //     bottom: '1%',//底边的距离
-            //     borderColor: "#000000",
-            //     fillerColor: '#000000',
-            //     borderRadius: 5,
-            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
-            //     showDataShadow: false,//是否显示数据阴影 默认auto
-            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-            //     realtime: true, //是否实时更新
-            //     filterMode: "none",//或者”empty“
-            //   }],
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -1655,8 +1705,9 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1677,19 +1728,20 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               },
-              max: 3,
-              min: -3
+              max: 1,
+              min: -1
             },
             series: [
               {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[4],
+                data: _th.nArr[4],
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1702,23 +1754,24 @@ export default {
                   lineStyle: {
                     type: "solid",
                     color: '#b33939',
-                    width: 0.5
+                    width: 1,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
                     color: '#b33939'  // 展示内容颜色
                   },
-                  data: _th.markData
+                  data: _th.markdata
                 }
               }
             ],
           });
           $(window).resize(function () {
-            chartaVL1.resize();
+            chart55.resize();
           });
-          var chartaVF1 = echarts.init(document.getElementById("aVF1"));
-          chartaVF1.clear()
-          chartaVF1.setOption({
+          var chart66 = echarts.init(document.getElementById("I6"));
+          chart66.clear()
+          chart66.setOption({
             title: {
               text: "",
               top: 5,
@@ -1731,56 +1784,9 @@ export default {
               bottom: '1',
               containLabel: false
             },
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'cross'
-              }
-            },
-            dataZoom: [
-              {
-                type: 'inside',
-                start: 0,
-                end:50
-              },
-              {
-                start: 0,
-                end: 50
-              }
-            ],
-            // dataZoom: [{
-            //   type: 'inside', // 放大和缩小
-            //   orient: 'vertical',
-            //   filterMode: "none",//或者”empty“
-            // }, {
-            //   type: 'inside',
-            //   filterMode: "none",//或者”empty“
-            // },
-            //   {
-            //     start: 0,//默认为0
-            //     end: 100,//默认为100
-            //     type: 'slider',
-            //     show: true,
-            //     // xAxisIndex: [0],
-            //     handleSize: 0,//滑动条的 左右2个滑动条的大小
-            //     startValue: 0, // 初始显示值
-            //     endValue:50000, // 结束显示值,自己定
-            //     height: 5,//组件高度
-            //     left: '10%', //左边的距离
-            //     right: '10%',//右边的距离
-            //     bottom: '1%',//底边的距离
-            //     borderColor: "#000000",
-            //     fillerColor: '#000000',
-            //     borderRadius: 5,
-            //     backgroundColor: '#ff1600',//两边未选中的滑动条区域的颜色
-            //     showDataShadow: false,//是否显示数据阴影 默认auto
-            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-            //     realtime: true, //是否实时更新
-            //     filterMode: "none",//或者”empty“
-            //   }],
             xAxis: {
               type: 'category',
-              data: x,
+              data: _th.x,
               axisLabel: {
                 show: false,
                 interval: 4,
@@ -1795,8 +1801,9 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1817,23 +1824,24 @@ export default {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8c1bf", //网格的颜色
-                  width: 1, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
                 }
               },
-              max: 3,
-              min: -3
+              max: 1,
+              min: -1
             },
             series: [
               {
                 type: 'line',
                 smooth: true,
                 showSymbol: false,
-                data: nArr[5],
+                data: _th.nArr[5],
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1,
                   }
                 },
                 markLine: {
@@ -1842,49 +1850,329 @@ export default {
                   lineStyle: {
                     type: "solid",
                     color: '#b33939',
-                    width: 0.5
+                    width: 1,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
                     color: '#b33939'  // 展示内容颜色
                   },
-                  data: _th.markData
+                  data: _th.markdata
                 }
               }
             ],
           });
           $(window).resize(function () {
-            chartaVF1.resize();
+            chart66.resize();
+          });
+          var chart77 = echarts.init(document.getElementById("I7"));
+          chart77.clear()
+          chart77.setOption({
+            title: {
+              text: "",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '1',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              },
+              max: 1,
+              min: -1
+            },
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[6],
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1,
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 1,
+                    opacity: 0.5,
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: _th.markdata
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chart77.resize();
+          });
+          var chart88 = echarts.init(document.getElementById("I8"));
+          chart88.clear()
+          chart88.setOption({
+            title: {
+              text: "",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '1',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              },
+              max: 1,
+              min: -1
+            },
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[7],
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1,
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 1,
+                    opacity: 0.5,
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: _th.markdata
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chart88.resize();
+          });
+          var chart99 = echarts.init(document.getElementById("I9"));
+          chart99.clear()
+          chart99.setOption({
+            title: {
+              text: "",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: '1',
+              right: '1',
+              top: '1',
+              bottom: '1',
+              containLabel: false
+            },
+            xAxis: {
+              type: 'category',
+              data: _th.x,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              }
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false
+              },
+              axisLine: {
+                show: false
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {//网格样式
+                  color: "#f8c1bf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
+                  opacity: 0.6,//透明度
+                }
+              },
+              max: 1,
+              min: -1
+            },
+            series: [
+              {
+                type: 'line',
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[8],
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1,
+                  }
+                },
+                markLine: {
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#b33939',
+                    width: 1,
+                    opacity: 0.5,
+                  },
+                  label: {
+                    position: 'start', // 表现内容展示的位置
+                    color: '#b33939'  // 展示内容颜色
+                  },
+                  data: _th.markdata
+                }
+              }
+            ],
+          });
+          $(window).resize(function () {
+            chart99.resize();
           });
         },
         error: function (data) {
           alert("数据请求错误,请刷新页面或联系管理员")
           loading.close()
-          console.log("请求失败：",data)
+          console.log("请求失败：", data)
         }
       })
     },
+
     //获取当前时间
     getData() {
       var str = new Date();
       var nowTime = str.getFullYear() + "-"
         + (str.getMonth() + 1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes() + ":" + str.getSeconds();
-      console.log("获取到当前的时间：",nowTime);
       return nowTime;
     },
-    //截断数据（一条数据现在2000）
-    getNewArray(array, subGroupLength) {
-      let i = 0;
-      let newArray = [];
-      while (i < array.length) {
-        newArray.push(array.slice(i, i += subGroupLength));
-      }
-      return newArray;
-    },
     //发送短信
-    sendMsg(){
+    sendMsg() {
       console.log("患者电话: " + this.data.pphone)
-      if(this.data.pphone) {
+      if (this.data.pphone) {
         // console.log("患者姓名: " + row.patientName)
         this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
           confirmButtonText: '确定',
@@ -1903,14 +2191,12 @@ export default {
             message: '已取消'
           });
         });
-      }
-      else{
+      } else {
         this.$message.error('该患者手机号不合法！！！');
       }
     },
-    //保存数据
+    //医生诊断
     btnUpload() {
-      var _th=this
       var form = {
         pId: this.pId,
         diagnosisStatus: '1',
@@ -1922,189 +2208,257 @@ export default {
       getReportByPId(this.pId).then(res => {
         if (res.data == null) {
           addReport(form).then(response => {
-            _th.$modal.msgSuccess("新增成功");
-            // _th.getList();
+            this.$modal.msgSuccess("新增成功");
+            // this.getList();
             console.log("新增成功！")
           });
         } else {
           form["reportId"] = res.data.reportId
-          console.log("保存的数据：",form)
+          console.log("保存的数据：", form)
           updateReport(form).then(response => {
-            _th.$modal.msgSuccess("修改成功");
-            // _th.getList();
+            this.$modal.msgSuccess("修改成功");
+            // this.getList();
             console.log("修改成功！")
           })
         }
       })
     },
+    //常用术语
+    Camera() {
+      var _th = this
+      getCommonTerms().then(response => {
+        console.log("常用术语：", response.data)
+        const result = Object.entries(response.data).map(([name, label]) => ({
+          name,
+          label
+        }));
+        _th.items=result
+        console.log("格式过的常用术语：", _th.items);
+      })
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {
+        });
+    },
+    //截断数据（一条数据现在2000）
+    getNewArray(array, subGroupLength) {
+      let i = 0;
+      let newArray = [];
+      while (i < array.length) {
+        newArray.push(array.slice(i, i += subGroupLength));
+      }
+      return newArray;
+    },
+    //canvas画图
+    // drawgrid() {
+    //   var c_canvas = document.getElementById("grids");
+    //   this.drawSmallGrid(c_canvas);
+    //   this.drawMediumGrid(c_canvas);
+    //   this.drawBigGrid(c_canvas);
+    // },
+    // drawSmallGrid(c_canvas) {
+    //   this.ctx = c_canvas.getContext("2d");
+    //   this.ctx.strokeStyle = "#f1dedf";
+    //   this.ctx.strokeWidth = 1;
+    //   this.ctx.beginPath();
+    //   for (var x = 0.5; x < 750; x += 3) {
+    //     this.ctx.moveTo(x, 0);
+    //     this.ctx.lineTo(x, 750);
+    //     this.ctx.stroke();
+    //   }
+    //   for (var y = 0.5; y < 750; y += 3) {
+    //     this.ctx.moveTo(0, y);
+    //     this.ctx.lineTo(750, y);
+    //     this.ctx.stroke();
+    //   }
+    //   this.ctx.closePath();
+    // },
+    // drawMediumGrid(c_canvas) {
+    //   this.ctx = c_canvas.getContext("2d");
+    //   this.ctx.strokeStyle = "#fdbeb9";
+    //   this.ctx.strokeWidth = 2
+    //   //宽度是小网格的2倍
+    //   this.ctx.beginPath();
+    //   for (var x = 0.5; x < 750; x += 15) {
+    //     this.ctx.moveTo(x, 0);
+    //     this.ctx.lineTo(x, 750);
+    //     this.ctx.stroke();
+    //   }
+    //   for (var y = 0.5; y < 750; y += 15) {
+    //     this.ctx.moveTo(0, y);
+    //     this.ctx.lineTo(750, y);
+    //     this.ctx.stroke();
+    //   }
+    //   this.ctx.closePath();
+    //   return;
+    // },
+    //
+    // drawBigGrid(c_canvas) {
+    //   this.ctx = c_canvas.getContext("2d");
+    //   this.ctx.strokeStyle = "#e0514b";
+    //   this.ctx.strokeWidth = 3;
+    //   this.ctx.beginPath();
+    //   for (var x = 0.5; x < 750; x += 75) {
+    //     this.ctx.moveTo(x, 0);
+    //     this.ctx.lineTo(x, 750);
+    //     this.ctx.stroke();
+    //   }
+    //   for (var y = 0.5; y < 750; y += 75) {
+    //     this.ctx.moveTo(0, y);
+    //     this.ctx.lineTo(750, y);
+    //     this.ctx.stroke();
+    //   }
+    //   this.ctx.closePath();
+    //   return;
+    // }
+
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.page {
-  margin-top: 0.5vw;
-  width: 100%;
-  height: 52vw;
-  //border: 3px solid #0000ff;
-}
-
-.header {
-  width: 100%;
-  height: 15vw;
-  display: flex;
-  flex-wrap: nowrap;
-  padding-left: 2vw;
-  margin-bottom: 2vw;
-  font-size: 1vw;
-  color: #000000;
-}
-
-.header-left {
-  width: 60%;
-  height: 100%;
-  display: flex;
-  flex-wrap: nowrap
-}
-
-.header-1 {
-  width: 28%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-}
-
-.header-2 {
-  width: 28%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-}
-
-.header-3 {
-  width: 44%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-}
-
-.header-right {
-  width: 40%;
-  height: 100%;
-}
-
-.header-4 {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-}
-
-.header-4-1-1 {
-  width: 100%;
-  height: 6vw;
-}
-
-.font {
-  font-size: 1vw;
-  font-weight: 700;
-  color: #6f0600;
-  background-color: #fff;
-}
-
-
 .body {
   display: flex;
 }
 
-.body .body-1 {
-  flex: 1;
+.left {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0.5vw;
+  //background-color: #71f9d5;
 }
 
-.bottom {
-  width: 100%;
-  height: 5vw;
-  //border: 1px solid #000000;
+.patientMessage {
+  display: flex;
+  //justify-content:space-between;
+  align-items: stretch;
+  //background-color: #e01806;
+  height: 30vw;
+}
+
+.patientMessage-1 {
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.patientMessage-2 {
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.patientMessage-1-1 {
+  font-size: 1.3vw;
+}
+
+.patientMessage-2-1 {
+  font-size: 1.3vw;
+}
+
+.automaticResult {
+  height: 27vw;
   margin-top: 2vw;
 }
 
-.bottom-left {
+.doctor-1 {
+  font-size: 1vw;
+  height: 2vw;
+  line-height: 2vw;
 
 }
 
-.anNiu {
-  height: 3vw;
-  width: 7vw;
-  float: right;
-  margin-right: 6vw;
-  font-size: 1.5vw;
+.doctor {
+  height: 5vw;
+  line-height: 6vw;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #000000;
+}
+
+.ecg {
+  //width: 50vw;
+  //  height: 50vw;
 }
 
 .line {
-  height: 4.2vw;
-  width: 84vw;
+  height: 7vw;
+  width: 49vw;
   margin: 0;
   padding: 0;
 
 }
 
+.upload {
+  //height: 5vw;
+  display: flex;
+  justify-content: space-around;
+}
+
+.anNiu {
+  height: 3vw;
+  width: 8vw;
+  //font-size: 1.5vw;
+  line-height: 1vw;
+  text-align: center;
+}
+
+.bigDiv {
+  border: 1px solid #157a0c;
+  height: 40vw;
+  width: 100%;
+  z-index: 1000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  //background-color: #03044A;
+}
+
+.commentLabelBtn {
+  width: auto;
+  height: 28px;
+  margin: 8px 8px 8px 0;
+  background: #eaeff5;
+  color: #000000 !important;
+  border-radius: 0.5vw;
+  border: 1px solid #000000;
+}
+//.selected{
+//  background-color: #435bf7;
+//  color: #fff !important;
+//}
 .lineI {
   position: absolute;
   display: inline-block;
   top: 50%;
   left: 50%;
+  -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  height: 24vw;
-  width: 85vw;
+  height: 35%;
+  width: 100%;
   background: white;
   border: 1px solid black;
   z-index: 3;
 }
 
 .lineshow {
-  height: 24vw;
-  width: 85vw;
+  height: 15vw;
+  width: 84vw;
   position: absolute;
-  //top: 50%;
-  //left: 50%;
-  //transform: translate(-50%, -50%);
-}
-
-.chartsBig {
-  position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
+  -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  height: 10vw;
-  width: 80vw;
-  border: 1px solid #00afff;
-  //z-index: 1000;
-  background-color: #00afff;
-  //display: none;
-}
-
-.noName {
-  position: absolute;
-  top: 0;
-  right: 0;
-  //margin-left: 40.5vw;
-  //margin-top: 10.8vw;
-  height: 2vw;
-  width: 3vw;
-  font-size: 1vw;
-  z-index: 2000;
+  border: 1px solid #fff;
 }
 </style>

@@ -50,3 +50,10 @@ export function delReport(reportId) {
     method: 'delete'
   })
 }
+
+export function getCommonTerms() {
+  return request({
+    url: '/report/report/getCommonTerms',
+    method: 'get'
+  })
+}
