@@ -223,7 +223,7 @@ public class PatientManagementController extends BaseController {
     /**
      * 更新患者状态
      */
-    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:edit')")
+//    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:edit')")
     @Log(title = "患者管理", businessType = BusinessType.UPDATE)
     @PostMapping("/updateStatus")
     public String updateStatus(@RequestBody String[] pIds) {
@@ -309,4 +309,5 @@ public class PatientManagementController extends BaseController {
         res.put("description", description);
         return AjaxResult.success(res);
     }
+
 }

@@ -5,9 +5,10 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.xindian.equipment.controller.EquipmentController;
 import com.ruoyi.xindian.hospital.domain.Hospital;
-import com.ruoyi.xindian.patient_management.domain.AnalysisParam;
-import com.ruoyi.xindian.patient_management.domain.OnlineParam;
-import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.domain.*;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
@@ -45,6 +46,9 @@ public class OnlineController extends BaseController {
     @Autowired
     private EquipmentController equipmentController;
 
+    @Autowired
+    private IPatientManagementService patientManagementService;
+
     @GetMapping("/updateAll")
     public AjaxResult updateAll() {
         AjaxResult result1 = update1();
@@ -54,11 +58,25 @@ public class OnlineController extends BaseController {
         map.put("res2", result2);
         return AjaxResult.success(map);
     }
+    @GetMapping("/{patientPhone}")
+    public AjaxResult getOnlineStatus(@PathVariable String patientPhone) {
+        update1();
+        update2();
+        PatientManagement patientManagement = new PatientManagement();
+        patientManagement.setPatientPhone(patientPhone);
+        patientManagement.setOnlineStatus("1");
+        List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementListDECG12(patientManagement);
+        if(patientManagements!=null && patientManagements.size()!=0){
+            return AjaxResult.success(patientManagements.get(0));
+        }
+        return AjaxResult.error("无在线设备");
+    }
+
 
     @GetMapping("/update1")
     public AjaxResult update1() {
         SysUser userInfo = patientManagementController.getUserInfo();
-        System.out.println(userInfo);
+//        System.out.println(userInfo);
         OnlineParam onlineParam = new OnlineParam("所有");
         if (userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
             onlineParam.setHospName(userInfo.getHospitalName());
@@ -98,7 +116,7 @@ public class OnlineController extends BaseController {
         String url = "https://server.mindyard.cn:84/get_device2";
 
         SysUser userInfo = patientManagementController.getUserInfo();
-        System.out.println(userInfo);
+//        System.out.println(userInfo);
         OnlineParam onlineParam = new OnlineParam("所有");
         if (userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
             onlineParam.setHospName(userInfo.getHospitalName());

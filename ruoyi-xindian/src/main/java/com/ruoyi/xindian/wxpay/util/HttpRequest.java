@@ -50,11 +50,22 @@ public class HttpRequest {
 
 
         HttpPost httpPost = new HttpPost(url);
-        //解决XStream对出现双下划线的bug
-        XStream xStreamForRequestPostData = new XStream(new DomDriver("UTF-8", new XmlFriendlyNameCoder("-_", "_")));
-        xStreamForRequestPostData.alias("xml", xmlObj.getClass());
+//        //解决XStream对出现双下划线的bug
+////        XStream xStream = XStreamFactory.getXStream();
+//        XStream xStreamForRequestPostData = new XStream(new DomDriver("UTF-8", new XmlFriendlyNameCoder("-_", "_")));
+//        xStreamForRequestPostData.alias("xml", xmlObj.getClass());
+//        //将要提交给API的数据对象转换成XML格式数据Post给API
+//        String postDataXML = xStreamForRequestPostData.toXML(xmlObj);
+
+        //指定解析编码为UTF-8，并解决XStream对出现双下划线的bug
+        XStream xStreamForReqData = new XStream(new DomDriver("UTF-8", new
+                XmlFriendlyNameCoder("-_", "_")));
+        //开启当前将被序列化为XML的类的注解
+        xStreamForReqData.processAnnotations(xmlObj.getClass());
         //将要提交给API的数据对象转换成XML格式数据Post给API
-        String postDataXML = xStreamForRequestPostData.toXML(xmlObj);
+        String postDataXMLOld = xStreamForReqData.toXML(xmlObj);
+        String postDataXML = postDataXMLOld.replace("&quot;", "\"");
+
 
         //得指明使用UTF-8编码，否则到API服务器XML的中文不能被成功识别
         StringEntity postEntity = new StringEntity(postDataXML, "UTF-8");

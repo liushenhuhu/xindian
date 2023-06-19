@@ -180,9 +180,9 @@ public class WXPayController {
 
             String result = HttpRequest.sendPost(Configure.getUrl(), order);
             System.out.println(result);
-            XStream xStream = new XStream();
+            XStream xStream = new XStream(new DomDriver());
             xStream.alias("xml", OrderReturnInfo.class);
-
+            Object o = xStream.fromXML(result);
             OrderReturnInfo returnInfo = (OrderReturnInfo) xStream.fromXML(result);
             // 二次签名
             if ("SUCCESS".equals(returnInfo.getReturn_code()) && returnInfo.getReturn_code().equals(returnInfo.getResult_code())) {
