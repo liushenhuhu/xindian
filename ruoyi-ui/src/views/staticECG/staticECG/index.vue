@@ -8,28 +8,28 @@
             <div id="1" class="line" @dblclick="showChart1()"></div>
           </div>
           <div>
-            <div id="2" class="line" @dblclick="showChart2($event)"></div>
+            <div id="2" class="line" @dblclick="showChart2()"></div>
           </div>
           <div>
-            <div id="3" class="line" @dblclick="showChart3($event)"></div>
+            <div id="3" class="line" @dblclick="showChart3()"></div>
           </div>
           <div>
-            <div id="4" class="line" @dblclick="showChart4($event)"></div>
+            <div id="4" class="line" @dblclick="showChart4()"></div>
           </div>
           <div>
-            <div id="5" class="line" @dblclick="showChart5($event)"></div>
+            <div id="5" class="line" @dblclick="showChart5()"></div>
           </div>
           <div>
-            <div id="6" class="line" @dblclick="showChart6($event)"></div>
+            <div id="6" class="line" @dblclick="showChart6()"></div>
           </div>
           <div>
-            <div id="7" class="line" @dblclick="showChart7($event)"></div>
+            <div id="7" class="line" @dblclick="showChart7()"></div>
           </div>
           <div>
-            <div id="8" class="line" @dblclick="showChart8($event)"></div>
+            <div id="8" class="line" @dblclick="showChart8()"></div>
           </div>
           <div>
-            <div id="9" class="line" @dblclick="showChart9($event)"></div>
+            <div id="9" class="line" @dblclick="showChart9()"></div>
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@
             <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 20vw">常用术语</el-button>
           </div>
           <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-            <div class="text" v-for="(item,index) in items">
+            <div v-for="(item,index) in items">
               <div>{{ item.name }}</div>
               <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
                       v-for="(itemc,indexc) in item.label"
@@ -2146,7 +2146,6 @@ export default {
         }
       })
     },
-
     //获取当前时间
     getData() {
       var str = new Date();
@@ -2430,7 +2429,12 @@ export default {
   //background-color: #435bf7;
   //color: #fff !important;
 }
-
+.font {
+  font-size: 1vw;
+  font-weight: 700;
+  color: #6f0600;
+  background-color: #fff;
+}
 .lineI {
   position: absolute;
   display: inline-block;
@@ -2443,6 +2447,17 @@ export default {
   background: white;
   border: 1px solid black;
   z-index: 3;
+}
+.noName {
+  position: absolute;
+  top: 0;
+  right: 0;
+  //margin-left: 40.5vw;
+  //margin-top: 10.8vw;
+  height: 2vw;
+  width: 3vw;
+  font-size: 1vw;
+  z-index: 2000;
 }
 
 .lineshow {
