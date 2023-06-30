@@ -76,9 +76,9 @@ public class OnlineController extends BaseController {
     @GetMapping("/update1")
     public AjaxResult update1() {
         SysUser userInfo = patientManagementController.getUserInfo();
-//        System.out.println(userInfo);
+        System.out.println("用户信息:"+userInfo);
         OnlineParam onlineParam = new OnlineParam("所有");
-        if (userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
+        if (userInfo!=null && userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
             onlineParam.setHospName(userInfo.getHospitalName());
         }
         String url = "https://server.mindyard.cn:84/get_device";
@@ -116,9 +116,9 @@ public class OnlineController extends BaseController {
         String url = "https://server.mindyard.cn:84/get_device2";
 
         SysUser userInfo = patientManagementController.getUserInfo();
-//        System.out.println(userInfo);
+        System.out.println("用户信息:"+userInfo);
         OnlineParam onlineParam = new OnlineParam("所有");
-        if (userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
+        if (userInfo!=null && userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
             onlineParam.setHospName(userInfo.getHospitalName());
         }
         RestTemplate restTemplate = new RestTemplate();

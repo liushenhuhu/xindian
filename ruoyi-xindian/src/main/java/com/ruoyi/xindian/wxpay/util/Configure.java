@@ -19,7 +19,7 @@ public class Configure {
     private static String mch_id = "1645541073";
 
     // 商户支付秘钥
-    private static String key = "";
+    private static String key = "ADFHJWhduenfks17shGDYE6278jfww12";
 
     // 回调通知地址
     private static String notify_url = "http://localhost:83/dev-api/WXPay/weixin/callback";
