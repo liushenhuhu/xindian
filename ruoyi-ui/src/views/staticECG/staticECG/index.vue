@@ -1,7 +1,39 @@
 <template>
   <div>
     <div class="body">
-      <div class="left">
+      <div class="noright">
+        <div class="ecg">
+          <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
+          <div>
+            <div id="1" class="line" @dblclick="showChart1()"></div>
+          </div>
+          <div>
+            <div id="2" class="line" @dblclick="showChart2()"></div>
+          </div>
+          <div>
+            <div id="3" class="line" @dblclick="showChart3()"></div>
+          </div>
+          <div>
+            <div id="4" class="line" @dblclick="showChart4()"></div>
+          </div>
+          <div>
+            <div id="5" class="line" @dblclick="showChart5()"></div>
+          </div>
+          <div>
+            <div id="6" class="line" @dblclick="showChart6()"></div>
+          </div>
+          <div>
+            <div id="7" class="line" @dblclick="showChart7()"></div>
+          </div>
+          <div>
+            <div id="8" class="line" @dblclick="showChart8()"></div>
+          </div>
+          <div>
+            <div id="9" class="line" @dblclick="showChart9()"></div>
+          </div>
+        </div>
+      </div>
+      <div class="noleft">
         <div class="patientMessage">
           <div class="patientMessage-1">
             <div class="patientMessage-1-1"><strong>姓名:</strong>{{ data.name }}</div>
@@ -18,7 +50,8 @@
             <div class="patientMessage-2-1"><strong>PR:</strong>{{ data.pr }}ms</div>
             <div class="patientMessage-2-1"><strong>QRS:</strong>{{ data.qrs }}ms</div>
             <div class="patientMessage-2-1"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>
-            <div class="patientMessage-2-1"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg</div>
+            <div class="patientMessage-2-1"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg
+            </div>
             <div class="patientMessage-2-1"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>
             <div class="patientMessage-2-1"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>
           </div>
@@ -26,14 +59,14 @@
         <div class="automaticResult">
           <div class="doctor-1"><strong>自动分析结果，仅供参考</strong></div>
           <div>
-            <div style="width: 100%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
+            <div style="width: 95%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
           </div>
           <div class="doctor-1">
             <strong>医师诊断</strong>
-            <el-button type="text" @click="dialogFormVisible = true" style="float: right">常用术语</el-button>
+            <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 20vw">常用术语</el-button>
           </div>
           <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-            <div class="text" v-for="(item,index) in items">
+            <div v-for="(item,index) in items">
               <div>{{ item.name }}</div>
               <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
                       v-for="(itemc,indexc) in item.label"
@@ -48,6 +81,7 @@
           </el-dialog>
           <div>
             <el-input
+              style="width: 95%;"
               type="textarea"
               v-model="data.resultByDoctor"
               placeholder="请在这里输入医生诊断结果"
@@ -56,64 +90,27 @@
               class="font">{{ data.resultByDoctor }}
             </el-input>
           </div>
-          <div class="upload">
-            <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
-            <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
-          </div>
+        </div>
+        <div class="upload">
+          <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
+          <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
         </div>
         <div class="doctor">
-          <strong>医师:</strong>
-          <el-input v-model="data.doctorName" clearable
-                    :style="{width: '25%',}">{{ data.doctorName }}
-          </el-input>
-          <span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
-          <strong>日期:</strong>
-          <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
-                    :style="{width: '45%',}"></el-input>
-          <el-input v-else v-model="data.dataTime" clearable
-                    :style="{width: '45%',}"></el-input>
-        </div>
-      </div>
-      <div class="right">
-        <div class="ecg">
-          <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
           <div>
-            <div id="1" class="line" @dblclick="showChart1()"></div>
+            <strong>医师:</strong>
+            <el-input v-model="data.doctorName" clearable
+                      :style="{width: '90%',}">{{ data.doctorName }}
+            </el-input>
           </div>
           <div>
-            <div id="2" class="line" @dblclick="showChart2($event)"></div>
-          </div>
-          <div>
-            <div id="3" class="line" @dblclick="showChart3($event)"></div>
-          </div>
-          <div>
-            <div id="4" class="line" @dblclick="showChart4($event)"></div>
-          </div>
-          <div>
-            <div id="5" class="line" @dblclick="showChart5($event)"></div>
-          </div>
-          <div>
-            <div id="6" class="line" @dblclick="showChart6($event)"></div>
-          </div>
-          <div>
-            <div id="7" class="line" @dblclick="showChart7($event)"></div>
-          </div>
-          <div>
-            <div id="8" class="line" @dblclick="showChart8($event)"></div>
-          </div>
-          <div>
-            <div id="9" class="line" @dblclick="showChart9($event)"></div>
+            <strong>日期:</strong>
+            <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
+                      :style="{width: '90%',}"></el-input>
+            <el-input v-else v-model="data.dataTime" clearable
+                      :style="{width: '90%',}"></el-input>
           </div>
         </div>
       </div>
-      <el-dialog
-        :visible.sync="videoVisible"
-        width="90%"
-      >
-        <div style="height:500px;text-align:center">
-          <div class="bigDiv" id="chartJump"></div>
-        </div>
-      </el-dialog>
 
     </div>
     <div class="lineI" v-show="open1">
@@ -165,7 +162,6 @@ export default {
   name: "index",
   data() {
     return {
-      isActive1:false,//术语按钮的样式显示
       videoVisible: false,//echarts弹出框显示
       markdata: [
         {xAxis: 0},
@@ -201,7 +197,7 @@ export default {
       ],//没放大之前标记线
       dialogFormVisible: false,//弹出框
       items: "",//常用术语
-      isSelected:false,//术语按钮没有被按下
+      isSelected: false,//术语按钮没有被按下
       selectedButtons: [],//选中的按钮
       pId: null,
       data: {
@@ -220,7 +216,7 @@ export default {
         pv5: "",
         sv1: "",
         rv5_sv1: "",
-        resultByDoctor: "",
+        resultByDoctor: [],
         dataTime: "",
         doctorName: "",
         diagnosisData: null,
@@ -320,49 +316,37 @@ export default {
     //按下常用术语按钮
     putDown(key) {
       console.log(key)
-      if(this.isSelected){
-        this.isSelected=false
-        let index = this.data.resultByDoctor.indexOf(key);
-        console.log("if",index,this.isSelected)
-        if (index !== -1) {
-          this.selectedButtons.splice(index, 1);
-          this.data.resultByDoctor=this.selectedButtons
-        }
-        else{
-          this.data.resultByDoctor += key + ';';
-        }
-      }else{
-        this.isSelected=true
-        console.log("else",this.isSelected)
-        this.data.resultByDoctor += key + ';';
+      if (this.data.resultByDoctor === null)
+        this.data.resultByDoctor = []
+      console.log(this.data.resultByDoctor)
+      let index = this.data.resultByDoctor.indexOf(key);
+      console.log("if", index, this.isSelected)
+      if (index !== -1) {
+        this.data.resultByDoctor.splice(index, 1);
+      } else {
+        this.data.resultByDoctor.push(key)
       }
-
-
-      // if (this.items[a].label[b].checked===true) {
-      //   this.items[a].label[b].checked = false;
-      //   this.data.resultByDoctor += event.srcElement.innerText + ';';
-      // } else {
-      //   this.items[a].label[b].checked = true;
-      //   let index = this.data.resultByDoctor.indexOf(this.items[a].label[b].name);
+      // if (this.isSelected) {
+      //   this.isSelected = false
+      //   let index = this.data.resultByDoctor.indexOf(key);
+      //   console.log("if", index, this.isSelected)
       //   if (index !== -1) {
+      //     // this.selectedButtons.splice(index, 1);
+      //     // this.data.resultByDoctor=this.selectedButtons
       //     this.data.resultByDoctor.splice(index, 1);
+      //   } else {
+      //     // this.data.resultByDoctor += key + ';';
+      //     this.data.resultByDoctor.push(key)
+      //     //this.selectedButtons.push(key)
+      //     // this.data.resultByDoctor=this.selectedButtons
       //   }
-      // }
-      // let index = this.checkButton.indexOf(value);
-      // if (index !== -1) {
-      //   this.checkButton.splice(index, 1);
-      // }
-      // else{
-      //   this.checkButton.push(value);
-      // }
-      // console.log("选中的术语：",this.checkButton)
-      // if (this.isActive1 == false) {
-      //   this.isActive1 = true;
-      //   this.data.resultByDoctor += event.srcElement.innerText + ';';
       // } else {
-      //   let test = this.data.resultByDoctor.replace('value', ''); // 需要直接写 value 的值，不能写变量名
-      //   this.data.resultByDoctor = test;
-      //   this.isActive1 = false;
+      //   this.isSelected = true
+      //   console.log("else", this.isSelected)
+      //   // this.data.resultByDoctor += key + ';';
+      //   this.data.resultByDoctor.push(key)
+      //   // this.selectedButtons.push(key)
+      //   // this.data.resultByDoctor=this.selectedButtons
       // }
     },
     //请求数据
@@ -384,7 +368,7 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pid: '2da82665-9134-b1c9-1285-a6b0806104ac'
+          pid: this.pId
         }),
         beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
@@ -394,7 +378,8 @@ export default {
         success: function (data) {
           console.log("请求成功：", data)
           loading.close()
-          // window.location.reload("#pdfDom");
+          _th.data.resultByDoctor = data.result.diagnosis_conclusion
+          _th.data.doctorName = data.result.diagnosis_doctor
           _th.data.age = data.result.age
           _th.data.gender = data.result.gender
           _th.data.name = data.result.patientName
@@ -2161,7 +2146,6 @@ export default {
         }
       })
     },
-
     //获取当前时间
     getData() {
       var str = new Date();
@@ -2232,7 +2216,7 @@ export default {
           name,
           label
         }));
-        _th.items=result
+        _th.items = result
         console.log("格式过的常用术语：", _th.items);
       })
     },
@@ -2325,10 +2309,11 @@ export default {
   display: flex;
 }
 
-.left {
+.noleft {
   display: flex;
   flex-direction: column;
   padding-left: 0.5vw;
+  width: 35%;
   //background-color: #71f9d5;
 }
 
@@ -2341,14 +2326,14 @@ export default {
 }
 
 .patientMessage-1 {
-  width: 20vw;
+  width: 15vw;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 
 .patientMessage-2 {
-  width: 20vw;
+  width: 15vw;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -2363,7 +2348,7 @@ export default {
 }
 
 .automaticResult {
-  height: 27vw;
+  //height: 27vw;
   margin-top: 2vw;
 }
 
@@ -2375,30 +2360,36 @@ export default {
 }
 
 .doctor {
+  display: flex;
+  flex-direction: column;
   height: 5vw;
   line-height: 6vw;
 }
 
-.right {
+.noright {
+  width: 65%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #000000;
+  //border: 1px solid #000000;
 }
 
 .ecg {
   //width: 50vw;
   //  height: 50vw;
+  display: flex;
+  flex-direction: column;
 }
 
 .line {
-  height: 7vw;
-  width: 49vw;
+  height: 9vw;
+  width: 55vw;
   margin: 0;
   padding: 0;
 
 }
 
 .upload {
+  margin-top: 1vw;
   //height: 5vw;
   display: flex;
   justify-content: space-around;
@@ -2433,10 +2424,17 @@ export default {
   border-radius: 0.5vw;
   border: 1px solid #000000;
 }
-//.selected{
-//  background-color: #435bf7;
-//  color: #fff !important;
-//}
+
+.selected {
+  //background-color: #435bf7;
+  //color: #fff !important;
+}
+.font {
+  font-size: 1vw;
+  font-weight: 700;
+  color: #6f0600;
+  background-color: #fff;
+}
 .lineI {
   position: absolute;
   display: inline-block;
@@ -2450,6 +2448,17 @@ export default {
   border: 1px solid black;
   z-index: 3;
 }
+.noName {
+  position: absolute;
+  top: 0;
+  right: 0;
+  //margin-left: 40.5vw;
+  //margin-top: 10.8vw;
+  height: 2vw;
+  width: 3vw;
+  font-size: 1vw;
+  z-index: 2000;
+}
 
 .lineshow {
   height: 15vw;
@@ -2461,4 +2470,5 @@ export default {
   transform: translate(-50%, -50%);
   border: 1px solid #fff;
 }
+
 </style>

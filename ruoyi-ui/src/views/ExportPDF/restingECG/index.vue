@@ -33,22 +33,42 @@
                 <div class="header-4-1">
                   <div style="width: 100%;height: 6vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
                 </div>
-                <div class="header-4-1"><strong>医师诊断</strong></div>
-                <div class="header-4-1-1">
+                <div class="header-4-1">
+                  <strong>医师诊断</strong>
+                  <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 20vw">常用术语</el-button>
+                </div>
+                <div>
                   <el-input
                     type="textarea"
                     v-model="data.resultByDoctor"
                     placeholder="请在这里输入医生诊断结果"
                     data-value="1111"
                     :rows="4"
-                    class="font">{{data.resultByDoctor}}
+                    class="font">{{ data.resultByDoctor }}
                   </el-input>
+                  <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
+                    <div v-for="(item,index) in items">
+                      <div>{{ item.name }}</div>
+                      <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
+                              v-for="(itemc,indexc) in item.label"
+                              :key="itemc"
+                              @click="putDown(itemc)">{{ itemc }}
+                      </button>
+                    </div>
+                    <div slot="footer" class="dialog-footer">
+                      <el-button @click="dialogFormVisible = false">取 消</el-button>
+                      <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                    </div>
+                  </el-dialog>
                 </div>
               </div>
             </div>
           </div>
           <div style="padding-left: 2vw;font-size: 1vw">10mm/mV 25mm/s</div>
           <div class="body">
+            <!--            <div class="demo-image__preview">-->
+            <!--              <el-image :src="baseImage"></el-image>-->
+            <!--            </div>-->
             <div class="body-1">
               <div>
                 <div id="I" class="line" @dblclick="clicktrueI"></div>
@@ -88,28 +108,30 @@
               <div>
                 <div id="V6" class="line" @dblclick="clicktrueV6"></div>
               </div>
-
             </div>
           </div>
           <div class="bottom">
-            <div class="bottom-left">
+            <div class="doctordata">
               <strong>医师:</strong>
               <el-input v-model="data.doctorName" clearable
-                        :style="{width: '30%',}">{{data.doctorName}}</el-input>
-              <span v-html="'\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'"></span>
+                        :style="{width: '30%',}">{{ data.doctorName }}
+              </el-input>
               <strong>日期:</strong>
               <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
                         :style="{width: '30%',}"></el-input>
               <el-input v-else v-model="data.dataTime" clearable
                         :style="{width: '30%',}"></el-input>
+            </div>
+            <div class="oder">
               <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
-              <el-button type="success" plain class="anNiu" @click="btnUpload">保存数据</el-button>
+              <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
             </div>
           </div>
         </div>
       </div>
       <div class="lineI" v-show="openI">
         <div id="I1" class="lineshow"></div>
+        <!--        <el-image style="width: 60vw;height: 10vw" :src="baseImage"></el-image>-->
         <button @click="clickclose" class="noName">关闭</button>
       </div>
       <div class="lineI" v-show="openII">
@@ -163,13 +185,18 @@
 <script>
 import echarts from 'echarts'
 import $ from 'jquery';
-import {addReport, getReportByPId, updateReport} from "@/api/report/report";
+import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/report/report";
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
+import html2canvas from "html2canvas";
 
 export default {
   name: "index",
   data() {
     return {
+      isSelected: false,//术语按钮没有被按下
+      dialogFormVisible: false,
+      items: [],//常用术语
+      checkButton: [],
       pId: null,
       data: {
         name: "",
@@ -191,10 +218,10 @@ export default {
         dataTime: "",
         doctorName: "",
         diagnosisData: null,
-        bSuggest:"",
-        cSuggest:"",
+        bSuggest: "",
+        cSuggest: "",
       },
-      markData:[
+      markData: [
         {xAxis: 0},
         {xAxis: 25},
         {xAxis: 50},
@@ -291,7 +318,7 @@ export default {
         {yAxis: 2.5},
         {yAxis: 3},
       ],//放大之后标记线
-      markdata:[
+      markdata: [
         {xAxis: 0},
         {xAxis: 25},
         {xAxis: 50},
@@ -408,7 +435,8 @@ export default {
       openV4: false,
       openV5: false,
       openV6: false,
-      pphone:"",
+      pphone: "",
+      baseImage: "",
     };
   },
   created() {
@@ -416,11 +444,11 @@ export default {
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
-        console.log("请求成功：",response.data)
+        console.log("请求成功：", response.data)
         this.data.resultByDoctor = response.diagnosisConclusion
         this.data.doctorName = response.diagnosisDoctor
         this.data.diagnosisData = response.reportTime
-        this.data.pphone=response.data.pphone
+        this.data.pphone = response.data.pphone
       });
       var show = sessionStorage.getItem(pId + "show");
       if (!show) {
@@ -429,9 +457,19 @@ export default {
     }
   },
   mounted() {
-    // this.get();
+    this.get();
+    this.Camera();
   },
   methods: {
+    //截断数据（一条数据现在2000）
+    getNewArray(array, subGroupLength) {
+      let i = 0;
+      let newArray = [];
+      while (i < array.length) {
+        newArray.push(array.slice(i, i += subGroupLength));
+      }
+      return newArray;
+    },
     //展开框
     clicktrueI() {
       this.openI = !this.openI;
@@ -469,7 +507,43 @@ export default {
     clicktrueV6() {
       this.openV6 = !this.openV6;
     },
-    //关闭放大框
+    //按下常用术语按钮
+    putDown(key) {
+      console.log(key)
+      if (this.data.resultByDoctor === null)
+        this.data.resultByDoctor = []
+      console.log(this.data.resultByDoctor)
+      let index = this.data.resultByDoctor.indexOf(key);
+      console.log("if", index, this.isSelected)
+      if (index !== -1) {
+        this.data.resultByDoctor.splice(index, 1);
+      } else {
+        this.data.resultByDoctor.push(key)
+      }
+      // if (this.isSelected) {
+      //   this.isSelected = false
+      //   let index = this.data.resultByDoctor.indexOf(key);
+      //   console.log("if", index, this.isSelected)
+      //   if (index !== -1) {
+      //     // this.selectedButtons.splice(index, 1);
+      //     // this.data.resultByDoctor=this.selectedButtons
+      //     this.data.resultByDoctor.splice(index, 1);
+      //   } else {
+      //     // this.data.resultByDoctor += key + ';';
+      //     this.data.resultByDoctor.push(key)
+      //     //this.selectedButtons.push(key)
+      //     // this.data.resultByDoctor=this.selectedButtons
+      //   }
+      // } else {
+      //   this.isSelected = true
+      //   console.log("else", this.isSelected)
+      //   // this.data.resultByDoctor += key + ';';
+      //   this.data.resultByDoctor.push(key)
+      //   // this.selectedButtons.push(key)
+      //   // this.data.resultByDoctor=this.selectedButtons
+      // }
+    },
+    //关闭展开框
     clickclose() {
       this.openI = false;
       this.openII = false;
@@ -495,7 +569,7 @@ export default {
       });
       var _th = this
       console.log("请求数据了！")
-      console.log("pId",this.pId)
+      console.log("pId", this.pId)
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
@@ -511,10 +585,10 @@ export default {
           request.setRequestHeader("password", "zzu123");
         },
         success: function (data) {
-          console.log("请求成功：",data)
+          console.log("请求成功：", data)
           loading.close()
-          _th.data.resultByDoctor=data.result.diagnosis_conclusion
-          _th.data.doctorName=data.result.diagnosis_doctor
+          _th.data.resultByDoctor = data.result.diagnosis_conclusion
+          _th.data.doctorName = data.result.diagnosis_doctor
           _th.data.age = data.result.age
           _th.data.gender = data.result.gender
           _th.data.name = data.result.patientName
@@ -531,17 +605,29 @@ export default {
           _th.data.sv1 = data.result.ecg_analysis_data["SV1_mv"]
           _th.data.rv5_sv1 = data.result.ecg_analysis_data["RV5_SV1"]
           _th.data12.dataI = data.result.I
+          _th.nArrI = _th.getNewArray(_th.data12.dataI, 1000);
           _th.data12.dataII = data.result.II
+          _th.nArrII = _th.getNewArray(_th.data12.dataII, 1000);
           _th.data12.dataIII = data.result.III
+          _th.nArrIII = _th.getNewArray(_th.data12.dataIII, 1000);
           _th.data12.dataaVR = data.result.aVR
+          _th.nArraVR = _th.getNewArray(_th.data12.dataaVR, 1000);
           _th.data12.dataaVL = data.result.aVL
+          _th.nArraVL = _th.getNewArray(_th.data12.dataaVL, 1000);
           _th.data12.dataaVF = data.result.aVF
+          _th.nArraVF = _th.getNewArray(_th.data12.dataaVF, 1000);
           _th.data12.dataV1 = data.result.V1
+          _th.nArrV1 = _th.getNewArray(_th.data12.dataV1, 1000);
           _th.data12.dataV2 = data.result.V2
+          _th.nArrV2 = _th.getNewArray(_th.data12.dataV2, 1000);
           _th.data12.dataV3 = data.result.V3
+          _th.nArrV3 = _th.getNewArray(_th.data12.dataV3, 1000);
           _th.data12.dataV4 = data.result.V4
+          _th.nArrV4 = _th.getNewArray(_th.data12.dataV4, 1000);
           _th.data12.dataV5 = data.result.V5
+          _th.nArrV5 = _th.getNewArray(_th.data12.dataV5, 1000);
           _th.data12.dataV6 = data.result.V6
+          _th.nArrV6 = _th.getNewArray(_th.data12.dataV6, 1000);
 
           for (var i = 0; i < 1000; i++) {
             _th.data12.x.push(i);
@@ -607,7 +693,6 @@ export default {
               max: 1,
               min: -1
             },
-
             series: [
               {
                 type: 'line',
@@ -639,6 +724,10 @@ export default {
               }
             ],
           });
+          // _th.baseImage = chartI.getDataURL({
+          //   pixelRatio: 2,
+          // });
+          // console.log(_th.baseImage)
           $(window).resize(function () {
             chartI.resize();
           });
@@ -924,7 +1013,7 @@ export default {
                     color: '#b33939'  // 展示内容颜色
                   },
 
-                  data:_th.markdata
+                  data: _th.markdata
                 }
               }
             ],
@@ -1704,6 +1793,8 @@ export default {
           $(window).resize(function () {
             chartV6.resize();
           });
+
+
           //放大之后的心电图
           var chartI1 = echarts.init(document.getElementById("I1"));
           chartI1.clear()
@@ -1723,13 +1814,30 @@ export default {
             dataZoom: [
               {
                 type: 'inside',   // 鼠标滚轮缩放
+                xAxisIndex: 0,
+                filterMode: 'none',//不过滤数据
+                start: 0,
+                end: 100
+              }, {
+                type: 'inside',   // 鼠标滚轮缩放
+                yAxisIndex: 0,
+                filterMode: 'none',//不过滤数据
                 start: 0,
                 end: 100
               },
               {
                 show: true,       // 滑动条组件
                 type: 'slider',
-                y: '90%',
+                filterMode: 'none',//不过滤数据
+                xAxisIndex: 0,
+                start: 0,
+                end: 100
+              },
+              {
+                show: true,       // 滑动条组件
+                type: 'slider',
+                filterMode: 'none',//不过滤数据
+                yAxisIndex: 0,
                 start: 0,
                 end: 100
               }
@@ -3026,7 +3134,7 @@ export default {
         error: function (data) {
           alert("数据请求错误,请刷新页面或联系管理员")
           loading.close()
-          console.log("请求失败：",data)
+          console.log("请求失败：", data)
         }
       })
     },
@@ -3038,9 +3146,9 @@ export default {
       return nowTime;
     },
     //发送短信
-    sendMsg(){
+    sendMsg() {
       console.log("患者电话: " + this.data.pphone)
-      if(this.data.pphone) {
+      if (this.data.pphone) {
         // console.log("患者姓名: " + row.patientName)
         this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
           confirmButtonText: '确定',
@@ -3059,8 +3167,7 @@ export default {
             message: '已取消'
           });
         });
-      }
-      else{
+      } else {
         this.$message.error('该患者手机号不合法！！！');
       }
     },
@@ -3083,7 +3190,7 @@ export default {
           });
         } else {
           form["reportId"] = res.data.reportId
-          console.log("保存的数据：",form)
+          console.log("保存的数据：", form)
           updateReport(form).then(response => {
             this.$modal.msgSuccess("修改成功");
             // this.getList();
@@ -3092,8 +3199,48 @@ export default {
         }
       })
     },
+    //常用术语
+    Camera() {
+      var _th = this
+      getCommonTerms().then(response => {
+        console.log("常用术语：", response.data)
+        const result = Object.entries(response.data).map(([name, label]) => ({
+          name,
+          label
+        }));
+        _th.items = result
+        console.log(_th.items);
+      })
+    },
+    Yes() {
+      this.dialogFormVisible = false
+      console.log("提交的术语：", this.checkButton)
+    },
+
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {
+        });
+    },
+    onOpen() {
+    },
+    onClose() {
+      this.$refs['elForm'].resetFields()
+    },
+    close() {
+      this.$emit('update:visible', false)
+    },
+    handleConfirm() {
+      this.$refs['elForm'].validate(valid => {
+        if (!valid) return
+        this.close()
+      })
+    },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -3105,7 +3252,7 @@ export default {
 
 .page {
   width: 100%;
-  height: 52vw;
+  height: 86vw;
   //border: 3px solid #0000ff;
 }
 
@@ -3180,8 +3327,9 @@ export default {
 }
 
 .body {
-  margin-left: 2vw;
+  //margin-left: 2vw;
   display: flex;
+  flex-direction: column;
 }
 
 .body .body-1 {
@@ -3189,24 +3337,34 @@ export default {
 }
 
 .bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
   width: 100%;
-  height: 5vw;
+  height: 4vw;
   //border: 1px solid #000000;
   margin-top: 2vw;
 }
 
+//.bottom-left{
+//  display: flex;
+//  //flex-direction: row;
+//}
 
 .anNiu {
   height: 3vw;
   width: 7vw;
-  float: right;
-  margin-right: 6vw;
+  //float: right;
+  //margin-right: 6vw;
   font-size: 1.5vw;
+  //margin-top: 1vw;
+  //margin-left: 5vw;
 }
+
 
 .line {
   height: 4vw;
-  width: 40vw;
+  width: 83vw;
   margin: 0;
   padding: 0;
 
@@ -3215,23 +3373,27 @@ export default {
 .lineI {
   position: absolute;
   display: inline-block;
-  top: 50%;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 24vw;
+  height: 20vw;
   width: 85vw;
   background: white;
   border: 1px solid black;
   z-index: 3;
 }
 
+.doctordata{
+  width: 58vw;
+}
+
 .lineshow {
-  height: 24vw;
+  height: 15vw;
   width: 85vw;
   position: absolute;
-  //top: 50%;
-  //left: 50%;
-  //transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .chartsBig {
@@ -3257,6 +3419,16 @@ export default {
   width: 3vw;
   font-size: 1vw;
   z-index: 2000;
+}
+
+.commentLabelBtn {
+  width: auto;
+  height: 28px;
+  margin: 8px 8px 8px 0;
+  background: #eaeff5;
+  color: #000000 !important;
+  border-radius: 0.5vw;
+  border: 1px solid #000000;
 }
 
 </style>
