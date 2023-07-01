@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.relationship.domain;
 
+import com.ruoyi.xindian.patient.domain.Patient;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -29,6 +30,23 @@ public class PatientRelationship extends BaseEntity
     /** 关系 */
     @Excel(name = "关系")
     private String relationship;
+
+    private String relationshipPatientName;
+
+    public String getRelationshipPatientName() {
+        return relationshipPatientName;
+    }
+
+    public void setRelationshipPatientName(String relationshipPatientName) {
+        this.relationshipPatientName = relationshipPatientName;
+    }
+//    public Patient getRelationshipPatient() {
+//        return relationshipPatient;
+//    }
+//
+//    public void setRelationshipPatient(Patient relationshipPatient) {
+//        this.relationshipPatient = relationshipPatient;
+//    }
 
     public void setId(Long id)
     {

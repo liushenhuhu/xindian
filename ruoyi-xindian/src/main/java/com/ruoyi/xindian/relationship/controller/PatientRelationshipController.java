@@ -2,6 +2,9 @@ package com.ruoyi.xindian.relationship.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +37,9 @@ public class PatientRelationshipController extends BaseController
     @Autowired
     private IPatientRelationshipService patientRelationshipService;
 
+    @Autowired
+    private IPatientService patientService;
+
     /**
      * 查询患者关系表列表
      */
@@ -43,6 +49,11 @@ public class PatientRelationshipController extends BaseController
     {
         startPage();
         List<PatientRelationship> list = patientRelationshipService.selectPatientRelationshipList(patientRelationship);
+        for (PatientRelationship relationship : list) {
+            Patient patient = patientService.selectPatientByPatientPhone(relationship.getSonPhone());
+            if(patient != null)
+                relationship.setRelationshipPatientName(patient.getPatientName());
+        }
         return getDataTable(list);
     }
 
