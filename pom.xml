@@ -22,7 +22,7 @@
         <bitwalker.version>1.21</bitwalker.version>
         <swagger.version>3.0.0</swagger.version>
         <kaptcha.version>2.3.2</kaptcha.version>
-        <mybatis-spring-boot.version>2.2.2</mybatis-spring-boot.version>
+        <mybatis-plus-spring-boot.version>3.3.1</mybatis-plus-spring-boot.version>
         <pagehelper.boot.version>1.4.1</pagehelper.boot.version>
         <fastjson.version>2.0.8</fastjson.version>
         <oshi.version>6.1.6</oshi.version>
@@ -32,6 +32,7 @@
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
         <jwt.version>0.9.1</jwt.version>
+
     </properties>
 
     <!-- 依赖声明 -->
@@ -62,11 +63,11 @@
                 <version>${bitwalker.version}</version>
             </dependency>
 
-            <!-- SpringBoot集成mybatis框架 -->
+            <!--MyBatis-Plus：是MyBatis的增强-->
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis-spring-boot.version}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-spring-boot.version}</version>
             </dependency>
 
             <!-- pagehelper 分页插件 -->

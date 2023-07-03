@@ -116,9 +116,9 @@ public class MyBatisConfig
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
     {
-        String typeAliasesPackage = env.getProperty("mybatis.typeAliasesPackage");
-        String mapperLocations = env.getProperty("mybatis.mapperLocations");
-        String configLocation = env.getProperty("mybatis.configLocation");
+        String typeAliasesPackage = env.getProperty("mybatis-plus.typeAliasesPackage");
+        String mapperLocations = env.getProperty("mybatis-plus.mapperLocations");
+        String configLocation = env.getProperty("mybatis-plus.configLocation");
         typeAliasesPackage = setTypeAliasesPackage(typeAliasesPackage);
         VFS.addImplClass(SpringBootVFS.class);
 

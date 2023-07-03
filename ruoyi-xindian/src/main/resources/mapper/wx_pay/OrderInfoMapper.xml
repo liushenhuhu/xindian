@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.wx_pay.mapper.OrderInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.wx_pay.domain.OrderInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="productId" column="product_id" jdbcType="BIGINT"/>
+            <result property="body" column="body" jdbcType="VARCHAR"/>
+            <result property="totalFee" column="total_fee" jdbcType="DECIMAL"/>
+            <result property="codeUrl" column="code_url" jdbcType="VARCHAR"/>
+            <result property="orderStatus" column="order_status" jdbcType="VARCHAR"/>
+            <result property="openId" column="open_id" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,order_no,
+        user_id,product_id,body,
+        total_fee,code_url,order_status,
+        open_id,create_time,update_time
+    </sql>
+</mapper>
