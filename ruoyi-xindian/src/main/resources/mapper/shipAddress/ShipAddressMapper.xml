@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper">
+
+    <resultMap type="ShipAddress" id="ShipAddressResult">
+        <result property="addressId"    column="address_id"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="streetAddress"    column="street_address"    />
+        <result property="city"    column="city"    />
+        <result property="state"    column="state"    />
+        <result property="country"    column="country"    />
+        <result property="postalCode"    column="postal_code"    />
+        <result property="defaultFlag"    column="default_flag"    />
+
+
+    </resultMap>
+
+    <sql id="selectShipAddressVo">
+        select address_id, patient_phone, patient_name, street_address,city,state,country,postal_code,default_flag from shipAddress
+    </sql>
+
+    <select id="selectShipAddressList" parameterType="ShipAddress" resultMap="ShipAddressResult">
+        <include refid="selectShipAddressVo"/>
+        <where>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+        </where>
+    </select>
+
+    <select id="selectShipAddressById" parameterType="Long" resultMap="ShipAddressResult">
+        <include refid="selectShipAddressVo"/>
+        where address_id = #{addressId}
+    </select>
+
+    <insert id="insertShipAddress" parameterType="ShipAddress" useGeneratedKeys="true" keyProperty="addressId">
+        insert into shipAddress
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="patientName != null">patient_name,</if>
+            <if test="streetAddress != null">street_address,</if>
+            <if test="city != null">city,</if>
+            <if test="state != null">state,</if>
+            <if test="country != null">country,</if>
+            <if test="postalCode != null">postal_code,</if>
+            <if test="defaultFlag != null">default_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="patientName != null">#{patientName},</if>
+            <if test="streetAddress != null">#{streetAddress},</if>
+            <if test="city != null">#{city},</if>
+            <if test="state != null">#{state},</if>
+            <if test="country != null">#{country},</if>
+            <if test="postalCode != null">#{postalCode},</if>
+            <if test="defaultFlag != null">#{defaultFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShipAddress" parameterType="ShipAddress">
+        update shipAddress
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="patientName != null">patient_name = #{patientName},</if>
+            <if test="streetAddress != null">street_address = #{streetAddress},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="postalCode != null">postal_code = #{postalCode},</if>
+            <if test="defaultFlag != null">default_flag = #{defaultFlag},</if>
+        </trim>
+        where address_id = #{addressId}
+    </update>
+
+    <!-- <delete id="deleteProtocolByProtocolId" parameterType="Long">
+        delete from protocol where protocol_id = #{protocolId}
+    </delete>-->
+
+    <delete id="deleteShipAddressByIds" parameterType="String">
+        delete from shipAddress where address_id in
+        <foreach item="addressId" collection="array" open="(" separator="," close=")">
+            #{addressId}
+        </foreach>
+    </delete>
+</mapper>
