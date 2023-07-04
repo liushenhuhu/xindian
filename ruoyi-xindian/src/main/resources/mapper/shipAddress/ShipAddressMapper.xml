@@ -25,8 +25,14 @@
     <select id="selectShipAddressList" parameterType="ShipAddress" resultMap="ShipAddressResult">
         <include refid="selectShipAddressVo"/>
         <where>
-            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="patientName != null  and patientName != ''"> and patient_name like concat('%', #{patientName}, '%')</if>
+            <if test="streetAddress != null  and streetAddress != ''"> and street_address = #{streetAddress}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="country != null  and country != ''"> and country = #{country}</if>
+            <if test="postalCode != null  and postalCode != ''"> and postal_code = #{postalCode}</if>
+            <if test="defaultFlag != null "> and default_flag = #{defaultFlag}</if>
         </where>
     </select>
 

@@ -26,7 +26,7 @@ public class ShipAddressController extends BaseController {
     /**
      * 查询
      */
-    @PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:list')")
+    /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:list')")*/
     @GetMapping("/list")
     public TableDataInfo list(ShipAddress shipAddress){
         startPage();
@@ -37,7 +37,7 @@ public class ShipAddressController extends BaseController {
     /**
      * 新增
      */
-    @PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:add')")
+    /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:add')")*/
     @Log(title = "存储", businessType = BusinessType.INSERT)
     @PostMapping("add")
     public AjaxResult add(@RequestBody ShipAddress shipAddress) {
@@ -49,7 +49,7 @@ public class ShipAddressController extends BaseController {
      * @param id
      * @return
      */
-    @PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:query')")
+    /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:query')")*/
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(shipAddressService.selectShipAddressById(id));
@@ -60,7 +60,7 @@ public class ShipAddressController extends BaseController {
      * @param shipAddress
      * @return
      */
-    @PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:edit')")
+    /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:edit')")*/
     @Log(title = "存储", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ShipAddress shipAddress) {
@@ -72,7 +72,7 @@ public class ShipAddressController extends BaseController {
      * @param ids
      * @return
      */
-    @PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:remove')")
+    /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:remove')")*/
     @Log(title = "批量删除", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
