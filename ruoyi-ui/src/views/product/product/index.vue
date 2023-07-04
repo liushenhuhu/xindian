@@ -1,66 +1,58 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户电话" prop="patientPhone">
+      <el-form-item label="商品名称" prop="productName">
         <el-input
-          v-model="queryParams.patientPhone"
-          placeholder="请输入用户电话"
+          v-model="queryParams.productName"
+          placeholder="请输入商品名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户姓名" prop="patientName">
+      <el-form-item label="价格(分)" prop="price">
         <el-input
-          v-model="queryParams.patientName"
-          placeholder="请输入用户姓名"
+          v-model="queryParams.price"
+          placeholder="请输入价格(分)"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="街道地址" prop="streetAddress">
+      <el-form-item label="商品描述" prop="productDescription">
         <el-input
-          v-model="queryParams.streetAddress"
-          placeholder="请输入街道地址"
+          v-model="queryParams.productDescription"
+          placeholder="请输入商品描述"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="城市" prop="city">
+      <el-form-item label="商品图片" prop="productUrl">
         <el-input
-          v-model="queryParams.city"
-          placeholder="请输入城市"
+          v-model="queryParams.productUrl"
+          placeholder="请输入商品图片"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="省份" prop="state">
+      <el-form-item label="商品折扣" prop="discount">
+        <el-input
+          v-model="queryParams.discount"
+          placeholder="请输入商品折扣"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="state">
         <el-input
           v-model="queryParams.state"
-          placeholder="请输入省份"
+          placeholder="请输入状态"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="国家" prop="country">
+      <el-form-item label="销量" prop="sales">
         <el-input
-          v-model="queryParams.country"
-          placeholder="请输入国家"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="邮政编码" prop="postalCode">
-        <el-input
-          v-model="queryParams.postalCode"
-          placeholder="请输入邮政编码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="默认地址标识符" prop="defaultFlag">
-        <el-input
-          v-model="queryParams.defaultFlag"
-          placeholder="请输入默认地址标识符"
+          v-model="queryParams.sales"
+          placeholder="请输入销量"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -79,7 +71,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:shipAddress:add']"
+          v-hasPermi="['product:product:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -90,7 +82,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:shipAddress:edit']"
+          v-hasPermi="['product:product:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -101,7 +93,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:shipAddress:remove']"
+          v-hasPermi="['product:product:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -111,23 +103,23 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:shipAddress:export']"
+          v-hasPermi="['product:product:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="shipAddressList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="productList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="地址id" align="center" prop="addressId" />-->
-      <el-table-column label="用户电话" align="center" prop="patientPhone" />
-      <el-table-column label="用户姓名" align="center" prop="patientName" />
-      <el-table-column label="街道地址" align="center" prop="streetAddress" />
-      <el-table-column label="城市" align="center" prop="city" />
-      <el-table-column label="省份" align="center" prop="state" />
-      <el-table-column label="国家" align="center" prop="country" />
-      <el-table-column label="邮政编码" align="center" prop="postalCode" />
-<!--      <el-table-column label="默认地址标识符" align="center" prop="defaultFlag" />-->
+<!--      <el-table-column label="商Bid" align="center" prop="productId" />-->
+      <el-table-column label="商品名称" align="center" prop="productName" />
+      <el-table-column label="价格(分)" align="center" prop="price" />
+      <el-table-column label="商品描述" align="center" prop="productDescription" />
+      <el-table-column label="商品图片" align="center" prop="productUrl" />
+      <el-table-column label="商品折扣" align="center" prop="discount" />
+      <el-table-column label="状态" align="center" prop="state" />
+      <el-table-column label="商品数量" align="center" prop="productNum" />
+      <el-table-column label="销量" align="center" prop="sales" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -135,14 +127,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:shipAddress:edit']"
+            v-hasPermi="['product:product:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:shipAddress:remove']"
+            v-hasPermi="['product:product:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -156,32 +148,29 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改地址管理对话框 -->
+    <!-- 添加或修改商品信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户电话" prop="patientPhone">
-          <el-input v-model="form.patientPhone" placeholder="请输入用户电话" />
+        <el-form-item label="商品名称" prop="productName">
+          <el-input v-model="form.productName" placeholder="请输入商品名称" />
         </el-form-item>
-        <el-form-item label="用户姓名" prop="patientName">
-          <el-input v-model="form.patientName" placeholder="请输入用户姓名" />
+        <el-form-item label="价格(分)" prop="price">
+          <el-input v-model="form.price" placeholder="请输入价格(分)" />
         </el-form-item>
-        <el-form-item label="街道地址" prop="streetAddress">
-          <el-input v-model="form.streetAddress" placeholder="请输入街道地址" />
+        <el-form-item label="商品描述" prop="productDescription">
+          <el-input v-model="form.productDescription" placeholder="请输入商品描述" />
         </el-form-item>
-        <el-form-item label="城市" prop="city">
-          <el-input v-model="form.city" placeholder="请输入城市" />
+        <el-form-item label="商品图片" prop="productUrl">
+          <el-input v-model="form.productUrl" placeholder="请输入商品图片" />
         </el-form-item>
-        <el-form-item label="省份" prop="state">
-          <el-input v-model="form.state" placeholder="请输入省份" />
+        <el-form-item label="商品折扣" prop="discount">
+          <el-input v-model="form.discount" placeholder="请输入商品折扣" />
         </el-form-item>
-        <el-form-item label="国家" prop="country">
-          <el-input v-model="form.country" placeholder="请输入国家" />
+        <el-form-item label="状态" prop="state">
+          <el-input v-model="form.state" placeholder="请输入状态" />
         </el-form-item>
-        <el-form-item label="邮政编码" prop="postalCode">
-          <el-input v-model="form.postalCode" placeholder="请输入邮政编码" />
-        </el-form-item>
-        <el-form-item label="默认地址标识符" prop="defaultFlag">
-          <el-input v-model="form.defaultFlag" placeholder="请输入默认地址标识符" />
+        <el-form-item label="销量" prop="sales">
+          <el-input v-model="form.sales" placeholder="请输入销量" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -193,10 +182,10 @@
 </template>
 
 <script>
-import { listShipAddress, getShipAddress, delShipAddress, addShipAddress, updateShipAddress } from "@/api/shipAddress/shipAddress";
+import { listProduct, getProduct, delProduct, addProduct, updateProduct } from "@/api/product/product";
 
 export default {
-  name: "ShipAddress",
+  name: "Product",
   data() {
     return {
       // 遮罩层
@@ -211,8 +200,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 地址管理表格数据
-      shipAddressList: [],
+      // 商品信息表格数据
+      productList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -221,14 +210,14 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        patientPhone: null,
-        patientName: null,
-        streetAddress: null,
-        city: null,
+        productName: null,
+        price: null,
+        productDescription: null,
+        productUrl: null,
+        discount: null,
         state: null,
-        country: null,
-        postalCode: null,
-        defaultFlag: null
+        productNum: null,
+        sales: null
       },
       // 表单参数
       form: {},
@@ -241,11 +230,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询地址管理列表 */
+    /** 查询商品信息列表 */
     getList() {
       this.loading = true;
-      listShipAddress(this.queryParams).then(response => {
-        this.shipAddressList = response.rows;
+      listProduct(this.queryParams).then(response => {
+        this.productList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -258,15 +247,17 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        addressId: null,
-        patientPhone: null,
-        patientName: null,
-        streetAddress: null,
-        city: null,
+        productId: null,
+        productName: null,
+        price: null,
+        productDescription: null,
+        productUrl: null,
+        discount: null,
         state: null,
-        country: null,
-        postalCode: null,
-        defaultFlag: null
+        updateTime: null,
+        createTime: null,
+        productNum: null,
+        sales: null
       };
       this.resetForm("form");
     },
@@ -282,7 +273,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.addressId)
+      this.ids = selection.map(item => item.productId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -290,30 +281,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加地址管理";
+      this.title = "添加商品信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const addressId = row.addressId || this.ids
-      getShipAddress(addressId).then(response => {
+      const productId = row.productId || this.ids
+      getProduct(productId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改地址管理";
+        this.title = "修改商品信息";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.addressId != null) {
-            updateShipAddress(this.form).then(response => {
+          if (this.form.productId != null) {
+            updateProduct(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addShipAddress(this.form).then(response => {
+            addProduct(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -324,9 +315,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const addressIds = row.addressId || this.ids;
-      this.$modal.confirm('是否确认删除地址管理编号为"' + addressIds + '"的数据项？').then(function() {
-        return delShipAddress(addressIds);
+      const productIds = row.productId || this.ids;
+      this.$modal.confirm('是否确认删除商品信息编号为"' + productIds + '"的数据项？').then(function() {
+        return delProduct(productIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -334,9 +325,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/shipAddress/export', {
+      this.download('product/product/export', {
         ...this.queryParams
-      }, `shipAddress_${new Date().getTime()}.xlsx`)
+      }, `product_${new Date().getTime()}.xlsx`)
     }
   }
 };

@@ -30,7 +30,7 @@ public class PatientRelationship extends BaseEntity
     /** 关系 */
     @Excel(name = "关系")
     private String relationship;
-
+//    患者姓名
     private String relationshipPatientName;
 
     public String getRelationshipPatientName() {

@@ -3,8 +3,13 @@ package com.ruoyi.xindian.relationship.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.xindian.appData.domain.AppData;
+import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.relationship.domain.PatientRelationshipDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +45,13 @@ public class PatientRelationshipController extends BaseController
     @Autowired
     private IPatientService patientService;
 
+    @Autowired
+    private IAppDataService appDataService;
+
+    @Autowired
+    private IMedicalHistoryService medicalHistoryService;
+
+
     /**
      * 查询患者关系表列表
      */
@@ -53,6 +65,15 @@ public class PatientRelationshipController extends BaseController
             Patient patient = patientService.selectPatientByPatientPhone(relationship.getSonPhone());
             if(patient != null)
                 relationship.setRelationshipPatientName(patient.getPatientName());
+        }
+        if(patientRelationship!=null && patientRelationship.getFatherPhone() != null){
+            PatientRelationship relationship = new PatientRelationship();
+            Patient patient = patientService.selectPatientByPatientPhone(patientRelationship.getFatherPhone());
+            relationship.setRelationshipPatientName(patient.getPatientName());
+            relationship.setFatherPhone(patientRelationship.getFatherPhone());
+            relationship.setRelationship("自己");
+            list.add(0,relationship);
+
         }
         return getDataTable(list);
     }
@@ -79,6 +100,39 @@ public class PatientRelationshipController extends BaseController
     {
         return AjaxResult.success(patientRelationshipService.selectPatientRelationshipById(id));
     }
+    private PatientRelationship getRelationship(PatientRelationshipDto patientRelationship){
+        PatientRelationship relationship = new PatientRelationship();
+        relationship.setFatherPhone(patientRelationship.getFatherPhone());
+        relationship.setSonPhone(patientRelationship.getSonPhone());
+        relationship.setRelationship(patientRelationship.getRelationship());
+        return relationship;
+    }
+    private AppData getAppData(PatientRelationshipDto patientRelationship){
+        AppData appData = new AppData();
+        appData.setBirthDay(patientRelationship.getBirthDay());
+        appData.setPatientPhone(patientRelationship.getSonPhone());
+        appData.setUserName(patientRelationship.getSonPhone());
+        appData.setPatientSex(patientRelationship.getPatientSex());
+        appData.setPatientName(patientRelationship.getRelationshipPatientName());
+        return appData;
+    }
+    private MedicalHistory getMedicalHistory(PatientRelationshipDto patientRelationship){
+        MedicalHistory medicalHistory = new MedicalHistory();
+        medicalHistory.setPastMedicalHistory(patientRelationship.getPastMedicalHistory());
+        medicalHistory.setLivingHabit(patientRelationship.getLivingHabit());
+        medicalHistory.setHeight(patientRelationship.getHeight());
+        medicalHistory.setWeight(patientRelationship.getWeight());
+        medicalHistory.setPatientPhone(patientRelationship.getSonPhone());
+        return medicalHistory;
+    }
+    private Patient getPatient(PatientRelationshipDto patientRelationship){
+        Patient patient = new Patient();
+        patient.setPatientName(patientRelationship.getRelationshipPatientName());
+        patient.setPatientPhone(patientRelationship.getSonPhone());
+        patient.setPatientSex(patientRelationship.getPatientSex());
+        patient.setBirthDay(patientRelationship.getBirthDay());
+        return patient;
+    }
 
     /**
      * 新增患者关系表
@@ -86,9 +140,18 @@ public class PatientRelationshipController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('relationship:relationship:add')")
     @Log(title = "患者关系表", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PatientRelationship patientRelationship)
+    public AjaxResult add(@RequestBody PatientRelationshipDto patientRelationship)
     {
-        return toAjax(patientRelationshipService.insertPatientRelationship(patientRelationship));
+        PatientRelationship relationship = getRelationship(patientRelationship);
+        if(patientRelationship.getRelationshipPatientName() != null){
+            AppData appData = getAppData(patientRelationship);
+            MedicalHistory medicalHistory = getMedicalHistory(patientRelationship);
+            Patient patient = getPatient(patientRelationship);
+            patientService.insertPatient(patient);
+            appDataService.insertAppData(appData);
+            medicalHistoryService.insertMedicalHistory(medicalHistory);
+        }
+        return toAjax(patientRelationshipService.insertPatientRelationship(relationship));
     }
 
     /**
