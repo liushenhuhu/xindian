@@ -5,19 +5,17 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.file.MimeTypeUtils;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.product.domain.ProductImgs;
 import com.ruoyi.xindian.product.domain.TProductDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -26,6 +24,7 @@ import com.ruoyi.xindian.product.domain.TProduct;
 import com.ruoyi.xindian.product.service.ITProductService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 商品信息Controller
@@ -39,6 +38,9 @@ public class TProductController extends BaseController
 {
     @Autowired
     private ITProductService tProductService;
+
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询商品信息列表
@@ -116,6 +118,20 @@ public class TProductController extends BaseController
     {
         return toAjax(tProductService.deleteTProductByProductIds(productIds));
     }
-
+    /**
+     * 商品图片上传
+     */
+    @PostMapping("/avatar")
+    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws Exception
+    {
+        if (!file.isEmpty())
+        {
+            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("imgUrl", "https://ecg.mindyard.cn:84/prod-api/"+avatar);
+            return ajax;
+        }
+        return AjaxResult.error("上传图片异常，请联系管理员");
+    }
 
 }
