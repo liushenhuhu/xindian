@@ -1,5 +1,8 @@
 package com.ruoyi.xindian.shipAddress.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,7 +15,13 @@ public class ShipAddress extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
+
     private Long addressId;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
     @Excel(name = "用户电话")
     private String patientPhone;
     @Excel(name = "用户姓名")
@@ -23,12 +32,33 @@ public class ShipAddress extends BaseEntity {
     private String city;
     @Excel(name = "省份")
     private String state;
-    @Excel(name = "国家")
+    @Excel(name = "县")
     private String country;
     @Excel(name = "邮政编码")
     private String postalCode;
     @Excel(name = "默认地址标识符")
     private Long defaultFlag;
+
+    /**
+     * 删除标记位置
+     */
+    private Integer delFlag;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
 
     public Long getAddressId() {
         return addressId;

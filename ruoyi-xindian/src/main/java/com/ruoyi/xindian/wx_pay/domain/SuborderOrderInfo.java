@@ -52,8 +52,10 @@ public class SuborderOrderInfo implements Serializable {
     @Excel(name = "修改时间")
     private Date updateTime;
 
+    @Excel(name = "购买商品信息")
     @TableField(exist = false)
     private Product product;
+
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

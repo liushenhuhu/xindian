@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.xindian.order.domain.UserAddress;
+import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -88,19 +88,21 @@ public class OrderInfo implements Serializable {
     /**
      * 子订单信息
      */
+    @Excel(name = "购买商品")
     @TableField(exist = false)
     List<SuborderOrderInfo> suborderOrderInfos = new ArrayList<>();
-
 
     /**
      * 地址
      */
+    @Excel(name = "地址")
     @TableField(exist = false)
-    private UserAddress userAddress;
+    private ShipAddress shipAddress;
 
     /**
      * 用户信息
      */
+    @Excel(name = "用户信息")
     @TableField(exist = false)
     private SysUser sysUser;
 

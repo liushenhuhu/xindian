@@ -3,9 +3,12 @@ package com.ruoyi.xindian.order.controller;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.order.domain.MCity;
 import com.ruoyi.xindian.order.service.MCityService;
 import com.ruoyi.xindian.order.service.UserAddressService;
+import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.order.vo.UserAddressVo;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
@@ -13,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -44,16 +48,16 @@ public class webOrderController extends BaseController {
     }
 
 
-//    /**
-//     * 修改订单状态或者地址
-//     */
-//    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:edit')")
-//    @Log(title = "修改订单状态或者地址", businessType = BusinessType.UPDATE)
-//    @PutMapping("/update")
-//    public AjaxResult edit(String orderId)
-//    {
-//        return toAjax(OrderInfoService.updateTOrderInfo(orderId));
-//    }
+
+    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:export')")
+    @PostMapping("/export")
+    public void webOrderList(HttpServletResponse response){
+        List<OrderInfo> orderInfoList = orderInfoService.webOrderList(null,null,null);
+        ExcelUtil<OrderInfo> util = new ExcelUtil<OrderInfo>(OrderInfo.class);
+        util.exportExcel(response, orderInfoList, "订单数据");
+    }
+
+
 
     /**
      * 获取【请填写功能名称】详细信息
@@ -84,21 +88,29 @@ public class webOrderController extends BaseController {
 
     /**
      * 通过修改地址，或者修改状态进行数据的添加
-     * @param userAddress
+     * @param shipaddressVo
      * @return
      */
     @PostMapping("/addressAdd")
-    public AjaxResult b(@RequestBody UserAddressVo userAddress){
+    public AjaxResult b(@RequestBody ShipaddressVo shipaddressVo){
 
-        Boolean is = orderInfoService.updateAddress(userAddress);
+        Boolean is = orderInfoService.updateAddress(shipaddressVo);
         return AjaxResult.success(is);
     }
 
 
+    /**
+     * 通过订单编号去查询
+     * @param id
+     * @return
+     */
     @GetMapping("/ListOrderId")
     public AjaxResult orderId(String id){
         OrderInfo orderInfo = orderInfoService.ListOrderId(id);
         return AjaxResult.success(orderInfo);
     }
+
+
+
 
 }

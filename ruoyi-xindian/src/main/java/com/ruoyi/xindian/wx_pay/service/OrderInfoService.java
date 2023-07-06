@@ -3,6 +3,7 @@ package com.ruoyi.xindian.wx_pay.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.order.vo.UserAddressVo;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.enums.OrderStatus;
@@ -83,7 +84,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
      */
     List<OrderInfo> webOrderList(String orderId, String userPhone, String orderState);
 
-    Boolean updateAddress(UserAddressVo userAddress);
+    Boolean updateAddress(ShipaddressVo shipaddressVo);
 
     /**
      * 通过id查询订单的所有信息

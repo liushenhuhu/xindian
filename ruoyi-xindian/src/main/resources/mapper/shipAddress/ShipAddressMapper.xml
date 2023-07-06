@@ -6,16 +6,16 @@
 
     <resultMap type="ShipAddress" id="ShipAddressResult">
         <result property="addressId"    column="address_id"    />
-        <result property="patientPhone"    column="patient_phone"    />
+        <result property="patientPhone"    column="patient_phone"   />
         <result property="patientName"    column="patient_name"    />
         <result property="streetAddress"    column="street_address"    />
         <result property="city"    column="city"    />
-        <result property="state"    column="state"    />
-        <result property="country"    column="country"    />
-        <result property="postalCode"    column="postal_code"    />
+        <result property="state"    column="state"   />
+        <result property="country"    column="country"   />
+        <result property="postalCode"    column="postal_code"   />
         <result property="defaultFlag"    column="default_flag"    />
-
-
+        <result property="userId"    column="user_id"   />
+        <result property="delFlag"    column="del_flag"   />
     </resultMap>
 
     <sql id="selectShipAddressVo">
@@ -52,6 +52,8 @@
             <if test="country != null">country,</if>
             <if test="postalCode != null">postal_code,</if>
             <if test="defaultFlag != null">default_flag,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientPhone != null">#{patientPhone},</if>
@@ -62,6 +64,8 @@
             <if test="country != null">#{country},</if>
             <if test="postalCode != null">#{postalCode},</if>
             <if test="defaultFlag != null">#{defaultFlag},</if>
+            <if test="userId != null">#{user_id},</if>
+            <if test="delFlag != null">#{del_flag},</if>
         </trim>
     </insert>
 

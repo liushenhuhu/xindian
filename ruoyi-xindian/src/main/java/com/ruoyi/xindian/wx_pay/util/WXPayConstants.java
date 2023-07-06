@@ -17,11 +17,11 @@ public class WXPayConstants {
     public static final String OPENID_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
     public static final String NOTIFY_URL = "";//回调ip
     public static final String UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一下单接口
-    public static final String CALLBACK_URL = "http://localhost:83/dev-api/dev-api/api/v1/callBack";//微信服务器调用支付结果通知路径
+    public static final String CALLBACK_URL = "http://localhost:83/dev-api/api/v1/callBack";//微信服务器调用支付结果通知路径
     public static final String PATERNER_KEY = "ADFHJWhduenfks17shGDYE6278jfww12";//商户key秘钥   填写你们自己的
     /*退款*/
     public static final String REFUND_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";//申请退款路径接口
-    public static final String notify_url = "https://127.0.0.1/wxPay/notifyUrl";//微信服务器调用退款结果通知路径
+
     
 //    下边这些没啥用：
     public static enum SignType {

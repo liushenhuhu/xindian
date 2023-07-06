@@ -135,14 +135,14 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收件人名称" prop="recipientName1">
-          <el-input v-model="userAddress1.recipientName" placeholder="请输入收件人名称"  :disabled="true"/>
+        <el-form-item label="收件人名称" prop="patientName1">
+          <el-input v-model="shipaddress1.patientName" placeholder="请输入收件人名称"  :disabled="true"/>
         </el-form-item>
-        <el-form-item label="收件人手机号" prop="contactNumber1">
-          <el-input v-model="userAddress1.contactNumber" placeholder="请输入收件人手机号"  :disabled="true"/>
+        <el-form-item label="收件人手机号" prop="patientPhone1">
+          <el-input v-model="shipaddress1.patientPhone" placeholder="请输入收件人手机号"  :disabled="true"/>
         </el-form-item>
-        <el-form-item label="收件人地址" prop="recipientName1">
-          <el-input style="width: 550px" v-model="userAddress1.province+'/'+userAddress1.city+'/'+userAddress1.area+'/'+userAddress1.detailedAddress" placeholder="请输入收件人地址"  :disabled="true"/> <el-button type="success" @click="addressUpdate()">修改地址</el-button>
+        <el-form-item label="收件人地址" prop="patientName1">
+          <el-input style="width: 550px" v-model="shipaddress1.state+'/'+shipaddress1.city+'/'+shipaddress1.area+'/'+shipaddress1.streetAddress" placeholder="请输入收件人地址"  :disabled="true"/> <el-button type="success" @click="addressUpdate()">修改地址</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -152,27 +152,27 @@
     </el-dialog>
 <!--修改地址-->
     <el-dialog title="修改地址" :visible.sync="addressOpen" width="800px" append-to-body>
-      <el-form ref="address" :model="userAddress" :rules="rules" label-width="100px">
+      <el-form ref="address" :model="shipaddress" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="收货人姓名" prop="recipientName">
-              <el-input v-model="userAddress.recipientName" placeholder="请输入收货人姓名" />
+            <el-form-item label="收货人姓名" prop="patientName">
+              <el-input v-model="shipaddress.patientName" placeholder="请输入收货人姓名" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="联系电话" prop="contactNumber">
-              <el-input v-model="userAddress.contactNumber" placeholder="请输入联系电话" />
+            <el-form-item label="联系电话" prop="patientPhone">
+              <el-input v-model="shipaddress.patientPhone" placeholder="请输入联系电话" />
             </el-form-item>
             </el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="地址" prop="province_id">
-              <el-select v-model="userAddress.province_id" clearable placeholder="请选择省份"  @change="loadCities(userAddress.province_id)">
+            <el-form-item label="地址" prop="state_id">
+              <el-select v-model="shipaddress.state_id" clearable placeholder="请选择省份"  @change="loadCities(shipaddress.state_id)">
                 <el-option
-                  v-for="item in provinces"
+                  v-for="item in states"
                   :label="item.regionName"
                   :key="item.id" :value="item.regionId"
                 >
@@ -182,7 +182,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="市" prop="city_id">
-              <el-select v-model="userAddress.city_id" clearable placeholder="请选择市" @change="loadArea(userAddress.city_id)">
+              <el-select v-model="shipaddress.city_id" clearable placeholder="请选择市" @change="loadArea(shipaddress.city_id)">
                 <el-option
                   v-for="item in cities"
                   :label="item.regionName"
@@ -194,7 +194,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="县" prop="area_id">
-              <el-select v-model="userAddress.area_id" clearable placeholder="请选择县" @change="loadAreaId(userAddress.area_id)">
+              <el-select v-model="shipaddress.area_id" clearable placeholder="请选择县" @change="loadAreaId(shipaddress.area_id)">
                 <el-option
                   v-for="item in counties"
                   :label="item.regionName"
@@ -207,8 +207,8 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="详细地址" prop="detailedAddress">
-              <el-input v-model="userAddress.detailedAddress" placeholder="请输入详细地址" />
+            <el-form-item label="详细地址" prop="streetAddress">
+              <el-input v-model="shipaddress.streetAddress" placeholder="请输入详细地址" />
             </el-form-item>
 
           </el-col>
@@ -217,7 +217,7 @@
           <el-col :span="24">
 
             <el-form-item label="邮政编码" prop="postalCode">
-              <el-input v-model="userAddress.postalCode" placeholder="请输入邮政编码" />
+              <el-input v-model="shipaddress.postalCode" placeholder="请输入邮政编码" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -258,10 +258,10 @@ export default {
       open: false,
       addressOpen:false,
       addressAndOrderId:null,
-      provinces: [],
+      states: [],
       cities: [],
       counties: [],
-      province1: null,
+      state1: null,
       citie1: null,
       countie1: null,
       // 查询参数
@@ -295,51 +295,52 @@ export default {
       },],
       // 表单参数
       form: {},
-        userAddress:{
+        shipaddress:{
           addressId: null,
           area: null,
           area_id: null,
           city: null,
           city_id: null,
-          contactNumber: null,
+          patientPhone: null,
           createdTime: null,
-          detailedAddress:null,
-          isDefault:null,
+          streetAddress:null,
+          defaultFlag:null,
           postalCode:null,
-          province:null,
-          province_id:null,
-          recipientName:null,
+          state:null,
+          state_id:null,
+          patientName:null,
           updatedTime:null,
       },
-      userAddress1:{
+      shipaddress1:{
         addressId: null,
         area: null,
         area_id: null,
         city: null,
         city_id: null,
-        contactNumber: null,
+        patientPhone: null,
         createdTime: null,
-        detailedAddress:null,
-        isDefault:null,
+        streetAddress:null,
+        defaultFlag:null,
         postalCode:null,
-        province:null,
-        province_id:null,
-        recipientName:null,
+        state:null,
+        state_id:null,
+        patientName:null,
         updatedTime:null,
         id: null,
         orderStatus: null,
-        isUpdate:null
+        isUpdate:null,
+        country:null,
       },
       // 表单校验
       rules: {
-        recipientName: [
+        patientName: [
           { required: true, message: '请输入收货人名称', trigger: 'blur' },
         ],
-        contactNumber: [
+        patientPhone: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
           { pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, message: '手机号格式不正确', trigger: 'blur' }
         ],
-        province: [
+        state: [
           { required: true, message: '请选择省', trigger: 'change' }
         ],
         city: [
@@ -348,7 +349,7 @@ export default {
         area: [
           { required: true, message: '请选择县', trigger: 'change' }
         ],
-        detailedAddress: [
+        streetAddress: [
           { required: true, message: '请输入详细地址', trigger: 'blur' },
         ],
         orderStatus: [
@@ -366,6 +367,7 @@ export default {
     getList() {
       this.loading = true;
       listInfo(this.queryParams).then(response => {
+        console.log(response)
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -374,25 +376,26 @@ export default {
     addressAdd(){
       this.$refs["address"].validate(valid => {
         if (valid) {
-          // this.province1 = this.userAddress.province
-          // this.citie1 = this.userAddress.city
-          // this.countie1 = this.userAddress.area
+          // this.state1 = this.shipaddress.state
+          // this.citie1 = this.shipaddress.city
+          // this.countie1 = this.shipaddress.area
 
-            this.userAddress1 = this.userAddress
-            this.userAddress1.id = this.form.id
+            this.shipaddress1 = this.shipaddress
+            this.shipaddress1.id = this.form.id
             this.addressOpen = false;
-            this.userAddress1.isUpdate="修改"
+            this.shipaddress1.isUpdate="修改"
         }
       })
     },
+
     loadOrder(state,id){
-      this.userAddress1.orderStatus = state
-      this.userAddress1.id=id
+      this.shipaddress1.orderStatus = state
+      this.shipaddress1.id=id
     },
     addressUpdate(id){
       this.addressAndOrderId=id
       address(null,1).then(response => {
-        this.provinces = response.data
+        this.states = response.data
       });
       this.addressOpen = true;
     },
@@ -400,17 +403,17 @@ export default {
       address(name,2).then(response => {
         this.cities = response.data
       });
-      console.log(this.provinces)
-      this.userAddress.province = this.provinces.find(item => item.regionId === name).regionName
+      console.log(this.states)
+      this.shipaddress.state = this.states.find(item => item.regionId === name).regionName
     },
     loadArea(name){
       address(name,3).then(response => {
         this.counties = response.data
       });
-      this.userAddress.area = this.cities.find(item => item.regionId === name).regionName
+      this.shipaddress.city  = this.cities.find(item => item.regionId === name).regionName
     },
     loadAreaId(name){
-      this.userAddress.city = this.counties.find(item => item.regionId === name).regionName
+      this.shipaddress.country =this.counties.find(item => item.regionId === name).regionName
     },
     // 取消按钮
     cancel() {
@@ -423,20 +426,20 @@ export default {
     },
     // 表单重置
     reset() {
-      this.userAddress={
+      this.shipaddress={
         addressId: null,
           area: null,
           area_id: null,
           city: null,
           city_id: null,
-          contactNumber: null,
+          patientPhone: null,
           createdTime: null,
-          detailedAddress:null,
-          isDefault:null,
+          streetAddress:null,
+          defaultFlag:null,
           postalCode:null,
-          province:null,
-          province_id:null,
-          recipientName:null,
+          state:null,
+          state_id:null,
+          patientName:null,
           updatedTime:null,
           id: null,
 
@@ -462,20 +465,21 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
+      console.log(id)
       getInfo(id).then(response => {
         console.log(response)
         this.form = response.data;
-        this.userAddress1 = response.data.userAddress
+        this.shipaddress1 = response.data.shipAddress
         this.open = true;
         this.title = "修改订单状态或地址";
-        this.userAddress1.id = id
+        this.shipaddress1.id = id
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          updateAddressInfo(this.userAddress1).then(response => {
+          updateAddressInfo(this.shipaddress1).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -483,13 +487,13 @@ export default {
         }
       });
     },
-    /** 删除按钮操作 */
+    /** 查看详情 */
     handleDelete(row) {
       this.$router.push({path: "/tool/orderDetails" , query: {id: row.id,}});
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/info/export', {
+      this.download('webOrder/export', {
         ...this.queryParams
       }, `info_${new Date().getTime()}.xlsx`)
     }

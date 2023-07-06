@@ -17,13 +17,13 @@
      <el-col :span="8"><div class="grid-content bg-purple-dark">订单地址</div></el-col>
    </el-row>
    <el-row>
-     <el-col :span="12"><div class="grid-content bg-purple-dark">收货人姓名：{{form.userAddress.recipientName}}</div></el-col>
-     <el-col :span="12"><div class="grid-content bg-purple-dark">联系电话：{{form.userAddress.contactNumber}}</div></el-col>
+     <el-col :span="12"><div class="grid-content bg-purple-dark">收货人姓名：{{form.shipAddress.patientName}}</div></el-col>
+     <el-col :span="12"><div class="grid-content bg-purple-dark">联系电话：{{form.shipAddress.patientPhone}}</div></el-col>
    </el-row>
    <el-row>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">省市县地址：{{form.userAddress.province+' / '+form.userAddress.city+' / '+form.userAddress.area}}</div></el-col>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">详情地址：{{form.userAddress.detailedAddress}}</div></el-col>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">邮政编码：{{form.userAddress.postalCode}}</div></el-col>
+     <el-col :span="8"><div class="grid-content bg-purple-dark">省市县地址：{{form.shipAddress.state+' / '+form.shipAddress.city+' / '+form.shipAddress.country}}</div></el-col>
+     <el-col :span="8"><div class="grid-content bg-purple-dark">详情地址：{{form.shipAddress.streetAddress}}</div></el-col>
+     <el-col :span="8"><div class="grid-content bg-purple-dark">邮政编码：{{form.shipAddress.postalCode}}</div></el-col>
    </el-row>
    <el-row>
      <el-col :span="8"><div class="grid-content bg-purple-dark">订单商品详情</div></el-col>

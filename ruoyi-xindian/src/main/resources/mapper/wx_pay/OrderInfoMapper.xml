@@ -19,21 +19,21 @@
     </resultMap>
 
     <resultMap id="ResultMap" type="com.ruoyi.xindian.wx_pay.domain.OrderInfo" extends="BaseResultMap">
-        <association property="userAddress" javaType="userAddress" resultMap="com.ruoyi.xindian.order.mapper.UserAddressMapper.BaseResultMap">
+        <association property="shipAddress" javaType="shipAddress" resultMap="com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper.ShipAddressResult">
         </association>
         <collection property="suborderOrderInfos" ofType="suborderOrderInfo" resultMap="com.ruoyi.xindian.wx_pay.mapper.SuborderOrderInfoMapper.ResultMap">
         </collection>
 
     </resultMap>
     <resultMap id="Map" type="com.ruoyi.xindian.wx_pay.domain.OrderInfo" extends="BaseResultMap">
-        <association property="userAddress" javaType="userAddress" resultMap="com.ruoyi.xindian.order.mapper.UserAddressMapper.BaseResultMap">
+        <association property="shipAddress" javaType="shipAddress" resultMap="com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper.ShipAddressResult">
         </association>
         <collection property="suborderOrderInfos" ofType="suborderOrderInfo" resultMap="com.ruoyi.xindian.wx_pay.mapper.SuborderOrderInfoMapper.ResultMap">
         </collection>
 
     </resultMap>
     <resultMap id="AddressResultMap" type="com.ruoyi.xindian.wx_pay.domain.OrderInfo" extends="BaseResultMap">
-        <association property="userAddress" javaType="userAddress" resultMap="com.ruoyi.xindian.order.mapper.UserAddressMapper.BaseResultMap">
+        <association property="shipAddress" javaType="shipAddress" resultMap="com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper.ShipAddressResult">
         </association>
     </resultMap>
     <resultMap id="UserAndOrder" type="com.ruoyi.xindian.wx_pay.domain.OrderInfo" extends="BaseResultMap">
@@ -51,14 +51,14 @@
     </sql>
     <select id="selectAllList" resultType="com.ruoyi.xindian.wx_pay.domain.OrderInfo" resultMap="ResultMap">
         SELECT
-            user_address.address_id,
-            user_address.recipient_name,
-            user_address.contact_number,
-            user_address.province,
-            user_address.city,
-            user_address.area,
-            user_address.detailed_address,
-            user_address.postal_code,
+            shipAddress.address_id,
+            shipAddress.patient_name,
+            shipAddress.patient_phone,
+            shipAddress.province,
+            shipAddress.city,
+            shipAddress.area,
+            shipAddress.street_address,
+            shipAddress.postal_code,
             t_order_info.id,
             t_order_info.title,
             t_order_info.total_fee,
@@ -79,7 +79,7 @@
                 INNER JOIN
             t_order_info
             ON
-                user_address.address_id = t_order_info.address_id
+                shipAddress.address_id = t_order_info.address_id
                 INNER JOIN
             t_suborder_order_info
             ON
@@ -126,34 +126,36 @@
             t_order_info.title,
             t_order_info.order_status,
             t_order_info.total_fee,
-            user_address.address_id,
-            user_address.recipient_name,
-            user_address.user_id,
-            user_address.contact_number,
-            user_address.province,
-            user_address.city,
-            user_address.area,
-            user_address.detailed_address,
-            user_address.postal_code,
-            user_address.is_default
+            shipAddress.address_id,
+            shipAddress.patient_name,
+            shipAddress.patient_phone,
+            shipAddress.state,
+            shipAddress.city,
+            shipAddress.country,
+            shipAddress.street_address,
+            shipAddress.postal_code,
+            shipAddress.user_id,
+            shipAddress.default_flag
         FROM
-            user_address
+            shipAddress
                 INNER JOIN
             t_order_info
             ON
-                user_address.address_id = t_order_info.address_id
+                shipAddress.address_id = t_order_info.address_id
         where t_order_info.id = #{orderId}
     </select>
     <select id="searchAllById" resultType="com.ruoyi.xindian.wx_pay.domain.OrderInfo" resultMap="ResultMap">
         SELECT
-            user_address.address_id,
-            user_address.recipient_name,
-            user_address.contact_number,
-            user_address.province,
-            user_address.city,
-            user_address.area,
-            user_address.detailed_address,
-            user_address.postal_code,
+            shipAddress.address_id,
+            shipAddress.patient_name,
+            shipAddress.patient_phone,
+            shipAddress.state,
+            shipAddress.city,
+            shipAddress.country,
+            shipAddress.street_address,
+            shipAddress.postal_code,
+            shipAddress.user_id,
+            shipAddress.default_flag,
             t_order_info.id,
             t_order_info.title,
             t_order_info.total_fee,
@@ -170,11 +172,11 @@
             t_product.discount,
             t_product.sales
         FROM
-            user_address
+            shipAddress
                 INNER JOIN
             t_order_info
             ON
-                user_address.address_id = t_order_info.address_id
+                shipAddress.address_id = t_order_info.address_id
                 INNER JOIN
             t_suborder_order_info
             ON

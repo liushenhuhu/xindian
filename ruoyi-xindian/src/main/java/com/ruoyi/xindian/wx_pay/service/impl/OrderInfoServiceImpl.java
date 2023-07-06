@@ -11,7 +11,10 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.order.domain.UserAddress;
 import com.ruoyi.xindian.order.mapper.UserAddressMapper;
+import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.order.vo.UserAddressVo;
+import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
+import com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
@@ -60,7 +63,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
 
     @Resource
-    private UserAddressMapper userAddressMapper;
+    private ShipAddressMapper shipAddressMapper;
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -328,28 +331,26 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     @Transactional
     @Override
-    public Boolean updateAddress(UserAddressVo userAddress) {
+    public Boolean updateAddress(ShipaddressVo shipaddressVo) {
 
-        if (userAddress.getOrderStatus()==null&&userAddress.getIsUpdate()==null){
-
+        if (shipaddressVo.getOrderStatus()==null&&shipaddressVo.getIsUpdate()==null){
             return true;
-
         }
-        if (userAddress.getIsUpdate()!=null&&!"".equals(userAddress.getIsUpdate())){
-            UserAddress userAddress1 = new UserAddress();
-            BeanUtils.copyProperties(userAddress,userAddress1);
-            userAddressMapper.insert(userAddress1);
+        if (shipaddressVo.getIsUpdate()!=null&&!"".equals(shipaddressVo.getIsUpdate())){
+            ShipAddress shipAddress = new ShipAddress();
+            BeanUtils.copyProperties(shipaddressVo,shipAddress);
+            shipAddressMapper.insertShipAddress(shipAddress);
                OrderInfo orderInfo = new OrderInfo();
-               if (userAddress.getOrderStatus()!=null&&!"".equals(userAddress.getOrderStatus())){
-                   orderInfo.setOrderStatus(userAddress.getOrderStatus());
+               if (shipaddressVo.getOrderStatus()!=null&&!"".equals(shipaddressVo.getOrderStatus())){
+                   orderInfo.setOrderStatus(shipaddressVo.getOrderStatus());
                }
-            orderInfo.setAddressId(Long.valueOf(userAddress1.getAddressId()));
-            orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",userAddress.getId()));
+            orderInfo.setAddressId(shipAddress.getAddressId());
+            orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",shipaddressVo.getId()));
             return true;
         }
         OrderInfo orderInfo = new OrderInfo();
-        orderInfo.setOrderStatus(userAddress.getOrderStatus());
-        orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",userAddress.getId()));
+        orderInfo.setOrderStatus(shipaddressVo.getOrderStatus());
+        orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",shipaddressVo.getId()));
         return true;
     }
 
