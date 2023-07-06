@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.order.mapper.MCityMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.order.domain.MCity">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="regionId" column="region_id" jdbcType="VARCHAR"/>
+            <result property="regionName" column="region_name" jdbcType="VARCHAR"/>
+            <result property="regionParentId" column="region_parent_id" jdbcType="VARCHAR"/>
+            <result property="regionLevel" column="region_level" jdbcType="OTHER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,region_id,region_name,
+        region_parent_id,region_level
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap"  >
+        select
+        <include refid="Base_Column_List" />
+        from m_city
+        <where>
+            <if test="regionParentId!=null&amp;&amp;regionParentId!=''">
+                and region_parent_id = #{regionParentId}
+            </if>
+            <if test="level!=null&amp;&amp;level!=''">
+                and region_level = #{level}
+            </if>
+        </where>
+
+    </select>
+
+
+
+
+</mapper>

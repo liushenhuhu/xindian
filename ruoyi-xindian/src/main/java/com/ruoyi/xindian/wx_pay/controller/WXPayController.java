@@ -4,12 +4,11 @@ package com.ruoyi.xindian.wx_pay.controller;
 
 
 
-import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.RefundInfo;
+import com.ruoyi.xindian.wx_pay.enums.OrderStatus;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.service.RefundInfoService;
 import com.ruoyi.xindian.wx_pay.service.WxPayService;
@@ -17,7 +16,6 @@ import com.ruoyi.xindian.wx_pay.util.HttpClientUtil;
 import com.ruoyi.xindian.wx_pay.util.WXPayConstants;
 import com.ruoyi.xindian.wx_pay.util.WXPayUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -26,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,23 +48,24 @@ public class WXPayController {
     private OrderInfoService orderInfoService;
 
 
-    @Resource
-    private TokenService tokenService;
+
 
     @Resource
     private RefundInfoService refundsInfoService;
 
     /**
      * 调用支付接口
-     * @param productId 商品id
+     *
+     * @param orderId 商品id
      * @param request
      * @return
      */
+
     @RequestMapping("prePay")
-    public Map<String, Object> prePay(Long productId, HttpServletRequest request){
+    public Map<String, Object> prePay(String  orderId, HttpServletRequest request){
 
-
-        LoginUser loginUser = tokenService.getLoginUser(request);
+        //获取token中发送请求的用户信息
+//        LoginUser loginUser = tokenService.getLoginUser(request);
 
 
         // 返回参数
@@ -88,12 +86,20 @@ public class WXPayController {
             ip = ips[0].trim();
         }
 
+
         try {
-            System.out.println("productId= "+productId);
+            System.out.println("productId= "+orderId);
             // 拼接统一下单地址参数
             Map<String, Object> paraMap = new HashMap<>();
-            OrderInfo order =  orderInfoService.createOrderByProductId(productId,loginUser);
-            String body = order.getBody();//商品名称
+            //查询订单信息
+            OrderInfo order =  orderInfoService.createOrderByProductId(orderId);
+            if (order==null){
+                throw new ServiceException("订单不存在");
+            }
+            if(!order.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
+                throw new ServiceException("订单不存在");
+            }
+            String body = order.getTitle();//订单介绍
             String orderNum = order.getOrderNo();//商户订单号，由随机数组成
             String openId = order.getOpenId();//获取到用户登录的openid
 
@@ -107,7 +113,7 @@ public class WXPayController {
             paraMap.put("appid", WXPayConstants.APP_ID);
             paraMap.put("mch_id", WXPayConstants.MCH_ID);//商家ID
             paraMap.put("nonce_str", WXPayUtil.generateNonceStr());//获取随机字符串 Nonce Str
-            paraMap.put("body", body);     //商品名称
+            paraMap.put("body", body);     //购买订单介绍
             paraMap.put("out_trade_no", orderNum);//订单号
             paraMap.put("total_fee",price);    //测试改为固定金额
             paraMap.put("spbill_create_ip", ip);
@@ -179,13 +185,6 @@ public class WXPayController {
             Map<String, Object> notifyMap = WXPayUtil.xmlToMap(xml);//将微信发的xml转map
             if(notifyMap.get("return_code").equals("SUCCESS")){
 
-
-//                String ordersNum = notifyMap.get("out_trade_no").toString();//商户订单号
-                //处理订单状态
-//          String openid = notifyMap.get("openid");
-//                Date zhifutime = new Date();
-//                Integer ordertype = 1;//1支付完成
-
                 try {
                     wxPayService.processOrder(xml);
                     ajaxResult.success("支付回调成功，修改订单状态为支付成功",SUCCESS);
@@ -203,7 +202,6 @@ public class WXPayController {
                     ajaxResult.error("订单状态修改失败");
                 }
 
-
             }
 
         } catch (Exception e) {
@@ -211,7 +209,6 @@ public class WXPayController {
         }
         return ajaxResult;
     }
-
 
 
 
@@ -226,21 +223,21 @@ public class WXPayController {
      */
 
     @RequestMapping("refund")
-    public Map<String, Object> refund(Long id,String reason,HttpServletResponse response){
-
+    public Map<String, Object> refund(String id,String reason,HttpServletResponse response){
 
         // 返回参数
         Map<String, Object> resMap = new HashMap<>();
-        Date newtime = new Date();
         String resXml = "";
         try {
             // 拼接统一下单地址参数
             Map<String, Object> paraMap = new HashMap<>();
             OrderInfo order =  orderInfoService.createOrderByOrderID(id);
+            
             String orderNum = order.getOrderNo();//商户订单号，由随机数组成
             BigDecimal price = order.getTotalFee();//金额
+
             //创建退款记录
-            RefundInfo refundsInfo = refundsInfoService.createRefundByOrderNo(orderNum, reason);
+            RefundInfo refundByOrderNo = refundsInfoService.createRefundByOrderNo(orderNum, reason);
 //       Integer price = 1;//支付金额，单位：分，这边需要转成字符串类型，否则后面的签名会失败
             System.out.println("订单号= "+orderNum);
             // 封装必需的参数
@@ -248,7 +245,7 @@ public class WXPayController {
             paraMap.put("mch_id", WXPayConstants.MCH_ID);//商家ID
             paraMap.put("nonce_str", WXPayUtil.generateNonceStr());//获取随机字符串 Nonce Str
             paraMap.put("out_trade_no", orderNum);//订单号
-            paraMap.put("out_refund_no", orderNum);//商户退款单号
+            paraMap.put("out_refund_no", refundByOrderNo.getRefundNo());//商户退款单号
             paraMap.put("total_fee",price);    //测试改为固定金额  订单金额
             paraMap.put("refund_fee",price);    //退款金额
 //       paraMap.put("notify_url", WXPayConstants.notify_url);   //退款路径
@@ -267,12 +264,19 @@ public class WXPayController {
             /*退款成功回调修改订单状态*/
             if (xmlStr.indexOf("SUCCESS") != -1) {
                 Map<String, Object> map = WXPayUtil.xmlToMap(xmlStr);//XML格式字符串转换为Map
+                if (map.get("result_code").equals("FAIL")){
+                    if (map.get("err_code_des").equals("订单已全额退款")){
+                        orderInfoService.updateRefundByOrdersNum(id);
+                    }
+                    throw new ServiceException((String) map.get("err_code_des"));
+                }
                 if(map.get("return_code").equals("SUCCESS")){
                     resMap.put("success",true);//此步说明退款成功
                     resMap.put("data","退款成功");
                     System.out.println("退款成功");
                     try {
-                        orderInfoService.updateRefundByOrdersNum(orderNum);
+                        //修改订单状态
+                        orderInfoService.updateRefundByOrdersNum(id);
                         //告诉微信服务器收到信息了，不要在调用回调action了========这里很重要回复微信服务器信息用流发送一个xml即可
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
                                 + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
@@ -287,12 +291,11 @@ public class WXPayController {
                     }catch (Exception e){
                         resMap.put("fail","订单状态修改失败");
                     }
-
                 }
-
             }else {
-                resMap.put("success","fail");//此步说明退款成功
-                resMap.put("data","退款失败");
+                //退款成功，但是修改失败
+                resMap.put("success","fail");
+                resMap.put("data","修改订单状态失败");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,7 +5,6 @@ package com.ruoyi.xindian.wx_pay.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.gson.Gson;
 import com.ruoyi.xindian.wx_pay.domain.PaymentInfo;
 import com.ruoyi.xindian.wx_pay.mapper.PaymentInfoMapper;
 import com.ruoyi.xindian.wx_pay.service.PaymentInfoService;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service

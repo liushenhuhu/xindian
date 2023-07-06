@@ -194,8 +194,8 @@ public class HttpClientUtil {
     * https双向签名认证，用于支付申请退款
     * 
     * */
-   public static String SSLCERT_PATH="C:\\Users\\Administrator\\Desktop\\jar\\p12\\apiclient_cert.p12";//证书的路径
-   public static String SSLCERT_PASSWORD="1356530102";//证书的密籍   自己的商户号
+   public static String SSLCERT_PATH="D:\\java项目\\hui\\apiclient_cert.p12";//证书的路径
+   public static String SSLCERT_PASSWORD="1645541073";//证书的密籍   自己的商户号
    @SuppressWarnings("deprecation")
    public static String doRefund(String url,String data) throws Exception {
       //注意PKCS12证书 是从微信商户平台-》账户设置-》 API安全 中下载的
@@ -215,7 +215,7 @@ public class HttpClientUtil {
       // Allow TLSv1 protocol only
       SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
             sslcontext,
-            new String[] { "TLSv1" },
+           null,
             null,
             SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
       CloseableHttpClient httpclient = HttpClients.custom()

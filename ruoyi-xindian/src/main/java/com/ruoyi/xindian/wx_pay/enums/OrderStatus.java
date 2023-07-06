@@ -15,7 +15,7 @@ public enum OrderStatus {
     /**
      * 支付成功
      */
-    SUCCESS("支付成功"),
+    SUCCESS("已支付"),
 
     /**
      * 已关闭
@@ -36,7 +36,15 @@ public enum OrderStatus {
      * 已退款
      */
     REFUND_SUCCESS("已退款"),
+    /**
+     * 已发货
+     */
+    DELIVER_GOODS("已发货"),
 
+    /**
+     * 已发货
+     */
+    ORDER_STATUS("订单已完成"),
     /**
      * 退款异常
      */

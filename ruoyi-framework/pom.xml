@@ -15,7 +15,14 @@
         framework框架核心
     </description>
 
-    <dependencies>
+    <dependencies>     <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-annotation</artifactId>
+    </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+        </dependency>
 
         <!-- SpringBoot Web容器 -->
          <dependency>
