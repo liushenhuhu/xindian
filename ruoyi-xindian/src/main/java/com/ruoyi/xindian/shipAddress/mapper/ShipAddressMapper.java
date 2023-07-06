@@ -19,5 +19,5 @@ public interface ShipAddressMapper {
 
     int updateShipAddress(ShipAddress shipAddress);
 
-    int deleteShipAddressByIds(Long[] ids);
+    int deleteShipAddressByIds(String id);
 }

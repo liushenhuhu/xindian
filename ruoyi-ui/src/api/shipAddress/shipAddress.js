@@ -39,6 +39,6 @@ export function updateShipAddress(data) {
 export function delShipAddress(addressId) {
   return request({
     url: '/shipAddress/shipAddress/' + addressId,
-    method: 'delete'
+    method: 'put'
   })
 }

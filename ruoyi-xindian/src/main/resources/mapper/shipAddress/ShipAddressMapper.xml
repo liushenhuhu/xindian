@@ -6,6 +6,7 @@
 
     <resultMap type="ShipAddress" id="ShipAddressResult">
         <result property="addressId"    column="address_id"    />
+        <result property="userId"    column="user_id"    />
         <result property="patientPhone"    column="patient_phone"    />
         <result property="patientName"    column="patient_name"    />
         <result property="streetAddress"    column="street_address"    />
@@ -19,7 +20,7 @@
     </resultMap>
 
     <sql id="selectShipAddressVo">
-        select address_id, patient_phone, patient_name, street_address,city,state,country,postal_code,default_flag from shipAddress
+        select address_id,user_id, patient_phone, patient_name, street_address,city,state,country,postal_code,default_flag from shipAddress
     </sql>
 
     <select id="selectShipAddressList" parameterType="ShipAddress" resultMap="ShipAddressResult">
@@ -33,6 +34,7 @@
             <if test="country != null  and country != ''"> and country = #{country}</if>
             <if test="postalCode != null  and postalCode != ''"> and postal_code = #{postalCode}</if>
             <if test="defaultFlag != null "> and default_flag = #{defaultFlag}</if>
+            AND del_flag = 0
         </where>
     </select>
 
@@ -80,14 +82,21 @@
         where address_id = #{addressId}
     </update>
 
+    <update id="deleteShipAddressByIds" parameterType="String">
+        update shipAddress
+        set del_flag = 1
+        where address_id = #{addressId}
+    </update>
+
     <!-- <delete id="deleteProtocolByProtocolId" parameterType="Long">
         delete from protocol where protocol_id = #{protocolId}
     </delete>-->
 
-    <delete id="deleteShipAddressByIds" parameterType="String">
+    <!--<delete id="deleteShipAddressByIds" parameterType="String">
         delete from shipAddress where address_id in
-        <foreach item="addressId" collection="array" open="(" separator="," close=")">
+        <foreach item="del_flag" collection="array" open="(" separator="," close=")">
             #{addressId}
         </foreach>
-    </delete>
+    </delete>-->
+
 </mapper>

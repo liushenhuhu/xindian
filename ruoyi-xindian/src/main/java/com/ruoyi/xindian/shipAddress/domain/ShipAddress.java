@@ -13,6 +13,7 @@ public class ShipAddress extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     private Long addressId;
+    private Integer userId;
     @Excel(name = "用户电话")
     private String patientPhone;
     @Excel(name = "用户姓名")
@@ -29,6 +30,14 @@ public class ShipAddress extends BaseEntity {
     private String postalCode;
     @Excel(name = "默认地址标识符")
     private Long defaultFlag;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Long getAddressId() {
         return addressId;
@@ -106,6 +115,7 @@ public class ShipAddress extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("addressId", addressId)
+                .append("userId", userId)
                 .append("patientPhone", patientPhone)
                 .append("patientName", patientName)
                 .append("streetAddress", streetAddress)

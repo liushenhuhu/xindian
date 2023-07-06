@@ -72,7 +72,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+<!--      <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -81,8 +81,8 @@
           @click="handleAdd"
           v-hasPermi="['system:shipAddress:add']"
         >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+<!--      <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -92,8 +92,8 @@
           @click="handleUpdate"
           v-hasPermi="['system:shipAddress:edit']"
         >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+<!--      <el-col :span="1.5">
         <el-button
           type="danger"
           plain
@@ -103,8 +103,8 @@
           @click="handleDelete"
           v-hasPermi="['system:shipAddress:remove']"
         >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+<!--      <el-col :span="1.5">
         <el-button
           type="warning"
           plain
@@ -113,7 +113,7 @@
           @click="handleExport"
           v-hasPermi="['system:shipAddress:export']"
         >导出</el-button>
-      </el-col>
+      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -130,13 +130,13 @@
       <el-table-column label="默认地址标识符" align="center" prop="defaultFlag" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
+<!--          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:shipAddress:edit']"
-          >修改</el-button>
+          >修改</el-button>-->
           <el-button
             size="mini"
             type="text"

@@ -66,7 +66,7 @@ public class ShipAddressServiceImpl implements IShipAddressService {
      * @return
      */
     @Override
-    public int deleteShipAddressByIds(Long[] ids) {
-        return shipAddressMapper.deleteShipAddressByIds(ids);
+    public int deleteShipAddressByIds(String id) {
+        return shipAddressMapper.deleteShipAddressByIds(id);
     }
 }

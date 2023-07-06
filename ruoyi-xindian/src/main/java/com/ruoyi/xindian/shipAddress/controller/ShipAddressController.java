@@ -68,15 +68,15 @@ public class ShipAddressController extends BaseController {
     }
 
     /**
-     * 批量删除
-     * @param ids
+     * 物理删除
+     * @param id
      * @return
      */
     /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:remove')")*/
-    @Log(title = "批量删除", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(shipAddressService.deleteShipAddressByIds(ids));
+    @Log(title = "物理删除", businessType = BusinessType.DELETE)
+    @PutMapping("/{id}")
+    public AjaxResult remove(@PathVariable String id) {
+        return toAjax(shipAddressService.deleteShipAddressByIds(id));
     }
 
 
