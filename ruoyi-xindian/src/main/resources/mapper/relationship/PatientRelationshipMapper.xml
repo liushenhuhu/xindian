@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper">
+
+    <resultMap type="PatientRelationship" id="PatientRelationshipResult">
+        <result property="id"    column="id"    />
+        <result property="fatherPhone"    column="father_phone"    />
+        <result property="sonPhone"    column="son_phone"    />
+        <result property="relationship"    column="relationship"    />
+    </resultMap>
+
+    <sql id="selectPatientRelationshipVo">
+        select id, father_phone, son_phone, relationship from patient_relationship
+    </sql>
+
+    <select id="selectPatientRelationshipList" parameterType="PatientRelationship" resultMap="PatientRelationshipResult">
+        <include refid="selectPatientRelationshipVo"/>
+        <where>
+            <if test="fatherPhone != null  and fatherPhone != ''"> and father_phone = #{fatherPhone}</if>
+            <if test="sonPhone != null  and sonPhone != ''"> and son_phone = #{sonPhone}</if>
+            <if test="relationship != null  and relationship != ''"> and relationship = #{relationship}</if>
+        </where>
+    </select>
+
+    <select id="selectPatientRelationshipById" parameterType="Long" resultMap="PatientRelationshipResult">
+        <include refid="selectPatientRelationshipVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPatientRelationship" parameterType="PatientRelationship" useGeneratedKeys="true" keyProperty="id">
+        insert into patient_relationship
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fatherPhone != null">father_phone,</if>
+            <if test="sonPhone != null">son_phone,</if>
+            <if test="relationship != null">relationship,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fatherPhone != null">#{fatherPhone},</if>
+            <if test="sonPhone != null">#{sonPhone},</if>
+            <if test="relationship != null">#{relationship},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePatientRelationship" parameterType="PatientRelationship">
+        update patient_relationship
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fatherPhone != null">father_phone = #{fatherPhone},</if>
+            <if test="sonPhone != null">son_phone = #{sonPhone},</if>
+            <if test="relationship != null">relationship = #{relationship},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePatientRelationshipById" parameterType="Long">
+        delete from patient_relationship where id = #{id}
+    </delete>
+
+    <delete id="deletePatientRelationshipByIds" parameterType="String">
+        delete from patient_relationship where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

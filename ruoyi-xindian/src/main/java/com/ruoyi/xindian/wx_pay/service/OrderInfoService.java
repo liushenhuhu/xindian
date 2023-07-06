@@ -1,21 +1,29 @@
 package com.ruoyi.xindian.wx_pay.service;
 
 
-
-
-
-
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.xindian.order.vo.ShipaddressVo;
+import com.ruoyi.xindian.order.vo.UserAddressVo;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.enums.OrderStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface OrderInfoService extends IService<OrderInfo> {
 
-    OrderInfo createOrderByProductId(Long productId, LoginUser loginUser);
+
+    /**
+     * 查询【请填写功能名称】
+     *
+     * @param id 【请填写功能名称】主键
+     * @return 【请填写功能名称】
+     */
+    OrderInfo selectTOrderInfoById(String id);
+
+
+    OrderInfo createOrderByProductId(String orderId);
 
     void saveCodeUrl(String orderNo, String codeUrl);
 
@@ -34,8 +42,54 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @param id
      * @return
      */
-    OrderInfo createOrderByOrderID(Long id);
+    OrderInfo createOrderByOrderID(String id);
 
-    void updateRefundByOrdersNum(String orderNum);
+    void updateRefundByOrdersNum(String id);
 
+    /**
+     * 通过用户查询对应的所有订单
+     * @param loginUser
+     * @return
+     */
+    List<OrderInfo> selectUserOrderList(LoginUser loginUser);
+
+    /**
+     * 通过Id删除订单
+     * @param orderId
+     * @return
+     */
+    Boolean deleteOrder(String orderId);
+
+    /**
+     * 添加订单
+     * @param request
+     * @param productId
+     * @param sum
+     * @param addressId
+     * @return
+     */
+    Boolean addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId);
+
+
+
+    void redisOrderKey(String orderId);
+
+
+    /**
+     * web页面查询所有订单数据
+     * @param orderId
+     * @param userPhone
+     * @param orderState
+     * @return
+     */
+    List<OrderInfo> webOrderList(String orderId, String userPhone, String orderState);
+
+    Boolean updateAddress(ShipaddressVo shipaddressVo);
+
+    /**
+     * 通过id查询订单的所有信息
+     * @param id
+     * @return
+     */
+    OrderInfo ListOrderId(String id);
 }

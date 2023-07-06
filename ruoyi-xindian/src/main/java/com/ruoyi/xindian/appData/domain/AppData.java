@@ -53,6 +53,17 @@ public class AppData extends BaseEntity
     /** 医生咨询次数*/
     private Long questionNum;
 
+    /** 关系*/
+    private String relation;
+
+    public String getRelation() {
+        return relation;
+    }
+
+    public void setRelation(String relation) {
+        this.relation = relation;
+    }
+
     public void setAppDataId(Long appDataId)
     {
         this.appDataId = appDataId;

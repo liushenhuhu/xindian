@@ -1,15 +1,17 @@
 package com.ruoyi.xindian.wx_pay.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -21,9 +23,8 @@ public class OrderInfo implements Serializable {
     /**
      * 订单id
      */
-    @TableId(type = IdType.AUTO)
     @Excel(name = "订单编号")
-    private Long id;
+    private String id;
 
     /**
      * 订单标题
@@ -42,18 +43,6 @@ public class OrderInfo implements Serializable {
      */
     @Excel(name = "用户id")
     private Long userId;
-
-    /**
-     * 支付产品id
-     */
-    @Excel(name = "支付产品id")
-    private Long productId;
-
-    /**
-     * 产品名称
-     */
-    @Excel(name = "产品名称")
-    private String body;
 
     /**
      * 订单金额(分)
@@ -80,6 +69,11 @@ public class OrderInfo implements Serializable {
     private String openId;
 
     /**
+     * 用户地址id
+     */
+    private Long addressId;
+
+    /**
      * 创建时间
      */
     @Excel(name = "创建时间")
@@ -90,6 +84,27 @@ public class OrderInfo implements Serializable {
      */
     @Excel(name = "更新时间")
     private Date updateTime;
+
+    /**
+     * 子订单信息
+     */
+    @Excel(name = "购买商品")
+    @TableField(exist = false)
+    List<SuborderOrderInfo> suborderOrderInfos = new ArrayList<>();
+
+    /**
+     * 地址
+     */
+    @Excel(name = "地址")
+    @TableField(exist = false)
+    private ShipAddress shipAddress;
+
+    /**
+     * 用户信息
+     */
+    @Excel(name = "用户信息")
+    @TableField(exist = false)
+    private SysUser sysUser;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

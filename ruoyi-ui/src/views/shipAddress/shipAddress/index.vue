@@ -119,7 +119,7 @@
 
     <el-table v-loading="loading" :data="shipAddressList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="地址id" align="center" prop="addressId" />
+<!--      <el-table-column label="地址id" align="center" prop="addressId" />-->
       <el-table-column label="用户电话" align="center" prop="patientPhone" />
       <el-table-column label="用户姓名" align="center" prop="patientName" />
       <el-table-column label="街道地址" align="center" prop="streetAddress" />
@@ -127,7 +127,7 @@
       <el-table-column label="省份" align="center" prop="state" />
       <el-table-column label="国家" align="center" prop="country" />
       <el-table-column label="邮政编码" align="center" prop="postalCode" />
-      <el-table-column label="默认地址标识符" align="center" prop="defaultFlag" />
+<!--      <el-table-column label="默认地址标识符" align="center" prop="defaultFlag" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 <!--          <el-button

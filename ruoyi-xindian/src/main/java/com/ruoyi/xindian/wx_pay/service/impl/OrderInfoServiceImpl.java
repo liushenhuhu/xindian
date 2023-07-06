@@ -1,39 +1,56 @@
 package com.ruoyi.xindian.wx_pay.service.impl;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.order.domain.UserAddress;
+import com.ruoyi.xindian.order.mapper.UserAddressMapper;
+import com.ruoyi.xindian.order.vo.ShipaddressVo;
+import com.ruoyi.xindian.order.vo.UserAddressVo;
+import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
+import com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.Product;
+import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
 import com.ruoyi.xindian.wx_pay.enums.OrderStatus;
 import com.ruoyi.xindian.wx_pay.mapper.OrderInfoMapper;
 import com.ruoyi.xindian.wx_pay.mapper.ProductMapper;
+import com.ruoyi.xindian.wx_pay.mapper.SuborderOrderInfoMapper;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
-import com.ruoyi.xindian.wx_pay.service.RefundInfoService;
 import com.ruoyi.xindian.wx_pay.util.OrderNoUtils;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
 public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo> implements OrderInfoService {
 
     @Resource
-    private ProductMapper productMapper;
-
+    private TokenService tokenService;
     @Resource
     private OrderInfoMapper orderInfoMapper;
+
+
+    @Resource
+    private SuborderOrderInfoMapper suborderOrderInfoMapper;
 
 
     @Resource
@@ -41,34 +58,32 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
 
 
+    @Resource
+    private ProductMapper productMapper;
 
 
-    @Transactional
+    @Resource
+    private ShipAddressMapper shipAddressMapper;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
     @Override
-    public OrderInfo createOrderByProductId(Long productId, LoginUser loginUser) {
+    public OrderInfo selectTOrderInfoById(String id) {
 
-        SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUserId());
-        //查找已存在但未支付的订单
-        OrderInfo orderInfo = this.getNoPayOrderByProductId(productId,sysUser.getUserId());
-        if( orderInfo != null){
-            return orderInfo;
-        }
-        System.out.println(new BaseController().getUserId());
+        return orderInfoMapper.selectTOrderInfoById(id);
+    }
 
-        //获取商品信息
-        Product product = productMapper.selectById(productId);
+    /**
+     * 通过订单id查询订单信息
+     * @param orderId
+     * @return
+     */
+    @Override
+    public OrderInfo createOrderByProductId(String orderId) {
 
-        //生成订单
-        orderInfo = new OrderInfo();
-        orderInfo.setTitle(product.getTitle());
-        orderInfo.setOrderNo(OrderNoUtils.getOrderNo()); //订单号
-        orderInfo.setProductId(productId);
-        orderInfo.setTotalFee(product.getPrice()); //分
-        orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
-        orderInfo.setBody(product.getTitle());
-        orderInfo.setOpenId(sysUser.getOpenId());
-        orderInfo.setUserId(loginUser.getUserId());
-        baseMapper.insert(orderInfo);
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+
         return orderInfo;
     }
 
@@ -99,6 +114,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<OrderInfo>().orderByDesc("create_time");
         return baseMapper.selectList(queryWrapper);
     }
+
 
     /**
      * 根据订单号更新订单状态
@@ -177,29 +193,219 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @return
      */
     @Override
-    public OrderInfo createOrderByOrderID(Long id) {
+    public OrderInfo createOrderByOrderID(String id) {
         OrderInfo orderInfo = orderInfoMapper.selectById(id);
         return orderInfo;
     }
 
     /**
      * 通过商户编号来进行数据的修改
-     * @param orderNum
+     * @param id
      */
     @Transactional
     @Override
-    public void updateRefundByOrdersNum(String orderNum) {
+    public void updateRefundByOrdersNum(String id) {
 
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setOrderStatus(OrderStatus.REFUND_SUCCESS.getType());
         QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("order_no", orderNum);
+        queryWrapper.eq("id",id);
 
         orderInfoMapper.update(orderInfo,queryWrapper);
 
 
     }
 
+    /**
+     * 查询当前用户的所有订单
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public List<OrderInfo> selectUserOrderList(LoginUser loginUser) {
+        List<OrderInfo> orderInfoList = orderInfoMapper.selectAllList(loginUser.getUser().getUserId());
+        return orderInfoList;
+    }
+
+    /**
+     * 通过id删除订单以及订单子表
+     * @param orderId
+     * @return
+     */
+    @Transactional
+    @Override
+    public Boolean deleteOrder(String orderId) {
+
+        int i = orderInfoMapper.deleteById(orderId);
+        if (i>0){
+            suborderOrderInfoMapper.delete(new QueryWrapper<SuborderOrderInfo>().eq("order_father", orderId));
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 添加订单
+     * @param request
+     * @param productId
+     * @param sum
+     * @param addressId
+     * @return
+     */
+    @Transactional
+    @Override
+    public Boolean addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId) {
+        Product product = productMapper.selectById(productId);
+        if ((product.getProductNum().compareTo(sum) <0)){
+            throw new ServiceException("库存不够");
+        }
+
+        //获取token中发送请求的用户信息
+        LoginUser loginUser = tokenService.getLoginUser(request);
+
+        SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
+
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(OrderNoUtils.getNo());
+        orderInfo.setTitle("购买"+product.getProductName());
+        orderInfo.setOrderNo(OrderNoUtils.getOrderNo());
+        orderInfo.setUserId(loginUser.getUser().getUserId());
+        orderInfo.setTotalFee(new BigDecimal(sum).multiply(product.getDiscount()));
+        orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
+        orderInfo.setOpenId(sysUser.getOpenId());
+        orderInfo.setAddressId(addressId);
+        orderInfo.setCreateTime(new Date());
+        orderInfo.setUpdateTime(new Date());
+        orderInfoMapper.insert(orderInfo);
+
+        SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();
+        suborderOrderInfo.setOrderFather(orderInfo.getId());
+        suborderOrderInfo.setProductId(productId);
+        suborderOrderInfo.setSum(Long.valueOf(sum));
+        suborderOrderInfo.setCreateTime(new Date());
+        suborderOrderInfo.setUpdateTime(new Date());
+
+        int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
+        updateProductAdd(sum,productId);
+
+
+        redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(orderInfo.getId(),productId+","+sum);
+        if (insert>0){
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * 判断订单过期，删除订单，以及添加库存
+     * @param orderId
+     */
+    @Transactional
+    @Override
+    public void redisOrderKey(String orderId) {
+        //通过订单id查找订单是否已经被支付，如果未支付，则删除
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        if (orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
+            //查询通过监听过期key来获取到订单id
+            String productIdAndSum = (String) redisTemplate.opsForValue().get(orderId);
+
+            deleteOrder(orderId);
+
+            if (productIdAndSum!=null){
+                String[] split = productIdAndSum.split(",");
+                updateProductDel(Integer.valueOf(split[1]),Long.valueOf(split[0]));
+            }
+        }
+        //删除同时存进去的key，释放资源
+        redisTemplate.opsForValue().getOperations().delete(orderId);
+
+    }
+
+    @Override
+    public List<OrderInfo> webOrderList(String orderId, String userPhone, String orderState) {
+        List<OrderInfo> orderInfoList = orderInfoMapper.selectWebAllList(orderId, userPhone, orderState);
+        return orderInfoList;
+    }
+
+    @Transactional
+    @Override
+    public Boolean updateAddress(ShipaddressVo shipaddressVo) {
+
+        if (shipaddressVo.getOrderStatus()==null&&shipaddressVo.getIsUpdate()==null){
+            return true;
+        }
+        if (shipaddressVo.getIsUpdate()!=null&&!"".equals(shipaddressVo.getIsUpdate())){
+            ShipAddress shipAddress = new ShipAddress();
+            BeanUtils.copyProperties(shipaddressVo,shipAddress);
+            shipAddressMapper.insertShipAddress(shipAddress);
+               OrderInfo orderInfo = new OrderInfo();
+               if (shipaddressVo.getOrderStatus()!=null&&!"".equals(shipaddressVo.getOrderStatus())){
+                   orderInfo.setOrderStatus(shipaddressVo.getOrderStatus());
+               }
+            orderInfo.setAddressId(shipAddress.getAddressId());
+            orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",shipaddressVo.getId()));
+            return true;
+        }
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setOrderStatus(shipaddressVo.getOrderStatus());
+        orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",shipaddressVo.getId()));
+        return true;
+    }
+
+    /**
+     * 通过id查询订单详情
+     * @param id
+     * @return
+     */
+    @Override
+    public OrderInfo ListOrderId(String id) {
+        OrderInfo orderInfo = orderInfoMapper.searchAllById(id);
+
+        return orderInfo;
+    }
+
+
+    /**
+     * 创建订单时，修改商品库存
+     * @param sum
+     * @param productId
+     * @return
+     */
+    private int updateProductAdd(Integer sum,Long productId){
+
+        // 创建一个 UpdateWrapper 对象，指定要更新的表和条件
+        UpdateWrapper<Product> updateWrapper = Wrappers.update();
+        updateWrapper
+                .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
+                .setSql("product_num = product_num - "+sum)
+                .setSql("sales = sales + "+sum); // 设置库存减一的更新操作
+
+        // 执行更新操作
+        int affectedRows = productMapper.update(null, updateWrapper);
+        return affectedRows;
+    }
+
+    /**
+     * 创建订单时，修改商品库存
+     * @param sum
+     * @param productId
+     * @return
+     */
+    private int updateProductDel(Integer sum,Long productId){
+
+        // 创建一个 UpdateWrapper 对象，指定要更新的表和条件
+        UpdateWrapper<Product> updateWrapper = Wrappers.update();
+        updateWrapper
+                .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
+                .setSql("product_num = product_num + "+sum)
+                .setSql("sales = sales - "+sum); // 设置库存减一的更新操作
+
+        // 执行更新操作
+        int affectedRows = productMapper.update(null, updateWrapper);
+        return affectedRows;
+    }
 
     /**
      * 根据商品id查询未支付订单

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.security.GeneralSecurityException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -64,12 +63,12 @@ public class WxPayServiceImpl implements WxPayService {
                     return;
                 }
 
-                //模拟通知并发
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                //模拟通知并发
+//                try {
+//                    TimeUnit.SECONDS.sleep(5);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
 
                 //更新订单状态
                 orderInfoService.updateStatusByOrderNo(orderNo, OrderStatus.SUCCESS);
