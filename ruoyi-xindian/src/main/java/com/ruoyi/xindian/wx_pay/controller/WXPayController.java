@@ -184,7 +184,6 @@ public class WXPayController {
             String xml = WXPayUtil.inputStream2String(is);
             Map<String, Object> notifyMap = WXPayUtil.xmlToMap(xml);//将微信发的xml转map
             if(notifyMap.get("return_code").equals("SUCCESS")){
-
                 try {
                     wxPayService.processOrder(xml);
                     ajaxResult.success("支付回调成功，修改订单状态为支付成功",SUCCESS);

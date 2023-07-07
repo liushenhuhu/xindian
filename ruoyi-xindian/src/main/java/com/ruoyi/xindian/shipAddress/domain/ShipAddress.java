@@ -44,7 +44,7 @@ public class ShipAddress extends BaseEntity {
     /**
      * 删除标记位置
      */
-    private Integer delFlag;
+    private Long delFlag;
 
     public Long getUserId() {
         return userId;
@@ -54,11 +54,11 @@ public class ShipAddress extends BaseEntity {
         this.userId = userId;
     }
 
-    public Integer getDelFlag() {
+    public Long getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Integer delFlag) {
+    public void setDelFlag(Long delFlag) {
         this.delFlag = delFlag;
     }
 

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.vipPatient.mapper.VipPatientMapper">
+
+    <resultMap type="VipPatient" id="VipPatientResult">
+        <result property="id"    column="id"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="vipNum"    column="vip_num"    />
+    </resultMap>
+
+    <sql id="selectVipPatientVo">
+        select id, patient_phone, end_date, vip_num from vip_patient
+    </sql>
+
+    <select id="selectVipPatientList" parameterType="VipPatient" resultMap="VipPatientResult">
+        <include refid="selectVipPatientVo"/>
+        <where>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone like concat('%', #{patientPhone}, '%')</if>
+            <if test="params.beginEndDate != null and params.beginEndDate != '' and params.endEndDate != null and params.endEndDate != ''"> and end_date between #{params.beginEndDate} and #{params.endEndDate}</if>
+            <if test="vipNum != null "> and vip_num = #{vipNum}</if>
+        </where>
+    </select>
+
+    <select id="selectVipPatientById" parameterType="Long" resultMap="VipPatientResult">
+        <include refid="selectVipPatientVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertVipPatient" parameterType="VipPatient" useGeneratedKeys="true" keyProperty="id">
+        insert into vip_patient
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientPhone != null and patientPhone != ''">patient_phone,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="vipNum != null">vip_num,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientPhone != null and patientPhone != ''">#{patientPhone},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="vipNum != null">#{vipNum},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVipPatient" parameterType="VipPatient">
+        update vip_patient
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientPhone != null and patientPhone != ''">patient_phone = #{patientPhone},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="vipNum != null">vip_num = #{vipNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVipPatientById" parameterType="Long">
+        delete from vip_patient where id = #{id}
+    </delete>
+
+    <delete id="deleteVipPatientByIds" parameterType="String">
+        delete from vip_patient where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

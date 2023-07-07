@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.vipPatient.mapper.VipWayPriceMapper">
+
+    <resultMap type="VipWayPrice" id="VipWayPriceResult">
+        <result property="id"    column="id"    />
+        <result property="way"    column="way"    />
+        <result property="price"    column="price"    />
+    </resultMap>
+
+    <sql id="selectVipWayPriceVo">
+        select id, way, price from vip_way_price
+    </sql>
+
+    <select id="selectVipWayPriceList" parameterType="VipWayPrice" resultMap="VipWayPriceResult">
+        <include refid="selectVipWayPriceVo"/>
+        <where>
+            <if test="way != null "> and way = #{way}</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+        </where>
+    </select>
+
+    <select id="selectVipWayPriceById" parameterType="Long" resultMap="VipWayPriceResult">
+        <include refid="selectVipWayPriceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertVipWayPrice" parameterType="VipWayPrice" useGeneratedKeys="true" keyProperty="id">
+        insert into vip_way_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="way != null">way,</if>
+            <if test="price != null">price,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="way != null">#{way},</if>
+            <if test="price != null">#{price},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVipWayPrice" parameterType="VipWayPrice">
+        update vip_way_price
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="way != null">way = #{way},</if>
+            <if test="price != null">price = #{price},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVipWayPriceById" parameterType="Long">
+        delete from vip_way_price where id = #{id}
+    </delete>
+
+    <delete id="deleteVipWayPriceByIds" parameterType="String">
+        delete from vip_way_price where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

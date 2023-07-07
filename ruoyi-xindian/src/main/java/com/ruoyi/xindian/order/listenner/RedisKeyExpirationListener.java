@@ -32,7 +32,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     public void onMessage(Message message, byte[] pattern) {
         // message.toString()可以获取失效的key
         String expiredKey = message.toString();
-        System.out.println("-------------------");
+        System.out.println("订单创建15分钟，开始判断订单是否支付并进行数据删除-------------------");
 
         String[] split = expiredKey.split(":");
         if (split[0].equals("order")){

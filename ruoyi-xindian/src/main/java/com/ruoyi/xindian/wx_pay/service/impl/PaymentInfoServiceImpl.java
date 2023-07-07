@@ -38,10 +38,9 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         //支付类型
         String tradeType = (String)plainTextMap.get("trade_type");
         //交易状态
-        String tradeState = (String)plainTextMap.get("trade_state");
+        String tradeState = (String)plainTextMap.get("result_code");
+        String totalFee = (String)plainTextMap.get("total_fee");
         //用户实际支付金额
-        Map<String, Object> amount = (Map)plainTextMap.get("amount");
-        BigDecimal payerTotal = BigDecimal.valueOf(((BigDecimal) amount.get("payer_total")).doubleValue());
 
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setOrderNo(orderNo);
@@ -49,7 +48,7 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         paymentInfo.setTransactionId(transactionId);
         paymentInfo.setTradeType(tradeType);
         paymentInfo.setTradeState(tradeState);
-        paymentInfo.setPayerTotal(payerTotal);
+        paymentInfo.setPayerTotal(new BigDecimal(totalFee));
         paymentInfo.setContent(xml);
 
         baseMapper.insert(paymentInfo);

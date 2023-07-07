@@ -130,8 +130,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         queryWrapper.eq("order_no", orderNo);
 
         OrderInfo orderInfo = new OrderInfo();
-        orderInfo.setOrderStatus(orderStatus.getType());
 
+        orderInfo.setOrderStatus(orderStatus.getType());
 
         baseMapper.update(orderInfo, queryWrapper);
     }
@@ -214,6 +214,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfoMapper.update(orderInfo,queryWrapper);
 
 
+        List<SuborderOrderInfo> suborderOrderInfo = suborderOrderInfoMapper.selectList(new QueryWrapper<SuborderOrderInfo>().eq("order_father", id));
+
+
+        for(SuborderOrderInfo c : suborderOrderInfo){
+            updateProductDel(c.getSum().intValue(),c.getProductId());
+        }
+
     }
 
     /**
@@ -235,6 +242,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Transactional
     @Override
     public Boolean deleteOrder(String orderId) {
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        if (orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
+            List<SuborderOrderInfo> suborderOrderInfo = suborderOrderInfoMapper.selectList(new QueryWrapper<SuborderOrderInfo>().eq("order_father", orderId));
+
+            for(SuborderOrderInfo c : suborderOrderInfo){
+                updateProductDel(c.getSum().intValue(),c.getProductId());
+            }
+        }
 
         int i = orderInfoMapper.deleteById(orderId);
         if (i>0){
@@ -254,9 +269,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     @Transactional
     @Override
-    public Boolean addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId) {
+    public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId) {
         Product product = productMapper.selectById(productId);
         if ((product.getProductNum().compareTo(sum) <0)){
+            Product product1 = new Product();
+            product1.setState("3");
+            product1.setProductId(product.getProductId());
+            productMapper.updateById(product1);
             throw new ServiceException("库存不够");
         }
 
@@ -291,10 +310,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
         redisTemplate.opsForValue().set(orderInfo.getId(),productId+","+sum);
-        if (insert>0){
-            return true;
-        }
-        return false;
+
+        return orderInfo.getId();
 
     }
 
@@ -308,6 +325,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         //通过订单id查找订单是否已经被支付，如果未支付，则删除
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
         if (orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
+
+            System.out.println("开始删除失效订单");
             //查询通过监听过期key来获取到订单id
             String productIdAndSum = (String) redisTemplate.opsForValue().get(orderId);
 
@@ -339,6 +358,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if (shipaddressVo.getIsUpdate()!=null&&!"".equals(shipaddressVo.getIsUpdate())){
             ShipAddress shipAddress = new ShipAddress();
             BeanUtils.copyProperties(shipaddressVo,shipAddress);
+            shipAddress.setDelFlag(1L);
             shipAddressMapper.insertShipAddress(shipAddress);
                OrderInfo orderInfo = new OrderInfo();
                if (shipaddressVo.getOrderStatus()!=null&&!"".equals(shipaddressVo.getOrderStatus())){
@@ -367,6 +387,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
 
+
     /**
      * 创建订单时，修改商品库存
      * @param sum
@@ -381,14 +402,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
                 .setSql("product_num = product_num - "+sum)
                 .setSql("sales = sales + "+sum); // 设置库存减一的更新操作
-
         // 执行更新操作
         int affectedRows = productMapper.update(null, updateWrapper);
         return affectedRows;
     }
 
+
     /**
-     * 创建订单时，修改商品库存
+     * 删除订单时，修改商品库存
      * @param sum
      * @param productId
      * @return
