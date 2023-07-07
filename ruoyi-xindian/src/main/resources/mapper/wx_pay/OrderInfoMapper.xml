@@ -59,6 +59,7 @@
             shipAddress.country,
             shipAddress.street_address,
             shipAddress.postal_code,
+            shipAddress.street,
             t_order_info.id,
             t_order_info.title,
             t_order_info.total_fee,
@@ -135,6 +136,7 @@
             shipAddress.street_address,
             shipAddress.postal_code,
             shipAddress.user_id,
+            shipAddress.street,
             shipAddress.default_flag
         FROM
             shipAddress
@@ -155,6 +157,7 @@
             shipAddress.street_address,
             shipAddress.postal_code,
             shipAddress.user_id,
+            shipAddress.street,
             shipAddress.default_flag,
             t_order_info.id,
             t_order_info.title,

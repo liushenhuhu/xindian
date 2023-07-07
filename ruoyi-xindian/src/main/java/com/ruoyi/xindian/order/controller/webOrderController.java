@@ -5,7 +5,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.order.domain.Area;
 import com.ruoyi.xindian.order.domain.MCity;
+import com.ruoyi.xindian.order.service.AreaService;
 import com.ruoyi.xindian.order.service.MCityService;
 import com.ruoyi.xindian.order.service.UserAddressService;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
@@ -31,7 +33,7 @@ public class webOrderController extends BaseController {
     private OrderInfoService orderInfoService;
 
     @Resource
-    private MCityService mCityService;
+    private AreaService areaService;
 
 
     @Resource
@@ -81,7 +83,7 @@ public class webOrderController extends BaseController {
         if (regionParentId.equals("null")){
             regionParentId = null;
         }
-        List<MCity> mCities = mCityService.findAddress(regionParentId,level);
+        List<Area> mCities = areaService.findAddress(regionParentId,level);
        return AjaxResult.success(mCities);
     }
 

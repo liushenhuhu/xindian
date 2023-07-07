@@ -142,7 +142,7 @@
           <el-input v-model="shipaddress1.patientPhone" placeholder="请输入收件人手机号"  :disabled="true"/>
         </el-form-item>
         <el-form-item label="收件人地址" prop="patientName1">
-          <el-input style="width: 550px" v-model="shipaddress1.state+'/'+shipaddress1.city+'/'+shipaddress1.area+'/'+shipaddress1.streetAddress" placeholder="请输入收件人地址"  :disabled="true"/> <el-button type="success" @click="addressUpdate()">修改地址</el-button>
+          <el-input style="width: 550px" v-model="shipaddress1.state+'/'+shipaddress1.city+'/'+shipaddress1.country+'/'+shipaddress1.street+'/'+shipaddress1.streetAddress" placeholder="请输入收件人地址"  :disabled="true"/> <el-button type="success" @click="addressUpdate()">修改地址</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -168,37 +168,51 @@
             </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="地址" prop="state_id">
               <el-select v-model="shipaddress.state_id" clearable placeholder="请选择省份"  @change="loadCities(shipaddress.state_id)">
                 <el-option
                   v-for="item in states"
-                  :label="item.regionName"
-                  :key="item.id" :value="item.regionId"
+                  :label="item.name"
+                  :key="item.id" :value="item.id"
                 >
                 </el-option>
               </el-select>
             </el-form-item>
+
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="市" prop="city_id">
-              <el-select v-model="shipaddress.city_id" clearable placeholder="请选择市" @change="loadArea(shipaddress.city_id)">
+              <el-select v-model="shipaddress.city_id" clearable placeholder="请选择市" @change="loadcountry(shipaddress.city_id)">
                 <el-option
                   v-for="item in cities"
-                  :label="item.regionName"
-                  :key="item.id" :value="item.regionId"
+                  :label="item.name"
+                  :key="item.id" :value="item.id"
                 >
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item label="县" prop="area_id">
-              <el-select v-model="shipaddress.area_id" clearable placeholder="请选择县" @change="loadAreaId(shipaddress.area_id)">
+          <el-col :span="6">
+            <el-form-item label="县" prop="country_id">
+              <el-select v-model="shipaddress.country_id" clearable placeholder="请选择县" @change="loadcountryId(shipaddress.country_id)">
                 <el-option
                   v-for="item in counties"
-                  :label="item.regionName"
-                  :key="item.id" :value="item.regionId"
+                  :label="item.name"
+                  :key="item.id" :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6">
+            <el-form-item label="街道" prop="street_id">
+              <el-select v-model="shipaddress.street_id" clearable placeholder="请选择街道" @change="loadstreet(shipaddress.street_id)">
+                <el-option
+                  v-for="item in streets"
+                  :label="item.name"
+                  :key="item.id" :value="item.id"
                 >
                 </el-option>
               </el-select>
@@ -261,9 +275,7 @@ export default {
       states: [],
       cities: [],
       counties: [],
-      state1: null,
-      citie1: null,
-      countie1: null,
+      streets: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -297,10 +309,12 @@ export default {
       form: {},
         shipaddress:{
           addressId: null,
-          area: null,
-          area_id: null,
+          country: null,
+          country_id: null,
           city: null,
           city_id: null,
+          street:null,
+          street_id:null,
           patientPhone: null,
           createdTime: null,
           streetAddress:null,
@@ -313,10 +327,12 @@ export default {
       },
       shipaddress1:{
         addressId: null,
-        area: null,
-        area_id: null,
+        country: null,
+        country_id: null,
         city: null,
         city_id: null,
+        street:null,
+        street_id:null,
         patientPhone: null,
         createdTime: null,
         streetAddress:null,
@@ -329,7 +345,6 @@ export default {
         id: null,
         orderStatus: null,
         isUpdate:null,
-        country:null,
       },
       // 表单校验
       rules: {
@@ -340,22 +355,24 @@ export default {
           { required: true, message: '请输入手机号', trigger: 'blur' },
           { pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, message: '手机号格式不正确', trigger: 'blur' }
         ],
-        state: [
+        state_id: [
           { required: true, message: '请选择省', trigger: 'change' }
         ],
-        city: [
+        city_id: [
           { required: true, message: '请选择市', trigger: 'change' }
         ],
-        area: [
+        country_id: [
           { required: true, message: '请选择县', trigger: 'change' }
         ],
         streetAddress: [
           { required: true, message: '请输入详细地址', trigger: 'blur' },
         ],
         orderStatus: [
-          { required: true, message: '请输入详细地址', trigger: 'blur' },
+          { required: true, message: '请选择订单状态', trigger: 'blur' },
         ],
-
+        street_id: [
+          { required: true, message: '请选择街道', trigger: 'change' }
+        ],
       }
     };
   },
@@ -367,7 +384,6 @@ export default {
     getList() {
       this.loading = true;
       listInfo(this.queryParams).then(response => {
-        console.log(response)
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -376,10 +392,6 @@ export default {
     addressAdd(){
       this.$refs["address"].validate(valid => {
         if (valid) {
-          // this.state1 = this.shipaddress.state
-          // this.citie1 = this.shipaddress.city
-          // this.countie1 = this.shipaddress.area
-
             this.shipaddress1 = this.shipaddress
             this.shipaddress1.id = this.form.id
             this.addressOpen = false;
@@ -393,6 +405,7 @@ export default {
       this.shipaddress1.id=id
     },
     addressUpdate(id){
+
       this.addressAndOrderId=id
       address(null,1).then(response => {
         this.states = response.data
@@ -400,20 +413,31 @@ export default {
       this.addressOpen = true;
     },
     loadCities(name){
+      this.shipaddress.city_id = null
+      this.shipaddress.country_id = null
+      this.shipaddress.street_id = null
       address(name,2).then(response => {
         this.cities = response.data
       });
-      console.log(this.states)
-      this.shipaddress.state = this.states.find(item => item.regionId === name).regionName
+      this.shipaddress.state = this.states.find(item => item.id === name).name
     },
-    loadArea(name){
+    loadcountry(name){
+      this.shipaddress.country_id = null
+      this.shipaddress.street_id = null
       address(name,3).then(response => {
         this.counties = response.data
       });
-      this.shipaddress.city  = this.cities.find(item => item.regionId === name).regionName
+      this.shipaddress.city  = this.cities.find(item => item.id === name).name
     },
-    loadAreaId(name){
-      this.shipaddress.country =this.counties.find(item => item.regionId === name).regionName
+    loadcountryId(name){
+      this.shipaddress.street_id = null
+      address(name,4).then(response => {
+        this.streets = response.data
+      });
+      this.shipaddress.country =this.counties.find(item => item.id === name).name
+    },
+    loadstreet(id){
+      this.shipaddress.street =this.streets.find(item => item.id === id).name
     },
     // 取消按钮
     cancel() {
@@ -428,8 +452,8 @@ export default {
     reset() {
       this.shipaddress={
         addressId: null,
-          area: null,
-          area_id: null,
+          country: null,
+          country_id: null,
           city: null,
           city_id: null,
           patientPhone: null,
@@ -442,7 +466,8 @@ export default {
           patientName:null,
           updatedTime:null,
           id: null,
-
+        street:null,
+        street_id:null,
       }
     },
     /** 搜索按钮操作 */
@@ -465,7 +490,6 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      console.log(id)
       getInfo(id).then(response => {
         console.log(response)
         this.form = response.data;

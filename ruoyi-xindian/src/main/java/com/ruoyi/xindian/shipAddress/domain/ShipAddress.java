@@ -39,6 +39,24 @@ public class ShipAddress extends BaseEntity {
     @Excel(name = "默认地址标识符")
     private Long defaultFlag;
 
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    private String street;
+
+    public Long getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Long delFlag) {
+        this.delFlag = delFlag;
+    }
+
     /**
      * 删除标记位置
      */
@@ -52,13 +70,7 @@ public class ShipAddress extends BaseEntity {
         this.userId = userId;
     }
 
-    public Long getDelFlag() {
-        return delFlag;
-    }
 
-    public void setDelFlag(Long delFlag) {
-        this.delFlag = delFlag;
-    }
 
     public Long getAddressId() {
         return addressId;

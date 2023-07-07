@@ -75,6 +75,8 @@ public class ShipaddressVo implements Serializable {
 
     private String orderStatus;
 
+    private String street;
+
 
     /**
      * 判断需不需要进行地址修改

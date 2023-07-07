@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.order.mapper.AreaMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.order.domain.Area">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="shortName" column="short_name" jdbcType="VARCHAR"/>
+            <result property="longitude" column="longitude" jdbcType="VARCHAR"/>
+            <result property="latitude" column="latitude" jdbcType="VARCHAR"/>
+            <result property="level" column="level" jdbcType="SMALLINT"/>
+            <result property="sort" column="sort" jdbcType="OTHER"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,parent_id,name,
+        short_name,longitude,latitude,
+        level,sort,status
+    </sql>
+    <select id="selectAll" resultType="com.ruoyi.xindian.order.domain.Area">
+
+        select
+        <include refid="Base_Column_List" />
+        from area
+        <where>
+            <if test="parentId!=null&amp;&amp;parentId!=''">
+                and parent_id = #{parentId}
+            </if>
+            <if test="level!=null&amp;&amp;level!=''">
+                and level = #{level}
+            </if>
+        </where>
+
+        order by sort ASC
+
+
+    </select>
+</mapper>
