@@ -38,7 +38,7 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         //支付类型
         String tradeType = (String)plainTextMap.get("trade_type");
         //交易状态
-        String tradeState = (String)plainTextMap.get("trade_state");
+        String tradeState = (String)plainTextMap.get("result_code");
         String totalFee = (String)plainTextMap.get("total_fee");
         //用户实际支付金额
 
