@@ -41,10 +41,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="国家" prop="country">
+      <el-form-item label="区县" prop="country">
         <el-input
           v-model="queryParams.country"
-          placeholder="请输入国家"
+          placeholder="请输入区县"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -123,9 +123,9 @@
       <el-table-column label="用户电话" align="center" prop="patientPhone" />
       <el-table-column label="用户姓名" align="center" prop="patientName" />
       <el-table-column label="街道地址" align="center" prop="streetAddress" />
-      <el-table-column label="城市" align="center" prop="city" />
       <el-table-column label="省份" align="center" prop="state" />
-      <el-table-column label="国家" align="center" prop="country" />
+      <el-table-column label="城市" align="center" prop="city" />
+      <el-table-column label="区县" align="center" prop="country" />
       <el-table-column label="邮政编码" align="center" prop="postalCode" />
 <!--      <el-table-column label="默认地址标识符" align="center" prop="defaultFlag" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -174,8 +174,8 @@
         <el-form-item label="省份" prop="state">
           <el-input v-model="form.state" placeholder="请输入省份" />
         </el-form-item>
-        <el-form-item label="国家" prop="country">
-          <el-input v-model="form.country" placeholder="请输入国家" />
+        <el-form-item label="区县" prop="country">
+          <el-input v-model="form.country" placeholder="请输入区县" />
         </el-form-item>
         <el-form-item label="邮政编码" prop="postalCode">
           <el-input v-model="form.postalCode" placeholder="请输入邮政编码" />
