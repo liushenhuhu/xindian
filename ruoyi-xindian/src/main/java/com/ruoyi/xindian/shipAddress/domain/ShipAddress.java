@@ -41,16 +41,6 @@ public class ShipAddress extends BaseEntity {
     @Excel(name = "默认地址标识符")
     private Long defaultFlag;
 
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    private String street;
-
     public Long getDelFlag() {
         return delFlag;
     }
