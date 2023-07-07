@@ -28,6 +28,8 @@ public class ShipAddress extends BaseEntity {
     private String patientName;
     @Excel(name = "街道地址")
     private String streetAddress;
+    @Excel(name = "街道")
+    private String street;
     @Excel(name = "城市")
     private String city;
     @Excel(name = "省份")
@@ -132,18 +134,29 @@ public class ShipAddress extends BaseEntity {
         this.defaultFlag = defaultFlag;
     }
 
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("addressId", addressId)
+                .append("userId", userId)
                 .append("patientPhone", patientPhone)
                 .append("patientName", patientName)
                 .append("streetAddress", streetAddress)
+                .append("street", street)
                 .append("city", city)
                 .append("state", state)
                 .append("country", country)
                 .append("postalCode", postalCode)
                 .append("defaultFlag", defaultFlag)
+                .append("delFlag", delFlag)
                 .toString();
     }
 }
