@@ -10,6 +10,7 @@
         <result property="patientPhone"    column="patient_phone"    />
         <result property="patientName"    column="patient_name"    />
         <result property="streetAddress"    column="street_address"    />
+        <result property="street"    column="street"    />
         <result property="city"    column="city"    />
         <result property="state"    column="state"    />
         <result property="country"    column="country"    />
@@ -21,7 +22,7 @@
     </resultMap>
 
     <sql id="selectShipAddressVo">
-        select address_id,user_id, patient_phone, patient_name, street_address,city,state,country,postal_code,default_flag from shipAddress
+        select address_id,user_id, patient_phone, patient_name, street, street_address,city,state,country,postal_code,default_flag from shipAddress
     </sql>
 
     <select id="selectShipAddressList" parameterType="ShipAddress" resultMap="ShipAddressResult">
@@ -50,6 +51,7 @@
             <if test="patientPhone != null">patient_phone,</if>
             <if test="patientName != null">patient_name,</if>
             <if test="streetAddress != null">street_address,</if>
+            <if test="street != null">street,</if>
             <if test="city != null">city,</if>
             <if test="state != null">state,</if>
             <if test="country != null">country,</if>
@@ -63,6 +65,7 @@
             <if test="patientPhone != null">#{patientPhone},</if>
             <if test="patientName != null">#{patientName},</if>
             <if test="streetAddress != null">#{streetAddress},</if>
+            <if test="street != null">#{street},</if>
             <if test="city != null">#{city},</if>
             <if test="state != null">#{state},</if>
             <if test="country != null">#{country},</if>
@@ -80,6 +83,7 @@
             <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
             <if test="patientName != null">patient_name = #{patientName},</if>
             <if test="streetAddress != null">street_address = #{streetAddress},</if>
+            <if test="street != null">street = #{street},</if>
             <if test="city != null">city = #{city},</if>
             <if test="state != null">state = #{state},</if>
             <if test="country != null">country = #{country},</if>
