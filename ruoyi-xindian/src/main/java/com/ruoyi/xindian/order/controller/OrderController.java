@@ -67,9 +67,9 @@ public class OrderController {
     @PostMapping("/orderAdd")
     public AjaxResult orderAdd(HttpServletRequest request,Long productId,Integer sum,Long addressId){
 
-        Boolean isAdd  = orderInfoService.addOrder(request,productId,sum,addressId);
+        String isAdd  = orderInfoService.addOrder(request,productId,sum,addressId);
 
-        return AjaxResult.success(isAdd);
+        return AjaxResult.success("操作成功",isAdd);
     }
 
 

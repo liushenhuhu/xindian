@@ -63,12 +63,6 @@ public class WxPayServiceImpl implements WxPayService {
                     return;
                 }
 
-//                //模拟通知并发
-//                try {
-//                    TimeUnit.SECONDS.sleep(5);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
 
                 //更新订单状态
                 orderInfoService.updateStatusByOrderNo(orderNo, OrderStatus.SUCCESS);

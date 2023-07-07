@@ -68,7 +68,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @param addressId
      * @return
      */
-    Boolean addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId);
+    String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId);
 
 
 
