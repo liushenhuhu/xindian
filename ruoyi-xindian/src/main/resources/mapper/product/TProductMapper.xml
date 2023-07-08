@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productNum != null  and productNum != ''"> and product_num = #{productNum}</if>
             <if test="sales != null "> and sales = #{sales}</if>
              and type = #{type}
-             and sales != '2'
+             and state != '2'
         </where>
 
     </select>
