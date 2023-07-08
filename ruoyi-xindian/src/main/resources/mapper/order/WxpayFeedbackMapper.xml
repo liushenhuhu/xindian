@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.order.mapper.WxpayFeedbackMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.order.domain.WxpayFeedback">
+            <id property="feedbackiId" column="feedbackI_id" jdbcType="INTEGER"/>
+            <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
+            <result property="feedbackCause" column="feedback_cause" jdbcType="VARCHAR"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="selectWxpayFeedbackVo">
+        select feedbackI_id, order_id, feedback_cause, remark, status, create_time, update_time from wxpay_feedback
+    </sql>
+
+    <select id="selectWxpayFeedbackList" parameterType="WxpayFeedback" resultMap="BaseResultMap">
+        <include refid="selectWxpayFeedbackVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="feedbackCause != null  and feedbackCause != ''"> and feedback_cause = #{feedbackCause}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectWxpayFeedbackByFeedbackiId" parameterType="Long" resultMap="BaseResultMap">
+        <include refid="selectWxpayFeedbackVo"/>
+        where feedbackI_id = #{feedbackiId}
+    </select>
+
+    <insert id="insertWxpayFeedback" parameterType="WxpayFeedback">
+        insert into wxpay_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="feedbackiId != null">feedbackI_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="feedbackCause != null">feedback_cause,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="feedbackiId != null">#{feedbackiId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="feedbackCause != null">#{feedbackCause},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWxpayFeedback" parameterType="WxpayFeedback">
+        update wxpay_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="feedbackCause != null">feedback_cause = #{feedbackCause},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where feedbackI_id = #{feedbackiId}
+    </update>
+
+    <delete id="deleteWxpayFeedbackByFeedbackiId" parameterType="Long">
+        delete from wxpay_feedback where feedbackI_id = #{feedbackiId}
+    </delete>
+
+    <delete id="deleteWxpayFeedbackByFeedbackiIds" parameterType="String">
+        delete from wxpay_feedback where feedbackI_id in
+        <foreach item="feedbackiId" collection="array" open="(" separator="," close=")">
+            #{feedbackiId}
+        </foreach>
+    </delete>
+
+
+</mapper>

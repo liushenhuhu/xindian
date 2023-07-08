@@ -15,8 +15,7 @@ import com.ruoyi.xindian.wx_pay.service.WxPayService;
 import com.ruoyi.xindian.wx_pay.util.HttpClientUtil;
 import com.ruoyi.xindian.wx_pay.util.WXPayConstants;
 import com.ruoyi.xindian.wx_pay.util.WXPayUtil;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -220,8 +219,7 @@ public class WXPayController {
      * @param response
      * @return
      */
-
-    @RequestMapping("refund")
+    @GetMapping("refund")
     public Map<String, Object> refund(String id,String reason,HttpServletResponse response){
 
         // 返回参数

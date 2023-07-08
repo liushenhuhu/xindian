@@ -183,8 +183,10 @@
                 INNER JOIN
             t_suborder_order_info
             ON
-                t_order_info.id = t_suborder_order_info.order_father,
+                t_order_info.id = t_suborder_order_info.order_father
+                inner join
             t_product
+        on t_suborder_order_info.product_id = t_product.product_id
         where t_order_info.id = #{id}
 
 
