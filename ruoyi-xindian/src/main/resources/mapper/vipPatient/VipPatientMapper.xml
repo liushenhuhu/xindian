@@ -28,6 +28,11 @@
         <include refid="selectVipPatientVo"/>
         where id = #{id}
     </select>
+    <select id="selectPhone" resultType="com.ruoyi.xindian.vipPatient.domain.VipPatient">
+        <include refid="selectVipPatientVo"></include>
+        where patient_phone= #{phone}
+
+    </select>
 
     <insert id="insertVipPatient" parameterType="VipPatient" useGeneratedKeys="true" keyProperty="id">
         insert into vip_patient

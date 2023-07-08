@@ -49,6 +49,7 @@ public class TProductController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TProduct tProduct)
     {
+        tProduct.setType("商品");
         startPage();
         List<TProduct> list = tProductService.selectTProductList(tProduct);
         List<TProductDto> resList = new ArrayList<>();

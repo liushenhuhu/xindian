@@ -90,4 +90,9 @@ public class VipPatientServiceImpl implements IVipPatientService
     {
         return vipPatientMapper.deleteVipPatientById(id);
     }
+
+    @Override
+    public VipPatient findVipPhone(String phone) {
+        return vipPatientMapper.selectPhone(phone);
+    }
 }

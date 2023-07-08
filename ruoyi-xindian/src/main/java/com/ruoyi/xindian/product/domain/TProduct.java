@@ -50,6 +50,19 @@ public class TProduct extends BaseEntity
     @Excel(name = "销量")
     private Long sales;
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * 商品类型
+     */
+    private String type;
+
     public void setProductId(Long productId) 
     {
         this.productId = productId;

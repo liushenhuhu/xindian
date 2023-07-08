@@ -62,4 +62,7 @@ public interface ITProductService
      * @return 结果
      */
     public int deleteTProductByProductId(Long productId);
+
+
+
 }

@@ -73,6 +73,11 @@ public class Product implements Serializable {
      */
     private Long sales;
 
+    /**
+     * 类型
+     */
+
+    private String type;
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

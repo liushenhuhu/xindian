@@ -16,6 +16,7 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="productNum" column="product_num" jdbcType="INTEGER"/>
         <result property="sales" column="sales" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">

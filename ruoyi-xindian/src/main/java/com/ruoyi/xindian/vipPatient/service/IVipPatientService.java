@@ -58,4 +58,8 @@ public interface IVipPatientService
      * @return 结果
      */
     public int deleteVipPatientById(Long id);
+
+
+
+    VipPatient findVipPhone(String phone);
 }

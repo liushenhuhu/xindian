@@ -13,8 +13,12 @@ import com.ruoyi.xindian.order.domain.UserAddress;
 import com.ruoyi.xindian.order.mapper.UserAddressMapper;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.order.vo.UserAddressVo;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
 import com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper;
+import com.ruoyi.xindian.vipPatient.domain.VipPatient;
+import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
@@ -26,6 +30,7 @@ import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.util.OrderNoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -48,10 +54,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Resource
     private OrderInfoMapper orderInfoMapper;
 
-
+    @Autowired
+    private IPatientService patientService;
     @Resource
     private SuborderOrderInfoMapper suborderOrderInfoMapper;
 
+
+    @Autowired
+    private IVipPatientService vipPatientService;
 
     @Resource
     private SysUserMapper sysUserMapper;
@@ -121,19 +131,109 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @param orderNo
      * @param orderStatus
      */
+    @Transactional
     @Override
     public void updateStatusByOrderNo(String orderNo, OrderStatus orderStatus) {
 
-        log.info("更新订单状态 ===> {}", orderStatus.getType());
+        OrderInfo orderByOrderNo = getOrderByOrderNo(orderNo);
+        List<SuborderOrderInfo> suborderOrderInfos = orderIdAndSuborder(orderByOrderNo.getId());
+        for(SuborderOrderInfo c: suborderOrderInfos){
 
-        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("order_no", orderNo);
+            Product product = productMapper.selectById(c.getProductId());
+            log.info("更新订单状态 ===> {}", orderStatus.getType());
+            QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+            if (product.getType().equals("服务")){
 
-        OrderInfo orderInfo = new OrderInfo();
+                queryWrapper.eq("order_no", orderNo);
 
-        orderInfo.setOrderStatus(orderStatus.getType());
+                OrderInfo orderInfo = new OrderInfo();
 
-        baseMapper.update(orderInfo, queryWrapper);
+                orderInfo.setOrderStatus(OrderStatus.SERVE_ORDER.getType());
+
+                baseMapper.update(orderInfo, queryWrapper);
+                vipPatient(product,orderByOrderNo.getUserId());
+
+            }else {
+
+                queryWrapper.eq("order_no", orderNo);
+
+                OrderInfo orderInfo = new OrderInfo();
+
+                orderInfo.setOrderStatus(orderStatus.getType());
+
+                baseMapper.update(orderInfo, queryWrapper);
+            }
+        }
+
+
+    }
+
+
+    /**
+     * 判断购买的服务次数，来对用户添加服务
+     * @param product
+     * @return
+     */
+    public Boolean vipPatient(Product product ,Long userId){
+
+        SysUser sysUser = sysUserMapper.selectUserById(userId);
+
+        if (product.getProductNum()>1){
+
+            VipPatient vipPhone = vipPatientService.findVipPhone(sysUser.getPhonenumber());
+            VipPatient vipPatient = new VipPatient();
+            if (vipPhone!=null){
+
+                vipPatient.setId(vipPatient.getId());
+                vipPatient.setVipNum(vipPhone.getVipNum() + 100);
+                Date endDate = vipPhone.getEndDate();
+                vipPatient.setEndDate(endDate);
+                vipPatientService.updateVipPatient(vipPatient);
+            }else {
+                vipPatient.setPatientPhone(sysUser.getPhonenumber());
+                vipPatient.setVipNum(100L);
+                Date endDate = new Date();
+                Date data = getData(endDate);
+                vipPatient.setEndDate(data);
+                vipPatientService.insertVipPatient(vipPatient);
+            }
+
+        }else {
+            Patient p = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
+            p.setDetectionNum(p.getDetectionNum() + 1);
+            patientService.updatePatient(p);
+        }
+
+        return true;
+    }
+
+
+    /**
+     * 将时间往后加一年
+     * @param date
+     * @return
+     */
+    public Date getData(Date date){
+        // 创建 Calendar 实例并设置原始日期
+        Calendar calendar = Calendar.getInstance();
+        // 设置日期
+        calendar.setTime(date);
+        // 加一年
+        calendar.add(Calendar.YEAR, 1);
+        // 获取加一年后的日期
+       return calendar.getTime();
+
+    }
+
+    /**
+     * 通过订单号获取订单信息
+     * @param orderId
+     * @return
+     */
+    public List<SuborderOrderInfo> orderIdAndSuborder(String orderId){
+
+        List<SuborderOrderInfo> orderFather = suborderOrderInfoMapper.selectList(new QueryWrapper<SuborderOrderInfo>().eq("order_father", orderId));
+        return orderFather;
     }
 
     /**
@@ -279,6 +379,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             throw new ServiceException("库存不够");
         }
 
+        if(product.getType().equals("服务")){
+            addressId = 11L;
+        }
         //获取token中发送请求的用户信息
         LoginUser loginUser = tokenService.getLoginUser(request);
 

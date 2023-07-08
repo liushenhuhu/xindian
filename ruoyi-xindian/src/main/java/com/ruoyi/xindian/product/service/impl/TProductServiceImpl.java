@@ -48,6 +48,7 @@ public class TProductServiceImpl implements ITProductService
     @Override
     public List<TProduct> selectTProductList(TProduct tProduct)
     {
+
         return tProductMapper.selectTProductList(tProduct);
     }
 

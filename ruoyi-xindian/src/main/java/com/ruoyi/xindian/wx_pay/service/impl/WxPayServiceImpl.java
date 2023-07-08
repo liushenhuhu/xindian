@@ -67,6 +67,8 @@ public class WxPayServiceImpl implements WxPayService {
                 //更新订单状态
                 orderInfoService.updateStatusByOrderNo(orderNo, OrderStatus.SUCCESS);
 
+
+
                 //记录支付日志
                 paymentInfoService.createPaymentInfo(xml);
             } finally {
