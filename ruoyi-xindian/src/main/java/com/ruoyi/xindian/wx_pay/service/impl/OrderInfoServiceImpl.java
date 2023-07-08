@@ -408,7 +408,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         suborderOrderInfo.setUpdateTime(new Date());
 
         int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
-        updateProductAdd(sum,productId);
+        if(!product.getType().equals("服务")){
+            updateProductAdd(sum,productId);
+        }
 
 
         redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);

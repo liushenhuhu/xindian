@@ -47,9 +47,9 @@ public enum OrderStatus {
     ORDER_STATUS("订单已完成"),
 
     /**
-     * 服务购买到账
+     * 服务
      */
-    SERVE_ORDER("服务购买到账"),
+    SERVE_ORDER("服务"),
     /**
      * 退款异常
      */

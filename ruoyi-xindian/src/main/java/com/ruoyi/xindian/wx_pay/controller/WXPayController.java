@@ -231,7 +231,9 @@ public class WXPayController {
             // 拼接统一下单地址参数
             Map<String, Object> paraMap = new HashMap<>();
             OrderInfo order =  orderInfoService.createOrderByOrderID(id);
-            
+            if (order.getOrderStatus().equals("服务")){
+                throw new ServiceException("服务类型不可退");
+            }
             String orderNum = order.getOrderNo();//商户订单号，由随机数组成
             BigDecimal price = order.getTotalFee();//金额
 
