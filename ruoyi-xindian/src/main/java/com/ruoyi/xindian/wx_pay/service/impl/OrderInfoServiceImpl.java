@@ -429,6 +429,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     public void redisOrderKey(String orderId) {
         //通过订单id查找订单是否已经被支付，如果未支付，则删除
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        if (orderInfo==null){
+            return;
+        }
         if (orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
 
             System.out.println("开始删除失效订单");

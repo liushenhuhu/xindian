@@ -65,6 +65,18 @@ public class TProductController extends BaseController
     }
 
     /**
+     * 查询商品服务列表
+     * @param tProduct
+     * @return
+     */
+    @GetMapping("/fwList")
+    public TableDataInfo fwList(TProduct tProduct){
+        tProduct.setType("服务");
+        startPage();
+        List<TProduct> list = tProductService.selectTProductList(tProduct);
+        return getDataTable(list);
+    }
+    /**
      * 导出商品信息列表
      */
 //    @PreAuthorize("@ss.hasPermi('product:product:export')")
