@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.product.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -55,6 +56,7 @@ public class TProductController extends BaseController
         List<TProductDto> resList = new ArrayList<>();
         for (TProduct product : list) {
             TProductDto tProductDto = new TProductDto();
+            product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
             BeanUtils.copyProperties(product,tProductDto);
             List<String> productImgs = tProductService.selectAllImages(product.getProductId());
             System.out.println(productImgs);
@@ -74,6 +76,9 @@ public class TProductController extends BaseController
         tProduct.setType("服务");
         startPage();
         List<TProduct> list = tProductService.selectTProductList(tProduct);
+        for (TProduct product : list) {
+            product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+        }
         return getDataTable(list);
     }
     /**
@@ -131,6 +136,7 @@ public class TProductController extends BaseController
     {
         return toAjax(tProductService.deleteTProductByProductIds(productIds));
     }
+
     /**
      * 商品图片上传
      */
