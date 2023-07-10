@@ -182,7 +182,8 @@ export default {
       },
       stateUpdate:{
         feedbackiId:null,
-        status:null
+        status:null,
+        orderId:null
       },
       // 查询参数
       queryParams: {
@@ -310,6 +311,7 @@ export default {
     /** 提交按钮 */
     submitForm() {
       const id = this.feedbackId.orderId
+      this.stateUpdate.orderId=id
       this.pay.id =id
       this.pay.reason = this.feedbackId.feedbackCause
       console.log(this.pay)
@@ -320,7 +322,6 @@ export default {
         this.$modal.msgSuccess("退款成功");
         this.stateUpdate.status ='退款成功'
         updateFeedback(this.stateUpdate).then(response => {
-          this.$modal.msgSuccess("修改成功");
           this.open = false;
           this.getList();
         });
