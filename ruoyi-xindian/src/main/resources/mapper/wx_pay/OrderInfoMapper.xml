@@ -76,7 +76,7 @@
             t_product.discount,
             t_product.sales
         FROM
-            user_address
+            shipAddress
                 INNER JOIN
             t_order_info
             ON

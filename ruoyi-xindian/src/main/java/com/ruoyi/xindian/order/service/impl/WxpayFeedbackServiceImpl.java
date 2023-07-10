@@ -5,6 +5,9 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.xindian.order.domain.WxpayFeedback;
 import com.ruoyi.xindian.order.service.WxpayFeedbackService;
 import com.ruoyi.xindian.order.mapper.WxpayFeedbackMapper;
+import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
+import com.ruoyi.xindian.wx_pay.enums.OrderStatus;
+import com.ruoyi.xindian.wx_pay.mapper.OrderInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,10 @@ public class WxpayFeedbackServiceImpl extends ServiceImpl<WxpayFeedbackMapper, W
 
     @Autowired
     private WxpayFeedbackMapper wxpayFeedbackMapper;
+
+
+    @Autowired
+    private OrderInfoMapper orderInfoMapper;
 
     /**
      * 查询【请填写功能名称】
@@ -57,7 +64,13 @@ public class WxpayFeedbackServiceImpl extends ServiceImpl<WxpayFeedbackMapper, W
     public int insertWxpayFeedback(WxpayFeedback wxpayFeedback)
     {
         wxpayFeedback.setCreateTime(DateUtils.getNowDate());
-        return wxpayFeedbackMapper.insertWxpayFeedback(wxpayFeedback);
+        wxpayFeedbackMapper.insertWxpayFeedback(wxpayFeedback);
+
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(wxpayFeedback.getOrderId());
+        orderInfo.setOrderStatus(OrderStatus.ORDER_BACK.getType());
+
+        return  orderInfoMapper.updateById(orderInfo);
     }
 
     /**
@@ -70,7 +83,11 @@ public class WxpayFeedbackServiceImpl extends ServiceImpl<WxpayFeedbackMapper, W
     public int updateWxpayFeedback(WxpayFeedback wxpayFeedback)
     {
         wxpayFeedback.setUpdateTime(DateUtils.getNowDate());
-        return wxpayFeedbackMapper.updateWxpayFeedback(wxpayFeedback);
+        wxpayFeedbackMapper.updateWxpayFeedback(wxpayFeedback);
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(wxpayFeedback.getOrderId());
+        orderInfo.setOrderStatus(wxpayFeedback.getStatus());
+        return orderInfoMapper.updateById(orderInfo);
     }
 
     /**

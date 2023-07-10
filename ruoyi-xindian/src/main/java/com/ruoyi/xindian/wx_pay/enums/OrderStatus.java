@@ -47,7 +47,12 @@ public enum OrderStatus {
     ORDER_STATUS("订单已完成"),
 
     /**
-     * 服务
+     * 退款申请
+     */
+    ORDER_BACK("退款申请"),
+
+    /**
+     *
      */
     SERVE_ORDER("服务"),
     /**

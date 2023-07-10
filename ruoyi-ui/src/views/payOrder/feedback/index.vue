@@ -59,17 +59,18 @@
       <el-table-column label="反馈信息状态" align="center" prop="status" >
         <template slot-scope="scope">
           <el-tag
-
-            :type="scope.row.status === '已处理'  ? 'primary' : 'danger'"
+            :type="scope.row.status === '退款成功' || scope.row.status === '拒接退款' ? 'primary' : 'danger'"
             disable-transitions>{{scope.row.status}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
+            v-if="!(scope.row.status === '退款成功' || scope.row.status === '拒接退款')"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['payOrder:feedback:edit']"
           >处理反馈</el-button>
@@ -193,8 +194,11 @@ export default {
       },
       infoList:[],
       options: [{
-        value: '已处理',
-        label: '已处理'
+        value: '退款成功',
+        label: '退款成功'
+      }, {
+        value: '拒接退款',
+        label: '拒接退款'
       }, {
         value: '未处理',
         label: '未处理'
@@ -227,6 +231,15 @@ export default {
     this.getList();
   },
   methods: {
+    clfk(val){
+      if (val.status=='拒绝退款'){
+        return false
+      }else if( val.status=='退款成功'){
+        return false
+      }else{
+        return true
+      }
+    },
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
@@ -303,7 +316,9 @@ export default {
       this.$modal.confirm('是否确认为订单号"' + id + '"退款？').then(res => {
         return Payback(this.pay);
       }).then(() => {
+        this.stateUpdate.feedbackiId =this.feedbackId.feedbackiId
         this.$modal.msgSuccess("退款成功");
+        this.stateUpdate.status ='退款成功'
         updateFeedback(this.stateUpdate).then(response => {
           this.$modal.msgSuccess("修改成功");
           this.open = false;
@@ -314,7 +329,7 @@ export default {
     },
     cancelPay(){
       this.stateUpdate.feedbackiId =this.feedbackId.feedbackiId
-      this.stateUpdate.status ='已处理'
+      this.stateUpdate.status ='拒接退款'
       updateFeedback(this.stateUpdate).then(response => {
         this.$modal.msgSuccess("修改成功");
         this.open = false;
