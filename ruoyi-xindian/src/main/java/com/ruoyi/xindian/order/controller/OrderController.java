@@ -35,22 +35,21 @@ public class OrderController {
      * @return
      */
     @GetMapping("/userOrderList")
-    public AjaxResult userOrderList(HttpServletRequest request){
+    public AjaxResult userOrderList(HttpServletRequest request,OrderInfo orderInfo){
         //获取token中发送请求的用户信息
         LoginUser loginUser = tokenService.getLoginUser(request);
         startPage();
-        List<OrderInfo> orderInfoList =  orderInfoService.selectUserOrderList(loginUser);
+        List<OrderInfo> orderInfoList =  orderInfoService.selectUserOrderList(loginUser,orderInfo);
         return AjaxResult.success(orderInfoList);
     }
 
     /**
      * 删除订单，通过Id
-     * @param request
      * @param orderId
      * @return
      */
     @GetMapping("/delete")
-    public AjaxResult deleteOrder(HttpServletRequest request , String orderId){
+    public AjaxResult deleteOrder(String orderId){
         Boolean isDel  = orderInfoService.deleteOrder(orderId);
         return AjaxResult.success(isDel);
     }

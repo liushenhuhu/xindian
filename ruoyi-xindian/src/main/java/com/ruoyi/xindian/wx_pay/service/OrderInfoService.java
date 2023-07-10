@@ -51,7 +51,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @param loginUser
      * @return
      */
-    List<OrderInfo> selectUserOrderList(LoginUser loginUser);
+    List<OrderInfo> selectUserOrderList(LoginUser loginUser,OrderInfo orderInfo);
 
     /**
      * 通过Id删除订单

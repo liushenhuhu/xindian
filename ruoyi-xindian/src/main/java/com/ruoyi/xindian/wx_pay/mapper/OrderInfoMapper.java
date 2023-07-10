@@ -16,7 +16,8 @@ import java.util.List;
 public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
 
 
-    List<OrderInfo> selectAllList(@Param("userId") Long userId);
+    List<OrderInfo> selectAllList(@Param("userId") Long userId,@Param("orderInfo")OrderInfo orderInfo);
+
     List<OrderInfo> selectWebAllList(@Param("orderId") String orderId,@Param("userPhone") String userPhone,@Param("orderState") String orderState);
 
     /**

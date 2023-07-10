@@ -329,8 +329,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @return
      */
     @Override
-    public List<OrderInfo> selectUserOrderList(LoginUser loginUser) {
-        List<OrderInfo> orderInfoList = orderInfoMapper.selectAllList(loginUser.getUser().getUserId());
+    public List<OrderInfo> selectUserOrderList(LoginUser loginUser,OrderInfo orderInfo) {
+        List<OrderInfo> orderInfoList = orderInfoMapper.selectAllList(loginUser.getUser().getUserId(),orderInfo);
         return orderInfoList;
     }
 
