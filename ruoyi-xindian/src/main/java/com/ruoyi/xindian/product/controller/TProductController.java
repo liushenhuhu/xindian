@@ -57,6 +57,7 @@ public class TProductController extends BaseController
         for (TProduct product : list) {
             TProductDto tProductDto = new TProductDto();
             product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+            product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
             BeanUtils.copyProperties(product,tProductDto);
             List<String> productImgs = tProductService.selectAllImages(product.getProductId());
             System.out.println(productImgs);
@@ -78,6 +79,7 @@ public class TProductController extends BaseController
         List<TProduct> list = tProductService.selectTProductList(tProduct);
         for (TProduct product : list) {
             product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+            product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
         }
         return getDataTable(list);
     }
