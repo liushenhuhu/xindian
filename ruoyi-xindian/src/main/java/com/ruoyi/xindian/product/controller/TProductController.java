@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.product.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -49,11 +50,14 @@ public class TProductController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TProduct tProduct)
     {
+        tProduct.setType("商品");
         startPage();
         List<TProduct> list = tProductService.selectTProductList(tProduct);
         List<TProductDto> resList = new ArrayList<>();
         for (TProduct product : list) {
             TProductDto tProductDto = new TProductDto();
+            product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+            product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
             BeanUtils.copyProperties(product,tProductDto);
             List<String> productImgs = tProductService.selectAllImages(product.getProductId());
             System.out.println(productImgs);
@@ -63,6 +67,22 @@ public class TProductController extends BaseController
         return getTable(resList,new PageInfo(list).getTotal());
     }
 
+    /**
+     * 查询商品服务列表
+     * @param tProduct
+     * @return
+     */
+    @GetMapping("/fwList")
+    public TableDataInfo fwList(TProduct tProduct){
+        tProduct.setType("服务");
+        startPage();
+        List<TProduct> list = tProductService.selectTProductList(tProduct);
+        for (TProduct product : list) {
+            product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+            product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+        }
+        return getDataTable(list);
+    }
     /**
      * 导出商品信息列表
      */
@@ -118,6 +138,7 @@ public class TProductController extends BaseController
     {
         return toAjax(tProductService.deleteTProductByProductIds(productIds));
     }
+
     /**
      * 商品图片上传
      */

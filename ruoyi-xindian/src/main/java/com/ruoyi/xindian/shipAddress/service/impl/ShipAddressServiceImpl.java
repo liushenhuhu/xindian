@@ -62,7 +62,7 @@ public class ShipAddressServiceImpl implements IShipAddressService {
 
     /**
      * 批量删除
-     * @param ids
+     * @param id
      * @return
      */
     @Override

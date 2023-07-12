@@ -35,6 +35,7 @@
             <if test="country != null  and country != ''"> and country = #{country}</if>
             <if test="postalCode != null  and postalCode != ''"> and postal_code = #{postalCode}</if>
             <if test="defaultFlag != null "> and default_flag = #{defaultFlag}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
             AND del_flag = 0
         </where>
     </select>

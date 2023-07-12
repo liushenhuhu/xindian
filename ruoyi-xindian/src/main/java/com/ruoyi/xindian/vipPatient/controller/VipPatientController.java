@@ -12,6 +12,8 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.product.domain.TProduct;
+import com.ruoyi.xindian.product.service.ITProductService;
 import com.ruoyi.xindian.vipPatient.domain.VipWayPrice;
 import com.ruoyi.xindian.vipPatient.service.IVipWayPriceService;
 import org.aspectj.weaver.loadtime.Aj;
@@ -53,6 +55,8 @@ public class VipPatientController extends BaseController
     @Autowired
     private IVipWayPriceService vipWayPriceService;
 
+    @Autowired
+    private ITProductService itProductService;
     /**
      * 查询vip用户列表
      */
@@ -204,8 +208,12 @@ public class VipPatientController extends BaseController
     }
     @GetMapping("/vipWay")
     public TableDataInfo vipWay(){
-        VipWayPrice vipWayPrice = new VipWayPrice();
-        List<VipWayPrice> vipWayPrices = vipWayPriceService.selectVipWayPriceList(vipWayPrice);
-        return getDataTable(vipWayPrices);
+        TProduct tProduct = new TProduct();
+        tProduct.setType("服务");
+        List<TProduct> tProducts = itProductService.selectTProductList(tProduct);
+
+        return getDataTable(tProducts);
     }
+
+
 }

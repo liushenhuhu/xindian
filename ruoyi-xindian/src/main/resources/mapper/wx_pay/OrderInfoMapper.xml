@@ -76,7 +76,7 @@
             t_product.discount,
             t_product.sales
         FROM
-            user_address
+            shipAddress
                 INNER JOIN
             t_order_info
             ON
@@ -84,9 +84,18 @@
                 INNER JOIN
             t_suborder_order_info
             ON
-                t_order_info.id = t_suborder_order_info.order_father,
+                t_order_info.id = t_suborder_order_info.order_father
+                inner join
+
             t_product
-        where t_order_info.user_id = #{userId}
+            on t_suborder_order_info.product_id = t_product.product_id
+        <where>
+            <if test="orderInfo.orderStatus!=null&amp;&amp;orderInfo.orderStatus!=''">
+                and t_order_info.order_status = #{orderInfo.orderStatus}
+            </if>
+            t_order_info.user_id = #{userId}
+        </where>
+        where
     </select>
     <select id="selectWebAllList" resultType="com.ruoyi.xindian.wx_pay.domain.OrderInfo" resultMap="UserAndOrder">
 
@@ -183,8 +192,10 @@
                 INNER JOIN
             t_suborder_order_info
             ON
-                t_order_info.id = t_suborder_order_info.order_father,
+                t_order_info.id = t_suborder_order_info.order_father
+                inner join
             t_product
+        on t_suborder_order_info.product_id = t_product.product_id
         where t_order_info.id = #{id}
 
 

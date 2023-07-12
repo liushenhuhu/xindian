@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.product.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.xindian.product.domain.ProductImgs;
@@ -30,7 +31,10 @@ public class TProductServiceImpl implements ITProductService
     @Override
     public TProduct selectTProductByProductId(Long productId)
     {
-        return tProductMapper.selectTProductByProductId(productId);
+        TProduct product = tProductMapper.selectTProductByProductId(productId);
+        product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+        product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+        return product;
     }
     /**
      * 查询商品详细信息图片
@@ -48,6 +52,7 @@ public class TProductServiceImpl implements ITProductService
     @Override
     public List<TProduct> selectTProductList(TProduct tProduct)
     {
+
         return tProductMapper.selectTProductList(tProduct);
     }
 

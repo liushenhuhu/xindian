@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.math.BigDecimal;
+
 /**
  * 商品信息对象 t_product
  * 
@@ -24,7 +26,7 @@ public class TProduct extends BaseEntity
 
     /** 价格(分) */
     @Excel(name = "价格(分)")
-    private Long price;
+    private BigDecimal price;
 
     /** 商品描述 */
     @Excel(name = "商品描述")
@@ -36,7 +38,7 @@ public class TProduct extends BaseEntity
 
     /** 商品折扣 */
     @Excel(name = "商品折扣")
-    private String discount;
+    private BigDecimal discount;
 
     /** 状态（1：上架，2：下架，3：缺货） */
     @Excel(name = "状态", readConverterExp = "1=：上架，2：下架，3：缺货")
@@ -50,102 +52,106 @@ public class TProduct extends BaseEntity
     @Excel(name = "销量")
     private Long sales;
 
-    public void setProductId(Long productId) 
-    {
+
+    /**
+     * 商品类型
+     */
+    private String type;
+
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 
-    public Long getProductId() 
-    {
-        return productId;
+    public String getProductName() {
+        return productName;
     }
-    public void setProductName(String productName) 
-    {
+
+    public void setProductName(String productName) {
         this.productName = productName;
     }
 
-    public String getProductName() 
-    {
-        return productName;
+    public BigDecimal getPrice() {
+        return price;
     }
-    public void setPrice(Long price) 
-    {
+
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public Long getPrice() 
-    {
-        return price;
+    public String getProductDescription() {
+        return productDescription;
     }
-    public void setProductDescription(String productDescription) 
-    {
+
+    public void setProductDescription(String productDescription) {
         this.productDescription = productDescription;
     }
 
-    public String getProductDescription() 
-    {
-        return productDescription;
+    public String getProductUrl() {
+        return productUrl;
     }
-    public void setProductUrl(String productUrl) 
-    {
+
+    public void setProductUrl(String productUrl) {
         this.productUrl = productUrl;
     }
 
-    public String getProductUrl() 
-    {
-        return productUrl;
+    public BigDecimal getDiscount() {
+        return discount;
     }
-    public void setDiscount(String discount) 
-    {
+
+    public void setDiscount(BigDecimal discount) {
         this.discount = discount;
     }
 
-    public String getDiscount() 
-    {
-        return discount;
+    public String getState() {
+        return state;
     }
-    public void setState(String state) 
-    {
+
+    public void setState(String state) {
         this.state = state;
     }
 
-    public String getState() 
-    {
-        return state;
+    public String getProductNum() {
+        return productNum;
     }
-    public void setProductNum(String productNum) 
-    {
+
+    public void setProductNum(String productNum) {
         this.productNum = productNum;
     }
 
-    public String getProductNum() 
-    {
-        return productNum;
+    public Long getSales() {
+        return sales;
     }
-    public void setSales(Long sales) 
-    {
+
+    public void setSales(Long sales) {
         this.sales = sales;
     }
 
-    public Long getSales() 
-    {
-        return sales;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("productId", getProductId())
-            .append("productName", getProductName())
-            .append("price", getPrice())
-            .append("productDescription", getProductDescription())
-            .append("productUrl", getProductUrl())
-            .append("discount", getDiscount())
-            .append("state", getState())
-            .append("updateTime", getUpdateTime())
-            .append("createTime", getCreateTime())
-            .append("productNum", getProductNum())
-            .append("sales", getSales())
-            .toString();
+        return "TProduct{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                ", productDescription='" + productDescription + '\'' +
+                ", productUrl='" + productUrl + '\'' +
+                ", discount=" + discount +
+                ", state='" + state + '\'' +
+                ", productNum='" + productNum + '\'' +
+                ", sales=" + sales +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package com.ruoyi.xindian.vipPatient.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * vip用户Mapper接口
@@ -58,4 +59,8 @@ public interface VipPatientMapper
      * @return 结果
      */
     public int deleteVipPatientByIds(Long[] ids);
+
+
+
+    VipPatient selectPhone(@Param("phone") String phone);
 }
