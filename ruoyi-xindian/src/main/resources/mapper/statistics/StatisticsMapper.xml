@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.statistics.mapper.StatisticsMapper">
+
+    <select id="selectDoctor" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
+    select doctor_name,doctor_phone from doctor
+    </select>
+
+        <select id="selectDoctorData" parameterType="com.ruoyi.xindian.statistics.domain.Statistics" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
+            select month(report_time) as month, count(1) as count from report where year(report_time)='2023'
+            <if test="doctorPhone != '' and doctorPhone != null">
+                and d_phone = #{doctorPhone}
+            </if>
+            GROUP BY month(report_time) ORDER BY month
+    </select>
+
+</mapper>
