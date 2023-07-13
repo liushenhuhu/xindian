@@ -91,11 +91,11 @@
             on t_suborder_order_info.product_id = t_product.product_id
         <where>
             <if test="orderInfo.orderStatus!=null&amp;&amp;orderInfo.orderStatus!=''">
-                and t_order_info.order_status = #{orderInfo.orderStatus}
+                and t_order_info.order_status LIKE  concat('%',#{orderInfo.orderStatus},'%')
             </if>
-            t_order_info.user_id = #{userId}
+             and t_order_info.user_id = #{userId}
         </where>
-        where
+        order by t_order_info.user_id desc
     </select>
     <select id="selectWebAllList" resultType="com.ruoyi.xindian.wx_pay.domain.OrderInfo" resultMap="UserAndOrder">
 

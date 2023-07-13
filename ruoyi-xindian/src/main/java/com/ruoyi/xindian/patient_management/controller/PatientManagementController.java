@@ -5,16 +5,21 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.Details;
@@ -29,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,6 +68,12 @@ public class PatientManagementController extends BaseController {
 
     @Autowired
     private IEquipmentService equipmentService;
+
+    @Autowired
+    private IHospitalService hospitalService;
+
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询患者管理列表
@@ -259,6 +271,29 @@ public class PatientManagementController extends BaseController {
         return sysUser;
     }
 
+
+    @GetMapping(value = "/getInfoId")
+    public AjaxResult getInfo(Long hospitalId, HttpServletRequest request) {
+
+        LoginUser loginUser = tokenService.getLoginUser(request);
+
+
+            if (SecurityUtils.isAdmin(loginUser.getUser().getUserId())) {
+
+                if (hospitalId.equals(0L)){
+                    Hospital hospital = new Hospital();
+                    hospital.setHospitalName("所有");
+                    return AjaxResult.success(hospital);
+                }
+                Hospital hospital1 = hospitalService.selectHospitalByHospitalId(hospitalId);
+                return AjaxResult.success(hospital1);
+            }else {
+
+                Hospital hospital1 = hospitalService.selectId(loginUser.getUser().getUserId());
+                return AjaxResult.success(hospital1);
+            }
+
+    }
 
     @GetMapping("getPatientManagementByPhone/{patientPhone}")
     public AjaxResult getPatientManagementByPhone(@PathVariable String patientPhone) {

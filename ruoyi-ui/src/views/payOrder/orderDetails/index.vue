@@ -37,7 +37,7 @@
        </template></el-table-column>
        <el-table-column label="用户图片" align="center" prop="product.productUrl" >
          <template slot-scope="item">
-           <img :src="item.row.product.productUrl" alt="">
+           <img :src="item.row.product.productUrl" alt="" width="80">
          </template>
        </el-table-column>
        <el-table-column label="购买数量" align="center" prop="sum" />

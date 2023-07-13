@@ -22,7 +22,7 @@ public class WxpayFeedback implements Serializable {
      */
     @TableId
     @Excel(name = "反馈信息id")
-    private Integer feedbackiId;
+    private Long feedbackiId;
 
     /**
      * 订单id

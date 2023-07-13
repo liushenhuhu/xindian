@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
+import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.ruoyi.common.utils.PageUtils.startPage;
@@ -40,6 +42,18 @@ public class OrderController {
         LoginUser loginUser = tokenService.getLoginUser(request);
         startPage();
         List<OrderInfo> orderInfoList =  orderInfoService.selectUserOrderList(loginUser,orderInfo);
+        if (orderInfoList!=null&&!orderInfoList.isEmpty()){
+            for (OrderInfo c:orderInfoList){
+                c.setTotalFee(c.getTotalFee().multiply(new BigDecimal("0.01")));
+
+                for (SuborderOrderInfo d : c.getSuborderOrderInfos()){
+
+                    d.getProduct().setPrice(d.getProduct().getPrice().multiply(new BigDecimal("0.01")));
+                    d.getProduct().setDiscount(d.getProduct().getDiscount().multiply(new BigDecimal("0.01")));
+                }
+            }
+        }
+
         return AjaxResult.success(orderInfoList);
     }
 
