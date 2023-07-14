@@ -39,4 +39,9 @@ public class StatisticsServiceImpl implements IStatisticsService {
     public List<AgeStatistics> ageListByWoman(AgeStatistics str) {
         return statisticsMapper.ageListByWoman(str);
     }
+
+    @Override
+    public List<Statistics> selectDateList(Statistics str) {
+        return statisticsMapper.selectDateList(str);
+    }
 }
