@@ -2,6 +2,7 @@ package com.ruoyi.xindian.hospital.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.Hospital;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 医院Mapper接口
@@ -34,6 +35,13 @@ public interface HospitalMapper
      * @return 医院集合
      */
     public List<Hospital> selectHospitalList(Hospital hospital);
+
+
+    /**
+     * 通过id区查询当前医院
+     * @return
+     */
+    Hospital selectId(Hospital hospital);
 
     /**
      * 新增医院

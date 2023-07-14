@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.hospital.service;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 
 /**
@@ -66,4 +68,15 @@ public interface IHospitalService
      * @return 结果
      */
     public int deleteHospitalByHospitalId(Long hospitalId);
+
+
+    /**
+     * 查找用户所存在的医院
+     */
+
+    List<Hospital> selectUserId(Long userId);
+
+
+    Hospital selectId(Long userId);
+
 }

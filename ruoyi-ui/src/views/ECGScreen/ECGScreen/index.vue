@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import {getUserInfo} from "@/api/patient_management/patient_management";
+import {getUserInfo,getInfoId} from "@/api/patient_management/patient_management";
 
 let windowHeight;
 export default {
@@ -22,14 +22,11 @@ export default {
     };
   },
   created() {
-    getUserInfo().then(user => {
+    let hospitalId = this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId');
+    sessionStorage.setItem('hospitalId',hospitalId)
+    console.log('获取到的id',hospitalId);
+    getInfoId(hospitalId).then(user => {
       console.log(user);
-      var hospitalName = '所有'
-      var hospitalCode = 'null'
-      if (user.deptId === 200) {
-        hospitalName = user.hospitalName
-        hospitalCode = user.hospitalCode
-      }
       var url = window.location.href
       // console.log(url)
       var split = url.split('/', 3);
@@ -38,9 +35,8 @@ export default {
       var split1 = str.split(':');
       var str1 = split1[0];
       // var str1 = '192.168.0.109';
-
       // this.src = 'http://' + str1 + ':6006?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
-      this.src = 'https://screen.mindyard.cn:84?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
+      this.src = 'https://screen.mindyard.cn:84?' + 'hospitalName=' + user.data.hospitalName + '&hospitalCode=' + user.data.hospitalCode+''
       console.log(this.src)
 
       //动态计算表格高度
@@ -50,14 +46,9 @@ export default {
     })
   },
   activated() {
-    getUserInfo().then(user => {
+    console.log('获取到的params',this.$route.params.hospitalId)
+    getInfoId(this.$route.params.hospitalId).then(user => {
       console.log(user);
-      var hospitalName = '所有'
-      var hospitalCode = 'null'
-      if (user.deptId === 200) {
-        hospitalName = user.hospitalName
-        hospitalCode = user.hospitalCode
-      }
       var url = window.location.href
       // console.log(url)
       var split = url.split('/', 3);
@@ -66,8 +57,9 @@ export default {
       var split1 = str.split(':');
       var str1 = split1[0];
       // var str1 = '192.168.0.109';
+
       // this.src = 'http://' + str1 + ':6006?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
-      this.src = 'https://screen.mindyard.cn:84?' + 'hospitalName=' + hospitalName + '&hospitalCode=' + hospitalCode
+      this.src = 'https://screen.mindyard.cn:84?' + 'hospitalName=' + user.data.hospitalName + '&hospitalCode=' + user.data.hospitalCode
       console.log(this.src)
 
       //动态计算表格高度

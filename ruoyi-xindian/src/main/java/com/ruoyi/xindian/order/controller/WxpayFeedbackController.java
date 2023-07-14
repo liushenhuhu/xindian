@@ -75,10 +75,8 @@ public class WxpayFeedbackController extends BaseController
     /**
      * 新增反馈
      */
-    @PreAuthorize("@ss.hasPermi('payOrder:feedback:add')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping("/feedbackAdd")
-
     public AjaxResult add(@RequestBody WxpayFeedback wxpayFeedback)
     {
         wxpayFeedback.setStatus("未处理");

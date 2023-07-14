@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.xindian.message.domain.Message;
 import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
 import com.ruoyi.xindian.wx_pay.domain.Product;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface ShipAddressMapper  extends BaseMapper<ShipAddress> {
     int updateShipAddress(ShipAddress shipAddress);
 
     int deleteShipAddressByIds(String id);
+
+    int updateDefaultFlagInt(@Param("userId") Long userId);
 }

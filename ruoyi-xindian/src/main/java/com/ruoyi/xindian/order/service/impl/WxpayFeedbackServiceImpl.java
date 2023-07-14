@@ -63,8 +63,7 @@ public class WxpayFeedbackServiceImpl extends ServiceImpl<WxpayFeedbackMapper, W
     @Override
     public int insertWxpayFeedback(WxpayFeedback wxpayFeedback)
     {
-        wxpayFeedback.setCreateTime(DateUtils.getNowDate());
-        wxpayFeedbackMapper.insertWxpayFeedback(wxpayFeedback);
+        wxpayFeedbackMapper.insert(wxpayFeedback);
 
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setId(wxpayFeedback.getOrderId());

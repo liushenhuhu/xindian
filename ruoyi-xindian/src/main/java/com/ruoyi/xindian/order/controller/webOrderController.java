@@ -13,12 +13,14 @@ import com.ruoyi.xindian.order.service.UserAddressService;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.order.vo.UserAddressVo;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
+import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -109,6 +111,13 @@ public class webOrderController extends BaseController {
     @GetMapping("/ListOrderId")
     public AjaxResult orderId(String id){
         OrderInfo orderInfo = orderInfoService.ListOrderId(id);
+        if (orderInfo!=null) {
+            for (SuborderOrderInfo d : orderInfo.getSuborderOrderInfos()) {
+
+                d.getProduct().setPrice(d.getProduct().getPrice().multiply(new BigDecimal("0.01")));
+                d.getProduct().setDiscount(d.getProduct().getDiscount().multiply(new BigDecimal("0.01")));
+            }
+        }
         return AjaxResult.success(orderInfo);
     }
 

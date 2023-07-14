@@ -65,6 +65,12 @@ export function getUserInfo() {
     method: 'get'
   })
 }
+export function getInfoId(id) {
+  return request({
+    url: '/patient_management/patient_management/getInfoId?hospitalId='+id,
+    method: 'get'
+  })
+}
 
 //发送短信
 export function sendMsgToPatient(phone) {

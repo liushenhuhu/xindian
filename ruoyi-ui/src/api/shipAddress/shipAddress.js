@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询地址管理列表
 export function listShipAddress(query) {
   return request({
-    url: '/shipAddress/shipAddress/list',
+    url: '/shipAddress/shipAddress/webList',
     method: 'get',
     params: query
   })

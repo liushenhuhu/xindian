@@ -44,6 +44,16 @@ public class ShipAddressController extends BaseController {
     }
 
     /**
+     * web地址管理查询
+     */
+    /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:list')")*/
+    @GetMapping("/webList")
+    public TableDataInfo webList(ShipAddress shipAddress,HttpServletRequest request){
+        startPage();
+        List<ShipAddress> list = shipAddressService.selectShipAddressList(shipAddress);
+        return getDataTable(list);
+    }
+    /**
      * 新增
      */
     /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:add')")*/
@@ -75,8 +85,8 @@ public class ShipAddressController extends BaseController {
     /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:edit')")*/
     @Log(title = "存储", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ShipAddress shipAddress) {
-        return toAjax(shipAddressService.updateShipAddress(shipAddress));
+    public AjaxResult edit(@RequestBody ShipAddress shipAddress,HttpServletRequest request) {
+        return toAjax(shipAddressService.updateShipAddress(shipAddress,request));
     }
 
     /**
