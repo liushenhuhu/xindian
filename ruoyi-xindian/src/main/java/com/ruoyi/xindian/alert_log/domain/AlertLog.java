@@ -103,6 +103,11 @@ public class AlertLog extends BaseEntity
     private String doctorPhone;
 
 
+    private Integer value;
+
+    private String name;
+
+
     public String getpId() {
         return pId;
     }

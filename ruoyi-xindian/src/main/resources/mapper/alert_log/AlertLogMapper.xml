@@ -291,6 +291,35 @@
         <include refid="selectAlertLogVo"/>
         where al.log_id = #{logId}
     </select>
+    <select id="select12List" resultType="com.ruoyi.xindian.alert_log.domain.AlertLog">
+        SELECT alert_log.log_type name, COUNT(*) value
+        FROM alert_log
+                 inner join patient_management  on alert_log.p_id = patient_management.p_id
+        <where>
+            <if test="ecgType != null&amp;&amp;ecgType =='12'">
+                and patient_management.p_id=#{pId} and (patient_management.ecg_type = "JECG12YTJ" or patient_management.ecg_type = "JECG12YXD" or patient_management.ecg_type = "DECG12YXD" or patient_management.ecg_type = "DECG12SX")
+            </if>
+            <if test="ecgType != null&amp;&amp;ecgType =='single'">
+                and patient_management.p_id=#{pId} and (patient_management.ecg_type = "JECGsingleGZ" or patient_management.ecg_type = "DECGsingleZZ" or patient_management.ecg_type = "DECGsingleGZ")
+            </if>
+        </where>
+        GROUP BY log_type;
+    </select>
+    <select id="selectEarly" resultType="com.ruoyi.xindian.alert_log.domain.AlertLog">
+        SELECT alert_log.log_type name, COUNT(*) value
+        FROM alert_log
+        inner join patient_management  on alert_log.p_id = patient_management.p_id
+        <where>
+            <if test="ecgType != null&amp;&amp;ecgType =='12'">
+                and (patient_management.ecg_type = "JECG12YTJ" or patient_management.ecg_type = "JECG12YXD" or patient_management.ecg_type = "DECG12YXD" or patient_management.ecg_type = "DECG12SX")
+            </if>
+            <if test="ecgType != null&amp;&amp;ecgType =='single'">
+                and (patient_management.ecg_type = "JECGsingleGZ" or patient_management.ecg_type = "DECGsingleZZ" or patient_management.ecg_type = "DECGsingleGZ")
+            </if>
+        </where>
+        GROUP BY log_type;
+
+    </select>
 
     <insert id="insertAlertLog" parameterType="AlertLog">
         insert into alert_log

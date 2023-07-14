@@ -22,30 +22,7 @@
           ></el-date-picker>
         </el-form-item>
       </el-form-item>
-      <el-form-item label="预警类型" prop="logType">
-        <el-input
-          v-model="queryParams.logType"
-          placeholder="请输入预警类型"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="事件名称" prop="eventName">
-        <el-input
-          v-model="queryParams.eventName"
-          placeholder="请输入事件名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="事件说明" prop="eventDescription">
-        <el-input
-          v-model="queryParams.eventDescription"
-          placeholder="请输入事件说明"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="患者id" prop="pId">
         <el-input
           v-model="queryParams.pId"
@@ -266,10 +243,11 @@
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
 
 export default {
-  name: "log",
+  name: "Alert_log_12",
   dicts: ['sex', 'if_status'],
   data() {
     return {
+      currentScrollPos:0,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -303,7 +281,7 @@ export default {
         patientName: null,
         hospitalName: null,
         anoStatus: null,
-        ecgType: null,
+        ecgType: '12'
       },
       // 表单参数
       form: {},
@@ -318,26 +296,37 @@ export default {
       }
     };
   },
+  activated() {
+    document.documentElement.scrollTop=this.currentScrollPos || 0
+  },
+
+  beforeRouteLeave(to,from,next) {
+    this.currentScrollPos = document.documentElement.scrollTop || 0
+    next()
+  },
   created() {
-    console.log(this.$route.params.pId)
-    this.queryParams.pId = this.$route.params.pId?this.$route.params.pId:sessionStorage.getItem('pId')
-    this.queryParams.logType = this.$route.params.type?this.$route.params.type:sessionStorage.getItem('logType')
-    this.queryParams.ecgType = this.$route.params.ecgType?this.$route.params.ecgType:sessionStorage.getItem('ecgType')
-    sessionStorage.setItem('pId',this.queryParams.pId);
-    sessionStorage.setItem('logType',this.queryParams.logType);
-    sessionStorage.setItem('ecgType',this.queryParams.ecgType);
+    if (this.$route.query.pId) {
+      this.queryParams.pId = this.$route.query.pId;
+    }
     this.getList();
   },
+  /*  activated() {
+      if (this.$route.query.pId) {
+        this.queryParams.pId = this.$route.query.pId;
+      }
+      this.getList();
+    },*/
   methods: {
     /** 查询预警日志列表 */
     getList() {
-      console.log(this.queryParams)
       this.loading = true;
       this.queryParams.params = {};
       if (null != this.daterangeLogTime && '' != this.daterangeLogTime) {
         this.queryParams.params["beginLogTime"] = this.daterangeLogTime[0];
         this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
       }
+      this.queryParams.ecgType = this.$route.query.type
+      this.queryParams.logType = this.$route.query.logType
       listAlert_log(this.queryParams).then(response => {
         this.alert_logList = response.rows;
         this.total = response.total;
@@ -439,7 +428,7 @@ export default {
       console.log(row.logId);
       this.$router.push({
         name: "lookLog",
-        params: {logId: row.logId, logType: row.logType}
+        params: {logId: row.logId, logType: row.logType, userId: 0}
       });
     },
   }

@@ -349,6 +349,7 @@ export default {
         this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
       }
       listAlert_log(this.queryParams).then(response => {
+        console.log(response)
         this.alert_logList = response.rows;
         this.total = response.total;
         this.loading = false;

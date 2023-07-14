@@ -76,6 +76,7 @@ public class AlertLogController extends BaseController {
                 list = alertLogService.selectAlertLogList12(alertLog);
             } else if (alertLog.getEcgType().equals("single")) {
                 list = alertLogService.selectAlertLogListSingle(alertLog);
+//                return getTable(list,)
             }
         }
         return getDataTable(list);

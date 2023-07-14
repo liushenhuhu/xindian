@@ -88,4 +88,11 @@ public interface AlertLogMapper {
      * @return 预警日志集合
      */
     public List<AlertLog> selectAlertLogListSingle(AlertLog alertLog);
+
+
+
+    List<AlertLog> select12List(AlertLog alertLog);
+
+
+    List<AlertLog> selectEarly(AlertLog alertLog);
 }

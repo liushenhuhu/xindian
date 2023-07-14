@@ -134,7 +134,7 @@
           </template></el-table-column>
           <el-table-column label="用户图片" align="center" prop="product.productUrl" >
             <template slot-scope="item">
-              <img :src="item.row.product.productUrl" alt="">
+              <img :src="item.row.product.productUrl" alt="" width="80">
             </template>
           </el-table-column>
           <el-table-column label="购买数量" align="center" prop="sum" />
@@ -175,7 +175,11 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      feedbackId:{},
+      feedbackId:{
+        feedbackCause:null,
+        orderId:null,
+        feedbackiId:null,
+      },
       pay:{
         id:null,
         reason:null
@@ -205,7 +209,14 @@ export default {
         label: '未处理'
       }, ],
       // 表单参数
-      form: {},
+      form: {
+        orderId: null,
+        feedbackCause: null,
+        remark: null,
+        status: "0",
+        createTime: null,
+        updateTime: null
+      },
       from:{
         id:null,
         title:null,
@@ -245,6 +256,7 @@ export default {
     getList() {
       this.loading = true;
       listFeedback(this.queryParams).then(response => {
+        console.log(response)
         this.feedbackList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -293,8 +305,10 @@ export default {
     handleUpdate(row) {
       this.reset();
       const orderId = row.orderId || this.orderId
+      console.log(row)
       const feedbackiId = row.feedbackiId || this.feedbackiId
       getFeedback(feedbackiId).then(r=>{
+        console.log(r)
         this.feedbackId = r.data
       })
 
@@ -310,6 +324,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      console.log(this.feedbackId)
       const id = this.feedbackId.orderId
       this.stateUpdate.orderId=id
       this.pay.id =id

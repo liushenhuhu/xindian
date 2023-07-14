@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.patient.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 患者对象 patient
@@ -92,6 +94,19 @@ public class Patient extends BaseEntity {
      * 检测次数
      */
     private Long detectionNum;
+
+    private String pId;
+
+
+    private List<AlertLog> alertLogList;
+
+    public List<AlertLog> getAlertLogList() {
+        return alertLogList;
+    }
+
+    public void setAlertLogList(List<AlertLog> alertLogList) {
+        this.alertLogList = alertLogList;
+    }
 
     public void setDetectionNum(Long detectionNum) {
         this.detectionNum = detectionNum;
@@ -212,5 +227,13 @@ public class Patient extends BaseEntity {
                 .append("monitoringStatus", getMonitoringStatus())
                 .append("bindingState", getBindingState())
                 .toString();
+    }
+
+    public String getpId() {
+        return pId;
+    }
+
+    public void setpId(String pId) {
+        this.pId = pId;
     }
 }

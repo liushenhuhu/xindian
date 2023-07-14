@@ -6,6 +6,7 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 商品信息对象 t_product
@@ -58,6 +59,20 @@ public class TProduct extends BaseEntity
      */
     private String type;
 
+
+    /**
+     * 图片集合
+     * @return
+     */
+    private List<String>  stringImg;
+
+    public List<String> getStringImg() {
+        return stringImg;
+    }
+
+    public void setStringImg(List<String> stringImg) {
+        this.stringImg = stringImg;
+    }
 
     public Long getProductId() {
         return productId;

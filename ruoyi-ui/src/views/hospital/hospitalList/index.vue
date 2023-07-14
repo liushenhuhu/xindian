@@ -136,7 +136,7 @@ export default {
   },
   methods: {
     findXD(){
-      const hospitalId = 0
+      const hospitalId = '0'
       console.log(hospitalId)
       this.$router.push({name:'ECGScreen',params:{hospitalId}})
     },

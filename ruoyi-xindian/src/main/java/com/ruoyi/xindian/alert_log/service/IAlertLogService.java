@@ -3,6 +3,7 @@ package com.ruoyi.xindian.alert_log.service;
 import java.util.List;
 
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
+import com.ruoyi.xindian.patient.domain.Patient;
 
 /**
  * 预警日志Service接口
@@ -82,4 +83,20 @@ public interface IAlertLogService {
      * @return 预警日志集合
      */
     public List<AlertLog> selectAlertLogListSingle(AlertLog alertLog);
+
+
+    /**
+     * 查询单导或者12导大的单人的信息统计
+     * @param alertLog
+     * @return
+     */
+    Patient select12List(AlertLog alertLog);
+
+
+    /**
+     * 查询所有
+     * @return
+     */
+    List<AlertLog> selectEarly(AlertLog alertLog);
+
 }
