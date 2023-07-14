@@ -22,7 +22,11 @@ export default {
     };
   },
   created() {
-    let hospitalId = this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId');
+    let hospitalId = '0'
+
+    if ((this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId'))!=null){
+       hospitalId =this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId')
+    }
     sessionStorage.setItem('hospitalId',hospitalId)
     console.log('获取到的id',hospitalId);
     getInfoId(hospitalId).then(user => {

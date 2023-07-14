@@ -101,9 +101,11 @@ public class TProductController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('product:product:query')")
     @GetMapping(value = "/{productId}")
-    public AjaxResult getInfo(@PathVariable("productId") Long productId)
-    {
-        return AjaxResult.success(tProductService.selectTProductByProductId(productId));
+    public AjaxResult getInfo(@PathVariable("productId") Long productId) {
+        TProduct product = tProductService.selectTProductByProductId(productId);
+        List<String> productImgs = tProductService.selectAllImages(product.getProductId());
+        product.setStringImg(productImgs);
+        return AjaxResult.success(product);
     }
 
     /**

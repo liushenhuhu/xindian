@@ -95,7 +95,7 @@
             </if>
              and t_order_info.user_id = #{userId}
         </where>
-        order by t_order_info.user_id desc
+        order by t_order_info.id desc
     </select>
     <select id="selectWebAllList" resultType="com.ruoyi.xindian.wx_pay.domain.OrderInfo" resultMap="UserAndOrder">
 

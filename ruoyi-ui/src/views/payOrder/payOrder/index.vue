@@ -82,7 +82,7 @@
         <template slot-scope="scope">
           <el-tag
 
-            :type="scope.row.orderStatus === '已支付' || scope.row.orderStatus === '已发货' ||scope.row.orderStatus ==='订单已完成' ? 'primary' : 'danger'"
+            :type="scope.row.orderStatus === '已支付' || scope.row.orderStatus === '已发货' ||scope.row.orderStatus ==='交易完成' ? 'primary' : 'danger'"
             disable-transitions>{{scope.row.orderStatus}}</el-tag>
         </template>
       </el-table-column>
@@ -302,8 +302,8 @@ export default {
       value: '已发货',
       label: '已发货'
     },{
-        value: '订单已完成',
-        label: '订单已完成'
+        value: '交易完成',
+        label: '交易完成'
       },],
       // 表单参数
       form: {},

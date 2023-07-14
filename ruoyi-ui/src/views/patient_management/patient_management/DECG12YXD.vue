@@ -252,6 +252,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-s-data"
+            @click="DRyujing(scope.row)"
+            v-hasPermi="['patient:patient:alert']"
+          >预警统计
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['patient_management:patient_management:edit']"
@@ -437,9 +445,9 @@ export default {
         this.getList();
       })
     },
-
-
-
+    DRyujing(row){
+      this.$router.push({path: "/statistics/DRearly" , query: {id: row.pId,type:'12'}});
+    },
     /** 查询患者管理列表 */
     getList() {
       this.loading = true;
@@ -547,7 +555,7 @@ export default {
     handleAlert(row) {
       this.$router.push({
         name: "log",
-        params: {pId: row.pId}});
+        params: {pId: row.pId,type:null}});
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {

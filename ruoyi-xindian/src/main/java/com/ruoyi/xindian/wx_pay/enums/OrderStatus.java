@@ -44,7 +44,7 @@ public enum OrderStatus {
     /**
      * 已发货
      */
-    ORDER_STATUS("订单已完成"),
+    ORDER_STATUS("交易成功"),
 
     /**
      * 退款申请

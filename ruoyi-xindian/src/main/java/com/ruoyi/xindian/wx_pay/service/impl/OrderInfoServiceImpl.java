@@ -413,7 +413,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
 
-        redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,60, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
         redisTemplate.opsForValue().set(orderInfo.getId(),productId+","+sum);
 
         return orderInfo.getId();

@@ -69,7 +69,8 @@ public class WxpayFeedbackController extends BaseController
     @GetMapping(value = "/{feedbackiId}")
     public AjaxResult getInfo(@PathVariable("feedbackiId") Long feedbackiId)
     {
-        return AjaxResult.success(wxpayFeedbackService.selectWxpayFeedbackByFeedbackiId(feedbackiId));
+        WxpayFeedback wxpayFeedback = wxpayFeedbackService.selectWxpayFeedbackByFeedbackiId(feedbackiId);
+        return AjaxResult.success(wxpayFeedback);
     }
 
     /**
