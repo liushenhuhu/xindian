@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.statistics.service.impl;
 
+import com.ruoyi.xindian.statistics.domain.AgeStatistics;
 import com.ruoyi.xindian.statistics.domain.Statistics;
 import com.ruoyi.xindian.statistics.mapper.StatisticsMapper;
 import com.ruoyi.xindian.statistics.service.IStatisticsService;
@@ -27,5 +28,15 @@ public class StatisticsServiceImpl implements IStatisticsService {
     @Override
     public List<Statistics> selectDoctor() {
         return statisticsMapper.selectDoctor();
+    }
+
+    @Override
+    public List<AgeStatistics> ageListByMan(AgeStatistics str) {
+        return statisticsMapper.ageListByMan(str);
+    }
+
+    @Override
+    public List<AgeStatistics> ageListByWoman(AgeStatistics str) {
+        return statisticsMapper.ageListByWoman(str);
     }
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.statistics.mapper;
 
+import com.ruoyi.xindian.statistics.domain.AgeStatistics;
 import com.ruoyi.xindian.statistics.domain.Statistics;
 
 import java.util.List;
@@ -13,4 +14,8 @@ public interface StatisticsMapper {
     List<Statistics> selectDoctorData(Statistics str);
 
     List<Statistics> selectDoctor();
+
+    List<AgeStatistics> ageListByMan(AgeStatistics str);
+
+    List<AgeStatistics> ageListByWoman(AgeStatistics str);
 }

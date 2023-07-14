@@ -16,14 +16,13 @@
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         </el-form-item>
       </el-form>
-      <div id="myChart" :style="{width: '1000px', height: '500px'}"></div>
+      <div id="myChart" :style="{width: '80%', height: '500%'}"></div>
     </div>
     </el-col>
   </el-row>
 </template>
 <script>
 import { listStatistics, selectDoctor } from "@/api/statistics/statistics";
-import item from "@/layout/components/Sidebar/Item";
 export default {
   name: 'hello',
   data () {
@@ -67,10 +66,10 @@ export default {
           data: this.countArr
         }],
         grid: {
-          bottom: 50,
-          top: 100,
+          bottom: '10%',
+          top: '25%',
           right: 0,
-          left: 200,
+          left: '40%',
         },
       });
     },

@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.statistics.service;
 
+import com.ruoyi.xindian.statistics.domain.AgeStatistics;
 import com.ruoyi.xindian.statistics.domain.Statistics;
 
 import java.util.List;
@@ -12,4 +13,8 @@ public interface IStatisticsService {
     List<Statistics> selectDoctorData(Statistics str);
 
     List<Statistics> selectDoctor();
+
+    List<AgeStatistics> ageListByMan(AgeStatistics str);
+
+    List<AgeStatistics> ageListByWoman(AgeStatistics str);
 }

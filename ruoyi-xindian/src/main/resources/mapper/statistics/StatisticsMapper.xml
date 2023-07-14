@@ -5,15 +5,68 @@
 <mapper namespace="com.ruoyi.xindian.statistics.mapper.StatisticsMapper">
 
     <select id="selectDoctor" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
-    select doctor_name,doctor_phone from doctor
+        select doctor_name,doctor_phone from doctor
     </select>
 
-        <select id="selectDoctorData" parameterType="com.ruoyi.xindian.statistics.domain.Statistics" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
-            select month(report_time) as month, count(1) as count from report where year(report_time)='2023'
-            <if test="doctorPhone != '' and doctorPhone != null">
-                and d_phone = #{doctorPhone}
-            </if>
-            GROUP BY month(report_time) ORDER BY month
+    <select id="selectDoctorData" parameterType="com.ruoyi.xindian.statistics.domain.Statistics" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
+        select month(report_time) as month, count(1) as count from report where year(report_time)='2023'
+        <if test="doctorPhone != '' and doctorPhone != null">
+            and d_phone = #{doctorPhone}
+        </if>
+        GROUP BY month(report_time) ORDER BY month
     </select>
+
+    <select id="ageListByMan" parameterType="com.ruoyi.xindian.statistics.domain.AgeStatistics" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
+        SELECT name,COUNT(*) AS value FROM (
+        SELECT patient_age,
+              CASE
+                  WHEN patient_age BETWEEN 0 AND 10 THEN '0-10岁'
+                  WHEN patient_age BETWEEN 11 AND 20 THEN '11-20岁'
+                  WHEN patient_age BETWEEN 21 AND 25 THEN '21-25岁'
+                  WHEN patient_age BETWEEN 26 AND 30 THEN '26-30岁'
+                  WHEN patient_age BETWEEN 31 AND 35 THEN '31-35岁'
+                  WHEN patient_age BETWEEN 36 AND 40 THEN '36-40岁'
+                  WHEN patient_age BETWEEN 41 AND 45 THEN '41-45岁'
+                  WHEN patient_age BETWEEN 46 AND 50 THEN '46-50岁'
+                  WHEN patient_age BETWEEN 51 AND 55 THEN '51-55岁'
+                  WHEN patient_age BETWEEN 56 AND 60 THEN '56-60岁'
+                  WHEN patient_age BETWEEN 61 AND 65 THEN '61-65岁'
+                  WHEN patient_age BETWEEN 66 AND 70 THEN '66-70岁'
+                  WHEN patient_age BETWEEN 71 AND 75 THEN '71-75岁'
+                  WHEN patient_age BETWEEN 76 AND 80 THEN '76-80岁'
+                  WHEN patient_age BETWEEN 81 AND 85 THEN '81-85岁'
+                  WHEN patient_age > 85 THEN '85岁以上'
+                  END AS name
+              FROM patient where patient_sex = '男'
+              )AS u WHERE u.name is not null GROUP BY name ORDER BY name;
+
+    </select>
+
+    <select id="ageListByWoman" parameterType="com.ruoyi.xindian.statistics.domain.AgeStatistics" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
+        SELECT name,COUNT(*) AS value FROM (
+           SELECT patient_age,
+                  CASE
+                      WHEN patient_age BETWEEN 0 AND 10 THEN '0-10岁'
+                      WHEN patient_age BETWEEN 11 AND 20 THEN '11-20岁'
+                      WHEN patient_age BETWEEN 21 AND 25 THEN '21-25岁'
+                      WHEN patient_age BETWEEN 26 AND 30 THEN '26-30岁'
+                      WHEN patient_age BETWEEN 31 AND 35 THEN '31-35岁'
+                      WHEN patient_age BETWEEN 36 AND 40 THEN '36-40岁'
+                      WHEN patient_age BETWEEN 41 AND 45 THEN '41-45岁'
+                      WHEN patient_age BETWEEN 46 AND 50 THEN '46-50岁'
+                      WHEN patient_age BETWEEN 51 AND 55 THEN '51-55岁'
+                      WHEN patient_age BETWEEN 56 AND 60 THEN '56-60岁'
+                      WHEN patient_age BETWEEN 61 AND 65 THEN '61-65岁'
+                      WHEN patient_age BETWEEN 66 AND 70 THEN '66-70岁'
+                      WHEN patient_age BETWEEN 71 AND 75 THEN '71-75岁'
+                      WHEN patient_age BETWEEN 76 AND 80 THEN '76-80岁'
+                      WHEN patient_age BETWEEN 81 AND 85 THEN '81-85岁'
+                      WHEN patient_age > 85 THEN '85岁以上'
+                      END AS name
+           FROM patient where patient_sex = '女'
+       )AS u WHERE u.name is not null GROUP BY name ORDER BY name;
+
+    </select>
+
 
 </mapper>
