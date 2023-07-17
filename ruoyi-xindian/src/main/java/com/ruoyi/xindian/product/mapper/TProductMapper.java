@@ -64,4 +64,5 @@ public interface TProductMapper
     public int deleteTProductByProductIds(Long[] productIds);
 
 
+    List<TProduct> selectTProductListToWeb(TProduct tProduct);
 }

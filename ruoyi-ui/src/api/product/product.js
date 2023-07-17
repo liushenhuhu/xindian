@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询商品信息列表
 export function listProduct(query) {
   return request({
-    url: '/product/product/list',
+    url: '/product/product/web/webList',
     method: 'get',
     params: query
   })
@@ -20,7 +20,7 @@ export function getProduct(productId) {
 // 新增商品信息
 export function addProduct(data) {
   return request({
-    url: '/product/product',
+    url: '/product/product/web',
     method: 'post',
     data: data
   })
@@ -42,3 +42,5 @@ export function delProduct(productId) {
     method: 'delete'
   })
 }
+
+

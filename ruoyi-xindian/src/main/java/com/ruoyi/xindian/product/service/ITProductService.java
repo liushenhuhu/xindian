@@ -64,5 +64,5 @@ public interface ITProductService
     public int deleteTProductByProductId(Long productId);
 
 
-
+    List<TProduct> selectTProductListToWeb(TProduct tProduct);
 }

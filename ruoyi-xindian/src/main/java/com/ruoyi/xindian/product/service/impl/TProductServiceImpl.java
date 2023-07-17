@@ -12,19 +12,19 @@ import com.ruoyi.xindian.product.service.ITProductService;
 
 /**
  * 商品信息Service业务层处理
- * 
+ *
  * @author chenpeng
  * @date 2023-07-04
  */
 @Service
-public class TProductServiceImpl implements ITProductService 
+public class TProductServiceImpl implements ITProductService
 {
     @Autowired
     private TProductMapper tProductMapper;
 
     /**
      * 查询商品信息
-     * 
+     *
      * @param productId 商品信息主键
      * @return 商品信息
      */
@@ -45,7 +45,7 @@ public class TProductServiceImpl implements ITProductService
     }
     /**
      * 查询商品信息列表
-     * 
+     *
      * @param tProduct 商品信息
      * @return 商品信息
      */
@@ -58,7 +58,7 @@ public class TProductServiceImpl implements ITProductService
 
     /**
      * 新增商品信息
-     * 
+     *
      * @param tProduct 商品信息
      * @return 结果
      */
@@ -71,7 +71,7 @@ public class TProductServiceImpl implements ITProductService
 
     /**
      * 修改商品信息
-     * 
+     *
      * @param tProduct 商品信息
      * @return 结果
      */
@@ -84,7 +84,7 @@ public class TProductServiceImpl implements ITProductService
 
     /**
      * 批量删除商品信息
-     * 
+     *
      * @param productIds 需要删除的商品信息主键
      * @return 结果
      */
@@ -96,7 +96,7 @@ public class TProductServiceImpl implements ITProductService
 
     /**
      * 删除商品信息信息
-     * 
+     *
      * @param productId 商品信息主键
      * @return 结果
      */
@@ -104,5 +104,10 @@ public class TProductServiceImpl implements ITProductService
     public int deleteTProductByProductId(Long productId)
     {
         return tProductMapper.deleteTProductByProductId(productId);
+    }
+
+    @Override
+    public List<TProduct> selectTProductListToWeb(TProduct tProduct) {
+        return tProductMapper.selectTProductListToWeb(tProduct);
     }
 }

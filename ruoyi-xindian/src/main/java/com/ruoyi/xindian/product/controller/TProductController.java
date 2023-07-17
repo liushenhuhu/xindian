@@ -5,15 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.json.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
+import com.ruoyi.framework.web.domain.server.SysFile;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.product.domain.ProductImgs;
 import com.ruoyi.xindian.product.domain.TProductDto;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 商品信息Controller
- * 
+ *
  * @author chenpeng
  * @date 2023-07-04
  */
@@ -66,6 +74,32 @@ public class TProductController extends BaseController
         }
         return getTable(resList,new PageInfo(list).getTotal());
     }
+
+
+    /**
+     * web端 调用接口
+     * @param tProduct
+     * @return
+     */
+    @GetMapping("/web/webList")
+    public TableDataInfo webList(TProduct tProduct)
+    {
+        startPage();
+        List<TProduct> list = tProductService.selectTProductListToWeb(tProduct);
+        List<TProductDto> resList = new ArrayList<>();
+        for (TProduct product : list) {
+            TProductDto tProductDto = new TProductDto();
+            product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+            product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+            BeanUtils.copyProperties(product,tProductDto);
+            List<String> productImgs = tProductService.selectAllImages(product.getProductId());
+            System.out.println(productImgs);
+            tProductDto.setBottomImg(productImgs);
+            resList.add(tProductDto);
+        }
+        return getTable(resList,new PageInfo(list).getTotal());
+    }
+
 
     /**
      * 查询商品服务列表
@@ -113,7 +147,7 @@ public class TProductController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('product:product:add')")
     @Log(title = "商品信息", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("/web")
     public AjaxResult add(@RequestBody TProduct tProduct)
     {
         return toAjax(tProductService.insertTProduct(tProduct));
@@ -156,5 +190,40 @@ public class TProductController extends BaseController
         }
         return AjaxResult.error("上传图片异常，请联系管理员");
     }
+
+    /**
+     * 批量上传
+     * @param files
+     * @return
+     */
+    @PostMapping(value ="/web/batchUploadFile")
+    @ApiOperation(value = "文件上传请求")
+    public R<JSONArray> batchUploadFile(@RequestParam("files") MultipartFile[] files)
+    {
+        try
+        {
+            JSONArray jsonArray=new JSONArray();
+
+            for(MultipartFile file : files) {//循环单个上传
+                // 上传并返回访问地址
+                /*String url = sysFileService.uploadFile(file);
+                SysFile sysFile = new SysFile();
+                sysFile.setName(FileUtils.getName(url));
+                sysFile.setUrl(url);
+                jsonArray.add(sysFile);*/
+                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
+                AjaxResult ajax = AjaxResult.success();
+                ajax.put("imgUrl", "https://ecg.mindyard.cn:84/prod-api/"+avatar);
+            }
+            return R.ok(jsonArray);
+        }
+        catch (Exception e)
+        {
+
+            return R.fail(e.getMessage());
+        }
+    }
+
+
 
 }
