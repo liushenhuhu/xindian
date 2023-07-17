@@ -21,6 +21,14 @@ public class TProduct extends BaseEntity
     /** 商Bid */
     private Long productId;
 
+    public String getUrlOne() {
+        return urlOne;
+    }
+
+    public void setUrlOne(String urlOne) {
+        this.urlOne = urlOne;
+    }
+
     /** 商品名称 */
     @Excel(name = "商品名称")
     private String productName;
@@ -58,6 +66,9 @@ public class TProduct extends BaseEntity
      * 商品类型
      */
     private String type;
+
+
+    private String urlOne;
 
 
     /**

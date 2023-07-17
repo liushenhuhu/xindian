@@ -116,7 +116,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/medicalData/medicalData/**").permitAll()
                 .antMatchers("/rotograph/rotograph/list").anonymous()
                 .antMatchers("/product/product/list").anonymous()
-                .antMatchers("/product/product/*").anonymous()
+                .antMatchers("/product/product/fwList").anonymous()
+                .antMatchers("/product/product/{productId}").anonymous()
                 .antMatchers("/api/v1/callBack").anonymous()
                 .antMatchers("/login", "/wxLogin", "/wxOpenId","/wxGZHOpenId","/register", "/register_doctor", "/captchaImage").anonymous()
 
