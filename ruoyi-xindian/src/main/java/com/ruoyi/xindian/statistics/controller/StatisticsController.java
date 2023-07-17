@@ -32,12 +32,32 @@ public class StatisticsController extends BaseController {
         return statisticsService.selectDoctor();
     }
 
+    /**
+     * 就诊次数
+     * @param str
+     * @return
+     */
     @GetMapping("/list")
     public TableDataInfo list(Statistics str){
         List<Statistics> list = statisticsService.selectDoctorData(str);
         return getDataTable(list);
     }
 
+    @GetMapping("dateList")
+    public TableDataInfo dateList(Statistics str){
+        //月份转换
+        str.setMonth(lowNumber(str.getMonth()));
+        startPage();
+        List<Statistics> list = statisticsService.selectDateList(str);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 年龄分布
+     * @param str
+     * @return
+     */
     @GetMapping ("/ageList")
     public Map<String,Object> ageList(AgeStatistics str){
         /* 查询性别男 */
@@ -49,6 +69,50 @@ public class StatisticsController extends BaseController {
         map.put("women",womanList);
         return map;
     }
+
+    public String lowNumber(String numStr){
+        String str = "";
+        switch(numStr){
+            case "一月":
+                str = "1";
+                break;
+            case "二月":
+                str = "2";
+                break;
+            case "三月":
+                str = "3";
+                break;
+            case "四月":
+                str = "4";
+                break;
+            case "五月":
+                str = "5";
+                break;
+            case "六月":
+                str = "6";
+                break;
+            case "七月":
+                str = "7";
+                break;
+            case "八月":
+                str = "8";
+                break;
+            case "九月":
+                str = "9";
+                break;
+            case "十月":
+                str = "10";
+                break;
+            case "十一月":
+                str = "11";
+                break;
+            case "十二月":
+                str = "12";
+                break;
+        }
+        return str;
+    }
+
 
 
 }

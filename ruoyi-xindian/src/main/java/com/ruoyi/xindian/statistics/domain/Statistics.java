@@ -16,6 +16,10 @@ public class Statistics extends BaseEntity {
 
     private String count;
 
+    private String doctorMonth;
+
+    private String timeCount;
+
     public String getDoctorName() {
         return doctorName;
     }
@@ -48,6 +52,22 @@ public class Statistics extends BaseEntity {
         this.count = count;
     }
 
+    public String getDoctorMonth() {
+        return doctorMonth;
+    }
+
+    public void setDoctorMonth(String doctorMonth) {
+        this.doctorMonth = doctorMonth;
+    }
+
+    public String getTimeCount() {
+        return timeCount;
+    }
+
+    public void setTimeCount(String timeCount) {
+        this.timeCount = timeCount;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -55,6 +75,8 @@ public class Statistics extends BaseEntity {
                 .append("doctorPhone", doctorPhone)
                 .append("month", month)
                 .append("count", count)
+                .append("doctorMonth", doctorMonth)
+                .append("timeCount", timeCount)
                 .toString();
     }
 }

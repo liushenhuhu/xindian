@@ -1,8 +1,8 @@
 <template>
   <el-row>
     <el-col :span="24">
-    <div class="app-container">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <div id="appc" class="app-container">
+      <el-form v-if="show" id="add1" :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
         <el-form-item label="医生名称" prop="doctor_name">
           <el-select v-model="queryParams.doctorPhone" clearable placeholder="请选择">
             <el-option
@@ -16,13 +16,30 @@
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         </el-form-item>
       </el-form>
-      <div id="myChart" :style="{width: '80%', height: '500%'}"></div>
+      <div id="myChart" :style="{width: '80%', height: '500%'}"> </div>
+      <div id="table1" style="align-content: center;display: none">
+        <el-button type="primary" icon="el-icon-back" size="mini" @click="backQuery">返回</el-button>
+        <el-table
+          :data="tableData"
+          style="width: 100%;text-align: center">
+          <el-table-column label="医生姓名" align="center" prop="doctorName" />
+          <el-table-column label="诊断月份" align="center" prop="month" />
+          <el-table-column label="诊断时长" align="center" prop="timeCount" />
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getListData"
+        />
+      </div>
     </div>
     </el-col>
   </el-row>
 </template>
 <script>
-import { listStatistics, selectDoctor } from "@/api/statistics/statistics";
+import { listStatistics, selectDoctor, dateList } from "@/api/statistics/statistics";
 export default {
   name: 'hello',
   data () {
@@ -31,11 +48,17 @@ export default {
       statistics: [],
       options: [],
       countArr: [],
+      show: true,
+      // 总条数
+      total: 0,
       queryParams: {
+        pageNum: 1,
+        pageSize: 10,
         doctorName: null,
         doctorPhone: null,
+        month: null
       },
-
+      tableData: []
     }
   },
   created() {
@@ -50,6 +73,8 @@ export default {
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById('myChart'))
       // 绘制图表
+      let status = this;
+      myChart.off('click');
       myChart.setOption({
         title: {
           text: ''
@@ -72,10 +97,24 @@ export default {
           left: '40%',
         },
       });
+      myChart.on('click', function (params) {
+        status.queryParams.month = params.name;
+        status.show = false;
+        document.getElementById("myChart").style.display='none';
+        document.getElementById("table1").style.display='';
+        status.getListData();
+      })
     },
     selectDoctor() {
       selectDoctor().then(response => {
         this.options = response;
+      })
+    },
+    getListData(){
+      dateList(this.queryParams).then(response => {
+        //console.log(response.rows);
+        this.tableData = response.rows;
+        this.total = response.total;
       })
     },
     /** 查询 */
@@ -99,6 +138,11 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
-  }
+    backQuery(){
+      this.show = true;
+      document.getElementById("myChart").style.display='';
+      document.getElementById("table1").style.display='none';
+    }
+  },
 }
 </script>

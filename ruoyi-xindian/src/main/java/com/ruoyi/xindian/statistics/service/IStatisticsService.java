@@ -17,4 +17,6 @@ public interface IStatisticsService {
     List<AgeStatistics> ageListByMan(AgeStatistics str);
 
     List<AgeStatistics> ageListByWoman(AgeStatistics str);
+
+    List<Statistics> selectDateList(Statistics str);
 }
