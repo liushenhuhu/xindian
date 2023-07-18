@@ -121,7 +121,7 @@
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -157,7 +157,7 @@
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -193,7 +193,7 @@
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -233,7 +233,7 @@
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -294,7 +294,7 @@
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -327,7 +327,7 @@
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -360,7 +360,7 @@
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -393,7 +393,7 @@
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -426,7 +426,7 @@
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
@@ -458,7 +458,7 @@
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="equipmentCodeList != null and equipmentCodeList.size()>0 and equipmentCodeList != ''">
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}

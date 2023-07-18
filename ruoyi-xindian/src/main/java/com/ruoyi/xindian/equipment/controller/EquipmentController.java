@@ -190,5 +190,12 @@ public class EquipmentController extends BaseController {
         }
         return AjaxResult.success(EquipmentCodeList);
     }
-
+    @GetMapping("/isPermission/{equipmentCode}")
+    public AjaxResult isPermission(@PathVariable String equipmentCode) {
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentCode);
+        if(equipment==null){
+            return AjaxResult.error("当前设备无权限，请联系后台管理员添加权限");
+        }
+        return AjaxResult.success("认证通过");
+    }
 }

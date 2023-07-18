@@ -17,9 +17,9 @@ import com.ruoyi.framework.web.domain.server.SysFile;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.product.domain.ProductImgs;
 import com.ruoyi.xindian.product.domain.TProductDto;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.ApiImplicitParam;
+//import io.swagger.annotations.ApiImplicitParams;
+//import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -197,7 +197,7 @@ public class TProductController extends BaseController
      * @return
      */
     @PostMapping(value ="/web/batchUploadFile")
-    @ApiOperation(value = "文件上传请求")
+//    @ApiOperation(value = "文件上传请求")
     public R<JSONArray> batchUploadFile(@RequestParam("files") MultipartFile[] files)
     {
         try

@@ -88,14 +88,15 @@ public class PatientManagementController extends BaseController {
 //        Long userId = getUserId();
         SysUser sysUser = userService.selectUserById(getUserId());
         if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 101) {
+            //101---医院
             String hospitalCode = sysUser.getHospitalCode();
             patientManagement.setHospitalCode(hospitalCode);
-            String phonenumber = sysUser.getPhonenumber();
-            if(!"15888888888".equals(phonenumber)){
-                patientManagement.setDoctorPhone(phonenumber);
-                if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
-                    patientManagement.setDiagnosisStatus(2L);
-            }
+//            String phonenumber = sysUser.getPhonenumber();
+//            if(!"15888888888".equals(phonenumber)){
+//                patientManagement.setDoctorPhone(phonenumber);
+//                if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
+//                    patientManagement.setDiagnosisStatus(2L);
+//            }
         } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 106) {
             // 106---科室账号
             Equipment equipment = new Equipment();

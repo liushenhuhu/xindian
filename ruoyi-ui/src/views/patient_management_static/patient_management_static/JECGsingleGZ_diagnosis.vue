@@ -37,9 +37,9 @@
         />
       </el-form-item>
       <el-form-item label="医院名称" prop="hospitalName">
-        <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
           <el-option
-            v-for="dict in dict.type.hospital_name_name_list"
+            v-for="dict in dict.type.hospital_name_list"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -428,7 +428,7 @@ import {updateOnlineAll} from "@/api/online/online";
 
 export default {
   name: "JECGsingleGZ_diagnosis",
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_name_list'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list'],
   data() {
     return {
       currentScrollPos: 0,
