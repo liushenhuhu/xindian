@@ -384,6 +384,7 @@ export default {
     getList() {
       this.loading = true;
       listEquipment(this.queryParams).then(response => {
+
         this.equipmentList = response.rows;
         this.total = response.total;
 

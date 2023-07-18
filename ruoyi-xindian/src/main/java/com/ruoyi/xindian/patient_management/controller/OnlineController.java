@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.xindian.equipment.controller.EquipmentController;
 import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.*;
@@ -49,6 +50,9 @@ public class OnlineController extends BaseController {
     @Autowired
     private IPatientManagementService patientManagementService;
 
+    @Autowired
+    private IHospitalService iHospitalService;
+
     @GetMapping("/updateAll")
     public AjaxResult updateAll() {
         AjaxResult result1 = update1();
@@ -76,11 +80,16 @@ public class OnlineController extends BaseController {
     @GetMapping("/update1")
     public AjaxResult update1() {
         SysUser userInfo = patientManagementController.getUserInfo();
+
         System.out.println("用户信息:"+userInfo);
         OnlineParam onlineParam = new OnlineParam("所有");
         if (userInfo!=null && userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
-            onlineParam.setHospName(userInfo.getHospitalName());
+            if (userInfo.getHospitalName()==null){
+                Hospital hospital = iHospitalService.selectHospitalByHospitalCode(userInfo.getHospitalCode());
+                onlineParam.setHospName(hospital.getHospitalName());
+            }
         }
+
         String url = "https://server.mindyard.cn:84/get_device";
         //请求
         RestTemplate restTemplate = new RestTemplate();
@@ -119,7 +128,10 @@ public class OnlineController extends BaseController {
         System.out.println("用户信息:"+userInfo);
         OnlineParam onlineParam = new OnlineParam("所有");
         if (userInfo!=null && userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
-            onlineParam.setHospName(userInfo.getHospitalName());
+            if (userInfo.getHospitalName()==null){
+                Hospital hospital = iHospitalService.selectHospitalByHospitalCode(userInfo.getHospitalCode());
+                onlineParam.setHospName(hospital.getHospitalName());
+            }
         }
         RestTemplate restTemplate = new RestTemplate();
 
