@@ -147,9 +147,22 @@ public class PatientRelationshipController extends BaseController
             AppData appData = getAppData(patientRelationship);
             MedicalHistory medicalHistory = getMedicalHistory(patientRelationship);
             Patient patient = getPatient(patientRelationship);
-            patientService.insertPatient(patient);
+            Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+            if(patient1!=null){
+                patient.setPatientId(patient1.getPatientId());
+                patientService.updatePatient(patient);
+            }else{
+                patientService.insertPatient(patient);
+            }
             appDataService.insertAppData(appData);
-            medicalHistoryService.insertMedicalHistory(medicalHistory);
+            MedicalHistory medicalHistory1 = medicalHistoryService.selectMedicalHistoryByPatientPhone(medicalHistory.getPatientPhone());
+            if(medicalHistory1!=null){
+                medicalHistory.setMedicalHistoryId(medicalHistory1.getMedicalHistoryId());
+                medicalHistoryService.updateMedicalHistory(medicalHistory);
+            }
+            else{
+                medicalHistoryService.insertMedicalHistory(medicalHistory);
+            }
         }
         return toAjax(patientRelationshipService.insertPatientRelationship(relationship));
     }
