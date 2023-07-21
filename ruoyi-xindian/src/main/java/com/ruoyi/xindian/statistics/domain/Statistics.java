@@ -18,6 +18,16 @@ public class Statistics extends BaseEntity {
 
     private String doctorMonth;
 
+    private String reportType;
+
+    public String getReportType() {
+        return reportType;
+    }
+
+    public void setReportType(String reportType) {
+        this.reportType = reportType;
+    }
+
     private String timeCount;
 
     public String getDoctorName() {
