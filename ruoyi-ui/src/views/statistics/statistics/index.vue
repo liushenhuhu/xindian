@@ -12,6 +12,14 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="心电图类型" prop="report_type" label-width="100px">
+          <el-select v-model="queryParams.reportType" clearable placeholder="请选择">
+            <el-option label="JECGsingle" value="JECGsingle"></el-option>
+            <el-option label="JECG12" value="JECG12"></el-option>
+            <el-option label="DECGsingle" value="DECGsingle"></el-option>
+            <el-option label="DECG12" value="DECG12"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         </el-form-item>
@@ -56,7 +64,8 @@ export default {
         pageSize: 10,
         doctorName: null,
         doctorPhone: null,
-        month: null
+        month: null,
+        reportType:null,
       },
       tableData: []
     }

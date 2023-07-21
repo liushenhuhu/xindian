@@ -13,6 +13,9 @@
         <if test="doctorPhone != '' and doctorPhone != null">
             and d_phone = #{doctorPhone}
         </if>
+        <if test="reportType != '' and reportType != null">
+            and report_type like concat(#{reportType},"%")
+        </if>
         GROUP BY month(report_time) ORDER BY month
     </select>
 
