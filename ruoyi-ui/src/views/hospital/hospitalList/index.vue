@@ -54,7 +54,6 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['hospital:hospital:edit']"
           >查看心电大屏数据</el-button>
         </template>
       </el-table-column>
@@ -130,13 +129,10 @@ export default {
   },
   created() {
     this.getList();
-    addDict().then(res =>{
-      console.log(res)
-    })
   },
   methods: {
     findXD(){
-      const hospitalId = '0'
+      const hospitalId = '1'
       console.log(hospitalId)
       this.$router.push({name:'ECGScreen',params:{hospitalId}})
     },
@@ -149,10 +145,7 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
-      addDict().then(res =>{
-        console.log(res)
-      })
-      JSON.parse("")
+      // JSON.parse("")
     },
     /** 刷新 */
     refresh() {

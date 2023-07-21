@@ -22,11 +22,7 @@ export default {
     };
   },
   created() {
-    let hospitalId = '0'
-
-    if ((this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId'))!=null){
-       hospitalId =this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId')
-    }
+    let hospitalId =this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId')
     sessionStorage.setItem('hospitalId',hospitalId)
     console.log('获取到的id',hospitalId);
     getInfoId(hospitalId).then(user => {
@@ -50,8 +46,10 @@ export default {
     })
   },
   activated() {
-    console.log('获取到的params',this.$route.params.hospitalId)
-    getInfoId(this.$route.params.hospitalId).then(user => {
+    let hospitalId =this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId')
+    sessionStorage.setItem('hospitalId',hospitalId)
+    console.log('获取到的params',hospitalId)
+    getInfoId(hospitalId).then(user => {
       console.log(user);
       var url = window.location.href
       // console.log(url)

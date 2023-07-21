@@ -112,8 +112,9 @@ public class webOrderController extends BaseController {
     public AjaxResult orderId(String id){
         OrderInfo orderInfo = orderInfoService.ListOrderId(id);
         if (orderInfo!=null) {
-            for (SuborderOrderInfo d : orderInfo.getSuborderOrderInfos()) {
+            orderInfo.setTotalFee(orderInfo.getTotalFee().multiply(new BigDecimal("0.01")));
 
+            for (SuborderOrderInfo d : orderInfo.getSuborderOrderInfos()) {
                 d.getProduct().setPrice(d.getProduct().getPrice().multiply(new BigDecimal("0.01")));
                 d.getProduct().setDiscount(d.getProduct().getDiscount().multiply(new BigDecimal("0.01")));
             }

@@ -60,7 +60,14 @@ export default {
             type: 'pie',
             radius: '70%',
             roseType: 'angle',
-            data: this.countArr
+            data: this.countArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              formatter: function (arg) {
+                console.log(arg);
+                return arg.name + '：预警' + arg.value + "次"
+              }
+            },
           }
         ]
       };

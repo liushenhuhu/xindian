@@ -87,7 +87,6 @@ public class PatientManagementController extends BaseController {
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
 //        Long userId = getUserId();
         SysUser sysUser = userService.selectUserById(getUserId());
-
         if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 101) {
             String hospitalCode = sysUser.getHospitalCode();
             patientManagement.setHospitalCode(hospitalCode);
@@ -279,8 +278,7 @@ public class PatientManagementController extends BaseController {
 
 
             if (SecurityUtils.isAdmin(loginUser.getUser().getUserId())) {
-
-                if (hospitalId.equals(0L)){
+                if (hospitalId.equals(1L)){
                     Hospital hospital = new Hospital();
                     hospital.setHospitalName("所有");
                     return AjaxResult.success(hospital);
@@ -288,7 +286,6 @@ public class PatientManagementController extends BaseController {
                 Hospital hospital1 = hospitalService.selectHospitalByHospitalId(hospitalId);
                 return AjaxResult.success(hospital1);
             }else {
-
                 Hospital hospital1 = hospitalService.selectId(loginUser.getUser().getUserId());
                 return AjaxResult.success(hospital1);
             }

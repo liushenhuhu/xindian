@@ -12,8 +12,10 @@ public class WXPayConstants {
         自定义内容     */
     /*支付*/
     public static final String APP_ID = "wx50da6a0dfc5c45c0";//appid  填写你们自己的
+    public static final String WX_PUBLIC_ID = "wx219c20026db0351e";//appid  填写你们自己的
     public static final String MCH_ID = "1645541073";//商家ID   填写你们自己的
     public static final String SECRET = "e74ff167d287ba25aefc87d9afe5fcf5";//APP KEY
+    public static final String WX_PUBLIC_SECRET = "e74ff167d287ba25aefc87d9afe5fcf5";//APP KEY
     public static final String OPENID_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
     public static final String NOTIFY_URL = "";//回调ip
     public static final String UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一下单接口
@@ -22,6 +24,8 @@ public class WXPayConstants {
     public static final String PATERNER_KEY = "ADFHJWhduenfks17shGDYE6278jfww12";//商户key秘钥   填写你们自己的
     /*退款*/
     public static final String REFUND_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";//申请退款路径接口
+
+    public static final String WE_CHAT_CALL_BACK_DOMAIN_URL = " http://6nxme4.natappfree.cc";//获取用户
 
     
 //    下边这些没啥用：

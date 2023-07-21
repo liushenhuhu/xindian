@@ -251,7 +251,7 @@ export default {
 
             label: {
               normal: {
-                show: false,
+                show: true,
                 position: "insideRight",
                 textStyle: {
                   color: "#ffffff",
@@ -300,7 +300,7 @@ export default {
             },
             label: {
               normal: {
-                show: false,
+                show: true,
                 position: "insideLeft",
                 textStyle: {
                   color: "#ffffff",

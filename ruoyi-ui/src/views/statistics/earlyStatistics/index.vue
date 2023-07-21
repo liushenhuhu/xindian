@@ -3,7 +3,7 @@
 
     <el-divider content-position="left">预警统计图</el-divider>
 
-    <div  id="main" style="width: 600px;height:400px; float: left">12导预警</div>
+    <div  id="main" style="width: 700px;height:400px; float: left;" >12导预警</div>
 
     <div id="main1" style="width: 600px;height:400px;float: right">单导预警</div>
   </div>
@@ -56,7 +56,14 @@ export default {
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
-            data: this.countArr
+            data: this.countArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              formatter: function (arg) {
+                console.log(arg);
+                return arg.name + '：预警' + arg.value + "次"
+              }
+            },
           }
         ]
       };
@@ -84,7 +91,14 @@ export default {
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
-            data: this.DCountArr
+            data: this.DCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              formatter: function (arg) {
+                console.log(arg);
+                return arg.name + '：预警' + arg.value + "次"
+              }
+            },
           }
         ]
       };

@@ -38,6 +38,13 @@ public interface HospitalMapper
 
 
     /**
+     * 查询医院列表
+     *
+     * @param hospital 医院
+     * @return 医院集合
+     */
+    public List<Hospital> selectHospitalCode(Hospital hospital);
+    /**
      * 通过id区查询当前医院
      * @return
      */

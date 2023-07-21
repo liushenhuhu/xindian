@@ -457,6 +457,7 @@ export default {
         this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
       }
       listPatient_management(this.queryParams).then(response => {
+        console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;

@@ -408,6 +408,7 @@ export default {
     getList() {
       this.loading = true;
       listPatient(this.queryParams).then(response => {
+        console.log(response)
         this.patientList = response.rows;
         this.total = response.total;
         this.loading = false;

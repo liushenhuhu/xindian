@@ -54,7 +54,7 @@
         <where>
             <if test="province != null  and province != ''"> and province like concat('%', #{province}, '%')</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
+            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code =  #{hospitalCode}</if>
             <if test="hospitalAccount != null  and hospitalAccount != ''"> and hospital_account like concat('%', #{hospitalAccount}, '%')</if>
             <if test="hospitalPassword != null  and hospitalPassword != ''"> and hospital_password like concat('%', #{hospitalPassword}, '%')</if>
             <if test="equipmentNumber != null "> and equipment_number like concat('%', #{equipmentNumber}, '%')</if>
