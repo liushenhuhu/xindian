@@ -216,4 +216,18 @@ public class VipPatientController extends BaseController
     }
 
 
+    /**
+     * 服务次数减一
+     * @param patientPhone
+     * @return
+     */
+    @GetMapping("/detectionNumSubtract")
+    public AjaxResult detectionNumSubtract(String patientPhone){
+
+        Boolean aBoolean = patientService.detectionNumSubtract(patientPhone);
+
+        return AjaxResult.success(aBoolean);
+    }
+
+
 }

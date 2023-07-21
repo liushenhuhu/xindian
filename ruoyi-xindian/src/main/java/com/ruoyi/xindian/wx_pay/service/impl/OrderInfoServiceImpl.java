@@ -1,4 +1,5 @@
 package com.ruoyi.xindian.wx_pay.service.impl;
+import com.google.common.collect.Lists;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -9,10 +10,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.xindian.order.domain.UserAddress;
-import com.ruoyi.xindian.order.mapper.UserAddressMapper;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
-import com.ruoyi.xindian.order.vo.UserAddressVo;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
@@ -77,6 +75,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
+
 
     @Override
     public OrderInfo selectTOrderInfoById(String id) {
@@ -177,31 +177,53 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     public Boolean vipPatient(Product product ,Long userId){
 
         SysUser sysUser = sysUserMapper.selectUserById(userId);
+        VipPatient vipPhone = vipPatientService.findVipPhone(sysUser.getPhonenumber());
 
-        if (product.getProductNum()>1){
-
-            VipPatient vipPhone = vipPatientService.findVipPhone(sysUser.getPhonenumber());
+        if (vipPhone!=null){
             VipPatient vipPatient = new VipPatient();
-            if (vipPhone!=null){
-
-                vipPatient.setId(vipPatient.getId());
-                vipPatient.setVipNum(vipPhone.getVipNum() + 100);
-                Date endDate = vipPhone.getEndDate();
-                vipPatient.setEndDate(endDate);
-                vipPatientService.updateVipPatient(vipPatient);
-            }else {
-                vipPatient.setPatientPhone(sysUser.getPhonenumber());
-                vipPatient.setVipNum(100L);
-                Date endDate = new Date();
+            //如果用户已经为vip，在原来的基础上增加次数
+            vipPatient.setId(vipPatient.getId());
+            vipPatient.setVipNum(vipPhone.getVipNum() + product.getProductNum());
+            Date endDate = vipPhone.getEndDate();
+            if (product.getProductNum()>5){
                 Date data = getData(endDate);
                 vipPatient.setEndDate(data);
-                vipPatientService.insertVipPatient(vipPatient);
+                vipPatientService.updateVipPatient(vipPatient);
+            }else {
+
+                Calendar calendar = Calendar.getInstance();
+                // 设置日期
+                calendar.setTime(endDate);
+                // 加一个月
+                calendar.add(Calendar.MONTH, 1);
+                Date time = calendar.getTime();
+                vipPatient.setEndDate(time);
+                vipPatientService.updateVipPatient(vipPatient);
+            }
+        }else {
+            if (product.getProductNum()>5){
+                VipPatient vipPatient = new VipPatient();
+
+                    Patient patient = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
+                    vipPatient.setPatientPhone(sysUser.getPhonenumber());
+                    vipPatient.setVipNum(patient.getDetectionNum()+100L);
+                    Date endDate = new Date();
+                    Date data = getData(endDate);
+                    vipPatient.setEndDate(data);
+                    vipPatientService.insertVipPatient(vipPatient);
+            }else {
+                Patient p = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
+                Calendar calendar = Calendar.getInstance();
+                // 设置日期
+                calendar.setTime(p.getDetectionTime());
+                // 加一个月
+                calendar.add(Calendar.MONTH, 1);
+                p.setDetectionTime(calendar.getTime());
+                p.setDetectionTime(p.getDetectionTime());
+                p.setDetectionNum(p.getDetectionNum() + product.getProductNum());
+                patientService.updatePatient(p);
             }
 
-        }else {
-            Patient p = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
-            p.setDetectionNum(p.getDetectionNum() + 1);
-            patientService.updatePatient(p);
         }
 
         return true;
@@ -379,15 +401,28 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             throw new ServiceException("库存不够");
         }
 
+
+
         if(product.getType().equals("服务")){
             addressId = 11L;
         }
+
+        ShipAddress shipAddress = shipAddressMapper.selectShipAddressById(addressId);
+
         //获取token中发送请求的用户信息
         LoginUser loginUser = tokenService.getLoginUser(request);
 
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
 
         OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setPatientPhone(shipAddress.getPatientPhone());
+        orderInfo.setPatientName(shipAddress.getPatientName());
+        orderInfo.setStreetAddress(shipAddress.getStreetAddress());
+        orderInfo.setStreet(shipAddress.getStreet());
+        orderInfo.setCity(shipAddress.getCity());
+        orderInfo.setState(shipAddress.getState());
+        orderInfo.setCountry(shipAddress.getCountry());
+        orderInfo.setPostalCode(shipAddress.getPostalCode());
         orderInfo.setId(OrderNoUtils.getNo());
         orderInfo.setTitle("购买"+product.getProductName());
         orderInfo.setOrderNo(OrderNoUtils.getOrderNo());
@@ -395,7 +430,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setTotalFee(new BigDecimal(sum).multiply(product.getDiscount()));
         orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
         orderInfo.setOpenId(sysUser.getOpenId());
-        orderInfo.setAddressId(addressId);
         orderInfo.setCreateTime(new Date());
         orderInfo.setUpdateTime(new Date());
         orderInfoMapper.insert(orderInfo);
@@ -463,20 +497,22 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if (shipaddressVo.getOrderStatus()==null&&shipaddressVo.getIsUpdate()==null){
             return true;
         }
+        OrderInfo orderInfo = new OrderInfo();
         if (shipaddressVo.getIsUpdate()!=null&&!"".equals(shipaddressVo.getIsUpdate())){
-            ShipAddress shipAddress = new ShipAddress();
-            BeanUtils.copyProperties(shipaddressVo,shipAddress);
-            shipAddress.setDelFlag(1L);
-            shipAddressMapper.insertShipAddress(shipAddress);
-               OrderInfo orderInfo = new OrderInfo();
-               if (shipaddressVo.getOrderStatus()!=null&&!"".equals(shipaddressVo.getOrderStatus())){
-                   orderInfo.setOrderStatus(shipaddressVo.getOrderStatus());
-               }
-            orderInfo.setAddressId(shipAddress.getAddressId());
-            orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",shipaddressVo.getId()));
+            orderInfo.setId(shipaddressVo.getId());
+            orderInfo.setPatientPhone(shipaddressVo.getPatientPhone());
+            orderInfo.setPatientName(shipaddressVo.getPatientName());
+            orderInfo.setStreetAddress(shipaddressVo.getStreetAddress());
+            orderInfo.setStreet(shipaddressVo.getStreet());
+            orderInfo.setCity(shipaddressVo.getCity());
+            orderInfo.setState(shipaddressVo.getState());
+            orderInfo.setCountry(shipaddressVo.getCountry());
+            orderInfo.setPostalCode(shipaddressVo.getPostalCode());
+
+            orderInfoMapper.updateById(orderInfo);
+
             return true;
         }
-        OrderInfo orderInfo = new OrderInfo();
         orderInfo.setOrderStatus(shipaddressVo.getOrderStatus());
         orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",shipaddressVo.getId()));
         return true;

@@ -64,4 +64,7 @@ public interface IEquipmentService
     public void updateEquipmentStatus(String[] statusList);
 
     public Equipment selectEquipmentByEquipmentCode(String equipmentCode);
+
+
+
 }

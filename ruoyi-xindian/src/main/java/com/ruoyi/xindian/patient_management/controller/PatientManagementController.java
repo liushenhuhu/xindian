@@ -80,13 +80,14 @@ public class PatientManagementController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PatientManagement patientManagement) {
+    public TableDataInfo list(PatientManagement patientManagement,HttpServletRequest request) {
 //        startPage();
 //        List<PatientManagement> list_add = new ArrayList<>();
+        LoginUser loginUser = tokenService.getLoginUser(request);
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
 //        Long userId = getUserId();
-        SysUser sysUser = userService.selectUserById(getUserId());
+        SysUser sysUser = userService.selectUserById(loginUser.getUser().getUserId());
         if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 101) {
             String hospitalCode = sysUser.getHospitalCode();
             patientManagement.setHospitalCode(hospitalCode);
@@ -275,7 +276,6 @@ public class PatientManagementController extends BaseController {
     public AjaxResult getInfo(Long hospitalId, HttpServletRequest request) {
 
         LoginUser loginUser = tokenService.getLoginUser(request);
-
 
             if (SecurityUtils.isAdmin(loginUser.getUser().getUserId())) {
                 if (hospitalId.equals(1L)){

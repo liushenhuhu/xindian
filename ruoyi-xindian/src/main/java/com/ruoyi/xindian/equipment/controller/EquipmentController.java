@@ -13,6 +13,7 @@ import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -189,6 +190,15 @@ public class EquipmentController extends BaseController {
             EquipmentCodeList.deleteCharAt(EquipmentCodeList.length()-1);
         }
         return AjaxResult.success(EquipmentCodeList);
+    }
+
+    @GetMapping("/code")
+    public AjaxResult code(String equimentCode){
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equimentCode);
+        if (equipment!=null){
+            return AjaxResult.success(true);
+        }
+        return AjaxResult.error();
     }
 
 }

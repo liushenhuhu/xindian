@@ -68,10 +68,7 @@ public class OrderInfo implements Serializable {
     @Excel(name = "用户标识")
     private String openId;
 
-    /**
-     * 用户地址id
-     */
-    private Long addressId;
+
 
     /**
      * 创建时间
@@ -92,12 +89,22 @@ public class OrderInfo implements Serializable {
     @TableField(exist = false)
     List<SuborderOrderInfo> suborderOrderInfos = new ArrayList<>();
 
-    /**
-     * 地址
-     */
-    @Excel(name = "地址")
-    @TableField(exist = false)
-    private ShipAddress shipAddress;
+    @Excel(name = "用户电话")
+    private String patientPhone;
+    @Excel(name = "用户姓名")
+    private String patientName;
+    @Excel(name = "街道地址")
+    private String streetAddress;
+    @Excel(name = "街道")
+    private String street;
+    @Excel(name = "城市")
+    private String city;
+    @Excel(name = "省份")
+    private String state;
+    @Excel(name = "县")
+    private String country;
+    @Excel(name = "邮政编码")
+    private String postalCode;
 
     /**
      * 用户信息

@@ -21,9 +21,9 @@
      <el-col :span="12"><div class="grid-content bg-purple-dark">联系电话：{{form.shipAddress.patientPhone}}</div></el-col>
    </el-row>
    <el-row>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">省市县街地址：{{form.shipAddress.state+' / '+form.shipAddress.city+' / '+form.shipAddress.country+' / '+form.shipAddress.street}}</div></el-col>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">详情地址：{{form.shipAddress.streetAddress}}</div></el-col>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">邮政编码：{{form.shipAddress.postalCode}}</div></el-col>
+     <el-col :span="8"><div class="grid-content bg-purple-dark">省市县街地址：{{form.state+' / '+form.city+' / '+form.country+' / '+form.street}}</div></el-col>
+     <el-col :span="8"><div class="grid-content bg-purple-dark">详情地址：{{form.streetAddress}}</div></el-col>
+     <el-col :span="8"><div class="grid-content bg-purple-dark">邮政编码：{{form.postalCode}}</div></el-col>
    </el-row>
    <el-row>
      <el-col :span="8"><div class="grid-content bg-purple-dark">订单商品详情</div></el-col>

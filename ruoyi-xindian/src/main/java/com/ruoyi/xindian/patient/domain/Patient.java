@@ -51,6 +51,14 @@ public class Patient extends BaseEntity {
     @Excel(name = "患者性别")
     private String patientSex;
 
+    public Date getDetectionTime() {
+        return detectionTime;
+    }
+
+    public void setDetectionTime(Date detectionTime) {
+        this.detectionTime = detectionTime;
+    }
+
     /**
      * 患者来源
      */
@@ -96,6 +104,10 @@ public class Patient extends BaseEntity {
     private Long detectionNum;
 
     private String pId;
+
+
+
+    private Date detectionTime;
 
 
     private List<AlertLog> alertLogList;

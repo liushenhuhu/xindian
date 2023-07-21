@@ -17,6 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,8 +105,19 @@ public class AppDataController extends BaseController {
         if(appData.getPatientAge() != null){
             patient.setPatientAge(appData.getPatientAge());
         }
+
         List<Patient> patientList = patientService.selectPatientList(patientSel);
         if (null == patientList || patientList.size() == 0) {
+            Date endDate =new Date();
+            // 创建 Calendar 实例并设置原始日期
+            Calendar calendar = Calendar.getInstance();
+            // 设置日期
+            calendar.setTime(endDate);
+            // 加一年
+            calendar.add(Calendar.YEAR, 1);
+            // 获取加一年后的日期
+            Date newDate = calendar.getTime();
+//            patient.setDetectionTime(newDate);
             patientService.insertPatient(patient);
         } else {
             Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());

@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.patient.mapper;
 
 import com.ruoyi.xindian.patient.domain.Patient;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -83,4 +85,7 @@ public interface PatientMapper
     public Patient selectPatientByNameAndPhone(Patient patient);
 
     public int delPatientByPatientPhone(String patientPhone);
+
+
+    int updateDetectionNumInt(@Param("patientPhone") String patientPhone);
 }

@@ -1,12 +1,15 @@
 package com.ruoyi.xindian.detection.controller;
 
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
 
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -141,6 +144,28 @@ public class DetectionController extends BaseController
         else{
             return AjaxResult.error("今日次数已用用完");
         }
+
+
+//        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
+//
+//        if (patient.getDetectionNum()>0){
+//            Date date = new Date();
+//
+//            if (date.getTime()-patient.getDetectionTime().getTime()>0){
+//                Patient patient1 = new Patient();
+//                patient1.setPatientId(patient.getPatientId());
+//                patient1.setDetectionNum(0L);
+//                patientService.updatePatient(patient1);
+//                patient.setDetectionNum(0L);
+//            }
+//
+//            return AjaxResult.success(patient);
+//
+//        }
+//
+//        return AjaxResult.success(patient);
+
+
     }
 
 }

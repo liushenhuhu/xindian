@@ -28,10 +28,10 @@
         <include refid="selectVipPatientVo"/>
         where id = #{id}
     </select>
-    <select id="selectPhone" resultType="com.ruoyi.xindian.vipPatient.domain.VipPatient">
+
+    <select id="selectPhone" resultType="com.ruoyi.xindian.vipPatient.domain.VipPatient" resultMap="VipPatientResult">
         <include refid="selectVipPatientVo"></include>
         where patient_phone= #{phone}
-
     </select>
 
     <insert id="insertVipPatient" parameterType="VipPatient" useGeneratedKeys="true" keyProperty="id">
@@ -55,6 +55,11 @@
             <if test="endDate != null">end_date = #{endDate},</if>
             <if test="vipNum != null">vip_num = #{vipNum},</if>
         </trim>
+        where id = #{id}
+    </update>
+    <update id="updateVipNumInt">
+        update  vip_patient
+           set vip_num = vip_num -1
         where id = #{id}
     </update>
 

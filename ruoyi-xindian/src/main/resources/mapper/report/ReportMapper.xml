@@ -17,10 +17,11 @@
         <result property="handlingSuggestion"    column="handling_suggestion"    />
         <result property="healthAdvice"    column="health_advice"    />
         <result property="pPhone"    column="p_phone"    />
+        <result property="patientSymptom"    column="patient_symptom"    />
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis, d_phone, handling_suggestion, health_advice, p_phone from report
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis, d_phone, handling_suggestion, health_advice, p_phone,patient_symptom from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
@@ -37,6 +38,7 @@
             <if test="handlingSuggestion != null  and handlingSuggestion != ''"> and handling_suggestion = #{handlingSuggestion}</if>
             <if test="healthAdvice != null  and healthAdvice != ''"> and health_advice = #{healthAdvice}</if>
             <if test="pPhone != null  and pPhone != ''"> and p_phone = #{pPhone}</if>
+            <if test="patientSymptom != null  and patientSymptom != ''"> and patient_symptom = #{patientSymptom}</if>
         </where>
         order by report_time desc
     </select>
@@ -72,6 +74,7 @@
             <if test="handlingSuggestion != null">handling_suggestion,</if>
             <if test="healthAdvice != null">health_advice,</if>
             <if test="pPhone != null">p_phone,</if>
+            <if test="patientSymptom != null">patient_symptom,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pId != null and pId != ''">#{pId},</if>
@@ -84,7 +87,7 @@
             <if test="dPhone != null">#{dPhone},</if>
             <if test="handlingSuggestion != null">#{handlingSuggestion},</if>
             <if test="healthAdvice != null">#{healthAdvice},</if>
-            <if test="pPhone != null">#{pPhone},</if>
+            <if test="patientSymptom != null">#{patientSymptom},</if>
         </trim>
     </insert>
 
@@ -102,6 +105,7 @@
             <if test="handlingSuggestion != null">handling_suggestion = #{handlingSuggestion},</if>
             <if test="healthAdvice != null">health_advice = #{healthAdvice},</if>
             <if test="pPhone != null">p_phone = #{pPhone},</if>
+            <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
         </trim>
         where report_id = #{reportId}
     </update>
