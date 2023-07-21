@@ -5,14 +5,23 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
+import com.ruoyi.xindian.wx_pay.domain.MessageTemplateEntity;
+import com.ruoyi.xindian.wx_pay.domain.MessageValueEntity;
+import com.ruoyi.xindian.wx_pay.domain.SendMessageVo;
+import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -20,7 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Service
+@Log4j2
 public class WXPublicRequest {
 
 //    @Resource
@@ -42,11 +52,18 @@ public class WXPublicRequest {
 
         Set<String> userOpenId = getUserOpenId(accessToken);
 
+        System.out.println(userOpenId);
+
     }
 
 
-
-
+    /**
+     * 微信公众号调用接口
+     * @param first
+     * @param userOpenid
+     * @param name
+     * @param serviceName
+     */
     public  void sendOrderMsg(String first,
                               String userOpenid,
                               String name,
@@ -89,22 +106,55 @@ public class WXPublicRequest {
     }
 
 
+    public  void sendMsg(String first, String userOpenid, String name, String serviceName) throws Exception {
+
+        MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity();
+        String time = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(new Date());
+        messageTemplateEntity.setMessageData(new MessageValueEntity("项目名称"), new MessageValueEntity(time), new MessageValueEntity("这是描述"));
+
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("touser", "wx4a6ad6d7e5e6xxxx"); //用户openid
+        paramsMap.put("template_id", "h7eKu5vOSbbObOxg9psqYZ-NiRyiiPi9wMuWqExxxx"); //推送消息模板id
+        paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
+        String wxAccessToken = getWXAccessToken();
+
+        HttpHeaders headers = new HttpHeaders(); //构建请求头
+        headers.setContentType(MediaType.APPLICATION_JSON); //设置内容类型为json
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap, headers); //构建http请求实体
+
+        //发送请求路径拼接获取到的access_token
+        SendMessageVo sendMessageVo = restTemplate.postForObject("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" +
+                wxAccessToken, request, SendMessageVo.class);
+
+        if (null == sendMessageVo) {
+            throw new RuntimeException("推送消息失败");
+        }
+        if (sendMessageVo.getErrcode() != 0) {
+            log.error("推送消息失败,原因：{}", sendMessageVo.getErrmsg());
+            throw new RuntimeException("推送消息失败");
+        }
+        log.info("推送消息成功");
+
+    }
+
+
+
+
 
     /**
-     *获取token
+     *获取公众号token
      * @return
      * @throws Exception
      */
     public String getAccessToken()throws Exception{
+
 
         if(Boolean.TRUE.equals(redisTemplate.hasKey("wxToken"))){
 
             return redisTemplate.opsForValue().get("wxToken");
         }else{
             String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
-                    + WXPayConstants.WX_PUBLIC_ID
-                    +"&secret="
-                    + WXPayConstants.WX_PUBLIC_SECRET;
+                    + WXPayConstants.WX_PUBLIC_ID+"&secret="+WXPayConstants.WX_PUBLIC_SECRET;
             String res=restTemplate.getForObject(url,String.class);
             JSONObject jsonObject = JSONObject.parseObject(res);
             String accessToken = jsonObject.getString("access_token");
@@ -113,6 +163,34 @@ public class WXPublicRequest {
         }
 
     }
+
+
+    /**
+     *获取小程序token
+     * @return
+     * @throws Exception
+     */
+    public String getWXAccessToken()throws Exception{
+
+        if(Boolean.TRUE.equals(redisTemplate.hasKey("wxXToken"))){
+
+            return redisTemplate.opsForValue().get("wxXToken");
+        }else{
+            String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
+                    + WXPayConstants.APP_ID
+                    +"&secret="
+                    + WXPayConstants.WX_SECRET;
+            String res=restTemplate.getForObject(url,String.class);
+            JSONObject jsonObject = JSONObject.parseObject(res);
+            String accessToken = jsonObject.getString("access_token");
+            redisTemplate.opsForValue().set("wxXToken",accessToken,20,TimeUnit.MINUTES);
+            return accessToken;
+        }
+
+    }
+
+
+
 
     /**
      * 获取关注公众号的所有
@@ -125,6 +203,8 @@ public class WXPublicRequest {
                 +accessToken;
         JSONObject jsonObject = getResponse(usersGetUrl);
         Set<String> openIds =new HashSet<String>();
+
+
         Integer total=0,count=0;
         try {
             //关注该公众账号的总用户数

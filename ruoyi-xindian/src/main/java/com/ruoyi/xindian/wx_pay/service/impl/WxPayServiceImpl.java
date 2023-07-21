@@ -63,7 +63,6 @@ public class WxPayServiceImpl implements WxPayService {
                     return;
                 }
 
-
                 //更新订单状态
                 orderInfoService.updateStatusByOrderNo(orderNo, OrderStatus.SUCCESS);
 

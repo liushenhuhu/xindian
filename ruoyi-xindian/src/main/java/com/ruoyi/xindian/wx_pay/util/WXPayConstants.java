@@ -11,11 +11,12 @@ public class WXPayConstants {
     /*
         自定义内容     */
     /*支付*/
-    public static final String APP_ID = "wx50da6a0dfc5c45c0";//appid  填写你们自己的
-    public static final String WX_PUBLIC_ID = "wx219c20026db0351e";//appid  填写你们自己的
+    public static final String APP_ID = "wx50da6a0dfc5c45c0";//appid  填写你们自己的 小程序
+    public static final String WX_PUBLIC_ID ="wx219c20026db0351e";//appid  填写你们自己的 公众号
     public static final String MCH_ID = "1645541073";//商家ID   填写你们自己的
-    public static final String SECRET = "e74ff167d287ba25aefc87d9afe5fcf5";//APP KEY
-    public static final String WX_PUBLIC_SECRET = "e74ff167d287ba25aefc87d9afe5fcf5";//APP KEY
+    public static final String SECRET = "e74ff167d287ba25aefc87d9afe5fcf5";//微信支付
+    public static final String WX_PUBLIC_SECRET = "c55d24177dc7f5cff61d8bebfdaa7d51";//微信公众号
+    public static final String WX_SECRET = "4a10ac992f6bd399982aa1ec5e67a241";//微信小程序
     public static final String OPENID_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
     public static final String NOTIFY_URL = "";//回调ip
     public static final String UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一下单接口

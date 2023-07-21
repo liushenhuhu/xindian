@@ -16,6 +16,7 @@ public class ShipAddress extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
 
+
     private Long addressId;
     /**
      * 用户id
@@ -36,7 +37,7 @@ public class ShipAddress extends BaseEntity {
     @Excel(name = "县")
     private String country;
     @Excel(name = "邮政编码")
-    private String postalCode;
+        private String postalCode;
     @Excel(name = "默认地址标识符")
     private Long defaultFlag;
 

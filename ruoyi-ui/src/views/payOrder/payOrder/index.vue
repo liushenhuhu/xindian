@@ -136,13 +136,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收件人名称" prop="patientName1">
-          <el-input v-model="shipaddress1.patientName" placeholder="请输入收件人名称"  :disabled="true"/>
+          <el-input v-model="form.patientName" placeholder="请输入收件人名称"  :disabled="true"/>
         </el-form-item>
         <el-form-item label="收件人手机号" prop="patientPhone1">
-          <el-input v-model="shipaddress1.patientPhone" placeholder="请输入收件人手机号"  :disabled="true"/>
+          <el-input v-model="form.patientPhone" placeholder="请输入收件人手机号"  :disabled="true"/>
         </el-form-item>
         <el-form-item label="收件人地址" prop="patientName1">
-          <el-input style="width: 550px" v-model="shipaddress1.state+'/'+shipaddress1.city+'/'+shipaddress1.country+'/'+shipaddress1.street+'/'+shipaddress1.streetAddress" placeholder="请输入收件人地址"  :disabled="true"/> <el-button type="success" @click="addressUpdate()">修改地址</el-button>
+          <el-input style="width: 550px" v-model="form.state+'/'+form.city+'/'+form.country+'/'+form.street+'/'+form.streetAddress" placeholder="请输入收件人地址"  :disabled="true"/> <el-button type="success" @click="addressUpdate()">修改地址</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -392,7 +392,22 @@ export default {
     addressAdd(){
       this.$refs["address"].validate(valid => {
         if (valid) {
+          console.log(this.shipaddress)
             this.shipaddress1 = this.shipaddress
+          this.form.country= this.shipaddress.country
+
+            this.form.city= this.shipaddress.city
+
+            this.form.street= this.shipaddress.street
+
+            this.form.patientPhone= this.shipaddress.patientPhone
+
+            this.form.streetAddress= this.shipaddress.streetAddress
+
+            this.form.postalCode= this.shipaddress.postalCode
+            this.form.state= this.shipaddress.state
+
+            this.form.patientName= this.shipaddress.patientName
             this.shipaddress1.id = this.form.id
             this.addressOpen = false;
             this.shipaddress1.isUpdate="修改"
@@ -493,7 +508,6 @@ export default {
       getInfo(id).then(response => {
         console.log(response)
         this.form = response.data;
-        this.shipaddress1 = response.data.shipAddress
         this.open = true;
         this.title = "修改订单状态或地址";
         this.shipaddress1.id = id

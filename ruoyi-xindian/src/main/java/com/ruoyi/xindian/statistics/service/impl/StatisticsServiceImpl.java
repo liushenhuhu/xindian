@@ -44,4 +44,9 @@ public class StatisticsServiceImpl implements IStatisticsService {
     public List<Statistics> selectDateList(Statistics str) {
         return statisticsMapper.selectDateList(str);
     }
+
+    @Override
+    public List<Statistics> typeList() {
+        return statisticsMapper.typeList();
+    }
 }

@@ -326,7 +326,6 @@ public class ReportController extends BaseController
     @PutMapping("/dataLabby")
     public AjaxResult dataLabby(@RequestBody Report report)
     {
-
         Long hospitalId = Long.valueOf(report.getHospital());
         Long s = report.getReportId();
         dataLabby dataLabby = new dataLabby();

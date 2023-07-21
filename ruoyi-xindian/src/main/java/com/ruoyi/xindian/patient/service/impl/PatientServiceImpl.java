@@ -1,10 +1,17 @@
 package com.ruoyi.xindian.patient.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.mapper.PatientMapper;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.vipPatient.domain.VipPatient;
+import com.ruoyi.xindian.vipPatient.mapper.VipPatientMapper;
+import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
+import com.ruoyi.xindian.wx_pay.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +27,9 @@ public class PatientServiceImpl implements IPatientService
     @Autowired
     private PatientMapper patientMapper;
 
+
+    @Autowired
+    private VipPatientMapper vipPatientMapper;
     /**
      * 查询患者
      *
@@ -121,5 +131,19 @@ public class PatientServiceImpl implements IPatientService
     @Override
     public Patient selectPatientByNameAndPhone(Patient patient) {
         return patientMapper.selectPatientByNameAndPhone(patient);
+    }
+
+    @Transactional
+    @Override
+    public Boolean detectionNumSubtract(String patientPhone) {
+        VipPatient vipPhone = vipPatientMapper.selectPhone(patientPhone);
+
+        if (vipPhone!=null){
+                     // 设置库存减一的更新操作
+            vipPatientMapper.updateVipNumInt(vipPhone.getId());
+        }else {
+            patientMapper.updateDetectionNumInt(patientPhone);
+        }
+        return true;
     }
 }

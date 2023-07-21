@@ -74,6 +74,8 @@ public class Report extends BaseEntity
 
     private String hospital;
 
+    private String patientSymptom;
+
     /**诊断状态*/
 
     public String getpId() {

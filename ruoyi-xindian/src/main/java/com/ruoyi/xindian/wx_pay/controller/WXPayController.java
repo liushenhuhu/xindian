@@ -40,7 +40,6 @@ import static com.ruoyi.xindian.wx_pay.enums.OrderStatus.SUCCESS;
 @RequestMapping(value = "/api/v1")
 public class WXPayController {
 
-
     @Resource
     private WxPayService wxPayService;
     @Resource
@@ -119,6 +118,7 @@ public class WXPayController {
             paraMap.put("notify_url",WXPayConstants.CALLBACK_URL);// 此路径是微信服务器调用支付结果通知路径
             paraMap.put("trade_type", "JSAPI");
             paraMap.put("openid", openId);
+            paraMap.put("receipt", "Y");
             String sign = WXPayUtil.generateSignature(paraMap, WXPayConstants.PATERNER_KEY);//商户密码
             //生成签名. 注意，若含有sign_type字段，必须和signType参数保持一致。
             paraMap.put("sign", sign);

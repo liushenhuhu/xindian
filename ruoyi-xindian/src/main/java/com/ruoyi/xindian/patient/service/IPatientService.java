@@ -89,4 +89,7 @@ public interface IPatientService
     public void updateMonitoringStatus2(String equipment);
 
     public Patient selectPatientByNameAndPhone(Patient patient);
+
+
+    Boolean detectionNumSubtract(String patientPhone );
 }

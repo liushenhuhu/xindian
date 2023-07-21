@@ -13,6 +13,7 @@ import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -190,12 +191,14 @@ public class EquipmentController extends BaseController {
         }
         return AjaxResult.success(EquipmentCodeList);
     }
-    @GetMapping("/isPermission/{equipmentCode}")
-    public AjaxResult isPermission(@PathVariable String equipmentCode) {
-        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentCode);
-        if(equipment==null){
-            return AjaxResult.error("当前设备无权限，请联系后台管理员添加权限");
+
+    @GetMapping("/code")
+    public AjaxResult code(String equimentCode){
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equimentCode);
+        if (equipment!=null){
+            return AjaxResult.success(true);
         }
-        return AjaxResult.success("认证通过");
+        return AjaxResult.error();
     }
+
 }
