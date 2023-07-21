@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="ProductImgs" id="ProductImgsResult">
         <result property="productId"    column="product_id"    />
-        <result property="productImags"    column="img"    />
+        <result property="img"    column="img"    />
         <result property="id"    column="id"    />
     </resultMap>
 
@@ -71,7 +71,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select img from product_imgs
         where product_id = #{productId}
     </select>
-
+    <select id="selectIdAndImg" parameterType="Long" resultMap="ProductImgsResult">
+        select id,img from product_imgs
+        where product_id = #{productId}
+    </select>
+    <insert id="insertProductImgs" parameterType="java.util.ArrayList">
+        insert into product_imgs(product_id,img) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.productId},#{item.img})
+        </foreach>
+    </insert>
 
 
     <insert id="insertTProduct" parameterType="TProduct" useGeneratedKeys="true" keyProperty="productId">
@@ -87,6 +96,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="productNum != null">product_num,</if>
             <if test="sales != null">sales,</if>
+            <if test="type != null">type,</if>
+            <if test="urlOne != null">url_one,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="productName != null">#{productName},</if>
@@ -99,6 +110,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="productNum != null">#{productNum},</if>
             <if test="sales != null">#{sales},</if>
+            <if test="type != null">#{type},</if>
+            <if test="urlOne != null">#{urlOne},</if>
          </trim>
     </insert>
 
@@ -115,12 +128,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="productNum != null">product_num = #{productNum},</if>
             <if test="sales != null">sales = #{sales},</if>
+            <if test="urlOne != null">url_one = #{urlOne},</if>
         </trim>
         where product_id = #{productId}
     </update>
 
     <delete id="deleteTProductByProductId" parameterType="Long">
         delete from t_product where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteByIdImg" parameterType="Integer">
+        delete from product_imgs where id in
+        <foreach collection="array" item="item"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAllImgs" parameterType="Long">
+        delete from product_imgs where product_id = #{productId}
     </delete>
 
     <delete id="deleteTProductByProductIds" parameterType="String">

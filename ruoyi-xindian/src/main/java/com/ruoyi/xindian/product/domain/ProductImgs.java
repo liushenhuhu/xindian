@@ -10,5 +10,5 @@ public class ProductImgs extends BaseEntity {
 
     private Long productId;
 
-    private String productImags;
+    private String img;
 }

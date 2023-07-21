@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.product.mapper.TProductMapper;
 import com.ruoyi.xindian.product.domain.TProduct;
 import com.ruoyi.xindian.product.service.ITProductService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 商品信息Service业务层处理
@@ -69,6 +70,7 @@ public class TProductServiceImpl implements ITProductService
         return tProductMapper.insertTProduct(tProduct);
     }
 
+
     /**
      * 修改商品信息
      *
@@ -109,5 +111,26 @@ public class TProductServiceImpl implements ITProductService
     @Override
     public List<TProduct> selectTProductListToWeb(TProduct tProduct) {
         return tProductMapper.selectTProductListToWeb(tProduct);
+    }
+
+    @Override
+    public int insertProductImgs(List tProducts) {
+        return tProductMapper.insertProductImgs(tProducts);
+    }
+
+    //根据id删除商品所有介绍图片
+    @Override
+    public void deleteAllImages(Long productId) {
+        tProductMapper.deleteAllImgs(productId);
+    }
+
+    @Override
+    public List<ProductImgs> selectIdAndImg(Long productId) {
+        return tProductMapper.selectIdAndImg(productId);
+    }
+
+    @Override
+    public void deleteByIdImg(Integer[] delImgs) {
+        tProductMapper.deleteByIdImg(delImgs);
     }
 }

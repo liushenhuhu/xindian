@@ -22,6 +22,7 @@ public interface TProductMapper
     public TProduct selectTProductByProductId(Long productId);
 
     public List<String> selectAllImages(Long productId);
+    public List<ProductImgs> selectIdAndImg(Long productId);
 
     /**
      * 查询商品信息列表
@@ -65,4 +66,10 @@ public interface TProductMapper
 
 
     List<TProduct> selectTProductListToWeb(TProduct tProduct);
+    //添加多张商品介绍图片
+    public int insertProductImgs(List tProducts);
+
+    public void deleteAllImgs(Long productId);
+
+    void deleteByIdImg(Integer[] delImgs);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.xindian.product.domain.ProductImgs;
 import com.ruoyi.xindian.product.domain.TProduct;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 商品信息Service接口
@@ -65,4 +66,12 @@ public interface ITProductService
 
 
     List<TProduct> selectTProductListToWeb(TProduct tProduct);
+    //添加多张商品介绍图片
+    public int insertProductImgs(List tProducts);
+
+    public void deleteAllImages(Long productId);
+
+    List<ProductImgs> selectIdAndImg(Long productId);
+
+    void deleteByIdImg(Integer[] delImgs);
 }
