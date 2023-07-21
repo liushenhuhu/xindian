@@ -113,6 +113,11 @@ public class StatisticsController extends BaseController {
         return str;
     }
 
+    @GetMapping ("/typeList")
+    public List<Statistics> typeList(Statistics statistics){
+        return statisticsService.typeList();
+    }
+
 
 
 }

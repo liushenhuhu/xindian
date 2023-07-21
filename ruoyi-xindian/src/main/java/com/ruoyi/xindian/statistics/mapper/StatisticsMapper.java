@@ -20,4 +20,6 @@ public interface StatisticsMapper {
     List<AgeStatistics> ageListByWoman(AgeStatistics str);
 
     List<Statistics> selectDateList(Statistics str);
+
+    List<Statistics> typeList();
 }

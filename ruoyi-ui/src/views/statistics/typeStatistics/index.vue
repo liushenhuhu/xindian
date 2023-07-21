@@ -1,25 +1,29 @@
 <template>
-  <div>
+  <div style="width: 100%;height: 100%">
+    <label>心电类型统计图</label>
   <el-row>
     <el-col :span="12">
-        <div id="myChart1" style="width: 100%;height: 400px"> </div>
+        <div id="myChart1" style="width: 100%;height: 520%;margin-left: 25%;margin-top: 10%"> </div>
     </el-col>
-    <el-col :span="12">
-      <div id="myChart2" :style="{width: '75%', height: '350%'}"> </div>
-    </el-col>
+<!--    <el-col :span="12">
+      <div id="myChart2" style="width: 100%;height: 400%"> </div>
+      <label style="margin-left: 70%">JECG12</label>
+    </el-col>-->
   </el-row>
-  <el-row>
+<!--  <el-row style="margin-right: 15%">
     <el-col :span="12">
-      <div id="myChart3" :style="{width: '75%', height: '350%'}"> </div>
+      <div id="myChart3" style="width: 100%;height: 400%"> </div>
+      <label style="margin-left: 70%">DECGsingle</label>
     </el-col>
     <el-col :span="12">
-      <div id="myChart4" :style="{width: '75%', height: '350%'}"> </div>
+      <div id="myChart4" style="width: 100%;height: 400%"> </div>
+      <label style="margin-left: 70%">DECG12</label>
     </el-col>
-  </el-row>
+  </el-row>-->
   </div>
 </template>
 <script>
-import { listStatistics, selectDoctor, dateList } from "@/api/statistics/statistics";
+import { listTypeStatistics } from "@/api/statistics/typeStatistics";
 export default {
   name: 'hello',
   data () {
@@ -27,7 +31,9 @@ export default {
       showSearch: true,
       statistics: [],
       options: [],
-      countArr: [],
+      arr: [],
+      xArr: [],
+      yArr: [],
       show: true,
       // 总条数
       total: 0,
@@ -39,12 +45,10 @@ export default {
         month: null,
         reportType:null,
       },
-      tableData: []
     }
   },
   created() {
     this.getList();
-    this.selectDoctor();
   },
   mounted(){
     this.drawLine1();
@@ -57,172 +61,48 @@ export default {
       let status = this;
       myChart.off('click');
       myChart.setOption({
-        title: {
-          text: 'JECGsingle'
-        },
+        /*title: {
+          text: '心电类型统计图'
+        },*/
         tooltip: {},
         xAxis: {
-          data: ["一月", "二月", "三月", "四月", "五月",
-            "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
+          data: this.xArr,
+          axisLabel:{
+            interval: 0,
+            rotate : 40,
+          }
         },
         yAxis: {},
         series: [{
-          name: '诊断次数',
+          name: '数量',
           type: 'bar',
-          data: this.countArr
+          data: this.yArr
         }],
         grid: {
-          bottom: '10%',
-          top: '25%',
+          bottom: '30%',
+          top: '10%',
           right: 0,
           left: '40%',
         },
       });
-      myChart.on('click', function (params) {
-        status.queryParams.month = params.name;
-        status.show = false;
-        document.getElementById("myChart").style.display='none';
-        document.getElementById("table1").style.display='';
-        status.getListData();
-      })
-    },
-    drawLine2() {
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById('myChart2'))
-      // 绘制图表
-      let status = this;
-      myChart.off('click');
-      myChart.setOption({
-        title: {
-          text: ''
-        },
-        tooltip: {},
-        xAxis: {
-          data: ["一月", "二月", "三月", "四月", "五月",
-            "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
-        },
-        yAxis: {},
-        series: [{
-          name: '诊断次数',
-          type: 'bar',
-          data: this.countArr
-        }],
-        grid: {
-          bottom: '10%',
-          top: '25%',
-          right: 0,
-          left: '40%',
-        },
-      });
-      myChart.on('click', function (params) {
-        status.queryParams.month = params.name;
-        status.show = false;
-        document.getElementById("myChart").style.display='none';
-        document.getElementById("table1").style.display='';
-        status.getListData();
-      })
-    },
-    drawLine3() {
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById('myChart3'))
-      // 绘制图表
-      let status = this;
-      myChart.off('click');
-      myChart.setOption({
-        title: {
-          text: ''
-        },
-        tooltip: {},
-        xAxis: {
-          data: ["一月", "二月", "三月", "四月", "五月",
-            "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
-        },
-        yAxis: {},
-        series: [{
-          name: '诊断次数',
-          type: 'bar',
-          data: this.countArr
-        }],
-        grid: {
-          bottom: '10%',
-          top: '25%',
-          right: 0,
-          left: '40%',
-        },
-      });
-      myChart.on('click', function (params) {
-        status.queryParams.month = params.name;
-        status.show = false;
-        document.getElementById("myChart").style.display='none';
-        document.getElementById("table1").style.display='';
-        status.getListData();
-      })
-    },
-    drawLine4() {
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById('myChart4'))
-      // 绘制图表
-      let status = this;
-      myChart.off('click');
-      myChart.setOption({
-        title: {
-          text: ''
-        },
-        tooltip: {},
-        xAxis: {
-          data: ["一月", "二月", "三月", "四月", "五月",
-            "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
-        },
-        yAxis: {},
-        series: [{
-          name: '诊断次数',
-          type: 'bar',
-          data: this.countArr
-        }],
-        grid: {
-          bottom: '10%',
-          top: '25%',
-          right: 0,
-          left: '40%',
-        },
-      });
-      myChart.on('click', function (params) {
-        status.queryParams.month = params.name;
-        status.show = false;
-        document.getElementById("myChart").style.display='none';
-        document.getElementById("table1").style.display='';
-        status.getListData();
-      })
-    },
-    selectDoctor() {
-      selectDoctor().then(response => {
-        this.options = response;
-      })
-    },
-    getListData(){
-      dateList(this.queryParams).then(response => {
-        //console.log(response.rows);
-        this.tableData = response.rows;
-        this.total = response.total;
-      })
     },
     /** 查询 */
     getList() {
       this.loading = true;
-      listStatistics(this.queryParams).then(response => {
-        //console.log(response.rows);
-        let data = response.rows;
-        let countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        for (let j = 0; j < data.length; j++) {
-          countArr[data[j].month - 1] = parseInt(data[j].count);
-        }
-        this.countArr = countArr;
+      listTypeStatistics(this.queryParams).then(response => {
+        //console.log(response);
+        this.arr = response;
+        this.arr.forEach(item => {
+            if(item.reportType === 'JECGsingleGZ' || item.reportType === 'JECG12YXD' || item.reportType === 'JECGsingleWL' || item.reportType === 'JECG12SX'){
+              this.xArr.push(item.reportType)
+              this.yArr.push(item.count);
+            }
+        })
         this.drawLine1();
-        this.drawLine2();
+        /*this.drawLine2();
         this.drawLine3();
         this.drawLine4();
-        //console.log(countArr);
-        this.loading = false;
+        this.loading = false;*/
       });
     },
     /** 搜索按钮操作 */

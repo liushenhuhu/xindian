@@ -80,5 +80,9 @@
             patient_management p on r.p_id = p.p_id where MONTH(r.report_time) = #{month} and MONTH(p.connection_time) = #{month} and r.diagnosis_doctor is not null) as c order by timeCount DESC
     </select>
 
+    <select id="typeList" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
+        select report_type as reportType, count(*) as count from report GROUP BY report_type
+    </select>
+
 
 </mapper>
