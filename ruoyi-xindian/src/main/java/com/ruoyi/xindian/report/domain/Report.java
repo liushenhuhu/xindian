@@ -76,6 +76,10 @@ public class Report extends BaseEntity
 
     private String patientSymptom;
 
+    /** 报告时间 */
+    private String endReportTime;
+    private String startReportTime;
+
     /**诊断状态*/
 
     public String getpId() {

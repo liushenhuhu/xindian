@@ -455,7 +455,7 @@ public class ReportController extends BaseController
             key= new SimpleDateFormat("yyyy-MM-dd").format(re.getReportTime());
 
             if(re.getIntelligentDiagnosis()!=null && re.getIntelligentDiagnosis().contains("正常")){
-                if(abnormal.containsKey(key)){
+                if(normal.containsKey(key)){
                     normal.put(key,normal.get(key)+1);
                 } else{
                     normal.put(key,1);

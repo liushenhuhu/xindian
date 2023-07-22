@@ -8,4 +8,5 @@ public class SendMessageVo {
        private Integer     errcode;
        private String     errmsg;
        private Long     msgid;
+       private String paymch_info;
 }

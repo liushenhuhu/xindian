@@ -31,7 +31,7 @@
             <if test="diagnosisStatus != null"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
-            <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
+            <if test="startReportTime != null and startReportTime != '' and endReportTime != null and endReportTime != ''"> and report_time between #{startReportTime} and DATE_ADD(#{endReportTime}, INTERVAL 1 DAY) </if>
             <if test="reportType != null  and reportType != ''"> and report_type like concat(#{reportType}, '%')</if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis = #{intelligentDiagnosis}</if>
             <if test="dPhone != null  and dPhone != ''"> and d_phone = #{dPhone}</if>

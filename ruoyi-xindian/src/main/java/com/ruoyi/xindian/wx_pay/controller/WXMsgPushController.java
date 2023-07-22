@@ -37,7 +37,10 @@ public class WXMsgPushController {
     @GetMapping("/ww")
     public void text() throws Exception {
 //        WXPublicRequest.sendOrderMsg("你好，有一条新的问诊订单","otRV25MQPOOEn-qJmZve9im0Phno", "张三","这是一条测试消息");
-        wxPublicRequest.sendOrderMsg("这是一条消息","o3aud50kcKiIIlwuDYCh_DjZjq1o","张三","这是一条测试消息");
+//        wxPublicRequest.sendOrderMsg("这是一条消息","o3aud50kcKiIIlwuDYCh_DjZjq1o","张三","这是一条测试消息");
+//        wxPublicRequest. getCardInvoiceSeturl();
+        wxPublicRequest.checkCardInvoiceSetbizattrContact();
+//        wxPublicRequest.setCardInvoiceSetbizattrContact();
     }
 
 
