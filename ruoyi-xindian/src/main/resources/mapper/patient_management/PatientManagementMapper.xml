@@ -121,6 +121,7 @@
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
+            <if test="endReportTime != null and endReportTime != ''"> and date_format(report_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -130,7 +131,6 @@
         </where>
         order by online_status desc, connection_time desc
     </select>
-
     <select id="selectPatientManagementJECGList" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         <where>
@@ -475,6 +475,19 @@
     <select id="getPhoneByPId" parameterType="String" resultMap="PatientManagementResult">
         select patient_phone from patient_management
         where p_id = #{pId}
+    </select>
+    <select id="selectAllDateList" resultType="com.ruoyi.xindian.patient_management.vo.DateListVO">
+        select   DATE_FORMAT(report_time,'%Y-%m-%d') as date,COUNT(report_time) as info
+        from patient_management m
+            inner join patient p on p.patient_phone = m.patient_phone
+            inner join equipment e on m.equipment_code = e.equipment_code
+            left join hospital h on m.hospital_code = h.hospital_code
+            left join report r on m.p_id = r.p_id
+      <where>
+        <if test="ecgType != null  and ecgType != ''"> and ecg_type like concat(#{ecgType}, '%') </if>
+        <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+    </where>
+        GROUP BY  DATE_FORMAT(report_time,'%Y-%m-%d')
     </select>
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">

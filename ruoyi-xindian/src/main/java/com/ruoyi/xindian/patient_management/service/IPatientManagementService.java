@@ -2,6 +2,7 @@ package com.ruoyi.xindian.patient_management.service;
 
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
+import com.ruoyi.xindian.patient_management.vo.DateListVO;
 
 import java.util.List;
 
@@ -78,4 +79,9 @@ public interface IPatientManagementService
     public List<SingleHistoryInfo> selectSingleHistoryInfoList(SingleHistoryInfo singleHistoryInfo);
 
     public  PatientManagement getPhoneByPId(String pId);
+
+
+    List<DateListVO> getDateList(PatientManagement patientManagement);
+
+
 }

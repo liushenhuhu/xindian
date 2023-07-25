@@ -3,12 +3,21 @@ package com.ruoyi.xindian.wx_pay.util;
 
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.body.RequestBody;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.google.gson.Gson;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
-import com.ruoyi.xindian.wx_pay.domain.MessageTemplateEntity;
-import com.ruoyi.xindian.wx_pay.domain.MessageValueEntity;
-import com.ruoyi.xindian.wx_pay.domain.SendMessageVo;
+import com.ruoyi.xindian.order.domain.Invoice;
+import com.ruoyi.xindian.order.mapper.InvoiceMapper;
+import com.ruoyi.xindian.wx_pay.VO.BizField;
+import com.ruoyi.xindian.wx_pay.VO.UserField;
+import com.ruoyi.xindian.wx_pay.VO.WxCardInvoiceAuthurlVO;
+import com.ruoyi.xindian.wx_pay.VO.invoiceVO;
+import com.ruoyi.xindian.wx_pay.domain.*;
+import com.ruoyi.xindian.wx_pay.mapper.OrderInfoMapper;
 import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -24,9 +33,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
@@ -45,6 +57,14 @@ public class WXPublicRequest {
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;
+
+
+    @Resource
+    private OrderInfoMapper orderInfoMapper;
+
+
+    @Resource
+    private InvoiceMapper invoiceMapper;
 
 
     /**
@@ -171,6 +191,176 @@ public class WXPublicRequest {
         return phone != null && !"".equals(phone);
     }
 
+
+    /**
+     * 商户获取授权页ticket
+     */
+    public String getCgiBinTicket() throws Exception {
+        String wxAccessToken = getAccessToken();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("access_token",wxAccessToken ); //用户openid
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=wx_card&access_token=";
+        HashMap<String,String> responseMap=null;
+        String cgiBinTicket = null;
+        String expire = null;
+        try {
+            responseMap = restTemplate.postForObject(url+wxAccessToken, request, HashMap.class);
+            cgiBinTicket = (String)responseMap.get("ticket");
+            expire = responseMap.get("expires_in");
+            log.info("微信获取自身的开票平台识别码，，返回数据:{}",responseMap);
+        }catch (Exception e){
+            System.out.println(e);
+            log.error("微信获取自身的开票平台识别码异常，，返回数据:{}",responseMap);
+        }
+        return cgiBinTicket;
+    }
+
+    /**
+     * 通过订单编号获取链接
+     */
+    public WxCardInvoiceAuthurlVO getAuthurl(String orderId) throws Exception {
+
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        if (orderInfo!=null){
+
+            //获取自身的开票平台识别码s_pappid
+            String cardInvoiceSeturl = getCardInvoiceSeturl();
+            //商户获取授权页ticket
+            String cgiBinTicket = getCgiBinTicket();
+
+            WxCardInvoiceAuthurlVO cardInvoiceAuthurl = getCardInvoiceAuthurl(cardInvoiceSeturl, cgiBinTicket, orderInfo.getId(), orderInfo.getTotalFee());
+
+            redisTemplate.opsForValue().set("invoice:"+orderId,orderId ,30 ,TimeUnit.MINUTES);
+
+            return cardInvoiceAuthurl;
+        }
+        return null;
+    }
+
+
+    public Boolean getInvoiceState(String orderId) throws Exception {
+//获取自身的开票平台识别码s_pappid
+        String s_pappid = getCardInvoiceSeturl();
+        String accessToken = getAccessToken();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("access_token",accessToken );
+        paramsMap.put("order_id", orderId);
+        paramsMap.put("s_pappid", s_pappid);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "https://api.weixin.qq.com/card/invoice/getauthdata?access_token=";
+        invoiceVO sendMessageVo=null;
+
+        try {
+            sendMessageVo = restTemplate.postForObject(url+accessToken, request, invoiceVO.class);
+            log.info("微信商户获取小程序授权页链接返回结果：{}",sendMessageVo);
+        }catch (Exception e){
+            System.out.println(e);
+            log.error("微信获取自身的开票平台识别码异常，，返回数据:{}",sendMessageVo);
+        }
+        String errmsg = null;
+        if (sendMessageVo != null) {
+            errmsg = sendMessageVo.getErrmsg();
+        }
+        if (errmsg != null && errmsg.equals("ok")) {
+            Invoice invoice = new Invoice();
+            invoice.setOrderId(orderId);
+
+            invoice.setPrice(new BigDecimal(sendMessageVo.getMoney()));
+            invoice.setOpenId(sendMessageVo.getOpenid());
+
+
+            BizField bizField = sendMessageVo.getUser_auth_info().getBiz_field();
+            if (bizField != null) {
+                invoice.setUserAuthInfo("biz_field");
+                invoice.setTitle(bizField.getTitle());
+                invoice.setTaxNo(bizField.getTax_no());
+                invoice.setAddr(bizField.getAddr());
+                invoice.setPhone(bizField.getPhone());
+                invoice.setBankType(bizField.getBank_type());
+                invoice.setBankNo(bizField.getBank_no());
+
+            } else {
+                UserField userField = sendMessageVo.getUser_auth_info().getUser_field();
+                invoice.setUserAuthInfo("user_field");
+                invoice.setTitle(userField.getTitle());
+                invoice.setTaxNo(userField.getTax_no());
+                invoice.setAddr(userField.getAddr());
+                invoice.setPhone(userField.getPhone());
+                invoice.setBankType(userField.getBank_type());
+                invoice.setBankNo(userField.getBank_no());
+            }
+            invoice.setCreateTime(new Date());
+            invoice.setUpdateTime(new Date());
+            invoice.setState("待处理");
+            invoiceMapper.insert(invoice);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *商户获取小程序授权页链接
+     */
+    public WxCardInvoiceAuthurlVO getCardInvoiceAuthurl( String s_pappid, String ticket, String order_id, BigDecimal money) throws Exception {
+
+        String accessToken = getAccessToken();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("access_token",accessToken );
+        paramsMap.put("timestamp",  WXPayUtil.getCurrentTimestamp()+"");
+        paramsMap.put("source", "wxa");
+        paramsMap.put("type", "1");
+        paramsMap.put("s_pappid", s_pappid);
+        paramsMap.put("ticket", ticket);
+        paramsMap.put("order_id", order_id);
+        paramsMap.put("money", money);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "https://api.weixin.qq.com/card/invoice/getauthurl?access_token=";
+        HashMap<String,String> sendMessageVo=null;
+        String appid = null;
+        String auth_url = null;
+        try {
+            sendMessageVo = restTemplate.postForObject(url+accessToken, request, HashMap.class);
+            appid =sendMessageVo.get("appid");
+            auth_url = sendMessageVo.get("auth_url");
+            log.info("微信商户获取小程序授权页链接返回结果：{}",sendMessageVo);
+        }catch (Exception e){
+            System.out.println(e);
+            log.error("微信获取自身的开票平台识别码异常，，返回数据:{}",sendMessageVo);
+        }
+
+//        HttpRestResponse response = null;
+//        String appid = null;
+//        String auth_url = null;
+//        try {
+//            response = httpRestClient.postData("https://api.weixin.qq.com/card/invoice/getauthurl?access_token=" + accessToken, request);
+//            LOGGER.info("微信商户获取小程序授权页链接返回结果：{}", response.getData());
+//            Map<?, ?> responseMap = response.toObject(Map.class);
+//            appid = (String)responseMap.get("appid");
+//            auth_url = (String)responseMap.get("auth_url");
+//        } catch (Exception e) {
+//            LOGGER.error("微信商户获取小程序授权页链接异常，请求参数：{}，返回数据:{}, e:{}", requestDataStr.toJSONString(), response, e.getMessage());
+//        }
+//
+//        //添加到缓存待授权微信发票卡券集合，统一处理
+//        Timestamp validTime = null;//设置当前时间后6分钟有效期
+//        String wxInvoiceAuthOrderListCacheKey = null;//设置缓存key
+//        String wxInvoiceAuthOrderListCache = redisClient.get(wxInvoiceAuthOrderListCacheKey);
+//        if(null != wxInvoiceAuthOrderListCache) {
+//            List<WxInvoiceAuthOrderListCacheVO> wxInvoiceAuthOrderList = JSONUtil.toList(wxInvoiceAuthOrderListCache.getBytes(), WxInvoiceAuthOrderListCacheVO.class);
+//            wxInvoiceAuthOrderList.add(new WxInvoiceAuthOrderListCacheVO(tenantId, order_id, validTime));
+//            redisClient.set(wxInvoiceAuthOrderListCacheKey, JSONUtil.toJson(wxInvoiceAuthOrderList));
+//        }
+
+        return new WxCardInvoiceAuthurlVO(appid, auth_url);
+    }
+
     /**
      * 设置商户联系方式
      */
@@ -200,11 +390,166 @@ public class WXPublicRequest {
     }
 
     /**
+     * 上传微信卡卷
+     */
+    public void setWXCardInvoice(String orderId,String sMediaId) throws Exception {
+        OrderInfo orderInfo = orderInfoMapper.searchAllById(orderId);
+        String accessToken = getAccessToken();
+        Invoice invoice = invoiceMapper.selectById(orderId);
+        //微信卡包id
+        String  cardid = setCardInvoiceContact();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        HashMap<String ,Object> hashMap = new HashMap<>();
+        HashMap<String ,Object> hashMap2 = new HashMap<>();
+        hashMap2.put("nonce_str",WXPayUtil.generateNonceStr());
+        hashMap.put("billing_no",invoice.getBillingNo() );
+        hashMap.put("billing_code",invoice.getBillingCode() );
+        hashMap.put("tax",invoice.getTax() );
+        hashMap.put("s_pdf_media_id",sMediaId);
+        hashMap.put("fee",invoice.getPrice());
+        hashMap.put("title",invoice.getTitle());
+        hashMap.put("fee_without_tax",invoice.getPrice());
+
+        hashMap.put("billing_time",OrderNoUtils.getNoN(invoice.getBillingTime()) );
+
+        List<Map<String,Object>> mapList = new ArrayList<>();
+        for (SuborderOrderInfo c : orderInfo.getSuborderOrderInfos()){
+            Map<String,Object> map = new HashMap<>();
+            map.put("price",c.getProductPrice());
+            map.put("num" ,c.getSum());
+            map.put("name",c.getProductName());
+            mapList.add(map);
+        }
+
+        hashMap.put("info",mapList);
+        paramsMap.put("access_token",accessToken );
+        hashMap2.put("user_card" ,hashMap);
+        paramsMap.put("card_ext",hashMap2);
+        paramsMap.put("order_id",orderId);
+        paramsMap.put("card_id",cardid);
+        paramsMap.put("appid",WXPayConstants.WX_PUBLIC_ID);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "https://api.weixin.qq.com/card/invoice/insert?access_token=";
+        HashMap<String,String> sendMessageVo=null;
+        try {
+            sendMessageVo = restTemplate.postForObject(url+accessToken, request, HashMap.class);
+            log.info("微信获取自身的开票平台识别码正常 。 返回数据:{}",sendMessageVo);
+        }catch (Exception e){
+            System.out.println(e);
+            log.error("微信获取自身的开票平台识别码异常，，返回数据:{}",sendMessageVo);
+        }
+    }
+
+    /**
+     * 更新发票卡券状态
+     */
+    public Boolean setCardState(String carId,String code) throws Exception {
+
+        String accessToken = getAccessToken();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("access_token",accessToken);
+        paramsMap.put("card_id",carId);
+        paramsMap.put("code",code);
+        paramsMap.put("reimburse_status","INVOICE_REIMBURSE_CANCEL");
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "https://api.weixin.qq.com/card/invoice/platform/updatestatus?access_token=";
+        HashMap<String,String> sendMessageVo=null;
+        String cardId=null;
+        try {
+            sendMessageVo = restTemplate.postForObject(url+accessToken, request, HashMap.class);
+            log.info("微信获取自身的开票平台识别码正常 。 返回数据:{}",sendMessageVo);
+            cardId= sendMessageVo.get("errmsg");
+        }catch (Exception e){
+            System.out.println(e);
+            log.error("微信获取自身的开票平台识别码异常，，返回数据:{}",sendMessageVo);
+        }
+        if (cardId != null && cardId.equals("ok")) {
+            return true;
+
+        }
+        return false;
+    }
+
+
+
+    /**
+     * 设置微信卡卷
+     */
+    public String setCardInvoiceContact() throws Exception {
+
+        String accessToken = getAccessToken();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        HashMap<String ,Object> hashMap = new HashMap<>();
+        HashMap<String ,Object> hashMap2 = new HashMap<>();
+        hashMap2.put("type","河南省增值税普通发票" );
+        hashMap2.put("payee","河南迈雅科技有限公司" );
+        hashMap.put("logo_url","url" );
+        hashMap.put("title","河南迈雅科技" );
+        paramsMap.put("access_token",accessToken );
+
+        hashMap2.put("base_info" ,hashMap);
+        paramsMap.put("invoice_info",hashMap2);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "https://api.weixin.qq.com/card/invoice/platform/createcard?access_token=";
+        HashMap<String,String> sendMessageVo=null;
+        String cardId=null;
+        try {
+            sendMessageVo = restTemplate.postForObject(url+accessToken, request, HashMap.class);
+            log.info("微信获取自身的开票平台识别码正常 。 返回数据:{}",sendMessageVo);
+           cardId= sendMessageVo.get("card_id");
+        }catch (Exception e){
+            System.out.println(e);
+            log.error("微信获取自身的开票平台识别码异常，，返回数据:{}",sendMessageVo);
+        }
+        return cardId;
+    }
+
+    /**
+     * 上传pdf格式文件
+     */
+    public String setCardUpload(MultipartFile file) throws Exception {
+
+        String accessToken = getAccessToken();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("access_token",accessToken );
+        paramsMap.put("pdf",file);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "https://api.weixin.qq.com/card/invoice/platform/setpdf?access_token=";
+        HashMap<String,String> sendMessageVo=null;
+        String sMediaId=null;
+        try {
+            sendMessageVo = restTemplate.postForObject(url+accessToken, request, HashMap.class);
+            log.info("微信获取自身的开票平台识别码正常 。 返回数据:{}",sendMessageVo);
+          sMediaId = sendMessageVo.get("s_media_id");
+        }catch (Exception e){
+            System.out.println(e);
+            log.error("微信获取自身的开票平台识别码异常，，返回数据:{}",sendMessageVo);
+        }
+        return sMediaId;
+    }
+
+
+
+
+    /**
      * 获取自身的开票平台识别码
      * @return
      * @throws Exception
      */
     public String  getCardInvoiceSeturl() throws Exception {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("getCardInvoiceSeturl"))){
+            return redisTemplate.opsForValue().get("getCardInvoiceSeturl");
+        }
         String wxAccessToken = getAccessToken();
         HttpHeaders headers = new HttpHeaders(); //构建请求头
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -218,7 +563,7 @@ public class WXPublicRequest {
         try {
             sendMessageVo = restTemplate.postForObject(url+wxAccessToken, request, HashMap.class);
             invoiceUrl = sendMessageVo.get("invoice_url");
-            errcode = sendMessageVo.get("errcode");
+            errcode = sendMessageVo.get("errmsg");
         }catch (Exception e){
             log.error("微信获取自身的开票平台识别码异常，，返回数据:{}",sendMessageVo);
         }
@@ -241,6 +586,9 @@ public class WXPublicRequest {
                     }
                 }
             }
+        }
+        if (s_pappid != null) {
+            redisTemplate.opsForValue().set("getCardInvoiceSeturl",s_pappid,24,TimeUnit.HOURS);
         }
         return s_pappid;
     }

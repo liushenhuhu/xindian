@@ -4,9 +4,11 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.patient_management.vo.DateListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -111,6 +113,20 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     public  PatientManagement getPhoneByPId(String pId){
         return patientManagementMapper.getPhoneByPId(pId);
     }
+
+    @Override
+    public  List<DateListVO> getDateList(PatientManagement patientManagement) {
+        List<DateListVO> dateListVOS = patientManagementMapper.selectAllDateList(patientManagement);
+        List<DateListVO> dateListVOS1 = new ArrayList<>();
+        for (DateListVO c : dateListVOS){
+            if (c.getDate()!=null&&!"".equals(c.getDate())){
+                c.setInfo(c.getInfo()+"条");
+                dateListVOS1.add(c);
+            }
+        }
+        return dateListVOS1;
+    }
+
     /**
      * 删除患者管理信息
      *

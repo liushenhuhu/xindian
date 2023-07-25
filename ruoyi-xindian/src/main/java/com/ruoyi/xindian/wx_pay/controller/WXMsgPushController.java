@@ -1,5 +1,7 @@
 package com.ruoyi.xindian.wx_pay.controller;
 
+import com.ruoyi.xindian.wx_pay.VO.WxCardInvoiceAuthurlVO;
+import com.ruoyi.xindian.wx_pay.util.AjaxResult;
 import com.ruoyi.xindian.wx_pay.util.OrderNoUtils;
 import com.ruoyi.xindian.wx_pay.util.WXPayConstants;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
@@ -35,15 +37,26 @@ public class WXMsgPushController {
      * 公众号消息推送
      */
     @GetMapping("/ww")
-    public void text() throws Exception {
+    public AjaxResult text() throws Exception {
 //        WXPublicRequest.sendOrderMsg("你好，有一条新的问诊订单","otRV25MQPOOEn-qJmZve9im0Phno", "张三","这是一条测试消息");
 //        wxPublicRequest.sendOrderMsg("这是一条消息","o3aud50kcKiIIlwuDYCh_DjZjq1o","张三","这是一条测试消息");
 //        wxPublicRequest. getCardInvoiceSeturl();
-        wxPublicRequest.checkCardInvoiceSetbizattrContact();
+//        wxPublicRequest.checkCardInvoiceSetbizattrContact();
+//        wxPublicRequest.getCgiBinTicket();
 //        wxPublicRequest.setCardInvoiceSetbizattrContact();
+//        return AjaxResult.success( wxPublicRequest.getInvoiceState("20230721173518132"));
+        return AjaxResult.success( wxPublicRequest.setCardInvoiceContact());
     }
 
+    @GetMapping("/getUrl")
+    public AjaxResult getUrl(String orderId) throws Exception {
 
+        WxCardInvoiceAuthurlVO authurl = wxPublicRequest.getAuthurl(orderId);
+        if (authurl!=null){
+            return AjaxResult.success(authurl);
+        }
+        return AjaxResult.error("订单不存在");
+    }
 
 
 

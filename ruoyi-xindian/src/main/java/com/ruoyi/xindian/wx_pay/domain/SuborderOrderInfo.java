@@ -7,6 +7,7 @@ import com.ruoyi.common.annotation.Excel;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -55,6 +56,10 @@ public class SuborderOrderInfo implements Serializable {
     @Excel(name = "购买商品信息")
     @TableField(exist = false)
     private Product product;
+
+    private String productName;
+
+    private BigDecimal productPrice;
 
 
     @TableField(exist = false)

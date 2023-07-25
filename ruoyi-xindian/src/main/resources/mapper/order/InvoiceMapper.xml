@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.order.mapper.InvoiceMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.order.domain.Invoice">
+        <id property="orderId" column="order_id" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="DECIMAL"/>
+        <result property="userAuthInfo" column="user_auth_info" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="taxNo" column="tax_no" jdbcType="VARCHAR"/>
+        <result property="addr" column="addr" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="bankType" column="bank_type" jdbcType="VARCHAR"/>
+        <result property="bankNo" column="bank_no" jdbcType="VARCHAR"/>
+        <result property="customFieldKey" column="custom_field_key" jdbcType="VARCHAR"/>
+        <result property="customFieldValue" column="custom_field_value" jdbcType="VARCHAR"/>
+        <result property="openId" column="open_id" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="invoiceUrl" column="invoice_url" jdbcType="VARCHAR"/>
+        <result property="billingNo" column="billing_no" jdbcType="VARCHAR"/>
+        <result property="billingCode" column="billing_code" jdbcType="VARCHAR"/>
+        <result property="tax" column="tax" jdbcType="DECIMAL"/>
+        <result property="checkCode" column="check_code" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="billingTime" column="billing_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        order_id,price,user_auth_info,
+        title,tax_no,addr,
+        phone,bank_type,bank_no,
+        custom_field_key,custom_field_value,open_id,
+        create_time,update_time,state,
+        invoice_url,billing_no,billing_code,
+        tax,check_code,status,
+        billing_time
+    </sql>
+    <select id="selectInvoiceList" parameterType="Invoice" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+            from invoice
+        <where>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="orderId != null "> and order_id like concat('%', #{orderId},'%')</if>
+            <if test="userAuthInfo != null  and userAuthInfo != ''"> and user_auth_info = #{userAuthInfo}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="taxNo != null  and taxNo != ''"> and tax_no like concat('%',#{taxNo},'%') </if>
+            <if test="addr != null  and addr != ''"> and addr = #{addr}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="bankType != null  and bankType != ''"> and bank_type = #{bankType}</if>
+            <if test="bankNo != null  and bankNo != ''"> and bank_no = #{bankNo}</if>
+            <if test="customFieldKey != null  and customFieldKey != ''"> and custom_field_key = #{customFieldKey}</if>
+            <if test="customFieldValue != null  and customFieldValue != ''"> and custom_field_value = #{customFieldValue}</if>
+            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+        </where>
+    </select>
+</mapper>

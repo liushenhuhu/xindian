@@ -162,6 +162,8 @@
             t_suborder_order_info.suborder_id,
             t_suborder_order_info.product_id,
             t_suborder_order_info.sum,
+            t_suborder_order_info.product_name,
+            t_suborder_order_info.product_price,
             t_product.product_id,
             t_product.product_name,
             t_product.price,

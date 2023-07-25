@@ -44,4 +44,19 @@ public class OrderNoUtils {
         return newDate + result;
     }
 
+    /**
+     * 获取编号
+     * @return
+     */
+    public static String getNoN( Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String newDate = sdf.format(date);
+        String result = "";
+        Random random = new Random();
+        for (int i = 0; i < 2; i++) {
+            result += random.nextInt(10);
+        }
+        return newDate + result;
+    }
 }

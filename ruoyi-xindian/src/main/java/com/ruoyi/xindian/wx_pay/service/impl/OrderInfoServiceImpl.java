@@ -440,7 +440,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         suborderOrderInfo.setSum(Long.valueOf(sum));
         suborderOrderInfo.setCreateTime(new Date());
         suborderOrderInfo.setUpdateTime(new Date());
-
+        suborderOrderInfo.setProductPrice(product.getDiscount());
+        suborderOrderInfo.setProductName(product.getProductName());
         int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
         if(!product.getType().equals("服务")){
             updateProductAdd(sum,productId);

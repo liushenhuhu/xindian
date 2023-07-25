@@ -2,6 +2,7 @@ package com.ruoyi.xindian.patient_management.mapper;
 
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
+import com.ruoyi.xindian.patient_management.vo.DateListVO;
 
 import java.util.List;
 
@@ -89,5 +90,7 @@ public interface PatientManagementMapper
      * 通过phone获取历史信息
      */
     public List<SingleHistoryInfo> selectSingleHistoryInfoList(SingleHistoryInfo singleHistoryInfo);
+
+    List<DateListVO> selectAllDateList(PatientManagement patientManagement);
 
 }

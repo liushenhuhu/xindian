@@ -196,6 +196,9 @@ public class PatientManagement extends BaseEntity {
 
     private String reportState;
 
+
+    private String endReportTime;
+
     public String getpId() {
         return pId;
     }

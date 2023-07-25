@@ -11,6 +11,8 @@
             <result property="sum" column="sum" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="productPrice" column="product_price" jdbcType="DECIMAL"/>
+        <result property="productName" column="product_name" jdbcType="DECIMAL"/>
     </resultMap>
     <resultMap id="ResultMap" type="com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo" extends="BaseResultMap">
         <association property="product" javaType="product" resultMap="com.ruoyi.xindian.wx_pay.mapper.ProductMapper.BaseResultMap"></association>

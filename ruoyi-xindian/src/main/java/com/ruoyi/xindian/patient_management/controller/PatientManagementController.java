@@ -343,4 +343,8 @@ public class PatientManagementController extends BaseController {
         return AjaxResult.success(res);
     }
 
+    @GetMapping("/dateList")
+    public AjaxResult dateList(PatientManagement patientManagement){
+        return AjaxResult.success(patientManagementService.getDateList(patientManagement));
+    }
 }
