@@ -28,10 +28,13 @@ import com.ruoyi.xindian.product.domain.TProductDto;
 ;
 import com.ruoyi.xindian.wx_pay.domain.Product;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -59,6 +62,9 @@ public class TProductController extends BaseController
 
     @Autowired
     private ISysUserService userService;
+
+    @Value("${ruoyi.url}")
+    private String url;
 
     /**
      * 查询商品信息列表
@@ -184,9 +190,9 @@ public class TProductController extends BaseController
             for(int i=0;i<files.size();i++) {//循环单个上传
                 String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), files.get(i), MimeTypeUtils.IMAGE_EXTENSION);
                 if(i==0){
-                    tProduct.setProductUrl("https://ecg.mindyard.cn:84/prod-api"+avatar);
+                    tProduct.setProductUrl(url+avatar);
                 }else {
-                    tProduct.setUrlOne("https://ecg.mindyard.cn:84/prod-api"+avatar);
+                    tProduct.setUrlOne(url+avatar);
                 }
             }
         }
@@ -218,12 +224,12 @@ public class TProductController extends BaseController
             if (!file1.isEmpty())
             {
                 String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file1, MimeTypeUtils.IMAGE_EXTENSION);
-                tProduct1.setProductUrl("https://ecg.mindyard.cn:84/prod-api"+avatar);
+                tProduct1.setProductUrl(url+avatar);
             }
             if (!file2.isEmpty())
             {
                 String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file2, MimeTypeUtils.IMAGE_EXTENSION);
-                tProduct1.setUrlOne("https://ecg.mindyard.cn:84/prod-api"+avatar);
+                tProduct1.setUrlOne(url+avatar);
             }
         }
         catch (Exception e)
@@ -254,7 +260,7 @@ public class TProductController extends BaseController
         {
             String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
             AjaxResult ajax = AjaxResult.success();
-            ajax.put("imgUrl", "https://ecg.mindyard.cn:84/prod-api"+avatar);
+            ajax.put("imgUrl", url+avatar);
             return ajax;
         }
         return AjaxResult.error("上传图片异常，请联系管理员");
@@ -290,7 +296,7 @@ public class TProductController extends BaseController
                 String avatar = FileUploadUtils.upload(RuoYiConfig.getUploadPath(), files[i], MimeTypeUtils.IMAGE_EXTENSION);
                 ProductImgs productImgs=new ProductImgs();
                 productImgs.setProductId(productId);
-                productImgs.setImg("https://ecg.mindyard.cn:84/prod-api" + avatar);
+                productImgs.setImg(url + avatar);
                 products.add(productImgs);
             }
         }

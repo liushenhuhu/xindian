@@ -1,11 +1,15 @@
 <template>
-  <div class="app-container">
+  <div>
 
     <el-divider content-position="left">预警统计图</el-divider>
 
-    <div  id="main" style="width: 700px;height:400px; float: left;" >12导预警</div>
+    <div id="main" style="width: 700px;height:400px;float: right">静态12导预警</div>
 
-    <div id="main1" style="width: 600px;height:400px;float: right">单导预警</div>
+    <div id="main1" style="width: 600px;height:400px;">静态单导预警</div>
+
+    <div id="main2" style="width: 700px;height:400px;float: right">动态12导预警</div>
+
+    <div id="main3" style="width: 600px;height:400px;">动态单导预警</div>
   </div>
 </template>
 <script>
@@ -47,6 +51,15 @@ export default {
       let main = this.$echarts.init(document.getElementById('main'))
       let th = this
       var option = {
+        title: {
+          text: "静态12导预警",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+
+        },
         tooltip: {
           trigger: 'item'
         },
@@ -60,8 +73,8 @@ export default {
             label: {//饼图文字的显示
               show: true, //默认  显示文字
               formatter: function (arg) {
-                console.log(arg);
-                return arg.name + '：预警' + arg.value + "次"
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
               }
             },
           }
@@ -74,14 +87,20 @@ export default {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
       });
     },
-    take01(val){
-      console.log(val)
-    },
+
     DDrawLine() {
       // 基于准备好的dom，初始化echarts实例
       let main1 = this.$echarts.init(document.getElementById('main1'))
       let th = this
       var option = {
+        title: {
+          text: "静态单导预警",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
         tooltip: {
           trigger: 'item'
         },
@@ -95,8 +114,8 @@ export default {
             label: {//饼图文字的显示
               show: true, //默认  显示文字
               formatter: function (arg) {
-                console.log(arg);
-                return arg.name + '：预警' + arg.value + "次"
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
               }
             },
           }
@@ -109,20 +128,155 @@ export default {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       });
     },
+
+
+    //动态
+    drawLine1() {
+      // 基于准备好的dom，初始化echarts实例
+      let main = this.$echarts.init(document.getElementById('main2'))
+      let th = this
+      var option = {
+        title: {
+          text: "动态12导预警",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.opName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            data: this.countArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main.off('click')
+      // 绘制图表
+      main.setOption(option);
+      main.on('click', function(params) {
+        th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
+      });
+    },
+    DDrawLine1() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main3'))
+      let th = this
+      var option = {
+        title: {
+          text: "动态单导预警",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            data: this.DCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      main1.on('click', function(params) {
+        th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      });
+    },
+
     /** 查询 */
     getList() {
 
-      this.query.ecgType='12'
+      //静态
+      this.query.ecgType='J12'
       listAlert_log(this.query).then(r=>{
-        this.countArr=r.data
-        this.opName = '12导预警'
-        this.drawLine();
+        if(r.data.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main');
+          dom.innerHTML = '-静态12导预警暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.countArr=r.data
+          this.opName = '12导预警'
+          this.drawLine();
+        }
+
       })
-      this.query1.ecgType='single'
+      this.query1.ecgType='Jsingle'
       listAlert_log(this.query1).then(r=>{
-        this.DCountArr=r.data
-        this.DOpName = '单导预警'
-        this.DDrawLine();
+        if(r.data.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main1');
+          dom.innerHTML = '-静态单导预警暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: left;margin-top: 5%;margin-left: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else{
+          this.DCountArr=r.data
+          this.DOpName = '单导预警'
+          this.DDrawLine();
+        }
+
+      })
+
+      //动态
+      this.query.ecgType='D12'
+      listAlert_log(this.query).then(r=>{
+        if(r.data.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main2');
+          dom.innerHTML = '-动态12导预警暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: left;margin-top: 5%;margin-left: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.countArr=r.data
+          this.opName = '12导预警'
+          this.drawLine1();
+        }
+
+      })
+      this.query1.ecgType='Dsingle'
+      listAlert_log(this.query1).then(r=>{
+        if(r.data.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main3');
+          dom.innerHTML = '-动态单导预警暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.DCountArr=r.data
+          this.DOpName = '单导预警'
+          this.DDrawLine1();
+        }
+
       })
 
     },

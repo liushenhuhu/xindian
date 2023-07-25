@@ -1,10 +1,11 @@
 <template>
   <div id="cf-double-column" :style="{ width: '100%', height: '100%' }">
     <p class="title"><span class="title-left"></span>男女比例图</p>
-    <div id="chart" :style="{ width: '60%', height: '600px',position: 'relative',left: '21%' }"></div>
+    <div id="chart" :style="{ width: '60%', height: '600px',position: 'relative',left: '20%' }"></div>
     <div class="footer-name">
-      <p>男</p>
-      <p>女</p>
+      <p></p>
+      <p>{{menCount}}</p>
+      <p>{{womenCount}}</p>
     </div>
   </div>
 </template>
@@ -19,6 +20,8 @@ export default {
     return {
       columndata1: [],
       columndata2: [],
+      menCount: 0,
+      womenCount: 0,
     }
   },
   created() {
@@ -58,6 +61,14 @@ export default {
       let colorLeft = ["#3DA1FF", "#2749FC"];
       let colorRight = ["#FB857D", "#F6504A"];
       let option = {
+        title: {
+          text: "男                    女",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
         legend: {
           top: "5%",
           right: "10%",
@@ -236,11 +247,11 @@ export default {
                   [
                     {
                       offset: 0,
-                      color: colorLeft[0], //指0%处的颜色
+                      color: colorLeft[1], //指0%处的颜色
                     },
                     {
                       offset: 1,
-                      color: colorLeft[1], //指100%处的颜色
+                      color: colorLeft[0], //指100%处的颜色
                     },
                   ],
                   false
@@ -318,10 +329,36 @@ export default {
     getList() {
       //this.loading = true;
       selectAge(this.queryParams).then(response => {
-        console.log(Object.values(response)[1]);
+        //console.log(Object.values(response)[1]);
         this.columndata1 = Object.values(response)[0];
         this.columndata2 = Object.values(response)[1];
         this.getDoubleCloumn();
+        console.log(this.columndata1);
+
+        let getArrByKey = (data, k) => {
+          let key = k || "value";
+          let res = [];
+          if (data) {
+            data.forEach(function (t) {
+              res.push(t[key]);
+            });
+          }
+          return res;
+        };
+        let arr1 = getArrByKey(this.columndata1,'value');
+        let arr2 = getArrByKey(this.columndata2,'value');
+
+        Array.prototype.sum = function () {
+          var sum = 0;
+          for (var i = 0; i < this.length; i++) {
+            sum += this[i];
+          }
+          return sum;
+        };
+
+        this.menCount = arr1.sum();
+        this.womenCount = arr2.sum();
+        //console.log(this.menCount)
         //this.loading = false;
       });
     },
@@ -360,11 +397,17 @@ export default {
     width: 100%;
     p {
       display: inline-block;
-      width: 50%;
-      padding: 0 3rem;
+      width: 25%;
+      padding: 0 2rem;
     }
     p:nth-of-type(1) {
       text-align: right;
+    }
+    p:nth-of-type(2) {
+      text-align: right;
+    }
+    p:nth-of-type(3) {
+      text-align: left;
     }
   }
 }

@@ -202,7 +202,7 @@ public class AlertLogServiceImpl implements IAlertLogService
     public List<AlertLog> selectEarly(AlertLog alertLog) {
 
 
-        if (alertLog.getEcgType().equals("12")){
+        /*if (alertLog.getEcgType().equals("J12")){
             if(Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest01"))){
                 //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）
                 List<AlertLog> alertLogs =  redisTemplate.opsForList().range("earlyLogTest01", 0,-1);
@@ -221,7 +221,8 @@ public class AlertLogServiceImpl implements IAlertLogService
                 //返回这个集合
                 return alertLogs;
             }
-        }else {
+        }
+        else if(alertLog.getEcgType().equals("Jsingle")){
             if(Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest02"))){
                 //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）
                 List<AlertLog> alertLogs =  redisTemplate.opsForList().range("earlyLogTest02", 0,-1);
@@ -236,13 +237,53 @@ public class AlertLogServiceImpl implements IAlertLogService
                 //第一个参数是key
                 //第二个参数是值
                 //第三个参数是时间颗粒度转换,MILLISECONDS是毫秒,所以这个redis的TTl是一小时
-                redisTemplate.expire("earlyLogTest02",63,TimeUnit.MINUTES);
+                redisTemplate.expire("earlyLogTest02",60,TimeUnit.MINUTES);
+                //返回这个集合
+                return alertLogs;
+            }
+        }
+        else if(alertLog.getEcgType().equals("D12")){
+            if(Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest03"))){
+                //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）
+                List<AlertLog> alertLogs =  redisTemplate.opsForList().range("earlyLogTest03", 0,-1);
+                //返回这个集合
+                return alertLogs;
+            }else{
+                //从mysql里查询这个集合
+                List<AlertLog> alertLogs = alertLogMapper.selectEarly(alertLog);
+                //存入redis
+                redisTemplate.opsForList().leftPushAll("earlyLogTest03", alertLogs);
+                //给redis设置毫秒值
+                //第一个参数是key
+                //第二个参数是值
+                //第三个参数是时间颗粒度转换,MILLISECONDS是毫秒,所以这个redis的TTl是一小时
+                redisTemplate.expire("earlyLogTest03",60,TimeUnit.MINUTES);
+                //返回这个集合
+                return alertLogs;
+            }
+        }
+        else if(alertLog.getEcgType().equals("Dsingle")) {
+            if(Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest04"))){
+                //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）
+                List<AlertLog> alertLogs =  redisTemplate.opsForList().range("earlyLogTest04", 0,-1);
+                //返回这个集合
+                return alertLogs;
+            }else{
+                //从mysql里查询这个集合
+                List<AlertLog> alertLogs = alertLogMapper.selectEarly(alertLog);
+                //存入redis
+                redisTemplate.opsForList().leftPushAll("earlyLogTest04", alertLogs);
+                //给redis设置毫秒值
+                //第一个参数是key
+                //第二个参数是值
+                //第三个参数是时间颗粒度转换,MILLISECONDS是毫秒,所以这个redis的TTl是一小时
+                redisTemplate.expire("earlyLogTest04",63,TimeUnit.MINUTES);
                 //返回这个集合
                 return alertLogs;
             }
 
-
-        }
+        }*/
+        return alertLogMapper.selectEarly(alertLog);
 
     }
 

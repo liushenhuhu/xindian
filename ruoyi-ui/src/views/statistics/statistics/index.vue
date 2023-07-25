@@ -107,6 +107,7 @@ export default {
         },
       });
       myChart.on('click', function (params) {
+        console.log(params)
         status.queryParams.month = params.name;
         status.show = false;
         document.getElementById("myChart").style.display='none';
