@@ -70,14 +70,15 @@ public class WXPublicRequest {
     /**
      * 发送给医生的公众号消息推送
      */
-    public  void dockerMsg() throws Exception {
+    public  void dockerMsg(String name) throws Exception {
 
         String accessToken = getAccessToken();
 
         Set<String> userOpenId = getUserOpenId(accessToken);
 
-        System.out.println(userOpenId);
-
+        for (String next : userOpenId) {
+            sendOrderMsg("你好，有一条新的问诊订单",next,name,"患者提交了一个心电订单");
+        }
     }
 
 
@@ -120,6 +121,7 @@ public class WXPublicRequest {
                 .templateId(OrderMsgTemplateId)
                 .data(wxMpTemplateDataList)
                 .url(detailUrl)
+                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
                 .build();
         try {
             wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
@@ -130,15 +132,27 @@ public class WXPublicRequest {
     }
 
 
-    public  void sendMsg(String first, String userOpenid, String name, String serviceName) throws Exception {
+    public  void sendMsg(String first, String userOpenid, String name, String serviceName,String state) throws Exception {
 
         MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity();
-        String time = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(new Date());
-        messageTemplateEntity.setMessageData(new MessageValueEntity("项目名称"), new MessageValueEntity(time), new MessageValueEntity("这是描述"));
+        String time = new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date());
+        messageTemplateEntity.setMessageData(new MessageValueEntity(time), new MessageValueEntity(first),new MessageValueEntity(state),new MessageValueEntity(name),new MessageValueEntity(serviceName));
 
+//        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+//                new WxMpTemplateData("date7",time),
+//                new WxMpTemplateData("thing8",first),
+//                new WxMpTemplateData("phrase4",state),
+//                new WxMpTemplateData("thing11",name),
+//                new WxMpTemplateData("thing3",serviceName)
+//        );
+        Map<String,Object> map = new HashMap<>();
+        map.put("appid","wx50da6a0dfc5c45c0");
+        map.put("pagepath","pages/record/index");
+//
         Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("touser", "wx4a6ad6d7e5e6xxxx"); //用户openid
-        paramsMap.put("template_id", "h7eKu5vOSbbObOxg9psqYZ-NiRyiiPi9wMuWqExxxx"); //推送消息模板id
+        paramsMap.put("touser", userOpenid); //用户openid
+        paramsMap.put("miniprogram", map); //用户openid
+        paramsMap.put("template_id", "LXUKc7XBotVpT_w7wDx1RpNF1PpNEJa3t6gaMsP7_Cw"); //推送消息模板id
         paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
         String wxAccessToken = getWXAccessToken();
 

@@ -7,11 +7,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.dataLabby.domain.dataLabby;
 import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
 import com.ruoyi.xindian.detection.domain.Detection;
@@ -30,10 +33,8 @@ import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
-import com.ruoyi.xindian.util.DateUtil;
-import com.ruoyi.xindian.util.StrUtil;
-import com.ruoyi.xindian.util.ThreadUtil;
-import com.ruoyi.xindian.util.WxUtil;
+import com.ruoyi.xindian.util.*;
+import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/report/report")
 public class ReportController extends BaseController
 {
+
+    @Autowired
+    private WXPublicRequest wxPublicRequest;
+
     @Autowired
     private IReportService reportService;
     @Autowired
@@ -92,6 +97,10 @@ public class ReportController extends BaseController
 
     @Autowired
     private IHospitalService hospitalService;
+
+
+    @Resource
+    private SysUserMapper sysUserMapper;
 
     /**
      * 查询报告列表
@@ -212,8 +221,7 @@ public class ReportController extends BaseController
     @PreAuthorize("@ss.hasPermi('report:report:edit')")
     @Log(title = "报告", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Report report)
-    {
+    public AjaxResult edit(@RequestBody Report report) throws Exception {
 //        User currentUser = ShiroUtils.getSysUser();
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String phonenumber = loginUser.getUser().getPhonenumber();
@@ -222,19 +230,21 @@ public class ReportController extends BaseController
         //当前报告信息
         Report report1 = reportService.selectReportByPId(s);
         report.setReportId(report1.getReportId());
+        Patient patient = patientService.selectPatientByPatientPhone(phonenumber);
         //患者请求医生
         if(report.getDiagnosisStatus()==2){
-            String dPhone=report.getdPhone();
-            //选择医院随机医生
+            //选择医院加入公共抢单
             if(report.getHospital()!=null){
                 Doctor doctor = new Doctor();
                 doctor.setHospital(report.getHospital());
                 doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && doctors.size()!=0){
-                    int rand = StrUtil.randomInt(doctors.size());
-                    dPhone=doctors.get(rand).getDoctorPhone();
-                    report.setdPhone(dPhone);
-                    report.setDiagnosisDoctor(doctors.get(rand).getDoctorName());
+
+                    wxPublicRequest.dockerMsg(patient.getPatientName());
+                    ReportUtil reportUtil = new ReportUtil();
+                    reportUtil.setParameter(report.getpId(), doctors, reportService);
+                    Thread thread = new Thread(reportUtil);
+                    thread.start();
                 } else{
                     return AjaxResult.error("当前医院平台无医生");
                 }
@@ -267,14 +277,13 @@ public class ReportController extends BaseController
                 detection1.setPatientPhone(phonenumber);
                 detection1.setParams(params);
                 List<Detection> detections = detectionService.selectDetectionList(detection1);
-                Patient patient = patientService.selectPatientByPatientPhone(phonenumber);
                 if (detections.size() >= patient.getDetectionNum()) {
                     return AjaxResult.error("今日咨询次数已用完");
                 }
 //            return AjaxResult.success();
-                detectionService.insertDetection(detection);
+//                detectionService.insertDetection(detection);
                 //给医生发送短信
-                WxUtil.send(dPhone);
+//                WxUtil.send(dPhone);
                 //给医生发送微信订阅消息
 //                Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
 //                if (doctor.getOpenId() != null) {
@@ -285,14 +294,14 @@ public class ReportController extends BaseController
 //                    WxUtil.sendGZHMsg(token, doctor.getOpenId(), msg, str_time);
 //                }
                 int i = reportService.updateReport(report);
-                if(report.getHospital()!=null && doctors!=null){
-                    //定时器, 30分钟无医生诊断, 换医生诊断.
-                    ThreadUtil threadUtil = new ThreadUtil();
-                    threadUtil.setParameter(report.getpId(), doctors, reportService);
-//                    threadUtil.run();
-                    Thread thread = new Thread(threadUtil);
-                    thread.start();
-                }
+//                if(report.getHospital()!=null && doctors!=null){
+//                    //定时器, 30分钟无医生诊断, 换医生诊断.
+//                    ThreadUtil threadUtil = new ThreadUtil();
+//                    threadUtil.setParameter(report.getpId(), doctors, reportService);
+////                    threadUtil.run();
+//                    Thread thread = new Thread(threadUtil);
+//                    thread.start();
+//                }
                 return toAjax(i);
             }
 
@@ -317,6 +326,10 @@ public class ReportController extends BaseController
             Date date = new Date();
             report.setReportTime(date);
             WxUtil.sendOK(report1.getPPhone());
+            SysUser sysUser = sysUserMapper.selectUserByPhone(phonenumber);
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+
+            wxPublicRequest.sendMsg(doctor.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
         }
         return toAjax(reportService.updateReport(report));
     }
@@ -567,5 +580,12 @@ public class ReportController extends BaseController
         String msg="17337345250";
         WxUtil.sendAdvice(msg);
         return AjaxResult.success();
+    }
+
+
+    @GetMapping("/docOrPatientList")
+    public AjaxResult docOrPatientList(){
+        List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementList();
+        return AjaxResult.success(patientManagements);
     }
 }

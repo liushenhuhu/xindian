@@ -46,6 +46,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     }
 
     @Override
+    public List<PatientManagement> selectPatientManagementList() {
+        return patientManagementMapper.selectPatientManagementJECGList();
+    }
+
+    @Override
     public List<PatientManagement> selectPatientManagementJECGList(PatientManagement patientManagement) {
         return patientManagementMapper.selectPatientManagementJECGList(patientManagement);
     }

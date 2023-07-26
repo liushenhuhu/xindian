@@ -20,6 +20,7 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.report.service.IReportService;
 import com.ruoyi.xindian.util.DateUtil;
+import com.ruoyi.xindian.util.ThreadUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -173,25 +174,34 @@ public class dataLabbyController extends BaseController
     /**
      * 抢单
      */
-    @GetMapping(value = "/dataLabby/{orderId}")
-    public AjaxResult getOrder(@PathVariable("orderId") Long orderId)
+    @GetMapping(value = "/dataLabby/{reportId}")
+    public AjaxResult getOrder(@PathVariable("reportId") Long reportId)
     {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String phonenumber = loginUser.getUser().getPhonenumber();
         Doctor doctor = doctorService.selectDoctorByDoctorPhone(phonenumber);
         lock.lock();
         try{
-            dataLabby order = orderService.selectOrderByOrderId(orderId);
-            if(order==null)
-                return AjaxResult.error("当前订单已被抢走！");
-
-            Long reportId = order.getReportId();
             Report report = reportService.selectReportByReportId(reportId);
+            if (report==null){
+                return AjaxResult.error("当前订单不存在");
+            }
+            if(report.getdPhone()!=null){
+                return AjaxResult.error("当前订单已被抢走！");
+            }
             report.setdPhone(phonenumber);
             report.setDiagnosisDoctor(doctor.getDoctorName());
             report.setDiagnosisStatus(2L);
-            orderService.deleteOrderByOrderId(orderId);
             reportService.updateReport(report);
+            Doctor doctor1 = new Doctor();
+            doctor1.setHospital(doctor.getHospital());
+            List<Doctor> doctors = doctorService.selectDoctorList(doctor1);
+            //定时器, 30分钟无医生诊断, 换医生诊断.
+            ThreadUtil threadUtil = new ThreadUtil();
+            threadUtil.setParameter(report.getpId(), doctors, reportService);
+//                    threadUtil.run();
+            Thread thread = new Thread(threadUtil);
+            thread.start();
         } catch (Exception e){
             return AjaxResult.error(String.valueOf(e));
         } finally {

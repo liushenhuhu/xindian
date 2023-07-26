@@ -29,6 +29,7 @@ public interface IPatientManagementService
      * @return 患者管理集合
      */
     public List<PatientManagement> selectPatientManagementList(PatientManagement patientManagement);
+    public List<PatientManagement> selectPatientManagementList();
     public List<PatientManagement> selectPatientManagementJECGList(PatientManagement patientManagement);
     public List<PatientManagement> selectPatientManagementJECGsingle(PatientManagement patientManagement);
 

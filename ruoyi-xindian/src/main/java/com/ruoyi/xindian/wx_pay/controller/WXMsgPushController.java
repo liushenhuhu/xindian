@@ -1,5 +1,8 @@
 package com.ruoyi.xindian.wx_pay.controller;
 
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.xindian.wx_pay.VO.WxCardInvoiceAuthurlVO;
 import com.ruoyi.xindian.wx_pay.util.AjaxResult;
 import com.ruoyi.xindian.wx_pay.util.OrderNoUtils;
@@ -10,6 +13,7 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,19 +37,30 @@ public class WXMsgPushController {
     private WXPublicRequest wxPublicRequest;
 
 
+    @GetMapping("/test")
+    public AjaxResult test1(String tt) throws Exception {
+        String wxAccessToken = wxPublicRequest.getWXAccessToken();
+        String post = "https://api.weixin.qq.com/cgi-bin/openapi/rid/get?access_token="+wxAccessToken;
+        JSONObject param = new JSONObject();
+        param.put("rid", tt);
+        String body = HttpUtil.createPost(post).body(JSONUtil.toJsonStr(param)).execute().body();
+        return AjaxResult.success(body);
+    }
+
+
     /**
      * 公众号消息推送
      */
     @GetMapping("/ww")
     public AjaxResult text() throws Exception {
 //        WXPublicRequest.sendOrderMsg("你好，有一条新的问诊订单","otRV25MQPOOEn-qJmZve9im0Phno", "张三","这是一条测试消息");
-//        wxPublicRequest.sendOrderMsg("这是一条消息","o3aud50kcKiIIlwuDYCh_DjZjq1o","张三","这是一条测试消息");
+        wxPublicRequest.sendMsg("测试","otRV25D_bnz4hjyXOUQoWWoieFVI","张三","这是","诊断完成");
 //        wxPublicRequest. getCardInvoiceSeturl();
 //        wxPublicRequest.checkCardInvoiceSetbizattrContact();
 //        wxPublicRequest.getCgiBinTicket();
 //        wxPublicRequest.setCardInvoiceSetbizattrContact();
 //        return AjaxResult.success( wxPublicRequest.getInvoiceState("20230721173518132"));
-        return AjaxResult.success( wxPublicRequest.setCardInvoiceContact());
+        return AjaxResult.success();
     }
 
     @GetMapping("/getUrl")
