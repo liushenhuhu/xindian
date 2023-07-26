@@ -313,7 +313,9 @@ public class ReportController extends BaseController
             notDealWithService.insertNotDealWith(notDealWith);
 //            report.setDiagnosisConclusion("");
             return toAjax(reportService.updateReport(report));
-        }else if(report.getDiagnosisStatus()==1){
+        }else if(report.getDiagnosisStatus()==1){//医生诊断
+            Date date = new Date();
+            report.setReportTime(date);
             WxUtil.sendOK(report1.getPPhone());
         }
         return toAjax(reportService.updateReport(report));
