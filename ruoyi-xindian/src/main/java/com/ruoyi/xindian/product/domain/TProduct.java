@@ -21,6 +21,22 @@ public class TProduct extends BaseEntity
     /** 商Bid */
     private Long productId;
 
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
+    }
+
+    public String getIsVip() {
+        return isVip;
+    }
+
+    public void setIsVip(String isVip) {
+        this.isVip = isVip;
+    }
+
     public String getUrlOne() {
         return urlOne;
     }
@@ -70,6 +86,15 @@ public class TProduct extends BaseEntity
 
     private String urlOne;
 
+    /**
+     * 服务次数
+     */
+    private String frequency;
+
+    /**
+     * 是否是vip服务
+     */
+    private String isVip;
 
     /**
      * 图片集合

@@ -78,6 +78,16 @@ public class Product implements Serializable {
      */
 
     private String type;
+    /**
+     * 服务次数
+     */
+    private Integer frequency;
+
+    /**
+     * 是否是vip服务
+     */
+    private Integer isVip;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

@@ -18,6 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sales"    column="sales"    />
         <result property="type"    column="type"    />
         <result property="urlOne"    column="url_one"    />
+        <result property="frequency"    column="frequency"    />
+        <result property="isVip"    column="is_vip"    />
     </resultMap>
 
     <resultMap type="ProductImgs" id="ProductImgsResult">
@@ -27,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTProductVo">
-        select product_id, product_name, price, product_description, product_url, discount, state, update_time, create_time, product_num, sales,type,url_one from t_product
+        select product_id, product_name, price, product_description, product_url, discount, state, update_time, create_time, product_num, sales,type,url_one ,frequency,is_vip from t_product
     </sql>
 
     <select id="selectTProductList" parameterType="TProduct" resultMap="TProductResult">
@@ -98,6 +100,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sales != null">sales,</if>
             <if test="type != null">type,</if>
             <if test="urlOne != null">url_one,</if>
+            <if test="frequency != null">frequency,</if>
+            <if test="isVip != null">is_vip,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="productName != null">#{productName},</if>
@@ -112,6 +116,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sales != null">#{sales},</if>
             <if test="type != null">#{type},</if>
             <if test="urlOne != null">#{urlOne},</if>
+            <if test="frequency != null">#{frequency},</if>
+            <if test="isVip != null">#{isVip},</if>
          </trim>
     </insert>
 
@@ -129,6 +135,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productNum != null">product_num = #{productNum},</if>
             <if test="sales != null">sales = #{sales},</if>
             <if test="urlOne != null">url_one = #{urlOne},</if>
+            <if test="frequency != null">frequency = #{frequency},</if>
+            <if test="isVip != null">is_vip = #{isVip},</if>
         </trim>
         where product_id = #{productId}
     </update>
