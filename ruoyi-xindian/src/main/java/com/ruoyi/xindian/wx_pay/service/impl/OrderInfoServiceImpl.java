@@ -151,6 +151,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderInfo.setOrderStatus(OrderStatus.SERVE_ORDER.getType());
 
                 baseMapper.update(orderInfo, queryWrapper);
+
                 vipPatient(product,orderByOrderNo.getUserId());
 
             }else {
@@ -162,6 +163,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderInfo.setOrderStatus(orderStatus.getType());
 
                 baseMapper.update(orderInfo, queryWrapper);
+
             }
         }
 
@@ -183,14 +185,23 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             VipPatient vipPatient = new VipPatient();
             //如果用户已经为vip，在原来的基础上增加次数
             vipPatient.setId(vipPatient.getId());
-            vipPatient.setVipNum(vipPhone.getVipNum() + product.getProductNum());
+            vipPatient.setVipNum(vipPhone.getVipNum() + product.getFrequency());
             Date endDate = vipPhone.getEndDate();
-            if (product.getProductNum()>5){
+            if (product.getFrequency()>=20&&product.getFrequency()<30){
+                Calendar calendar = Calendar.getInstance();
+                // 设置日期
+                calendar.setTime(endDate);
+                // 加一个月
+                calendar.add(Calendar.MONTH, 6);
+                Date time = calendar.getTime();
+                vipPatient.setEndDate(time);
+                vipPatientService.updateVipPatient(vipPatient);
+            }else if (product.getFrequency()>=30){
                 Date data = getData(endDate);
                 vipPatient.setEndDate(data);
                 vipPatientService.updateVipPatient(vipPatient);
-            }else {
-
+            }
+            else {
                 Calendar calendar = Calendar.getInstance();
                 // 设置日期
                 calendar.setTime(endDate);
@@ -201,27 +212,66 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 vipPatientService.updateVipPatient(vipPatient);
             }
         }else {
-            if (product.getProductNum()>5){
-                VipPatient vipPatient = new VipPatient();
+            if (product.getIsVip()==0){
 
-                    Patient patient = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
-                    vipPatient.setPatientPhone(sysUser.getPhonenumber());
-                    vipPatient.setVipNum(patient.getDetectionNum()+100L);
-                    Date endDate = new Date();
-                    Date data = getData(endDate);
+                VipPatient vipPatient = new VipPatient();
+                Patient patient = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
+                vipPatient.setPatientPhone(sysUser.getPhonenumber());
+                vipPatient.setVipNum(patient.getDetectionNum()+product.getFrequency());
+                Date date = new Date();
+                if (product.getFrequency()>=20&&product.getFrequency()<30){
+                    Calendar calendar = Calendar.getInstance();
+                    // 设置日期
+                    calendar.setTime(date);
+                    // 加一个月
+                    calendar.add(Calendar.MONTH, 6);
+                    Date time = calendar.getTime();
+                    vipPatient.setEndDate(time);
+                    vipPatientService.insertVipPatient(vipPatient);
+                }else if (product.getFrequency()>=30){
+                    Date data = getData(date);
                     vipPatient.setEndDate(data);
                     vipPatientService.insertVipPatient(vipPatient);
+                }
+                else {
+                    Calendar calendar = Calendar.getInstance();
+                    // 设置日期
+                    calendar.setTime(date);
+                    // 加一个月
+                    calendar.add(Calendar.MONTH, 1);
+                    Date time = calendar.getTime();
+                    vipPatient.setEndDate(time);
+                    vipPatientService.insertVipPatient(vipPatient);
+                }
+
+
             }else {
                 Patient p = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
-                Calendar calendar = Calendar.getInstance();
-                // 设置日期
-                calendar.setTime(p.getDetectionTime());
-                // 加一个月
-                calendar.add(Calendar.MONTH, 1);
-                p.setDetectionTime(calendar.getTime());
-                p.setDetectionTime(p.getDetectionTime());
-                p.setDetectionNum(p.getDetectionNum() + product.getProductNum());
-                patientService.updatePatient(p);
+                p.setDetectionNum(p.getDetectionNum() + product.getFrequency());
+                if (product.getFrequency()>=20&&product.getFrequency()<30){
+                    Calendar calendar = Calendar.getInstance();
+                    // 设置日期
+                    calendar.setTime(p.getDetectionTime());
+                    // 加一个月
+                    calendar.add(Calendar.MONTH, 6);
+                    Date time = calendar.getTime();
+                    p.setDetectionTime(time);
+                    patientService.updatePatient(p);
+                }else if (product.getFrequency()>=30){
+                    Date data = getData(p.getDetectionTime());
+                    p.setDetectionTime(data);
+                    patientService.updatePatient(p);
+                }
+                else {
+                    Calendar calendar = Calendar.getInstance();
+                    // 设置日期
+                    calendar.setTime(p.getDetectionTime());
+                    // 加一个月
+                    calendar.add(Calendar.MONTH, 1);
+                    Date time = calendar.getTime();
+                    p.setDetectionTime(time);
+                    patientService.updatePatient(p);
+                }
             }
 
         }
