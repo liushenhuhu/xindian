@@ -93,6 +93,8 @@
         </template>
       </el-table-column>
       <el-table-column label="商品折扣" align="center" prop="discount" />
+      <el-table-column label="商品折扣" align="center" prop="discount" />
+      <el-table-column label="商品折扣" align="center" prop="discount" />
       <el-table-column label="状态" align="center" prop="state" >
         <template slot-scope="scope">
           <div v-if="scope.row.state==1">上架</div>
@@ -100,8 +102,13 @@
           <div v-if="scope.row.state==3">缺货</div>
         </template>
       </el-table-column>
-      <el-table-column label="商品数量" align="center" prop="productNum" />
-      <el-table-column label="销量" align="center" prop="sales" />
+      <el-table-column label="服务次数" align="center" prop="frequency" />
+      <el-table-column label="是否会员" align="center" prop="isVip">
+      <template slot-scope="scope">
+        <div v-if="scope.row.isVip==1">否</div>
+        <div v-if="scope.row.isVip==2">是</div>
+      </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 
@@ -376,24 +383,24 @@ export default {
     handleChange1(file, fileList) {
       this.form.productUrl = URL.createObjectURL(file.raw);
       this.list[0]=file.raw;
-      console.log(this.list)
+      //console.log(this.list)
     },
     handleChange2(file, fileList) {
       this.form.urlOne = URL.createObjectURL(file.raw);
       this.list[1]=file.raw;
-      console.log(this.list)
+      //console.log(this.list)
     },
     handleRemove(file, fileList) {
       this.delImgs.push(file.name)
-      console.log(this.delImgs)
+      //console.log(this.delImgs)
     },
     //选择多张介绍图
     handleChange3(file, fileList) {
-      console.log(fileList)
+      //console.log(fileList)
       for (let i = 0; i <fileList.length; i++) {
         this.imgs[i]=fileList[i].raw
       }
-      console.log(this.imgs)
+      //console.log(this.imgs)
     },
 
     // 多选框选中数据
@@ -466,9 +473,9 @@ export default {
         }
       });
     },
-    //上传多张商品介绍图片
+    //上传多个商品介绍图片
     submitImgs(){
-      console.log(this.imgs)
+      //console.log(this.imgs)
       let data=new FormData();
       for (let i = 0; i < this.imgs.length; i++) {
         data.append('files', this.imgs[i])

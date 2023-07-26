@@ -3,13 +3,15 @@
     <div class="mainbox">
       <div class="box">
         <div class="title">
-          <img src="" alt class="logo" />
-          <span class="title-hn">客服机器人-雅雅</span>
+          <img src="@/assets/images/backg.png" width="4%" height="4%" alt />
+          <span class="title-hn">智能AI医生-小郑</span>
         </div>
         <div id="content" class="content">
           <div v-for="(item,index) in info" :key="index">
             <div class="info_r info_default" v-if="item.type == 'leftinfo'">
-              <span class="circle circle_r"></span>
+              <span class="circle circle_r">
+                <img src="@/assets/images/robot.gif" width="40px" height="40px" alt/>
+              </span>
               <div class="con_r con_text">
                 <div>{{item.content}}</div>
                 <div v-for="(item2,index) in item.question" :key="index">
@@ -35,18 +37,16 @@
             </div>
           </div>
         </div>
-
         <div class="setproblem">
           <textarea
             placeholder="请输入您的问题..."
             style="height: 68px;width: 100%;resize:none;padding-right:80px;outline: none;border-color:#ccc;border-radius:5px;"
-            id="text"
+            id="text" maxlength="150"  @input="selectMaxLength()"
             v-model="customerText"
             @keyup.enter="sentMsg()"
           ></textarea>
-          <button @click="sentMsg()" class="setproblems">
-
-            <span style="vertical-align: 4px;">发 送</span>
+          <button @click="sentMsg()" style="display: block;margin-top: -0.25%;margin-right: -4%">
+            <span style="vertical-align: 3px;">发 送</span>
           </button>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default {
           time: this.getTodayTime(),
           name: "robot",
           content:
-            "你好，我是客服机器人雅雅，请问有什么问题可以帮助您？",
+            "你好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
           question: [],
         },
       ],
@@ -189,7 +189,7 @@ export default {
       let happyEnding = {
         type: "leftinfo",
         time: this.getTodayTime(),
-        content: "退下吧",
+        content: "",
         question: [],
       };
       this.info.push(happyEnding);
@@ -231,6 +231,13 @@ export default {
         seconds;
       return time;
     },
+    selectMaxLength() {
+      console.log('input')
+      if(this.customerText.length > 149){
+          this.$message.warning("超过限制字数！");
+      }
+
+    }
   },
   mounted() {},
   props: {},
@@ -240,23 +247,28 @@ export default {
 <style lang="scss" scoped>
 .mainbox {
   width: 100%;
-  background: linear-gradient(
+  /*background: linear-gradient(
       180deg,
       rgba(149, 179, 212, 1) 0%,
       rgba(74, 131, 194, 1) 100%
-  );
+  );*/
   .box {
     width: 100%;
     /* width: 680px; */
     height: 600px;
-    background-color: #fafafa;
+    background-color: #ffffff;
     position: relative;
     padding: 1.25rem;
     #content {
+      margin-top: 3%;
       height: 800px;
       overflow-y: scroll;
-      font-size: 14px;
+      font-size: 20px;
       width: 100%;
+      //background-image: url("../../../assets/images/333.jpg");
+      //background-repeat:no-repeat;
+      //background-size:100% 100%;
+      //background-position: center;
       .circle {
         display: inline-block;
         width: 34px;
@@ -278,7 +290,8 @@ export default {
         position: relative;
         .circle_r {
           position: absolute;
-          left: 0%;
+          left: -0.1%;
+          top: 5%;
         }
         .pic_r {
           width: 17px;
@@ -287,8 +300,8 @@ export default {
         }
         .con_r {
           display: inline-block;
-          /* max-width: 253px; */
-          width: 55%;
+          max-width: 39%;
+          //width: 55%;
           min-height: 55px;
           /* min-height: 20px; */
           background-color: #e2e2e2;
@@ -299,7 +312,7 @@ export default {
         .time_r {
           margin-left: 45px;
           color: #999999;
-          font-size: 12px;
+          font-size: 24px;
         }
       }
       .info_l {
@@ -320,19 +333,22 @@ export default {
         .time_l {
           margin-right: 45px;
           color: #999999;
-          font-size: 12px;
+          font-size: 24px;
           margin-top: 5px;
         }
         .con_l {
           display: inline-block;
-          width: 220px;
-          min-height: 51px;
+          max-width: 30%;
+          min-height: 55px;
           background-color: #3163C5;
           border-radius: 6px;
           padding: 10px;
           text-align: left;
           color: #fff;
           margin-right: 5px;
+          /*word-wrap:break-word;
+          word-break:break-all;*/
+          //overflow: hidden;/*这个参数根据需求来决定要不要*/
         }
       }
       #question {
@@ -361,7 +377,7 @@ export default {
   background: #3163C5;
   opacity: 1;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 24px;
   color: #ffffff;
   position: absolute;
   right: 5%;
@@ -390,7 +406,20 @@ export default {
 
 .czkj-question-msg {
   float: left;
-  font-size: 14px;
+  font-size: 24px;
   color: #3163C5;
 }
+.title {
+  position: absolute;
+  left: 45%;
+  //height: 10%;
+  font-size: 20px;
+}
+.title-hn {
+  display: block;
+  float: right;
+  margin-right: 84%;
+  margin-top: 0.5%;
+}
+
 </style>
