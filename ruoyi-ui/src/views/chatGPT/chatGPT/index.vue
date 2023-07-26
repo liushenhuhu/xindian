@@ -3,8 +3,8 @@
     <div class="mainbox">
       <div class="box">
         <div class="title">
-          <img src="@/assets/images/backg.png" width="4%" height="4%" alt />
-          <span class="title-hn">智能AI医生-小郑</span>
+          <img src="@/assets/images/logo1.png" width="2.8%" height="65%" alt />
+          <img src="@/assets/images/font.png" width="9%" height="60%" />
         </div>
         <div id="content" class="content">
           <div v-for="(item,index) in info" :key="index">
@@ -189,7 +189,7 @@ export default {
       let happyEnding = {
         type: "leftinfo",
         time: this.getTodayTime(),
-        content: "",
+        content: "下次为您服务！",
         question: [],
       };
       this.info.push(happyEnding);
@@ -258,23 +258,24 @@ export default {
     height: 600px;
     background-color: #ffffff;
     position: relative;
-    padding: 1.25rem;
+    //padding: 1.25rem;
     #content {
-      margin-top: 3%;
-      height: 800px;
+      margin-top: -0.4%;
+      height: 1200px;
       overflow-y: scroll;
       font-size: 20px;
       width: 100%;
-      //background-image: url("../../../assets/images/333.jpg");
-      //background-repeat:no-repeat;
-      //background-size:100% 100%;
-      //background-position: center;
+      background-image: url("../../../assets/images/body.png");
+      background-repeat:no-repeat;
+      background-size:100% 100%;
+      background-position: center;
       .circle {
         display: inline-block;
-        width: 34px;
-        height: 34px;
+        width: 42px;
+        height: 42px;
         border-radius: 50%;
         background-color: #eff1f3;
+        margin-left: 56px;
       }
       .con_text {
         color: #333;
@@ -288,15 +289,16 @@ export default {
       }
       .info_r {
         position: relative;
+        margin-top: 2%;
         .circle_r {
           position: absolute;
-          left: -0.1%;
+          left: -1%;
           top: 5%;
         }
         .pic_r {
           width: 17px;
           height: 17px;
-          margin: 8px;
+          margin: 9px;
         }
         .con_r {
           display: inline-block;
@@ -307,31 +309,28 @@ export default {
           background-color: #e2e2e2;
           border-radius: 6px;
           padding: 10px;
-          margin-left: 40px;
+          margin-left: 100px;
         }
         .time_r {
-          margin-left: 45px;
+          margin-left: 100px;
           color: #999999;
           font-size: 24px;
         }
       }
       .info_l {
         text-align: right;
-        // margin-right: 20px;
+        margin-right: 35px;
         color: #ffffff;
         color: #3163C5;
         margin-top: 10px;
-
-        // .circle_l {
-        //   // vertical-align: -10px;
-        // }
         .pic_l {
-          width: 13px;
+          width: 17px;
           height: 17px;
-          margin: 8px 10px;
+          margin: 9px;
+          //margin-right: 20px;
         }
         .time_l {
-          margin-right: 45px;
+          margin-right: 72px;
           color: #999999;
           font-size: 24px;
           margin-top: 5px;
@@ -350,6 +349,9 @@ export default {
           word-break:break-all;*/
           //overflow: hidden;/*这个参数根据需求来决定要不要*/
         }
+        .circle_l {
+          margin-left: 25px;
+        }
       }
       #question {
         cursor: pointer;
@@ -362,7 +364,7 @@ export default {
   height: 68px;
   background-color: #ffffff;
   position: relative;
-  margin-top: 3.75rem;
+  margin-top: -12rem;
 
 }
 .setproblem textarea {
@@ -410,16 +412,28 @@ export default {
   color: #3163C5;
 }
 .title {
-  position: absolute;
-  left: 45%;
-  //height: 10%;
-  font-size: 20px;
+  width: 100%;
+  //position: absolute;
+  //margin: 0 auto;
+  text-align: center;
+  //left: 45%;
+  height: 16%;
+  font-size: 32px;
+  background: url("../../../assets/images/title.png");
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+  background-position: center;
+  background-color:rgb(3,4,74);
+  img {
+    display: inline;
+    margin-top: 0.5%;
+  }
 }
 .title-hn {
-  display: block;
-  float: right;
-  margin-right: 84%;
-  margin-top: 0.5%;
+  display: inline-block;
+  //vertical-align: middle;
+  //float: right;
+  //margin-right: 46%;
 }
 
 </style>
