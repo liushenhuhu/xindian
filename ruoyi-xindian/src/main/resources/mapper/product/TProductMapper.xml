@@ -162,4 +162,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{productId}
         </foreach>
     </delete>
+
+    <select id="selectByIdUrl" parameterType="Integer" resultMap="ProductImgsResult">
+        select img from product_imgs where id in
+        <foreach collection="array" item="item"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>
