@@ -133,4 +133,9 @@ public class TProductServiceImpl implements ITProductService
     public void deleteByIdImg(Integer[] delImgs) {
         tProductMapper.deleteByIdImg(delImgs);
     }
+
+    @Override
+    public List<ProductImgs> selectByIdUrl(Integer[] delImgs) {
+        return tProductMapper.selectByIdUrl(delImgs);
+    }
 }

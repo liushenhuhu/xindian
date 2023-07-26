@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.product.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -263,7 +264,13 @@ public class TProductController extends BaseController
 	@DeleteMapping("/web/{productIds}")
     public AjaxResult remove(@PathVariable Long[] productIds)
     {
-        return toAjax(tProductService.deleteTProductByProductIds(productIds));
+        if(tProductService.deleteTProductByProductIds(productIds) > 0){
+            //delLinuxFile(tProductService.select);
+            return toAjax(1);
+        }else {
+            return toAjax(0);
+        }
+
     }
 
     /**
@@ -292,24 +299,26 @@ public class TProductController extends BaseController
     public AjaxResult batchUploadFile(@RequestParam(value = "files",required = false) MultipartFile[] files,
                                       @PathVariable("productId") Long productId,
                                       @RequestParam(value = "delImgs",required = false) Integer[] delImgs) {
+        List<ProductImgs> products = new ArrayList<>();
+    try{
         if(delImgs!=null){
+            List<ProductImgs> list= tProductService.selectByIdUrl(delImgs);
             //根据id删除商品介绍图片
             tProductService.deleteByIdImg(delImgs);
+            for (int i = 0; i < list.size(); i++) {
+               delLinuxFile(list.get(i).getImg());
+
+            }
         }
 
         if(files==null){
             return AjaxResult.success("操作成功");
         }
-        List<ProductImgs> products = new ArrayList<>();
-//        //根据id删除所有介绍图片
-//        tProductService.deleteAllImages(productId);
 
-    try{
-//        System.out.println(files[0].getSize());
 
             for (int i = 0; i < files.length; i++) {
                 //循环单个上传
-                String avatar = FileUploadUtils.upload(RuoYiConfig.getUploadPath(), files[i], MimeTypeUtils.IMAGE_EXTENSION);
+                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), files[i], MimeTypeUtils.IMAGE_EXTENSION);
                 ProductImgs productImgs=new ProductImgs();
                 productImgs.setProductId(productId);
                 productImgs.setImg(url + avatar);
@@ -323,6 +332,22 @@ public class TProductController extends BaseController
         }
         return toAjax(tProductService.insertProductImgs(products));
         }
+
+
+    public void delLinuxFile(String filePath) {
+        try {
+        String str = filePath.substring(38, filePath.length());
+        str = "/home/chenpeng/workspace/system/xindian/uploadPath"+ str;
+        System.out.println("路径========================"+str);
+        String cmd1 = "rm -f " + str;//linux指令
+        String[] cmd = new String[]{"sh","-c",cmd1};
+
+            Process process = Runtime.getRuntime().exec(cmd);
+            process.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     }
 
