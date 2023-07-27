@@ -3,6 +3,9 @@ package com.ruoyi.xindian.patient_management.controller;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.equipment.controller.EquipmentController;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
@@ -25,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -53,19 +58,25 @@ public class OnlineController extends BaseController {
     @Autowired
     private IHospitalService iHospitalService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
+
     @GetMapping("/updateAll")
-    public AjaxResult updateAll() {
-        AjaxResult result1 = update1();
-        AjaxResult result2 = update2();
+    public AjaxResult updateAll(HttpServletRequest request) {
+        AjaxResult result1 = update1(request);
+        AjaxResult result2 = update2(request);
         Map<String, Object> map = new HashMap<>();
         map.put("res1", result1);
         map.put("res2", result2);
         return AjaxResult.success(map);
     }
     @GetMapping("/{patientPhone}")
-    public AjaxResult getOnlineStatus(@PathVariable String patientPhone) {
-        update1();
-        update2();
+    public AjaxResult getOnlineStatus(@PathVariable String patientPhone,HttpServletRequest request) {
+        update1(request);
+        update2(request);
         PatientManagement patientManagement = new PatientManagement();
         patientManagement.setPatientPhone(patientPhone);
         patientManagement.setOnlineStatus("1");
@@ -78,9 +89,9 @@ public class OnlineController extends BaseController {
 
 
     @GetMapping("/update1")
-    public AjaxResult update1() {
-        SysUser userInfo = patientManagementController.getUserInfo();
-
+    public AjaxResult update1(HttpServletRequest request1) {
+        LoginUser loginUser = tokenService.getLoginUser(request1);
+        SysUser userInfo = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         System.out.println("用户信息:"+userInfo);
         OnlineParam onlineParam = new OnlineParam("所有");
         if (userInfo!=null && userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
@@ -120,11 +131,12 @@ public class OnlineController extends BaseController {
     }
 
     @GetMapping("/update2")
-    public AjaxResult update2() {
+    public AjaxResult update2(HttpServletRequest request1) {
 //        String url = "http://219.155.7.235:5003/get_device2";
         String url = "https://server.mindyard.cn:84/get_device2";
 
-        SysUser userInfo = patientManagementController.getUserInfo();
+        LoginUser loginUser = tokenService.getLoginUser(request1);
+        SysUser userInfo = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         System.out.println("用户信息:"+userInfo);
         OnlineParam onlineParam = new OnlineParam("所有");
         if (userInfo!=null && userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {

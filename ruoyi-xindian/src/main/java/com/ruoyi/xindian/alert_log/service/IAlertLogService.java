@@ -99,4 +99,6 @@ public interface IAlertLogService {
      */
     List<AlertLog> selectEarly(AlertLog alertLog);
 
+    void redisEarly(AlertLog alertLog);
+
 }

@@ -3,9 +3,14 @@ package com.ruoyi.xindian.hospital.controller;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
@@ -14,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -33,22 +40,46 @@ public class DoctorController extends BaseController
     @Autowired
     private IDepartmentService departmentService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
+
     /**
      * 查询医生列表
      */
     @PreAuthorize("@ss.hasPermi('doctor:doctor:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Doctor doctor)
+    public TableDataInfo list(Doctor doctor, HttpServletRequest request)
     {
-        startPage();
-        List<Doctor> list = doctorService.selectDoctorList(doctor);
+        LoginUser loginUser = tokenService.getLoginUser(request);
         Department department = new Department();
-        for (Doctor value : list) {
-            department.setDepartmentCode(value.getDepartmentCode());
-            List<Department> departments = departmentService.selectDepartmentList(department);
-            value.setDepartmentName(departments.get(0).getDepartmentName());
+        SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
+        if (sysUser.getDeptId()==200){
+            List<Doctor> doctors = doctorService.selectUserDoc(doctor,loginUser.getUser().getUserId());
+            for (Doctor value : doctors) {
+                department.setDepartmentCode(value.getDepartmentCode());
+                List<Department> departments = departmentService.selectDepartmentList(department);
+                value.setDepartmentName(departments.get(0).getDepartmentName());
+            }
+            return getDataTable(doctors);
         }
-        return getDataTable(list);
+
+
+
+            startPage();
+            List<Doctor> list = doctorService.selectDoctorList(doctor);
+            for (Doctor value : list) {
+                department.setDepartmentCode(value.getDepartmentCode());
+                List<Department> departments = departmentService.selectDepartmentList(department);
+                value.setDepartmentName(departments.get(0).getDepartmentName());
+            }
+            return getDataTable(list);
+
+
+
+
     }
 
     @GetMapping("/nameList")

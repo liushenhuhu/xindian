@@ -4,11 +4,16 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.equipment.domain.Equipment;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+
+import javax.annotation.Resource;
 
 /**
  * 医院Service业务层处理
@@ -24,6 +29,10 @@ public class HospitalServiceImpl implements IHospitalService
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
+
 
     /**
      * 查询医院
@@ -111,7 +120,21 @@ public class HospitalServiceImpl implements IHospitalService
         if (sysUser.getHospitalCode()!=null&&!"".equals(sysUser.getHospitalCode())){
             hospital.setHospitalCode(sysUser.getHospitalCode());
         }
-        return hospitalMapper.selectHospitalList(hospital);
+        List<Hospital> hospitals = hospitalMapper.selectHospitalList(hospital);
+
+        Hospital hospital2 = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+        AssociatedHospital associatedHospital = new AssociatedHospital();
+        associatedHospital.setHospitalId(hospital2.getHospitalId());
+        List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+        if (associatedHospitals!=null&&associatedHospitals.size()>0){
+            for (AssociatedHospital c:associatedHospitals){
+                Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                hospital.setHospitalCode(hospital1.getHospitalCode());
+                List<Hospital> hospitals1 = hospitalMapper.selectHospitalList(hospital);
+                hospitals.addAll(hospitals1);
+            }
+        }
+        return hospitals;
     }
 
     @Override

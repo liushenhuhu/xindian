@@ -142,7 +142,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             Product product = productMapper.selectById(c.getProductId());
             log.info("更新订单状态 ===> {}", orderStatus.getType());
             QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
-            if (product.getType().equals("服务")){
+            if (product.getType().equals("服务")||product.getType().equals("卡片")){
 
                 queryWrapper.eq("order_no", orderNo);
 
@@ -497,6 +497,63 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             updateProductAdd(sum,productId);
         }
 
+
+        redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(orderInfo.getId(),productId+","+sum);
+
+        return orderInfo.getId();
+
+    }
+    /**
+     * 添加订单
+     * @param request
+     * @param productId
+     * @param sum
+     * @return
+     */
+    @Transactional
+    @Override
+    public String addKpOrFwOrder(HttpServletRequest request, Long productId, Integer sum) {
+        Product product = productMapper.selectById(productId);
+        if ((product.getProductNum().compareTo(sum) <0)){
+            Product product1 = new Product();
+            product1.setState("3");
+            product1.setProductId(product.getProductId());
+            productMapper.updateById(product1);
+            throw new ServiceException("库存不够");
+        }
+
+
+
+        //获取token中发送请求的用户信息
+        LoginUser loginUser = tokenService.getLoginUser(request);
+
+        SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
+
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(OrderNoUtils.getNo());
+        orderInfo.setTitle("购买"+product.getProductName());
+        orderInfo.setOrderNo(OrderNoUtils.getOrderNo());
+        orderInfo.setUserId(loginUser.getUser().getUserId());
+        orderInfo.setTotalFee(new BigDecimal(sum).multiply(product.getDiscount()));
+        orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
+        orderInfo.setOpenId(sysUser.getOpenId());
+        orderInfo.setCreateTime(new Date());
+        orderInfo.setUpdateTime(new Date());
+        orderInfoMapper.insert(orderInfo);
+
+        SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();
+        suborderOrderInfo.setOrderFather(orderInfo.getId());
+        suborderOrderInfo.setProductId(productId);
+        suborderOrderInfo.setSum(Long.valueOf(sum));
+        suborderOrderInfo.setCreateTime(new Date());
+        suborderOrderInfo.setUpdateTime(new Date());
+        suborderOrderInfo.setProductPrice(product.getDiscount());
+        suborderOrderInfo.setProductName(product.getProductName());
+        int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
+        if(!product.getType().equals("服务")){
+            updateProductAdd(sum,productId);
+        }
 
         redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
         redisTemplate.opsForValue().set(orderInfo.getId(),productId+","+sum);

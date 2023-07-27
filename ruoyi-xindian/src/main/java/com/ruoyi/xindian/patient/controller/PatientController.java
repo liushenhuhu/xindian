@@ -61,11 +61,13 @@ public class PatientController extends BaseController
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalName = sysUser.getHospitalName();
+
             if(hospitalName==null){
                 String hospitalCode = sysUser.getHospitalCode();
                 if(hospitalCode!=null) {
                     Hospital hospital = hospitalService.selectHospitalByHospitalCode(hospitalCode);
                     hospitalName=hospital.getHospitalName();
+                   patient.setHospitalId(hospital.getHospitalId());
                 }
                 else{
                     return getDataTable(list);

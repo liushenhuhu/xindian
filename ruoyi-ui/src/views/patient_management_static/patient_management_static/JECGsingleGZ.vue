@@ -307,6 +307,13 @@
             size="mini"
             type="text"
             icon="el-icon-s-order"
+            @click="selectECG(scope.row)"
+          >选择医生诊断
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-order"
             @click="lookECG(scope.row)"
             v-hasPermi="['patient:patient:alert']"
           >查看报告
@@ -408,6 +415,13 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="选择医生诊断" :visible.sync="dialogFormVisible" width="300px">
+      <el-cascader :options="option" clearable v-model="value"></el-cascader>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogForm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -417,7 +431,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient
+  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listDoc, docUpdate
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -442,6 +456,14 @@ export default {
       ids: [],
       // 非单个禁用
       single: true,
+      reportList:{
+        pId:null,
+        dPhone:null,
+        hospital:null,
+      },
+      option:[],
+      value:[],
+      dialogFormVisible:false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -518,6 +540,21 @@ export default {
     refreshList() {
       console.log("refresh======")
       updateOnlineAll().then(res => {
+        this.getList();
+      })
+    },
+    selectECG(row){
+      this.reportList.pId = row.pId
+      this.dialogFormVisible = true;
+      listDoc().then(r =>{
+        this.option = r.data
+      })
+    },
+    dialogForm(){
+      this.reportList.dPhone = this.value[1]
+      this.reportList.hospital = this.value[0]
+      console.log(this.reportList)
+      docUpdate(this.reportList).then(r =>{
         this.getList();
       })
     },

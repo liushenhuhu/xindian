@@ -2,6 +2,11 @@ package com.ruoyi.xindian.patient.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
+import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.mapper.PatientMapper;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -13,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -30,6 +36,12 @@ public class PatientServiceImpl implements IPatientService
 
     @Autowired
     private VipPatientMapper vipPatientMapper;
+
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
+
+    @Resource
+    private HospitalMapper hospitalMapper;
     /**
      * 查询患者
      *
@@ -49,9 +61,22 @@ public class PatientServiceImpl implements IPatientService
      * @return 患者
      */
     @Override
-    public List<Patient> selectPatientList(Patient patient)
-    {
-        return patientMapper.selectPatientList(patient);
+    public List<Patient> selectPatientList(Patient patient) {
+        List<Patient> patients = patientMapper.selectPatientList(patient);
+        if (patient.getHospitalId()!=null){
+            AssociatedHospital associatedHospital = new AssociatedHospital();
+            associatedHospital.setHospitalId(patient.getHospitalId());
+            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+            if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                for (AssociatedHospital c:associatedHospitals){
+                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                    patient.setPatientSource(hospital1.getHospitalName());
+                    List<Patient> patients1 = patientMapper.selectPatientList(patient);
+                    patients.addAll(patients1);
+                }
+            }
+        }
+        return patients;
     }
 
     /**

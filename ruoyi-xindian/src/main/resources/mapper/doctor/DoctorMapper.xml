@@ -55,6 +55,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDoctorVo"/>
         where doctor_phone = #{doctorPhone}
     </select>
+    <select id="selectDoc" resultType="com.ruoyi.xindian.patient_management.vo.ListDocVO">
+        SELECT hospital as label ,hospital as value
+        FROM doctor
+        GROUP BY hospital
+    </select>
 
 
     <insert id="insertDoctor" parameterType="Doctor" useGeneratedKeys="true" keyProperty="doctorId">

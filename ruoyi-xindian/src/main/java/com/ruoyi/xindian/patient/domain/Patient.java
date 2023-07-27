@@ -109,6 +109,15 @@ public class Patient extends BaseEntity {
 
     private Date detectionTime;
 
+    private Long hospitalId;
+
+    public Long getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Long hospitalId) {
+        this.hospitalId = hospitalId;
+    }
 
     private List<AlertLog> alertLogList;
 

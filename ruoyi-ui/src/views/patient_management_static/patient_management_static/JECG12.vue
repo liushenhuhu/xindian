@@ -314,6 +314,13 @@
             size="mini"
             type="text"
             icon="el-icon-s-order"
+            @click="selectECG(scope.row)"
+          >选择医生诊断
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-order"
             @click="lookECG(scope.row)"
           >查看报告
           </el-button>
@@ -412,6 +419,13 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="选择医生诊断" :visible.sync="dialogFormVisible" width="300px">
+      <el-cascader :options="option" clearable v-model="value"></el-cascader>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogForm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -421,7 +435,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient
+  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listDoc,docUpdate
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -429,6 +443,7 @@ import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 import {addReport} from "@/api/report/report";
 import {listDoctorName} from "@/api/doctor/doctor";
+import th from "element-ui/src/locale/lang/th";
 
 
 export default {
@@ -442,12 +457,15 @@ export default {
       options: [],
       // 遮罩层
       loading: true,
+      value:[],
       // 选中数组
       ids: [],
       // 非单个禁用
       single: true,
+      pId:null,
       // 非多个禁用
       multiple: true,
+      dialogFormVisible:false,
       // 显示搜索条件
       showSearch: false,
       // 总条数
@@ -456,6 +474,7 @@ export default {
       patient_managementList: [],
       // 弹出层标题
       title: "",
+      option:[],
       // 是否显示弹出层
       open: false,
       // 时间范围
@@ -480,6 +499,11 @@ export default {
         ecgLevel: null,
         DoctorName: null,
         doctorPhone: null
+      },
+      reportList:{
+        pId:null,
+        dPhone:null,
+        hospital:null,
       },
       // 表单参数
       form: {},
@@ -516,9 +540,7 @@ export default {
         var obj = {}
         obj.value = response[i];
         obj.label = response[i];
-        console.log(obj)
         this.options[i] = obj;
-        console.log(this.options)
       }
     });
     this.getList();
@@ -531,7 +553,21 @@ export default {
         this.getList();
       })
     },
-
+    selectECG(row){
+      this.reportList.pId = row.pId
+      this.dialogFormVisible = true;
+      listDoc().then(r =>{
+        this.option = r.data
+      })
+    },
+    dialogForm(){
+      this.reportList.dPhone = this.value[1]
+      this.reportList.hospital = this.value[0]
+      console.log(this.reportList)
+      docUpdate(this.reportList).then(r =>{
+        this.getList();
+      })
+    },
 
     /** 查询患者管理列表 */
     getList() {

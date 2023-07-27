@@ -1,11 +1,20 @@
 package com.ruoyi.xindian.hospital.service.impl;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.DoctorMapper;
+import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
+import com.ruoyi.xindian.patient_management.vo.ListDocVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +29,16 @@ public class DoctorServiceImpl implements IDoctorService
 {
     @Autowired
     private DoctorMapper doctorMapper;
+
+    @Resource
+    private HospitalMapper hospitalMapper;
+
+
+    @Resource
+    private SysUserMapper sysUserMapper;
+
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
 
     /**
      * 查询医生
@@ -107,5 +126,48 @@ public class DoctorServiceImpl implements IDoctorService
     public int deleteDoctorByDoctorId(Long doctorId)
     {
         return doctorMapper.deleteDoctorByDoctorId(doctorId);
+    }
+
+    @Override
+    public List<ListDocVO> listDoc() {
+
+        List<ListDocVO> listDocVOS = doctorMapper.selectDoc();
+        Doctor doctor = new Doctor();
+        for (ListDocVO c : listDocVOS){
+            doctor.setHospital(c.getLabel());
+            List<Doctor> doctors = doctorMapper.selectDoctorList(doctor);
+            for (Doctor d : doctors){
+                DocVO listDocVO = new DocVO();
+                listDocVO.setLabel(d.getDoctorName());
+                listDocVO.setValue(d.getDoctorPhone());
+                c.getChildren().add(listDocVO);
+            }
+        }
+        return listDocVOS;
+    }
+
+    @Override
+    public List<Doctor> selectUserDoc(Doctor doctor,Long userId) {
+        SysUser sysUser = sysUserMapper.selectUserById(userId);
+
+        Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+
+        doctor.setHospital(hospital.getHospitalName());
+
+        List<Doctor> doctors = doctorMapper.selectDoctorList(doctor);
+
+        AssociatedHospital associatedHospital = new AssociatedHospital();
+        associatedHospital.setHospitalId(hospital.getHospitalId());
+        List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+        if (associatedHospitals!=null&&associatedHospitals.size()>0){
+            for (AssociatedHospital c:associatedHospitals){
+                Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                doctor.setHospital(hospital1.getHospitalName());
+                List<Doctor> doctors1 = doctorMapper.selectDoctorList(doctor);
+                doctors.addAll(doctors1);
+            }
+        }
+
+        return doctors;
     }
 }

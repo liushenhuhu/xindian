@@ -161,7 +161,7 @@
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+<!--      <el-table-column label="患者电话" align="center" prop="patientPhone"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

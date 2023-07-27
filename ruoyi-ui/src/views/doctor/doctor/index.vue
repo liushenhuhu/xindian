@@ -144,7 +144,7 @@
               v-for="dict in dict.type.hospital_name_list"
               :key="dict.value"
               :label="dict.label"
-              :value="dict.value"
+              :value="dict.label"
             />
           </el-select>
         </el-form-item>
@@ -304,6 +304,7 @@ export default {
         //   this.restaurants.find(item => console.log(item))
         //   this.doctorList[i].departmentCode=this.restaurants.find(item => item.id === response.rows[i].departmentCode);
         // }
+        console.log(response)
         this.total = response.total;
         this.loading = false;
       });

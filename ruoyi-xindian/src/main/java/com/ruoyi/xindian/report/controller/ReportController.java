@@ -588,4 +588,23 @@ public class ReportController extends BaseController
         List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementList();
         return AjaxResult.success(patientManagements);
     }
+
+    @GetMapping("/docUpdate")
+    public AjaxResult docUpdate( Report report){
+        Report report1 = reportService.selectReportByPId(report.getpId());
+        Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+        report.setReportId(report1.getReportId());
+        report.setDiagnosisStatus(2L);
+        report.setDiagnosisDoctor(doctor1.getDoctorName());
+        Doctor doctor = new Doctor();
+        doctor.setHospital(report.getHospital());
+        List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+        //定时器, 30分钟无医生诊断, 换医生诊断.
+        ThreadUtil threadUtil = new ThreadUtil();
+        threadUtil.setParameter(report.getpId(), doctors, reportService);
+        Thread thread = new Thread(threadUtil);
+        thread.start();
+        int i = reportService.updateReport(report);
+        return AjaxResult.success();
+    }
 }

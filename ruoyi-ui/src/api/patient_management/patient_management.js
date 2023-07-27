@@ -79,3 +79,19 @@ export function sendMsgToPatient(phone) {
     method: 'get'
   })
 }
+
+export function listDoc() {
+  return request({
+    url: '/patient_management/patient_management/listDoc',
+    method: 'get'
+  })
+}
+export function docUpdate(data) {
+  return request({
+    url: '/report/report/docUpdate',
+    method: 'get',
+    params:data
+  })
+}
+
+

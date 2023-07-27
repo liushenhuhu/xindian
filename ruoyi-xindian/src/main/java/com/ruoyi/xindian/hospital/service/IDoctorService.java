@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.hospital.service;
 
 import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.patient_management.vo.ListDocVO;
 
 import java.util.List;
 
@@ -63,4 +64,13 @@ public interface IDoctorService
      * @return 结果
      */
     public int deleteDoctorByDoctorId(Long doctorId);
+
+    /**
+     * 查询医院所在医生
+     */
+    List<ListDocVO> listDoc();
+
+
+    List<Doctor> selectUserDoc(Doctor doctor,Long userId);
+
 }

@@ -1,5 +1,7 @@
 package com.ruoyi.xindian.order.listenner;
 
+import com.ruoyi.xindian.alert_log.domain.AlertLog;
+import com.ruoyi.xindian.alert_log.service.IAlertLogService;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.data.redis.connection.Message;
@@ -27,6 +29,10 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     @Resource
     private WXPublicRequest wxPublicRequest;
 
+
+    @Resource
+    private IAlertLogService alertLogService;
+
     /**
      * redis失效key事件处理
      * @param message
@@ -49,6 +55,31 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        if (expiredKey.equals("earlyLogTest01")){
+            AlertLog alertLog = new AlertLog();
+            alertLog.setEcgType("J12");
+            alertLog.setRedisKey("earlyLogTest01");
+            alertLogService.redisEarly(alertLog);
+        }
+        if (expiredKey.equals("earlyLogTest02")){
+            AlertLog alertLog = new AlertLog();
+            alertLog.setEcgType("Jsingle");
+            alertLog.setRedisKey("earlyLogTest02");
+            alertLogService.redisEarly(alertLog);
+        }
+        if (expiredKey.equals("earlyLogTest03")){
+            AlertLog alertLog = new AlertLog();
+            alertLog.setEcgType("D12");
+            alertLog.setRedisKey("earlyLogTest03");
+            alertLogService.redisEarly(alertLog);
+        }
+        if (expiredKey.equals("earlyLogTest04")){
+            AlertLog alertLog = new AlertLog();
+            alertLog.setEcgType("Dsingle");
+            alertLog.setRedisKey("earlyLogTest04");
+            alertLogService.redisEarly(alertLog);
         }
 
     }

@@ -87,4 +87,18 @@ public class OrderController {
     }
 
 
+    /**
+     * 添加订单
+     * @param request
+     * @param productId
+     * @param sum
+     * @return
+     */
+    @PostMapping("/orderKpOrFwAdd")
+    public AjaxResult orderKpOrFwAdd(HttpServletRequest request,Long productId,Integer sum){
+
+        String isAdd  = orderInfoService.addKpOrFwOrder(request,productId,sum);
+
+        return AjaxResult.success("操作成功",isAdd);
+    }
 }

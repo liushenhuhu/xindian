@@ -71,6 +71,15 @@ public interface OrderInfoService extends IService<OrderInfo> {
     String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId);
 
 
+    /**
+     * 添加订单
+     * @param request
+     * @param productId
+     * @param sum
+     * @return
+     */
+    String addKpOrFwOrder(HttpServletRequest request, Long productId, Integer sum);
+
 
     void redisOrderKey(String orderId);
 

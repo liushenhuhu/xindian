@@ -311,16 +311,16 @@
     </select>
     <select id="selectEarly" resultType="com.ruoyi.xindian.alert_log.domain.AlertLog">
         <if test="ecgType != null&amp;&amp;ecgType =='J12'">
-            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type = 'JECG12YXD' GROUP BY a.log_type
+            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type like concat('JECG12','%') GROUP BY a.log_type
         </if>
         <if test="ecgType != null&amp;&amp;ecgType =='Jsingle'">
-            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type = 'JECGsingleWL' GROUP BY a.log_type
+            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type like concat('JECGsingle','%')  GROUP BY a.log_type
         </if>
         <if test="ecgType != null&amp;&amp;ecgType =='D12'">
-            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type = 'DECG12YXD' GROUP BY a.log_type
+            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type like concat('DECG12','%')  GROUP BY a.log_type
         </if>
         <if test="ecgType != null&amp;&amp;ecgType =='Dsingle'">
-            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type = 'DECGsingleGZ' GROUP BY a.log_type
+            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type like concat('DECGsingle','%')  GROUP BY a.log_type
         </if>
 
     </select>
