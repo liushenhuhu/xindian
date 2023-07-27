@@ -4,13 +4,13 @@
       <div class="box">
         <div class="title">
           <img src="@/assets/images/logo1.png" width="2.8%" height="65%" alt />
-          <img src="@/assets/images/font.png" width="9%" height="60%" />
+          <img src="@/assets/images/font.png" width="9.5%" height="60%" />
         </div>
         <div id="content" class="content">
           <div v-for="(item,index) in info" :key="index">
             <div class="info_r info_default" v-if="item.type == 'leftinfo'">
               <span class="circle circle_r">
-                <img src="@/assets/images/robot.gif" width="40px" height="40px" alt/>
+                <img src="@/assets/images/robot.gif" width="40px" height="40px" style="margin-left: 1px" alt/>
               </span>
               <div class="con_r con_text">
                 <div>{{item.content}}</div>
@@ -295,11 +295,6 @@ export default {
           left: -1%;
           top: 5%;
         }
-        .pic_r {
-          width: 17px;
-          height: 17px;
-          margin: 9px;
-        }
         .con_r {
           display: inline-block;
           max-width: 39%;
@@ -414,7 +409,7 @@ export default {
 .title {
   width: 100%;
   //position: absolute;
-  //margin: 0 auto;
+  margin: 0 auto !important;
   text-align: center;
   //left: 45%;
   height: 16%;
