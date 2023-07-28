@@ -258,28 +258,28 @@ public class ReportController extends BaseController
 //            }
 //            appData.setQuestionNum(questionNum-1);
 //            appDataService.updateAppData(appData);
-                Detection detection = new Detection();
-                detection.setPatientPhone(phonenumber);
-                detection.setDetectionTime(new Date());
-                detection.setDetectionPid(report1.getpId());
-
-                HashMap<String, Object> params = new HashMap<>();
-                Detection detection1 = new Detection();
-                LocalDate now = LocalDate.now();
-                LocalDateTime startOfDay = now.atStartOfDay();
-                LocalDateTime endofDay = now.atTime(LocalTime.MAX);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-                String start = startOfDay.format(formatter);
-                String end = endofDay.format(formatter);
-                params.put("beginDetectionTime", start);
-                params.put("endDetectionTime", end);
-                detection1.setPatientPhone(phonenumber);
-                detection1.setParams(params);
-                List<Detection> detections = detectionService.selectDetectionList(detection1);
-                if (detections.size() >= patient.getDetectionNum()) {
-                    return AjaxResult.error("今日咨询次数已用完");
-                }
+//                Detection detection = new Detection();
+//                detection.setPatientPhone(phonenumber);
+//                detection.setDetectionTime(new Date());
+//                detection.setDetectionPid(report1.getpId());
+//                detectionService.insertDetection(detection);
+//                HashMap<String, Object> params = new HashMap<>();
+//                Detection detection1 = new Detection();
+//                LocalDate now = LocalDate.now();
+//                LocalDateTime startOfDay = now.atStartOfDay();
+//                LocalDateTime endofDay = now.atTime(LocalTime.MAX);
+//                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//
+//                String start = startOfDay.format(formatter);
+//                String end = endofDay.format(formatter);
+//                params.put("beginDetectionTime", start);
+//                params.put("endDetectionTime", end);
+//                detection1.setPatientPhone(phonenumber);
+//                detection1.setParams(params);
+//                List<Detection> detections = detectionService.selectDetectionList(detection1);
+//                if (detections.size() >= patient.getDetectionNum()) {
+//                    return AjaxResult.error("今日咨询次数已用完");
+//                }
 //            return AjaxResult.success();
 //                detectionService.insertDetection(detection);
                 //给医生发送短信
