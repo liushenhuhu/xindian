@@ -3,8 +3,8 @@
     <div class="mainbox">
       <div class="box">
         <div class="title">
-          <img src="@/assets/images/logo1.png" width="2.8%" height="65%" alt />
-          <img src="@/assets/images/font.png" width="9.5%" height="60%" />
+          <img src="@/assets/images/logo1.png" style="margin-top: 1%" width="4%" height="50%" alt />
+          <img src="@/assets/images/font.png" width="13%" height="50%" />
         </div>
         <div id="content" class="content">
           <div v-for="(item,index) in info" :key="index">
@@ -40,7 +40,7 @@
         <div class="setproblem">
           <textarea
             placeholder="请输入您的问题..."
-            style="height: 68px;width: 100%;resize:none;padding-right:80px;outline: none;border-color:#ccc;border-radius:5px;"
+            style="height: 4vw;width: 100%;resize:none;outline: none;border-color:#ccc;border-radius:5px;font-size: 20px"
             id="text" maxlength="150"  @input="selectMaxLength()"
             v-model="customerText"
             @keyup.enter="sentMsg()"
@@ -68,7 +68,7 @@ export default {
           time: this.getTodayTime(),
           name: "robot",
           content:
-            "你好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
+            "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
           question: [],
         },
       ],
@@ -247,28 +247,21 @@ export default {
 <style lang="scss" scoped>
 .mainbox {
   width: 100%;
-  /*background: linear-gradient(
-      180deg,
-      rgba(149, 179, 212, 1) 0%,
-      rgba(74, 131, 194, 1) 100%
-  );*/
   .box {
     width: 100%;
-    /* width: 680px; */
-    height: 600px;
+    height: 46vw;
     background-color: #ffffff;
     position: relative;
-    //padding: 1.25rem;
+    background-image: url("../../../assets/images/body.png");
+    background-repeat:no-repeat;
+    background-size:100% 110%;
+    background-position: center;
+    z-index: 0;
     #content {
-      margin-top: -0.4%;
-      height: 1200px;
+      height: 35.6vw;
       overflow-y: scroll;
       font-size: 20px;
       width: 100%;
-      background-image: url("../../../assets/images/body.png");
-      background-repeat:no-repeat;
-      background-size:100% 100%;
-      background-position: center;
       .circle {
         display: inline-block;
         width: 42px;
@@ -356,11 +349,11 @@ export default {
 }
 .setproblem {
   width: 100%;
-  height: 68px;
-  background-color: #ffffff;
+  height: 4vw;
+  background-color: #ab2828;
   position: relative;
-  margin-top: -12rem;
-
+  //margin-top: -7.3vw;
+  z-index: 999;
 }
 .setproblem textarea {
   color: #999999;
@@ -412,7 +405,7 @@ export default {
   margin: 0 auto !important;
   text-align: center;
   //left: 45%;
-  height: 16%;
+  height: 14%;
   font-size: 32px;
   background: url("../../../assets/images/title.png");
   background-repeat:no-repeat;
