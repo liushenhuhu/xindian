@@ -39,6 +39,12 @@ public class ReportUtil implements Runnable {
                 report.setDiagnosisDoctor(doctors.get(rand).getDoctorName());
                 WxUtil.send(dPhone);
                 reportService.updateReport(report);
+                //定时器, 30分钟无医生诊断, 换医生诊断.
+                    ThreadUtil threadUtil = new ThreadUtil();
+                    threadUtil.setParameter(report.getpId(), doctors, reportService);
+//                    threadUtil.run();
+                    Thread thread = new Thread(threadUtil);
+                    thread.start();
             }
         }
     }

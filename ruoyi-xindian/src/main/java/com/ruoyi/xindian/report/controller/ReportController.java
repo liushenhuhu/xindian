@@ -293,6 +293,8 @@ public class ReportController extends BaseController
 //                    String token = WxUtil.queryGZHToken();
 //                    WxUtil.sendGZHMsg(token, doctor.getOpenId(), msg, str_time);
 //                }
+                Date date = new Date();
+                report.setReportTime(date);
                 int i = reportService.updateReport(report);
 //                if(report.getHospital()!=null && doctors!=null){
 //                    //定时器, 30分钟无医生诊断, 换医生诊断.

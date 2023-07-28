@@ -240,7 +240,7 @@
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
+      <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
       <el-table-column label="报告时间" align="center" prop="reportTime" width="180" show-overflow-tooltip>
         <template slot-scope="scope">
@@ -578,6 +578,7 @@ export default {
         this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
       }
       listPatient_management(this.queryParams).then(response => {
+        console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;

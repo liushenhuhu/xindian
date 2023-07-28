@@ -61,6 +61,10 @@
           <div>
             <div style="width: 95%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
           </div>
+          <div class="doctor-1"><strong>患者症状</strong></div>
+          <div>
+            <div style="width: 95%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.patientSymptom }}</div>
+          </div>
           <div class="doctor-1">
             <strong>医师诊断</strong>
             <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 20vw">常用术语</el-button>
@@ -222,6 +226,7 @@ export default {
         diagnosisData: null,
         bSuggest: "",
         cSuggest: "",
+        patientSymptom:"无",
       },
       data12: {
         x: [],
@@ -257,11 +262,15 @@ export default {
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
-        console.log("请求成功：", response.data)
+        console.log( response.data)
         this.data.resultByDoctor = response.diagnosisConclusion
         this.data.doctorName = response.diagnosisDoctor
         this.data.diagnosisData = response.reportTime
         this.data.pphone = response.data.pphone
+        if (response.data.patientSymptom!=null){
+          this.data.patientSymptom = response.data.patientSymptom
+        }
+
       });
       // var show = sessionStorage.getItem(pId + "show");
       // if (!show) {

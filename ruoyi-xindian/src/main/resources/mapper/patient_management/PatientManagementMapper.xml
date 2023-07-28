@@ -39,6 +39,8 @@
         <result property="endTime"    column="end_time"    />
         <result property="timeDuration"    column="time_duration"    />
         <result property="reportState"    column="report_state"    />
+        <result property="patientSymptom"    column="patient_symptom"    />
+
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -72,7 +74,7 @@
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
                diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, ecg_level, doctor_phone,
                birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
-               end_time, time_duration, d_phone, report_state
+               end_time, time_duration, d_phone, report_state,patient_symptom
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
@@ -133,7 +135,7 @@
     </select>
     <select id="selectPatientManagementJECGList" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
-        where diagnosis_status = 2 and doctorPhone is null and diagnosis_doctor is null
+        where diagnosis_status = 2 and d_phone is null and diagnosis_doctor is null
         order by connection_time desc
     </select>
 
