@@ -77,7 +77,7 @@ public class WXPublicRequest {
         Set<String> userOpenId = getUserOpenId(accessToken);
 
         for (String next : userOpenId) {
-            sendOrderMsg("你好，有一条新的问诊订单",next,name,"患者提交了一个心电订单");
+            sendOrderMsg("你好，有一条新的问诊订单",next,"心电患者","患者提交了一个心电订单");
         }
     }
 
@@ -97,7 +97,7 @@ public class WXPublicRequest {
         String OrderMsgTemplateId = "LjIAdodHTvUzCEg5COBLQvlAtyVheKJt9cFrAExVHPE";
 
         // 卡片详情跳转页，设置此值，当点击消息时会打开指定的页面
-        String detailUrl = "https://baidu.com";
+//        String detailUrl = "https://baidu.com";
 
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("yyyy-MM-dd HH:mm");
@@ -120,7 +120,7 @@ public class WXPublicRequest {
                 .toUser(userOpenid)
                 .templateId(OrderMsgTemplateId)
                 .data(wxMpTemplateDataList)
-                .url(detailUrl)
+//                .url(detailUrl)
                 .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
                 .build();
         try {
