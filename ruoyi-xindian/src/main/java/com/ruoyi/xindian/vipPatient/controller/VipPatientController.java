@@ -1,15 +1,20 @@
 package com.ruoyi.xindian.vipPatient.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.product.domain.TProduct;
@@ -57,6 +62,10 @@ public class VipPatientController extends BaseController
 
     @Autowired
     private ITProductService itProductService;
+
+
+    @Resource
+    private TokenService tokenService;
     /**
      * 查询vip用户列表
      */
@@ -143,13 +152,21 @@ public class VipPatientController extends BaseController
      * 检测是否为vip
      */
     @GetMapping("/isVip")
-    public AjaxResult isVip(){
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+    public AjaxResult isVip(HttpServletRequest request) throws ParseException {
+        LoginUser loginUser = tokenService.getLoginUser(request);
         String phonenumber = loginUser.getUser().getPhonenumber();
-        VipPatient vipPatient = new VipPatient();
-        vipPatient.setPatientPhone(phonenumber);
-        List<VipPatient> vipPatients = vipPatientService.selectVipPatientList(vipPatient);
-        if(vipPatients!=null&&vipPatients.size()!=0){
+        VipPatient vipPatients = vipPatientService.findVipPhone(phonenumber);
+
+        if(vipPatients!=null){
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date parse = format.parse(format.format(new Date()));
+            Date parse1 = format.parse(format.format(vipPatients.getEndDate()));
+            //判断日期是否过期，如果过期则直接删除
+            if (parse.getTime()>parse1.getTime()){
+                vipPatientService.deleteVipPatientById(vipPatients.getId());
+                return AjaxResult.success("false");
+            }
             return AjaxResult.success("true",vipPatients);
         }
         else{

@@ -47,6 +47,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         return patientManagementMapper.selectPatientManagementByPId(pId);
     }
 
+
     /**
      * 查询患者管理列表
      *

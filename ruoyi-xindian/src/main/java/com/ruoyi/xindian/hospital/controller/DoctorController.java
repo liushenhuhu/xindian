@@ -56,7 +56,7 @@ public class DoctorController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         Department department = new Department();
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
-        if (sysUser.getDeptId()==200){
+        if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
             List<Doctor> doctors = doctorService.selectUserDoc(doctor,loginUser.getUser().getUserId());
             for (Doctor value : doctors) {
                 department.setDepartmentCode(value.getDepartmentCode());
@@ -65,8 +65,6 @@ public class DoctorController extends BaseController
             }
             return getDataTable(doctors);
         }
-
-
 
             startPage();
             List<Doctor> list = doctorService.selectDoctorList(doctor);
