@@ -40,7 +40,7 @@
         <div class="setproblem">
           <textarea
             placeholder="请输入您的问题..."
-            style="height: 4vw;width: 100%;resize:none;outline: none;border-color:#ccc;border-radius:5px;font-size: 20px"
+            style="height: 8vh;width: 100%;resize:none;outline: none;border-color:#ccc;border-radius:5px;font-size: 20px"
             id="text" maxlength="150"  @input="selectMaxLength()"
             v-model="customerText"
             @keyup.enter="sentMsg()"
@@ -249,7 +249,7 @@ export default {
   width: 100%;
   .box {
     width: 100%;
-    height: 46vw;
+    height: calc( 100vh - 84px);
     background-color: #ffffff;
     position: relative;
     background-image: url("../../../assets/images/body.png");
@@ -258,7 +258,7 @@ export default {
     background-position: center;
     z-index: 0;
     #content {
-      height: 35.6vw;
+      height: calc(100% - 20vh);
       overflow-y: scroll;
       font-size: 20px;
       width: 100%;
@@ -349,7 +349,7 @@ export default {
 }
 .setproblem {
   width: 100%;
-  height: 4vw;
+  height: 8vh;
   background-color: #ab2828;
   position: relative;
   //margin-top: -7.3vw;
@@ -405,7 +405,7 @@ export default {
   margin: 0 auto !important;
   text-align: center;
   //left: 45%;
-  height: 14%;
+  height: 12vh;
   font-size: 32px;
   background: url("../../../assets/images/title.png");
   background-repeat:no-repeat;
