@@ -327,13 +327,19 @@ public class ReportController extends BaseController
         }else if(report.getDiagnosisStatus()==1){//医生诊断
             Date date = new Date();
             report.setReportTime(date);
-            WxUtil.sendOK(report1.getPPhone());
+//            WxUtil.sendOK(report1.getPPhone());
             SysUser sysUser = sysUserMapper.selectUserByPhone(phonenumber);
-            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+            Report report2 = reportService.selectReportByPId(report.getpId());
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
+            reportService.updateReport(report);
+            try {
+                wxPublicRequest.sendMsg(doctor.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
+            }catch (Exception e){
+                System.out.println(e);
+            }
 
-            wxPublicRequest.sendMsg(doctor.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
         }
-        return toAjax(reportService.updateReport(report));
+        return toAjax(1);
     }
 
     /**

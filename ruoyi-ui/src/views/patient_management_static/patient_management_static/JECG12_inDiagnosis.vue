@@ -549,6 +549,7 @@ export default {
       console.log(this.reportList)
       docUpdate(this.reportList).then(r =>{
         this.getList();
+        this.dialogFormVisible = false;
       })
     },
     sendMsg(row){
