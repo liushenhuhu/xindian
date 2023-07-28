@@ -34,6 +34,7 @@ import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
 import com.ruoyi.xindian.util.*;
+import com.ruoyi.xindian.vipPatient.controller.VipPatientController;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,6 +67,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class ReportController extends BaseController
 {
 
+    @Resource
+    private VipPatientController vipPatientController;
     @Autowired
     private WXPublicRequest wxPublicRequest;
 
@@ -239,7 +242,6 @@ public class ReportController extends BaseController
                 doctor.setHospital(report.getHospital());
                 doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && doctors.size()!=0){
-
                     wxPublicRequest.dockerMsg(patient.getPatientName());
                     ReportUtil reportUtil = new ReportUtil();
                     reportUtil.setParameter(report.getpId(), doctors, reportService);
@@ -251,6 +253,7 @@ public class ReportController extends BaseController
             }
             //咨询医生次数减一
             if(phonenumber.equals(report1.getPPhone())) {
+                vipPatientController.detectionNumSubtract(phonenumber);
 //            AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
 //            Long questionNum = appData.getQuestionNum();
 //            if(questionNum==0){
