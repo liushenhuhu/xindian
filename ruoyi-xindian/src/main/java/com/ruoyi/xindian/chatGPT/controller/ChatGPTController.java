@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.utils.http.HttpUtils;
+import com.ruoyi.xindian.chatGPT.domain.Chat;
+import com.ruoyi.xindian.product.domain.TProduct;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -40,10 +42,10 @@ public class ChatGPTController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     @GetMapping("/proxyRequest")
-    public JSONObject proxyRequest(String str){
+    public JSONObject proxyRequest(Chat chat){
         //定义发送数据
         JSONObject param = new JSONObject();
-        param.put("prompt", str);
+        param.put("prompt", chat.getText());
         //定义接收数据
         JSONObject result = new JSONObject();
 
@@ -51,7 +53,7 @@ public class ChatGPTController extends BaseController {
         HttpPost httpPost = new HttpPost(url);
         CloseableHttpClient client = HttpClients.createDefault();
         //请求参数转JOSN字符串
-        StringEntity entity = new StringEntity(param.toString(), "UTF-8");
+        StringEntity entity = new StringEntity(JSONObject.toJSONString(param), "UTF-8");
         entity.setContentEncoding("UTF-8");
         entity.setContentType("application/json");
         httpPost.setEntity(entity);

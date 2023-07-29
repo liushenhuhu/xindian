@@ -41,7 +41,7 @@
           <textarea
             placeholder="请输入您的问题..."
             style="height: 8vh;width: 100%;resize:none;outline: none;border-color:#ccc;border-radius:5px;font-size: 20px"
-            id="text" maxlength="150"  @input="selectMaxLength()"
+            id="text" maxlength="150"
             v-model="customerText"
             @keyup.enter="sentMsg()"
           ></textarea>
@@ -75,6 +75,9 @@ export default {
       timer: null,
       robotQuestion: [],
       robotAnswer: [],
+      queryParams: {
+        text: "",
+      },
     };
   },
   created() {
@@ -87,6 +90,7 @@ export default {
       clearTimeout(this.timer);
       this.showTimer();
       let text = this.customerText.trim();
+      this.queryParams.text = text;
       if (text !== "") {
         var obj = {
           type: "rightinfo",
@@ -94,7 +98,7 @@ export default {
           content: text,
         };
         this.info.push(obj);
-        proxyRequest(text).then(response => {
+        proxyRequest(this.queryParams).then(response => {
           //console.log(response.response);
           this.customerText = "";
           let obj = {
@@ -231,13 +235,13 @@ export default {
         seconds;
       return time;
     },
-    selectMaxLength() {
+    /*selectMaxLength() {
       console.log('input')
       if(this.customerText.length > 149){
           this.$message.warning("超过限制字数！");
       }
 
-    }
+    }*/
   },
   mounted() {},
   props: {},
