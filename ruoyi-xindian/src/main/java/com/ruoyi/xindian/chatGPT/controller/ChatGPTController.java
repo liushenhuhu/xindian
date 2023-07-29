@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.xindian.chatGPT.domain.Chat;
-import com.ruoyi.xindian.product.domain.TProduct;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -16,20 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author lixinlong

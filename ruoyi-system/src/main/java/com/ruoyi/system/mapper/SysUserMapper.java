@@ -149,4 +149,9 @@ public interface SysUserMapper
     public int insertPatient(SysUser sysUser);
 
     public int insertMedical(SysUser sysUser);
+
+    int updateDetectionNumInt(@Param("patientPhone") String patientPhone);
+
+
+    int updateDeteTime(@Param("patientPhone") String patientPhone);
 }

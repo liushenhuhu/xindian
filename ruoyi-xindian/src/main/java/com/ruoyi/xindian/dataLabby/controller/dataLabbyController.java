@@ -175,14 +175,14 @@ public class dataLabbyController extends BaseController
      * 抢单
      */
     @GetMapping(value = "/dataLabby/{reportId}")
-    public AjaxResult getOrder(@PathVariable("reportId") Long reportId)
+    public AjaxResult getOrder(@PathVariable("reportId") String pId)
     {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String phonenumber = loginUser.getUser().getPhonenumber();
         Doctor doctor = doctorService.selectDoctorByDoctorPhone(phonenumber);
         lock.lock();
         try{
-            Report report = reportService.selectReportByReportId(reportId);
+            Report report = reportService.selectReportByPId(pId);
             if (report==null){
                 return AjaxResult.error("当前订单不存在");
             }

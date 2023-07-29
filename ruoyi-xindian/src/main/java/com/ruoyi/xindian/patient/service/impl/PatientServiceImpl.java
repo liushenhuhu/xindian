@@ -2,6 +2,8 @@ package com.ruoyi.xindian.patient.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.domain.Hospital;
@@ -42,6 +44,9 @@ public class PatientServiceImpl implements IPatientService
 
     @Resource
     private HospitalMapper hospitalMapper;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
     /**
      * 查询患者
      *
@@ -167,7 +172,7 @@ public class PatientServiceImpl implements IPatientService
                      // 设置库存减一的更新操作
             vipPatientMapper.updateVipNumInt(vipPhone.getId());
         }else {
-            patientMapper.updateDetectionNumInt(patientPhone);
+            sysUserMapper.updateDetectionNumInt(patientPhone);
         }
         return true;
     }

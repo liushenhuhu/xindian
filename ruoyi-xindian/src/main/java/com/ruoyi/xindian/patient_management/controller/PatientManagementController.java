@@ -248,7 +248,6 @@ public class PatientManagementController extends BaseController {
 //            System.out.println(Arrays.toString(pIds));
             for (String pId : pIds) {
                 PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
-
                 if (patientManagement != null) {
                     Patient patient = new Patient();
                     patient.setPatientName(patientManagement.getPatientName());

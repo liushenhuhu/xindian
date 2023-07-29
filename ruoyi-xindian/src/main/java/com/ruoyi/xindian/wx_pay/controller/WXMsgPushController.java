@@ -47,6 +47,10 @@ public class WXMsgPushController {
         return AjaxResult.success(body);
     }
 
+    @GetMapping("/wxTest")
+    public void test1() throws Exception {
+        wxPublicRequest.dockerMsg("zs");
+    }
 
     /**
      * 公众号消息推送
