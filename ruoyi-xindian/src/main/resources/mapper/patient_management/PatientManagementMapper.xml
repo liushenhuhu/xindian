@@ -136,7 +136,7 @@
     <select id="selectPatientManagementJECGList" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         where diagnosis_status = 2 and d_phone is null and diagnosis_doctor is null
-        order by connection_time desc
+        order by report_time desc
     </select>
 
     <select id="selectPatientManagementJECGsingle" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -172,7 +172,7 @@
                 </foreach>
             </if>
         </where>
-        order by connection_time desc
+        order by report_time desc
     </select>
 
 
@@ -239,7 +239,7 @@
             <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
         </where>
-        order by connection_time desc
+        order by report_time desc
     </select>
 
     <select id="selectPatientManagementListDECGsingle" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -273,7 +273,7 @@
                 </foreach>
             </if>
         </where>
-        order by  online_status desc, connection_time desc
+        order by  online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListJECG12" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -306,7 +306,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, connection_time desc
+        order by online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListDECG12" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -339,7 +339,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, connection_time desc
+        order by online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListDECG12_COUNT" parameterType="PatientManagement" resultType="long">
@@ -372,7 +372,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, connection_time desc
+        order by online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListDECGsingle_COUNT" parameterType="PatientManagement" resultType="long">
