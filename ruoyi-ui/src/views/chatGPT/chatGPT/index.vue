@@ -22,7 +22,7 @@
             </div>
             <div class="left-btn">
               <button @click="sentMsg()" style="width: 60%;height: 60%;background-color: rgba(68,114,196);">
-                <span style="vertical-align: 3px;font-size: 26px; color: white">发 送</span>
+                <span style="vertical-align: 3px;font-size: 1vw; color: white">发 送</span>
               </button>
             </div>
           </div>
