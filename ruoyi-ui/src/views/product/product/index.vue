@@ -391,8 +391,9 @@ export default {
       //console.log(this.list)
     },
     handleRemove(file, fileList) {
-      this.delImgs.push(file.name)
-      //console.log(this.delImgs)
+      if(!file.raw){
+        this.delImgs.push(file.name)
+      }
     },
     //选择多张介绍图
     handleChange3(file, fileList) {
