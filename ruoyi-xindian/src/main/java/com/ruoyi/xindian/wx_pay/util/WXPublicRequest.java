@@ -61,7 +61,7 @@ public class WXPublicRequest {
     /**
      * 发送给医生的公众号消息推送
      */
-    public  void dockerMsg(String name) throws Exception {
+    public  void dockerMsg() throws Exception {
 
         String accessToken = getAccessToken();
         Set<String> userOpenId = getUserOpenId(accessToken);

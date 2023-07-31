@@ -49,7 +49,7 @@ public class WXMsgPushController {
 
     @GetMapping("/wxTest")
     public void test1() throws Exception {
-        wxPublicRequest.dockerMsg("zs");
+        wxPublicRequest.dockerMsg();
     }
 
     /**

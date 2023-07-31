@@ -18,7 +18,7 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
 
     List<OrderInfo> selectAllList(@Param("userId") Long userId,@Param("orderInfo")OrderInfo orderInfo);
 
-    List<OrderInfo> selectWebAllList(@Param("orderId") String orderId,@Param("userPhone") String userPhone,@Param("orderState") String orderState);
+    List<OrderInfo> selectWebAllList(@Param("orderId") String orderId,@Param("userPhone") String userPhone,@Param("orderState") String orderState,@Param("orderStatus")String orderStatus);
 
     /**
      * 查询【请填写功能名称】

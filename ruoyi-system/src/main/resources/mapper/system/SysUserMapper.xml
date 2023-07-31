@@ -242,7 +242,7 @@
         <if test="openId != null">#{openId},</if>
         <if test="unionId != null">#{unionId},</if>
         <if test="detectionNum != null">#{detectionNum},</if>
-        DATE_ADD(NOW(), INTERVAL +1 year),
+        <if test="detectionTime != null">#{detectionTime},</if>
         sysdate()
         )
     </insert>

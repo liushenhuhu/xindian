@@ -83,6 +83,16 @@ public class ShipaddressVo implements Serializable {
      */
     private String isUpdate;
 
+    /**
+     * 快递公司
+     */
+    private String courierCompany;
+
+    /**
+     * 快递单号
+     */
+    private String courierNumber;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

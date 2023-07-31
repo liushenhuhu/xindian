@@ -52,7 +52,6 @@
 
     <el-table v-loading="loading" :data="feedbackList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="反馈信息id" align="center" prop="feedbackiId" />
       <el-table-column label="订单id" align="center" prop="orderId" />
       <el-table-column label="反馈原因" align="center" prop="feedbackCause" />
       <el-table-column label="备注" align="center" prop="remark" />
@@ -63,6 +62,7 @@
             disable-transitions>{{scope.row.status}}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="申请时间" align="center" prop="createTime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 

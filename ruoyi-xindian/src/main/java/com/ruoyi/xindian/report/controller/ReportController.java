@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
@@ -233,7 +236,7 @@ public class ReportController extends BaseController
         //当前报告信息
         Report report1 = reportService.selectReportByPId(s);
         report.setReportId(report1.getReportId());
-        Patient patient = patientService.selectPatientByPatientPhone(phonenumber);
+
         //患者请求医生
         if(report.getDiagnosisStatus()==2){
             //选择医院加入公共抢单
@@ -242,11 +245,22 @@ public class ReportController extends BaseController
                 doctor.setHospital(report.getHospital());
                 doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && doctors.size()!=0){
-                    wxPublicRequest.dockerMsg(patient.getPatientName());
+
                     ReportUtil reportUtil = new ReportUtil();
                     reportUtil.setParameter(report.getpId(), doctors, reportService);
                     Thread thread = new Thread(reportUtil);
                     thread.start();
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    CompletableFuture.runAsync(() ->{
+                        System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
+                        try{
+                            wxPublicRequest.dockerMsg();
+                        }catch (Exception e){
+                            System.out.println(e);
+                        }
+                        System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
+                    },executorService);
+                    executorService.shutdown(); // 回收线程池
                 } else{
                     return AjaxResult.error("当前医院平台无医生");
                 }
@@ -287,15 +301,6 @@ public class ReportController extends BaseController
 //                detectionService.insertDetection(detection);
                 //给医生发送短信
 //                WxUtil.send(dPhone);
-                //给医生发送微信订阅消息
-//                Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
-//                if (doctor.getOpenId() != null) {
-//                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                    String msg = "有患者请求您诊断心电图，请及时处理。";
-//                    String str_time = format.format(new Date());
-//                    String token = WxUtil.queryGZHToken();
-//                    WxUtil.sendGZHMsg(token, doctor.getOpenId(), msg, str_time);
-//                }
                 Date date = new Date();
                 report.setReportTime(date);
                 int i = reportService.updateReport(report);
@@ -330,10 +335,10 @@ public class ReportController extends BaseController
         }else if(report.getDiagnosisStatus()==1){//医生诊断
             Date date = new Date();
             report.setReportTime(date);
-//            WxUtil.sendOK(report1.getPPhone());
-            SysUser sysUser = sysUserMapper.selectUserByPhone(phonenumber);
             Report report2 = reportService.selectReportByPId(report.getpId());
+            SysUser sysUser = sysUserMapper.selectUserByPhone(report2.getPPhone());
             Doctor doctor = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
+            Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
             reportService.updateReport(report);
             try {
                 wxPublicRequest.sendMsg(doctor.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
@@ -615,6 +620,7 @@ public class ReportController extends BaseController
         threadUtil.setParameter(report.getpId(), doctors, reportService);
         Thread thread = new Thread(threadUtil);
         thread.start();
+        WxUtil.send(report.getdPhone());
         int i = reportService.updateReport(report);
         return AjaxResult.success();
     }

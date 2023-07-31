@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="订单编号" prop="payOrderName">
         <el-input
-          v-model="queryParams.payOrderId"
+          v-model="queryParams.orderId"
           placeholder="请输入订单编号"
           clearable
           @keyup.enter.native="handleQuery"
@@ -18,7 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="订单状态" prop="orderState">
-        <el-select v-model="queryParams.orderState" clearable placeholder="请选择订单状态">
+        <el-select v-model="queryParams.orderStatus" clearable placeholder="请选择订单状态">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -78,12 +78,12 @@
       <el-table-column label="商户订单编号" align="center" prop="orderNo" />
       <el-table-column label="用户昵称" align="center" prop="sysUser.nickName" />
       <el-table-column label="订单标题" align="center" prop="title" />
-      <el-table-column label="订单状态" align="center" prop="orderStatus" >
+      <el-table-column label="订单状态" align="center" prop="orderState" >
         <template slot-scope="scope">
           <el-tag
 
-            :type="scope.row.orderStatus === '已支付' || scope.row.orderStatus === '已发货' ||scope.row.orderStatus ==='交易完成' ? 'primary' : 'danger'"
-            disable-transitions>{{scope.row.orderStatus}}</el-tag>
+            :type="scope.row.orderState === '已支付' || scope.row.orderState === '已发货' ||scope.row.orderState ==='交易成功'||scope.row.orderState ==='服务'  ? 'primary' : 'danger'"
+            disable-transitions>{{scope.row.orderState}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" />
@@ -143,6 +143,12 @@
         </el-form-item>
         <el-form-item label="收件人地址" prop="patientName1">
           <el-input style="width: 550px" v-model="form.state+'/'+form.city+'/'+form.country+'/'+form.street+'/'+form.streetAddress" placeholder="请输入收件人地址"  :disabled="true"/> <el-button type="success" @click="addressUpdate()">修改地址</el-button>
+        </el-form-item>
+        <el-form-item label="快递公司" prop="courierCompany" v-if="form.orderStatus==='已发货'&&form.orderStatus">
+          <el-input v-model="form.courierCompany" placeholder="请输入快递公司" />
+        </el-form-item>
+        <el-form-item label="快递单号" prop="courierNumber" v-if="form.orderStatus==='已发货'">
+          <el-input v-model="form.courierNumber" placeholder="请输入快递公司"  />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -288,6 +294,9 @@ export default {
         addressId: null,
         orderStatus: null,
         openId: null,
+        orderId:null,
+        userPhone:null,
+
       },
       options: [{
       value: '未支付',
@@ -324,6 +333,8 @@ export default {
           state_id:null,
           patientName:null,
           updatedTime:null,
+          courierCompany:null,
+          courierNumber:null,
       },
       shipaddress1:{
         addressId: null,
@@ -345,6 +356,8 @@ export default {
         id: null,
         orderStatus: null,
         isUpdate:null,
+        courierCompany:null,
+        courierNumber:null,
       },
       // 表单校验
       rules: {
@@ -370,6 +383,12 @@ export default {
         orderStatus: [
           { required: true, message: '请选择订单状态', trigger: 'blur' },
         ],
+        courierCompany: [
+          { required: true, message: '请填写快递公司', trigger: 'blur' },
+        ],
+        courierNumber: [
+          { required: true, message: '请填写快递单号', trigger: 'blur' },
+        ],
         street_id: [
           { required: true, message: '请选择街道', trigger: 'change' }
         ],
@@ -384,6 +403,7 @@ export default {
     getList() {
       this.loading = true;
       listInfo(this.queryParams).then(response => {
+        console.log(response)
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -517,6 +537,9 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.shipaddress1.courierNumber = this.form.courierNumber
+          this.shipaddress1.courierCompany = this.form.courierCompany
+          console.log(this.shipaddress1)
           updateAddressInfo(this.shipaddress1).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;

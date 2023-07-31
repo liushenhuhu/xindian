@@ -24,6 +24,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -235,6 +237,14 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional
     public int insertUser(SysUser user) {
+
+        Calendar calendar = Calendar.getInstance();
+        // 设置日期
+        calendar.setTime(new Date());
+        // 加一年
+        calendar.add(Calendar.YEAR, 1);
+        Date time = calendar.getTime();
+        user.setDetectionTime(time);
         // 新增用户信息
         int rows = userMapper.insertUser(user);
         // 新增用户岗位关联

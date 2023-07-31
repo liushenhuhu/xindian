@@ -107,6 +107,20 @@ public class OrderInfo implements Serializable {
     private String postalCode;
 
     /**
+     * 订单当前状态
+     */
+    private String orderState;
+
+    /**
+     * 快递公司
+     */
+    private String courierCompany;
+
+    /**
+     * 快递单号
+     */
+    private String courierNumber;
+    /**
      * 用户信息
      */
     @Excel(name = "用户信息")

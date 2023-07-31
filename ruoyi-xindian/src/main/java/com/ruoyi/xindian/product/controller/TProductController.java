@@ -105,9 +105,9 @@ public class TProductController extends BaseController
         List<TProduct> list = tProductService.selectTProductListToWeb(tProduct);
         List<TProductDto> resList = new ArrayList<>();
         for (TProduct product : list) {
-            TProductDto tProductDto = new TProductDto();
             product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
             product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+            TProductDto tProductDto = new TProductDto();
             BeanUtils.copyProperties(product,tProductDto);
             List<String> productImgs = tProductService.selectAllImages(product.getProductId());
             System.out.println(productImgs);
@@ -128,11 +128,18 @@ public class TProductController extends BaseController
         tProduct.setType("服务");
         startPage();
         List<TProduct> list = tProductService.selectTProductList(tProduct);
+        List<TProductDto> resList = new ArrayList<>();
         for (TProduct product : list) {
             product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
             product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+            TProductDto tProductDto = new TProductDto();
+            BeanUtils.copyProperties(product,tProductDto);
+            List<String> productImgs = tProductService.selectAllImages(product.getProductId());
+            System.out.println(productImgs);
+            tProductDto.setBottomImg(productImgs);
+            resList.add(tProductDto);
         }
-        return getDataTable(list);
+        return getTable(resList,new PageInfo(list).getTotal());
     }
     /**
      * 查询商品服务列表
@@ -144,11 +151,18 @@ public class TProductController extends BaseController
         tProduct.setType("卡片");
         startPage();
         List<TProduct> list = tProductService.selectTProductList(tProduct);
+        List<TProductDto> resList = new ArrayList<>();
         for (TProduct product : list) {
             product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
             product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+            TProductDto tProductDto = new TProductDto();
+            BeanUtils.copyProperties(product,tProductDto);
+            List<String> productImgs = tProductService.selectAllImages(product.getProductId());
+            System.out.println(productImgs);
+            tProductDto.setBottomImg(productImgs);
+            resList.add(tProductDto);
         }
-        return getDataTable(list);
+        return getTable(resList,new PageInfo(list).getTotal());
     }
     /**
      * 导出商品信息列表

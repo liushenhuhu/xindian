@@ -91,7 +91,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @param orderState
      * @return
      */
-    List<OrderInfo> webOrderList(String orderId, String userPhone, String orderState);
+    List<OrderInfo> webOrderList(String orderId, String userPhone, String orderState,String orderStatus);
 
     Boolean updateAddress(ShipaddressVo shipaddressVo);
 

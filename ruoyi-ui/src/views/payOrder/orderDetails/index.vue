@@ -1,8 +1,6 @@
 <template>
  <div class="app-container">
-   <el-row>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">订单详情</div></el-col>
-   </el-row>
+   <el-divider content-position="left">订单详情</el-divider>
    <el-row>
      <el-col :span="12"><div class="grid-content bg-purple-dark">订单编号：{{form.id}}</div></el-col>
      <el-col :span="12"><div class="grid-content bg-purple-dark">订单描述：{{form.title}}</div></el-col>
@@ -13,21 +11,17 @@
      <el-col :span="8"><div class="grid-content bg-purple-dark">订单状态：{{form.orderStatus}}</div><span></span></el-col>
      <el-col :span="8"><div class="grid-content bg-purple-dark">订单金额：{{form.totalFee}}</div><span></span></el-col>
    </el-row>
+   <el-divider content-position="left">订单地址</el-divider>
    <el-row>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">订单地址</div></el-col>
-   </el-row>
-   <el-row>
-     <el-col :span="12"><div class="grid-content bg-purple-dark">收货人姓名：{{form.shipAddress.patientName}}</div></el-col>
-     <el-col :span="12"><div class="grid-content bg-purple-dark">联系电话：{{form.shipAddress.patientPhone}}</div></el-col>
+     <el-col :span="12"><div class="grid-content bg-purple-dark">收货人姓名：{{form.patientName}}</div></el-col>
+     <el-col :span="12"><div class="grid-content bg-purple-dark">联系电话：{{form.patientPhone}}</div></el-col>
    </el-row>
    <el-row>
      <el-col :span="8"><div class="grid-content bg-purple-dark">省市县街地址：{{form.state+' / '+form.city+' / '+form.country+' / '+form.street}}</div></el-col>
      <el-col :span="8"><div class="grid-content bg-purple-dark">详情地址：{{form.streetAddress}}</div></el-col>
      <el-col :span="8"><div class="grid-content bg-purple-dark">邮政编码：{{form.postalCode}}</div></el-col>
    </el-row>
-   <el-row>
-     <el-col :span="8"><div class="grid-content bg-purple-dark">订单商品详情</div></el-col>
-   </el-row>
+   <el-divider content-position="left">订单商品详情</el-divider>
    <el-row>
      <el-table v-loading="loading" :data="infoList" >
        <el-table-column label="商品编号" align="center" prop="product.productId" />

@@ -44,10 +44,10 @@ public class webOrderController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('payOrder:payOrder:list')")
     @GetMapping("/list")
-    public TableDataInfo webOrderList(String orderId,String userPhone,String orderState){
+    public TableDataInfo webOrderList(String orderId,String userPhone,String orderState,String orderStatus){
 
         startPage();
-        List<OrderInfo> orderInfoList =  orderInfoService.webOrderList(orderId,userPhone,orderState);
+        List<OrderInfo> orderInfoList =  orderInfoService.webOrderList(orderId,userPhone,orderState,orderStatus);
         return getDataTable(orderInfoList);
     }
 
@@ -56,7 +56,7 @@ public class webOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('payOrder:payOrder:export')")
     @PostMapping("/export")
     public void webOrderList(HttpServletResponse response){
-        List<OrderInfo> orderInfoList = orderInfoService.webOrderList(null,null,null);
+        List<OrderInfo> orderInfoList = orderInfoService.webOrderList(null,null,null,null);
         ExcelUtil<OrderInfo> util = new ExcelUtil<OrderInfo>(OrderInfo.class);
         util.exportExcel(response, orderInfoList, "订单数据");
     }

@@ -11,6 +11,7 @@ import com.ruoyi.xindian.wx_pay.mapper.OrderInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,11 +64,13 @@ public class WxpayFeedbackServiceImpl extends ServiceImpl<WxpayFeedbackMapper, W
     @Override
     public int insertWxpayFeedback(WxpayFeedback wxpayFeedback)
     {
+        wxpayFeedback.setCreateTime(new Date());
+        wxpayFeedback.setUpdateTime(new Date());
         wxpayFeedbackMapper.insert(wxpayFeedback);
 
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setId(wxpayFeedback.getOrderId());
-        orderInfo.setOrderStatus(OrderStatus.ORDER_BACK.getType());
+        orderInfo.setOrderState(OrderStatus.ORDER_BACK.getType());
 
         return  orderInfoMapper.updateById(orderInfo);
     }

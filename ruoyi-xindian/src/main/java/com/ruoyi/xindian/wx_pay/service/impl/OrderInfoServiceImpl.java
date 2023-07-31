@@ -15,6 +15,7 @@ import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
 import com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper;
+import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
@@ -150,6 +151,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
                 orderInfo.setOrderStatus(OrderStatus.SERVE_ORDER.getType());
 
+                orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
                 baseMapper.update(orderInfo, queryWrapper);
 
                 vipPatient(product,orderByOrderNo.getUserId());
@@ -161,9 +163,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 OrderInfo orderInfo = new OrderInfo();
 
                 orderInfo.setOrderStatus(orderStatus.getType());
+                orderInfo.setOrderState(orderStatus.getType());
 
                 baseMapper.update(orderInfo, queryWrapper);
-
+                WxUtil.send("15286981260");
             }
         }
 
@@ -379,6 +382,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setOrderStatus(OrderStatus.REFUND_SUCCESS.getType());
+        orderInfo.setOrderState(OrderStatus.REFUND_SUCCESS.getType());
         QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",id);
 
@@ -442,15 +446,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId) {
         Product product = productMapper.selectById(productId);
-        if ((product.getProductNum().compareTo(sum) <0)){
-            Product product1 = new Product();
-            product1.setState("3");
-            product1.setProductId(product.getProductId());
-            productMapper.updateById(product1);
-            throw new ServiceException("库存不够");
-        }
-
-
 
         if(product.getType().equals("服务")){
             addressId = 11L;
@@ -481,6 +476,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setOpenId(sysUser.getOpenId());
         orderInfo.setCreateTime(new Date());
         orderInfo.setUpdateTime(new Date());
+        orderInfo.setOrderState(OrderStatus.NOTPAY.getType());
         orderInfoMapper.insert(orderInfo);
 
         SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();
@@ -514,15 +510,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     public String addKpOrFwOrder(HttpServletRequest request, Long productId, Integer sum) {
         Product product = productMapper.selectById(productId);
-        if ((product.getProductNum().compareTo(sum) <0)){
-            Product product1 = new Product();
-            product1.setState("3");
-            product1.setProductId(product.getProductId());
-            productMapper.updateById(product1);
-            throw new ServiceException("库存不够");
-        }
-
-
 
         //获取token中发送请求的用户信息
         LoginUser loginUser = tokenService.getLoginUser(request);
@@ -539,6 +526,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setOpenId(sysUser.getOpenId());
         orderInfo.setCreateTime(new Date());
         orderInfo.setUpdateTime(new Date());
+        orderInfo.setOrderState(OrderStatus.NOTPAY.getType());
         orderInfoMapper.insert(orderInfo);
 
         SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();
@@ -592,8 +580,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     @Override
-    public List<OrderInfo> webOrderList(String orderId, String userPhone, String orderState) {
-        List<OrderInfo> orderInfoList = orderInfoMapper.selectWebAllList(orderId, userPhone, orderState);
+    public List<OrderInfo> webOrderList(String orderId, String userPhone, String orderState,String orderStatus) {
+        List<OrderInfo> orderInfoList = orderInfoMapper.selectWebAllList(orderId, userPhone, orderState,orderStatus);
         return orderInfoList;
     }
 
@@ -615,10 +603,21 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             orderInfo.setState(shipaddressVo.getState());
             orderInfo.setCountry(shipaddressVo.getCountry());
             orderInfo.setPostalCode(shipaddressVo.getPostalCode());
-
+            orderInfo.setCourierCompany(shipaddressVo.getCourierCompany());
+            orderInfo.setCourierNumber(shipaddressVo.getCourierNumber());
+            OrderInfo orderInfo1 = orderInfoMapper.selectById(shipaddressVo.getId());
+            if (!orderInfo1.getOrderState().equals("申请退款")){
+                orderInfo.setOrderState(shipaddressVo.getState());
+            }
             orderInfoMapper.updateById(orderInfo);
 
             return true;
+        }
+        orderInfo.setCourierCompany(shipaddressVo.getCourierCompany());
+        orderInfo.setCourierNumber(shipaddressVo.getCourierNumber());
+        OrderInfo orderInfo1 = orderInfoMapper.selectById(shipaddressVo.getId());
+        if (orderInfo1.getOrderState()!=null&&!orderInfo1.getOrderState().equals("申请退款")){
+            orderInfo.setOrderState(shipaddressVo.getOrderStatus());
         }
         orderInfo.setOrderStatus(shipaddressVo.getOrderStatus());
         orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",shipaddressVo.getId()));
@@ -646,16 +645,26 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @return
      */
     private int updateProductAdd(Integer sum,Long productId){
-
-        // 创建一个 UpdateWrapper 对象，指定要更新的表和条件
+        Product product = productMapper.selectById(productId);
         UpdateWrapper<Product> updateWrapper = Wrappers.update();
-        updateWrapper
-                .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
-                .setSql("product_num = product_num - "+sum)
-                .setSql("sales = sales + "+sum); // 设置库存减一的更新操作
+
+        if (product!=null&&(product.getProductNum()-sum)==0){
+            // 创建一个 UpdateWrapper 对象，指定要更新的表和条件
+            updateWrapper
+                    .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
+                    .setSql("product_num = product_num - "+sum)
+                    .setSql("sales = sales + "+sum)
+                    .setSql("state = '3'"); // 设置库存减一的更新操作
+        }else {
+            updateWrapper
+                    .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
+                    .setSql("product_num = product_num - "+sum)
+                    .setSql("sales = sales + "+sum); // 设置库存减一的更新操作
+        }
         // 执行更新操作
-        int affectedRows = productMapper.update(null, updateWrapper);
-        return affectedRows;
+
+
+        return productMapper.update(null, updateWrapper);
     }
 
 
@@ -667,16 +676,26 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     private int updateProductDel(Integer sum,Long productId){
 
-        // 创建一个 UpdateWrapper 对象，指定要更新的表和条件
-        UpdateWrapper<Product> updateWrapper = Wrappers.update();
-        updateWrapper
-                .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
-                .setSql("product_num = product_num + "+sum)
-                .setSql("sales = sales - "+sum); // 设置库存减一的更新操作
 
+        Product product = productMapper.selectById(productId);
+        UpdateWrapper<Product> updateWrapper = Wrappers.update();
+
+        if (product!=null&&product.getProductNum()==0){
+            // 创建一个 UpdateWrapper 对象，指定要更新的表和条件
+            updateWrapper
+                    .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
+                    .setSql("product_num = product_num + "+sum)
+                    .setSql("sales = sales - "+sum)
+                    .setSql("state = '1'"); // 设置库存减一的更新操作
+        }else {
+            updateWrapper
+                    .eq("product_id", productId) // 设置更新的条件，例如根据商品ID进行更新
+                    .setSql("product_num = product_num + "+sum)
+                    .setSql("sales = sales - "+sum);// 设置库存减一的更新操作
+
+        }
         // 执行更新操作
-        int affectedRows = productMapper.update(null, updateWrapper);
-        return affectedRows;
+        return productMapper.update(null, updateWrapper);
     }
 
     /**

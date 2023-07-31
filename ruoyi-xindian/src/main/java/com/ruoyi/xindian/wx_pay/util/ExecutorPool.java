@@ -16,10 +16,10 @@ import java.util.concurrent.*;
 public class ExecutorPool {
 
     //线程池最大线程数量
-    private final static int MAXTHREAD = 14;
+    private final static int MAXTHREAD = 24;
 
     //初始化线程数量
-    private final static int THREADSZIE = 10;
+    private final static int THREADSZIE = 20;
 
     //固定长度线程池
     private final static ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(THREADSZIE, MAXTHREAD, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());

@@ -146,6 +146,34 @@ public class SysProfileController extends BaseController
         return AjaxResult.error("修改密码异常，请联系管理员");
     }
 
+
+    /**
+     * 验证码修改密码
+     */
+    @Log(title = "个人信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/updatePwdByPhoneT")
+    public AjaxResult updatePwdByPhoneTest(String newPassword,String mobile, String code, String uuid)
+    {
+        LoginUser loginUser = getLoginUser();
+        String userName = loginUser.getUsername();
+        String password = loginUser.getPassword();
+//        SysLoginService sysLoginService = new SysLoginService();
+//        sysLoginService.checkSmsCode(mobile, code, uuid);
+
+        if (SecurityUtils.matchesPassword(newPassword, password))
+        {
+            return AjaxResult.error("新密码不能与旧密码相同");
+        }
+        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0)
+        {
+            // 更新缓存用户密码
+            loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
+            tokenService.setLoginUser(loginUser);
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("修改密码异常，请联系管理员");
+    }
+
     /**
      * 头像上传
      */

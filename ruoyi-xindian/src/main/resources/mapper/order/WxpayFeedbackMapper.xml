@@ -25,6 +25,7 @@
             <if test="feedbackCause != null  and feedbackCause != ''"> and feedback_cause = #{feedbackCause}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectWxpayFeedbackByFeedbackiId" parameterType="Long" resultMap="BaseResultMap">

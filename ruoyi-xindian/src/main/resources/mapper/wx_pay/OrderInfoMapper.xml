@@ -23,6 +23,9 @@
             <result property="state" column="state" jdbcType="VARCHAR"/>
             <result property="country" column="country" jdbcType="VARCHAR"/>
             <result property="postalCode" column="postal_code" jdbcType="VARCHAR"/>
+            <result property="orderState" column="order_state" jdbcType="VARCHAR"/>
+            <result property="courierCompany" column="courier_company" jdbcType="VARCHAR"/>
+            <result property="courierNumber" column="courier_number" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="ResultMap" type="com.ruoyi.xindian.wx_pay.domain.OrderInfo" extends="BaseResultMap">
@@ -59,6 +62,9 @@
         t_order_info.street_address,
         t_order_info.postal_code,
         t_order_info.street,
+        t_order_info.order_state,
+        t_order_info.courier_company,
+        t_order_info.courier_number,
             t_order_info.id,
             t_order_info.title,
             t_order_info.total_fee,
@@ -87,8 +93,8 @@
             t_product
             on t_suborder_order_info.product_id = t_product.product_id
         <where>
-            <if test="orderInfo.orderStatus!=null&amp;&amp;orderInfo.orderStatus!=''">
-                and t_order_info.order_status LIKE  concat('%',#{orderInfo.orderStatus},'%')
+            <if test="orderInfo.orderState!=null&amp;&amp;orderInfo.orderState!=''">
+                and t_order_info.order_state LIKE  concat('%',#{orderInfo.orderState},'%')
             </if>
              and t_order_info.user_id = #{userId}
         </where>
@@ -103,6 +109,9 @@
             t_order_info.open_id,
             t_order_info.create_time,
             t_order_info.order_status,
+        t_order_info.order_state,
+        t_order_info.courier_company,
+        t_order_info.courier_number,
             sys_user.nick_name,
             sys_user.phonenumber
         FROM
@@ -117,14 +126,17 @@
                 and t_order_info.id like concat('%',#{orderId},'%')
             </if>
             <if test="orderState!=null&amp;&amp;orderState!=''">
-                and t_order_info.order_status = #{orderState}
+                and t_order_info.order_state = #{orderState}
+            </if>
+            <if test="orderStatus!=null&amp;&amp;orderStatus!=''">
+                and t_order_info.order_status = #{orderStatus}
             </if>
             <if test="userPhone!=null&amp;&amp;userPhone!=''">
                 and sys_user.phonenumber like concat('%',#{userPhone},'%')
             </if>
         </where>
 
-
+        order by t_order_info.create_time desc
     </select>
     <select id="selectTOrderInfoById" resultType="com.ruoyi.xindian.wx_pay.domain.OrderInfo" resultMap="BaseResultMap">
         SELECT
@@ -139,6 +151,9 @@
             t_order_info.country,
             t_order_info.street_address,
             t_order_info.postal_code,
+            t_order_info.order_state,
+            t_order_info.courier_company,
+            t_order_info.courier_number,
             t_order_info.street
         FROM
 
@@ -159,6 +174,9 @@
             t_order_info.title,
             t_order_info.total_fee,
             t_order_info.order_status,
+            t_order_info.order_state,
+            t_order_info.courier_company,
+            t_order_info.courier_number,
             t_order_info.create_time,
             t_suborder_order_info.suborder_id,
             t_suborder_order_info.product_id,
