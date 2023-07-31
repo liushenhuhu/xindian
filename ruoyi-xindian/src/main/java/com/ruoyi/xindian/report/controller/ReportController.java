@@ -34,6 +34,7 @@ import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
 import com.ruoyi.xindian.util.*;
+import com.ruoyi.xindian.vipPatient.controller.VipPatientController;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,6 +67,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class ReportController extends BaseController
 {
 
+    @Resource
+    private VipPatientController vipPatientController;
     @Autowired
     private WXPublicRequest wxPublicRequest;
 
@@ -239,7 +242,6 @@ public class ReportController extends BaseController
                 doctor.setHospital(report.getHospital());
                 doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && doctors.size()!=0){
-
                     wxPublicRequest.dockerMsg(patient.getPatientName());
                     ReportUtil reportUtil = new ReportUtil();
                     reportUtil.setParameter(report.getpId(), doctors, reportService);
@@ -251,6 +253,7 @@ public class ReportController extends BaseController
             }
             //咨询医生次数减一
             if(phonenumber.equals(report1.getPPhone())) {
+                vipPatientController.detectionNumSubtract(phonenumber);
 //            AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
 //            Long questionNum = appData.getQuestionNum();
 //            if(questionNum==0){
@@ -293,6 +296,8 @@ public class ReportController extends BaseController
 //                    String token = WxUtil.queryGZHToken();
 //                    WxUtil.sendGZHMsg(token, doctor.getOpenId(), msg, str_time);
 //                }
+                Date date = new Date();
+                report.setReportTime(date);
                 int i = reportService.updateReport(report);
 //                if(report.getHospital()!=null && doctors!=null){
 //                    //定时器, 30分钟无医生诊断, 换医生诊断.
@@ -325,13 +330,19 @@ public class ReportController extends BaseController
         }else if(report.getDiagnosisStatus()==1){//医生诊断
             Date date = new Date();
             report.setReportTime(date);
-            WxUtil.sendOK(report1.getPPhone());
+//            WxUtil.sendOK(report1.getPPhone());
             SysUser sysUser = sysUserMapper.selectUserByPhone(phonenumber);
-            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+            Report report2 = reportService.selectReportByPId(report.getpId());
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
+            reportService.updateReport(report);
+            try {
+                wxPublicRequest.sendMsg(doctor.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
+            }catch (Exception e){
+                System.out.println(e);
+            }
 
-            wxPublicRequest.sendMsg(doctor.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
         }
-        return toAjax(reportService.updateReport(report));
+        return toAjax(1);
     }
 
     /**

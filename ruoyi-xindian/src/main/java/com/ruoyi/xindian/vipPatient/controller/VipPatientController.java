@@ -12,9 +12,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.product.domain.TProduct;
@@ -64,6 +66,8 @@ public class VipPatientController extends BaseController
     private ITProductService itProductService;
 
 
+    @Resource
+    private ISysUserService sysUserService;
     @Resource
     private TokenService tokenService;
     /**
@@ -246,5 +250,15 @@ public class VipPatientController extends BaseController
         return AjaxResult.success(aBoolean);
     }
 
+    @GetMapping("/detectionTime/{phone}")
+    public AjaxResult getDateTime(@PathVariable("phone")String phone){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        VipPatient vipPhone = vipPatientService.findVipPhone(phone);
+        if (vipPhone!=null){
+            return AjaxResult.success(simpleDateFormat.format(vipPhone.getEndDate()));
+        }
+        SysUser sysUser = sysUserService.selectUserByPhone(phone);
+        return AjaxResult.success(simpleDateFormat.format(sysUser.getDetectionTime()));
+    }
 
 }

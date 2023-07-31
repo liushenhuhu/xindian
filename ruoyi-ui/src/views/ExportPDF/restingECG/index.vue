@@ -31,7 +31,11 @@
               <div class="header-4">
                 <div class="header-4-1"><strong>自动分析结果，仅供参考</strong></div>
                 <div class="header-4-1">
-                  <div style="width: 100%;height: 6vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
+                  <div style="width: 100%;height: 3vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
+                </div>
+                <div class="header-4-1"><strong>患者症状</strong></div>
+                <div class="header-4-1">
+                  <div style="width: 100%;height: 3vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.patientSymptom }}</div>
                 </div>
                 <div class="header-4-1">
                   <strong>医师诊断</strong>
@@ -220,6 +224,7 @@ export default {
         diagnosisData: null,
         bSuggest: "",
         cSuggest: "",
+        patientSymptom:"无",
       },
       markData: [
         {xAxis: 0},
@@ -449,6 +454,10 @@ export default {
         this.data.doctorName = response.diagnosisDoctor
         this.data.diagnosisData = response.reportTime
         this.data.pphone = response.data.pphone
+        if(response.data.patientSymptom!=null){
+          this.data.patientSymptom = response.data.patientSymptom
+        }
+
       });
       var show = sessionStorage.getItem(pId + "show");
       if (!show) {

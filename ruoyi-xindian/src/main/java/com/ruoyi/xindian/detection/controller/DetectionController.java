@@ -8,9 +8,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.util.WxUtil;
@@ -48,6 +51,11 @@ public class DetectionController extends BaseController
 
     @Autowired
     private IPatientService patientService;
+
+    @Resource
+    private ISysUserService sysUserService;
+
+
 
     /**
      * 查询detection列表
@@ -136,9 +144,9 @@ public class DetectionController extends BaseController
         detection.setPatientPhone(patientPhone);
         detection.setParams(params);
         List<Detection> detections = detectionService.selectDetectionList(detection);
-        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
-        if(detections.size()<= patient.getDetectionNum()){
-            Long d=patient.getDetectionNum()-detections.size();
+        SysUser sysUser = sysUserService.selectUserByPhone(patientPhone);
+        if(detections.size()<= sysUser.getDetectionNum()){
+            Long d=sysUser.getDetectionNum()-detections.size();
             return AjaxResult.success(d);
         }
         else{
@@ -146,26 +154,9 @@ public class DetectionController extends BaseController
         }
 
 
-//        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
-//
-//        if (patient.getDetectionNum()>0){
-//            Date date = new Date();
-//
-//            if (date.getTime()-patient.getDetectionTime().getTime()>0){
-//                Patient patient1 = new Patient();
-//                patient1.setPatientId(patient.getPatientId());
-//                patient1.setDetectionNum(0L);
-//                patientService.updatePatient(patient1);
-//                patient.setDetectionNum(0L);
-//            }
-//
-//            return AjaxResult.success(patient);
-//
-//        }
-//
-//        return AjaxResult.success(patient);
-
 
     }
+
+
 
 }

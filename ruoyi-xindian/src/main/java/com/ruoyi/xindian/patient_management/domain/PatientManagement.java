@@ -196,10 +196,10 @@ public class PatientManagement extends BaseEntity {
 
     private String reportState;
 
-
     private String endReportTime;
+    private String patientSymptom;
 
-    private Boolean rushState = false;
+    private Integer rushState = 1;
 
     public String getpId() {
         return pId;

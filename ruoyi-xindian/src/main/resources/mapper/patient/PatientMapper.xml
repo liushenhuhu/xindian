@@ -162,7 +162,7 @@
     </update>
     <update id="updateDetectionNumInt">
         update patient
-        set detection_num = detection_num-1
+        set detection_num = detection_num - 1
         where patient_phone = #{patientPhone}
     </update>
 

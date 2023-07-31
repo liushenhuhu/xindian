@@ -237,7 +237,7 @@
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
+      <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
       <el-table-column label="报告时间" align="center" prop="reportTime" width="180" show-overflow-tooltip>
         <template slot-scope="scope">
@@ -549,6 +549,7 @@ export default {
       console.log(this.reportList)
       docUpdate(this.reportList).then(r =>{
         this.getList();
+        this.dialogFormVisible = false;
       })
     },
     sendMsg(row){

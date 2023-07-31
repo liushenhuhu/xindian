@@ -2,14 +2,8 @@ package com.ruoyi.xindian.wx_pay.util;
 
 
 import cn.hutool.http.HttpUtil;
-import cn.hutool.http.body.RequestBody;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.alibaba.fastjson2.JSON;
-import com.google.gson.Gson;
-import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.order.mapper.InvoiceMapper;
 import com.ruoyi.xindian.wx_pay.VO.BizField;
@@ -24,33 +18,27 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @Log4j2
 public class WXPublicRequest {
-
-//    @Resource
-//    private WxMpService wxMpService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -66,6 +54,9 @@ public class WXPublicRequest {
     @Resource
     private InvoiceMapper invoiceMapper;
 
+    @Resource
+    private ExecutorPool executorPool;
+
 
     /**
      * 发送给医生的公众号消息推送
@@ -73,11 +64,11 @@ public class WXPublicRequest {
     public  void dockerMsg(String name) throws Exception {
 
         String accessToken = getAccessToken();
-
         Set<String> userOpenId = getUserOpenId(accessToken);
-
-        for (String next : userOpenId) {
-            sendOrderMsg("你好，有一条新的问诊订单",next,"心电患者","患者提交了一个心电订单");
+        LinkedList<String> linkedList = new LinkedList<>(userOpenId);
+        int len = (int)Math.ceil((double)linkedList.size()/10);
+        for (int i=0;i<len;i++){
+            executorPool.send(linkedList);
         }
     }
 
@@ -145,13 +136,10 @@ public class WXPublicRequest {
 //                new WxMpTemplateData("thing11",name),
 //                new WxMpTemplateData("thing3",serviceName)
 //        );
-        Map<String,Object> map = new HashMap<>();
-        map.put("appid","wx50da6a0dfc5c45c0");
-        map.put("pagepath","pages/record/index");
-//
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("touser", userOpenid); //用户openid
-        paramsMap.put("miniprogram", map); //用户openid
+        paramsMap.put("miniprogram_state", "fomal");
+        paramsMap.put("page", "pages/record/index");
         paramsMap.put("template_id", "LXUKc7XBotVpT_w7wDx1RpNF1PpNEJa3t6gaMsP7_Cw"); //推送消息模板id
         paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
         String wxAccessToken = getWXAccessToken();
@@ -612,18 +600,15 @@ public class WXPublicRequest {
      * @throws Exception
      */
     public String getAccessToken()throws Exception{
-
-
-        if(Boolean.TRUE.equals(redisTemplate.hasKey("wxToken"))){
-
-            return redisTemplate.opsForValue().get("wxToken");
+        if(Boolean.TRUE.equals(redisTemplate.hasKey("wxGZToken"))){
+            return redisTemplate.opsForValue().get("wxGZToken");
         }else{
             String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
                     + WXPayConstants.WX_PUBLIC_ID+"&secret="+WXPayConstants.WX_PUBLIC_SECRET;
             String res=restTemplate.getForObject(url,String.class);
             JSONObject jsonObject = JSONObject.parseObject(res);
             String accessToken = jsonObject.getString("access_token");
-            redisTemplate.opsForValue().set("wxToken",accessToken,20,TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set("wxGZToken",accessToken,20,TimeUnit.MINUTES);
             return accessToken;
         }
 
@@ -664,40 +649,61 @@ public class WXPublicRequest {
      * @throws Exception
      */
     public Set<String> getUserOpenId(String accessToken)throws Exception{
-        String usersGetUrl="https://api.weixin.qq.com/cgi-bin/user/get?access_token="
-                +accessToken;
-        JSONObject jsonObject = getResponse(usersGetUrl);
-        Set<String> openIds =new HashSet<String>();
+        if(Boolean.TRUE.equals(redisTemplate.hasKey("WXGZOpenIDList"))){
+            List<String> wxgzOpenIDList = redisTemplate.opsForList().range("WXGZOpenIDList", 0, -1);
 
 
-        Integer total=0,count=0;
-        try {
-            //关注该公众账号的总用户数
-            total=(Integer) jsonObject.get("total");
-            //拉取的 OPENID 个数，最大值为10000
-            count=(Integer) jsonObject.get("count");
-            if (count<total){
-                //总关注用户数超过 默认数10000
-                //需要 next_openid 参数 分批次 多次拉取
-                openIds.addAll(getUsers(openIds,usersGetUrl, accessToken, (String)jsonObject.get("next_openid")));
-            }else {
-                //有关注者
-                if (count>0){
-                    //列表数据，OPENID的列表
-                    JSONObject openIdDdta = (JSONObject)jsonObject.get("data");
-                    JSONArray openIdArray= (JSONArray) openIdDdta.get("openid");
+            if (wxgzOpenIDList != null) {
+                return new HashSet<>(wxgzOpenIDList);
+            }
+            return new HashSet<>();
+        }else {
+            String usersGetUrl="https://api.weixin.qq.com/cgi-bin/user/get?access_token="
+                    +accessToken;
+            JSONObject jsonObject = getResponse(usersGetUrl);
+            Set<String> openIds =new HashSet<String>();
+
+
+            Integer total=0,count=0;
+            try {
+                //关注该公众账号的总用户数
+                total=(Integer) jsonObject.get("total");
+                //拉取的 OPENID 个数，最大值为10000
+                count=(Integer) jsonObject.get("count");
+                if (count<total){
+                    //总关注用户数超过 默认数10000
+                    //需要 next_openid 参数 分批次 多次拉取
+                    openIds.addAll(getUsers(openIds,usersGetUrl, accessToken, (String)jsonObject.get("next_openid")));
+                }else {
+                    //有关注者
+                    if (count>0){
+                        //列表数据，OPENID的列表
+                        JSONObject openIdDdta = (JSONObject)jsonObject.get("data");
+                        JSONArray openIdArray= (JSONArray) openIdDdta.get("openid");
 //                    JSONArray unionidArray= (JSONArray) openIdDdta.get("unionid");
 //                    String unionidA = jsonObject.getString("unionid");
 
-                    for (Object objects:openIdArray) {
-                        openIds.add(objects.toString());
+                        for (Object objects:openIdArray) {
+                            openIds.add(objects.toString());
+                        }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            List<String> list = new ArrayList<>(openIds);
+            redisTemplate.opsForList().leftPushAll("WXGZOpenIDList", list);
+            //给redis设置毫秒值
+            //第一个参数是key
+            //第二个参数是值
+            //第三个参数是时间颗粒度转换,MILLISECONDS是毫秒,所以这个redis的TTl是一小时
+            redisTemplate.expire("WXGZOpenIDList",30,TimeUnit.MINUTES);
+
+            return openIds;
         }
-        return openIds;
+
+
+
     }
 
     private Set<String> getUsers(Set<String>openIds,String url,String accessToken,String nextOpenId) {

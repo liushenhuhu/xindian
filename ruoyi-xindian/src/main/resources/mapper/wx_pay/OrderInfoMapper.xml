@@ -73,6 +73,7 @@
             t_product.product_url,
             t_product.product_description,
             t_product.discount,
+            t_product.type,
             t_product.sales
         FROM
 
@@ -170,6 +171,7 @@
             t_product.product_url,
             t_product.product_description,
             t_product.discount,
+            t_product.type,
             t_product.sales
         FROM
             t_order_info

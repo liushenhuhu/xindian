@@ -39,6 +39,8 @@
         <result property="endTime"    column="end_time"    />
         <result property="timeDuration"    column="time_duration"    />
         <result property="reportState"    column="report_state"    />
+        <result property="patientSymptom"    column="patient_symptom"    />
+
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -72,7 +74,7 @@
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
                diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, ecg_level, doctor_phone,
                birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
-               end_time, time_duration, d_phone, report_state
+               end_time, time_duration, d_phone, report_state,patient_symptom
         from patient_management m
                  inner join patient p on p.patient_phone = m.patient_phone
                  inner join equipment e on m.equipment_code = e.equipment_code
@@ -121,7 +123,7 @@
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
-            <if test="endReportTime != null and endReportTime != ''"> and date_format(report_time, '%Y-%m-%d') = #{endReportTime}</if>
+            <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -133,8 +135,8 @@
     </select>
     <select id="selectPatientManagementJECGList" parameterType="PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
-        where diagnosis_status = 2 and doctorPhone is null and diagnosis_doctor is null
-        order by connection_time desc
+        where diagnosis_status = 2 and d_phone is null and diagnosis_doctor is null
+        order by report_time desc
     </select>
 
     <select id="selectPatientManagementJECGsingle" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -170,7 +172,7 @@
                 </foreach>
             </if>
         </where>
-        order by connection_time desc
+        order by report_time desc
     </select>
 
 
@@ -237,7 +239,7 @@
             <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone like concat('%', #{doctorPhone}, '%')</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
         </where>
-        order by connection_time desc
+        order by report_time desc
     </select>
 
     <select id="selectPatientManagementListDECGsingle" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -271,7 +273,7 @@
                 </foreach>
             </if>
         </where>
-        order by  online_status desc, connection_time desc
+        order by  online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListJECG12" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -304,7 +306,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, connection_time desc
+        order by online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListDECG12" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -337,7 +339,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, connection_time desc
+        order by online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListDECG12_COUNT" parameterType="PatientManagement" resultType="long">
@@ -370,7 +372,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, connection_time desc
+        order by online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListDECGsingle_COUNT" parameterType="PatientManagement" resultType="long">
@@ -447,7 +449,7 @@
         where p_id = #{pId}
     </select>
     <select id="selectAllDateList" resultType="com.ruoyi.xindian.patient_management.vo.DateListVO">
-        select   DATE_FORMAT(report_time,'%Y-%m-%d') as date,COUNT(report_time) as info
+        select   DATE_FORMAT(connection_time,'%Y-%m-%d') as date,COUNT(connection_time) as info
         from patient_management m
             inner join patient p on p.patient_phone = m.patient_phone
             inner join equipment e on m.equipment_code = e.equipment_code
@@ -457,7 +459,7 @@
         <if test="ecgType != null  and ecgType != ''"> and ecg_type like concat(#{ecgType}, '%') </if>
         <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
     </where>
-        GROUP BY  DATE_FORMAT(report_time,'%Y-%m-%d')
+        GROUP BY  DATE_FORMAT(connection_time,'%Y-%m-%d')
     </select>
 
 

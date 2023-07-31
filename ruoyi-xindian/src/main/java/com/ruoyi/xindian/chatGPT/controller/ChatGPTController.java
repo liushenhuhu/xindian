@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.utils.http.HttpUtils;
+import com.ruoyi.xindian.chatGPT.domain.Chat;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -14,20 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author lixinlong
@@ -40,10 +30,11 @@ public class ChatGPTController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     @GetMapping("/proxyRequest")
-    public JSONObject proxyRequest(String str){
+    public JSONObject proxyRequest(Chat chat){
         //定义发送数据
         JSONObject param = new JSONObject();
-        param.put("prompt", str);
+        param.put("prompt", chat.getText());
+        param.put("history", JSON.parseArray(chat.getHistory()));
         //定义接收数据
         JSONObject result = new JSONObject();
 
@@ -51,7 +42,7 @@ public class ChatGPTController extends BaseController {
         HttpPost httpPost = new HttpPost(url);
         CloseableHttpClient client = HttpClients.createDefault();
         //请求参数转JOSN字符串
-        StringEntity entity = new StringEntity(param.toString(), "UTF-8");
+        StringEntity entity = new StringEntity(JSONObject.toJSONString(param), "UTF-8");
         entity.setContentEncoding("UTF-8");
         entity.setContentType("application/json");
         httpPost.setEntity(entity);

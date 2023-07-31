@@ -215,9 +215,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             if (product.getIsVip()==0){
 
                 VipPatient vipPatient = new VipPatient();
-                Patient patient = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
+                SysUser sysUser1 = sysUserMapper.selectUserByPhone(sysUser.getPhonenumber());
                 vipPatient.setPatientPhone(sysUser.getPhonenumber());
-                vipPatient.setVipNum(patient.getDetectionNum()+product.getFrequency());
+                vipPatient.setVipNum(sysUser1.getDetectionNum()+product.getFrequency());
                 Date date = new Date();
                 if (product.getFrequency()>=20&&product.getFrequency()<30){
                     Calendar calendar = Calendar.getInstance();
@@ -243,10 +243,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     vipPatient.setEndDate(time);
                     vipPatientService.insertVipPatient(vipPatient);
                 }
-
+                sysUserMapper.updateDeteTime(sysUser.getPhonenumber());
 
             }else {
-                Patient p = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
+                SysUser p = sysUserMapper.selectUserByPhone(sysUser.getPhonenumber());
                 p.setDetectionNum(p.getDetectionNum() + product.getFrequency());
                 if (product.getFrequency()>=20&&product.getFrequency()<30){
                     Calendar calendar = Calendar.getInstance();
@@ -256,11 +256,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     calendar.add(Calendar.MONTH, 6);
                     Date time = calendar.getTime();
                     p.setDetectionTime(time);
-                    patientService.updatePatient(p);
+                   sysUserMapper.updateUser(p);
                 }else if (product.getFrequency()>=30){
                     Date data = getData(p.getDetectionTime());
                     p.setDetectionTime(data);
-                    patientService.updatePatient(p);
+                    sysUserMapper.updateUser(p);
                 }
                 else {
                     Calendar calendar = Calendar.getInstance();
@@ -270,10 +270,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     calendar.add(Calendar.MONTH, 1);
                     Date time = calendar.getTime();
                     p.setDetectionTime(time);
-                    patientService.updatePatient(p);
+                    sysUserMapper.updateUser(p);
                 }
             }
-
         }
 
         return true;

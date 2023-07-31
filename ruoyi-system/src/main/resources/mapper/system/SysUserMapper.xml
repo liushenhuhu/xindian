@@ -29,6 +29,8 @@
         <result property="roleId" column="role_id"/>
         <result property="openId" column="open_id"/>
         <result property="unionId" column="union_id"/>
+        <result property="detectionTime" column="detection_time"/>
+        <result property="detectionNum" column="detection_num"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -74,6 +76,8 @@
                u.department_code,
                u.open_id,
                u.union_id,
+               u.detection_time,
+               u.detection_num,
                d.dept_id,
                d.parent_id,
                d.ancestors,
@@ -216,6 +220,8 @@
         <if test="departmentCode != null and departmentCode != ''">department_code,</if>
         <if test="openId != null and openId != ''">open_id,</if>
         <if test="unionId != null and unionId != ''">union_id,</if>
+        <if test="detectionNum != null and detectionNum != ''">detection_num,</if>
+        detection_time,
         create_time
         )values(
         <if test="userId != null and userId != ''">#{userId},</if>
@@ -235,6 +241,8 @@
         <if test="departmentCode != null">#{departmentCode},</if>
         <if test="openId != null">#{openId},</if>
         <if test="unionId != null">#{unionId},</if>
+        <if test="detectionNum != null">#{detectionNum},</if>
+        DATE_ADD(NOW(), INTERVAL +1 year),
         sysdate()
         )
     </insert>
@@ -308,6 +316,8 @@
             <if test="departmentCode != null">department_code = #{departmentCode},</if>
             <if test="openId != null">open_id = #{openId},</if>
             <if test="unionId != null">union_id = #{unionId},</if>
+            <if test="detectionNum != null">detection_num = #{detectionNum},</if>
+            <if test="detectionTime != null">detection_time = #{detectionTime},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
@@ -366,6 +376,13 @@
         update sys_user
         set open_id = #{param1}
         where phonenumber = #{param2}
+    </update>
+    <update id="updateDetectionNumInt">
+        update sys_user set detection_num = detection_num -1 where phonenumber = #{patientPhone}
+
+    </update>
+    <update id="updateDeteTime">
+        update sys_user set detection_num = 0 where phonenumber = #{patientPhone}
     </update>
 
 </mapper>

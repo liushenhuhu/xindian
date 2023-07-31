@@ -116,6 +116,29 @@ public class SysUser extends BaseEntity
      */
     private String unionId;
 
+    private Date detectionTime;
+
+    public Date getDetectionTime() {
+        return detectionTime;
+    }
+
+    public void setDetectionTime(Date detectionTime) {
+        this.detectionTime = detectionTime;
+    }
+
+    public Long getDetectionNum() {
+        return detectionNum;
+    }
+
+    public void setDetectionNum(Long detectionNum) {
+        this.detectionNum = detectionNum;
+    }
+
+    /**
+     * 检测次数
+     */
+    private Long detectionNum;
+
     public SysUser()
     {
 
