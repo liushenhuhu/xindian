@@ -3,9 +3,9 @@
     <div class="mainbox">
       <div class="box">
         <div class="title">
-          <img src="@/assets/images/chatGPT-logo.png" width="" height="84%">
+          <img src="@/assets/images/chatGPT-logo1.png" width="" height="84%">
           <img src="@/assets/images/chatGPT-logo-font.png" width="" height="84%">
-          <img src="@/assets/images/chatGPT-logo2.png" width="" height="40%">
+          <img src="@/assets/images/chatGPT-logo3.png" width="" height="40%">
         </div>
 
         <div id="content" class="content">
@@ -87,7 +87,9 @@ export default {
       robotAnswer: [],
       queryParams: {
         text: "",
+        history: "",
       },
+
     };
   },
   created() {
@@ -97,6 +99,7 @@ export default {
   methods: {
     // 用户发送消息
     sentMsg() {
+      console.log("queryParams: ====="+this.queryParams.history);
       clearTimeout(this.timer);
       this.showTimer();
       let text = this.customerText.trim();
@@ -110,7 +113,12 @@ export default {
         this.info.push(obj);
         this.customerText = "";
         proxyRequest(this.queryParams).then(response => {
-          //console.log(response.response);
+          //console.log(response);
+          /*if(this.queryParams.history !== "" && this.queryParams.history !== null){
+
+          }*/
+          console.log("history:  ===="+JSON.stringify(response.history));
+          this.queryParams.history = JSON.stringify(response.history);
           this.customerText = "";
           let obj = {
             id: 1,
@@ -267,10 +275,10 @@ export default {
     height: calc( 100vh - 84px);
     background-color: #ffffff;
     position: relative;
-    /*background-image: url("../../../assets/images/body.png");
+    background-image: url("../../../assets/images/body.png");
     background-repeat:no-repeat;
     background-size:100% 110%;
-    background-position: center;*/
+    background-position: center;
     z-index: 0;
     display: flex;
     flex-direction: column;
@@ -285,11 +293,12 @@ export default {
       justify-content: flex-start;
       .circle {
         display: inline-block;
-        width: 42px;
-        height: 42px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         background-color: #eff1f3;
         margin-left: 56px;
+        margin-top: 6px;
       }
       .con_text {
         color: #333;
@@ -337,7 +346,7 @@ export default {
           width: 40px;
           height: 40px;
           margin-top: 6px;
-          //margin-right: 20px;
+          margin-right: 3px;
         }
         .time_l {
           margin-right: 72px;
@@ -360,7 +369,7 @@ export default {
           //overflow: hidden;/*这个参数根据需求来决定要不要*/
         }
         .circle_l {
-          margin-left: 25px;
+          margin-left: 10px;
         }
       }
       #question {

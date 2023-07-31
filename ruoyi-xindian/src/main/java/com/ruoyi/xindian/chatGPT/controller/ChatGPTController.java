@@ -34,6 +34,7 @@ public class ChatGPTController extends BaseController {
         //定义发送数据
         JSONObject param = new JSONObject();
         param.put("prompt", chat.getText());
+        param.put("history", JSON.parseArray(chat.getHistory()));
         //定义接收数据
         JSONObject result = new JSONObject();
 
