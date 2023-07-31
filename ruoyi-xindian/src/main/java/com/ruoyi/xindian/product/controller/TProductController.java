@@ -28,6 +28,7 @@ import com.ruoyi.xindian.product.domain.ProductImgs;
 import com.ruoyi.xindian.product.domain.TProductDto;
 ;
 import com.ruoyi.xindian.wx_pay.domain.Product;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -222,13 +223,13 @@ public class TProductController extends BaseController
     /**
      * 修改商品信息
      */
-    @Log(title = "商品信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody TProduct tProduct)
-    {
-
-        return toAjax(tProductService.updateTProduct(tProduct));
-    }
+//    @Log(title = "商品信息", businessType = BusinessType.UPDATE)
+//    @PutMapping
+//    public AjaxResult edit(@RequestBody TProduct tProduct)
+//    {
+//
+//        return toAjax(tProductService.updateTProduct(tProduct));
+//    }
 //    @PreAuthorize("@ss.hasPermi('product:product:edit')")
     @Log(title = "商品信息", businessType = BusinessType.UPDATE)
     @PostMapping("/web/update")
@@ -238,12 +239,12 @@ public class TProductController extends BaseController
     {
         TProduct tProduct1 = JSONObject.parseObject(tProduct, TProduct.class);
         try{
-            if (!file1.isEmpty())
+            if (file1!=null)
             {
                 String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file1, MimeTypeUtils.IMAGE_EXTENSION);
                 tProduct1.setProductUrl(url+avatar);
             }
-            if (!file2.isEmpty())
+            if (file2!=null)
             {
                 String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file2, MimeTypeUtils.IMAGE_EXTENSION);
                 tProduct1.setUrlOne(url+avatar);
