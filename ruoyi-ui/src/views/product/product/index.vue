@@ -391,8 +391,9 @@ export default {
       //console.log(this.list)
     },
     handleRemove(file, fileList) {
-      this.delImgs.push(file.name)
-      //console.log(this.delImgs)
+      if(!file.raw){
+        this.delImgs.push(file.name)
+      }
     },
     //选择多张介绍图
     handleChange3(file, fileList) {
@@ -449,10 +450,17 @@ export default {
           let data=new FormData();
           data.append("product",JSON.stringify(this.form))
           if (this.form.productId != null) {
-            data.append('file1', this.list[0])
-            data.append('file2', this.list[1])
+            if(this.list[0]!=undefined){
+              data.append('file1', this.list[0])
+            }
+            if(this.list[1]!=undefined){
+              data.append('file2', this.list[1])
+            }
             console.log(data.get("file1"))
             console.log(data.get("file2"))
+            for (var [key, value] of data) {
+              console.log(key, value);
+            }
             updateProduct(data).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
