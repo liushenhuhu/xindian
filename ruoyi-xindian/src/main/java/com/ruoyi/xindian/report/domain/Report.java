@@ -82,6 +82,7 @@ public class Report extends BaseEntity
 
     /**诊断状态*/
 
+    private String ecgType;
     public String getpId() {
         return pId;
     }

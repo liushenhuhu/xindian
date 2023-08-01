@@ -18,7 +18,7 @@ ruoyi:
   captchaType: math
   # 上传文件的地址
   #url: https://ecg.mindyard.cn:84
-  url: https://develop.mindyard.cn:84
+  url: https://develop.mindyard.cn:84/prod-api/
 
 # 开发环境配置
 server:

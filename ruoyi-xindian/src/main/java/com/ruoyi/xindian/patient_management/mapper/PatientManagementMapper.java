@@ -3,6 +3,8 @@ package com.ruoyi.xindian.patient_management.mapper;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
+import com.ruoyi.xindian.patient_management.vo.PInfoVO;
+import com.ruoyi.xindian.report.domain.Report;
 
 import java.util.List;
 
@@ -97,4 +99,8 @@ public interface PatientManagementMapper
 
     List<DateListVO> selectAllDateList(PatientManagement patientManagement);
 
+
+    PInfoVO selectALLTotal(Report report);
+    PInfoVO selectALLTotal01(Report report);
+    PInfoVO selectALLTotal02(Report report);
 }

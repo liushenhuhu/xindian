@@ -33,6 +33,7 @@ import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.patient_management.vo.PInfoVO;
 import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
@@ -451,15 +452,15 @@ public class ReportController extends BaseController
      */
     @GetMapping("/get_week_info")
     public AjaxResult getWeekInfo(Report rep) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(new Date());
 //        int weekIdx = calendar.get(Calendar.DAY_OF_WEEK) - 1;//1 星期一
 //        if(weekIdx<0) weekIdx=0;
 //        int flag=1;
 //        int index=0;
 //        ArrayList<String> weekDay = new ArrayList<>();
-        HashMap<String, Integer> normal = new HashMap<>();
-        HashMap<String, Integer> abnormal = new HashMap<>();
+//        HashMap<String, Integer> normal = new HashMap<>();
+//        HashMap<String, Integer> abnormal = new HashMap<>();
 //        HashMap<String, Object> params = new HashMap<>();
 //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 //        String maxTime="0000";
@@ -485,31 +486,34 @@ public class ReportController extends BaseController
 ////        params.put("endReportTime",maxTime);
 ////        report.setParams(params);
 //        report.setPPhone(rep.getPPhone());
-        List<Report> reports = reportService.selectReportList(rep);
-        String key="";
-        HashMap<String, Object> result = new HashMap<>();
+//        List<Report> reports = reportService.selectReportList(rep);
+//        String key="";
+//        HashMap<String, Object> result = new HashMap<>();
+//
+//        for (Report re : reports) {
+//            key= new SimpleDateFormat("yyyy-MM-dd").format(re.getReportTime());
+//
+//            if(re.getIntelligentDiagnosis()!=null && re.getIntelligentDiagnosis().contains("正常")){
+//                if(normal.containsKey(key)){
+//                    normal.put(key,normal.get(key)+1);
+//                } else{
+//                    normal.put(key,1);
+//                }
+//            }
+//            else {
+//                if(abnormal.containsKey(key)){
+//                    abnormal.put(key,abnormal.get(key)+1);
+//                } else{
+//                    abnormal.put(key,1);
+//                }
+//            }
+//        }
+//        result.put("normal",normal);
+//        result.put("abnormal",abnormal);
+        PInfoVO pInfoVO = patientManagementService.updatePatient(rep);
 
-        for (Report re : reports) {
-            key= new SimpleDateFormat("yyyy-MM-dd").format(re.getReportTime());
 
-            if(re.getIntelligentDiagnosis()!=null && re.getIntelligentDiagnosis().contains("正常")){
-                if(normal.containsKey(key)){
-                    normal.put(key,normal.get(key)+1);
-                } else{
-                    normal.put(key,1);
-                }
-            }
-            else {
-                if(abnormal.containsKey(key)){
-                    abnormal.put(key,abnormal.get(key)+1);
-                } else{
-                    abnormal.put(key,1);
-                }
-            }
-        }
-        result.put("normal",normal);
-        result.put("abnormal",abnormal);
-        return AjaxResult.success(result);
+        return AjaxResult.success(pInfoVO);
     }
     @GetMapping("/getDealWithInfo")
     public AjaxResult getDealWithInfo(Report rep) {

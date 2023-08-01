@@ -10,6 +10,8 @@ import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
+import com.ruoyi.xindian.patient_management.vo.PInfoVO;
+import com.ruoyi.xindian.report.domain.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,11 +33,13 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     @Autowired
     private HospitalMapper hospitalMapper;
 
-    @Autowired
-    private SysUserMapper sysUserMapper;
+
 
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
     /**
      * 查询患者管理
      *
@@ -56,24 +60,8 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
      */
     @Override
     public List<PatientManagement> selectPatientManagementList(PatientManagement patientManagement) {
-        List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementList(patientManagement);
 
-        String code = patientManagement.getHospitalCode();
-        if (code!=null&&!"".equals(code)){
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    patientManagement.setHospitalCode(hospital1.getHospitalCode());
-                    List<PatientManagement> patientManagements1 =  patientManagementMapper.selectPatientManagementList(patientManagement);
-                    patientManagements.addAll(patientManagements1);
-                }
-            }
-        }
-        return patientManagements;
+        return  patientManagementMapper.selectPatientManagementList(patientManagement);
     }
 
     @Override
@@ -83,46 +71,17 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
 
     @Override
     public List<PatientManagement> selectPatientManagementJECGList(PatientManagement patientManagement) {
-        List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementJECGList(patientManagement);
 
-        String code = patientManagement.getHospitalCode();
-        if (code!=null&&!"".equals(code)){
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    patientManagement.setHospitalCode(hospital1.getHospitalCode());
-                    List<PatientManagement> patientManagements1 =  patientManagementMapper.selectPatientManagementJECGList(patientManagement);
-                    patientManagements.addAll(patientManagements1);
-                }
-            }
-        }
-        return patientManagements;
+        return  patientManagementMapper.selectPatientManagementJECGList(patientManagement);
+
     }
 
     @Override
     public List<PatientManagement> selectPatientManagementJECGsingle(PatientManagement patientManagement) {
-        List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementJECGsingle(patientManagement);
 
-        String code = patientManagement.getHospitalCode();
-        if (code!=null&&!"".equals(code)){
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    patientManagement.setHospitalCode(hospital1.getHospitalCode());
-                    List<PatientManagement> patientManagements1 = patientManagementMapper.selectPatientManagementJECGsingle(patientManagement);
-                    patientManagements.addAll(patientManagements1);
-                }
-            }
-        }
-        return patientManagements;
+
+        return patientManagementMapper.selectPatientManagementJECGsingle(patientManagement);
+
     }
 
 
@@ -133,68 +92,22 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
 
     @Override
     public List<PatientManagement> selectPatientManagementListDECGsingle(PatientManagement patientManagement) {
-        List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementListDECGsingle(patientManagement);
-        String code = patientManagement.getHospitalCode();
-        if (code!=null&&!"".equals(code)){
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    patientManagement.setHospitalCode(hospital1.getHospitalCode());
-                    List<PatientManagement> patientManagements1 = patientManagementMapper.selectPatientManagementListDECGsingle(patientManagement);
-                    patientManagements.addAll(patientManagements1);
-                }
-            }
-        }
-        return patientManagements;
+
+        return patientManagementMapper.selectPatientManagementListDECGsingle(patientManagement);
     }
 
     @Override
     public List<PatientManagement> selectPatientManagementListJECG12(PatientManagement patientManagement) {
-        List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementListJECG12(patientManagement);
-        String code = patientManagement.getHospitalCode();
-        if (code!=null&&!"".equals(code)){
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    patientManagement.setHospitalCode(hospital1.getHospitalCode());
-                    List<PatientManagement> patientManagements1 = patientManagementMapper.selectPatientManagementListJECG12(patientManagement);
-                    patientManagements.addAll(patientManagements1);
-                }
-            }
-        }
 
-
-        return patientManagements;
+        return patientManagementMapper.selectPatientManagementListJECG12(patientManagement);
     }
 
     @Override
     public List<PatientManagement> selectPatientManagementListDECG12(PatientManagement patientManagement) {
-        List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementListDECG12(patientManagement);
-        String code = patientManagement.getHospitalCode();
-        if (code!=null&&!"".equals(code)){
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    patientManagement.setHospitalCode(hospital1.getHospitalCode());
-                    List<PatientManagement> patientManagements1 = patientManagementMapper.selectPatientManagementListDECG12(patientManagement);
-                    patientManagements.addAll(patientManagements1);
-                }
-            }
-        }
 
-        return patientManagements;
+
+        return patientManagementMapper.selectPatientManagementListDECG12(patientManagement);
+
     }
 
 
@@ -218,6 +131,21 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     @Override
     public int updatePatientManagement(PatientManagement patientManagement) {
         return patientManagementMapper.updatePatientManagement(patientManagement);
+    }
+
+    @Override
+    public PInfoVO updatePatient(Report rep) {
+        PInfoVO pInfoVO = patientManagementMapper.selectALLTotal(rep);
+        if (rep.getEcgType()!=null&&!"".equals(rep.getEcgType())){
+            PInfoVO pInfoVO1 = patientManagementMapper.selectALLTotal01(rep);
+            pInfoVO.setTotalSingle(pInfoVO1.getTotalSingle());
+        }
+
+        PInfoVO pInfoVO2 = patientManagementMapper.selectALLTotal02(rep);
+
+
+        pInfoVO.setTotalConsult(pInfoVO2.getTotalConsult());
+        return pInfoVO;
     }
 
     /**

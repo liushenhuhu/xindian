@@ -14,9 +14,12 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
+import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
@@ -34,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
@@ -75,6 +79,14 @@ public class PatientManagementController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private HospitalMapper hospitalMapper;
+
+
+
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
+
     /**
      * 查询患者管理列表
      */
@@ -115,6 +127,21 @@ public class PatientManagementController extends BaseController {
             patientManagement.setDoctorPhone(phonenumber);
             if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
                 patientManagement.setDiagnosisStatus(2L);
+        }
+
+        String code = patientManagement.getHospitalCode();
+        if (code!=null&&!"".equals(code)){
+            patientManagement.getHospitalCodeList().add(code);
+            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
+            AssociatedHospital associatedHospital = new AssociatedHospital();
+            associatedHospital.setHospitalId(hospital.getHospitalId());
+            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+            if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                for (AssociatedHospital c:associatedHospitals){
+                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                    patientManagement.getHospitalCodeList().add(hospital1.getHospitalCode());
+                }
+            }
         }
         startPage();
         if (null == patientManagement.getEcgType()) {
@@ -163,7 +190,8 @@ public class PatientManagementController extends BaseController {
             }
             resList.add(patientManagmentDept);
         }
-        return getTable(resList, new PageInfo(list).getTotal());
+        long total = new PageInfo(list).getTotal();
+        return getTable(resList, total);
     }
 
     /**
@@ -352,4 +380,6 @@ public class PatientManagementController extends BaseController {
     public AjaxResult listDoc(){
         return AjaxResult.success(doctorService.listDoc());
     }
+
+
 }

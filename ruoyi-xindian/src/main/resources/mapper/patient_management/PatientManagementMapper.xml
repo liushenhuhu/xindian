@@ -103,7 +103,6 @@
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -130,6 +129,13 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
         </where>
         order by online_status desc, connection_time desc
     </select>
@@ -145,7 +151,6 @@
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -171,6 +176,12 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
         order by report_time desc
     </select>
@@ -185,7 +196,6 @@
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -208,6 +218,12 @@
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
             </if>
@@ -248,7 +264,6 @@
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -269,6 +284,12 @@
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
             </if>
@@ -282,7 +303,6 @@
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -305,6 +325,12 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
         order by online_status desc, report_time desc
     </select>
@@ -315,7 +341,6 @@
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -335,6 +360,12 @@
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
             </if>
@@ -348,7 +379,6 @@
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -371,6 +401,12 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
         order by online_status desc, report_time desc
     </select>
@@ -381,7 +417,6 @@
             <if test="diagnosisStatus != null  and diagnosisStatus != ''"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
@@ -404,6 +439,12 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
 
@@ -414,7 +455,6 @@
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -433,6 +473,12 @@
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
                 <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
             </if>
@@ -460,6 +506,22 @@
         <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
     </where>
         GROUP BY  DATE_FORMAT(connection_time,'%Y-%m-%d')
+    </select>
+    <select id="selectALLTotal" resultType="com.ruoyi.xindian.patient_management.vo.PInfoVO">
+        SELECT COUNT(r.p_phone) as totalCollection
+        FROM report r INNER JOIN patient_management p  ON r.p_id = p.p_id
+        WHERE p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone = #{pPhone}
+
+    </select>
+    <select id="selectALLTotal01" resultType="com.ruoyi.xindian.patient_management.vo.PInfoVO">
+        SELECT COUNT(r.p_phone) as totalSingle
+        FROM report r INNER JOIN patient_management p  ON r.p_id = p.p_id
+        WHERE p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone = #{pPhone} and p.ecg_type like concat(#{ecgType},'%')
+    </select>
+    <select id="selectALLTotal02" resultType="com.ruoyi.xindian.patient_management.vo.PInfoVO">
+        SELECT COUNT(r.p_phone) as totalConsult
+        FROM report r INNER JOIN patient_management p  ON r.p_id = p.p_id
+        WHERE  p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone = #{pPhone} and r.diagnosis_status = '1'
     </select>
 
 

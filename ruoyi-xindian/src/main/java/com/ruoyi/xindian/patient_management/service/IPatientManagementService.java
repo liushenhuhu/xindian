@@ -3,6 +3,8 @@ package com.ruoyi.xindian.patient_management.service;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
+import com.ruoyi.xindian.patient_management.vo.PInfoVO;
+import com.ruoyi.xindian.report.domain.Report;
 
 import java.util.List;
 
@@ -56,6 +58,7 @@ public interface IPatientManagementService
      * @return 结果
      */
     public int updatePatientManagement(PatientManagement patientManagement);
+     PInfoVO updatePatient(Report rep);
 
     /**
      * 批量删除患者管理

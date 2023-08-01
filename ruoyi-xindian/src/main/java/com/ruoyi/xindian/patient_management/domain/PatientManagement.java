@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -200,6 +201,9 @@ public class PatientManagement extends BaseEntity {
     private String patientSymptom;
 
     private Integer rushState = 1;
+
+
+    private List<String> hospitalCodeList = new ArrayList<>();
 
     public String getpId() {
         return pId;
