@@ -2,13 +2,12 @@
   <div class="home" id="home">
       <div class="title">
         <div class="button">
-          <el-button size="mini" plain>院区数据</el-button>
+<!--          <el-button size="mini" >院区数据</el-button>-->
           <el-button size="mini" @click="inScreen" plain>进入全屏</el-button>
           <el-button size="mini" @click="outScreen" plain>退出全屏</el-button>
         </div>
-        <span style="font-size: 40px;color: #6EDDF1">动态心电智能实时监控</span>
+        <span >动态心电智能实时监控</span>
         <el-pagination
-          small
           @current-change="handleCurrentChange"
           layout="prev, pager, next"
           :total="1000">
@@ -20,12 +19,12 @@
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" :id="getId(index)"></div>
 <!--          <div class="chart" id="chart_0"></div>-->
-          <div class="infleft">
+          <div class="infleft" @click="jump(item.deviceSn)">
             <div class="name">心率:</div>
             <div class="hart" ><span :style="color(item.hr_mean)">{{item.hr_mean}}</span></div>
           </div>
         </div>
-        <div class="containMsg">
+        <div class="containMsg" @click="jump(item.deviceSn)" >
           <div class="name effect">姓名:<span>{{item.patientName}}</span></div>
           <div class="name" >性别:<span>{{item.gender}}</span></div>
           <div class="name" >年龄:<span>{{item.age}}</span></div>
@@ -62,6 +61,7 @@ import {
   get_device,
   list
 } from "@/api/ECGScreen/equipment";
+import 'default-passive-events'
 export default {
   name: "Index",
   data() {
@@ -88,7 +88,9 @@ export default {
   created() {
 
   },
-
+  activated() {
+    this.get_device();
+  },
   mounted() {
     this.openLoading();
     this.get_device();
@@ -102,6 +104,12 @@ export default {
         this.isFullFlag = false
       }
     })
+  },
+  beforeRouteLeave(to, from, next){
+    next();
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
   },
   computed: {
     color() {
@@ -228,9 +236,7 @@ export default {
                 this.newData.push(res.result)
 
               })
-
             })
-
             this.ts++
             this.tag++
           }
@@ -383,6 +389,15 @@ export default {
         target:document.querySelector("#home")
       });
     },
+    jump(deviceSn){
+      this.$router.push(
+        {
+          //添加需要传值到那个页面的路径
+          path:'/Screen/detail',
+          //携带需要传递的参数
+          query:{deviceSn:deviceSn}
+        })
+    },
     closeFullScreen(){
       this.loading.close();
     },
@@ -407,7 +422,7 @@ export default {
 
 <style scoped lang="scss">
 ::v-deep .el-pagination{
-  width: 18vw;
+  width: 400px;
 }
 ::v-deep .el-pagination .el-pager li{
   background-color: rgba(0,0,0,0);
@@ -449,11 +464,17 @@ export default {
     background-size: cover;
     background-color:rgb(3,4,74);
     margin-bottom: 0;
+    span{
+      font-size: 45px;
+      color: #6EDDF1;
+      letter-spacing:6px;
+      padding-left: 10vw;
+    }
     .button{
       display: inline-block;
       .el-button{
         width: 70px;
-        height: 25px;
+        height: 30px;
         padding: 0;
         margin-left: 3px;
         margin-top: 3px;
@@ -522,7 +543,13 @@ export default {
           margin-bottom: 10px;
         }
       }
-
+      .infleft:hover{
+        cursor: pointer;
+        .name{
+          color: #bfe7ec;
+          font-size: 1.6vw;
+        }
+      }
     }
     .containMsg{
       display: flex;
@@ -535,6 +562,14 @@ export default {
         span{
           color: white;
         }
+      }
+    }
+    .containMsg:hover{
+      cursor: pointer;
+      .name{
+        font-size: 0.9vw;
+        color: #bfe7ec;
+        font-weight: bold;
       }
     }
     &::before {
