@@ -160,11 +160,9 @@ public class VipPatientController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         String phonenumber = loginUser.getUser().getPhonenumber();
         VipPatient vipPatients = vipPatientService.findVipPhone(phonenumber);
-
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date parse = format.parse(format.format(new Date()));
         if(vipPatients!=null){
-
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date parse = format.parse(format.format(new Date()));
             Date parse1 = format.parse(format.format(vipPatients.getEndDate()));
             //判断日期是否过期，如果过期则直接删除
             if (parse.getTime()>parse1.getTime()){
@@ -174,6 +172,12 @@ public class VipPatientController extends BaseController
             return AjaxResult.success("true",vipPatients);
         }
         else{
+            SysUser sysUser = sysUserService.selectUserById(loginUser.getUser().getUserId());
+            Date parse1 = format.parse(format.format(sysUser.getDetectionTime()));
+            if (parse.getTime()>parse1.getTime()){
+                sysUser.setDetectionNum(0L);
+                sysUserService.updateUser(sysUser);
+            }
             return AjaxResult.success("false");
         }
     }

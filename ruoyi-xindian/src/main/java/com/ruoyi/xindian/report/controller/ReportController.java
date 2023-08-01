@@ -236,8 +236,13 @@ public class ReportController extends BaseController
         //当前报告信息
         Report report1 = reportService.selectReportByPId(s);
         report.setReportId(report1.getReportId());
-
+        Date date = new Date();
+        report.setReportTime(date);
         //患者请求医生
+        Report report2 = reportService.selectReportByPId(report.getpId());
+        SysUser sysUser = sysUserMapper.selectUserByPhone(report2.getPPhone());
+        Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
+        Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
         if(report.getDiagnosisStatus()==2){
             //选择医院加入公共抢单
             if(report.getHospital()!=null){
@@ -301,8 +306,7 @@ public class ReportController extends BaseController
 //                detectionService.insertDetection(detection);
                 //给医生发送短信
 //                WxUtil.send(dPhone);
-                Date date = new Date();
-                report.setReportTime(date);
+
                 int i = reportService.updateReport(report);
 //                if(report.getHospital()!=null && doctors!=null){
 //                    //定时器, 30分钟无医生诊断, 换医生诊断.
@@ -331,17 +335,17 @@ public class ReportController extends BaseController
             notDealWith.setRefuseReason(report.getDiagnosisConclusion());
             notDealWithService.insertNotDealWith(notDealWith);
 //            report.setDiagnosisConclusion("");
+
+            try {
+                wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断被拒");
+            }catch (Exception e){
+                System.out.println(e);
+            }
             return toAjax(reportService.updateReport(report));
         }else if(report.getDiagnosisStatus()==1){//医生诊断
-            Date date = new Date();
-            report.setReportTime(date);
-            Report report2 = reportService.selectReportByPId(report.getpId());
-            SysUser sysUser = sysUserMapper.selectUserByPhone(report2.getPPhone());
-            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
-            Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
             reportService.updateReport(report);
             try {
-                wxPublicRequest.sendMsg(doctor.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
+                wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
             }catch (Exception e){
                 System.out.println(e);
             }
