@@ -1,10 +1,10 @@
-package com.ruoyi.xindian.chatGPT.controller;
+package com.ruoyi.xindian.chatECG.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.utils.http.HttpUtils;
-import com.ruoyi.xindian.chatGPT.domain.Chat;
+import com.ruoyi.xindian.chatECG.domain.Chat;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -25,7 +25,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/proxyRequest")
-public class ChatGPTController extends BaseController {
+public class ChatECGController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
@@ -59,7 +59,7 @@ public class ChatGPTController extends BaseController {
         try {
             client.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
         System.out.println(result);
         return result;

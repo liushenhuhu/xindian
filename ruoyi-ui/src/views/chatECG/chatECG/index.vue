@@ -3,9 +3,9 @@
     <div class="mainbox">
       <div class="box">
         <div class="title">
-          <img src="@/assets/images/chatGPT-logo1.png" width="" height="84%">
-          <img src="@/assets/images/chatGPT-logo-font.png" width="" height="84%">
-          <img src="@/assets/images/chatGPT-logo3.png" width="" height="40%">
+          <img src="@/assets/images/chatECG-logo1.png" width="" height="84%">
+          <img src="@/assets/images/chatECG-logo-font.png" width="" height="84%">
+          <img src="@/assets/images/chatECG-logo3.png" width="" height="40%">
         </div>
 
         <div id="content" class="content">
@@ -64,7 +64,7 @@
   </div>
 </template>
 <script>
-import {proxyRequest} from "@/api/chatGPT/chatGPT";
+import {proxyRequest} from "@/api/chatECG/chatECG";
 
 export default {
   components: {},
