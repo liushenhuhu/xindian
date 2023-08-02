@@ -1,10 +1,10 @@
 <template>
-  <div class="home" id="home">
+  <div class="home" id="home" >
       <div class="title">
         <div class="button">
 <!--          <el-button size="mini" >院区数据</el-button>-->
-          <el-button size="mini" @click="inScreen" plain>进入全屏</el-button>
-          <el-button size="mini" @click="outScreen" plain>退出全屏</el-button>
+          <el-button size="mini" @click="inScreen" plain>全屏切换</el-button>
+<!--          <el-button size="mini" @click="inScreen" plain>退出全屏</el-button>-->
         </div>
         <span >动态心电智能实时监控</span>
         <el-pagination
@@ -15,6 +15,7 @@
       </div>
 
     <div class="mainbox">
+
       <div class="container"  v-for="(item,index) in data" :key="index">
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" :id="getId(index)"></div>
@@ -51,8 +52,8 @@
         </div>
         <div class="panel-footer"></div>
       </div>
-
     </div>
+
   </div>
 </template>
 
@@ -62,6 +63,8 @@ import {
   list
 } from "@/api/ECGScreen/equipment";
 import 'default-passive-events'
+import screenfull from 'screenfull'
+import card from "element-ui/packages/card";
 export default {
   name: "Index",
   data() {
@@ -71,13 +74,11 @@ export default {
       total:null,//总设备数
       pagenum:null,//总页数
       pages:1,//当前页
-      arr:[],
+      arr:[],//设备号列表
       data:[],//前10秒数据
       newData:[],//最新10秒数据
       p1Iy:[],
       p1V1y:[],
-      newp1Iy:[],
-      newp1V1y:[],
       tag:1,//每个请求10秒数据  1表示前5秒的数据显示 2表示后5秒的数据显示
       ts:0,//时间段
       lodaing:{},
@@ -86,31 +87,34 @@ export default {
     };
   },
   created() {
-
+    this.get_device();
   },
   activated() {
     this.get_device();
   },
   mounted() {
     this.openLoading();
-    this.get_device();
+
 
     // this.chart(0)
     // 监听页面全屏
-    window.addEventListener("fullscreenchange", (e)=> {
-      if(screenfull.isFullscreen){
-        this.isFullFlag = true
-      }else{
-        this.isFullFlag = false
-      }
-    })
+    // window.addEventListener("fullscreenchange", (e)=> {
+    //   if(screenfull.isFullscreen){
+    //     this.isFullFlag = true
+    //     console.log("进入全屏")
+    //   }else{
+    //     this.isFullFlag = false
+    //     console.log("退出")
+    //   }
+    // })
   },
   beforeRouteLeave(to, from, next){
-    next();
     if (this.timer) {
       clearInterval(this.timer);
     }
+    next();
   },
+
   computed: {
     color() {
       return hr_mean => {
@@ -122,6 +126,24 @@ export default {
 
     },
   },
+  watch:{
+    data(val, oldVal){
+      console.log("data数据更新")
+      this.$nextTick(()=>{
+        this.data.forEach((item,index)=>{
+          let chart = this.$echarts.init(document.getElementById('child_'+index))
+          try{
+            chart.clear();
+            chart.setOption(this.chart(index,1250))
+          }catch (e){
+            console.log(e)
+          }
+
+        })
+      })
+
+    }
+  },
   methods: {
     getId:function (val){
       return 'child_'+val
@@ -129,6 +151,7 @@ export default {
      async get_device(){
        await get_device().then(res=>{
          this.arr=res.result.dev_list;
+         console.log(this.arr)
          let length =  res.result.dev_list.length;//总设备个数
          this.total=length;
          this.pagenum = (length%12==0) ? (length/12) : length/12+1;//总页数
@@ -152,6 +175,7 @@ export default {
         })
        await this.list()
     },
+
     async list(){
       this.data=[]
       this.p1Iy=[]
@@ -159,52 +183,101 @@ export default {
       if(this.pages>this.pagenum){
         return this.closeFullScreen()
       }
-      if(this.currentpage[this.pages-1].length!=0){
-        for (let j=0;j<this.currentpage[this.pages-1].length;j++){
-          let {result:res} = await list(this.currentpage[this.pages-1][j],this.ts)
-          res.hr_mean=res.hr_mean.toFixed()
-          this.data.push(res)
-          this.p1Iy.push(res.data.II);
-          this.p1V1y.push(res.data.V1);
-          }
-        this.ts++
-          // this.p1Iy.push(res.data.II);
-          // this.p1V1y.push(res.data.V1);
+      if(this.currentpage[this.pages-1].length!==0){
+        // for (let index = 0; index < this.currentpage[this.pages - 1].length; index++){
+        //   list(this.currentpage[this.pages-1][index],this.ts).then(res=>{
+        //     res.result.hr_mean=res.result.hr_mean.toFixed()
+        //     this.data.push(res.result)
+        //     this.p1Iy.push(res.result.data.II);
+        //     this.p1V1y.push(res.result.data.V1);
+        //   })
+        // }
+        let promiseList=[]
+        for (let index = 0; index < this.currentpage[this.pages - 1].length; index++) {
+          promiseList.push(new Promise((resolve, reject) => {
+            list(this.currentpage[this.pages-1][index],this.ts).then(res=>{
+               res.result.hr_mean=res.result.hr_mean.toFixed()
+              resolve(res.result)
+             })
+          }));
         }
-      let that=this
-        let fn=function (){
-          that.setchart()
-        return fn
+
+        Promise.all(promiseList).then((rspList)=> {
+          rspList.map((val)=> {
+            this.data.push(val)
+            this.p1Iy.push(val.data.II);
+            this.p1V1y.push(val.data.V1);
+          });
+          console.log(this.data)
+          const that=this
+          this.timer=setInterval(function (){
+            that.setchart()
+          },5100)
+          this.closeFullScreen()
+        })
+
+        //   let d=[]
+        // this.currentpage[this.pages-1].forEach(async (item,index)=>{
+        //   await this.getList(index)
+        // })
+        // Promise.all(d).then(()=>{
+        //   console.log(this.data)
+        // })
+        // console.log(this.data)
+
         }
-      this.timer=setInterval(fn(),5060)
-      // let that=this
-      // setInterval(function h(){
-      //   that.setchart()
-      //   return h
-      // }, 5050)
-      this.closeFullScreen()
-      //   //不使用this.$nextTick()方法会报错
-      //   // setInterval(()=>{        }, 5000)
-      // this.$nextTick(()=> {
-      //
-      //     })
+      // this.setchart()
+
+
 
 
     },
 
-    handleCurrentChange(pages){
+    async handleCurrentChange(pages){
       clearInterval(this.timer)
       this.tag=1
       this.pages=pages
       this.openLoading()
       console.log("当前页"+this.pages)
-      this.list()
+      this.data=[]
+      this.p1Iy=[]
+      this.p1V1y=[]
+      await this.list()
     },
 
-    setchart(){
-          let j=0
-        if(this.tag==2){
-          j=1250
+    async setchart(){
+        if(this.tag===1){
+          this.ts++
+          this.newData=[]
+          if(this.currentpage[this.pages-1]!==null){
+            if(this.currentpage[this.pages-1].length!==0){
+              for (var i=0;i<this.currentpage[this.pages-1].length;i++){
+                list(this.currentpage[this.pages-1][i],this.ts).then((res)=>{
+                  res.result.hr_mean=res.result.hr_mean.toFixed()
+                  this.newData.push(res.result)
+                })
+              }
+              // this.currentpage[this.pages-1].forEach((item,index)=>{
+              //   list(this.currentpage[this.pages-1][index],this.ts).then((res)=>{
+              //     res.result.hr_mean=res.result.hr_mean.toFixed()
+              //     this.newData.push(res.result)
+              //   })
+              // })
+              this.tag++
+            }
+          }
+          this.$nextTick(()=>{
+            this.data.forEach((item,index)=>{
+              let chart = this.$echarts.init(document.getElementById('child_'+index))
+              try{
+                chart.clear();
+                chart.setOption(this.chart(index,0))
+              }catch (e){
+                console.log(e)
+              }
+            })
+          })
+        }else {
           this.p1Iy=[]
           this.p1V1y=[]
           /**
@@ -213,46 +286,22 @@ export default {
            * new.device => old.index
            * new.splic(index,i,data)
            */
-          // console.log(this.newData)
           for(let a=0;a<this.data.length;a++){
             for(let b=0;b<this.newData.length;b++){
-              if(this.data[a].deviceSn==this.newData[b].deviceSn){
+              if(this.data[a].deviceSn===this.newData[b].deviceSn){
                 this.data.splice(a,1,this.newData[b])
                 this.p1Iy.push(this.newData[b].data.II)
                 this.p1V1y.push(this.newData[b].data.V1)
               }
             }
           }
-          // console.log(this.p1Iy)
-          // console.log(this.p1V1y)
-          this.newData=[]
-          this.tag--
-        }else {
-          console.log(this.currentpage)
-          if(this.currentpage[this.pages-1].length!=0){
-            this.currentpage[this.pages-1].forEach((item,index)=>{
-              list(this.currentpage[this.pages-1][index],this.ts).then((res)=>{
-                res.result.hr_mean=res.result.hr_mean.toFixed()
-                this.newData.push(res.result)
 
-              })
-            })
-            this.ts++
-            this.tag++
-          }
+          this.tag--
         }
-      this.$nextTick(()=>{
-      this.data.forEach(async (item,index)=>{
-        let option =this.chart(index,j)
-        let chart = this.$echarts.init(document.getElementById('child_'+index))
-        chart.clear();
-        await chart.setOption(option)
-      })
-      })
+
 
     },
     chart(id,j){
-      // let chart = this.$echarts.init(this.$refs.chart[id])
       let timex = (function () {
         var now = new Date();
         var res = [];
@@ -263,16 +312,13 @@ export default {
         }
         return res;
       })();
-      let datenow = new Date()
-      timex.unshift(datenow.toLocaleTimeString());//将当前时间转换为字符串并添加到timex数组的开头
-      timex.pop();//删除timex数组的最后一个元素并返回它删除的元素的值
-      for (let j = 0; j < 1250; j++) {
-        timex.unshift((new Date(datenow.valueOf() - (j * 4))).toLocaleTimeString());//datenow.valueOf()返回datenow数组的值
+      const datenow = new Date()
+      for (let b = 0; b < 1250; b++) {
+        timex.unshift((new Date(datenow.valueOf() - (b * 4))).toLocaleTimeString());//datenow.valueOf()返回datenow数组的值
         timex.pop();
       }
       let p1Iy=[]
       let p1V1y=[]
-
       for (let i = j; i < 1250+j; i++) {
         p1Iy.push(this.p1Iy[id][i])
         p1V1y.push(this.p1V1y[id][i]-1)
@@ -281,7 +327,7 @@ export default {
       // p1V1y=p1V1y.reverse()
       let option=({
         animation: true,
-        animationDuration: 4750,
+        animationDuration: 4800,
         animationEasing: "linear",
         animationEasingUpdate: 'linear',
         animationDurationUpdate: 5100,
@@ -401,21 +447,18 @@ export default {
     closeFullScreen(){
       this.loading.close();
     },
-    goTarget(href) {
-      window.open(href, "_blank");
-    },
     inScreen(){
-      this.isFullFlag=true
+      this.isFullFlag=!this.isFullFlag
       const element = document.getElementById('home');//指定全屏区域元素
-      if(this.isFullFlag){
+      if(screenfull.isEnabled && !screenfull.isFullscreen){
         // screenfull.request(element);
-        element.requestFullscreen()
+        screenfull.request(element)
+        return
       }
+        screenfull.toggle(element)
+
     },
-    outScreen(){
-      this.isFullFlag=false
-      document.exitFullscreen();
-    }
+
   },
 };
 </script>
@@ -468,7 +511,7 @@ export default {
       font-size: 45px;
       color: #6EDDF1;
       letter-spacing:6px;
-      padding-left: 10vw;
+      padding-left: 16vw;
     }
     .button{
       display: inline-block;
