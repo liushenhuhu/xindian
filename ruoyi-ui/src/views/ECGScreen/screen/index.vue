@@ -60,7 +60,8 @@
 <script>
 import {
   get_device,
-  list
+  list,
+  getlist
 } from "@/api/ECGScreen/equipment";
 import 'default-passive-events'
 import screenfull from 'screenfull'
@@ -133,11 +134,9 @@ export default {
       this.$nextTick(()=>{
         this.data.forEach((item,index)=>{
           let chart = this.$echarts.init(document.getElementById('child_'+index))
-          try{
+          if(this.p1Iy[index]){
             chart.clear();
             chart.setOption(this.chart(index,1250))
-          }catch (e){
-            console.log(e)
           }
 
         })
@@ -184,7 +183,16 @@ export default {
       if(this.pages>this.pagenum){
         return this.closeFullScreen()
       }
-      if(this.currentpage[this.pages-1].length!==0){
+      if(this.currentpage[this.pages-1].length!==0) {
+        // for (let index = 0; index < this.currentpage[this.pages - 1].length; index++) {
+        //   list(this.currentpage[this.pages - 1][index], this.ts).then(res => {
+        //     const that = this
+        //     this.timer = setInterval(function () {
+        //       that.setchart()
+        //     }, 5050)
+        //     this.closeFullScreen()
+        //   })
+        // }
         // for (let index = 0; index < this.currentpage[this.pages - 1].length; index++){
         //   list(this.currentpage[this.pages-1][index],this.ts).then(res=>{
         //     res.result.hr_mean=res.result.hr_mean.toFixed()
@@ -217,19 +225,7 @@ export default {
           this.closeFullScreen()
         })
 
-        //   let d=[]
-        // this.currentpage[this.pages-1].forEach(async (item,index)=>{
-        //   await this.getList(index)
-        // })
-        // Promise.all(d).then(()=>{
-        //   console.log(this.data)
-        // })
-        // console.log(this.data)
-
-        }
-      // this.setchart()
-
-
+      }
 
 
     },
@@ -268,17 +264,14 @@ export default {
           this.$nextTick(()=>{
             this.data.forEach((item,index)=>{
               let chart = this.$echarts.init(document.getElementById('child_'+index))
-              try{
+              if(this.p1Iy[index]!==null){
                 chart.clear();
                 chart.setOption(this.chart(index,0))
-              }catch (e){
-                console.log(e)
               }
             })
           })
         }else {
-          this.p1Iy=[]
-          this.p1V1y=[]
+
           /**
            * new array
            * old array
@@ -289,8 +282,8 @@ export default {
             for(let b=0;b<this.newData.length;b++){
               if(this.data[a].deviceSn===this.newData[b].deviceSn){
                 this.data.splice(a,1,this.newData[b])
-                this.p1Iy.push(this.newData[b].data.II)
-                this.p1V1y.push(this.newData[b].data.V1)
+                this.p1Iy.splice(a,1,this.newData[b].data.II)
+                this.p1V1y.splice(a,1,this.newData[b].data.V1)
               }
             }
           }
@@ -324,6 +317,7 @@ export default {
       let p1Iy=[]
       let p1V1y=[]
       console.log(this.p1Iy)
+      console.log(this.data)
       for (let i = j; i < 1250+j; i++) {
         p1Iy.push(this.p1Iy[id][i])
         p1V1y.push(this.p1V1y[id][i]-1)
