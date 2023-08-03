@@ -73,6 +73,11 @@ public class ReportServiceImpl implements IReportService
         return reportMapper.updateReport(report);
     }
 
+    @Override
+    public int updateReportNull(Report report) {
+        return reportMapper.updateReportNull(report);
+    }
+
     /**
      * 批量删除报告
      * 

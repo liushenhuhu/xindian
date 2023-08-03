@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
             <if test="departmentName != null  and departmentName != ''"> and department_name like concat('%', #{departmentName}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code &lt;= #{hospitalCode}</if>
+            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code = #{hospitalCode}</if>
         </where>
     </select>
 

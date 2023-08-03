@@ -51,6 +51,15 @@ public interface IReportService
      */
     public int updateReport(Report report);
 
+
+    /**
+     * 修改报告
+     *
+     * @param report 报告
+     * @return 结果
+     */
+    public int updateReportNull(Report report);
+
     /**
      * 批量删除报告
      * 

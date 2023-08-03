@@ -449,7 +449,7 @@ export default {
       })
     },
     DRyujing(row){
-      this.$router.push({path: "/statistics/DRearly" , query: {id: row.pId,type:'single'}});
+      this.$router.push({path: "/DRearly" , query: {id: row.pId,type:'single'}});
     },
     /** 查询患者管理列表 */
     getList() {

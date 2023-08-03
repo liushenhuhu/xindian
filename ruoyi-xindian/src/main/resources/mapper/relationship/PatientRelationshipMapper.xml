@@ -28,6 +28,11 @@
         <include refid="selectPatientRelationshipVo"/>
         where id = #{id}
     </select>
+    <select id="selectFatherPhonePatientRelationship"
+            resultType="com.ruoyi.xindian.relationship.domain.PatientRelationship">
+        <include refid="selectPatientRelationshipVo"/>
+        where son_phone = #{phone}
+    </select>
 
     <insert id="insertPatientRelationship" parameterType="PatientRelationship" useGeneratedKeys="true" keyProperty="id">
         insert into patient_relationship

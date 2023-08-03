@@ -2,6 +2,7 @@ package com.ruoyi.xindian.relationship.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.relationship.domain.PatientRelationship;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 患者关系表Mapper接口
@@ -58,4 +59,6 @@ public interface PatientRelationshipMapper
      * @return 结果
      */
     public int deletePatientRelationshipByIds(Long[] ids);
+
+    PatientRelationship selectFatherPhonePatientRelationship(@Param("phone") String phone);
 }

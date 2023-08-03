@@ -2,10 +2,6 @@ package com.ruoyi.xindian.report.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -34,11 +30,15 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.PInfoVO;
+import com.ruoyi.xindian.relationship.domain.PatientRelationship;
+import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
 import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
 import com.ruoyi.xindian.util.*;
 import com.ruoyi.xindian.vipPatient.controller.VipPatientController;
+import com.ruoyi.xindian.vipPatient.domain.VipPatient;
+import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,8 +71,14 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class ReportController extends BaseController
 {
 
+
     @Resource
     private VipPatientController vipPatientController;
+
+
+    @Resource
+    private PatientRelationshipMapper patientRelationshipMapper;
+
     @Autowired
     private WXPublicRequest wxPublicRequest;
 
@@ -108,6 +114,9 @@ public class ReportController extends BaseController
 
     @Resource
     private SysUserMapper sysUserMapper;
+
+    @Resource
+    private IVipPatientService vipPatientService;
 
     /**
      * 查询报告列表
@@ -244,7 +253,27 @@ public class ReportController extends BaseController
         SysUser sysUser = sysUserMapper.selectUserByPhone(report2.getPPhone());
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
         Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
+
+//        if (sysUser==null){
+//            PatientRelationship patientRelationship = patientRelationshipMapper.selectFatherPhonePatientRelationship(report2.getPPhone());
+//            sysUser = sysUserMapper.selectUserByPhone(patientRelationship.getFatherPhone());
+//        }
+        SysUser sysUser1 = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         if(report.getDiagnosisStatus()==2){
+
+            //判断用户是否存在服务次数
+            VipPatient vipPhone = vipPatientService.findVipPhone(report2.getPPhone());
+            if (vipPhone==null){
+                if (sysUser1.getDetectionNum()==0){
+                    return AjaxResult.error("用户服务次数不足");
+                }
+            }
+            if (vipPhone!=null){
+                if (vipPhone.getVipNum()==0){
+                    return AjaxResult.error("用户服务次数不足");
+                }
+            }
+
             //选择医院加入公共抢单
             if(report.getHospital()!=null){
                 Doctor doctor = new Doctor();
@@ -270,55 +299,15 @@ public class ReportController extends BaseController
                 } else{
                     return AjaxResult.error("当前医院平台无医生");
                 }
+            }else {
+                return AjaxResult.error("请先选择医院医院");
             }
             //咨询医生次数减一
-            if(phonenumber.equals(report1.getPPhone())) {
-                vipPatientController.detectionNumSubtract(phonenumber);
-//            AppData appData = appDataService.selectAppDataByPatientPhone(phonenumber);
-//            Long questionNum = appData.getQuestionNum();
-//            if(questionNum==0){
-//                return AjaxResult.error("咨询次数已用完");
-//            }
-//            appData.setQuestionNum(questionNum-1);
-//            appDataService.updateAppData(appData);
-//                Detection detection = new Detection();
-//                detection.setPatientPhone(phonenumber);
-//                detection.setDetectionTime(new Date());
-//                detection.setDetectionPid(report1.getpId());
-//                detectionService.insertDetection(detection);
-//                HashMap<String, Object> params = new HashMap<>();
-//                Detection detection1 = new Detection();
-//                LocalDate now = LocalDate.now();
-//                LocalDateTime startOfDay = now.atStartOfDay();
-//                LocalDateTime endofDay = now.atTime(LocalTime.MAX);
-//                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//
-//                String start = startOfDay.format(formatter);
-//                String end = endofDay.format(formatter);
-//                params.put("beginDetectionTime", start);
-//                params.put("endDetectionTime", end);
-//                detection1.setPatientPhone(phonenumber);
-//                detection1.setParams(params);
-//                List<Detection> detections = detectionService.selectDetectionList(detection1);
-//                if (detections.size() >= patient.getDetectionNum()) {
-//                    return AjaxResult.error("今日咨询次数已用完");
-//                }
-//            return AjaxResult.success();
-//                detectionService.insertDetection(detection);
-                //给医生发送短信
-//                WxUtil.send(dPhone);
+                vipPatientController.detectionNumSubtract(sysUser1.getPhonenumber());
 
                 int i = reportService.updateReport(report);
-//                if(report.getHospital()!=null && doctors!=null){
-//                    //定时器, 30分钟无医生诊断, 换医生诊断.
-//                    ThreadUtil threadUtil = new ThreadUtil();
-//                    threadUtil.setParameter(report.getpId(), doctors, reportService);
-////                    threadUtil.run();
-//                    Thread thread = new Thread(threadUtil);
-//                    thread.start();
-//                }
                 return toAjax(i);
-            }
+
 
         } else if(report.getDiagnosisStatus()==3){ //拒绝逻辑
             Detection detection = new Detection();
@@ -335,22 +324,30 @@ public class ReportController extends BaseController
             notDealWith.setRefuseTime(calendar.getTime());
             notDealWith.setRefuseReason(report.getDiagnosisConclusion());
             notDealWithService.insertNotDealWith(notDealWith);
-//            report.setDiagnosisConclusion("");
 
-            try {
-                wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断被拒");
-            }catch (Exception e){
-                System.out.println(e);
+
+//            sysUserMapper.updateDetectionNumAdd(sysUser.getPhonenumber));
+            if (sysUser==null){
+                WxUtil.send(report2.getPPhone());
+            }else {
+                try {
+                    wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断被拒");
+                }catch (Exception e){
+                    System.out.println(e);
+                }
             }
-            return toAjax(reportService.updateReport(report));
+            return toAjax(reportService.updateReportNull(report));
         }else if(report.getDiagnosisStatus()==1){//医生诊断
             reportService.updateReport(report);
-            try {
-                wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
-            }catch (Exception e){
-                System.out.println(e);
+            if (sysUser==null){
+                WxUtil.send(report2.getPPhone());
+            }else {
+                try {
+                    wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
+                }catch (Exception e){
+                    System.out.println(e);
+                }
             }
-
         }
         return toAjax(1);
     }
@@ -610,6 +607,15 @@ public class ReportController extends BaseController
     @GetMapping("/docOrPatientList")
     public AjaxResult docOrPatientList(){
         List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementList();
+        for (PatientManagement management : patientManagements) {
+            if(DateUtil.isValidDate(management.getBirthDay())){
+                try {
+                    management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
+                } catch (ParseException e) {
+                    System.out.println(1);
+                }
+            }
+        }
         return AjaxResult.success(patientManagements);
     }
 
@@ -620,6 +626,7 @@ public class ReportController extends BaseController
         report.setReportId(report1.getReportId());
         report.setDiagnosisStatus(2L);
         report.setDiagnosisDoctor(doctor1.getDoctorName());
+        report.setReportTime(new Date());
         Doctor doctor = new Doctor();
         doctor.setHospital(report.getHospital());
         List<Doctor> doctors = doctorService.selectDoctorList(doctor);

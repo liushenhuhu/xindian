@@ -446,7 +446,7 @@ export default {
       })
     },
     DRyujing(row){
-      this.$router.push({path: "/statistics/DRearly" , query: {id: row.pId,type:'12'}});
+      this.$router.push({path: "/DRearly" , query: {id: row.pId,type:'12'}});
     },
     /** 查询患者管理列表 */
     getList() {

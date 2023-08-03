@@ -109,6 +109,24 @@
         </trim>
         where report_id = #{reportId}
     </update>
+    <update id="updateReportNull">
+        update report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pId != null and pId != ''">p_id = #{pId},</if>
+            <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
+            <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
+            <if test="reportTime != null">report_time = #{reportTime},</if>
+            <if test="reportType != null">report_type = #{reportType},</if>
+            <if test="intelligentDiagnosis != null">intelligent_diagnosis = #{intelligentDiagnosis},</if>
+            <if test="handlingSuggestion != null">handling_suggestion = #{handlingSuggestion},</if>
+            <if test="healthAdvice != null">health_advice = #{healthAdvice},</if>
+            <if test="pPhone != null">p_phone = #{pPhone},</if>
+            <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
+            diagnosis_doctor = null,
+            d_phone = null
+        </trim>
+        where report_id = #{reportId}
+    </update>
 
     <delete id="deleteReportByReportId" parameterType="Long">
         delete from report where report_id = #{reportId}

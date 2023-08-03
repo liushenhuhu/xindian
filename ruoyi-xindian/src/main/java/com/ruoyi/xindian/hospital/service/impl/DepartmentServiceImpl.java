@@ -1,11 +1,21 @@
 package com.ruoyi.xindian.hospital.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
+import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.hospital.mapper.DepartmentMapper;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
+
+import javax.annotation.Resource;
 
 /**
  * 科室Service业务层处理
@@ -18,6 +28,15 @@ public class DepartmentServiceImpl implements IDepartmentService
 {
     @Autowired
     private DepartmentMapper departmentMapper;
+    @Resource
+    private HospitalMapper hospitalMapper;
+
+
+    @Resource
+    private SysUserMapper sysUserMapper;
+
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
 
     /**
      * 查询科室
@@ -41,6 +60,30 @@ public class DepartmentServiceImpl implements IDepartmentService
     public List<Department> selectDepartmentList(Department department)
     {
         return departmentMapper.selectDepartmentList(department);
+    }
+
+    @Override
+    public List<Department> selectDepartmentList(SysUser sysUser,Department department) {
+
+
+        department.setHospitalCode(sysUser.getHospitalCode());
+        List<Department> departments = departmentMapper.selectDepartmentList(department);
+
+        Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+        AssociatedHospital associatedHospital = new AssociatedHospital();
+        associatedHospital.setHospitalId(hospital.getHospitalId());
+        List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+        if (associatedHospitals!=null&&associatedHospitals.size()>0){
+            for (AssociatedHospital c:associatedHospitals){
+                Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                department.setHospitalCode(hospital1.getHospitalCode());
+                List<Department> departments1 = departmentMapper.selectDepartmentList(department);
+                departments.addAll(departments1);
+            }
+        }
+
+
+        return departments;
     }
 
     @Override

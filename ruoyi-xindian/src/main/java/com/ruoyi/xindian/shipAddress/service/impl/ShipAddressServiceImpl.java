@@ -53,6 +53,9 @@ public class ShipAddressServiceImpl implements IShipAddressService {
             shipAddress.setDefaultFlag(1L);
             return shipAddressMapper.insertShipAddress(shipAddress);
         }
+        if (shipAddress.getDefaultFlag()==1){
+            shipAddressMapper.updateDefaultFlagInt(shipAddress.getUserId());
+        }
 
         return shipAddressMapper.insertShipAddress(shipAddress);
     }

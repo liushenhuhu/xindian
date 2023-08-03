@@ -35,12 +35,11 @@ public class ShipAddressController extends BaseController {
      */
     /*@PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:list')")*/
     @GetMapping("/list")
-    public TableDataInfo list(ShipAddress shipAddress,HttpServletRequest request){
+    public AjaxResult list(ShipAddress shipAddress,HttpServletRequest request){
         LoginUser loginUser = tokenService.getLoginUser(request);
         shipAddress.setUserId(loginUser.getUser().getUserId());
-        startPage();
         List<ShipAddress> list = shipAddressService.selectShipAddressList(shipAddress);
-        return getDataTable(list);
+        return AjaxResult.success(list);
     }
 
     /**

@@ -194,6 +194,70 @@ public class PatientManagementController extends BaseController {
         return getTable(resList, total);
     }
 
+
+    /**
+     * 查询患者管理列表
+     */
+//    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
+    @GetMapping("/listP")
+    public TableDataInfo listP(PatientManagement patientManagement,HttpServletRequest request) {
+
+        List<PatientManagement> list = new ArrayList<>();
+        ArrayList<PatientManagmentDept> resList = new ArrayList<>();
+        startPage();
+        if (null == patientManagement.getEcgType()) {
+            list = patientManagementService.selectPatientManagementList(patientManagement);
+        } else if (patientManagement.getEcgType().equals("DECGsingle")) {
+            list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
+        } else if (patientManagement.getEcgType().equals("JECG12")) {
+            list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+        } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
+            list = patientManagementService.selectPatientManagementJECGList(patientManagement);
+        }else if (patientManagement.getEcgType().equals("JECGsingle")) {
+            list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
+        } else if (patientManagement.getEcgType().equals("DECG12")) {
+            list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
+        } else {
+            list = patientManagementService.selectPatientManagementList(patientManagement);
+        }
+        PatientManagmentDept patientManagmentDept;
+        Doctor doctor = new Doctor();
+        Department department = new Department();
+        for (PatientManagement management : list) {
+//            patientManagmentDept= (PatientManagmentDept) management;
+            if(DateUtil.isValidDate(management.getBirthDay())){
+                try {
+                    management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
+                } catch (ParseException e) {
+                    System.out.println(1);
+                }
+            }
+            patientManagmentDept = new PatientManagmentDept();
+            BeanUtils.copyProperties(management, patientManagmentDept);
+
+            if (patientManagmentDept.getDoctorPhone() != null) {
+                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
+                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+                if (doctors.get(0).getDepartmentCode() != null) {
+                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
+                    List<Department> departments = departmentService.selectDepartmentList(department);
+                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                }
+            }
+            if (management.getTimeDuration() == null) {
+                patientManagmentDept.setAcquisitionDuration("报告未生成");
+            } else {
+                patientManagmentDept.setAcquisitionDuration("记录时长: " + DateUtil.timeToString(management.getTimeDuration()));
+            }
+            resList.add(patientManagmentDept);
+        }
+        long total = new PageInfo(list).getTotal();
+        return getTable(resList, total);
+    }
+
+
+
+
     /**
      * 导出患者管理列表
      */

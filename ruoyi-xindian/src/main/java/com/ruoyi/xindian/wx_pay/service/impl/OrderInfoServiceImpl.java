@@ -154,7 +154,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
                 baseMapper.update(orderInfo, queryWrapper);
 
-                vipPatient(product,orderByOrderNo.getUserId());
+                vipPatient(product,orderByOrderNo.getUserId(),c);
 
             }else {
 
@@ -179,7 +179,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @param product
      * @return
      */
-    public Boolean vipPatient(Product product ,Long userId){
+    public Boolean vipPatient(Product product ,Long userId,SuborderOrderInfo suborderOrderInfo){
 
         SysUser sysUser = sysUserMapper.selectUserById(userId);
         VipPatient vipPhone = vipPatientService.findVipPhone(sysUser.getPhonenumber());
@@ -187,8 +187,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if (vipPhone!=null){
             VipPatient vipPatient = new VipPatient();
             //如果用户已经为vip，在原来的基础上增加次数
-            vipPatient.setId(vipPatient.getId());
-            vipPatient.setVipNum(vipPhone.getVipNum() + product.getFrequency());
+            vipPatient.setId(vipPhone.getId());
+            vipPatient.setVipNum(vipPhone.getVipNum() +(product.getFrequency()*suborderOrderInfo.getSum()) );
             Date endDate = vipPhone.getEndDate();
             if (product.getFrequency()>=20&&product.getFrequency()<30){
                 Calendar calendar = Calendar.getInstance();
@@ -220,7 +220,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 VipPatient vipPatient = new VipPatient();
                 SysUser sysUser1 = sysUserMapper.selectUserByPhone(sysUser.getPhonenumber());
                 vipPatient.setPatientPhone(sysUser.getPhonenumber());
-                vipPatient.setVipNum(sysUser1.getDetectionNum()+product.getFrequency());
+                vipPatient.setVipNum(sysUser1.getDetectionNum()+(product.getFrequency()*suborderOrderInfo.getSum()) );
                 Date date = new Date();
                 if (product.getFrequency()>=20&&product.getFrequency()<30){
                     Calendar calendar = Calendar.getInstance();
@@ -250,7 +250,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
             }else {
                 SysUser p = sysUserMapper.selectUserByPhone(sysUser.getPhonenumber());
-                p.setDetectionNum(p.getDetectionNum() + product.getFrequency());
+                p.setDetectionNum(p.getDetectionNum() + (product.getFrequency()*suborderOrderInfo.getSum()) );
                 if (product.getFrequency()>=20&&product.getFrequency()<30){
                     Calendar calendar = Calendar.getInstance();
                     // 设置日期
@@ -444,7 +444,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     @Transactional
     @Override
-    public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId) {
+    public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId) throws Exception {
         Product product = productMapper.selectById(productId);
 
         if(product.getType().equals("服务")){
@@ -453,6 +453,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         ShipAddress shipAddress = shipAddressMapper.selectShipAddressById(addressId);
 
+        if (shipAddress==null){
+            throw new Exception("用户地址不存在");
+        }
         //获取token中发送请求的用户信息
         LoginUser loginUser = tokenService.getLoginUser(request);
 
@@ -494,7 +497,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
 
         redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
-        redisTemplate.opsForValue().set(orderInfo.getId(),productId+","+sum);
 
         return orderInfo.getId();
 
@@ -543,7 +545,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
         redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
-        redisTemplate.opsForValue().set(orderInfo.getId(),productId+","+sum);
 
         return orderInfo.getId();
 
@@ -564,19 +565,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if (orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
 
             System.out.println("开始删除失效订单");
-            //查询通过监听过期key来获取到订单id
-            String productIdAndSum = (String) redisTemplate.opsForValue().get(orderId);
 
             deleteOrder(orderId);
-
-            if (productIdAndSum!=null){
-                String[] split = productIdAndSum.split(",");
-                updateProductDel(Integer.valueOf(split[1]),Long.valueOf(split[0]));
-            }
         }
-        //删除同时存进去的key，释放资源
-        redisTemplate.opsForValue().getOperations().delete(orderId);
-
     }
 
     @Override
@@ -678,7 +669,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
 
         Product product = productMapper.selectById(productId);
+        if (product!=null&&product.getType().equals("服务")){
+            return 1;
+        }
+
         UpdateWrapper<Product> updateWrapper = Wrappers.update();
+
 
         if (product!=null&&product.getProductNum()==0){
             // 创建一个 UpdateWrapper 对象，指定要更新的表和条件

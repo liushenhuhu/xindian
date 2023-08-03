@@ -384,5 +384,8 @@
     <update id="updateDeteTime">
         update sys_user set detection_num = 0 where phonenumber = #{patientPhone}
     </update>
+    <update id="updateDetectionNumAdd">
+        update sys_user set detection_num = detection_num +1 where phonenumber = #{patientPhone}
+    </update>
 
 </mapper>

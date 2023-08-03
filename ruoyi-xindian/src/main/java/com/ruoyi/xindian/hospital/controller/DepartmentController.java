@@ -3,7 +3,14 @@ package com.ruoyi.xindian.hospital.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.mapper.SysUserMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,16 +43,29 @@ public class DepartmentController extends BaseController
     @Autowired
     private IDepartmentService departmentService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
     /**
      * 查询科室列表
      */
     @PreAuthorize("@ss.hasPermi('department:department:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Department department)
+    public TableDataInfo list(Department department, HttpServletRequest request)
     {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
+        if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
+            List<Department> departments = departmentService.selectDepartmentList(sysUser, department);
+            return getDataTable(departments);
+        }
+
         startPage();
         List<Department> list = departmentService.selectDepartmentList(department);
         return getDataTable(list);
+
     }
     @GetMapping("/getAllDepartment")
     public TableDataInfo getAllDepartment()

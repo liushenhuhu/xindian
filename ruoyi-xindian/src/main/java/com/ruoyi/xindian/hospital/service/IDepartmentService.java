@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.hospital.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.xindian.hospital.domain.Department;
 
 /**
@@ -26,6 +28,8 @@ public interface IDepartmentService
      * @return 科室集合
      */
     public List<Department> selectDepartmentList(Department department);
+
+    public List<Department> selectDepartmentList(SysUser sysUser,Department department);
     public List<Department> selectAllDepartment();
 
     /**
