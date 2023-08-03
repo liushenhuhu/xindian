@@ -83,7 +83,8 @@ export default {
       ts:0,//时间段
       lodaing:{},
       currentpage:[],//一维数组，存放12台设备
-      timer:null
+      timer:null,
+      time:null,//时间 X轴
     };
   },
   created() {
@@ -212,7 +213,7 @@ export default {
           const that=this
           this.timer=setInterval(function (){
             that.setchart()
-          },5100)
+          },5050)
           this.closeFullScreen()
         })
 
@@ -250,8 +251,7 @@ export default {
           this.ts++
           this.newData=[]
           if(this.currentpage[this.pages-1]!==null){
-            if(this.currentpage[this.pages-1].length!==0){
-              for (var i=0;i<this.currentpage[this.pages-1].length;i++){
+              for (let i=0;i<this.currentpage[this.pages-1].length;i++){
                 list(this.currentpage[this.pages-1][i],this.ts).then((res)=>{
                   res.result.hr_mean=res.result.hr_mean.toFixed()
                   this.newData.push(res.result)
@@ -264,7 +264,6 @@ export default {
               //   })
               // })
               this.tag++
-            }
           }
           this.$nextTick(()=>{
             this.data.forEach((item,index)=>{
@@ -295,17 +294,15 @@ export default {
               }
             }
           }
-
           this.tag--
         }
 
-
     },
-    chart(id,j){
+    timex(){
       let timex = (function () {
-        var now = new Date();
-        var res = [];
-        var lenth = 1250;
+        let now = new Date();
+        let res = [];
+        let lenth = 1250;
         while (lenth--) {
           res.push(now.toLocaleTimeString());
           now = new Date(now.valueOf() - 4);
@@ -317,8 +314,16 @@ export default {
         timex.unshift((new Date(datenow.valueOf() - (b * 4))).toLocaleTimeString());//datenow.valueOf()返回datenow数组的值
         timex.pop();
       }
+      return timex
+    },
+    chart(id,j){
+      if(id===0){
+        this.time=this.timex()
+      }
+
       let p1Iy=[]
       let p1V1y=[]
+      console.log(this.p1Iy)
       for (let i = j; i < 1250+j; i++) {
         p1Iy.push(this.p1Iy[id][i])
         p1V1y.push(this.p1V1y[id][i]-1)
@@ -327,12 +332,12 @@ export default {
       // p1V1y=p1V1y.reverse()
       let option=({
         animation: true,
-        animationDuration: 4800,
+        animationDuration: 4750,
         animationEasing: "linear",
         animationEasingUpdate: 'linear',
-        animationDurationUpdate: 5100,
+        animationDurationUpdate: 5050,
         animationDelayUpdate: 0,
-        animationThreshold: 5000,
+        animationThreshold: 5100,
         title: {
         text: '电位（mV）',
           textStyle: {
@@ -359,7 +364,7 @@ export default {
         },
         xAxis: {
           boundaryGap: true,
-            data: timex,
+            data: this.time,
             axisLabel: { //修改坐标系字体颜色
             interval: 248,
               show: true,
