@@ -1,9 +1,7 @@
-package com.ruoyi.xindian.chatGPT.domain;
+package com.ruoyi.xindian.chatECG.domain;
 
 import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.lang.reflect.Array;
 
 /**
  * @author lixinlong
