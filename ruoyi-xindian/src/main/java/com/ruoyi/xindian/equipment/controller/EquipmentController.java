@@ -3,15 +3,22 @@ package com.ruoyi.xindian.equipment.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,6 +60,13 @@ public class EquipmentController extends BaseController {
     @Autowired
     private IDoctorService doctorService;
 
+
+    @Autowired
+    private IHospitalService hospitalService;
+
+
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
     /**
      * 查询设备列表
      */
@@ -63,7 +77,20 @@ public class EquipmentController extends BaseController {
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalCode = sysUser.getHospitalCode();
-            equipment.setHospitalCode(hospitalCode);
+            equipment.getHospitalCodeList().add(hospitalCode);
+            if (equipment.getHospitalCode()!=null){
+                String hId = equipment.getHospitalCode();
+                Hospital hospital = hospitalService.selectHospitalByHospitalCode(hId);
+                AssociatedHospital associatedHospital = new AssociatedHospital();
+                associatedHospital.setHospitalId(hospital.getHospitalId());
+                List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+                if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                    for (AssociatedHospital c:associatedHospitals){
+                        Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                        equipment.getHospitalCodeList().add(hospital1.getHospitalCode());
+                    }
+                }
+            }
             startPage();
             list = equipmentService.selectEquipmentList(equipment);
         } else {

@@ -63,7 +63,6 @@ public class OrderController {
     public AjaxResult userOrderList(HttpServletRequest request,OrderInfo orderInfo){
         //获取token中发送请求的用户信息
         LoginUser loginUser = tokenService.getLoginUser(request);
-        startPage();
         List<OrderInfo> orderInfoList =  orderInfoService.selectUserOrderList(loginUser,orderInfo);
         if (orderInfoList!=null&&!orderInfoList.isEmpty()){
             for (OrderInfo c:orderInfoList){

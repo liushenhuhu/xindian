@@ -50,3 +50,11 @@ export function delDoctor(doctorId) {
     method: 'delete'
   })
 }
+
+export function hospitalCodeFind(doctorId) {
+  return request({
+    url: '/department/department/hospitalCodeFind/' + doctorId,
+    method: 'get'
+  })
+}
+

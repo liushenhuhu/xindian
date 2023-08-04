@@ -139,28 +139,26 @@
         </el-form-item>
         <el-form-item label="医院" prop="hospital">
 <!--          <el-input v-model="form.hospital" placeholder="请输入医院" />-->
-          <el-select v-model="form.hospital" placeholder="请选择医院名称" clearable>
+          <el-select v-model="form.hospital" placeholder="请选择医院名称" clearable @change="historyId(form.hospital)">
             <el-option
-              v-for="dict in dict.type.hospital_name_list"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.label"
-            />
+              v-for="item in options"
+              :key="item.hospitalId"
+              :label="item.hospitalName"
+              :value="item.hospitalCode">
+            </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="科室" prop="departmentCode">
 <!--          <el-input v-model="form.departmentCode" placeholder="请输入科室代号" />-->
-          <el-autocomplete
-            popper-class="my-autocomplete"
-            v-model="form.departmentName"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入科室"
-            @select="addSelect">
-            <template slot-scope="{ item }">
-              <div class="name">{{ item.value }}</div>
-            </template>
-          </el-autocomplete>
+          <el-select v-model="form.departmentName" placeholder="请选择科室" clearable >
+            <el-option
+              v-for="item in options1"
+              :key="item.departmentId"
+              :label="item.departmentName"
+              :value="item.departmentCode">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="职称" prop="professional">
           <el-input v-model="form.professional" type="textarea" autosize placeholder="请输入内容" />
@@ -195,9 +193,10 @@
 </template>
 
 <script>
-import { listDoctor, getDoctor, delDoctor, addDoctor, updateDoctor } from "@/api/doctor/doctor";
+import { listDoctor, getDoctor, delDoctor, addDoctor, updateDoctor ,hospitalCodeFind} from "@/api/doctor/doctor";
 import { listDepartment } from "@/api/department/department";
 import item from "@/layout/components/Sidebar/Item";
+import {listHospital, listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "Doctor",
@@ -221,6 +220,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      options:[],
+      options1:[],
       // 医生表格数据
       doctorList: [],
       // 弹出层标题
@@ -304,10 +305,17 @@ export default {
         //   this.restaurants.find(item => console.log(item))
         //   this.doctorList[i].departmentCode=this.restaurants.find(item => item.id === response.rows[i].departmentCode);
         // }
-        console.log(response)
         this.total = response.total;
         this.loading = false;
       });
+    },
+    historyId(val){
+      if (val!==""){
+        hospitalCodeFind(val).then(r=>{
+         this.options1=r.data
+        })
+      }
+
     },
     // 取消按钮
     cancel() {
@@ -360,6 +368,9 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加医生";
+      listHospitalId(null).then(r=>{
+        this.options=r.rows
+      })
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -367,11 +378,9 @@ export default {
       const doctorId = row.doctorId || this.ids
       getDoctor(doctorId).then(response => {
         this.form = response.data;
-        console.log(response.data);
         this.open = true;
         this.title = "修改医生";
       });
-      console.log(this.form.departmentName);
     },
     /** 提交按钮 */
     submitForm() {

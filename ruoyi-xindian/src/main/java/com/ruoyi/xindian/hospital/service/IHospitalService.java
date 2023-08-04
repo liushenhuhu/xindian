@@ -74,7 +74,7 @@ public interface IHospitalService
      * 查找用户所存在的医院
      */
 
-    List<Hospital> selectUserId(Long userId);
+    List<Hospital> selectUserId(Hospital hospital);
 
 
     Hospital selectId(Long userId);

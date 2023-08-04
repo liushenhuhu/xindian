@@ -12,7 +12,9 @@ import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -48,6 +51,8 @@ public class PatientController extends BaseController
 
     @Autowired
     private IAppDataService appDataService;
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
 
 
     /**
@@ -73,7 +78,18 @@ public class PatientController extends BaseController
                     return getDataTable(list);
                 }
             }
-            patient.setPatientSource(hospitalName);
+            patient.getHospitalNameList().add(hospitalName);
+            if (patient.getHospitalId()!=null){
+                AssociatedHospital associatedHospital = new AssociatedHospital();
+                associatedHospital.setHospitalId(patient.getHospitalId());
+                List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+                if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                    for (AssociatedHospital c:associatedHospitals){
+                        Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                        patient.getHospitalNameList().add(hospital1.getHospitalName());
+                    }
+                }
+            }
             startPage();
             list = patientService.selectPatientList(patient);
         } else {

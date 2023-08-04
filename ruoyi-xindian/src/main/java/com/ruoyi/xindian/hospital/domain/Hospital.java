@@ -1,6 +1,9 @@
 package com.ruoyi.xindian.hospital.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -67,8 +70,18 @@ public class Hospital extends BaseEntity
 
     private String price;
 
+    public List<String> getHospitalCodeList() {
+        return hospitalCodeList;
+    }
+
+    public void setHospitalCodeList(List<String> hospitalCodeList) {
+        this.hospitalCodeList = hospitalCodeList;
+    }
+
     private String img;
 
+
+    private List<String> hospitalCodeList = new ArrayList<>();
     public String getImg() {
         return img;
     }

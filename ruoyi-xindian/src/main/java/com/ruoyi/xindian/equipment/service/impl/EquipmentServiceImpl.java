@@ -1,5 +1,8 @@
 package com.ruoyi.xindian.equipment.service.impl;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
@@ -7,11 +10,15 @@ import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.patient.domain.Patient;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.equipment.mapper.EquipmentMapper;
 import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -51,23 +58,8 @@ public class EquipmentServiceImpl implements IEquipmentService {
      */
     @Override
     public List<Equipment> selectEquipmentList(Equipment equipment) {
-        List<Equipment> equipment1 = equipmentMapper.selectEquipmentList(equipment);
-        if (equipment.getHospitalCode()!=null){
-            String hId = equipment.getHospitalCode();
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(hId);
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    equipment.setHospitalCode(hospital1.getHospitalCode());
-                    List<Equipment> equipment2 = equipmentMapper.selectEquipmentList(equipment);
-                    equipment1.addAll(equipment2);
-                }
-            }
-        }
-        return equipment1;
+
+        return equipmentMapper.selectEquipmentList(equipment);
     }
 
     /**
@@ -128,4 +120,33 @@ public class EquipmentServiceImpl implements IEquipmentService {
     public Equipment selectEquipmentByEquipmentCode(String equipmentCode){
         return equipmentMapper.selectEquipmentByEquipmentCode(equipmentCode);
     }
+
+
+
+    @Transactional
+    @Override
+    public void batchInsert(String filePath) throws Exception {
+
+            FileInputStream inputStream = new FileInputStream(filePath);
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            XSSFSheet sheet = workbook.getSheetAt(4);//5表示excel表的第几页，从下表0开始
+            List<Equipment> equipmentList = new ArrayList<>();
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                XSSFRow row = sheet.getRow(i);
+                String name = row.getCell(1).getStringCellValue();
+                //因为id自增，所以不加id，后期可以自行修改，其他参数自行修改
+                Equipment equipment = new Equipment( name, "V2023-06-19", "False", "29", "JECGsingleWL");
+                equipmentList.add(equipment);
+            }
+            for (int i = 0; i < equipmentList.size(); i ++) {
+                System.out.println(equipmentList.get(i));
+                equipmentMapper.insertEquipment(equipmentList.get(i));
+            }
+
+    }
+
+
+
+
+
 }

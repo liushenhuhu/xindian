@@ -29,7 +29,7 @@ public interface IDepartmentService
      */
     public List<Department> selectDepartmentList(Department department);
 
-    public List<Department> selectDepartmentList(SysUser sysUser,Department department);
+
     public List<Department> selectAllDepartment();
 
     /**

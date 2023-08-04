@@ -32,6 +32,7 @@ import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.PInfoVO;
 import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
+import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
@@ -117,6 +118,9 @@ public class ReportController extends BaseController
 
     @Resource
     private IVipPatientService vipPatientService;
+
+    @Resource
+    private WxMsgRunConfig wxMsgRunConfig;
 
     /**
      * 查询报告列表
@@ -281,21 +285,10 @@ public class ReportController extends BaseController
                 doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && doctors.size()!=0){
 
-                    ReportUtil reportUtil = new ReportUtil();
-                    reportUtil.setParameter(report.getpId(), doctors, reportService);
-                    Thread thread = new Thread(reportUtil);
-                    thread.start();
-                    ExecutorService executorService = Executors.newSingleThreadExecutor();
-                    CompletableFuture.runAsync(() ->{
-                        System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
-                        try{
-                            wxPublicRequest.dockerMsg();
-                        }catch (Exception e){
-                            System.out.println(e);
-                        }
-                        System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
-                    },executorService);
-                    executorService.shutdown(); // 回收线程池
+                    if (report.getpId()!=null&&!"".equals(report.getpId())){
+                        wxMsgRunConfig.redisAdd(report.getpId(),doctors);
+                    }
+
                 } else{
                     return AjaxResult.error("当前医院平台无医生");
                 }
@@ -631,10 +624,7 @@ public class ReportController extends BaseController
         doctor.setHospital(report.getHospital());
         List<Doctor> doctors = doctorService.selectDoctorList(doctor);
         //定时器, 30分钟无医生诊断, 换医生诊断.
-        ThreadUtil threadUtil = new ThreadUtil();
-        threadUtil.setParameter(report.getpId(), doctors, reportService);
-        Thread thread = new Thread(threadUtil);
-        thread.start();
+        wxMsgRunConfig.redisDTStart(report.getpId(),doctors);
         WxUtil.send(report.getdPhone());
         int i = reportService.updateReport(report);
         return AjaxResult.success();

@@ -547,6 +547,7 @@ export default {
       this.reportList.pId = row.pId
       this.dialogFormVisible = true;
       listDoc().then(r =>{
+        console.log(r)
         this.option = r.data
       })
     },

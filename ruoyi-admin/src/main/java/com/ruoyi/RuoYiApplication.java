@@ -1,9 +1,14 @@
 package com.ruoyi;
 
+import com.ruoyi.xindian.report.config.WxMsgRunConfig;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+
+import javax.annotation.Resource;
 
 /**
  * 启动程序
@@ -11,8 +16,11 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
  * @author ruoyi
  */
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
-public class RuoYiApplication
+public class RuoYiApplication implements ApplicationRunner
 {
+    @Resource
+    private WxMsgRunConfig wxMsgRunConfig;
+
     public static void main(String[] args)
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
@@ -27,5 +35,11 @@ public class RuoYiApplication
                 " |  | \\ `'   /|   `-'  /           \n" +
                 " |  |  \\    /  \\      /           \n" +
                 " ''-'   `'-'    `-..-'              ");
+    }
+
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        wxMsgRunConfig.reportItemT();
     }
 }

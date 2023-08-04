@@ -229,7 +229,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门"/>
+              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" @input="inputSelect" placeholder="请选择归属部门"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -490,6 +490,10 @@ export default {
             message: "请输入正确的手机号码",
             trigger: "blur"
           }
+        ],
+
+        deptId: [
+          {required: true, message: '所属模块不能为空', trigger: 'input'}
         ]
       }
     };
@@ -517,6 +521,9 @@ export default {
           this.loading = false;
         }
       );
+    },
+    inputSelect(data){
+      this.$refs.form.validateField('deptId');
     },
     /** 查询部门下拉树结构 */
     getTreeselect() {

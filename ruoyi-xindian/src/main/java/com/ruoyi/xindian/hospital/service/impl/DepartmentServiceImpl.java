@@ -62,29 +62,6 @@ public class DepartmentServiceImpl implements IDepartmentService
         return departmentMapper.selectDepartmentList(department);
     }
 
-    @Override
-    public List<Department> selectDepartmentList(SysUser sysUser,Department department) {
-
-
-        department.setHospitalCode(sysUser.getHospitalCode());
-        List<Department> departments = departmentMapper.selectDepartmentList(department);
-
-        Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
-        AssociatedHospital associatedHospital = new AssociatedHospital();
-        associatedHospital.setHospitalId(hospital.getHospitalId());
-        List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-        if (associatedHospitals!=null&&associatedHospitals.size()>0){
-            for (AssociatedHospital c:associatedHospitals){
-                Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                department.setHospitalCode(hospital1.getHospitalCode());
-                List<Department> departments1 = departmentMapper.selectDepartmentList(department);
-                departments.addAll(departments1);
-            }
-        }
-
-
-        return departments;
-    }
 
     @Override
     public List<Department> selectAllDepartment()

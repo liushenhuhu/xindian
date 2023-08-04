@@ -113,28 +113,9 @@ public class HospitalServiceImpl implements IHospitalService
 
 
     @Override
-    public List<Hospital> selectUserId(Long userId) {
-        SysUser sysUser = sysUserMapper.selectUserById(userId);
-        Hospital hospital = new Hospital();
-        hospital.setHospitalName(sysUser.getHospitalName());
-        if (sysUser.getHospitalCode()!=null&&!"".equals(sysUser.getHospitalCode())){
-            hospital.setHospitalCode(sysUser.getHospitalCode());
-        }
-        List<Hospital> hospitals = hospitalMapper.selectHospitalList(hospital);
+    public List<Hospital> selectUserId(Hospital hospital) {
 
-        Hospital hospital2 = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
-        AssociatedHospital associatedHospital = new AssociatedHospital();
-        associatedHospital.setHospitalId(hospital2.getHospitalId());
-        List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-        if (associatedHospitals!=null&&associatedHospitals.size()>0){
-            for (AssociatedHospital c:associatedHospitals){
-                Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                hospital.setHospitalCode(hospital1.getHospitalCode());
-                List<Hospital> hospitals1 = hospitalMapper.selectHospitalList(hospital);
-                hospitals.addAll(hospitals1);
-            }
-        }
-        return hospitals;
+        return hospitalMapper.selectHospitalList(hospital);
     }
 
     @Override

@@ -39,10 +39,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="applicablePopulation != null  and applicablePopulation != ''"> and applicable_population = #{applicablePopulation}</if>
             <if test="chargePrice != null  and chargePrice != ''"> and charge_price = #{chargePrice}</if>
             <if test="onlineState != null  and onlineState != ''"> and online_state = #{onlineState}</if>
-            <if test="hospital != null  and hospital != ''"> and hospital = #{hospital}</if>
             <if test="img != null  and img != ''"> and img = #{img}</if>
             <if test="professional != null  and professional != ''"> and professional = #{professional}</if>
             <if test="equipmentList != null  and equipmentList != ''"> and equipment_list = #{equipmentList}</if>
+            <if test="hospitalNameList != null and hospitalNameList.size()>0">
+                and  hospital in
+                <foreach collection="hospitalNameList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
     

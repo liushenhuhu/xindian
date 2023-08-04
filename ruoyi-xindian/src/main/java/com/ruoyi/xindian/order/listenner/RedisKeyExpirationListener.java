@@ -2,6 +2,7 @@ package com.ruoyi.xindian.order.listenner;
 
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.alert_log.service.IAlertLogService;
+import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.data.redis.connection.Message;
@@ -10,6 +11,8 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * redis失效key监听
@@ -33,6 +36,11 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     @Resource
     private IAlertLogService alertLogService;
 
+    @Resource
+    private WxMsgRunConfig wxMsgRunConfig;
+
+    private final Lock lock = new ReentrantLock();
+
     /**
      * redis失效key事件处理
      * @param message
@@ -41,46 +49,76 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     @Override
     public void onMessage(Message message, byte[] pattern) {
         // message.toString()可以获取失效的key
-        String expiredKey = message.toString();
 
 
-        String[] split = expiredKey.split(":");
-        if (split[0].equals("order")){
-            System.out.println("订单创建15分钟，开始判断订单是否支付并进行数据删除-------------------");
-            orderInfoService.redisOrderKey(split[1]);
-        }
-        if (split[0].equals("invoice")){
-            try {
-                wxPublicRequest.getAuthurl(split[1]);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+
+        lock.lock();
+        try {
+            String expiredKey = message.toString();
+            String[] split = expiredKey.split(":");
+            if (split[0].equals("order")){
+                System.out.println("订单创建15分钟，开始判断订单是否支付并进行数据删除-------------------");
+                orderInfoService.redisOrderKey(split[1]);
+                return;
             }
+            if (split[0].equals("invoice")){
+                try {
+                    wxPublicRequest.getAuthurl(split[1]);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                return;
+            }
+            if (split[0].equals("reportPT")){
+                try {
+                   wxMsgRunConfig.redisTOrAdd(split[1]);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                return;
+            }
+
+            if (split[0].equals("reportDT")){
+                try {
+                    wxMsgRunConfig.redisDTTime(split[1]);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                return;
+            }
+            if (expiredKey.equals("earlyLogTest01")){
+                AlertLog alertLog = new AlertLog();
+                alertLog.setEcgType("J12");
+                alertLog.setRedisKey("earlyLogTest01");
+                alertLogService.redisEarly(alertLog);
+                return;
+            }
+            if (expiredKey.equals("earlyLogTest02")){
+                AlertLog alertLog = new AlertLog();
+                alertLog.setEcgType("Jsingle");
+                alertLog.setRedisKey("earlyLogTest02");
+                alertLogService.redisEarly(alertLog);
+                return;
+            }
+            if (expiredKey.equals("earlyLogTest03")){
+                AlertLog alertLog = new AlertLog();
+                alertLog.setEcgType("D12");
+                alertLog.setRedisKey("earlyLogTest03");
+                alertLogService.redisEarly(alertLog);
+                return;
+            }
+            if (expiredKey.equals("earlyLogTest04")){
+                AlertLog alertLog = new AlertLog();
+                alertLog.setEcgType("Dsingle");
+                alertLog.setRedisKey("earlyLogTest04");
+                alertLogService.redisEarly(alertLog);
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }finally {
+            lock.unlock();
         }
 
-        if (expiredKey.equals("earlyLogTest01")){
-            AlertLog alertLog = new AlertLog();
-            alertLog.setEcgType("J12");
-            alertLog.setRedisKey("earlyLogTest01");
-            alertLogService.redisEarly(alertLog);
-        }
-        if (expiredKey.equals("earlyLogTest02")){
-            AlertLog alertLog = new AlertLog();
-            alertLog.setEcgType("Jsingle");
-            alertLog.setRedisKey("earlyLogTest02");
-            alertLogService.redisEarly(alertLog);
-        }
-        if (expiredKey.equals("earlyLogTest03")){
-            AlertLog alertLog = new AlertLog();
-            alertLog.setEcgType("D12");
-            alertLog.setRedisKey("earlyLogTest03");
-            alertLogService.redisEarly(alertLog);
-        }
-        if (expiredKey.equals("earlyLogTest04")){
-            AlertLog alertLog = new AlertLog();
-            alertLog.setEcgType("Dsingle");
-            alertLog.setRedisKey("earlyLogTest04");
-            alertLogService.redisEarly(alertLog);
-        }
 
     }
 }

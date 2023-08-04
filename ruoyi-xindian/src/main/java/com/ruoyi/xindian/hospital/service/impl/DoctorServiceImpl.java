@@ -132,9 +132,10 @@ public class DoctorServiceImpl implements IDoctorService
     public List<ListDocVO> listDoc() {
 
         List<ListDocVO> listDocVOS = doctorMapper.selectDoc();
-        Doctor doctor = new Doctor();
+
         for (ListDocVO c : listDocVOS){
-            doctor.setHospital(c.getLabel());
+            Doctor doctor = new Doctor();
+            doctor.getHospitalNameList().add(c.getLabel());
             List<Doctor> doctors = doctorMapper.selectDoctorList(doctor);
             for (Doctor d : doctors){
                 DocVO listDocVO = new DocVO();
@@ -147,27 +148,9 @@ public class DoctorServiceImpl implements IDoctorService
     }
 
     @Override
-    public List<Doctor> selectUserDoc(Doctor doctor,Long userId) {
-        SysUser sysUser = sysUserMapper.selectUserById(userId);
+    public List<Doctor> selectUserDoc(Doctor doctor) {
 
-        Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
 
-        doctor.setHospital(hospital.getHospitalName());
-
-        List<Doctor> doctors = doctorMapper.selectDoctorList(doctor);
-
-        AssociatedHospital associatedHospital = new AssociatedHospital();
-        associatedHospital.setHospitalId(hospital.getHospitalId());
-        List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-        if (associatedHospitals!=null&&associatedHospitals.size()>0){
-            for (AssociatedHospital c:associatedHospitals){
-                Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                doctor.setHospital(hospital1.getHospitalName());
-                List<Doctor> doctors1 = doctorMapper.selectDoctorList(doctor);
-                doctors.addAll(doctors1);
-            }
-        }
-
-        return doctors;
+        return doctorMapper.selectDoctorList(doctor);
     }
 }

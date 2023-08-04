@@ -584,6 +584,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             return true;
         }
         OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setUpdateTime(new Date());
         if (shipaddressVo.getIsUpdate()!=null&&!"".equals(shipaddressVo.getIsUpdate())){
             orderInfo.setId(shipaddressVo.getId());
             orderInfo.setPatientPhone(shipaddressVo.getPatientPhone());

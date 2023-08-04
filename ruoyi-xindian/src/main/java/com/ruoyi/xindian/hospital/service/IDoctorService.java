@@ -71,6 +71,6 @@ public interface IDoctorService
     List<ListDocVO> listDoc();
 
 
-    List<Doctor> selectUserDoc(Doctor doctor,Long userId);
+    List<Doctor> selectUserDoc(Doctor doctor);
 
 }

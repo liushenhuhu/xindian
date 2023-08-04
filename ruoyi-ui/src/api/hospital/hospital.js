@@ -3,12 +3,18 @@ import request from '@/utils/request'
 // 查询医院列表
 export function listHospital(query) {
   return request({
-    url: '/hospital/hospital/list',
+    url: '/hospital/hospitalList/list',
     method: 'get',
     params: query
   })
 }
-
+export function listHospitalId(query) {
+  return request({
+    url: '/hospital/hospitalList/listId',
+    method: 'get',
+    params: query
+  })
+}
 // 查询医院详细
 export function getHospital(hospitalId) {
   return request({

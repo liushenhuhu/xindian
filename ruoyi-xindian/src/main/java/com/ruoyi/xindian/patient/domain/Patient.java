@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -110,6 +111,16 @@ public class Patient extends BaseEntity {
     private Date detectionTime;
 
     private Long hospitalId;
+
+    private List<String> hospitalNameList = new ArrayList<>();
+
+    public List<String> getHospitalNameList() {
+        return hospitalNameList;
+    }
+
+    public void setHospitalNameList(List<String> hospitalNameList) {
+        this.hospitalNameList = hospitalNameList;
+    }
 
     public Long getHospitalId() {
         return hospitalId;

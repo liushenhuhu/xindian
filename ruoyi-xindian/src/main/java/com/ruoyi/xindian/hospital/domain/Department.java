@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 科室对象 department
  * 
@@ -30,7 +33,17 @@ public class Department extends BaseEntity
     @Excel(name = "医院代号")
     private String hospitalCode;
 
-    public void setDepartmentId(Long departmentId) 
+    private List<String> hospitalCodeList = new ArrayList<>();
+
+    public List<String> getHospitalCodeList() {
+        return hospitalCodeList;
+    }
+
+    public void setHospitalCodeList(List<String> hospitalCodeList) {
+        this.hospitalCodeList = hospitalCodeList;
+    }
+
+    public void setDepartmentId(Long departmentId)
     {
         this.departmentId = departmentId;
     }

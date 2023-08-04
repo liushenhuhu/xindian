@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
@@ -17,10 +18,12 @@ import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.report.service.IReportService;
 import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.ThreadUtil;
+import com.ruoyi.xindian.util.WxUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +62,9 @@ public class dataLabbyController extends BaseController
     private IDoctorService doctorService;
     @Autowired
     private IPatientService patientService;
+
+    @Resource
+    private WxMsgRunConfig wxMsgRunConfig;
 
     private final Lock lock = new ReentrantLock();
     /**
@@ -196,12 +202,8 @@ public class dataLabbyController extends BaseController
             Doctor doctor1 = new Doctor();
             doctor1.setHospital(doctor.getHospital());
             List<Doctor> doctors = doctorService.selectDoctorList(doctor1);
-            //定时器, 30分钟无医生诊断, 换医生诊断.
-            ThreadUtil threadUtil = new ThreadUtil();
-            threadUtil.setParameter(report.getpId(), doctors, reportService);
-//                    threadUtil.run();
-            Thread thread = new Thread(threadUtil);
-            thread.start();
+            WxUtil.send(phonenumber);
+            wxMsgRunConfig.redisDTStart(pId,doctors);
         } catch (Exception e){
             return AjaxResult.error(String.valueOf(e));
         } finally {

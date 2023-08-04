@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 医生对象 doctor
  * 
@@ -73,6 +76,16 @@ public class Doctor extends BaseEntity
     private String openId;
 
     private String unionId;
+
+    private List<String> hospitalNameList = new ArrayList<>();
+
+    public List<String> getHospitalNameList() {
+        return hospitalNameList;
+    }
+
+    public void setHospitalNameList(List<String> hospitalNameList) {
+        this.hospitalNameList = hospitalNameList;
+    }
 
     public String getEquipmentList() {
         return equipmentList;

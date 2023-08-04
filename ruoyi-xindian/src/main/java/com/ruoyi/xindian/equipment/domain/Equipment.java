@@ -6,6 +6,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 设备对象 equipment
  *
@@ -60,7 +63,19 @@ public class Equipment extends BaseEntity
      *
      * @return
      */
+    private List<String> hospitalCodeList = new ArrayList<>();
 
+    public Equipment() {
+    }
+
+    public Equipment(String equipmentCode, String equipmentVersion, String equipmentStatus, String hospitalCode, String equipmentType) {
+
+        this.equipmentCode = equipmentCode;
+        this.equipmentVersion = equipmentVersion;
+        this.equipmentStatus = equipmentStatus;
+        this.hospitalCode = hospitalCode;
+        this.equipmentType = equipmentType;
+    }
 
     public String getpId() {
         return pId;

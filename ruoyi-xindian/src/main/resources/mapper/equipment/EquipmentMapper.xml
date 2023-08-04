@@ -27,11 +27,16 @@
             <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="equipmentVersion != null  and equipmentVersion != ''"> and equipment_version like concat('%', #{equipmentVersion}, '%')</if>
             <if test="equipmentStatus != null  and equipmentStatus != ''"> and equipment_status like concat('%', #{equipmentStatus}, '%')</if>
-            <if test="hospitalCode != null  and hospitalCode != ''"> and hospital_code like concat('%', #{hospitalCode}, '%')</if>
             <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
             <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and patient_phone like concat('%', #{patientPhone}, '%')</if>
             <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
         order by equipment_status desc
     </select>

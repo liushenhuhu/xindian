@@ -70,6 +70,7 @@
             t_order_info.total_fee,
             t_order_info.order_status,
             t_order_info.create_time,
+            t_order_info.update_time,
             t_suborder_order_info.suborder_id,
             t_suborder_order_info.product_id,
             t_suborder_order_info.sum,
@@ -98,7 +99,7 @@
             </if>
              and t_order_info.user_id = #{userId}
         </where>
-        order by t_order_info.id desc
+        order by t_order_info.update_time desc
     </select>
     <select id="selectWebAllList" resultType="com.ruoyi.xindian.wx_pay.domain.OrderInfo" resultMap="UserAndOrder">
 

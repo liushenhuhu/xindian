@@ -532,6 +532,12 @@
         FROM report r INNER JOIN patient_management p  ON r.p_id = p.p_id
         WHERE  p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone = #{pPhone} and r.diagnosis_status = '1'
     </select>
+    <select id="selectPatientManagementJECGList1"
+            resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement">
+        <include refid="selectPatientManagementVo"/>
+        where diagnosis_status = 2 and d_phone is not null and diagnosis_doctor is not null
+        order by report_time desc
+    </select>
 
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">

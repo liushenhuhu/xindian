@@ -66,5 +66,6 @@ public interface IEquipmentService
     public Equipment selectEquipmentByEquipmentCode(String equipmentCode);
 
 
+    void batchInsert(String path) throws Exception;
 
 }

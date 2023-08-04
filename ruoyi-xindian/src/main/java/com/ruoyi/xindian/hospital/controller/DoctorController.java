@@ -11,10 +11,14 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +50,13 @@ public class DoctorController extends BaseController
     @Resource
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private IHospitalService hospitalService;
+
+
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
+    /**
     /**
      * 查询医生列表
      */
@@ -57,7 +68,20 @@ public class DoctorController extends BaseController
         Department department = new Department();
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
-            List<Doctor> doctors = doctorService.selectUserDoc(doctor,loginUser.getUser().getUserId());
+
+            Hospital hospital = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+
+            doctor.getHospitalNameList().add(hospital.getHospitalName());
+            AssociatedHospital associatedHospital = new AssociatedHospital();
+            associatedHospital.setHospitalId(hospital.getHospitalId());
+            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+            if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                for (AssociatedHospital c:associatedHospitals){
+                    Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                    doctor.getHospitalNameList().add(hospital1.getHospitalName());
+                }
+            }
+            List<Doctor> doctors = doctorService.selectUserDoc(doctor);
             for (Doctor value : doctors) {
                 department.setDepartmentCode(value.getDepartmentCode());
                 List<Department> departments = departmentService.selectDepartmentList(department);

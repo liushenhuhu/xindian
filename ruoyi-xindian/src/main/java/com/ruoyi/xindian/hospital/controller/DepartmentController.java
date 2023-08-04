@@ -11,6 +11,10 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
+import com.ruoyi.xindian.hospital.domain.Hospital;
+import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +52,14 @@ public class DepartmentController extends BaseController
 
     @Resource
     private SysUserMapper sysUserMapper;
+
+
+    @Autowired
+    private IHospitalService hospitalService;
+
+
+    @Resource
+    private AssociatedHospitalMapper associatedHospitalMapper;
     /**
      * 查询科室列表
      */
@@ -58,7 +70,20 @@ public class DepartmentController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
-            List<Department> departments = departmentService.selectDepartmentList(sysUser, department);
+
+            department.getHospitalCodeList().add(sysUser.getHospitalCode());
+            Hospital hospital = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+            AssociatedHospital associatedHospital = new AssociatedHospital();
+            associatedHospital.setHospitalId(hospital.getHospitalId());
+            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+            if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                for (AssociatedHospital c:associatedHospitals){
+                    Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                    department.getHospitalCodeList().add(hospital1.getHospitalCode());
+                }
+            }
+            startPage();
+            List<Department> departments = departmentService.selectDepartmentList(department);
             return getDataTable(departments);
         }
 
@@ -136,6 +161,15 @@ public class DepartmentController extends BaseController
     public AjaxResult remove(@PathVariable Long[] departmentIds)
     {
         return toAjax(departmentService.deleteDepartmentByDepartmentIds(departmentIds));
+    }
+
+    @GetMapping("/hospitalCodeFind/{code}")
+    public AjaxResult hospitalCodeFind(@PathVariable("code")String hospitalCode){
+        Department department = new Department();
+        department.getHospitalCodeList().add(hospitalCode);
+        List<Department> departments = departmentService.selectDepartmentList(department);
+        return AjaxResult.success(departments);
+
     }
 
 }

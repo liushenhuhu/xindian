@@ -52,9 +52,7 @@
             </if>
             <if test="patientSex != null  and patientSex != ''">and patient_sex like concat('%', #{patientSex}, '%')
             </if>
-            <if test="patientSource != null  and patientSource != ''">and patient_source like concat('%',
-                #{patientSource}, '%')
-            </if>
+
             <if test="patientPhone != null  and patientPhone != ''">and patient_phone like concat('%', #{patientPhone},
                 '%')
             </if>
@@ -71,6 +69,12 @@
             <if test="birthDay != null "> and birth_day = #{birthDay}</if>
             <if test="detectionNum != null "> and detection_num = #{detectionNum}</if>
 
+            <if test="hospitalNameList != null and hospitalNameList.size()>0">
+                and  patient_source in
+                <foreach collection="hospitalNameList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
         order by monitoring_status desc, patient_id desc
     </select>

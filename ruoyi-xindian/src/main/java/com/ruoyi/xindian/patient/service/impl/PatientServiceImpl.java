@@ -67,21 +67,8 @@ public class PatientServiceImpl implements IPatientService
      */
     @Override
     public List<Patient> selectPatientList(Patient patient) {
-        List<Patient> patients = patientMapper.selectPatientList(patient);
-        if (patient.getHospitalId()!=null){
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(patient.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    patient.setPatientSource(hospital1.getHospitalName());
-                    List<Patient> patients1 = patientMapper.selectPatientList(patient);
-                    patients.addAll(patients1);
-                }
-            }
-        }
-        return patients;
+
+        return patientMapper.selectPatientList(patient);
     }
 
     /**
