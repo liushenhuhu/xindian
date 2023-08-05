@@ -125,7 +125,7 @@ public class ReportController extends BaseController
     /**
      * 查询报告列表
      */
-    @PreAuthorize("@ss.hasPermi('report:report:list')")
+//    @PreAuthorize("@ss.hasPermi('report:report:list')")
     @GetMapping("/list")
     public TableDataInfo list(Report report)
     {
@@ -198,7 +198,7 @@ public class ReportController extends BaseController
     /**
      * 导出报告列表
      */
-    @PreAuthorize("@ss.hasPermi('report:report:export')")
+//    @PreAuthorize("@ss.hasPermi('report:report:export')")
     @Log(title = "报告", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Report report)
@@ -211,7 +211,7 @@ public class ReportController extends BaseController
     /**
      * 获取报告详细信息
      */
-    @PreAuthorize("@ss.hasPermi('report:report:query')")
+//    @PreAuthorize("@ss.hasPermi('report:report:query')")
     @GetMapping(value = "/{reportId}")
     public AjaxResult getInfo(@PathVariable("reportId") Long reportId)
     {
@@ -225,7 +225,7 @@ public class ReportController extends BaseController
     /**
      * 获取报告详细信息
      */
-    @PreAuthorize("@ss.hasPermi('report:report:query')")
+//    @PreAuthorize("@ss.hasPermi('report:report:query')")
     @GetMapping(value = "/getInfoByPid/{pId}")
     public AjaxResult getInfoByPid(@PathVariable("pId") String pId)
     {
@@ -239,7 +239,7 @@ public class ReportController extends BaseController
     /**
      * 新增报告
      */
-    @PreAuthorize("@ss.hasPermi('report:report:add')")
+//    @PreAuthorize("@ss.hasPermi('report:report:add')")
     @Log(title = "报告", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Report report)
@@ -252,7 +252,7 @@ public class ReportController extends BaseController
     /**
      * 修改报告
      */
-    @PreAuthorize("@ss.hasPermi('report:report:edit')")
+//    @PreAuthorize("@ss.hasPermi('report:report:edit')")
     @Log(title = "报告", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Report report) throws Exception {
@@ -385,7 +385,7 @@ public class ReportController extends BaseController
     /**
      * 删除报告
      */
-    @PreAuthorize("@ss.hasPermi('report:report:remove')")
+//    @PreAuthorize("@ss.hasPermi('report:report:remove')")
     @Log(title = "报告", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{reportIds}")
     public AjaxResult remove(@PathVariable Long[] reportIds)
