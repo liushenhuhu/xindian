@@ -73,4 +73,8 @@ public interface IDoctorService
 
     List<Doctor> selectUserDoc(Doctor doctor);
 
+
+
+    List<Doctor> selectIsDoc();
+
 }

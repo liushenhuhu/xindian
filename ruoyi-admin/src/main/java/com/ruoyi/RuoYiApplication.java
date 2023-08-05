@@ -40,6 +40,7 @@ public class RuoYiApplication implements ApplicationRunner
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        wxMsgRunConfig.reportItemT();
+//        wxMsgRunConfig.reportItemT();
+//        System.out.println("开始了");
     }
 }

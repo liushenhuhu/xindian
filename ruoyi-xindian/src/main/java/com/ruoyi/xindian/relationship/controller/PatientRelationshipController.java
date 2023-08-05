@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.relationship.controller;
 
 import java.util.List;
+import java.util.Random;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.xindian.appData.domain.AppData;
@@ -102,11 +103,45 @@ public class PatientRelationshipController extends BaseController
     }
     private PatientRelationship getRelationship(PatientRelationshipDto patientRelationship){
         PatientRelationship relationship = new PatientRelationship();
+        if (patientRelationship.getSonPhone()==null||patientRelationship.getSonPhone().equals(patientRelationship.getFatherPhone())){
+            StringBuilder fatherPhone = new StringBuilder(patientRelationship.getFatherPhone());
+            Random random = new Random();
+            for (int i = 0; i < 3; i++) {
+                fatherPhone.append(random.nextInt(10));
+            }
+            relationship.setSonPhone(fatherPhone.toString());
+        }else {
+            relationship.setSonPhone(patientRelationship.getSonPhone());
+        }
+
         relationship.setFatherPhone(patientRelationship.getFatherPhone());
-        relationship.setSonPhone(patientRelationship.getSonPhone());
+
         relationship.setRelationship(patientRelationship.getRelationship());
         return relationship;
     }
+
+
+
+    private PatientRelationship getRelationship1(PatientRelationshipDto patientRelationship){
+        PatientRelationship relationship = new PatientRelationship();
+        if (patientRelationship.getSonPhone()==null||"".equals(patientRelationship.getSonPhone())||patientRelationship.getSonPhone().equals(patientRelationship.getFatherPhone())){
+            StringBuilder fatherPhone = new StringBuilder(patientRelationship.getFatherPhone());
+            Random random = new Random();
+            for (int i = 0; i < 3; i++) {
+                fatherPhone.append(random.nextInt(10));
+            }
+            relationship.setSonPhone(fatherPhone.toString());
+        }else {
+            relationship.setSonPhone(patientRelationship.getSonPhone());
+        }
+
+        relationship.setFatherPhone(patientRelationship.getFatherPhone());
+
+        relationship.setRelationship(patientRelationship.getRelationship());
+        return relationship;
+    }
+
+
     private AppData getAppData(PatientRelationshipDto patientRelationship){
         AppData appData = new AppData();
         appData.setBirthDay(patientRelationship.getBirthDay());
@@ -125,6 +160,9 @@ public class PatientRelationshipController extends BaseController
         medicalHistory.setPatientPhone(patientRelationship.getSonPhone());
         return medicalHistory;
     }
+
+
+
     private Patient getPatient(PatientRelationshipDto patientRelationship){
         Patient patient = new Patient();
         patient.setPatientName(patientRelationship.getRelationshipPatientName());
@@ -166,6 +204,40 @@ public class PatientRelationshipController extends BaseController
         }
         return toAjax(patientRelationshipService.insertPatientRelationship(relationship));
     }
+
+
+
+
+    @PostMapping("/addPatient")
+    public AjaxResult addPatient(@RequestBody PatientRelationshipDto patientRelationship)
+    {
+        PatientRelationship relationship = getRelationship1(patientRelationship);
+        patientRelationship.setSonPhone(relationship.getSonPhone());
+        if(patientRelationship.getRelationshipPatientName() != null){
+            AppData appData = getAppData(patientRelationship);
+
+            MedicalHistory medicalHistory = getMedicalHistory(patientRelationship);
+            Patient patient = getPatient(patientRelationship);
+            Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+            if(patient1!=null){
+                patient.setPatientId(patient1.getPatientId());
+                patientService.updatePatient(patient);
+            }else{
+                patientService.insertPatient(patient);
+            }
+            appDataService.insertAppData(appData);
+            MedicalHistory medicalHistory1 = medicalHistoryService.selectMedicalHistoryByPatientPhone(medicalHistory.getPatientPhone());
+            if(medicalHistory1!=null){
+                medicalHistory.setMedicalHistoryId(medicalHistory1.getMedicalHistoryId());
+                medicalHistoryService.updateMedicalHistory(medicalHistory);
+            }
+            else{
+                medicalHistoryService.insertMedicalHistory(medicalHistory);
+            }
+        }
+        return toAjax(patientRelationshipService.insertPatientRelationship(relationship));
+    }
+
 
     /**
      * 修改患者关系表

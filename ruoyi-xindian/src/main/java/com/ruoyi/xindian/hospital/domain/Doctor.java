@@ -77,6 +77,19 @@ public class Doctor extends BaseEntity
 
     private String unionId;
 
+    /**
+     * 用于判断是否是正规医生，还是测试医生
+     */
+    private String isDoc;
+
+    public String getIsDoc() {
+        return isDoc;
+    }
+
+    public void setIsDoc(String isDoc) {
+        this.isDoc = isDoc;
+    }
+
     private List<String> hospitalNameList = new ArrayList<>();
 
     public List<String> getHospitalNameList() {

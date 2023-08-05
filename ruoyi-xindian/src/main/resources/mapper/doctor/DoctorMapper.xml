@@ -21,10 +21,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="openId"    column="open_id"    />
         <result property="unionId"    column="union_id"    />
         <result property="equipmentList"    column="equipment_list"    />
+        <result property="isDoc"    column="is_doc"    />
     </resultMap>
 
     <sql id="selectDoctorVo">
-        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id, equipment_list from doctor
+        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id, equipment_list,is_doc from doctor
     </sql>
 
     <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
@@ -65,6 +66,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM doctor
         GROUP BY hospital
     </select>
+    <select id="selectIsDoctors" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
+        <include refid="selectDoctorVo"/>
+        where is_doc = '1'
+    </select>
+
 
 
     <insert id="insertDoctor" parameterType="Doctor" useGeneratedKeys="true" keyProperty="doctorId">
@@ -83,6 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="img != null">img,</if>
             <if test="professional != null">professional,</if>
             <if test="equipmentList != null">equipment_list,</if>
+            <if test="isDoc != null">is_doc,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doctorName != null">#{doctorName},</if>
@@ -98,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="img != null">#{img},</if>
             <if test="professional != null">#{professional},</if>
             <if test="equipmentList != null">#{equipmentList},</if>
+            <if test="isDoc != null">#{isDoc},</if>
          </trim>
     </insert>
 
@@ -118,6 +126,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="professional != null">professional = #{professional},</if>
             <if test="openId != null">open_id = #{openId},</if>
             <if test="equipmentList != null">equipment_list = #{equipmentList},</if>
+            <if test="isDoc != null">is_doc = #{isDoc},</if>
         </trim>
         where doctor_id = #{doctorId}
     </update>

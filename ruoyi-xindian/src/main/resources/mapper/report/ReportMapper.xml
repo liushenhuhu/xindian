@@ -37,7 +37,7 @@
             <if test="dPhone != null  and dPhone != ''"> and d_phone = #{dPhone}</if>
             <if test="handlingSuggestion != null  and handlingSuggestion != ''"> and handling_suggestion = #{handlingSuggestion}</if>
             <if test="healthAdvice != null  and healthAdvice != ''"> and health_advice = #{healthAdvice}</if>
-            <if test="pPhone != null  and pPhone != ''"> and p_phone = #{pPhone}</if>
+            <if test="pPhone != null  and pPhone != ''"> and p_phone like concat( #{pPhone},'%')</if>
             <if test="patientSymptom != null  and patientSymptom != ''"> and patient_symptom = #{patientSymptom}</if>
         </where>
         order by report_time desc
