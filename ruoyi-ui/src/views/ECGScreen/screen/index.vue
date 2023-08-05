@@ -14,44 +14,226 @@
         </el-pagination>
       </div>
 
-    <div class="mainbox">
-
-      <div class="container"  v-for="(item,index) in data" :key="index">
+    <div class="mainbox" >
+      <div class="container" >
         <div class="containcontent">
-          <div class="chart chartEvent" ref="chart" :id="getId(index)"></div>
-<!--          <div class="chart" id="chart_0"></div>-->
-          <div class="infleft" @click="jump(item.deviceSn)">
+          <div class="chart chartEvent" ref="chart" id="child_0"></div>
+          <!--          <div class="chart" id="chart_0"></div>-->
+          <div class="infleft" @click="jump(data0.deviceSn)">
             <div class="name">心率:</div>
-            <div class="hart" ><span :style="color(item.hr_mean)">{{item.hr_mean}}</span></div>
+            <div class="hart" ><span :style="color(data0.hr_mean)">{{data0.hr_mean}}</span></div>
           </div>
         </div>
-        <div class="containMsg" @click="jump(item.deviceSn)" >
-          <div class="name effect">姓名:<span>{{item.patientName}}</span></div>
-          <div class="name" >性别:<span>{{item.gender}}</span></div>
-          <div class="name" >年龄:<span>{{item.age}}</span></div>
-          <div class="name" >所属医院:<span>{{item.hospName}}</span></div>
-          <div class="name" >设备号:<span>{{item.deviceSn}}</span></div>
+        <div class="containMsg" @click="jump(data0.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data0.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data0.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data0.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data0.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data0.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
       </div>
 
-      <div class="container" v-if="data.length<12" v-for="index of (12-data.length)" :key="index+data.length">
+      <div class="container">
         <div class="containcontent">
-          <div class="chart"></div>
-          <div class="infleft">
+          <div class="chart chartEvent" ref="chart" id="child_1"></div>
+          <div class="infleft" @click="jump(data1.deviceSn)">
             <div class="name">心率:</div>
-            <div class="hart"><span></span></div>
+            <div class="hart" ><span :style="color(data1.hr_mean)">{{data1.hr_mean}}</span></div>
           </div>
         </div>
-        <div class="containMsg">
-          <div class="name effect">姓名:<span></span></div>
-          <div class="name" >性别:<span></span></div>
-          <div class="name" >年龄:<span></span></div>
-          <div class="name" >所属医院:<span></span></div>
-          <div class="name" >设备号:<span></span></div>
+        <div class="containMsg" @click="jump(data1.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data1.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data1.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data1.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data1.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data1.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
       </div>
+
+      <div class="container"  >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_2"></div>
+          <!--          <div class="chart" id="chart_0"></div>-->
+          <div class="infleft" @click="jump(data2.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data2.hr_mean)">{{data2.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data2.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data2.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data2.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data2.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data2.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data2.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+
+      <div class="container"  >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_3"></div>
+          <!--          <div class="chart" id="chart_0"></div>-->
+          <div class="infleft" @click="jump(data3.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data3.hr_mean)">{{data3.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data3.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data3.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data3.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data3.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data3.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data3.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+
+      <div class="container" >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_4"></div>
+          <!--          <div class="chart" id="chart_0"></div>-->
+          <div class="infleft" @click="jump(data4.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data4.hr_mean)">{{data4.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data4.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data4.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data4.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data4.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data4.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data4.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+
+      <div class="container" >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_5"></div>
+          <div class="infleft" @click="jump(data5.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data5.hr_mean)">{{data5.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data5.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data5.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data5.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data5.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data5.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data5.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+
+      <div class="container" >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_6"></div>
+          <div class="infleft" @click="jump(data6.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data6.hr_mean)">{{data6.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data6.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data6.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data6.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data6.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data6.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data6.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+
+      <div class="container" >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_7"></div>
+          <!--          <div class="chart" id="chart_0"></div>-->
+          <div class="infleft" @click="jump(data7.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data7.hr_mean)">{{data7.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data7.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data7.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data7.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data7.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data7.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data7.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+      <div class="container" >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_8"></div>
+          <!--          <div class="chart" id="chart_0"></div>-->
+          <div class="infleft" @click="jump(data8.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data8.hr_mean)">{{data8.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data8.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data8.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data8.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data8.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data8.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data8.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+      <div class="container" >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_9"></div>
+          <div class="infleft" @click="jump(data9.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data9.hr_mean)">{{data9.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data9.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data9.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data9.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data9.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data9.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data9.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+
+      <div class="container" >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_10"></div>
+          <div class="infleft" @click="jump(data10.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data10.hr_mean)">{{data10.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data10.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data10.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data10.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data10.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data10.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data10.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+      <div class="container" >
+        <div class="containcontent">
+          <div class="chart chartEvent" ref="chart" id="child_11"></div>
+          <div class="infleft" @click="jump(data11.deviceSn)">
+            <div class="name">心率:</div>
+            <div class="hart" ><span :style="color(data11.hr_mean)">{{data11.hr_mean}}</span></div>
+          </div>
+        </div>
+        <div class="containMsg" @click="jump(data11.deviceSn)" >
+          <div class="name effect">姓名:<span>{{data11.patientName}}</span></div>
+          <div class="name" >性别:<span>{{data11.gender}}</span></div>
+          <div class="name" >年龄:<span>{{data11.age}}</span></div>
+          <div class="name" >所属医院:<span>{{data11.hospName}}</span></div>
+          <div class="name" >设备号:<span>{{data11.deviceSn}}</span></div>
+        </div>
+        <div class="panel-footer"></div>
+      </div>
+
     </div>
 
   </div>
@@ -65,56 +247,146 @@ import {
 } from "@/api/ECGScreen/equipment";
 import 'default-passive-events'
 import screenfull from 'screenfull'
+
+import axios from 'axios'
 import card from "element-ui/packages/card";
 export default {
   name: "Index",
   data() {
     return {
+      test:1,
       // 版本号
       isFullFlag:false,
       total:null,//总设备数
       pagenum:null,//总页数
       pages:1,//当前页
       arr:[],//设备号列表
-      data:[],//前10秒数据
-      newData:[],//最新10秒数据
+      data0:{},
+      data1: {},//前10秒数据
+      data2:{},
+      data3:{},
+      data4:{},
+      data5:{},
+      data6:{},
+      data7:{},
+      data8:{},
+      data9:{},
+      data10:{},
+      data11:{},
+      newData0:{},
+      newData1:{}, //最新10秒数据
+      newData2:{},
+      newData3:{},
+      newData4:{},
+      newData5:{},
+      newData6:{},
+      newData7:{},
+      newData8:{},
+      newData9:{},
+      newData10:{},
+      newData11:{},
+      p0Iy:[],
+      p0V1y:[],
       p1Iy:[],
       p1V1y:[],
+      p2Iy:[],
+      p2V1y:[],
+      p3Iy:[],
+      p3V1y:[],
+      p4Iy:[],
+      p4V1y:[],
+      p5Iy:[],
+      p5V1y:[],
+      p6Iy:[],
+      p6V1y:[],
+      p7Iy:[],
+      p7V1y:[],
+      p8Iy:[],
+      p8V1y:[],
+      p9Iy:[],
+      p9V1y:[],
+      p10Iy:[],
+      p10V1y:[],
+      p11Iy:[],
+      p11V1y:[],
       tag:1,//每个请求10秒数据  1表示前5秒的数据显示 2表示后5秒的数据显示
       ts:0,//时间段
       lodaing:{},
       currentpage:[],//一维数组，存放12台设备
-      timer:null,
+      timer0:null,
+      timer1:null,
+      timer2:null,
+      timer3:null,
+      timer4:null,
+      timer5:null,
+      timer6:null,
+      timer7:null,
+      timer8:null,
+      timer9:null,
+      timer10:null,
+      timer11:null,
       time:null,//时间 X轴
     };
   },
   created() {
-    this.get_device();
-  },
-  activated() {
+    this.openLoading();
     this.get_device();
   },
   mounted() {
-    this.openLoading();
 
-
-    // this.chart(0)
-    // 监听页面全屏
-    // window.addEventListener("fullscreenchange", (e)=> {
-    //   if(screenfull.isFullscreen){
-    //     this.isFullFlag = true
-    //     console.log("进入全屏")
-    //   }else{
-    //     this.isFullFlag = false
-    //     console.log("退出")
-    //   }
-    // })
   },
-  beforeRouteLeave(to, from, next){
-    if (this.timer) {
-      clearInterval(this.timer);
+  activated() {
+    /*this.clearIntervallist();
+    this.clearList();
+    this.get_device();
+    console.log("this.timer0======"+this.timer0)*/
+    //this.$router.go(0);
+    location.reload;
+  },
+/*  deactivated() {
+    this.clearIntervallist();
+    this.clearIntervallist();
+  },*/
+
+  // destroyed(){
+  //   if(this.timer0){
+  //     this.clearIntervallist()
+  //   }
+  //   console.log("destroyed")
+  // },
+ /* beforeRouteLeave(to, from, next){
+    if(this.timer0){
+      this.clearIntervallist()
     }
+    console.log("离开路由")
     next();
+  },*/
+  beforeDestroy(){
+    //console.log(this.timer0)
+    window.clearInterval(this.timer0);
+    window.clearInterval(this.timer1);
+    window.clearInterval(this.timer2);
+    window.clearInterval(this.timer3)
+    window.clearInterval(this.timer4);
+    window.clearInterval(this.timer5);
+    window.clearInterval(this.timer6);
+    window.clearInterval(this.timer7);
+    window.clearInterval(this.timer8);
+    window.clearInterval(this.timer9);
+    window.clearInterval(this.timer10);
+    window.clearInterval(this.timer11);
+    this.timer0=null;
+    this.timer1=null;
+    this.timer2=null;
+    this.timer3=null;
+    this.timer4=null;
+    this.timer5=null;
+    this.timer6=null;
+    this.timer7=null;
+    this.timer8=null;
+    this.timer9=null;
+    this.timer10=null;
+    this.timer11=null;
   },
 
   computed: {
@@ -128,31 +400,26 @@ export default {
 
     },
   },
-  watch:{
-    data(val, oldVal){
-      console.log("data数据更新")
-      this.$nextTick(()=>{
-        this.data.forEach((item,index)=>{
-          let chart = this.$echarts.init(document.getElementById('child_'+index))
-          if(this.p1Iy[index]){
-            chart.clear();
-            chart.setOption(this.chart(index,1250))
-          }
 
-        })
-      })
-
-    }
-  },
   methods: {
-    getId:function (val){
-      return 'child_'+val
-    },
-     async get_device(){
-       await get_device().then(res=>{
-         this.arr=res.result.dev_list;
+    async get_device(){
+      console.log(this.timer0)
+      console.log(this.data0)
+       await this.$http.post('https://server.mindyard.cn:84/get_device',
+         JSON.stringify({
+           "ts": 0,
+           "hospName":"所有"}),{
+           contentType: "application/json",
+           dataType: "json",
+           headers:{
+             "user":"zzu",
+             "password":"zzu123"
+           },
+         }
+       ).then(res=>{
+         this.arr=res.data.result.dev_list;
          console.log(this.arr)
-         let length =  res.result.dev_list.length;//总设备个数
+         let length =  res.data.result.dev_list.length;//总设备个数
          this.total=length;
          this.pagenum = (length%12==0) ? (length/12) : length/12+1;//总页数
            for (let i = 0; i < length; i+=12) {
@@ -172,76 +439,951 @@ export default {
               })
             }
           })
-        })
-       await this.list()
-    },
+        }).catch(err=>{
+         console.log("请求错误"+err)
+       })
 
-    async list(){
-      this.data=[]
+      if(this.pagenum>=this.pages){
+        const num=this.currentpage[this.pages-1].length
+        if(num>=1){
+          this.list1()
+        }
+        if(num>=2){
+          this.list2()
+        }
+        if(num>=3){
+          this.list3()
+        }
+        if(num>=4){
+          this.list4()
+        }
+        if(num>=5){
+          this.list5()
+        }
+        if(num>=6){
+          this.list6()
+        }
+        if(num>=7){
+          this.list7()
+        }
+        if(num>=8){
+          this.list8()
+        }
+        if(num>=9){
+          this.list9()
+        }
+        if(num>=10){
+          this.list10()
+        }
+        if(num>=11){
+          this.list11()
+        }
+        if(num>=12){
+          this.list12()
+        }
+      }
+      this.closeFullScreen()
+    },
+    async list1(){
+      if(this.currentpage[this.pages-1][0]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][0],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data0 = res.data.result
+          console.log(this.data1)
+          this.p0Iy=res.data.result.data.II;
+          this.p0V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_0'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
+          let tag=1
+          let ts=1
+          this.timer0=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][0],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData0=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                this.newData0={}
+                  console.log("请求错误"+err)
+                })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
+            }else {
+              if(this.newData0){
+                this.data0=this.newData0
+                this.p0Iy= this.newData0.data.II
+                this.p0V1y=this.newData0.data.V1
+                console.log(this.data1)
+                tag--
+                chart.clear();
+                chart.setOption(this.chart(0, 1250,this.p0Iy,this.p0V1y))
+              }
+            }
+          },6000)
+          console.log("timer00="+this.timer0)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list2(){
+      if(this.currentpage[this.pages-1][1]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][1],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data1 = res.data.result
+          this.p1Iy=res.data.result.data.II;
+          this.p1V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_1'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p1Iy,this.p1V1y))
+          let tag=1
+          let ts=1
+          this.timer1=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][1],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData1=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p2Iy,this.p2V1y))
+            }else {
+              this.data1=this.newData1
+              this.p1Iy= this.newData1.data.II
+              this.p1V1y=this.newData1.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p1Iy,this.p1V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list3(){
+      if(this.currentpage[this.pages-1][2]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][2],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data2 = res.data.result
+          this.p2Iy=res.data.result.data.II;
+          this.p2V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_2'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p2Iy,this.p2V1y))
+          let tag=1
+          let ts=1
+          this.timer2=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][2],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData2=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p2Iy,this.p2V1y))
+            }else {
+              this.data2=this.newData2
+              this.p2Iy= this.newData2.data.II
+              this.p2V1y=this.newData2.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p2Iy,this.p2V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list4(){
+      if(this.currentpage[this.pages-1][3]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][3],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data3 = res.data.result
+          this.p3Iy=res.data.result.data.II;
+          this.p3V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_3'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p3Iy,this.p3V1y))
+          let tag=1
+          let ts=1
+          this.timer3=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][3],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData3=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p3Iy,this.p3V1y))
+            }else {
+              this.data3=this.newData3
+              this.p3Iy= this.newData3.data.II
+              this.p3V1y=this.newData3.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p3Iy,this.p3V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list5(){
+      if(this.currentpage[this.pages-1][4]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][4],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data4 = res.data.result
+          this.p4Iy=res.data.result.data.II;
+          this.p4V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_4'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p4Iy,this.p4V1y))
+          let tag=1
+          let ts=1
+          this.timer4=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][4],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData4=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p4Iy,this.p4V1y))
+            }else {
+              this.data4=this.newData4
+              this.p4Iy= this.newData4.data.II
+              this.p4V1y=this.newData4.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p4Iy,this.p4V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list6(){
+      if(this.currentpage[this.pages-1][5]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][5],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data5 = res.data.result
+          this.p5Iy=res.data.result.data.II;
+          this.p5V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_5'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p5Iy,this.p5V1y))
+          let tag=1
+          let ts=1
+          this.timer5=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][5],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData5=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p5Iy,this.p5V1y))
+            }else {
+              this.data5=this.newData5
+              this.p5Iy= this.newData5.data.II
+              this.p5V1y=this.newData5.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p5Iy,this.p5V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list7(){
+      if(this.currentpage[this.pages-1][6]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][6],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data6 = res.data.result
+          this.p6Iy=res.data.result.data.II;
+          this.p6V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_6'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p6Iy,this.p6V1y))
+          let tag=1
+          let ts=1
+          this.timer6=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][6],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData6=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p6Iy,this.p6V1y))
+            }else {
+              this.data6=this.newData6
+              this.p6Iy= this.newData6.data.II
+              this.p6V1y=this.newData6.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p6Iy,this.p6V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list8(){
+      if(this.currentpage[this.pages-1][7]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][7],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data7 = res.data.result
+          this.p7Iy=res.data.result.data.II;
+          this.p7V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_7'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p7Iy,this.p7V1y))
+          let tag=1
+          let ts=1
+          this.timer7=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][7],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData7=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p7Iy,this.p7V1y))
+            }else {
+              this.data7=this.newData7
+              this.p7Iy= this.newData7.data.II
+              this.p7V1y=this.newData7.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p7Iy,this.p7V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list9(){
+      if(this.currentpage[this.pages-1][8]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][8],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data8 = res.data.result
+          this.p8Iy=res.data.result.data.II;
+          this.p8V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_8'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p8Iy,this.p8V1y))
+          let tag=1
+          let ts=1
+          this.timer8=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][8],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData8=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p8Iy,this.p8V1y))
+            }else {
+              this.data8=this.newData8
+              this.p8Iy= this.newData8.data.II
+              this.p8V1y=this.newData8.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p8Iy,this.p8V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list10(){
+      if(this.currentpage[this.pages-1][9]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][9],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data9 = res.data.result
+          this.p9Iy=res.data.result.data.II;
+          this.p9V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_9'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p9Iy,this.p9V1y))
+          let tag=1
+          let ts=1
+          this.timer9=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][9],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData9=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p9Iy,this.p9V1y))
+            }else {
+              this.data9=this.newData9
+              this.p9Iy= this.newData9.data.II
+              this.p9V1y=this.newData9.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p9Iy,this.p9V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list11(){
+      if(this.currentpage[this.pages-1][10]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][10],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data10 = res.data.result
+          this.p10Iy=res.data.result.data.II;
+          this.p10V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_10'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p10Iy,this.p10V1y))
+          let tag=1
+          let ts=1
+          this.timer10=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][10],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData10=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p1Iy,this.p1V1y))
+            }else {
+              this.data10=this.newData10
+              this.p10Iy= this.newData10.data.II
+              this.p10V1y=this.newData10.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p10Iy,this.p10V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    async list12(){
+      if(this.currentpage[this.pages-1][11]!==null) {
+        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+          JSON.stringify({
+            "deviceSn": this.currentpage[this.pages - 1][11],
+            "ts": 0,
+          }), {
+            contentType: "application/json",
+            dataType: "json",
+            headers: {
+              "user": "zzu",
+              "password": "zzu123"
+            },
+          }
+        ).then(res => {
+          res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+          this.data11 = res.data.result
+          this.p11Iy=res.data.result.data.II;
+          this.p11V1y=res.data.result.data.V1;
+          let chart = this.$echarts.init(document.getElementById('child_11'))
+          chart.clear();
+          chart.setOption(this.chart(0, 0,this.p11Iy,this.p11V1y))
+          let tag=1
+          let ts=1
+          this.timer11=window.setInterval(()=>{
+            if(tag===1){
+              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][11],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res=>{
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData11=res.data.result
+                ts++
+                tag++
+              }).catch(err=>{
+                console.log("请求错误"+err)
+              })
+              chart.clear();
+              chart.setOption(this.chart(0, 0,this.p11Iy,this.p11V1y))
+            }else {
+              this.data11=this.newData11
+              this.p11Iy= this.newData11.data.II
+              this.p11V1y=this.newData11.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(0, 1250,this.p11Iy,this.p11V1y))
+            }
+          },5000)
+        }).catch(err=>{
+          console.log("请求错误"+err)
+        })
+      }
+
+    },
+    clearIntervallist(){
+      console.log("清除定时任务")
+      clearInterval(this.timer0)
+      clearInterval(this.timer1)
+      clearInterval(this.timer2)
+      clearInterval(this.timer3)
+      clearInterval(this.timer4)
+      clearInterval(this.timer5)
+      clearInterval(this.timer6)
+      clearInterval(this.timer7)
+      clearInterval(this.timer8)
+      clearInterval(this.timer9)
+      clearInterval(this.timer10)
+      clearInterval(this.timer11)
+      this.timer0=null;
+      this.timer1=null;
+      this.timer2=null;
+      this.timer3=null;
+      this.timer4=null;
+      this.timer5=null;
+      this.timer6=null;
+      this.timer7=null;
+      this.timer8=null;
+      this.timer9=null;
+      this.timer10=null;
+      this.timer11=null;
+    },
+    clearList(){
+      this.$echarts.init(document.getElementById('child_0')).dispose()
+      this.$echarts.init(document.getElementById('child_1')).dispose()
+      this.$echarts.init(document.getElementById('child_2')).dispose()
+      this.$echarts.init(document.getElementById('child_3')).dispose()
+      this.$echarts.init(document.getElementById('child_4')).dispose()
+      this.$echarts.init(document.getElementById('child_5')).dispose()
+      this.$echarts.init(document.getElementById('child_6')).dispose()
+      this.$echarts.init(document.getElementById('child_7')).dispose()
+      this.$echarts.init(document.getElementById('child_8')).dispose()
+      this.$echarts.init(document.getElementById('child_9')).dispose()
+      this.$echarts.init(document.getElementById('child_10')).dispose()
+      this.$echarts.init(document.getElementById('child_11')).dispose()
+      this.data0={}
+      this.data1={}
+      this.data2={}
+      this.data3={}
+      this.data4={}
+      this.data5={}
+      this.data6={}
+      this.data7={}
+      this.data8={}
+      this.data9={}
+      this.data10={}
+      this.data11={}
+      this.newData0={}
+      this.newData1={}
+      this.newData2={}
+      this.newData3={}
+      this.newData4={}
+      this.newData5={}
+      this.newData6={}
+      this.newData7={}
+      this.newData8={}
+      this.newData9={}
+      this.newData10={}
+      this.newData11={}
+      this.p0Iy=[]
+      this.p0V1y=[]
       this.p1Iy=[]
       this.p1V1y=[]
-      if(this.pages>this.pagenum){
-        return this.closeFullScreen()
-      }
-      if(this.currentpage[this.pages-1].length!==0) {
-        // for (let index = 0; index < this.currentpage[this.pages - 1].length; index++) {
-        //   list(this.currentpage[this.pages - 1][index], this.ts).then(res => {
-        //     const that = this
-        //     this.timer = setInterval(function () {
-        //       that.setchart()
-        //     }, 5050)
-        //     this.closeFullScreen()
-        //   })
-        // }
-        // for (let index = 0; index < this.currentpage[this.pages - 1].length; index++){
-        //   list(this.currentpage[this.pages-1][index],this.ts).then(res=>{
-        //     res.result.hr_mean=res.result.hr_mean.toFixed()
-        //     this.data.push(res.result)
-        //     this.p1Iy.push(res.result.data.II);
-        //     this.p1V1y.push(res.result.data.V1);
-        //   })
-        // }
-        let promiseList=[]
-        for (let index = 0; index < this.currentpage[this.pages - 1].length; index++) {
-          promiseList.push(new Promise((resolve, reject) => {
-            list(this.currentpage[this.pages-1][index],this.ts).then(res=>{
-               res.result.hr_mean=res.result.hr_mean.toFixed()
-              resolve(res.result)
-             })
-          }));
-        }
-
-        Promise.all(promiseList).then((rspList)=> {
-          rspList.map((val)=> {
-            this.data.push(val)
-            this.p1Iy.push(val.data.II);
-            this.p1V1y.push(val.data.V1);
-          });
-          console.log(this.data)
-          const that=this
-          this.timer=setInterval(function (){
-            that.setchart()
-          },5050)
-          this.closeFullScreen()
-        })
-
-      }
-
-
+      this.p2Iy=[]
+      this.p2V1y=[]
+      this.p3Iy=[]
+      this.p3V1y=[]
+      this.p4Iy=[]
+      this.p4V1y=[]
+      this.p5Iy=[]
+      this.p5V1y=[]
+      this.p6Iy=[]
+      this.p6V1y=[]
+      this.p7Iy=[]
+      this.p7V1y=[]
+      this.p8Iy=[]
+      this.p8V1y=[]
+      this.p9Iy=[]
+      this.p9V1y=[]
+      this.p10Iy=[]
+      this.p10V1y=[]
+      this.p11Iy=[]
+      this.p11V1y=[]
+      this.ts=0
     },
-
-    async handleCurrentChange(pages){
-      clearInterval(this.timer)
-      this.tag=1
+    handleCurrentChange(pages){
+      this.clearIntervallist()
+      this.clearList()
       this.pages=pages
+
       this.openLoading()
       console.log("当前页"+this.pages)
-      this.data=[]
-      this.p1Iy=[]
-      this.p1V1y=[]
-      await this.list()
+      if(this.pagenum>=this.pages){
+        const num=this.currentpage[this.pages-1].length
+        if(num>=1){
+          this.list1()
+        }
+        if(num>=2){
+          this.list2()
+        }
+        if(num>=3){
+          this.list3()
+        }
+        if(num>=4){
+          this.list4()
+        }
+        if(num>=5){
+          this.list5()
+        }
+        if(num>=6){
+          this.list6()
+        }
+        if(num>=7){
+          this.list7()
+        }
+        if(num>=8){
+          this.list8()
+        }
+        if(num>=9){
+          this.list9()
+        }
+        if(num>=10){
+          this.list10()
+        }
+        if(num>=11){
+          this.list11()
+        }
+        if(num>=12){
+          this.list12()
+        }
+      }
+      this.closeFullScreen()
     },
-
     async setchart(){
         if(this.tag===1){
           this.ts++
@@ -251,6 +1393,8 @@ export default {
                 list(this.currentpage[this.pages-1][i],this.ts).then((res)=>{
                   res.result.hr_mean=res.result.hr_mean.toFixed()
                   this.newData.push(res.result)
+                },err=>{
+                  this.currentpage[this.pages-1].splice(index,1,null)
                 })
               }
               // this.currentpage[this.pages-1].forEach((item,index)=>{
@@ -280,7 +1424,7 @@ export default {
            */
           for(let a=0;a<this.data.length;a++){
             for(let b=0;b<this.newData.length;b++){
-              if(this.data[a].deviceSn===this.newData[b].deviceSn){
+              if(this.data1[a].deviceSn===this.newData[b].deviceSn){
                 this.data.splice(a,1,this.newData[b])
                 this.p1Iy.splice(a,1,this.newData[b].data.II)
                 this.p1V1y.splice(a,1,this.newData[b].data.V1)
@@ -309,18 +1453,13 @@ export default {
       }
       return timex
     },
-    chart(id,j){
-      if(id===0){
-        this.time=this.timex()
-      }
-
+    chart(id,j,pIy,pV1y){
+      this.time=this.timex()
       let p1Iy=[]
       let p1V1y=[]
-      console.log(this.p1Iy)
-      console.log(this.data)
       for (let i = j; i < 1250+j; i++) {
-        p1Iy.push(this.p1Iy[id][i])
-        p1V1y.push(this.p1V1y[id][i]-1)
+        p1Iy.push(pIy[i])
+        p1V1y.push(pV1y[i]-1)
       }
       // p1Iy=p1Iy.reverse()
       // p1V1y=p1V1y.reverse()
