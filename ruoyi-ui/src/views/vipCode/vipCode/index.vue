@@ -9,8 +9,22 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="服务次数" prop="num">
+        <el-input
+          v-model="queryParams.num"
+          placeholder="请输入服务次数"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="是否为会员" prop="isVip">
         <el-select v-model="queryParams.isVip" placeholder="请选择是否为会员">
+          <el-option label="否" value="0"></el-option>
+          <el-option label="是" value="1"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="是否使用" prop="state">
+        <el-select v-model="queryParams.state" placeholder="请选择是否使用">
           <el-option label="否" value="0"></el-option>
           <el-option label="是" value="1"></el-option>
         </el-select>
@@ -72,8 +86,8 @@
       <el-table-column label="服务次数" align="center" prop="num" />
       <el-table-column label="是否为会员" align="center" prop="isVip" >
       <template slot-scope="scope">
-        <div v-if="scope.row.state==0">否</div>
-        <div v-if="scope.row.state==1">是</div>
+        <div v-if="scope.row.isVip==0">否</div>
+        <div v-if="scope.row.isVip==1">是</div>
       </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="state" >
@@ -82,6 +96,8 @@
           <div v-if="scope.row.state==1">已使用</div>
         </template>
       </el-table-column>
+      <el-table-column label="生成时间" align="center" prop="createTime" />
+      <el-table-column label="使用时间" align="center" prop="useTime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -113,18 +129,28 @@
     <!-- 添加或修改商品信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px" >
+        <el-form-item v-show="title!=='添加激活码'" label="序列号" >
+          <el-input v-model="form.code" disabled="disabled" style="width: 220px"/>
+        </el-form-item>
         <el-form-item label="服务次数" prop="num">
-          <el-input v-model="form.num" placeholder="请输入服务次数" style="width: 180px"/>
+          <el-input v-model="form.num" placeholder="请输入服务次数" style="width: 220px"/>
         </el-form-item>
         <el-form-item label="是否为会员" prop="isVip">
           <el-select v-model="form.isVip" placeholder="请选择是否为会员">
-            <el-option label="非会员" value="0"></el-option>
-            <el-option label="是会员" value="1"></el-option>
+            <el-option label="否" :value="0"></el-option>
+            <el-option label="是" :value="1"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="新增个数" prop="n">
-          <el-input v-model="n" placeholder="请输入新增序列号个数" style="width:180px"/>
+        <el-form-item v-show="title==='添加激活码'" label="新增个数" >
+          <el-input v-model="n" placeholder="请输入新增序列号个数" style="width:220px"/>
         </el-form-item>
+        <el-form-item v-show="title!=='添加激活码'" label="状态" >
+          <el-select v-model="form.state" placeholder="请选择是否使用">
+            <el-option label="未使用" :value="0"></el-option>
+            <el-option label="已使用" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -137,7 +163,10 @@
 <script>
 import {
   listTable,
-  insertCode
+  insertCode,
+  remove,
+  detailById,
+  update
 } from "@/api/vipCode/vipCode";
 
 
@@ -207,6 +236,7 @@ export default {
     getList() {
       this.loading = true;
       listTable(this.queryParams).then(res => {
+        console.log(res)
         this.codeList = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -251,16 +281,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加商品信息";
+      this.title = "添加激活码";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const Id = row.Id || this.ids
-      getProduct(productId).then(response => {
+      this.title = "修改激活码信息";
+      const id = row.id || this.ids
+      detailById(id).then(response => {
         this.form = response.data;
-        this.open = true;
-        this.title = "修改商品信息";
+        this.open=true
       });
     },
     /** 提交按钮 */
@@ -268,10 +298,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-
+            update(this.form).then(res=>{
+              this.getList();
+              this.open=false
+              this.$modal.msgSuccess("修改成功");
+            })
           }else {
             insertCode(this.form,this.n).then(res=>{
-              console.log(res)
               this.getList();
               this.open=false
               this.$modal.msgSuccess(res.msg);
@@ -285,7 +318,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$modal.confirm('是否确认删除商品信息编号为"' + ids + '"的数据项？').then(function() {
-        return delProduct(productIds);
+        return remove(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -294,9 +327,9 @@ export default {
 
     /** 导出按钮操作 */
     handleExport() {
-      this.download('product/product/export', {
+      this.download('vipcode/vipcode/export', {
         ...this.queryParams
-      }, `product_${new Date().getTime()}.xlsx`)
+      }, `code_${new Date().getTime()}.xlsx`)
     }
   }
 };

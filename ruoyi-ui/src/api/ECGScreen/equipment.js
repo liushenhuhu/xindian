@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/request1'
 
 // 查询所有设备连接信息
 export function list(currentpage,ts) {
@@ -15,6 +15,7 @@ export function list(currentpage,ts) {
         "deviceSn": currentpage,//设备号
         "ts": ts,//时间段
       }
+
     ),
   })
 }

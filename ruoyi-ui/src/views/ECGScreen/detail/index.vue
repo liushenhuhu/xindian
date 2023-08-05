@@ -21,10 +21,65 @@
 
     <div class="main">
       <div class="left">
-        <div class="container" v-for="(item,index) in 12" :key="index">
-          <el-button @click="show(index)">展开</el-button>
-          <span :style="color(data.noise[index])"></span>
-          <div :id="getId(index)" ref="cahrt"></div>
+        <div class="container">
+          <el-button @click="show(0)">展开</el-button>
+          <span :style="color(0)"></span>
+          <div id="chart_0" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(1)">展开</el-button>
+          <span :style="color(1)"></span>
+          <div id="chart_1" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(2)">展开</el-button>
+          <span :style="color(2)"></span>
+          <div id="chart_2" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(3)">展开</el-button>
+          <span :style="color(3)"></span>
+          <div id="chart_3" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(4)">展开</el-button>
+          <span :style="color(4)"></span>
+          <div id="chart_4" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(5)">展开</el-button>
+          <span :style="color(5)"></span>
+          <div id="chart_5" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(6)">展开</el-button>
+          <span :style="color(6)"></span>
+          <div id="chart_6" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(7)">展开</el-button>
+          <span :style="color(7)"></span>
+          <div id="chart_7" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(8)">展开</el-button>
+          <span :style="color(8)"></span>
+          <div id="chart_8" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(9)">展开</el-button>
+          <span :style="color(9)"></span>
+          <div id="chart_9" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(10)">展开</el-button>
+          <span :style="color(10)"></span>
+          <div id="chart_10" ></div>
+        </div>
+        <div class="container">
+          <el-button @click="show(11)">展开</el-button>
+          <span :style="color(11)"></span>
+          <div id="chart_11" ></div>
         </div>
       </div>
       <div class="right">
@@ -50,12 +105,28 @@
 </template>
 
 <script>
-import {
-  get_device,
-  list
-} from "@/api/ECGScreen/equipment";
+
 import 'default-passive-events'
+import * as echarts from './echarts.min'
 import screenfull from 'screenfull'
+let meanChart;
+let Anachart;
+let sdnnchart;
+let pnn20chart;
+let pnn50chart;
+let chart;
+let  I
+let  II
+let  III
+let  aVR
+let  aVL
+let  aVF
+let  V1
+let  V2
+let  V3
+let  V4
+let  V5
+let  V6
 export default {
   name: "Index",
   data() {
@@ -65,7 +136,7 @@ export default {
       isShow:false,
       deviceSn:null,
       data: {},//前10秒数据
-      newData:[],//最新10秒数据
+      newData: null,//最新10秒数据
       arr:[],//12个图 点位  二位数组
       newArr:[],
       ts:0,//时间段
@@ -77,17 +148,20 @@ export default {
   },
   created() {
     this.deviceSn=this.$route.query.deviceSn;
-
+    if(this.deviceSn!==null){
+      this.getlist()
+    }
   },
   activated() {
-    this.getlist(this.deviceSn);
-
+    location.reload;
   },
   computed: {
     color() {
-      return noise=> {
-        if(noise){
-          return 'background-color:red;';
+      return id=> {
+        if(this.data.noise){
+          if(this.data.noise[id]){
+            return 'background-color:red;';
+          }
         }
         return ;
       };
@@ -95,284 +169,147 @@ export default {
     },
   },
   mounted() {
-    if(this.deviceSn!==null){
-      this.getlist(this.deviceSn)
-    }
-
-
-    // 监听页面全屏
-    window.addEventListener("fullscreenchange", (e)=> {
-      if(screenfull.isFullscreen){
-        this.isFullFlag = true
-        console.log("进入全屏")
-      }else{
-        this.isFullFlag = false
-      }
-    })
   },
 
-  beforeRouteLeave(to, from, next){
-    next();
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+  beforeDestroy(){
+    window.clearInterval(this.timer);
+    this.timer=null;
   },
-
   methods: {
-    getId:function (val){
-      return 'cahrt_'+val
-    },
-    async getlist(){
-      let res = await list(this.deviceSn,this.ts)
-      console.log(res.result)
-      res.result.hr_mean=res.result.hr_mean.toFixed()
-      this.data=res.result
-      this.arrList.forEach(item=>{
-        this.arr.push(res.result.data[item])
-      })
-      this.ts++
-      this.$message.success("设备"+this.deviceSn+"数据获取成功")
-      this.setChartList()
-      this.timer=setInterval(this.setChartList,10100)
-
-    },
-    timex(){
-      let now = new Date();
-      let res = [];
-      let lenth = 2500;
-      while (lenth--) {
-        res.push(now.toLocaleTimeString());
-        now = new Date(now.valueOf() - 4);
-      }
-      return res;
-    },
-    setChartList(){
-
-      if(this.newData!=null){
-        Object.assign(this.data,this.newData)
-        Object.assign(this.arr,this.newArr)
-        // this.data=this.newData
-        // this.arr=this.newArr
-      }
-      this.newData=[]
-      this.newArr=[]
-      list(this.deviceSn,this.ts).then(res=>{
-        res.result.hr_mean=res.result.hr_mean.toFixed()
-        Object.assign(this.newData,res.result)
-        this.arrList.forEach(item=>{
-          this.newArr.push(res.result.data[item])
-        })
-        this.ts++
-      })
-
-      if(this.data!=null){
-        this.$nextTick(()=>{
-          this.setMeanChart()
-          this.setAna()
-          this.setsdnn()
-          this.setpnn20()
-          this.setpnn50()
-
-          this.arr.forEach((item,index)=>{
-            let chart = this.$echarts.init(document.getElementById('cahrt_'+index))
-            chart.clear();
-            chart.setOption(this.getchartOption(index))
-          })
-        })
-
-      }
-
-
-    },
-    getchartOption(id){
-      let show=false
-      let bottom=0.5
-      if(id==11){
-        show=true
-        bottom=18
-      }
-      let datenow=new Date();
-      let timex=this.timex()
-      timex.unshift(datenow.toLocaleTimeString());
-      timex.pop();
-      for (let j = 1; j < 2500; j++) {
-        timex.unshift((new Date(datenow.valueOf() - (j * 4))).toLocaleTimeString());
-        timex.pop();
-      }
-      this.time=timex
-      let option={
-        animation: true,
-        animationDuration: 9600,
-        animationEasing: "linear",
-        animationEasingUpdate: 'linear',
-        animationDurationUpdate: 10000,
-        animationDelayUpdate: 0,
-        animationThreshold: 10000,
-
-        title: {
-          text: this.arrList[id]+'导联',
-          textStyle: {
-            fontSize: 12,
-            color: "yellow"
+    getlist(){
+      console.log(this.timer)
+      this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        JSON.stringify({
+          "deviceSn": this.deviceSn,
+          "ts": 0,
+        }), {
+          contentType: "application/json",
+          dataType: "json",
+          headers: {
+            "user": "zzu",
+            "password": "zzu123"
           },
-          left: 30
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          }
-        },
-        grid: {
-          left: 30 /*"50px"*/,
-          right: 5 /*"15px"*/,
-          top: 1,
-          bottom: bottom
-        },
-        legend: {
-          data: ['当前电位'],
-          show: true,
-          textStyle: {
-            color: "#000000"
-          } /*图例(legend)说明文字的颜色*/,
-          left: "right",
-        },
-        xAxis: {
-          boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
-          data: timex,
-          axisTick: {//x轴刻度
-            show: false
-
-          },
-          axisLabel: { //x轴刻度数字
-            show: show,
+        }
+      ).then(res => {
+        res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+        this.$set(this,"data",res.data.result)
+        console.log(this.data)
+        I=res.data.result.data.I
+        II=res.data.result.data.II
+        III=res.data.result.data.III
+        aVR=res.data.result.data.aVR
+        aVL=res.data.result.data.aVL
+        aVF=res.data.result.data.aVF
+        V1=res.data.result.data.V1
+        V2=res.data.result.data.V2
+        V3=res.data.result.data.V3
+        V4=res.data.result.data.V4
+        V5=res.data.result.data.V5
+        V6=res.data.result.data.V6
+        this.$message.success("设备"+this.deviceSn+"数据获取成功")
+        this.setMeanChart()
+        this.setsdnn()
+        this.setpnn50()
+        this.setpnn20()
+        this.setAna()
+        let chartI=this.$echarts.init(document.getElementById("chart_0"))
+        let chartII=this.$echarts.init(document.getElementById("chart_1"))
+        let chartIII=this.$echarts.init(document.getElementById("chart_2"))
+        let chartaVR=this.$echarts.init(document.getElementById("chart_3"))
+        let chartaVL=this.$echarts.init(document.getElementById("chart_4"))
+        let chartaVF=this.$echarts.init(document.getElementById("chart_5"))
+        let chartV1=this.$echarts.init(document.getElementById("chart_6"))
+        let chartV2=this.$echarts.init(document.getElementById("chart_7"))
+        let chartV3=this.$echarts.init(document.getElementById("chart_8"))
+        let chartV4=this.$echarts.init(document.getElementById("chart_9"))
+        let chartV5=this.$echarts.init(document.getElementById("chart_10"))
+        let chartV6=this.$echarts.init(document.getElementById("chart_11"))
+        this.time=this.timex()
+        chartI.clear()
+        chartI.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+          title: {
+            text: 'I导联',
             textStyle: {
-              color: "#8DB6DB"
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
             }
           },
-          splitLine: {/*网格线*/
-            show: false,
-            interval: 9,//x轴线之间相隔的数量
-            lineStyle: {
-              opacity: 0.3,//x轴线的粗细
-              color: "#8DB6DB"//x轴线的颜色
-            },
-          }
-        },
-        yAxis: {
-          min: 1,
-          max: -1,
-          boundaryGap: false,
-          splitNumber: 20,
-          axisLabel: { //修改坐标系字体颜色
-            show: false,
-            textStyle: {
-              color: "#000000",
-
-            }
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
           },
-          splitLine: {/*网格线*/
-            lineStyle: {
-              opacity: 0.3,
-              color: "#8DB6DB"
-            },
-            show: false
-          }
-        },
-        series: [{
-          markLine: {
-            animation: false,
-            symbol: "none",
-            silent: true,
-            lineStyle: {
-              type: "solid",
-              color: '#8DB6DB',
-              width: 1,
-              opacity: 0.5,
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
 
             },
-            label: {
+            axisLabel: { //x轴刻度数字
               show: false,
-              position: 'start', // 表现内容展示的位置
-              color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              textStyle: {
+                color: "#8DB6DB"
+              }
             },
-            data: [
-              {xAxis: 0},
-              {xAxis: 50},
-              {xAxis: 100},
-              {xAxis: 150},
-              {xAxis: 200},
-              {xAxis: 250},
-              {xAxis: 300},
-              {xAxis: 350},
-              {xAxis: 400},
-              {xAxis: 450},
-              {xAxis: 500},
-              {xAxis: 550},
-              {xAxis: 600},
-              {xAxis: 650},
-              {xAxis: 700},
-              {xAxis: 750},
-              {xAxis: 800},
-              {xAxis: 850},
-              {xAxis: 900},
-              {xAxis: 950},
-              {xAxis: 1000},
-              {xAxis: 1050},
-              {xAxis: 1100},
-              {xAxis: 1150},
-              {xAxis: 1200},
-              {xAxis: 1250},
-              {xAxis: 1300},
-              {xAxis: 1350},
-              {xAxis: 1400},
-              {xAxis: 1450},
-              {xAxis: 1500},
-              {xAxis: 1550},
-              {xAxis: 1600},
-              {xAxis: 1650},
-              {xAxis: 1700},
-              {xAxis: 1750},
-              {xAxis: 1800},
-              {xAxis: 1850},
-              {xAxis: 1900},
-              {xAxis: 1950},
-              {xAxis: 2000},
-              {xAxis: 2050},
-              {xAxis: 2100},
-              {xAxis: 2150},
-              {xAxis: 2200},
-              {xAxis: 2250},
-              {xAxis: 2300},
-              {xAxis: 2350},
-              {xAxis: 2400},
-              {xAxis: 2450},
-              {xAxis: 2500},
-              {yAxis: -1},
-              {yAxis: -0.5},
-              {yAxis: 0},
-              {yAxis: 0.5},
-              {yAxis: 1},
-            ]
-
-          },
-          /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
-          itemStyle: {
-            normal: {
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
               lineStyle: {
-                color: '#92c2ff',/*折线的颜色*/
-                opacity: 1,
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
               },
             }
           },
-          symbol: "none",
-          /*去掉小圆点*/
-          name: this.arrList[id],
-          type: 'line',
-          data: this.arr[id],
-          smooth: 0 //显示为平滑的曲线*/
-        },
-          {
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
             markLine: {
               animation: false,
               symbol: "none",
@@ -382,13 +319,65 @@ export default {
                 color: '#8DB6DB',
                 width: 1,
                 opacity: 0.5,
+
               },
               label: {
-                show: true,
+                show: false,
                 position: 'start', // 表现内容展示的位置
                 color: '#8DB6DB'  // xAxis,yAxis数字的颜色
               },
               data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
                 {yAxis: -1},
                 {yAxis: -0.5},
                 {yAxis: 0},
@@ -397,6 +386,7 @@ export default {
               ]
 
             },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
             itemStyle: {
               normal: {
                 lineStyle: {
@@ -407,18 +397,5154 @@ export default {
             },
             symbol: "none",
             /*去掉小圆点*/
-            name: this.arrList[id],
+            name: 'I',
             type: 'line',
+            data: I,
             smooth: 0 //显示为平滑的曲线*/
-          }]
-      }
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
 
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'I',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartII.clear()
+        chartII.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
 
-      return option;
+          title: {
+            text: 'II导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'II',
+            type: 'line',
+            data: II,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'II',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartIII.clear()
+        chartIII.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'III导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'II',
+            type: 'line',
+            data: III,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'III',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartaVR.clear()
+        chartaVR.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'aVR导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'aVR',
+            type: 'line',
+            data: aVR,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'aVR',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartaVL.clear()
+        chartaVL.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'aVL导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'aVL',
+            type: 'line',
+            data: aVL,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'II',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartaVF.clear()
+        chartaVF.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'aVF导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'aVF',
+            type: 'line',
+            data: aVF,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'II',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartV1.clear()
+        chartV1.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'V1导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'V1',
+            type: 'line',
+            data: V1,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'V1',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartV2.clear()
+        chartV2.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'V2导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'V2',
+            type: 'line',
+            data: V2,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'V2',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartV3.clear()
+        chartV3.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'V3导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'V3',
+            type: 'line',
+            data: V3,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'V3',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartV4.clear()
+        chartV4.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'V4导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'V4',
+            type: 'line',
+            data: V4,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'V4',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartV5.clear()
+        chartV5.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'V5导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 0.5
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+
+            },
+            axisLabel: { //x轴刻度数字
+              show: false,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'V5',
+            type: 'line',
+            data: V5,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'V5',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+        chartV6.clear()
+        chartV6.setOption({
+          animation: true,
+          animationDuration: 9900,
+          animationEasing: "linear",
+          animationEasingUpdate: 'linear',
+          animationDurationUpdate: 10100,
+          animationDelayUpdate: 0,
+          animationThreshold: 10000,
+
+          title: {
+            text: 'V6导联',
+            textStyle: {
+              fontSize: 12,
+              color: "yellow"
+            },
+            left: 30
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          grid: {
+            left: 25 /*"50px"*/,
+            right: 0 /*"15px"*/,
+            top: 1,
+            bottom: 18
+          },
+          legend: {
+            data: ['当前电位'],
+            show: true,
+            textStyle: {
+              color: "#000000"
+            } /*图例(legend)说明文字的颜色*/,
+            left: "right",
+          },
+          xAxis: {
+            boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+            data: this.time,
+            axisTick: {//x轴刻度
+              show: false
+            },
+            axisLabel: { //x轴刻度数字
+              show: true,
+              textStyle: {
+                color: "#8DB6DB"
+              }
+            },
+            splitLine: {/*网格线*/
+              show: false,
+              interval: 9,//x轴线之间相隔的数量
+              lineStyle: {
+                opacity: 0.3,//x轴线的粗细
+                color: "#8DB6DB"//x轴线的颜色
+              },
+            }
+          },
+          yAxis: {
+            type: 'value',
+            // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+            axisLine: {
+              show: true
+            },
+
+            min: 1,
+            max: -1,
+            boundaryGap: false,
+            splitNumber: 20,
+            axisLabel: { //修改坐标系字体颜色
+              show: false,
+              textStyle: {
+                color: "#000000",
+
+              }
+            },
+            splitLine: {/*网格线*/
+              lineStyle: {
+                opacity: 0.3,
+                color: "#8DB6DB"
+              },
+              show: false
+            }
+          },
+          series: [{
+            markLine: {
+              animation: false,
+              symbol: "none",
+              silent: true,
+              lineStyle: {
+                type: "solid",
+                color: '#8DB6DB',
+                width: 1,
+                opacity: 0.5,
+
+              },
+              label: {
+                show: false,
+                position: 'start', // 表现内容展示的位置
+                color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+              },
+              data: [
+                {xAxis: 0},
+                {xAxis: 50},
+                {xAxis: 100},
+                {xAxis: 150},
+                {xAxis: 200},
+                {xAxis: 250},
+                {xAxis: 300},
+                {xAxis: 350},
+                {xAxis: 400},
+                {xAxis: 450},
+                {xAxis: 500},
+                {xAxis: 550},
+                {xAxis: 600},
+                {xAxis: 650},
+                {xAxis: 700},
+                {xAxis: 750},
+                {xAxis: 800},
+                {xAxis: 850},
+                {xAxis: 900},
+                {xAxis: 950},
+                {xAxis: 1000},
+                {xAxis: 1050},
+                {xAxis: 1100},
+                {xAxis: 1150},
+                {xAxis: 1200},
+                {xAxis: 1250},
+                {xAxis: 1300},
+                {xAxis: 1350},
+                {xAxis: 1400},
+                {xAxis: 1450},
+                {xAxis: 1500},
+                {xAxis: 1550},
+                {xAxis: 1600},
+                {xAxis: 1650},
+                {xAxis: 1700},
+                {xAxis: 1750},
+                {xAxis: 1800},
+                {xAxis: 1850},
+                {xAxis: 1900},
+                {xAxis: 1950},
+                {xAxis: 2000},
+                {xAxis: 2050},
+                {xAxis: 2100},
+                {xAxis: 2150},
+                {xAxis: 2200},
+                {xAxis: 2250},
+                {xAxis: 2300},
+                {xAxis: 2350},
+                {xAxis: 2400},
+                {xAxis: 2450},
+                {xAxis: 2500},
+                {yAxis: -1},
+                {yAxis: -0.5},
+                {yAxis: 0},
+                {yAxis: 0.5},
+                {yAxis: 1},
+              ]
+
+            },
+            /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+            itemStyle: {
+              normal: {
+                lineStyle: {
+                  color: '#92c2ff',/*折线的颜色*/
+                  opacity: 1,
+                },
+              }
+            },
+            symbol: "none",
+            /*去掉小圆点*/
+            name: 'V6',
+            type: 'line',
+            data: V6,
+            smooth: 0 //显示为平滑的曲线*/
+          },
+            {
+              markLine: {
+                animation: false,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#8DB6DB',
+                  width: 1,
+                  opacity: 0.5,
+                },
+                label: {
+                  show: true,
+                  position: 'start', // 表现内容展示的位置
+                  color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                },
+                data: [
+                  {yAxis: -1},
+                  {yAxis: -0.5},
+                  {yAxis: 0},
+                  {yAxis: 0.5},
+                  {yAxis: 1},
+                ]
+              },
+              itemStyle: {
+                normal: {
+                  lineStyle: {
+                    color: '#92c2ff',/*折线的颜色*/
+                    opacity: 1,
+                  },
+                }
+              },
+              symbol: "none",
+              /*去掉小圆点*/
+              name: 'V6',
+              type: 'line',
+              smooth: 0 //显示为平滑的曲线*/
+            }]
+        })
+         this.$http.post('https://server.mindyard.cn:84/detect_decg',
+           JSON.stringify({
+             "deviceSn": this.deviceSn,
+             "ts": 1,
+           }), {
+             contentType: "application/json",
+             dataType: "json",
+             headers: {
+               "user": "zzu",
+               "password": "zzu123"
+             },
+           }
+         ).then(res=>{
+           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+           this.newData=res.data.result
+         })
+           .catch(err=>{
+             console.log("错误信息"+err)
+           })
+        let ts=2
+        this.timer=setInterval(()=>{
+          if(this.newData){
+            ts++
+            this.$set(this,"data",this.newData)
+            I=this.newData.data.I
+            II=this.newData.data.II
+            III=this.newData.data.III
+            aVR=this.newData.data.aVR
+            aVL=this.newData.data.aVL
+            aVF=this.newData.data.aVF
+            V1=this.newData.data.V1
+            V2=this.newData.data.V2
+            V3=this.newData.data.V3
+            V4=this.newData.data.V4
+            V5=this.newData.data.V5
+            V6=this.newData.data.V6
+            this.setMeanChart()
+            this.setsdnn()
+            this.setpnn50()
+            this.setpnn20()
+            this.setAna()
+            chartI.clear()
+            chartI.clear()
+            chartI.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+              title: {
+                text: 'I导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'I',
+                type: 'line',
+                data: I,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'I',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartII.clear()
+            chartII.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'II导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'II',
+                type: 'line',
+                data: II,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'II',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartIII.clear()
+            chartIII.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'III导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'II',
+                type: 'line',
+                data: III,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'III',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartaVR.clear()
+            chartaVR.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'aVR导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'aVR',
+                type: 'line',
+                data: aVR,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'aVR',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartaVL.clear()
+            chartaVL.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'aVL导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'aVL',
+                type: 'line',
+                data: aVL,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'II',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartaVF.clear()
+            chartaVF.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'aVF导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'aVF',
+                type: 'line',
+                data: aVF,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'II',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartV1.clear()
+            chartV1.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'V1导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'V1',
+                type: 'line',
+                data: V1,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'V1',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartV2.clear()
+            chartV2.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'V2导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'V2',
+                type: 'line',
+                data: V2,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'V2',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartV3.clear()
+            chartV3.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'V3导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'V3',
+                type: 'line',
+                data: V3,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'V3',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartV4.clear()
+            chartV4.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'V4导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'V4',
+                type: 'line',
+                data: V4,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'V4',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartV5.clear()
+            chartV5.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'V5导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 0.5
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+
+                },
+                axisLabel: { //x轴刻度数字
+                  show: false,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'V5',
+                type: 'line',
+                data: V5,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'V5',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+            chartV6.clear()
+            chartV6.setOption({
+              animation: true,
+              animationDuration: 9900,
+              animationEasing: "linear",
+              animationEasingUpdate: 'linear',
+              animationDurationUpdate: 10100,
+              animationDelayUpdate: 0,
+              animationThreshold: 10000,
+
+              title: {
+                text: 'V6导联',
+                textStyle: {
+                  fontSize: 12,
+                  color: "yellow"
+                },
+                left: 30
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'cross'
+                }
+              },
+              grid: {
+                left: 25 /*"50px"*/,
+                right: 0 /*"15px"*/,
+                top: 1,
+                bottom: 18
+              },
+              legend: {
+                data: ['当前电位'],
+                show: true,
+                textStyle: {
+                  color: "#000000"
+                } /*图例(legend)说明文字的颜色*/,
+                left: "right",
+              },
+              xAxis: {
+                boundaryGap: false,//x轴刻度数字在两个刻度线中间显示还是刻度线下显示
+                data: this.time,
+                axisTick: {//x轴刻度
+                  show: false
+                },
+                axisLabel: { //x轴刻度数字
+                  show: true,
+                  textStyle: {
+                    color: "#8DB6DB"
+                  }
+                },
+                splitLine: {/*网格线*/
+                  show: false,
+                  interval: 9,//x轴线之间相隔的数量
+                  lineStyle: {
+                    opacity: 0.3,//x轴线的粗细
+                    color: "#8DB6DB"//x轴线的颜色
+                  },
+                }
+              },
+              yAxis: {
+                type: 'value',
+                // 显式设置 `axisLine.show` 和 `axisTick.show` 为 `true`
+                axisLine: {
+                  show: true
+                },
+
+                min: 1,
+                max: -1,
+                boundaryGap: false,
+                splitNumber: 20,
+                axisLabel: { //修改坐标系字体颜色
+                  show: false,
+                  textStyle: {
+                    color: "#000000",
+
+                  }
+                },
+                splitLine: {/*网格线*/
+                  lineStyle: {
+                    opacity: 0.3,
+                    color: "#8DB6DB"
+                  },
+                  show: false
+                }
+              },
+              series: [{
+                markLine: {
+                  animation: false,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: '#8DB6DB',
+                    width: 1,
+                    opacity: 0.5,
+
+                  },
+                  label: {
+                    show: false,
+                    position: 'start', // 表现内容展示的位置
+                    color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                  },
+                  data: [
+                    {xAxis: 0},
+                    {xAxis: 50},
+                    {xAxis: 100},
+                    {xAxis: 150},
+                    {xAxis: 200},
+                    {xAxis: 250},
+                    {xAxis: 300},
+                    {xAxis: 350},
+                    {xAxis: 400},
+                    {xAxis: 450},
+                    {xAxis: 500},
+                    {xAxis: 550},
+                    {xAxis: 600},
+                    {xAxis: 650},
+                    {xAxis: 700},
+                    {xAxis: 750},
+                    {xAxis: 800},
+                    {xAxis: 850},
+                    {xAxis: 900},
+                    {xAxis: 950},
+                    {xAxis: 1000},
+                    {xAxis: 1050},
+                    {xAxis: 1100},
+                    {xAxis: 1150},
+                    {xAxis: 1200},
+                    {xAxis: 1250},
+                    {xAxis: 1300},
+                    {xAxis: 1350},
+                    {xAxis: 1400},
+                    {xAxis: 1450},
+                    {xAxis: 1500},
+                    {xAxis: 1550},
+                    {xAxis: 1600},
+                    {xAxis: 1650},
+                    {xAxis: 1700},
+                    {xAxis: 1750},
+                    {xAxis: 1800},
+                    {xAxis: 1850},
+                    {xAxis: 1900},
+                    {xAxis: 1950},
+                    {xAxis: 2000},
+                    {xAxis: 2050},
+                    {xAxis: 2100},
+                    {xAxis: 2150},
+                    {xAxis: 2200},
+                    {xAxis: 2250},
+                    {xAxis: 2300},
+                    {xAxis: 2350},
+                    {xAxis: 2400},
+                    {xAxis: 2450},
+                    {xAxis: 2500},
+                    {yAxis: -1},
+                    {yAxis: -0.5},
+                    {yAxis: 0},
+                    {yAxis: 0.5},
+                    {yAxis: 1},
+                  ]
+
+                },
+                /*itemStyle: {normal: {areaStyle: {type: 'default'}}},*/
+                itemStyle: {
+                  normal: {
+                    lineStyle: {
+                      color: '#92c2ff',/*折线的颜色*/
+                      opacity: 1,
+                    },
+                  }
+                },
+                symbol: "none",
+                /*去掉小圆点*/
+                name: 'V6',
+                type: 'line',
+                data: V6,
+                smooth: 0 //显示为平滑的曲线*/
+              },
+                {
+                  markLine: {
+                    animation: false,
+                    symbol: "none",
+                    silent: true,
+                    lineStyle: {
+                      type: "solid",
+                      color: '#8DB6DB',
+                      width: 1,
+                      opacity: 0.5,
+                    },
+                    label: {
+                      show: true,
+                      position: 'start', // 表现内容展示的位置
+                      color: '#8DB6DB'  // xAxis,yAxis数字的颜色
+                    },
+                    data: [
+                      {yAxis: -1},
+                      {yAxis: -0.5},
+                      {yAxis: 0},
+                      {yAxis: 0.5},
+                      {yAxis: 1},
+                    ]
+                  },
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#92c2ff',/*折线的颜色*/
+                        opacity: 1,
+                      },
+                    }
+                  },
+                  symbol: "none",
+                  /*去掉小圆点*/
+                  name: 'V6',
+                  type: 'line',
+                  smooth: 0 //显示为平滑的曲线*/
+                }]
+            })
+          }
+          this.$http.post('https://server.mindyard.cn:84/detect_decg',
+            JSON.stringify({
+              "deviceSn": this.deviceSn,
+              "ts": ts,
+            }), {
+              contentType: "application/json",
+              dataType: "json",
+              headers: {
+                "user": "zzu",
+                "password": "zzu123"
+              },
+            }
+          ).then(res=>{
+            res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+            this.newData=res.data.result
+          }).catch(err=>{
+            console.log("错误信息"+err)
+          })
+        },10200)
+
+      }).catch(err=>{
+        console.log("错误信息"+err)
+      })
+
     },
 
+    timex(){
+      let timex = (function () {
+        let now = new Date();
+        let res = [];
+        let lenth = 2500;
+        while (lenth--) {
+          res.push(now.toLocaleTimeString());
+          now = new Date(now.valueOf() - 4);
+        }
+        return res;
+      })();
+      const datenow = new Date()
+      for (let b = 0; b < 2500; b++) {
+        timex.unshift((new Date(datenow.valueOf() - (b * 4))).toLocaleTimeString());//datenow.valueOf()返回datenow数组的值
+        timex.pop();
+      }
+      return timex
+    },
     setMeanChart(){
-      let meanChart=this.$echarts.init(document.getElementById("meanChart"))
+      meanChart=echarts.getInstanceByDom(document.getElementById("meanChart"))
+      if(meanChart== null){
+        meanChart=echarts.init(document.getElementById("meanChart"))
+      }
       meanChart.setOption({
         title: {
           show: true,
@@ -602,7 +5728,10 @@ export default {
 
     },
     setAna(){
-      let Anachart=this.$echarts.init(document.getElementById("anaoption"))
+      Anachart = this.$echarts.getInstanceByDom(document.getElementById("anaoption"))
+      if(Anachart== null) {
+        Anachart = this.$echarts.init(document.getElementById("anaoption"))
+      }
       Anachart.setOption({
         dataset: {
           source: [
@@ -630,15 +5759,25 @@ export default {
           name: '置信度',
           min: 0,
           max: 100,
+          axisLine: {
+            lineStyle:{
+              color: "#add4f3"
+            }
+          },
           axisLabel: { //修改坐标系字体颜色
             show: true,
             textStyle: {
-              color: "#8DB6DB"
+              color: "#add4f3"
             }
           },
         },
         yAxis: {
           type: 'category',
+          axisLine: {
+            lineStyle:{
+              color: "#add4f3"
+            }
+          },
           axisLabel: { //修改坐标系字体颜色
             show: true,
             textStyle: {
@@ -680,7 +5819,10 @@ export default {
       });
     },
     setsdnn(){
-      let sdnnchart=this.$echarts.init(document.getElementById("sdnnrmssd"))
+      sdnnchart = this.$echarts.getInstanceByDom(document.getElementById("sdnnrmssd"))
+      if(sdnnchart== null) {
+        sdnnchart = this.$echarts.init(document.getElementById("sdnnrmssd"))
+      }
       sdnnchart.setOption({
         dataset: {
           source: [
@@ -700,6 +5842,7 @@ export default {
           //name: '置信度' ,
           min: 20,
           max: 140,
+
           axisLabel: { //修改坐标系字体颜色
             show: true,
             textStyle: {
@@ -709,6 +5852,11 @@ export default {
         },
         yAxis: {
           type: 'category',
+          axisLine: {
+            lineStyle:{
+              color: "#add4f3"
+            }
+          },
           axisLabel: { //修改坐标系字体颜色
             show: true,
             textStyle: {
@@ -751,7 +5899,10 @@ export default {
       });
     },
     setpnn20(){
-      let pnn20chart=this.$echarts.init(document.getElementById("pnn20"))
+      pnn20chart = this.$echarts.getInstanceByDom(document.getElementById("pnn20"))
+      if(pnn20chart== null) {
+        pnn20chart = this.$echarts.init(document.getElementById("pnn20"))
+      }
       pnn20chart.setOption({
         title: [{
           text: '{a|' + this.data.PNN20.toFixed(2) + '}{c|%}',
@@ -796,8 +5947,8 @@ export default {
                   cx: api.getWidth() / 2,
                   cy: api.getHeight() / 2,
                   r: Math.min(api.getWidth(), api.getHeight()) / 2.3 * 0.65,
-                  startAngle: (0 + -0) * Math.PI / 180,
-                  endAngle: (360 + -0) * Math.PI / 180
+                  startAngle: 0 * Math.PI / 180,
+                  endAngle: 360 * Math.PI / 180
                 },
                 style: {
                   stroke: "#0CD3DB",
@@ -869,7 +6020,10 @@ export default {
       });
     },
     setpnn50(){
-      let pnn50chart=this.$echarts.init(document.getElementById("pnn50"))
+      pnn50chart = this.$echarts.getInstanceByDom(document.getElementById("pnn50"))
+      if(pnn50chart== null) {
+        pnn50chart = this.$echarts.init(document.getElementById("pnn50"))
+      }
       pnn50chart.setOption({
         title: [{
           text: '{a|' + this.data.PNN50.toFixed(2) + '}{c|%}',
@@ -1007,8 +6161,49 @@ export default {
         })
     },
     show(index){
-      this.isShow=true
-      const chart=this.$echarts.init(document.getElementById('chartshow'));
+      let data=[]
+      switch (index) {
+        case 0:
+          data=I
+          break;
+        case 1:
+          data=II
+          break;
+        case 2:
+          data=III
+          break;
+        case 3:
+          data=aVR
+          break;
+        case 4:
+          data=aVL
+          break;
+        case 5:
+          data=aVF
+          break;
+        case 6:
+          data=V1
+          break;
+        case 7:
+          data=V2
+          break;
+        case 8:
+          data=V3
+          break;
+        case 9:
+          data=V4
+          break;
+        case 10:
+          data=V5
+          break;
+        case 11:
+          data=V6
+          break;
+      }
+      chart = echarts.getInstanceByDom(document.getElementById('chartshow'));
+      if(chart== null) {
+        chart = echarts.init(document.getElementById('chartshow'));
+      }
       let option={
         animation: true,
         title: {
@@ -1026,85 +6221,48 @@ export default {
             type: 'cross'
           }
         },
-        dataZoom:[{
+        dataZoom:[
+          {
+              type: 'inside',   // 鼠标滚轮缩放
+              start: 0,
+              end: 100
+            },
+          {
           type: 'slider',
           show: true,
-          start: 0,
-          end: 100,
+          // start: 0,
+          // end: 100,
           xAxisIndex: [0],
-          backgroundColor: 'rgba(227,227,227,0)',
+           borderRadius: 2,
+          // backgroundColor: 'rgba(227,227,227,0)',
           showDataShadow: true,//是否显示数据阴影 默认auto
           dataBackground: {
             lineStyle: {
-              color: "#70deff",
-              width: 1
+              color: "#ffffff",
+              width: 1,
+              shadowBlur: 0.5,
+            },
+            areaStyle: {
+              color: "rgba(143, 192, 225, 1)"
             }
           },
-
+            filterMode: "none",
+            realtime: true,
+            brushSelect:true,
+            brushStyle: {
+              color: "rgba(71, 154, 222, 0.36)",
+              borderColor: "rgba(238, 190, 190, 1)",
+              borderWidth: 1,
+              borderType: "dashed",
+              borderDashOffset: 1
+            }
 
         }],
-        // dataZoom: [
-        //   // {
-        //   //   type: 'inside',   // 鼠标滚轮缩放
-        //   //   start: 0,
-        //   //   end: 100
-        //   // },
-        //   {
-        //     show: true,       // 滑动条组件
-        //     type: 'slider',
-        //     // y: '90%',
-        //     start: 0,
-        //     end: 100,
-        //     // borderColor: "#ccc",
-        //     fillerColor: 'rgba(13,76,245,0.23)',
-        //     // borderRadius: 5,
-        //     // backgroundColor: '#EFEFEF00',//两边未选中的滑动条区域的颜色
-        //     showDetail: true,
-        //     showDataShadow: true,//是否显示数据阴影 默认auto
-        //     realtime: true, //是否实时更新
-        //     filterMode: "empty",//或者”empty“
-        //     brushSelect: true,//是否开启刷选功能。在下图的brush区域你可以按住鼠标左键后框选出选中部分
-        //     // brushStyle: {
-        //     //   borderWidth: 1,
-        //     //   color: 'rgba(255,36,36,0.2)',
-        //     //   borderColor: '#ff2424'
-        //     // }
-        //   },
-        // ],
-        // dataZoom: [{
-        //   type: 'inside', // 放大和缩小
-        //   orient: 'vertical',
-        //   filterMode: "none",//或者”empty“
-        // }, {
-        //   type: 'inside',
-        //   filterMode: "none",//或者”empty“
-        // }, {
-        //   start: 0,//默认为0
-        //   end: 100,//默认为100
-        //   type: 'slider',
-        //   show: true,
-        //   // xAxisIndex: [0],
-        //   handleSize: "100%",//滑动条的 左右2个滑动条的大小
-        //   // startValue: 0, // 初始显示值
-        //   // endValue: 100, // 结束显示值,自己定
-        //   height: 10,//组件高度
-        //   left: '10%', //左边的距离
-        //   right: '15%',//右边的距离
-        //   bottom: '1%',//底边的距离
-        //   borderColor: "#ccc",
-        //   fillerColor: '#4cccfe',
-        //   borderRadius: 5,
-        //   backgroundColor: '#efefef',//两边未选中的滑动条区域的颜色
-        //   showDataShadow: false,//是否显示数据阴影 默认auto
-        //   showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-        //   realtime: true, //是否实时更新
-        //   filterMode: "none",//或者”empty“
-        // }],
         grid: {
           left: '2%' /*"50px"*/,
           right: '3%' /*"15px"*/,
           top: '8%',
-          bottom: '15%'
+          bottom: '20%'
         },
         legend: {
           show: false,
@@ -1132,8 +6290,9 @@ export default {
           } /*网格线*/
         },
         yAxis: {
-          min: 3,
-          max: -3,
+          type:"value",
+          min: -3,
+          max: 3,
           boundaryGap: false,
           splitNumber: 84,
           axisLabel: { //修改坐标系字体颜色
@@ -1150,7 +6309,8 @@ export default {
             },
           } /*网格线*/
         },
-        series: [{
+        series: [
+          {
           markLine: {
             animation: false,
             symbol: "none",
@@ -1246,7 +6406,7 @@ export default {
           /*去掉小圆点*/
           name: '当前电位',
           type: 'line',
-          data: this.arr[index],
+          data: data,
           smooth: 0 //显示为平滑的曲线*/
         },
           {
@@ -1296,11 +6456,12 @@ export default {
             smooth: 0 //显示为平滑的曲线*/
           }]
       }
+      chart.clear()
       chart.setOption(option)
       window.addEventListener('resize', () => {
         chart.resize();
       });
-
+      this.isShow=true
       // window.onresize = function () {
       //   chart.resize();
       // }
@@ -1379,21 +6540,22 @@ export default {
   }
   .main{
     display: flex;
-    width: 100%;
-    height: 95%;
-    margin-left: 0.5vw;
+    height: 95vh;
     .left{
       display: flex;
       flex-direction: column;
       justify-content: space-around;
       height: 100%;
-      width: 54vw;
+      width: 53vw;
+      margin-left: 2.2vw;
       .container{
         position: relative;;
-        width: 55vw;
-        height: 8.1%;
+        width: 47.5vw;
+        height: 8.2vh;
+        margin: 0;
+        padding: 0;
         div{
-          width: 55vw;
+          width: 47vw;
           height: 100%;
           z-index: 1;
         }
@@ -1426,7 +6588,7 @@ export default {
         }
       }
       .container:last-child{
-        height: 10%;
+        height: 10vh;
       }
     }
     .right{

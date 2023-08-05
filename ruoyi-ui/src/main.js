@@ -39,6 +39,7 @@ import VueMeta from 'vue-meta'
 import DictData from '@/components/DictData'
 //echarts
 import echarts from 'echarts'
+import axios  from "axios";
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -51,7 +52,7 @@ Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 Vue.prototype.$echarts = echarts
-
+Vue.prototype.$http=axios
 // 全局组件挂载
 Vue.component('DictTag', DictTag)
 Vue.component('Pagination', Pagination)

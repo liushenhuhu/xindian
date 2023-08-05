@@ -1248,6 +1248,18 @@ export default {
     },
     clearIntervallist(){
       console.log("清除定时任务")
+      window.clearInterval(this.timer0);
+      window.clearInterval(this.timer1);
+      window.clearInterval(this.timer2);
+      window.clearInterval(this.timer3)
+      window.clearInterval(this.timer4);
+      window.clearInterval(this.timer5);
+      window.clearInterval(this.timer6);
+      window.clearInterval(this.timer7);
+      window.clearInterval(this.timer8);
+      window.clearInterval(this.timer9);
+      window.clearInterval(this.timer10);
+      window.clearInterval(this.timer11);
       clearInterval(this.timer0)
       clearInterval(this.timer1)
       clearInterval(this.timer2)
@@ -1340,7 +1352,6 @@ export default {
       this.clearIntervallist()
       this.clearList()
       this.pages=pages
-
       this.openLoading()
       console.log("当前页"+this.pages)
       if(this.pagenum>=this.pages){
