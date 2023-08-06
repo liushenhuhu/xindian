@@ -203,6 +203,8 @@ public class PatientManagement extends BaseEntity {
     private Integer rushState = 1;
 
 
+    private String PatPhone;
+
     private List<String> hospitalCodeList = new ArrayList<>();
 
     public String getpId() {

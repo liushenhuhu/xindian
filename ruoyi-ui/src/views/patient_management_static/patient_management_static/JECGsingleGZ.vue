@@ -14,7 +14,7 @@
 
       <el-form-item label="患者电话" prop="patientPhone">
         <el-input
-          v-model="queryParams.patientPhone"
+          v-model="queryParams.PatPhone"
           placeholder="请输入患者电话"
           clearable
           @keyup.enter.native="handleQuery"
@@ -490,7 +490,7 @@ export default {
         connectionTime: null,
         patientName: null,
         ecgType: 'JECGsingle',
-        patientPhone: null,
+        PatPhone: null,
         intelligentDiagnosis: null,
         diagnosisStatus: 0,
         diagnosisConclusion: null,
