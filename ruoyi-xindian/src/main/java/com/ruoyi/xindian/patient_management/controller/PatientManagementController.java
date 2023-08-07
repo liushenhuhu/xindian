@@ -174,9 +174,9 @@ public class PatientManagementController extends BaseController {
             }
 
             if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
-                if (management.getPatientPhone().length()==14){
-                    management.setPatientPhone(management.getPatientPhone().substring(0,11));
-                }
+//                if (management.getPatientPhone().length()==14||management.getPatientPhone().length()==15){
+//                    management.setPatientPhone(management.getPatientPhone().substring(0,11));
+//                }
             }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
@@ -251,11 +251,11 @@ public class PatientManagementController extends BaseController {
                     patientManagmentDept.setDept(departments.get(0).getDepartmentName());
                 }
             }
-            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
-                if (management.getPatientPhone().length()==14){
-                    management.setPatientPhone(management.getPatientPhone().substring(0,11));
-                }
-            }
+//            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+//                if (management.getPatientPhone().length()==14||management.getPatientPhone().length()==15){
+//                    management.setPatientPhone(management.getPatientPhone().substring(0,11));
+//                }
+//            }
             if (management.getTimeDuration() == null) {
                 patientManagmentDept.setAcquisitionDuration("报告未生成");
             } else {
@@ -441,8 +441,10 @@ public class PatientManagementController extends BaseController {
             if (info.getBradycardia() == null) info.setBradycardia((long) 0);
             if (info.getTachycardia() == null) info.setTachycardia((long) 0);
         }
+        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
         res.put("infoNumber", infos);
         res.put("description", description);
+        res.put("patient",patient);
         return AjaxResult.success(res);
     }
 

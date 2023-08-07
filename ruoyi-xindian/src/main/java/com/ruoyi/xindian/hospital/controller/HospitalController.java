@@ -98,6 +98,14 @@ public class HospitalController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Hospital hospital)
     {
+        Hospital hospital1 = hospitalService.selectCode(hospital.getHospitalName());
+        if (hospital1!=null){
+            return AjaxResult.error("医院名称已经存在");
+        }
+        Hospital hospital2 = hospitalService.selectHospitalByHospitalCode(hospital.getHospitalCode());
+        if (hospital2!=null){
+            return AjaxResult.error("医院代号已经存在");
+        }
         return toAjax(hospitalService.insertHospital(hospital));
     }
 

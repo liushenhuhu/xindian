@@ -60,4 +60,7 @@ public interface DepartmentMapper
      * @return 结果
      */
     public int deleteDepartmentByDepartmentIds(Long[] departmentIds);
+
+
+    Department selectHospitalCodeDepartment(Department department);
 }

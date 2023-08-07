@@ -38,7 +38,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDepartmentVo"/>
         where department_id = #{departmentId}
     </select>
-        
+    <select id="selectHospitalCodeDepartment" resultType="com.ruoyi.xindian.hospital.domain.Department">
+        <include refid="selectDepartmentVo"/>
+        where hospital_code = #{hospitalCode} and department_name = #{departmentName}
+    </select>
+
     <insert id="insertDepartment" parameterType="Department" useGeneratedKeys="true" keyProperty="departmentId">
         insert into department
         <trim prefix="(" suffix=")" suffixOverrides=",">

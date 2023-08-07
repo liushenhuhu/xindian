@@ -156,8 +156,8 @@ public class VipCodeController extends BaseController {
      * @param place 定义随机数的位数
      */
     public String randomGen(int place) {
-        String base = "wqetryuioplkjhgfdsazxcvbmnABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuffer sb = new StringBuffer();
+        String base = "0123456789";
+        StringBuilder sb = new StringBuilder();
         Random rd = new Random();
         for(int i=0;i<place;i++) {
             sb.append(base.charAt(rd.nextInt(base.length())));

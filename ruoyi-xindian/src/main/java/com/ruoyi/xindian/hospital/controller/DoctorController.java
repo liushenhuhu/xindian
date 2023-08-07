@@ -101,7 +101,6 @@ public class DoctorController extends BaseController
 
 
 
-
     }
 
     @GetMapping("/nameList")
@@ -136,6 +135,8 @@ public class DoctorController extends BaseController
         department.setDepartmentCode(doctor.getDepartmentCode());
         List<Department> departments = departmentService.selectDepartmentList(department);
         doctor.setDepartmentName(departments.get(0).getDepartmentName());
+        Hospital hospital = hospitalService.selectCode(doctor.getHospital());
+        doctor.setHospitalCode(hospital.getHospitalCode());
         return AjaxResult.success(doctor);
     }
 
@@ -158,6 +159,12 @@ public class DoctorController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Doctor doctor)
     {
+        Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(doctor.getDoctorPhone());
+        if (doctor1!=null){
+            return AjaxResult.error("手机号已存在");
+        }
+        Hospital hospital = hospitalService.selectHospitalByHospitalCode(doctor.getHospital());
+        doctor.setHospital(hospital.getHospitalName());
         return toAjax(doctorService.insertDoctor(doctor));
     }
 
@@ -169,10 +176,16 @@ public class DoctorController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Doctor doctor)
     {
-//        Doctor doctor1 = new Doctor();
-//        doctor1.setDoctorPhone(doctor.getDoctorPhone());
-//        List<Doctor> doctors = doctorService.selectDoctorList(doctor1);
-//        doctor.setDoctorId(doctors.get(0).getDoctorId());
+        Doctor doctor1 = doctorService.selectDoctorByDoctorId(doctor.getDoctorId());
+        if (!doctor1.getDoctorPhone().equals(doctor.getDoctorPhone())){
+            Doctor doctor2 = doctorService.selectDoctorByDoctorPhone(doctor.getDoctorPhone());
+            if (doctor2!=null){
+                return AjaxResult.error("手机号已存在");
+            }
+        }
+
+        Hospital hospital = hospitalService.selectHospitalByHospitalCode(doctor.getHospital());
+        doctor.setHospital(hospital.getHospitalName());
         return toAjax(doctorService.updateDoctor(doctor));
     }
 
