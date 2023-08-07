@@ -114,6 +114,9 @@ public class dataLabbyController extends BaseController
         Patient patient = patientService.selectPatientByPatientPhone(report.getPPhone());
         t.setPatientName(patient.getPatientName());
         t.setPId(report.getpId());
+        if (patient.getPatientPhone().length()==14){
+            patient.setPatientPhone(patient.getPatientPhone().substring(0,11));
+        }
         t.setPatientPhone(patient.getPatientPhone());
         if(patient.getBirthDay() == null){
             t.setPatientAge(patient.getPatientAge());
@@ -199,10 +202,10 @@ public class dataLabbyController extends BaseController
             report.setDiagnosisDoctor(doctor.getDoctorName());
             report.setDiagnosisStatus(2L);
             reportService.updateReport(report);
-            Doctor doctor1 = new Doctor();
-            doctor1.setHospital(doctor.getHospital());
-            List<Doctor> doctors = doctorService.selectDoctorList(doctor1);
-            WxUtil.send(phonenumber);
+            Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(phonenumber);
+            Doctor doctor2 = new Doctor();
+            doctor2.getHospitalNameList().add(doctor1.getHospital());
+            List<Doctor> doctors = doctorService.selectDoctorList(doctor2);
             wxMsgRunConfig.redisDTStart(pId,doctors);
         } catch (Exception e){
             return AjaxResult.error(String.valueOf(e));

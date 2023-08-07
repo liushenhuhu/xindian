@@ -98,6 +98,7 @@ public class PatientManagementController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
+
 //        Long userId = getUserId();
         SysUser sysUser = userService.selectUserById(loginUser.getUser().getUserId());
         if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 101) {
@@ -171,6 +172,12 @@ public class PatientManagementController extends BaseController {
                     System.out.println(1);
                 }
             }
+
+            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+                if (management.getPatientPhone().length()==14){
+                    management.setPatientPhone(management.getPatientPhone().substring(0,11));
+                }
+            }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
@@ -242,6 +249,11 @@ public class PatientManagementController extends BaseController {
                     department.setDepartmentCode(doctors.get(0).getDepartmentCode());
                     List<Department> departments = departmentService.selectDepartmentList(department);
                     patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                }
+            }
+            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+                if (management.getPatientPhone().length()==14){
+                    management.setPatientPhone(management.getPatientPhone().substring(0,11));
                 }
             }
             if (management.getTimeDuration() == null) {

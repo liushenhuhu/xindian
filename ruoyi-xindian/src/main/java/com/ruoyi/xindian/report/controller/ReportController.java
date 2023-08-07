@@ -125,7 +125,7 @@ public class ReportController extends BaseController
     /**
      * 查询报告列表
      */
-    @PreAuthorize("@ss.hasPermi('report:report:list')")
+//    @PreAuthorize("@ss.hasPermi('report:report:list')")
     @GetMapping("/list")
     public TableDataInfo list(Report report)
     {
@@ -172,8 +172,14 @@ public class ReportController extends BaseController
                     medical.add("无");
                     reportM.setMedicalHistory(medical);
                 }
+                if (patientManagement.getPatientPhone()!=null&&!"".equals(patientManagement.getPatientPhone())){
+                    if (patientManagement.getPatientPhone().length()==14){
+                        reportM.setPatientPhone(patientManagement.getPatientPhone().substring(0,11));
+                    }else {
+                        reportM.setPatientPhone(patientManagement.getPatientPhone());
+                    }
+                }
 
-                reportM.setPatientPhone(patientManagement.getPatientPhone());
                 patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
                 birthDay = patient.getBirthDay();
                 if(birthDay != null)
@@ -192,7 +198,7 @@ public class ReportController extends BaseController
     /**
      * 导出报告列表
      */
-    @PreAuthorize("@ss.hasPermi('report:report:export')")
+//    @PreAuthorize("@ss.hasPermi('report:report:export')")
     @Log(title = "报告", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Report report)
@@ -205,27 +211,35 @@ public class ReportController extends BaseController
     /**
      * 获取报告详细信息
      */
-    @PreAuthorize("@ss.hasPermi('report:report:query')")
+//    @PreAuthorize("@ss.hasPermi('report:report:query')")
     @GetMapping(value = "/{reportId}")
     public AjaxResult getInfo(@PathVariable("reportId") Long reportId)
     {
-        return AjaxResult.success(reportService.selectReportByReportId(reportId));
+        Report report = reportService.selectReportByReportId(reportId);
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())&&report.getPPhone().length()==14){
+            report.setPPhone(report.getPPhone().substring(0,11));
+        }
+        return AjaxResult.success(report);
     }
 
     /**
      * 获取报告详细信息
      */
-    @PreAuthorize("@ss.hasPermi('report:report:query')")
+//    @PreAuthorize("@ss.hasPermi('report:report:query')")
     @GetMapping(value = "/getInfoByPid/{pId}")
     public AjaxResult getInfoByPid(@PathVariable("pId") String pId)
     {
-        return AjaxResult.success(reportService.selectReportByPId(pId));
+        Report report = reportService.selectReportByPId(pId);
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())&&report.getPPhone().length()==14){
+            report.setPPhone(report.getPPhone().substring(0,11));
+        }
+        return AjaxResult.success(report);
     }
 
     /**
      * 新增报告
      */
-    @PreAuthorize("@ss.hasPermi('report:report:add')")
+//    @PreAuthorize("@ss.hasPermi('report:report:add')")
     @Log(title = "报告", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Report report)
@@ -238,13 +252,12 @@ public class ReportController extends BaseController
     /**
      * 修改报告
      */
-    @PreAuthorize("@ss.hasPermi('report:report:edit')")
+//    @PreAuthorize("@ss.hasPermi('report:report:edit')")
     @Log(title = "报告", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Report report) throws Exception {
 //        User currentUser = ShiroUtils.getSysUser();
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        String phonenumber = loginUser.getUser().getPhonenumber();
         String s = report.getpId();
         List<Doctor> doctors = null;
         //当前报告信息
@@ -254,7 +267,13 @@ public class ReportController extends BaseController
         report.setReportTime(date);
         //患者请求医生
         Report report2 = reportService.selectReportByPId(report.getpId());
-        SysUser sysUser = sysUserMapper.selectUserByPhone(report2.getPPhone());
+        StringBuilder stringBuilder = new StringBuilder();
+        if (report2.getPPhone().length()==14){
+            stringBuilder.append(report2.getPPhone(), 0, 11);
+        }else {
+            stringBuilder.append(report2.getPPhone());
+        }
+        SysUser sysUser = sysUserMapper.selectUserByPhone(String.valueOf(stringBuilder));
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
         Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
 
@@ -266,7 +285,7 @@ public class ReportController extends BaseController
         if(report.getDiagnosisStatus()==2){
 
             //判断用户是否存在服务次数
-            VipPatient vipPhone = vipPatientService.findVipPhone(report2.getPPhone());
+            VipPatient vipPhone = vipPatientService.findVipPhone(sysUser1.getPhonenumber());
             if (vipPhone==null){
                 if (sysUser1.getDetectionNum()==0){
                     return AjaxResult.error("用户服务次数不足");
@@ -281,7 +300,7 @@ public class ReportController extends BaseController
             //选择医院加入公共抢单
             if(report.getHospital()!=null){
                 Doctor doctor = new Doctor();
-                doctor.setHospital(report.getHospital());
+                doctor.getHospitalNameList().add(report.getHospital());
                 doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && doctors.size()!=0){
 
@@ -321,7 +340,7 @@ public class ReportController extends BaseController
 
 //            sysUserMapper.updateDetectionNumAdd(sysUser.getPhonenumber));
             if (sysUser==null){
-                WxUtil.send(report2.getPPhone());
+                WxUtil.send(String.valueOf(stringBuilder));
             }else {
                 try {
                     wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断被拒");
@@ -333,7 +352,7 @@ public class ReportController extends BaseController
         }else if(report.getDiagnosisStatus()==1){//医生诊断
             reportService.updateReport(report);
             if (sysUser==null){
-                WxUtil.send(report2.getPPhone());
+                WxUtil.send(String.valueOf(stringBuilder));
             }else {
                 try {
                     wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
@@ -366,7 +385,7 @@ public class ReportController extends BaseController
     /**
      * 删除报告
      */
-    @PreAuthorize("@ss.hasPermi('report:report:remove')")
+//    @PreAuthorize("@ss.hasPermi('report:report:remove')")
     @Log(title = "报告", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{reportIds}")
     public AjaxResult remove(@PathVariable Long[] reportIds)
@@ -583,7 +602,14 @@ public class ReportController extends BaseController
             }
             reportM.setPatientName(patient.getPatientName());
             reportM.setPatientSex(patient.getPatientSex());
-            reportM.setPatientPhone(r.getPPhone());
+            StringBuilder stringBuilder = new StringBuilder();
+            if (r.getPPhone().length()==14){
+                stringBuilder.append(r.getPPhone() ,0,11);
+            }
+            else {
+                stringBuilder.append(r.getPPhone());
+            }
+            reportM.setPatientPhone(String.valueOf(stringBuilder));
             resList.add(reportM);
         }
         return getTable(resList,new PageInfo(patientPhone).getTotal());
@@ -608,6 +634,9 @@ public class ReportController extends BaseController
                     System.out.println(1);
                 }
             }
+            if (management.getPatientPhone().length()==14){
+                management.setPatientPhone(management.getPatientPhone().substring(0,11));
+            }
         }
         return AjaxResult.success(patientManagements);
     }
@@ -621,7 +650,7 @@ public class ReportController extends BaseController
         report.setDiagnosisDoctor(doctor1.getDoctorName());
         report.setReportTime(new Date());
         Doctor doctor = new Doctor();
-        doctor.setHospital(report.getHospital());
+        doctor.getHospitalNameList().add(report.getHospital());
         List<Doctor> doctors = doctorService.selectDoctorList(doctor);
         //定时器, 30分钟无医生诊断, 换医生诊断.
         wxMsgRunConfig.redisDTStart(report.getpId(),doctors);

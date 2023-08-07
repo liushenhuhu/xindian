@@ -69,6 +69,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 }
                 return;
             }
+            //用于提交心电，加入抢单，十分钟过期，判断有没有诊断
             if (split[0].equals("reportPT")){
                 try {
                    wxMsgRunConfig.redisTOrAdd(split[1]);
@@ -78,6 +79,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 return;
             }
 
+            //用于医生诊断，判断诊断30分钟内是否
             if (split[0].equals("reportDT")){
                 try {
                     wxMsgRunConfig.redisDTTime(split[1]);
@@ -86,6 +88,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 }
                 return;
             }
+
             if (expiredKey.equals("earlyLogTest01")){
                 AlertLog alertLog = new AlertLog();
                 alertLog.setEcgType("J12");

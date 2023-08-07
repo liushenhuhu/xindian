@@ -60,7 +60,7 @@ public class DoctorController extends BaseController
     /**
      * 查询医生列表
      */
-    @PreAuthorize("@ss.hasPermi('doctor:doctor:list')")
+//    @PreAuthorize("@ss.hasPermi('doctor:doctor:list')")
     @GetMapping("/list")
     public TableDataInfo list(Doctor doctor, HttpServletRequest request)
     {
@@ -127,7 +127,7 @@ public class DoctorController extends BaseController
     /**
      * 获取医生详细信息
      */
-    @PreAuthorize("@ss.hasPermi('doctor:doctor:query')")
+//    @PreAuthorize("@ss.hasPermi('doctor:doctor:query')")
     @GetMapping(value = "/{doctorId}")
     public AjaxResult getInfo(@PathVariable("doctorId") Long doctorId)
     {
@@ -185,5 +185,12 @@ public class DoctorController extends BaseController
     public AjaxResult remove(@PathVariable Long[] doctorIds)
     {
         return toAjax(doctorService.deleteDoctorByDoctorIds(doctorIds));
+    }
+
+
+
+    @GetMapping("/isDoc")
+    public AjaxResult idDoc(){
+        return AjaxResult.success(doctorService.selectIsDoc());
     }
 }

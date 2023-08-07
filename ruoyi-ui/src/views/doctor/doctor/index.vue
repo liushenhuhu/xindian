@@ -151,7 +151,7 @@
 
         <el-form-item label="科室" prop="departmentCode">
 <!--          <el-input v-model="form.departmentCode" placeholder="请输入科室代号" />-->
-          <el-select v-model="form.departmentName" placeholder="请选择科室" clearable >
+          <el-select v-model="form.departmentCode" placeholder="请选择科室" clearable >
             <el-option
               v-for="item in options1"
               :key="item.departmentId"
@@ -180,9 +180,13 @@
         <el-form-item label="收费价格" prop="chargePrice">
           <el-input v-model="form.chargePrice" placeholder="请输入收费价格" />
         </el-form-item>
-<!--        <el-form-item label="关联设备" prop="chargePrice">-->
-<!--          <el-input v-model="form.equipmentList" placeholder="请输入逗号分割的设备号" />-->
-<!--        </el-form-item>-->
+        <el-form-item label="医生类型" prop="isDoc">
+          <el-radio-group v-model="form.isDoc">
+            <el-radio  label="0">测试用的医生账号</el-radio>
+            <el-radio label="1">正规用的医生账号</el-radio>
+          </el-radio-group>
+          <span style="color: red">  (测试用的医生账号,不会作为专业的医生去随机推送患者诊断请求)</span>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -262,7 +266,10 @@ export default {
         ],
         departmentCode: [
           { required: true, message: "科室不能为空", trigger: "blur" }
-        ]
+        ],
+        isDoc: [
+          { required: true, message: "请选择医生类型", trigger: "change" }
+        ],
       }
     };
   },

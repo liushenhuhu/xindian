@@ -111,6 +111,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
             <if test="diagnosisStatus != null "> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
@@ -156,6 +157,7 @@
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
             <if test="ecgType != null  and ecgType != ''"> and ecg_type like "JECGsingle%" </if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
@@ -205,6 +207,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
             <if test="diagnosisStatus != null "> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
@@ -247,6 +250,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
 
             <if test="diagnosisStatus != null "> and diagnosis_status = #{diagnosisStatus}</if>
@@ -275,6 +279,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
 
             <if test="diagnosisStatus != null  and diagnosisStatus != ''"> and diagnosis_status = #{diagnosisStatus}</if>
@@ -315,6 +320,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
             <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
@@ -354,6 +360,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
             <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
@@ -393,6 +400,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
             <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
@@ -433,6 +441,7 @@
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
             <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
@@ -470,6 +479,7 @@
             <if test="ecgType != null  and ecgType != ''"> and ecg_type like "JECG12%"</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone like concat(#{PatPhone},'%') </if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone = #{patientPhone}</if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>

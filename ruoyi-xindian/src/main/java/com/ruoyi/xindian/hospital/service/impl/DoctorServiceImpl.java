@@ -153,4 +153,9 @@ public class DoctorServiceImpl implements IDoctorService
 
         return doctorMapper.selectDoctorList(doctor);
     }
+
+    @Override
+    public List<Doctor> selectIsDoc() {
+        return doctorMapper.selectIsDoctors();
+    }
 }

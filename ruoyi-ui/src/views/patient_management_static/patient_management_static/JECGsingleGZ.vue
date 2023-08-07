@@ -14,7 +14,7 @@
 
       <el-form-item label="患者电话" prop="patientPhone">
         <el-input
-          v-model="queryParams.patientPhone"
+          v-model="queryParams.PatPhone"
           placeholder="请输入患者电话"
           clearable
           @keyup.enter.native="handleQuery"
@@ -194,7 +194,7 @@
 
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="上传时间" align="center" prop="connectionTime" width="180">
+      <el-table-column label="上传时间" align="center" prop="connectionTime" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
@@ -236,9 +236,10 @@
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
+      <el-table-column label="患者名称" align="center" prop="patientName" show-overflow-tooltip/>
       <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
-      <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
-      <el-table-column label="报告时间" align="center" prop="reportTime" width="180" show-overflow-tooltip>
+      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
@@ -489,7 +490,7 @@ export default {
         connectionTime: null,
         patientName: null,
         ecgType: 'JECGsingle',
-        patientPhone: null,
+        PatPhone: null,
         intelligentDiagnosis: null,
         diagnosisStatus: 0,
         diagnosisConclusion: null,
@@ -599,6 +600,7 @@ export default {
         this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
       }
       listPatient_management(this.queryParams).then(response => {
+        console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
