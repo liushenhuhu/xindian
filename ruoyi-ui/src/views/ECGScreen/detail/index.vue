@@ -105,10 +105,9 @@
 </template>
 
 <script>
-
-import 'default-passive-events'
 import * as echarts from './echarts.min'
 import screenfull from 'screenfull'
+import 'default-passive-events'
 let meanChart;
 let Anachart;
 let sdnnchart;
@@ -137,10 +136,8 @@ export default {
       deviceSn:null,
       data: {},//前10秒数据
       newData: null,//最新10秒数据
-      arr:[],//12个图 点位  二位数组
       newArr:[],
       ts:0,//时间段
-      arrList:['I','II','III','aVR','aVL','aVF','V1','V2','V3','V4','V5','V6'],
       timer:null,
       time:[],
       chartjump:null
@@ -169,15 +166,20 @@ export default {
     },
   },
   mounted() {
+    setTimeout(()=>{
+      if(chart){
+        chart.resize()
+      }
+    })
   },
 
   beforeDestroy(){
+    console.log("离开页面")
     window.clearInterval(this.timer);
     this.timer=null;
   },
   methods: {
     getlist(){
-      console.log(this.timer)
       this.$http.post('https://server.mindyard.cn:84/detect_decg',
         JSON.stringify({
           "deviceSn": this.deviceSn,
@@ -212,18 +214,18 @@ export default {
         this.setpnn50()
         this.setpnn20()
         this.setAna()
-        let chartI=this.$echarts.init(document.getElementById("chart_0"))
-        let chartII=this.$echarts.init(document.getElementById("chart_1"))
-        let chartIII=this.$echarts.init(document.getElementById("chart_2"))
-        let chartaVR=this.$echarts.init(document.getElementById("chart_3"))
-        let chartaVL=this.$echarts.init(document.getElementById("chart_4"))
-        let chartaVF=this.$echarts.init(document.getElementById("chart_5"))
-        let chartV1=this.$echarts.init(document.getElementById("chart_6"))
-        let chartV2=this.$echarts.init(document.getElementById("chart_7"))
-        let chartV3=this.$echarts.init(document.getElementById("chart_8"))
-        let chartV4=this.$echarts.init(document.getElementById("chart_9"))
-        let chartV5=this.$echarts.init(document.getElementById("chart_10"))
-        let chartV6=this.$echarts.init(document.getElementById("chart_11"))
+        let chartI=echarts.init(document.getElementById("chart_0"))
+        let chartII=echarts.init(document.getElementById("chart_1"))
+        let chartIII=echarts.init(document.getElementById("chart_2"))
+        let chartaVR=echarts.init(document.getElementById("chart_3"))
+        let chartaVL=echarts.init(document.getElementById("chart_4"))
+        let chartaVF=echarts.init(document.getElementById("chart_5"))
+        let chartV1=echarts.init(document.getElementById("chart_6"))
+        let chartV2=echarts.init(document.getElementById("chart_7"))
+        let chartV3=echarts.init(document.getElementById("chart_8"))
+        let chartV4=echarts.init(document.getElementById("chart_9"))
+        let chartV5=echarts.init(document.getElementById("chart_10"))
+        let chartV6=echarts.init(document.getElementById("chart_11"))
         this.time=this.timex()
         chartI.clear()
         chartI.setOption({
@@ -251,8 +253,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -291,8 +294,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -393,12 +396,20 @@ export default {
                   color: '#92c2ff',/*折线的颜色*/
                   opacity: 1,
                 },
-              }
+              },
+              emphasis:{
+                scale:false,
+                lineStyle: {
+                  width:3
+                },
+              },
             },
+
             symbol: "none",
             /*去掉小圆点*/
             name: 'I',
             type: 'line',
+
             data: I,
             smooth: 0 //显示为平滑的曲线*/
           },
@@ -469,8 +480,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -509,8 +521,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -669,7 +681,6 @@ export default {
           animationDurationUpdate: 10100,
           animationDelayUpdate: 0,
           animationThreshold: 10000,
-
           title: {
             text: 'III导联',
             textStyle: {
@@ -687,8 +698,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -727,8 +739,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -905,8 +917,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -945,8 +958,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -1123,8 +1136,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -1163,8 +1177,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -1341,8 +1355,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -1381,8 +1396,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -1559,8 +1574,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -1599,8 +1615,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -1777,8 +1793,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -1817,8 +1834,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -1995,8 +2012,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -2035,8 +2053,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -2213,8 +2231,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -2253,8 +2272,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -2431,8 +2450,9 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 0.5
+            top: 0,
+            bottom: 0.5,
+            height: '98%'
           },
           legend: {
             data: ['当前电位'],
@@ -2471,8 +2491,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -2649,8 +2669,8 @@ export default {
           grid: {
             left: 25 /*"50px"*/,
             right: 0 /*"15px"*/,
-            top: 1,
-            bottom: 18
+            top: 0,
+            bottom: 17.5,
           },
           legend: {
             data: ['当前电位'],
@@ -2688,8 +2708,8 @@ export default {
               show: true
             },
 
-            min: 1,
-            max: -1,
+            min: -1,
+            max: 1,
             boundaryGap: false,
             splitNumber: 20,
             axisLabel: { //修改坐标系字体颜色
@@ -2881,7 +2901,6 @@ export default {
             this.setpnn20()
             this.setAna()
             chartI.clear()
-            chartI.clear()
             chartI.setOption({
               animation: true,
               animationDuration: 9900,
@@ -2907,8 +2926,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -2947,8 +2967,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -3125,8 +3145,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -3165,8 +3186,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -3325,7 +3346,6 @@ export default {
               animationDurationUpdate: 10100,
               animationDelayUpdate: 0,
               animationThreshold: 10000,
-
               title: {
                 text: 'III导联',
                 textStyle: {
@@ -3343,8 +3363,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -3383,8 +3404,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -3561,8 +3582,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -3601,8 +3623,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -3779,8 +3801,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -3819,8 +3842,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -3997,8 +4020,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -4037,8 +4061,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -4215,8 +4239,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -4255,8 +4280,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -4433,8 +4458,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -4473,8 +4499,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -4651,8 +4677,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -4691,8 +4718,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -4869,8 +4896,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -4909,8 +4937,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -5087,8 +5115,9 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 0.5
+                top: 0,
+                bottom: 0.5,
+                height: '98%'
               },
               legend: {
                 data: ['当前电位'],
@@ -5127,8 +5156,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -5305,8 +5334,8 @@ export default {
               grid: {
                 left: 25 /*"50px"*/,
                 right: 0 /*"15px"*/,
-                top: 1,
-                bottom: 18
+                top: 0,
+                bottom: 17.5,
               },
               legend: {
                 data: ['当前电位'],
@@ -5344,8 +5373,8 @@ export default {
                   show: true
                 },
 
-                min: 1,
-                max: -1,
+                min: -1,
+                max: 1,
                 boundaryGap: false,
                 splitNumber: 20,
                 axisLabel: { //修改坐标系字体颜色
@@ -5514,7 +5543,7 @@ export default {
           }).catch(err=>{
             console.log("错误信息"+err)
           })
-        },10200)
+        },10300)
 
       }).catch(err=>{
         console.log("错误信息"+err)
@@ -6262,7 +6291,8 @@ export default {
           left: '2%' /*"50px"*/,
           right: '3%' /*"15px"*/,
           top: '8%',
-          bottom: '20%'
+          bottom: '20%',
+
         },
         legend: {
           show: false,
@@ -6456,15 +6486,16 @@ export default {
             smooth: 0 //显示为平滑的曲线*/
           }]
       }
-      chart.clear()
-      chart.setOption(option)
       window.addEventListener('resize', () => {
         chart.resize();
       });
+      chart.clear()
+      chart.setOption(option)
       this.isShow=true
-      // window.onresize = function () {
-      //   chart.resize();
-      // }
+      setTimeout(()=>{
+        chart.resize();
+      })
+
     },
     closeShow(){
       this.isShow=false
@@ -6499,7 +6530,7 @@ export default {
   .showbox{
     position: absolute;
     width: 98%;
-    height:50vh;
+    height:52vh;
     z-index: 2000;
     border: 1px solid #6EDDF1;
     top: 50%;
@@ -6507,8 +6538,7 @@ export default {
     transform: translate(-50%, -50%);
     .chart {
       border: 1px solid #6EDDF1;
-      width: 98vw;
-      height: 50vh;
+      height: 52vh;
       background-color: rgb(3,4,74);
     }
     .el-button{
@@ -6588,7 +6618,7 @@ export default {
         }
       }
       .container:last-child{
-        height: 10vh;
+        height: 10.5vh;
       }
     }
     .right{

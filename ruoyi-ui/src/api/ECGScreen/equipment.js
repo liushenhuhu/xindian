@@ -1,4 +1,4 @@
-import request from '@/utils/request1'
+import request from '@/utils/request'
 
 // 查询所有设备连接信息
 export function list(currentpage,ts) {

@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
 import lombok.Data;
 
 /**
@@ -26,16 +27,19 @@ public class VipCode implements Serializable {
     /**
      * 激活码
      */
+    @Excel(name = "激活码序列号")
     private String code;
 
     /**
      * 
      */
+    @Excel(name = "服务次数")
     private Integer num;
 
     /**
      * 是否为vip（)
      */
+    @Excel(name = "是否为VIP",readConverterExp = "0=否,1=是")
     private Integer isVip;
 
     /**
