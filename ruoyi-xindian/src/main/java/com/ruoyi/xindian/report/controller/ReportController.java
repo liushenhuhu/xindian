@@ -172,13 +172,13 @@ public class ReportController extends BaseController
                     medical.add("无");
                     reportM.setMedicalHistory(medical);
                 }
-                if (patientManagement.getPatientPhone()!=null&&!"".equals(patientManagement.getPatientPhone())){
-                    if (patientManagement.getPatientPhone().length()==14){
-                        reportM.setPatientPhone(patientManagement.getPatientPhone().substring(0,11));
-                    }else {
-                        reportM.setPatientPhone(patientManagement.getPatientPhone());
-                    }
-                }
+//                if (patientManagement.getPatientPhone()!=null&&!"".equals(patientManagement.getPatientPhone())){
+//                    if (patientManagement.getPatientPhone().length()==14||patientManagement.getPatientPhone().length()==15){
+//                        reportM.setPatientPhone(patientManagement.getPatientPhone().substring(0,11));
+//                    }else {
+//                        reportM.setPatientPhone(patientManagement.getPatientPhone());
+//                    }
+//                }
 
                 patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
                 birthDay = patient.getBirthDay();
@@ -216,9 +216,9 @@ public class ReportController extends BaseController
     public AjaxResult getInfo(@PathVariable("reportId") Long reportId)
     {
         Report report = reportService.selectReportByReportId(reportId);
-        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())&&report.getPPhone().length()==14){
-            report.setPPhone(report.getPPhone().substring(0,11));
-        }
+//        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())&&(report.getPPhone().length()==14||report.getPPhone().length()==15)){
+//            report.setPPhone(report.getPPhone().substring(0,11));
+//        }
         return AjaxResult.success(report);
     }
 
@@ -230,9 +230,9 @@ public class ReportController extends BaseController
     public AjaxResult getInfoByPid(@PathVariable("pId") String pId)
     {
         Report report = reportService.selectReportByPId(pId);
-        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())&&report.getPPhone().length()==14){
-            report.setPPhone(report.getPPhone().substring(0,11));
-        }
+//        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())&&(report.getPPhone().length()==14||report.getPPhone().length()==15)){
+//            report.setPPhone(report.getPPhone().substring(0,11));
+//        }
         return AjaxResult.success(report);
     }
 
@@ -268,7 +268,7 @@ public class ReportController extends BaseController
         //患者请求医生
         Report report2 = reportService.selectReportByPId(report.getpId());
         StringBuilder stringBuilder = new StringBuilder();
-        if (report2.getPPhone().length()==14){
+        if (report2.getPPhone().length()==14||report2.getPPhone().length()==15){
             stringBuilder.append(report2.getPPhone(), 0, 11);
         }else {
             stringBuilder.append(report2.getPPhone());
@@ -541,8 +541,8 @@ public class ReportController extends BaseController
         NotDealWith notDealWith = new NotDealWith();
         notDealWith.setDoctorPhone(rep.getdPhone());
         HashMap<String, Object> params = new HashMap<>();
-        params.put("beginRefuseTime",rep.getParams().get("beginReportTime"));
-        params.put("endRefuseTime",rep.getParams().get("endReportTime"));
+        params.put("beginRefuseTime",rep.getStartReportTime());
+        params.put("endRefuseTime",rep.getEndReportTime());
         notDealWith.setParams(params);
         List<NotDealWith> notDealWiths = notDealWithService.selectNotDealWithList(notDealWith);
         int refuse = notDealWiths.size();
@@ -603,12 +603,12 @@ public class ReportController extends BaseController
             reportM.setPatientName(patient.getPatientName());
             reportM.setPatientSex(patient.getPatientSex());
             StringBuilder stringBuilder = new StringBuilder();
-            if (r.getPPhone().length()==14){
-                stringBuilder.append(r.getPPhone() ,0,11);
-            }
-            else {
+//            if (r.getPPhone().length()==14||r.getPPhone().length()==15){
+//                stringBuilder.append(r.getPPhone() ,0,11);
+//            }
+//            else {
                 stringBuilder.append(r.getPPhone());
-            }
+//            }
             reportM.setPatientPhone(String.valueOf(stringBuilder));
             resList.add(reportM);
         }
@@ -634,9 +634,9 @@ public class ReportController extends BaseController
                     System.out.println(1);
                 }
             }
-            if (management.getPatientPhone().length()==14){
-                management.setPatientPhone(management.getPatientPhone().substring(0,11));
-            }
+//            if (management.getPatientPhone().length()==14||management.getPatientPhone().length()==15){
+//                management.setPatientPhone(management.getPatientPhone().substring(0,11));
+//            }
         }
         return AjaxResult.success(patientManagements);
     }
@@ -649,6 +649,7 @@ public class ReportController extends BaseController
         report.setDiagnosisStatus(2L);
         report.setDiagnosisDoctor(doctor1.getDoctorName());
         report.setReportTime(new Date());
+        report.setStartTime(new Date());
         Doctor doctor = new Doctor();
         doctor.getHospitalNameList().add(report.getHospital());
         List<Doctor> doctors = doctorService.selectDoctorList(doctor);

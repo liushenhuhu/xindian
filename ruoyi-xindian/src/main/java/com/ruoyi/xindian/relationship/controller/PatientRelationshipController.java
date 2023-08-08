@@ -125,7 +125,7 @@ public class PatientRelationshipController extends BaseController
     private PatientRelationship getRelationship1(PatientRelationshipDto patientRelationship){
         PatientRelationship relationship = new PatientRelationship();
         if (patientRelationship.getSonPhone()==null||"".equals(patientRelationship.getSonPhone())||patientRelationship.getSonPhone().equals(patientRelationship.getFatherPhone())){
-            StringBuilder fatherPhone = new StringBuilder(patientRelationship.getFatherPhone());
+            StringBuilder fatherPhone = new StringBuilder(patientRelationship.getFatherPhone()+"-");
             Random random = new Random();
             for (int i = 0; i < 3; i++) {
                 fatherPhone.append(random.nextInt(10));

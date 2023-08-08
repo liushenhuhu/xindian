@@ -117,4 +117,9 @@ public class DepartmentServiceImpl implements IDepartmentService
     {
         return departmentMapper.deleteDepartmentByDepartmentId(departmentId);
     }
+
+    @Override
+    public Department selectCode(Department department) {
+        return departmentMapper.selectHospitalCodeDepartment(department);
+    }
 }

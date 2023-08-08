@@ -79,4 +79,7 @@ public interface IHospitalService
 
     Hospital selectId(Long userId);
 
+
+    Hospital selectCode(String hospitalName);
+
 }

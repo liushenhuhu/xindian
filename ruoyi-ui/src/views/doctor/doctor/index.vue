@@ -384,10 +384,20 @@ export default {
       this.reset();
       const doctorId = row.doctorId || this.ids
       getDoctor(doctorId).then(response => {
+        hospitalCodeFind(response.data.hospitalCode).then(r=>{
+          console.log(r)
+          this.options1=r.data
+        })
         this.form = response.data;
+        this.form.hospital = response.data.hospitalCode
+        console.log(response.data)
         this.open = true;
         this.title = "修改医生";
+
       });
+      listHospitalId(null).then(r=>{
+        this.options=r.rows
+      })
     },
     /** 提交按钮 */
     submitForm() {

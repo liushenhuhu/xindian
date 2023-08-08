@@ -80,7 +80,7 @@ public class Report extends BaseEntity
     private String endReportTime;
     private String startReportTime;
 
-    /**诊断状态*/
+    private Date startTime;
 
     private String ecgType;
     public String getpId() {

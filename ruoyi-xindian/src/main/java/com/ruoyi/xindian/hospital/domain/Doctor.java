@@ -64,6 +64,7 @@ public class Doctor extends BaseEntity
     @Excel(name = "医院")
     private String hospital;
 
+    private String hospitalCode;
     /** 头像地址 */
     @Excel(name = "头像地址")
     private String img;
@@ -81,6 +82,14 @@ public class Doctor extends BaseEntity
      * 用于判断是否是正规医生，还是测试医生
      */
     private String isDoc;
+
+    public String getHospitalCode() {
+        return hospitalCode;
+    }
+
+    public void setHospitalCode(String hospitalCode) {
+        this.hospitalCode = hospitalCode;
+    }
 
     public String getIsDoc() {
         return isDoc;

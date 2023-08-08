@@ -564,8 +564,14 @@ export default {
 
     sendMsg(row){
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
-      var isPhoneNumberValid = reg.test(row.patientPhone);
+      let patientPhone = row.patientPhone
+      if (row.patientPhone.length===14||row.patientPhone.length===15){
+        patientPhone=row.patientPhone.substring(0,11)
+      }
+
+      var isPhoneNumberValid = reg.test(patientPhone);
       if(isPhoneNumberValid) {
+        console.log(patientPhone)
         console.log("患者电话: " + row.patientPhone)
         console.log("患者姓名: " + row.patientName)
         this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
@@ -573,7 +579,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          sendMsgToPatient(row.patientPhone).then(response => {
+          sendMsgToPatient(patientPhone).then(response => {
             this.$message({
               type: 'success',
               message: '发送成功!'

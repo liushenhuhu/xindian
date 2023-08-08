@@ -1,21 +1,38 @@
 <template>
-  <div>
-
-    <el-divider content-position="left">预警统计图</el-divider>
-
-    <div id="main" style="width: 700px;height:400px;float: right">静态12导预警</div>
-
-    <div id="main1" style="width: 600px;height:400px;">静态单导预警</div>
-
-    <div id="main2" style="width: 700px;height:400px;float: right">动态12导预警</div>
-
-    <div id="main3" style="width: 600px;height:400px;">动态单导预警</div>
+<div class="mains">
+  <div class="count">
+    <child></child>
   </div>
+  <div class="type">
+    <typeChild></typeChild>
+  </div>
+  <div class="age">
+    <ageChild></ageChild>
+  </div>
+  <div class="circle">
+    <div id="main0" style="width: 20vw;height:20vh;text-align: right">静态12导预警</div>
+
+    <div id="main1" style="width: 20vw;height:20vh;">静态单导预警</div>
+
+    <div id="main2" style="width: 20vw;height:20vh;float: right">动态12导预警</div>
+
+    <div id="main3" style="width: 20vw;height:20vh;">动态单导预警</div>
+  </div>
+
+</div>
 </template>
 <script>
 import {listAlert_log} from "@/api/DRearly/DRearly";
+import child from '../statistics/child'
+import typeChild from '../typeStatistics/child'
+import ageChild from '../ageStatistics/child1'
 
 export default {
+  components:{
+    child,
+    typeChild,
+    ageChild
+  },
   name: 'hello',
   data () {
     return {
@@ -48,7 +65,7 @@ export default {
   methods: {
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
-      let main = this.$echarts.init(document.getElementById('main'))
+      let main = this.$echarts.init(document.getElementById('main0'))
       let th = this
       var option = {
         title: {
@@ -220,7 +237,7 @@ export default {
       listAlert_log(this.query).then(r=>{
         if(r.data.length === 0){
           // 无数据时：展示暂无数据
-          const dom = document.getElementById('main');
+          const dom = document.getElementById('main0');
           dom.innerHTML = '-静态12导预警暂无相关数据-';
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
           dom.removeAttribute('_echarts_instance_');
@@ -285,3 +302,27 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.mains {
+  width: 100%;
+  height: 100%;
+  //display: flex;
+}
+.circle {
+  margin-top: 8%;
+  display: flex;
+  //justify-content: flex-end;
+  flex-direction: row-reverse;
+  align-items: center;
+  div{
+    margin-left: -60px;
+  }
+}
+.type {
+  height: 100%;
+  margin-left: 1%;
+}
+.age {
+  margin-top: -18%;
+}
+</style>
