@@ -8,6 +8,8 @@ import com.ruoyi.xindian.statistics.service.IStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +45,23 @@ public class StatisticsController extends BaseController {
         return getDataTable(list);
     }
 
+    @GetMapping("/countList")
+    public TableDataInfo countList(Statistics statistics){
+        return  null;
+    }
+
     @GetMapping("dateList")
     public TableDataInfo dateList(Statistics str){
         //月份转换
         str.setMonth(lowNumber(str.getMonth()));
         startPage();
         List<Statistics> list = statisticsService.selectDateList(str);
+        for (Statistics c : list){
+
+            BigDecimal bigDecimal = new BigDecimal(String.valueOf(Double.parseDouble(c.getTimeCount()) / 60));
+            BigDecimal bigDecimal1 = bigDecimal.setScale(1, RoundingMode.UP);
+            c.setTimeCount(bigDecimal1 +"分钟");
+        }
         return getDataTable(list);
     }
 

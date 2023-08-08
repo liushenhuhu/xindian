@@ -20,6 +20,15 @@
             <el-option label="DECG12" value="DECG12"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="选择年分"  label-width="100px">
+          <el-date-picker
+            v-model="queryParams.year"
+            type="year"
+            placeholder="选择年"
+            format="yyyy">
+          </el-date-picker>
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         </el-form-item>
@@ -48,6 +57,7 @@
 </template>
 <script>
 import { listStatistics, selectDoctor, dateList } from "@/api/statistics/statistics";
+import Da from "element-ui/src/locale/lang/da";
 export default {
   name: 'hello',
   data () {
@@ -66,16 +76,23 @@ export default {
         doctorPhone: null,
         month: null,
         reportType:null,
+        year:'',
       },
       tableData: []
     }
   },
   created() {
+    let date = new Date()
+    this.queryParams.year=date.getFullYear()+''
+
     this.getList();
+
     this.selectDoctor();
   },
   mounted(){
     this.drawLine();
+
+
   },
   methods: {
     drawLine() {
@@ -134,6 +151,11 @@ export default {
     /** 查询 */
     getList() {
       this.loading = true;
+      if (this.queryParams.year.length!==4){
+        let dateYear = new Date(this.queryParams.year)
+        this.queryParams.year= dateYear.getFullYear()+''
+      }
+      console.log(this.queryParams)
       listStatistics(this.queryParams).then(response => {
         //console.log(response.rows);
         let data = response.rows;

@@ -22,4 +22,6 @@ public interface StatisticsMapper {
     List<Statistics> selectDateList(Statistics str);
 
     List<Statistics> typeList();
+
+    List<Statistics> selectCountList(Statistics statistics);
 }

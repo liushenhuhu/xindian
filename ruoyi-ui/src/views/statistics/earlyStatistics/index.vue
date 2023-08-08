@@ -1,8 +1,5 @@
 <template>
 <div class="mains">
-  <div class="count">
-    <child></child>
-  </div>
   <div class="type">
     <typeChild></typeChild>
   </div>
@@ -23,13 +20,11 @@
 </template>
 <script>
 import {listAlert_log} from "@/api/DRearly/DRearly";
-import child from '../statistics/child'
 import typeChild from '../typeStatistics/child'
 import ageChild from '../ageStatistics/child1'
 
 export default {
   components:{
-    child,
     typeChild,
     ageChild
   },

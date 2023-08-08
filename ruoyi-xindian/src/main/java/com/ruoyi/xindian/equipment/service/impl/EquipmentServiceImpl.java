@@ -129,7 +129,7 @@ public class EquipmentServiceImpl implements IEquipmentService {
 
             FileInputStream inputStream = new FileInputStream(filePath);
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheetAt(4);//5表示excel表的第几页，从下表0开始
+            XSSFSheet sheet = workbook.getSheetAt(6);//5表示excel表的第几页，从下表0开始
             List<Equipment> equipmentList = new ArrayList<>();
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 XSSFRow row = sheet.getRow(i);

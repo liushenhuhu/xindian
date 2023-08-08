@@ -58,7 +58,7 @@ public class VipCodeController extends BaseController {
     public AjaxResult insertCode(VipCode vipCode,@PathVariable("n") Integer n){
         List<VipCode> vipCodes = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            String code = randomGen(16);
+            String code = randomGen(12);
             VipCode item = new VipCode();
             item.setNum(vipCode.getNum());
             item.setIsVip(vipCode.getIsVip());

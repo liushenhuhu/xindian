@@ -49,4 +49,9 @@ public class StatisticsServiceImpl implements IStatisticsService {
     public List<Statistics> typeList() {
         return statisticsMapper.typeList();
     }
+
+    @Override
+    public List<Statistics> selectCountList(Statistics statistics) {
+        return null;
+    }
 }

@@ -1,4 +1,5 @@
 package com.ruoyi.xindian.patient_management.controller;
+import java.util.Date;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Log;
@@ -431,18 +432,35 @@ public class PatientManagementController extends BaseController {
 
         Info.setPatientPhone(patientPhone);
         List<SingleHistoryInfo> infos = patientManagementService.selectSingleHistoryInfoList(Info);
-        for (SingleHistoryInfo info : infos) {
-            if (info.getApBeat() == null) info.setApBeat((long) 0);
-            if (info.getPvBeat() == null) info.setPvBeat((long) 0);
-            if (info.getAtrialFibrillation() == null) info.setAtrialFibrillation((long) 0);
-            if (info.getAtrialFlutter() == null) info.setAtrialFlutter((long) 0);
-            if (info.getLeftBlock() == null) info.setLeftBlock((long) 0);
-            if (info.getRightBlock() == null) info.setRightBlock((long) 0);
-            if (info.getBradycardia() == null) info.setBradycardia((long) 0);
-            if (info.getTachycardia() == null) info.setTachycardia((long) 0);
+        if (infos!=null&&infos.size()>0){
+            for (SingleHistoryInfo info : infos) {
+                if (info.getApBeat() == null) info.setApBeat((long) 0);
+                if (info.getPvBeat() == null) info.setPvBeat((long) 0);
+                if (info.getAtrialFibrillation() == null) info.setAtrialFibrillation((long) 0);
+                if (info.getAtrialFlutter() == null) info.setAtrialFlutter((long) 0);
+                if (info.getLeftBlock() == null) info.setLeftBlock((long) 0);
+                if (info.getRightBlock() == null) info.setRightBlock((long) 0);
+                if (info.getBradycardia() == null) info.setBradycardia((long) 0);
+                if (info.getTachycardia() == null) info.setTachycardia((long) 0);
+            }
+            res.put("infoNumber", infos);
+        }else {
+            List<SingleHistoryInfo> list = new ArrayList<>();
+            SingleHistoryInfo singleHistoryInfo = new SingleHistoryInfo();
+            singleHistoryInfo.setApBeat(0L);
+            singleHistoryInfo.setPvBeat(0L);
+            singleHistoryInfo.setAtrialFibrillation(0L);
+            singleHistoryInfo.setAtrialFlutter(0L);
+            singleHistoryInfo.setLeftBlock(0L);
+            singleHistoryInfo.setRightBlock(0L);
+            singleHistoryInfo.setBradycardia(0L);
+            singleHistoryInfo.setTachycardia(0L);
+            list.add(singleHistoryInfo);
+            res.put("infoNumber", list);
         }
+
         Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
-        res.put("infoNumber", infos);
+
         res.put("description", description);
         res.put("patient",patient);
         return AjaxResult.success(res);

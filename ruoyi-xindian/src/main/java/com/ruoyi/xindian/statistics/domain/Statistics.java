@@ -20,6 +20,26 @@ public class Statistics extends BaseEntity {
 
     private String reportType;
 
+    private String year;
+
+    private String averageTime;
+
+    public String getAverageTime() {
+        return averageTime;
+    }
+
+    public void setAverageTime(String averageTime) {
+        this.averageTime = averageTime;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     public String getReportType() {
         return reportType;
     }
