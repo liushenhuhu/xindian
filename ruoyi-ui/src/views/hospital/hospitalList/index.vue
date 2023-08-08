@@ -134,7 +134,7 @@ export default {
     findXD(){
       const hospitalId = '1'
       console.log(hospitalId)
-      this.$router.push({name:'ECGScreen',params:{hospitalId}})
+      this.$router.push({path:'/Screen/screen',query:{hospitalId:hospitalId}})
     },
     /** 查询医院列表 */
     getList() {
@@ -195,7 +195,7 @@ export default {
       this.reset();
       const hospitalId = row.hospitalId || this.ids
       console.log(hospitalId)
-      this.$router.push({name:'ECGScreen',params:{hospitalId}})
+      this.$router.push({path:'/Screen/screen',query:{hospitalId:hospitalId}})
     },
     /** 提交按钮 */
     submitForm() {
