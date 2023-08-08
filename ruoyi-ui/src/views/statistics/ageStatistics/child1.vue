@@ -1,9 +1,8 @@
 <template>
-  <div id="cf-double-column" :style="{ width: '60%', height: '40%',float: 'right',left: '-10%' }">
+  <div id="cf-double-column" :style="{ width: '100%', height: '100%' }">
     <p class="title"><span class="title-left"></span>男女比例图</p>
-    <div id="chart" :style="{ width: '100%', height: '700px' }"></div>
+    <div id="chart" :style="{ width: '60vw', height: '500px' }"></div>
     <div class="footer-name">
-      <p></p>
       <p>{{menCount}}</p>
       <p>{{womenCount}}</p>
     </div>
@@ -369,8 +368,6 @@ export default {
 <style lang="scss" scoped>
 #cf-double-column {
   position: relative;
-  margin-top: -30%;
-  //margin-left: -20%;
   border-radius: 0.5rem;
   .title {
     position: absolute;
@@ -398,14 +395,12 @@ export default {
       display: inline-block;
       width: 25%;
       padding: 0 2rem;
+      margin: 0;
     }
     p:nth-of-type(1) {
       text-align: right;
     }
     p:nth-of-type(2) {
-      text-align: right;
-    }
-    p:nth-of-type(3) {
       text-align: left;
     }
   }

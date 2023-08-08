@@ -1,5 +1,5 @@
 <template>
-        <div id="myChart1" style="width: 25%;height: 35vh; margin-top: 20%"> </div>
+        <div id="myChart1" style="width: 25vw;height: 500px;margin-top: 7%"> </div>
 </template>
 <script>
 import { listTypeStatistics } from "@/api/statistics/typeStatistics";
@@ -58,12 +58,15 @@ export default {
           data: this.yArr
         }],
         grid: {
-          bottom: '20%',
-          top: '0%',
+          bottom: '35%',
+          top: '10%',
           right: '10%',
-          left: '0%',
+          left: '12%',
           //height: '100%'
         },
+      });
+      window.addEventListener("resize", function () {
+        myChart.resize();
       });
     },
     /** 查询 */

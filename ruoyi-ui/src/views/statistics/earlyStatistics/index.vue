@@ -1,35 +1,38 @@
 <template>
 <div class="mains">
-  <div class="count">
-    <child></child>
-  </div>
-  <div class="type">
-    <typeChild></typeChild>
-  </div>
-  <div class="age">
-    <ageChild></ageChild>
+
+  <div class="top">
+    <el-card class="card1" >
+      <typeChild></typeChild>
+    </el-card>
+    <el-card class="card1">
+      <ageChild></ageChild>
+    </el-card>
   </div>
   <div class="circle">
-    <div id="main0" style="width: 20vw;height:20vh;text-align: right">静态12导预警</div>
-
-    <div id="main1" style="width: 20vw;height:20vh;">静态单导预警</div>
-
-    <div id="main2" style="width: 20vw;height:20vh;float: right">动态12导预警</div>
-
-    <div id="main3" style="width: 20vw;height:20vh;">动态单导预警</div>
+    <el-card class="card2">
+      <div id="main0" style="width: 22vw;height:25vh;color: black;font-weight: 800">静态12导预警</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main1" style="width: 22vw;height:25vh;">静态单导预警</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main2" style="width: 22vw;height:25vh;">动态12导预警</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main3" style="width: 22vw;height:25vh;">动态单导预警</div>
+    </el-card>
   </div>
 
 </div>
 </template>
 <script>
 import {listAlert_log} from "@/api/DRearly/DRearly";
-import child from '../statistics/child'
 import typeChild from '../typeStatistics/child'
 import ageChild from '../ageStatistics/child1'
 
 export default {
   components:{
-    child,
     typeChild,
     ageChild
   },
@@ -100,6 +103,9 @@ export default {
       main.off('click')
       // 绘制图表
       main.setOption(option);
+      window.addEventListener("resize", function () {
+        main.resize();
+      });
       main.on('click', function(params) {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
       });
@@ -141,6 +147,9 @@ export default {
       main1.off('click')
       // 绘制图表
       main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
       main1.on('click', function(params) {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       });
@@ -184,6 +193,9 @@ export default {
       main.off('click')
       // 绘制图表
       main.setOption(option);
+      window.addEventListener("resize", function () {
+        main.resize();
+      });
       main.on('click', function(params) {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
       });
@@ -224,6 +236,9 @@ export default {
       main1.off('click')
       // 绘制图表
       main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
       main1.on('click', function(params) {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       });
@@ -306,23 +321,30 @@ export default {
 .mains {
   width: 100%;
   height: 100%;
-  //display: flex;
-}
-.circle {
-  margin-top: 8%;
   display: flex;
-  //justify-content: flex-end;
-  flex-direction: row-reverse;
-  align-items: center;
-  div{
-    margin-left: -60px;
+  flex-direction: column;
+  .top{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    .card1{
+      margin-top: 5px;
+    }
+  }
+  .circle {
+    margin-top: 5px;
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    .card2{
+        min-height: 280px;
+        min-width: 20vw;
+    }
   }
 }
-.type {
-  height: 100%;
-  margin-left: 1%;
-}
-.age {
-  margin-top: -18%;
-}
+
+
+
 </style>
