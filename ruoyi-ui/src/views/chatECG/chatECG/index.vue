@@ -31,7 +31,7 @@
             <div v-for="(item,index) in info" :key="index">
               <div class="info_r info_default" v-if="item.type == 'leftinfo'">
               <span class="circle circle_r">
-                <img src="@/assets/images/robot.gif" width="40px" height="40px" style="margin-left: 1px" alt/>
+                <img src="@/assets/images/robot.gif" width="40px" height="40px" style="margin-left: 3px" alt/>
               </span>
                 <div class="con_r con_text">
                   <div>{{item.content}}</div>
