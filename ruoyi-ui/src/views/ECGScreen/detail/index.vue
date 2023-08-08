@@ -145,12 +145,19 @@ export default {
   },
   created() {
     this.deviceSn=this.$route.query.deviceSn;
+    this.data={}
     if(this.deviceSn!==null){
       this.getlist()
     }
   },
   activated() {
-    location.reload;
+    console.log("activated")
+    this.disposeList()
+    this.deviceSn=this.$route.query.deviceSn;
+    this.data={}
+    if(this.deviceSn!==null){
+      this.getlist()
+    }
   },
   computed: {
     color() {
@@ -165,18 +172,21 @@ export default {
 
     },
   },
-  mounted() {
-    setTimeout(()=>{
-      if(chart){
-        chart.resize()
-      }
-    })
-  },
-
-  beforeDestroy(){
-    console.log("离开页面")
-    window.clearInterval(this.timer);
-    this.timer=null;
+  watch:{
+  $route(to,from){
+    if(this.$route.path!=='/Screen/detail'){
+      window.clearInterval(this.timer)
+      this.timer=null
+      console.log("路由变化")
+    }
+  }
+},
+  deactivated(){//keep-alive的隐藏的钩子函数
+    window.clearInterval(this.timer)
+    this.timer=null
+    this.data={}
+    this.newData={}
+    this.disposeList()
   },
   methods: {
     getlist(){
@@ -194,7 +204,7 @@ export default {
         }
       ).then(res => {
         res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-        this.$set(this,"data",res.data.result)
+        this.data=res.data.result
         console.log(this.data)
         I=res.data.result.data.I
         II=res.data.result.data.II
@@ -2879,10 +2889,15 @@ export default {
              console.log("错误信息"+err)
            })
         let ts=2
-        this.timer=setInterval(()=>{
+        if(!this.timer){
+          this.timer=window.setInterval(()=>{
+            if(this.$route.path!=='/Screen/detail'){
+              window.clearInterval(this.timer)
+              this.timer=null
+            }
           if(this.newData){
             ts++
-            this.$set(this,"data",this.newData)
+            this.data=this.newData
             I=this.newData.data.I
             II=this.newData.data.II
             III=this.newData.data.III
@@ -5544,13 +5559,26 @@ export default {
             console.log("错误信息"+err)
           })
         },10300)
-
+        }
       }).catch(err=>{
         console.log("错误信息"+err)
       })
 
     },
-
+    disposeList(){
+      echarts.init(document.getElementById("chart_0")).dispose()
+      echarts.init(document.getElementById("chart_1")).dispose()
+      echarts.init(document.getElementById("chart_2")).dispose()
+      echarts.init(document.getElementById("chart_3")).dispose()
+      echarts.init(document.getElementById("chart_4")).dispose()
+      echarts.init(document.getElementById("chart_5")).dispose()
+      echarts.init(document.getElementById("chart_6")).dispose()
+      echarts.init(document.getElementById("chart_7")).dispose()
+      echarts.init(document.getElementById("chart_8")).dispose()
+      echarts.init(document.getElementById("chart_9")).dispose()
+      echarts.init(document.getElementById("chart_10")).dispose()
+      echarts.init(document.getElementById("chart_11")).dispose()
+    },
     timex(){
       let timex = (function () {
         let now = new Date();
@@ -6648,10 +6676,12 @@ export default {
           flex-wrap: wrap;
           width: 50%;
           span{
+            font-weight:bold;
             text-align: center;
             width: 50%;
-            font-size:1vw;
-            color: #4cc9f0;
+            font-size:1.1vw;
+            color: #5bd1fc;
+            text-shadow: 0 0 5px rgba(76, 201, 240, 0.98),0 0 15px rgba(76, 201, 240, 0.84),0 0 25px rgba(76, 201, 240, 0.84),0 0 35px rgba(76, 201, 240, 0.84);
           }
         }
       }
