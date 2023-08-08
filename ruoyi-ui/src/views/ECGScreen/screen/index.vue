@@ -495,6 +495,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer0){
             this.timer0=window.setInterval(()=>{
               if(this.$route.path!=='/Screen/screen'){
@@ -514,6 +515,12 @@ export default {
                   },
                 }
               ).then(res=>{
+                if(!res.data.result){
+                  this.newData0={}
+                  code=201
+                  return
+                }
+                code=200
                 res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                 this.newData0=res.data.result
                 ts++
@@ -522,9 +529,13 @@ export default {
                 this.newData0={}
                   console.log("请求错误"+err)
                 })
-              chart.clear();
-              chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
-            }else {
+              if(code!==201){
+                console.log(tag)
+                chart.clear();
+                chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
+              }
+            }
+            else {
               if(this.newData0){
                 this.data0=this.newData0
                 this.p0Iy= this.newData0.data.II
@@ -572,6 +583,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p1Iy,this.p1V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer1) {
             this.timer1 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -591,6 +603,12 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    this.newData1={}
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData1 = res.data.result
                   ts++
@@ -598,8 +616,10 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p2Iy, this.p2V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p2Iy, this.p2V1y))
+                }
               } else {
                 this.data1 = this.newData1
                 this.p1Iy = this.newData1.data.II
@@ -645,6 +665,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p2Iy,this.p2V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer2) {
             this.timer2 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -664,6 +685,12 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    this.newData2
+                    code=201
+                  return
+                }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData2 = res.data.result
                   ts++
@@ -671,8 +698,11 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p2Iy, this.p2V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p2Iy, this.p2V1y))
+                }
+
               } else {
                 this.data2 = this.newData2
                 this.p2Iy = this.newData2.data.II
@@ -718,6 +748,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p3Iy,this.p3V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer3) {
             this.timer3 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -737,6 +768,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData3 = res.data.result
                   ts++
@@ -744,8 +780,10 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p3Iy, this.p3V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p3Iy, this.p3V1y))
+                }
               } else {
                 this.data3 = this.newData3
                 this.p3Iy = this.newData3.data.II
@@ -791,6 +829,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p4Iy,this.p4V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer4) {
             this.timer4 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -810,6 +849,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData4 = res.data.result
                   ts++
@@ -817,8 +861,11 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p4Iy, this.p4V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p4Iy, this.p4V1y))
+                }
+
               } else {
                 this.data4 = this.newData4
                 this.p4Iy = this.newData4.data.II
@@ -864,6 +911,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p5Iy,this.p5V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer5) {
             this.timer5 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -883,6 +931,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData5 = res.data.result
                   ts++
@@ -890,8 +943,10 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p5Iy, this.p5V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p5Iy, this.p5V1y))
+                }
               } else {
                 this.data5 = this.newData5
                 this.p5Iy = this.newData5.data.II
@@ -937,6 +992,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p6Iy,this.p6V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer6) {
             this.timer6 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -956,6 +1012,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData6 = res.data.result
                   ts++
@@ -963,8 +1024,11 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p6Iy, this.p6V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p6Iy, this.p6V1y))
+                }
+
               } else {
                 this.data6 = this.newData6
                 this.p6Iy = this.newData6.data.II
@@ -1009,6 +1073,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p7Iy,this.p7V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer7) {
             this.timer7 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -1028,6 +1093,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData7 = res.data.result
                   ts++
@@ -1035,8 +1105,11 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p7Iy, this.p7V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p7Iy, this.p7V1y))
+                }
+
               } else {
                 this.data7 = this.newData7
                 this.p7Iy = this.newData7.data.II
@@ -1081,6 +1154,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p8Iy,this.p8V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer8) {
             this.timer8 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -1100,6 +1174,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData8 = res.data.result
                   ts++
@@ -1107,8 +1186,11 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p8Iy, this.p8V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p8Iy, this.p8V1y))
+                }
+
               } else {
                 this.data8 = this.newData8
                 this.p8Iy = this.newData8.data.II
@@ -1153,6 +1235,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p9Iy,this.p9V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer9) {
             this.timer9 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -1172,6 +1255,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData9 = res.data.result
                   ts++
@@ -1179,8 +1267,11 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p9Iy, this.p9V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p9Iy, this.p9V1y))
+                }
+
               } else {
                 this.data9 = this.newData9
                 this.p9Iy = this.newData9.data.II
@@ -1225,6 +1316,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p10Iy,this.p10V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer10) {
             this.timer10 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -1244,6 +1336,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData10 = res.data.result
                   ts++
@@ -1251,8 +1348,11 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p1Iy, this.p1V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p1Iy, this.p1V1y))
+                }
+
               } else {
                 this.data10 = this.newData10
                 this.p10Iy = this.newData10.data.II
@@ -1297,6 +1397,7 @@ export default {
           chart.setOption(this.chart(0, 0,this.p11Iy,this.p11V1y))
           let tag=1
           let ts=1
+          let code=200
           if(!this.timer11) {
             this.timer11 = window.setInterval(() => {
               if(this.$route.path!=='/Screen/screen'){
@@ -1316,6 +1417,11 @@ export default {
                     },
                   }
                 ).then(res => {
+                  if(!res.data.result){
+                    code=201
+                    return
+                  }
+                  code=200
                   res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                   this.newData11 = res.data.result
                   ts++
@@ -1323,8 +1429,10 @@ export default {
                 }).catch(err => {
                   console.log("请求错误" + err)
                 })
-                chart.clear();
-                chart.setOption(this.chart(0, 0, this.p11Iy, this.p11V1y))
+                if(code!==201){
+                  chart.clear();
+                  chart.setOption(this.chart(0, 0, this.p11Iy, this.p11V1y))
+                }
               } else {
                 this.data11 = this.newData11
                 this.p11Iy = this.newData11.data.II

@@ -203,6 +203,10 @@ export default {
           },
         }
       ).then(res => {
+        if(!res.data.result){
+          this.$message.error("设备"+this.deviceSn+"数据获取失败")
+          return
+        }
         res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
         this.data=res.data.result
         console.log(this.data)
