@@ -71,6 +71,11 @@
         </where>
 
     </select>
+    <select id="selectHospitalCodeHospital" resultType="com.ruoyi.xindian.hospital.domain.Hospital">
+        <include refid="selectHospitalVo"/>
+        where hospital_name = #{code}
+    </select>
+
 
     <insert id="insertHospital" parameterType="Hospital">
         insert into hospital

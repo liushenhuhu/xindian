@@ -248,8 +248,6 @@ import {
 import 'default-passive-events'
 import screenfull from 'screenfull'
 
-import axios from 'axios'
-import card from "element-ui/packages/card";
 export default {
   name: "Index",
   data() {
@@ -343,24 +341,7 @@ export default {
     //this.$router.go(0);
     location.reload;
   },
-/*  deactivated() {
-    this.clearIntervallist();
-    this.clearIntervallist();
-  },*/
 
-  // destroyed(){
-  //   if(this.timer0){
-  //     this.clearIntervallist()
-  //   }
-  //   console.log("destroyed")
-  // },
- /* beforeRouteLeave(to, from, next){
-    if(this.timer0){
-      this.clearIntervallist()
-    }
-    console.log("离开路由")
-    next();
-  },*/
   beforeDestroy(){
     //console.log(this.timer0)
     window.clearInterval(this.timer0);
@@ -486,6 +467,7 @@ export default {
     },
     async list1(){
       if(this.currentpage[this.pages-1][0]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][0],
@@ -499,6 +481,10 @@ export default {
             },
           }
         ).then(res => {
+          console.log("之前页面的请求"+p)
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data0 = res.data.result
           console.log(this.data1)
@@ -555,6 +541,7 @@ export default {
     },
     async list2(){
       if(this.currentpage[this.pages-1][1]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][1],
@@ -568,6 +555,10 @@ export default {
             },
           }
         ).then(res => {
+          console.log("之前页面的请求"+p)
+          if(p!==this.pages){
+          return
+        }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data1 = res.data.result
           this.p1Iy=res.data.result.data.II;
@@ -618,6 +609,7 @@ export default {
     },
     async list3(){
       if(this.currentpage[this.pages-1][2]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][2],
@@ -631,6 +623,10 @@ export default {
             },
           }
         ).then(res => {
+          console.log("之前页面的请求"+p)
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data2 = res.data.result
           this.p2Iy=res.data.result.data.II;
@@ -681,6 +677,7 @@ export default {
     },
     async list4(){
       if(this.currentpage[this.pages-1][3]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][3],
@@ -694,6 +691,10 @@ export default {
             },
           }
         ).then(res => {
+          console.log("之前页面的请求"+p)
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data3 = res.data.result
           this.p3Iy=res.data.result.data.II;
@@ -744,6 +745,7 @@ export default {
     },
     async list5(){
       if(this.currentpage[this.pages-1][4]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][4],
@@ -757,6 +759,9 @@ export default {
             },
           }
         ).then(res => {
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data4 = res.data.result
           this.p4Iy=res.data.result.data.II;
@@ -807,6 +812,7 @@ export default {
     },
     async list6(){
       if(this.currentpage[this.pages-1][5]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][5],
@@ -820,6 +826,9 @@ export default {
             },
           }
         ).then(res => {
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data5 = res.data.result
           this.p5Iy=res.data.result.data.II;
@@ -870,6 +879,7 @@ export default {
     },
     async list7(){
       if(this.currentpage[this.pages-1][6]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][6],
@@ -883,6 +893,9 @@ export default {
             },
           }
         ).then(res => {
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data6 = res.data.result
           this.p6Iy=res.data.result.data.II;
@@ -933,6 +946,7 @@ export default {
     },
     async list8(){
       if(this.currentpage[this.pages-1][7]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][7],
@@ -946,6 +960,9 @@ export default {
             },
           }
         ).then(res => {
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data7 = res.data.result
           this.p7Iy=res.data.result.data.II;
@@ -996,6 +1013,7 @@ export default {
     },
     async list9(){
       if(this.currentpage[this.pages-1][8]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][8],
@@ -1009,6 +1027,9 @@ export default {
             },
           }
         ).then(res => {
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data8 = res.data.result
           this.p8Iy=res.data.result.data.II;
@@ -1059,6 +1080,7 @@ export default {
     },
     async list10(){
       if(this.currentpage[this.pages-1][9]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][9],
@@ -1072,6 +1094,9 @@ export default {
             },
           }
         ).then(res => {
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data9 = res.data.result
           this.p9Iy=res.data.result.data.II;
@@ -1122,6 +1147,7 @@ export default {
     },
     async list11(){
       if(this.currentpage[this.pages-1][10]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][10],
@@ -1135,6 +1161,9 @@ export default {
             },
           }
         ).then(res => {
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data10 = res.data.result
           this.p10Iy=res.data.result.data.II;
@@ -1185,6 +1214,7 @@ export default {
     },
     async list12(){
       if(this.currentpage[this.pages-1][11]!==null) {
+        const p=this.pages
         await this.$http.post('https://server.mindyard.cn:84/detect_decg',
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][11],
@@ -1198,6 +1228,9 @@ export default {
             },
           }
         ).then(res => {
+          if(p!==this.pages){
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data11 = res.data.result
           this.p11Iy=res.data.result.data.II;
@@ -1585,13 +1618,15 @@ export default {
       });
     },
     jump(deviceSn){
-      this.$router.push(
-        {
-          //添加需要传值到那个页面的路径
-          path:'/Screen/detail',
-          //携带需要传递的参数
-          query:{deviceSn:deviceSn}
-        })
+      if(deviceSn){
+        this.$router.push(
+          {
+            //添加需要传值到那个页面的路径
+            path:'/Screen/detail',
+            //携带需要传递的参数
+            query:{deviceSn:deviceSn}
+          })
+      }
     },
     closeFullScreen(){
       this.loading.close();

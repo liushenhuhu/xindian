@@ -3156,15 +3156,19 @@ export default {
     },
     //发送短信
     sendMsg() {
-      console.log("患者电话: " + this.data.pphone)
-      if (this.data.pphone) {
+      let patientPhone = this.data.pphone
+      if (patientPhone.length===14||patientPhone.length===15){
+        patientPhone=patientPhone.substring(0,11)
+      }
+      console.log(patientPhone)
+      if (patientPhone) {
         // console.log("患者姓名: " + row.patientName)
         this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          sendMsgToPatient(this.data.pphone).then(response => {
+          sendMsgToPatient(patientPhone).then(response => {
             this.$message({
               type: 'success',
               message: '发送成功!'

@@ -63,4 +63,6 @@ public interface IDepartmentService
      * @return 结果
      */
     public int deleteDepartmentByDepartmentId(Long departmentId);
+
+    Department selectCode(Department department);
 }

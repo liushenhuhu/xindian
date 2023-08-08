@@ -58,6 +58,7 @@ public class SingleHistoryInfo extends BaseEntity
     @Excel(name = "心动过速")
     private Long tachycardia;
 
+
     public void setEcgId(Long ecgId)
     {
         this.ecgId = ecgId;

@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.dataLabby.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -114,9 +115,9 @@ public class dataLabbyController extends BaseController
         Patient patient = patientService.selectPatientByPatientPhone(report.getPPhone());
         t.setPatientName(patient.getPatientName());
         t.setPId(report.getpId());
-        if (patient.getPatientPhone().length()==14){
-            patient.setPatientPhone(patient.getPatientPhone().substring(0,11));
-        }
+//        if (patient.getPatientPhone().length()==14||patient.getPatientPhone().length()==15){
+//            patient.setPatientPhone(patient.getPatientPhone().substring(0,11));
+//        }
         t.setPatientPhone(patient.getPatientPhone());
         if(patient.getBirthDay() == null){
             t.setPatientAge(patient.getPatientAge());
@@ -201,6 +202,8 @@ public class dataLabbyController extends BaseController
             report.setdPhone(phonenumber);
             report.setDiagnosisDoctor(doctor.getDoctorName());
             report.setDiagnosisStatus(2L);
+            report.setReportTime(new Date());
+            report.setStartTime(new Date());
             reportService.updateReport(report);
             Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(phonenumber);
             Doctor doctor2 = new Doctor();

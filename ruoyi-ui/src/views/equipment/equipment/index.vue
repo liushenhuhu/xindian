@@ -460,6 +460,9 @@ export default {
         this.open = true;
         this.title = "修改设备";
       });
+      listHospitalId(null).then(r=>{
+        this.options=r.rows
+      })
     },
     /** 提交按钮 */
     submitForm() {

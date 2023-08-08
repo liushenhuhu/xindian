@@ -97,6 +97,8 @@ public class WxMsgRunConfig {
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();
                     report2.setdPhone(dPhone);
+                    report2.setReportTime(new Date());
+                    report2.setStartTime(new Date());
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
                     WxUtil.send(dPhone);
                     redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
@@ -111,6 +113,8 @@ public class WxMsgRunConfig {
                         Doctor doctor =doctorList.get(rand);
                         String dPhone= doctor.getDoctorPhone();
                         report2.setdPhone(dPhone);
+                        report2.setReportTime(new Date());
+                        report2.setStartTime(new Date());
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
                                             WxUtil.send(dPhone);
                     }
@@ -147,6 +151,8 @@ public class WxMsgRunConfig {
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();
                     report2.setdPhone(dPhone);
+                    report2.setReportTime(new Date());
+                    report2.setStartTime(new Date());
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
                     WxUtil.send(dPhone);
                     redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
@@ -160,6 +166,8 @@ public class WxMsgRunConfig {
                         int rand = StrUtil.randomInt(doctorList.size());
                         Doctor doctor =doctorList.get(rand);
                         String dPhone= doctor.getDoctorPhone();
+                        report2.setReportTime(new Date());
+                        report2.setStartTime(new Date());
                         report2.setdPhone(dPhone);
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
                                             WxUtil.send(dPhone);

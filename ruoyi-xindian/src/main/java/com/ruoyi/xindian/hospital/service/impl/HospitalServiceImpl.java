@@ -128,4 +128,11 @@ public class HospitalServiceImpl implements IHospitalService
         }
         return hospitalMapper.selectId(hospital);
     }
+
+    @Override
+    public Hospital selectCode(String hospitalName) {
+        return hospitalMapper.selectHospitalCodeHospital(hospitalName);
+    }
+
+
 }

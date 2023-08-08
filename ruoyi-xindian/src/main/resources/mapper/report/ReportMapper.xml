@@ -11,6 +11,7 @@
         <result property="diagnosisConclusion"    column="diagnosis_conclusion"    />
         <result property="diagnosisDoctor"    column="diagnosis_doctor"    />
         <result property="reportTime"    column="report_time"    />
+        <result property="startTime"    column="start_time"    />
         <result property="reportType"    column="report_type"    />
         <result property="intelligentDiagnosis"    column="intelligent_diagnosis"    />
         <result property="dPhone"    column="d_phone"    />
@@ -21,7 +22,7 @@
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis, d_phone, handling_suggestion, health_advice, p_phone,patient_symptom from report
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis, d_phone, handling_suggestion, health_advice, p_phone,patient_symptom,start_time from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
@@ -99,6 +100,7 @@
             <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
             <if test="diagnosisDoctor != null">diagnosis_doctor = #{diagnosisDoctor},</if>
             <if test="reportTime != null">report_time = #{reportTime},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
             <if test="reportType != null">report_type = #{reportType},</if>
             <if test="intelligentDiagnosis != null">intelligent_diagnosis = #{intelligentDiagnosis},</if>
             <if test="dPhone != null">d_phone = #{dPhone},</if>
@@ -116,6 +118,7 @@
             <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
             <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
             <if test="reportTime != null">report_time = #{reportTime},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
             <if test="reportType != null">report_type = #{reportType},</if>
             <if test="intelligentDiagnosis != null">intelligent_diagnosis = #{intelligentDiagnosis},</if>
             <if test="handlingSuggestion != null">handling_suggestion = #{handlingSuggestion},</if>

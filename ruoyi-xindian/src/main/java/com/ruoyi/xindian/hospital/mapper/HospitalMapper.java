@@ -81,4 +81,7 @@ public interface HospitalMapper
      * @return 结果
      */
     public int deleteHospitalByHospitalIds(Long[] hospitalIds);
+
+
+    Hospital selectHospitalCodeHospital(@Param("code") String code);
 }
