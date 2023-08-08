@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -29,14 +30,19 @@ public class ChatECGController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
+
+
     @GetMapping("/proxyRequest")
-    public JSONObject proxyRequest(Chat chat){
+    public JSONObject proxyRequest(Chat chat, HttpServletRequest request){
+
+
         //定义发送数据
         JSONObject param = new JSONObject();
         param.put("prompt", chat.getText());
         param.put("history", JSON.parseArray(chat.getHistory()));
         //定义接收数据
         JSONObject result = new JSONObject();
+
 
         String url = "http://202.102.249.124:6025/";
         HttpPost httpPost = new HttpPost(url);

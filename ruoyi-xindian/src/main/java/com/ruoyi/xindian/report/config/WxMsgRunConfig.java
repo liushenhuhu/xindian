@@ -123,7 +123,7 @@ public class WxMsgRunConfig {
                 reportService.updateReport(report2);
                 redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
             }else {
-                redisTemplate.opsForValue().set("reportPT:"+pId,pId,1, TimeUnit.HOURS);
+                redisTemplate.opsForValue().set("reportPT:"+pId,pId,10, TimeUnit.MINUTES);
 //                redisTemplate.opsForValue().set("reportPT:"+pId,pId,1, TimeUnit.MINUTES);
             }
         }
@@ -140,6 +140,8 @@ public class WxMsgRunConfig {
         if (report2.getDiagnosisStatus()==1){
             redisTemplate.delete("DocList"+pId);
         }else {
+            report2.setReportTime(new Date());
+            report2.setStartTime(new Date());
             if (now.isAfter(start) && now.isBefore(end)) {
 
                 if (!Boolean.TRUE.equals(redisTemplate.hasKey("DocList"+pId))){
@@ -151,8 +153,7 @@ public class WxMsgRunConfig {
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();
                     report2.setdPhone(dPhone);
-                    report2.setReportTime(new Date());
-                    report2.setStartTime(new Date());
+
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
                     WxUtil.send(dPhone);
                     redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
@@ -166,17 +167,14 @@ public class WxMsgRunConfig {
                         int rand = StrUtil.randomInt(doctorList.size());
                         Doctor doctor =doctorList.get(rand);
                         String dPhone= doctor.getDoctorPhone();
-                        report2.setReportTime(new Date());
-                        report2.setStartTime(new Date());
                         report2.setdPhone(dPhone);
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
-                                            WxUtil.send(dPhone);
+                        WxUtil.send(dPhone);
                     }
-
-
                 }
-                reportService.updateReport(report2);
+
             }
+            reportService.updateReport(report2);
             redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
         }
 

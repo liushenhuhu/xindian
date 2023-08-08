@@ -1,53 +1,85 @@
 <template>
   <el-row>
     <el-col :span="24">
-    <div id="appc" class="app-container">
-      <el-form v-if="show" id="add1" :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-        <el-form-item label="医生名称" prop="doctor_name">
-          <el-select v-model="queryParams.doctorPhone" clearable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :label="item.doctorName"
-              :value="item.doctorPhone">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="心电图类型" prop="report_type" label-width="100px">
-          <el-select v-model="queryParams.reportType" clearable placeholder="请选择">
-            <el-option label="JECGsingle" value="JECGsingle"></el-option>
-            <el-option label="JECG12" value="JECG12"></el-option>
-            <el-option label="DECGsingle" value="DECGsingle"></el-option>
-            <el-option label="DECG12" value="DECG12"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        </el-form-item>
-      </el-form>
-      <div id="myChart" :style="{width: '80%', height: '500%'}"> </div>
-      <div id="table1" style="align-content: center;display: none">
-        <el-button type="primary" icon="el-icon-back" size="mini" @click="backQuery">返回</el-button>
+      <div id="appc" class="app-container">
+        <el-form v-if="show" id="add1" :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+          <el-form-item label="医生名称" prop="doctor_name">
+            <el-select v-model="queryParams.doctorPhone" clearable placeholder="请选择" style="width: 110px">
+              <el-option
+                v-for="item in options"
+                :label="item.doctorName"
+                :value="item.doctorPhone">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="心电图类型" prop="report_type" label-width="100px">
+            <el-select v-model="queryParams.reportType" clearable placeholder="请选择" style="width: 110px">
+              <el-option label="JECGsingle" value="JECGsingle"></el-option>
+              <el-option label="JECG12" value="JECG12"></el-option>
+              <el-option label="DECGsingle" value="DECGsingle"></el-option>
+              <el-option label="DECG12" value="DECG12"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="选择年分"  label-width="100px">
+            <el-date-picker
+              v-model="queryParams.year"
+              type="year"
+              placeholder="选择年"
+              format="yyyy">
+            </el-date-picker>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          </el-form-item>
+        </el-form>
+        <div id="myChart" :style="{width: '80%', height: '500%'}"> </div>
+<!--        <div id="table1" style="align-content: center;display: none">-->
+<!--          <el-button type="primary" icon="el-icon-back" size="mini" @click="backQuery">返回</el-button>-->
+<!--          <el-table-->
+<!--            :data="tableData"-->
+<!--            style="width: 100%;text-align: center">-->
+<!--            <el-table-column label="医生姓名" align="center" prop="doctorName" />-->
+<!--            <el-table-column label="诊断月份" align="center" prop="month" />-->
+<!--            <el-table-column label="诊断时长" align="center" prop="timeCount" />-->
+<!--          </el-table>-->
+<!--          <pagination-->
+<!--            v-show="total>0"-->
+<!--            :total="total"-->
+<!--            :page.sync="queryParams.pageNum"-->
+<!--            :limit.sync="queryParams.pageSize"-->
+<!--            @pagination="getListData"-->
+<!--          />-->
+<!--        </div>-->
+
+
+
+        <el-divider content-position="left">诊断平均时间排行</el-divider>
         <el-table
           :data="tableData"
           style="width: 100%;text-align: center">
           <el-table-column label="医生姓名" align="center" prop="doctorName" />
-          <el-table-column label="诊断月份" align="center" prop="month" />
-          <el-table-column label="诊断时长" align="center" prop="timeCount" />
+          <el-table-column label="诊断次数" align="center" prop="month" />
+          <el-table-column label="平均诊断时长" align="center" prop="timeCount" />
         </el-table>
         <pagination
-          v-show="total>0"
           :total="total"
           :page.sync="queryParams.pageNum"
           :limit.sync="queryParams.pageSize"
           @pagination="getListData"
         />
+
+
       </div>
-    </div>
     </el-col>
   </el-row>
+
+
+
 </template>
 <script>
 import { listStatistics, selectDoctor, dateList } from "@/api/statistics/statistics";
+import Da from "element-ui/src/locale/lang/da";
 export default {
   name: 'hello',
   data () {
@@ -66,16 +98,23 @@ export default {
         doctorPhone: null,
         month: null,
         reportType:null,
+        year:'',
       },
       tableData: []
     }
   },
   created() {
+    let date = new Date()
+    this.queryParams.year=date.getFullYear()+''
+
     this.getList();
+
     this.selectDoctor();
   },
   mounted(){
     this.drawLine();
+
+
   },
   methods: {
     drawLine() {
@@ -86,24 +125,28 @@ export default {
       myChart.off('click');
       myChart.setOption({
         title: {
-          text: ''
+          text: '诊断次数统计图'
         },
         tooltip: {},
         xAxis: {
           data: ["一月", "二月", "三月", "四月", "五月",
-            "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
+            "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+          axisLabel:{
+            interval: 0,
+            rotate : 40,
+          }
         },
         yAxis: {},
         series: [{
-          name: '诊断次数',
+          //name: '诊断次数',
           type: 'bar',
           data: this.countArr
         }],
         grid: {
-          bottom: '10%',
-          top: '25%',
+          bottom: '60%',
+          top: '0%',
           right: 0,
-          left: '40%',
+          left: '0%',
         },
       });
       myChart.on('click', function (params) {
@@ -130,6 +173,11 @@ export default {
     /** 查询 */
     getList() {
       this.loading = true;
+      if (this.queryParams.year.length!==4){
+        let dateYear = new Date(this.queryParams.year)
+        this.queryParams.year= dateYear.getFullYear()+''
+      }
+      console.log(this.queryParams)
       listStatistics(this.queryParams).then(response => {
         //console.log(response.rows);
         let data = response.rows;
@@ -156,3 +204,5 @@ export default {
   },
 }
 </script>
+<style>
+</style>
