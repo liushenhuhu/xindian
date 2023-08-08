@@ -16,6 +16,9 @@ public class Statistics extends BaseEntity {
 
     private String count;
 
+
+    private String countTime;
+
     private String doctorMonth;
 
     private String reportType;
@@ -23,6 +26,35 @@ public class Statistics extends BaseEntity {
     private String year;
 
     private String averageTime;
+
+
+    private String startTime;
+
+    private String endTime;
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getCountTime() {
+        return countTime;
+    }
+
+    public void setCountTime(String countTime) {
+        this.countTime = countTime;
+    }
 
     public String getAverageTime() {
         return averageTime;

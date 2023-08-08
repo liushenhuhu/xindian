@@ -72,6 +72,7 @@ public class PatientRelationshipController extends BaseController
             Patient patient = patientService.selectPatientByPatientPhone(patientRelationship.getFatherPhone());
             relationship.setRelationshipPatientName(patient.getPatientName());
             relationship.setFatherPhone(patientRelationship.getFatherPhone());
+            relationship.setSonPhone(patientRelationship.getFatherPhone());
             relationship.setRelationship("自己");
             list.add(0,relationship);
 

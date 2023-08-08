@@ -1,4 +1,6 @@
 package com.ruoyi.xindian.patient_management.controller;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 import com.github.pagehelper.PageInfo;
@@ -268,7 +270,58 @@ public class PatientManagementController extends BaseController {
         return getTable(resList, total);
     }
 
+    @GetMapping("/listPatientTimeList")
+    public TableDataInfo listPatientTimeList(PatientManagement patientManagement,HttpServletRequest request) {
 
+
+        ArrayList<PatientManagmentDept> resList = new ArrayList<>();
+        startPage();
+
+        List<PatientManagement> list  = patientManagementService.selectPatientManagementList12(patientManagement);
+
+        PatientManagmentDept patientManagmentDept;
+        Doctor doctor = new Doctor();
+        Department department = new Department();
+        for (PatientManagement management : list) {
+            if(DateUtil.isValidDate(management.getBirthDay())){
+                try {
+                    management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
+                } catch (ParseException e) {
+                    System.out.println(1);
+                }
+            }
+            patientManagmentDept = new PatientManagmentDept();
+            BeanUtils.copyProperties(management, patientManagmentDept);
+
+            if (patientManagmentDept.getDoctorPhone() != null) {
+                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
+                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+                if (doctors.get(0).getDepartmentCode() != null) {
+                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
+                    List<Department> departments = departmentService.selectDepartmentList(department);
+                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                }
+            }
+//            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+//                if (management.getPatientPhone().length()==14||management.getPatientPhone().length()==15){
+//                    management.setPatientPhone(management.getPatientPhone().substring(0,11));
+//                }
+//            }
+            if (management.getTimeDuration() == null) {
+                patientManagmentDept.setAcquisitionDuration("报告未生成");
+            } else {
+                patientManagmentDept.setAcquisitionDuration("记录时长: " + DateUtil.timeToString(management.getTimeDuration()));
+            }
+
+
+            BigDecimal bigDecimal = new BigDecimal(String.valueOf(Double.parseDouble(management.getAvgTime()) / 60));
+            BigDecimal bigDecimal1 = bigDecimal.setScale(1, RoundingMode.UP);
+            patientManagmentDept.setAvgTime(bigDecimal1 +"分钟");
+            resList.add(patientManagmentDept);
+        }
+        long total = new PageInfo(list).getTotal();
+        return getTable(resList, total);
+    }
 
 
     /**

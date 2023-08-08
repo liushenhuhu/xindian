@@ -89,4 +89,6 @@ public interface IPatientManagementService
     List<DateListVO> getDateList(PatientManagement patientManagement);
 
 
+    List<PatientManagement> selectPatientManagementList12(PatientManagement patientManagement);
+
 }

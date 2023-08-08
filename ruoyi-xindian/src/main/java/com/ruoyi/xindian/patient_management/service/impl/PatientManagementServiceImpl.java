@@ -180,6 +180,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         return dateListVOS1;
     }
 
+    @Override
+    public List<PatientManagement> selectPatientManagementList12(PatientManagement patientManagement) {
+        return patientManagementMapper.selectPatientManagementList12(patientManagement);
+    }
+
     /**
      * 删除患者管理信息
      *

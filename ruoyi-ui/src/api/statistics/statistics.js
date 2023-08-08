@@ -24,4 +24,10 @@ export function dateList(query) {
     params: query
   })
 }
-
+export function countList(query) {
+  return request({
+    url: '/statistics/statistics/countList',
+    method: 'get',
+    params: query
+  })
+}

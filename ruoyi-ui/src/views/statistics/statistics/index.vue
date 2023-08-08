@@ -28,6 +28,17 @@
               format="yyyy">
             </el-date-picker>
           </el-form-item>
+          <el-form-item label="诊断时间">
+            <el-date-picker
+              v-model="daterangeConnectionTime"
+              style="width: 205px"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
 
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -59,8 +70,9 @@
           :data="tableData"
           style="width: 100%;text-align: center">
           <el-table-column label="医生姓名" align="center" prop="doctorName" />
-          <el-table-column label="诊断次数" align="center" prop="month" />
-          <el-table-column label="平均诊断时长" align="center" prop="timeCount" />
+          <el-table-column label="诊断次数" align="center" prop="count" />
+          <el-table-column label="诊断总时长" align="center" prop="countTime" />
+          <el-table-column label="平均诊断时长" align="center" prop="averageTime" />
         </el-table>
         <pagination
           :total="total"
@@ -78,7 +90,7 @@
 
 </template>
 <script>
-import { listStatistics, selectDoctor, dateList } from "@/api/statistics/statistics";
+import {listStatistics, selectDoctor, dateList, countList} from "@/api/statistics/statistics";
 import Da from "element-ui/src/locale/lang/da";
 export default {
   name: 'hello',
@@ -91,6 +103,7 @@ export default {
       show: true,
       // 总条数
       total: 0,
+      daterangeConnectionTime: [],
       queryParams: {
         pageNum: 1,
         pageSize: 10,
@@ -99,6 +112,8 @@ export default {
         month: null,
         reportType:null,
         year:'',
+        startTime:null,
+        endTime:null,
       },
       tableData: []
     }
@@ -150,12 +165,12 @@ export default {
         },
       });
       myChart.on('click', function (params) {
-        console.log(params)
-        status.queryParams.month = params.name;
-        status.show = false;
-        document.getElementById("myChart").style.display='none';
-        document.getElementById("table1").style.display='';
-        status.getListData();
+
+        status.queryParams.month = status.lowNumber(params.name)
+        console.log(status.queryParams.year+'-'+status.queryParams.month)
+
+
+        status.$router.push({path:'/Diagnostic_statistics',query:{countTime:status.queryParams.year+'-'+status.queryParams.month,doctorPhone:status.queryParams.doctorPhone}})
       })
     },
     selectDoctor() {
@@ -170,14 +185,60 @@ export default {
         this.total = response.total;
       })
     },
+    lowNumber(val){
+
+      let str = "";
+      switch(val){
+        case "一月":
+          str = "01";
+          break;
+        case "二月":
+          str = "02";
+          break;
+        case "三月":
+          str = "03";
+          break;
+        case "四月":
+          str = "04";
+          break;
+        case "五月":
+          str = "05";
+          break;
+        case "六月":
+          str = "06";
+          break;
+        case "七月":
+          str = "07";
+          break;
+        case "八月":
+          str = "08";
+          break;
+        case "九月":
+          str = "09";
+          break;
+        case "十月":
+          str = "10";
+          break;
+        case "十一月":
+          str = "11";
+          break;
+        case "十二月":
+          str = "12";
+          break;
+      }
+      return str;
+    },
     /** 查询 */
     getList() {
-      this.loading = true;
       if (this.queryParams.year.length!==4){
         let dateYear = new Date(this.queryParams.year)
         this.queryParams.year= dateYear.getFullYear()+''
       }
-      console.log(this.queryParams)
+
+      if (null != this.daterangeConnectionTime && '' !== this.daterangeConnectionTime) {
+        this.queryParams.startTime = this.daterangeConnectionTime[0];
+        this.queryParams.endTime = this.daterangeConnectionTime[1];
+      }
       listStatistics(this.queryParams).then(response => {
         //console.log(response.rows);
         let data = response.rows;
@@ -188,8 +249,11 @@ export default {
         this.countArr = countArr;
         this.drawLine();
         //console.log(countArr);
-        this.loading = false;
       });
+      countList(this.queryParams).then(r=>{
+        this.tableData=r.rows
+        this.total = r.total;
+      })
     },
     /** 搜索按钮操作 */
     handleQuery() {

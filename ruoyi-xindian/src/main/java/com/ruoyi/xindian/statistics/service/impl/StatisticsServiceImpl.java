@@ -52,6 +52,6 @@ public class StatisticsServiceImpl implements IStatisticsService {
 
     @Override
     public List<Statistics> selectCountList(Statistics statistics) {
-        return null;
+        return statisticsMapper.selectCountList(statistics);
     }
 }

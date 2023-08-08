@@ -205,6 +205,12 @@ public class PatientManagement extends BaseEntity {
 
     private String PatPhone;
 
+
+    private String countTime;
+
+
+    private String avgTime;
+
     private List<String> hospitalCodeList = new ArrayList<>();
 
     public String getpId() {

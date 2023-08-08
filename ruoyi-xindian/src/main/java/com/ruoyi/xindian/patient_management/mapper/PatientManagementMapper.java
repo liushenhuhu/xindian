@@ -56,6 +56,7 @@ public interface PatientManagementMapper
     public List<PatientManagement> selectPatientManagementListJECG12(PatientManagement patientManagement);
 
     public List<PatientManagement> selectPatientManagementListDECG12(PatientManagement patientManagement);
+    public List<PatientManagement> selectPatientManagementList12(PatientManagement patientManagement);
 
     /**
      * 新增患者管理
@@ -104,4 +105,7 @@ public interface PatientManagementMapper
     PInfoVO selectALLTotal(Report report);
     PInfoVO selectALLTotal01(Report report);
     PInfoVO selectALLTotal02(Report report);
+
+
+
 }

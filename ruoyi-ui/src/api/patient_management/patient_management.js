@@ -94,4 +94,14 @@ export function docUpdate(data) {
   })
 }
 
+export function listPatient_TimeList(query) {
+  return request({
+    url: '/patient_management/patient_management/listPatientTimeList',
+    method: 'get',
+    params: query
+  })
+}
+
+
+
 

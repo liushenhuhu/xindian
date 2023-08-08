@@ -1,182 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
-
-<!--      <el-form-item label="患者姓名" prop="patientName">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.patientName"-->
-<!--          placeholder="请输入患者姓名"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-
-<!--      <el-form-item label="患者电话" prop="patientPhone">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.patientPhone"-->
-<!--          placeholder="请输入患者电话"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-
-<!--      <el-form-item label="患者身份证号" prop="patientCode">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.patientCode"-->
-<!--          placeholder="请输入患者身份证号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="患者id" prop="pId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.pId"-->
-<!--          placeholder="请输入患者id"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="医院名称" prop="hospitalName">-->
-<!--        <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>-->
-<!--          <el-option-->
-<!--            v-for="dict in dict.type.hospital_name_name_list"-->
-<!--            :key="dict.value"-->
-<!--            :label="dict.label"-->
-<!--            :value="dict.value"-->
-<!--          />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="设备号" prop="equipmentCode">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.equipmentCode"-->
-<!--          placeholder="请输入设备号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-      <el-form-item label="诊断时间">
-        <el-date-picker
-          v-model="daterangeConnectionTime"
-          style="width: 205px"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetimerange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <!--      <el-form-item label="在线状态" prop="onlineStatus">
-              <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
-                <el-option
-                  v-for="dict in dict.type.monitoring_status"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                />
-              </el-select>
-            </el-form-item>-->
-<!--      <el-form-item label="智能诊断" prop="intelligentDiagnosis">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.intelligentDiagnosis"-->
-<!--          placeholder="请输入智能诊断"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-      <!--      <el-form-item label="诊断状态" prop="diagnosisStatus">-->
-      <!--        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>-->
-      <!--          <el-option-->
-      <!--            v-for="dict in dict.type.diagnosis_status"-->
-      <!--            :key="dict.value"-->
-      <!--            :label="dict.label"-->
-      <!--            :value="dict.value"-->
-      <!--          />-->
-      <!--        </el-select>-->
-      <!--      </el-form-item>-->
-<!--      <el-form-item label="诊断结论" prop="diagnosisConclusion">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.diagnosisConclusion"-->
-<!--          placeholder="请输入诊断结论"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-      <el-form-item label="诊断医生" prop="diagnosisDoctor">
-        <el-input
-          v-model="queryParams.diagnosisDoctor"
-          placeholder="请输入诊断医生"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="风险等级" prop="ecgLevel">
-        <el-select v-model="queryParams.ecgLevel" placeholder="请选择风险等级" clearable>
-          <el-option
-            v-for="dict in dict.type.ecg_level"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="医生电话" prop="doctorPhone">
-        <el-input
-          v-model="queryParams.doctorPhone"
-          placeholder="请输入医生电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <!--      <el-form-item label="pId" prop="pId">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.pId"-->
-      <!--          placeholder="请输入pId"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['patient_management:patient_management:add']"-->
-<!--        >新增-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['patient_management:patient_management:edit']"-->
-<!--        >修改-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          plain-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['patient_management:patient_management:remove']"-->
-<!--        >删除-->
-<!--        </el-button>-->
-<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -207,6 +32,7 @@
       </el-table-column>
       <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
+      <el-table-column label="诊断时间（分钟）" align="center" prop="avgTime"/>
       <el-table-column label="报告时间" align="center" prop="reportTime" width="180" show-overflow-tooltip>
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -281,29 +107,6 @@
             v-hasPermi="['patient:patient:alert']"
           >查看报告
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-position"
-            @click="sendMsg(scope.row)"
-          >发送短信
-          </el-button>
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['patient_management:patient_management:edit']"-->
-<!--          >修改-->
-<!--          </el-button>-->
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['patient_management:patient_management:remove']"-->
-<!--          >删除-->
-<!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -315,118 +118,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <h3>
-      诊断统计
-    </h3>
-    <el-form :label-position="labelPosition" :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="true" label-width="70px">
-      <el-form-item label="诊断时间">
-        <el-date-picker
-          v-model="daterangeReportTime"
-          style="width: 205px"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetimerange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="诊断医生" prop="diagnosisDoctor">
-        <el-input
-          v-model="queryParams.diagnosisDoctor"
-          placeholder="请输入诊断医生"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="医生电话" prop="doctorPhone">
-        <el-input
-          v-model="queryParams.doctorPhone"
-          placeholder="请输入医生电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <el-form :label-position="labelPosition" size="small" :inline="true" v-show="true" label-width="70px">
-      <el-form-item label="诊断单价" prop="">
-        <el-input
-          v-model="cil"
-          placeholder="请输入单价"
-          clearable
-        />
-      </el-form-item>
-      <el-form-item label="元/条"/>
-    </el-form>
-    <div class="grid-content bg-purple-dark">总共诊断：{{total}} 条</div>
-    <div class="grid-content bg-purple-dark">费用为：{{total*cil}} 元</div>
 
-
-    <!-- 添加或修改患者管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="患者电话" prop="patientPhone">
-          <el-input v-model="form.patientPhone" placeholder="请输入患者电话"/>
-        </el-form-item>
-        <el-form-item label="医院代号" prop="hospitalCode">
-          <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
-        </el-form-item>
-        <el-form-item label="设备号" prop="equipmentCode">
-          <el-input v-model="form.equipmentCode" placeholder="请输入设备号"/>
-        </el-form-item>
-        <el-form-item label="连接时间" prop="connectionTime">
-          <el-date-picker clearable
-                          v-model="form.connectionTime"
-                          type="datetime"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          placeholder="请选择连接时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="心电种类" prop="ecgType">
-          <el-select v-model="form.ecgType" placeholder="请选择心电种类">
-            <el-option
-              v-for="dict in dict.type.ecg_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="在线状态" prop="onlineStatus">
-          <el-select v-model="form.onlineStatus" placeholder="请选择在线状态">
-            <el-option
-              v-for="dict in dict.type.monitoring_status"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="智能诊断" prop="intelligentDiagnosis">
-          <el-input v-model="form.intelligentDiagnosis" placeholder="请输入智能诊断"/>
-        </el-form-item>
-        <el-form-item label="风险等级">
-          <el-radio-group v-model="form.ecgLevel">
-            <el-radio
-              v-for="dict in dict.type.ecg_level"
-              :key="dict.value"
-              :label="parseInt(dict.value)"
-            >{{ dict.label }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="医生电话" prop="doctorPhone">
-          <el-input v-model="form.doctorPhone" placeholder="请输入医生电话" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -436,7 +128,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient
+  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listPatient_TimeList
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -491,7 +183,8 @@ export default {
         diagnosisDoctor: null,
         reportTime: null,
         ecgLevel: null,
-        doctorPhone: null
+        doctorPhone: null,
+        countTime:null,
       },
       // 表单参数
       form: {},
@@ -523,6 +216,9 @@ export default {
   },
 
   created() {
+
+    this.queryParams.countTime=this.$route.query.countTime
+    this.queryParams.doctorPhone=this.$route.query.doctorPhone
     this.getList();
   },
   methods: {
@@ -567,15 +263,8 @@ export default {
     getList() {
       this.loading = true;
       this.queryParams.params = {};
-      if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
-        this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
-        this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
-      }
-      if (null != this.daterangeReportTime && '' != this.daterangeReportTime) {
-        this.queryParams.params["beginReportTime"] = this.daterangeReportTime[0];
-        this.queryParams.params["endReportTime"] = this.daterangeReportTime[1];
-      }
-      listPatient_management(this.queryParams).then(response => {
+      listPatient_TimeList(this.queryParams).then(response => {
+        console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;

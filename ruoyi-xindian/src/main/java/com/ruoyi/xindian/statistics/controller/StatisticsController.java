@@ -47,7 +47,18 @@ public class StatisticsController extends BaseController {
 
     @GetMapping("/countList")
     public TableDataInfo countList(Statistics statistics){
-        return  null;
+        startPage();
+        List<Statistics> statistics1 = statisticsService.selectCountList(statistics);
+        for (Statistics c : statistics1){
+
+            BigDecimal bigDecimal = new BigDecimal(String.valueOf(Double.parseDouble(c.getCountTime()) / 60));
+            BigDecimal bigDecimal1 = bigDecimal.setScale(1, RoundingMode.UP);
+            c.setCountTime(bigDecimal1 +"分钟");
+            BigDecimal bigDecimal2 = new BigDecimal(String.valueOf(Double.parseDouble(c.getAverageTime()) / 60));
+            BigDecimal bigDecimal3 = bigDecimal2.setScale(1, RoundingMode.UP);
+            c.setAverageTime(bigDecimal3 +"分钟");
+        }
+        return  getDataTable(statistics1);
     }
 
     @GetMapping("dateList")
