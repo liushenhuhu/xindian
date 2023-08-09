@@ -6218,7 +6218,7 @@ export default {
       this.$router.push(
         {
           //添加需要传值到那个页面的路径
-          path:'/Screen/screen',
+          path:'/ECGscreen',
         })
     },
     show(index){

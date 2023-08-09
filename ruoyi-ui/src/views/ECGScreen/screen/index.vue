@@ -343,7 +343,7 @@ export default {
   },
   watch:{
     $route(to,from){
-      if(this.$route.path!=='/Screen/screen'){
+      if(this.$route.path!=='/ECGscreen'){
         this.clearIntervallist()
         console.log("路由变化")
       }
@@ -498,7 +498,7 @@ export default {
           let code=200
           if(!this.timer0){
             this.timer0=window.setInterval(()=>{
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer0)
               }
             if(tag===1){
@@ -586,7 +586,7 @@ export default {
           let code=200
           if(!this.timer1) {
             this.timer1 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer1)
               }
               if (tag === 1) {
@@ -668,7 +668,7 @@ export default {
           let code=200
           if(!this.timer2) {
             this.timer2 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer2)
               }
               if (tag === 1) {
@@ -751,7 +751,7 @@ export default {
           let code=200
           if(!this.timer3) {
             this.timer3 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer3)
               }
               if (tag === 1) {
@@ -832,7 +832,7 @@ export default {
           let code=200
           if(!this.timer4) {
             this.timer4 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer4)
               }
               if (tag === 1) {
@@ -914,7 +914,7 @@ export default {
           let code=200
           if(!this.timer5) {
             this.timer5 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer5)
               }
               if (tag === 1) {
@@ -995,7 +995,7 @@ export default {
           let code=200
           if(!this.timer6) {
             this.timer6 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer6)
               }
               if (tag === 1) {
@@ -1076,7 +1076,7 @@ export default {
           let code=200
           if(!this.timer7) {
             this.timer7 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer7)
               }
               if (tag === 1) {
@@ -1157,7 +1157,7 @@ export default {
           let code=200
           if(!this.timer8) {
             this.timer8 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer8)
               }
               if (tag === 1) {
@@ -1238,7 +1238,7 @@ export default {
           let code=200
           if(!this.timer9) {
             this.timer9 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer9)
               }
               if (tag === 1) {
@@ -1319,7 +1319,7 @@ export default {
           let code=200
           if(!this.timer10) {
             this.timer10 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer10)
               }
               if (tag === 1) {
@@ -1400,7 +1400,7 @@ export default {
           let code=200
           if(!this.timer11) {
             this.timer11 = window.setInterval(() => {
-              if(this.$route.path!=='/Screen/screen'){
+              if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer11)
               }
               if (tag === 1) {
