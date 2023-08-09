@@ -493,6 +493,7 @@ export default {
           let chart = this.$echarts.init(document.getElementById('child_0'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
+
           let tag=1
           let ts=1
           let code=200
@@ -501,6 +502,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer0)
               }
+              chart.resize()
             if(tag===1){
               this.$http.post('https://server.mindyard.cn:84/detect_decg',
                 JSON.stringify({
@@ -552,7 +554,6 @@ export default {
           console.log("请求错误"+err)
         })
       }
-
     },
     async list2(){
       if(this.currentpage[this.pages-1][1]!==null) {
@@ -589,6 +590,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer1)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -671,6 +673,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer2)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -754,6 +757,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer3)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -835,6 +839,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer4)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -917,6 +922,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer5)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -998,6 +1004,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer6)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -1079,6 +1086,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer7)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -1160,6 +1168,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer8)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -1241,6 +1250,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer9)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -1322,6 +1332,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer10)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
@@ -1403,6 +1414,7 @@ export default {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer11)
               }
+              chart.resize()
               if (tag === 1) {
                 this.$http.post('https://server.mindyard.cn:84/detect_decg',
                   JSON.stringify({
