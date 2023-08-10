@@ -13,9 +13,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -32,8 +30,8 @@ public class ChatECGController extends BaseController {
 
 
 
-    @GetMapping("/proxyRequest")
-    public JSONObject proxyRequest(Chat chat, HttpServletRequest request){
+    @PostMapping("/proxyRequest")
+    public JSONObject proxyRequest(@RequestBody Chat chat, HttpServletRequest request){
 
 
         //定义发送数据
