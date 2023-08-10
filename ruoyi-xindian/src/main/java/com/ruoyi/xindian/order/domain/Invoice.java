@@ -144,6 +144,7 @@ public class Invoice implements Serializable {
      */
     private Date billingTime;
 
+    @TableField(exist = false)
     private String bilTime;
 
     @TableField(exist = false)

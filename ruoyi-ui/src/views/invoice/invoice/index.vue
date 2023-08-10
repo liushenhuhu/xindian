@@ -419,7 +419,7 @@ export default {
       getInvoice(orderId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改【请填写功能名称】";
+        this.title = "查看抬头信息";
       });
     },
     /** 提交按钮 */
