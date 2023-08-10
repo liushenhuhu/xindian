@@ -20,7 +20,7 @@
               <el-option label="DECG12" value="DECG12"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="选择年分"  label-width="100px">
+          <el-form-item label="选择年份"  label-width="100px">
             <el-date-picker
               v-model="queryParams.year"
               type="year"
@@ -37,6 +37,9 @@
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              @input="e=>{
+          immediUpdate(daterangeConnectionTime,e)
+         }"
             ></el-date-picker>
           </el-form-item>
 
@@ -44,7 +47,7 @@
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           </el-form-item>
         </el-form>
-        <div id="myChart" :style="{width: '80%', height: '500%'}"> </div>
+        <div id="myChart" :style="{width: '80%', height: '300%'}"> </div>
 <!--        <div id="table1" style="align-content: center;display: none">-->
 <!--          <el-button type="primary" icon="el-icon-back" size="mini" @click="backQuery">返回</el-button>-->
 <!--          <el-table-->
@@ -157,11 +160,14 @@ export default {
           type: 'bar',
           data: this.countArr
         }],
-        grid: {
-          bottom: '60%',
-          top: '0%',
-          right: 0,
-          left: '0%',
+        label: {//饼图文字的显示
+          show: true, //默认  显示文字
+          position: 'top',
+          verticalAlign: 'middle',
+          textStyle: { // 数值样式
+            color: '#ed7d31',
+            fontSize: 12
+          }
         },
       });
       myChart.on('click', function (params) {
@@ -172,6 +178,13 @@ export default {
 
         status.$router.push({path:'/Diagnostic_statistics',query:{countTime:status.queryParams.year+'-'+status.queryParams.month,doctorPhone:status.queryParams.doctorPhone}})
       })
+    },
+
+    immediUpdate(data, e) {
+      if (e == null) {
+        this.queryParams.startTime = null
+        this.queryParams.endTime = null
+      }
     },
     selectDoctor() {
       selectDoctor().then(response => {
