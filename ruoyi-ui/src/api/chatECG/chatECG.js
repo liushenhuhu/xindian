@@ -6,6 +6,6 @@ export function proxyRequest(data) {
   return request({
     url: '/proxyRequest/proxyRequest',
     method: 'post',
-    data: data,
+    params: data,
   })
 }
