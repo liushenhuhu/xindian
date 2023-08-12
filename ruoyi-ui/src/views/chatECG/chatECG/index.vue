@@ -56,6 +56,20 @@
                 <div class="time_l">{{item.time}}</div>
               </div>
             </div>
+
+
+            <div class="info_r info_default" v-if="isLoading">
+              <span class="circle circle_r">
+                <img src="@/assets/images/robot.gif" width="40px" height="40px" style="margin-left: 3px" alt/>
+              </span>
+              <div class="con_r con_text">
+                <div style="display:flex;height: 35px;align-items: center">
+                  <loading/>
+                </div>
+              </div>
+            </div>
+
+
           </div>
 
         </div>
@@ -65,12 +79,15 @@
 </template>
 <script>
 import {proxyRequest} from "@/api/chatECG/chatECG";
-
+import loading from "./loading"
 export default {
-  components: {},
+  components: {
+    loading
+  },
   computed: {},
   data() {
     return {
+      isLoading:false,
       customerText: "",
       info: [
         {
@@ -99,7 +116,7 @@ export default {
   methods: {
     // 用户发送消息
     sentMsg() {
-      console.log("queryParams: ====="+this.queryParams.history);
+      //console.log("queryParams: ====="+this.queryParams.history);
       clearTimeout(this.timer);
       this.showTimer();
       let text = this.customerText.trim();
@@ -112,12 +129,13 @@ export default {
         };
         this.info.push(obj);
         this.customerText = "";
+        this.isLoading=true;
         proxyRequest(this.queryParams).then(response => {
           //console.log(response);
           /*if(this.queryParams.history !== "" && this.queryParams.history !== null){
 
           }*/
-          console.log("history:  ===="+JSON.stringify(response.history));
+          //console.log("history:  ===="+JSON.stringify(response.history));
           this.queryParams.history = JSON.stringify(response.history);
           this.customerText = "";
           let obj = {
@@ -127,6 +145,7 @@ export default {
           }
           this.robotAnswer.push(obj)
           this.appendRobotMsg(response.response);
+          this.isLoading=false;
         })
         this.$nextTick(() => {
           var contentHeight = document.getElementById("right");
