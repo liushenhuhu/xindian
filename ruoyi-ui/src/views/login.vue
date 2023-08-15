@@ -224,7 +224,7 @@ export default {
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h2 style="margin: 0px auto 0px auto;text-align: center;color: #707070">心电<span style="color: red;font-weight: bolder">AI</span>服务平台</h2>
+      <h2 style="margin: 0px auto 0px auto;text-align: center;color: #707070">心电<span style="color: red;font-weight: 800">AI</span>服务平台</h2>
 <!--      <h4 style="text-align: center;color: #707070">ECGMS-100</h4>-->
       <h4 style="text-align: center;color: #707070">&nbsp;</h4>
       <el-form-item prop="username" v-if="!isSmsLogin">
