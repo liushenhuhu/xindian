@@ -4,7 +4,7 @@
       <div id="appc" class="app-container">
         <el-form v-if="show" id="add1" :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
           <el-form-item label="医生名称" prop="doctor_name">
-            <el-select v-model="queryParams.doctorPhone" clearable placeholder="请选择" style="width: 110px">
+            <el-select v-model="queryParams.doctorPhone" clearable placeholder="请选择" >
               <el-option
                 v-for="item in options"
                 :label="item.doctorName"
@@ -13,7 +13,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="心电图类型" prop="report_type" label-width="100px">
-            <el-select v-model="queryParams.reportType" clearable placeholder="请选择" style="width: 110px">
+            <el-select v-model="queryParams.reportType" clearable placeholder="请选择">
               <el-option label="JECGsingle" value="JECGsingle"></el-option>
               <el-option label="JECG12" value="JECG12"></el-option>
               <el-option label="DECGsingle" value="DECGsingle"></el-option>

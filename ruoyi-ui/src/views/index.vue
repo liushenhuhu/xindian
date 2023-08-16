@@ -3,11 +3,11 @@
     <el-row :gutter="20">
       <el-col :sm="24" :lg="24">
         <h2>
-          心电算法网关
+          心电<span style="color: red;font-weight: 800">AI</span>服务平台
         </h2>
-        <h3>
+<!--        <h3>
           ECGMS-100
-        </h3>
+        </h3>-->
 
 
       </el-col>

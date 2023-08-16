@@ -20,7 +20,7 @@
         />
       </el-form-item>
 
-      <el-form-item label="患者身份证号" prop="patientCode">
+<!--      <el-form-item label="患者身份证号" prop="patientCode">
         <el-input
           v-model="queryParams.patientCode"
           placeholder="请输入患者身份证号"
@@ -35,7 +35,7 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="医院名称" prop="hospitalName">
         <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
           <el-option
@@ -46,7 +46,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="设备号" prop="equipmentCode">
+<!--      <el-form-item label="设备号" prop="equipmentCode">
         <el-input
           v-model="queryParams.equipmentCode"
           placeholder="请输入设备号"
@@ -64,7 +64,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item>-->
       <!--      <el-form-item label="在线状态" prop="onlineStatus">
               <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
                 <el-option
@@ -75,14 +75,14 @@
                 />
               </el-select>
             </el-form-item>-->
-      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+<!--      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
         <el-input
           v-model="queryParams.intelligentDiagnosis"
           placeholder="请输入智能诊断"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
 <!--      <el-form-item label="诊断状态" prop="diagnosisStatus">
         <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
           <el-option
@@ -93,14 +93,14 @@
           />
         </el-select>
       </el-form-item>-->
-      <el-form-item label="诊断结论" prop="diagnosisConclusion">
+<!--      <el-form-item label="诊断结论" prop="diagnosisConclusion">
         <el-input
           v-model="queryParams.diagnosisConclusion"
           placeholder="请输入诊断结论"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="诊断医生" prop="field101">
         <el-select v-model="queryParams.DoctorName" placeholder="请选择诊断医生" clearable :style="{width: '100%'}">
           <el-option

@@ -3,6 +3,7 @@ package com.ruoyi.framework.web.exception;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -17,7 +18,7 @@ import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 全局异常处理器
- * 
+ *
  * @author ruoyi
  */
 @RestControllerAdvice
@@ -101,6 +102,18 @@ public class GlobalExceptionHandler
         log.error(e.getMessage(), e);
         String message = e.getBindingResult().getFieldError().getDefaultMessage();
         return AjaxResult.error(message);
+    }
+
+    /**
+     * SQL异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(BadSqlGrammarException.class)
+    public Object handleBadSqlGrammarException(BadSqlGrammarException e)
+    {
+        log.error(e.getMessage(), e);
+        return AjaxResult.error("服务器内部异常，请联系管理员！");
     }
 
     /**

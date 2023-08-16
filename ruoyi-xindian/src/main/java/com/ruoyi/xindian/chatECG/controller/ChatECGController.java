@@ -31,7 +31,7 @@ public class ChatECGController extends BaseController {
 
 
     @PostMapping("/proxyRequest")
-    public JSONObject proxyRequest(@RequestBody Chat chat, HttpServletRequest request){
+    public JSONObject proxyRequest(@RequestBody Chat chat){
 
 
         //定义发送数据
