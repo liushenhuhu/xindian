@@ -55,7 +55,19 @@ export default {
         series: [{
           //name: '数量',
           type: 'bar',
-          data: this.yArr
+          data: this.yArr,
+          itemStyle: {        //上方显示数值
+            normal: {
+              label: {
+                show: true, //开启显示
+                position: 'top', //在上方显示
+                textStyle: { //数值样式
+                  color: 'black',
+                  fontSize: 16
+                }
+              }
+            }
+          }
         }],
         grid: {
           bottom: '35%',

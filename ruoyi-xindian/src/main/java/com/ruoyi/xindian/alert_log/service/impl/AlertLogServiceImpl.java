@@ -2,6 +2,7 @@ package com.ruoyi.xindian.alert_log.service.impl;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.mapper.PatientMapper;
@@ -203,6 +204,8 @@ public class AlertLogServiceImpl implements IAlertLogService
 
 
         if (alertLog.getEcgType().equals("J12")){
+
+
             if(Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest01"))){
                 //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）
                 List<AlertLog> alertLogs =  redisTemplate.opsForList().range("earlyLogTest01", 0,-1);
@@ -210,7 +213,9 @@ public class AlertLogServiceImpl implements IAlertLogService
                 return alertLogs;
             }else{
                 //从mysql里查询这个集合
-                List<AlertLog> alertLogs = alertLogMapper.selectEarly(alertLog);
+                List<AlertLog> list = alertLogMapper.selectEarly(alertLog);
+                List<AlertLog> alertLogs = list.stream().filter(item -> item.getName().length() == 4).collect(Collectors.toList());
+
                 if (alertLogs!=null&&alertLogs.size()>0){
                     //存入redis
                     redisTemplate.opsForList().leftPushAll("earlyLogTest01", alertLogs);

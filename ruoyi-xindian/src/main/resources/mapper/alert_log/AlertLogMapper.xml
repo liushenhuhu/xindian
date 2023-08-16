@@ -311,7 +311,10 @@
     </select>
     <select id="selectEarly" resultType="com.ruoyi.xindian.alert_log.domain.AlertLog">
         <if test="ecgType != null&amp;&amp;ecgType =='J12'">
-            select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type like concat('JECG12','%') GROUP BY a.log_type
+            select if(LOCATE(',',a.intelligent_diagnosis)>0,left(a.intelligent_diagnosis, LOCATE(',',a.intelligent_diagnosis)-1),a.intelligent_diagnosis) AS name,
+            COUNT(if(LOCATE(',',a.intelligent_diagnosis)>0,left(a.intelligent_diagnosis, LOCATE(',',a.intelligent_diagnosis)-1),a.intelligent_diagnosis)) AS value
+            from report a INNER join patient_management p on a.p_id = p.p_id
+            where p.ecg_type like concat('JECG12','%') GROUP BY if(LOCATE(',',a.intelligent_diagnosis)>0,left(a.intelligent_diagnosis, LOCATE(',',a.intelligent_diagnosis)-1),a.intelligent_diagnosis)
         </if>
         <if test="ecgType != null&amp;&amp;ecgType =='Jsingle'">
             select a.log_type AS name, COUNT(a.log_type) AS value from alert_log a INNER join patient_management p on a.p_id = p.p_id where p.ecg_type like concat('JECGsingle','%')  GROUP BY a.log_type

@@ -106,9 +106,9 @@ export default {
       window.addEventListener("resize", function () {
         main.resize();
       });
-      main.on('click', function(params) {
-        th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
-      });
+      // main.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
+      // });
     },
 
     DDrawLine() {

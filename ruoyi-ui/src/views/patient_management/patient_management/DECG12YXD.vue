@@ -570,9 +570,16 @@ export default {
         this.$modal.msgError("设备不在线！");
       }
       else{
-        this.$router.push({
-          path: "/monitoring",
-          query: {equipmentCode: row.equipmentCode}});
+        this.$router.push(
+          {
+            //添加需要传值到那个页面的路径
+            path:'/Screen/detail',
+            //携带需要传递的参数
+            query:{deviceSn:row.equipmentCode}
+          })
+        // this.$router.push({
+        //   path: "/monitoring",
+        //   query: {equipmentCode: row.equipmentCode}});
       }
     },
     /** 生成报告*/
