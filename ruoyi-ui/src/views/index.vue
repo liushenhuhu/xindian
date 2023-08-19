@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :sm="24" :lg="24">
         <h2>
-          心电<span style="color: red;font-weight: 800">AI</span>服务平台
+          心电<span style="color: red;font-weight: 700">AI</span>服务平台
         </h2>
 <!--        <h3>
           ECGMS-100

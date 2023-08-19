@@ -23,12 +23,12 @@
 
     <sql id="selectPatientVo">
         select patient_id,
-               patient_name,
+               patient_name_aes as patient_name,
                patient_code,
                patient_age,
                patient_sex,
                patient_source,
-               patient_phone,
+               patient_phone_aes as patient_phone,
                family_phone,
                equipment_id,
                monitoring_status,
@@ -42,7 +42,7 @@
     <select id="selectPatientList" parameterType="Patient" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
         <where>
-            <if test="patientName != null  and patientName != ''">and patient_name like concat('%', #{patientName},
+            <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName},
                 '%')
             </if>
             <if test="patientCode != null  and patientCode != ''">and patient_code like concat('%', #{patientCode},
@@ -53,7 +53,7 @@
             <if test="patientSex != null  and patientSex != ''">and patient_sex like concat('%', #{patientSex}, '%')
             </if>
 
-            <if test="patientPhone != null  and patientPhone != ''">and patient_phone like concat('%', #{patientPhone},
+            <if test="patientPhone != null  and patientPhone != ''">and patient_phone_aes like concat('%', #{patientPhone},
                 '%')
             </if>
             <if test="familyPhone != null  and familyPhone != ''">and family_phone like concat('%', #{familyPhone},
@@ -103,12 +103,12 @@
         insert into patient
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientId != null">patient_id,</if>
-            <if test="patientName != null and patientName != ''">patient_name,</if>
+            <if test="patientName != null and patientName != ''">patient_name_aes,</if>
             <if test="patientCode != null and patientCode != ''">patient_code,</if>
             <if test="patientAge != null">patient_age,</if>
             <if test="patientSex != null">patient_sex,</if>
             <if test="patientSource != null">patient_source,</if>
-            <if test="patientPhone != null">patient_phone,</if>
+            <if test="patientPhone != null">patient_phone_aes,</if>
             <if test="familyPhone != null">family_phone,</if>
             <if test="equipmentId != null">equipment_id,</if>
             <if test="monitoringStatus != null">monitoring_status,</if>
@@ -138,12 +138,12 @@
     <update id="updatePatient" parameterType="Patient">
         update patient
         <trim prefix="SET" suffixOverrides=",">
-            <if test="patientName != null and patientName != ''">patient_name = #{patientName},</if>
+            <if test="patientName != null and patientName != ''">patient_name_aes = #{patientName},</if>
             <if test="patientCode != null and patientCode != ''">patient_code = #{patientCode},</if>
             <if test="patientAge != null">patient_age = #{patientAge},</if>
             <if test="patientSex != null">patient_sex = #{patientSex},</if>
             <if test="patientSource != null">patient_source = #{patientSource},</if>
-            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="patientPhone != null">patient_phone_aes = #{patientPhone},</if>
             <if test="familyPhone != null">family_phone = #{familyPhone},</if>
             <if test="equipmentId != null">equipment_id = #{equipmentId},</if>
             <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
@@ -167,7 +167,7 @@
     <update id="updateDetectionNumInt">
         update patient
         set detection_num = detection_num - 1
-        where patient_phone = #{patientPhone}
+        where patient_phone_aes = #{patientPhone}
     </update>
 
     <delete id="deletePatientByPatientId" parameterType="Long">
@@ -186,6 +186,6 @@
     <delete id="delPatientByPatientPhone" parameterType="String">
         delete
         from patient
-        where patient_phone = #{patientPhone}
+        where patient_phone_aes = #{patientPhone}
     </delete>
 </mapper>
