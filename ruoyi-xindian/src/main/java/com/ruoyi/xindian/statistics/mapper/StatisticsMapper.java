@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.statistics.mapper;
 
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
+import com.ruoyi.xindian.statistics.domain.Reportstic;
 import com.ruoyi.xindian.statistics.domain.Statistics;
 
 import java.util.List;
@@ -24,4 +25,8 @@ public interface StatisticsMapper {
     List<Statistics> typeList();
 
     List<Statistics> selectCountList(Statistics statistics);
+
+    List<AgeStatistics> getmonth(Reportstic str);
+
+    List<AgeStatistics> getday(Reportstic str);
 }

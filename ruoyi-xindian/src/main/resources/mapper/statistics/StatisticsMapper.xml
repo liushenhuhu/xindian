@@ -103,4 +103,21 @@
     </select>
 
 
+    <select id="getmonth" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
+        SELECT Month(report_time) as name,COUNT(*) AS value
+        FROM report r
+        WHERE YEAR(r.report_time)=#{year}
+        GROUP BY name
+        ORDER BY name asc
+    </select>
+
+    <select id="getday" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
+        SELECT DATE_FORMAT(report_time,'%c-%d') as name,COUNT(*) AS value
+        FROM report r
+        WHERE r.report_time BETWEEN #{startTime} and DATE_ADD(#{endTime} ,INTERVAL 1 DAY)
+        GROUP BY name
+        ORDER BY name asc
+    </select>
+
+
 </mapper>

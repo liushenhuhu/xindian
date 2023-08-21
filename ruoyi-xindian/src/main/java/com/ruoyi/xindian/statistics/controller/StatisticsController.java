@@ -3,6 +3,7 @@ package com.ruoyi.xindian.statistics.controller;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
+import com.ruoyi.xindian.statistics.domain.Reportstic;
 import com.ruoyi.xindian.statistics.domain.Statistics;
 import com.ruoyi.xindian.statistics.service.IStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,6 +145,22 @@ public class StatisticsController extends BaseController {
         return statisticsService.typeList();
     }
 
+    @GetMapping ("/getreportcount")
+    public Map<String,Object> submitReportCount(Reportstic str){
+        if("".equals(str.getStartTime())||str.getStartTime()==null
+                ||"".equals(str.getEndTime())||str.getEndTime()==null){
+            str.setStartTime(LocalDateTime.now().plusDays(-13).format(DateTimeFormatter.ofPattern("YYYY-MM-dd")));
+            str.setEndTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd")));
+        }
 
-
+        if("".equals(str.getYear())||str.getYear()==null){
+            str.setYear(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY")));
+        }
+        List<AgeStatistics> list1 = statisticsService.getday(str);
+        List<AgeStatistics> list2 = statisticsService.getmonth(str);
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("day",list1);
+        map.put("month",list2);
+        return map;
+    }
 }

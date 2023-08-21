@@ -330,7 +330,7 @@ export default {
   async created() {
     this.openLoading();
     let hospitalId =this.$route.query.hospitalId
-    console.log(hospitalId)
+    // console.log(hospitalId)
     if(hospitalId&&hospitalId!==1){
       await getInfoId(hospitalId).then(user => {
         hospName=user.data.hospitalName
@@ -345,7 +345,7 @@ export default {
     $route(to,from){
       if(this.$route.path!=='/ECGscreen'){
         this.clearIntervallist()
-        console.log("路由变化")
+        // console.log("路由变化")
       }
     }
   },
@@ -359,11 +359,11 @@ export default {
   //   next()
   // },
   deactivated(){//keep-alive的隐藏的钩子函数
-    console.log("deactivated")
+    // console.log("deactivated")
     this.clearIntervallist()
   },
   // beforeDestroy(){
-  //   console.log(this.timer0)
+  //   // console.log(this.timer0)
   //   this.clearIntervallist()
   // },
   // beforeRouteEnter (to, from, next) {
@@ -385,8 +385,8 @@ export default {
 
   methods: {
     async get_device(hospName){
-      console.log(this.timer0)
-      console.log("医院名称:"+hospName)
+      // console.log(this.timer0)
+      // console.log("医院名称:"+hospName)
       await this.$http.post('https://server.mindyard.cn:84/get_device',
          JSON.stringify({
            "ts": 0,
@@ -400,7 +400,7 @@ export default {
          }
        ).then(res=>{
          this.arr=res.data.result.dev_list;
-         console.log(this.arr)
+         // console.log(this.arr)
          let length =  res.data.result.dev_list.length;//总设备个数
          this.total=length;
          this.pagenum = (length%12==0) ? (length/12) : length/12+1;//总页数
@@ -422,7 +422,7 @@ export default {
             }
           })
         }).catch(err=>{
-         console.log("请求错误"+err)
+         // console.log("请求错误"+err)
        })
 
       if(this.pagenum>=this.pages){
@@ -483,7 +483,7 @@ export default {
           }
         ).then(res => {
           if(p!==this.pages){
-            console.log("之前页面的请求"+p)
+            // console.log("之前页面的请求"+p)
             return
           }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
@@ -501,6 +501,7 @@ export default {
             this.timer0=window.setInterval(()=>{
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer0)
+                this.timer0=null
               }
               chart.resize()
             if(tag===1){
@@ -529,10 +530,10 @@ export default {
                 tag++
               }).catch(err=>{
                 this.newData0={}
-                  console.log("请求错误"+err)
+                  // console.log("请求错误"+err)
                 })
               if(code!==201){
-                console.log(tag)
+                // console.log(tag)
                 chart.clear();
                 chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
               }
@@ -549,9 +550,9 @@ export default {
             }
           },5000)
           }
-          console.log("timer00="+this.timer0)
+          // console.log("timer00="+this.timer0)
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
     },
@@ -572,7 +573,7 @@ export default {
           }
         ).then(res => {
           if(p!==this.pages){
-            console.log("之前页面的请求"+p)
+            // console.log("之前页面的请求"+p)
           return
         }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
@@ -589,6 +590,7 @@ export default {
             this.timer1 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer1)
+                this.timer1=null
               }
               chart.resize()
               if (tag === 1) {
@@ -616,7 +618,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -633,7 +635,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -655,7 +657,7 @@ export default {
           }
         ).then(res => {
           if(p!==this.pages){
-            console.log("之前页面的请求"+p)
+            // console.log("之前页面的请求"+p)
             return
           }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
@@ -672,6 +674,7 @@ export default {
             this.timer2 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer2)
+                this.timer2=null
               }
               chart.resize()
               if (tag === 1) {
@@ -699,7 +702,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -717,7 +720,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -739,7 +742,7 @@ export default {
           }
         ).then(res => {
           if(p!==this.pages){
-            console.log("之前页面的请求"+p)
+            // console.log("之前页面的请求"+p)
             return
           }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
@@ -756,6 +759,7 @@ export default {
             this.timer3 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer3)
+                this.timer3=null
               }
               chart.resize()
               if (tag === 1) {
@@ -782,7 +786,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -799,7 +803,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -821,7 +825,7 @@ export default {
           }
         ).then(res => {
           if(p!==this.pages){
-            console.log("之前页面的请求"+p)
+            // console.log("之前页面的请求"+p)
             return
           }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
@@ -838,6 +842,7 @@ export default {
             this.timer4 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer4)
+                this.timer4=null
               }
               chart.resize()
               if (tag === 1) {
@@ -864,7 +869,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -882,7 +887,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -904,7 +909,7 @@ export default {
           }
         ).then(res => {
           if(p!==this.pages){
-            console.log("之前页面的请求"+p)
+            // console.log("之前页面的请求"+p)
             return
           }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
@@ -921,6 +926,7 @@ export default {
             this.timer5 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer5)
+                this.timer5=null
               }
               chart.resize()
               if (tag === 1) {
@@ -947,7 +953,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -964,7 +970,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -986,7 +992,7 @@ export default {
           }
         ).then(res => {
           if(p!==this.pages){
-            console.log("之前页面的请求"+p)
+            // console.log("之前页面的请求"+p)
             return
           }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
@@ -1003,6 +1009,7 @@ export default {
             this.timer6 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer6)
+                this.timer6=null
               }
               chart.resize()
               if (tag === 1) {
@@ -1029,7 +1036,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -1047,7 +1054,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -1085,6 +1092,7 @@ export default {
             this.timer7 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer7)
+                this.timer7=null
               }
               chart.resize()
               if (tag === 1) {
@@ -1111,7 +1119,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -1129,7 +1137,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -1167,6 +1175,7 @@ export default {
             this.timer8 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer8)
+                this.timer8=null
               }
               chart.resize()
               if (tag === 1) {
@@ -1193,7 +1202,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -1211,7 +1220,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -1249,6 +1258,7 @@ export default {
             this.timer9 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer9)
+                this.timer9=null
               }
               chart.resize()
               if (tag === 1) {
@@ -1275,7 +1285,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -1293,7 +1303,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // console.log("请求错误"+err)
         })
       }
 
@@ -1331,6 +1341,7 @@ export default {
             this.timer10 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer10)
+                this.timer10=null
               }
               chart.resize()
               if (tag === 1) {
@@ -1357,7 +1368,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -1375,7 +1386,7 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // // console.log("请求错误"+err)
         })
       }
 
@@ -1413,6 +1424,7 @@ export default {
             this.timer11 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer11)
+                this.timer11=null
               }
               chart.resize()
               if (tag === 1) {
@@ -1439,7 +1451,7 @@ export default {
                   ts++
                   tag++
                 }).catch(err => {
-                  console.log("请求错误" + err)
+                  // // console.log("请求错误" + err)
                 })
                 if(code!==201){
                   chart.clear();
@@ -1456,13 +1468,13 @@ export default {
             }, 5000)
           }
         }).catch(err=>{
-          console.log("请求错误"+err)
+          // // console.log("请求错误"+err)
         })
       }
 
     },
     clearIntervallist(){
-      console.log("清除定时任务")
+      // // console.log("清除定时任务")
       window.clearInterval(this.timer0);
       window.clearInterval(this.timer1);
       window.clearInterval(this.timer2);
@@ -1556,7 +1568,7 @@ export default {
       this.clearList()
       this.pages=pages
       this.openLoading()
-      console.log("当前页"+this.pages)
+      // // console.log("当前页"+this.pages)
       if(this.pagenum>=this.pages){
         const num=this.currentpage[this.pages-1].length
         if(num>=1){
