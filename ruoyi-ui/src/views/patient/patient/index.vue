@@ -9,14 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者身份证号" prop="patientCode">
+<!--      <el-form-item label="患者身份证号" prop="patientCode">
         <el-input
           v-model="queryParams.patientCode"
           placeholder="请输入患者身份证号"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="患者年龄" prop="patientAge">
         <el-input
           v-model="queryParams.patientAge"
@@ -61,14 +61,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="最近连接设备号" prop="equipmentId">
+<!--      <el-form-item label="最近连接设备号" prop="equipmentId">
         <el-input
           v-model="queryParams.equipmentId"
           placeholder="请输入最近连接设备号"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="监测状态" prop="monitoringStatus">
         <el-select v-model="queryParams.monitoringStatus" placeholder="请选择监测状态" clearable>
           <el-option

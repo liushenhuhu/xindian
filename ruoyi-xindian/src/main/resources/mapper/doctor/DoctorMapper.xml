@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.hospital.mapper.DoctorMapper">
-    
+
     <resultMap type="Doctor" id="DoctorResult">
         <result property="doctorId"    column="doctor_id"    />
         <result property="doctorName"    column="doctor_name"    />
@@ -25,14 +25,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDoctorVo">
-        select doctor_id, doctor_name, doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id, equipment_list,is_doc from doctor
+        select doctor_id, doctor_name_aes as doctor_name, doctor_phone_aes as doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id, equipment_list,is_doc from doctor
     </sql>
 
     <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
         <include refid="selectDoctorVo"/>
-        <where>  
-            <if test="doctorName != null  and doctorName != ''"> and doctor_name like concat('%', #{doctorName}, '%')</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone like concat('%', #{doctorPhone}, '%')</if>
+        <where>
+            <if test="doctorName != null  and doctorName != ''"> and doctor_name_aes like concat('%', #{doctorName}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes like concat('%', #{doctorPhone}, '%')</if>
             <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
             <if test="skill != null  and skill != ''"> and skill = #{skill}</if>
             <if test="introduction != null  and introduction != ''"> and introduction = #{introduction}</if>
@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
         </where>
     </select>
-    
+
     <select id="selectDoctorByDoctorId" parameterType="Long" resultMap="DoctorResult">
         <include refid="selectDoctorVo"/>
         where doctor_id = #{doctorId}
@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDoctorByDoctorPhone" parameterType="String" resultMap="DoctorResult">
         <include refid="selectDoctorVo"/>
-        where doctor_phone = #{doctorPhone}
+        where doctor_phone_aes = #{doctorPhone}
     </select>
     <select id="selectDoc" resultType="com.ruoyi.xindian.patient_management.vo.ListDocVO">
         SELECT hospital as label ,hospital as value
@@ -76,8 +76,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertDoctor" parameterType="Doctor" useGeneratedKeys="true" keyProperty="doctorId">
         insert into doctor
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="doctorName != null">doctor_name,</if>
-            <if test="doctorPhone != null and doctorPhone != ''">doctor_phone,</if>
+            <if test="doctorName != null">doctor_name_aes,</if>
+            <if test="doctorPhone != null and doctorPhone != ''">doctor_phone_aes,</if>
             <if test="departmentCode != null and departmentCode != ''">department_code,</if>
             <if test="skill != null">skill,</if>
             <if test="introduction != null">introduction,</if>
@@ -112,8 +112,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateDoctor" parameterType="Doctor">
         update doctor
         <trim prefix="SET" suffixOverrides=",">
-            <if test="doctorName != null">doctor_name = #{doctorName},</if>
-            <if test="doctorPhone != null and doctorPhone != ''">doctor_phone = #{doctorPhone},</if>
+            <if test="doctorName != null">doctor_name_aes = #{doctorName},</if>
+            <if test="doctorPhone != null and doctorPhone != ''">doctor_phone_aes = #{doctorPhone},</if>
             <if test="departmentCode != null and departmentCode != ''">department_code = #{departmentCode},</if>
             <if test="skill != null">skill = #{skill},</if>
             <if test="introduction != null">introduction = #{introduction},</if>
@@ -136,7 +136,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDoctorByDoctorIds" parameterType="String">
-        delete from doctor where doctor_id in 
+        delete from doctor where doctor_id in
         <foreach item="doctorId" collection="array" open="(" separator="," close=")">
             #{doctorId}
         </foreach>

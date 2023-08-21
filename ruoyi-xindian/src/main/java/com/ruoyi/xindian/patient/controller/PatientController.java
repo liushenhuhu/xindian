@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.patient.controller;
 
+import com.ruoyi.common.annotation.Aes;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -18,6 +19,7 @@ import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.util.AesUtils;
 import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,14 +56,16 @@ public class PatientController extends BaseController
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
 
+    @Resource
+    private AesUtils aesUtils;
 
     /**
      * 查询患者列表
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Patient patient)
-    {
+    @Aes
+    public TableDataInfo list(Patient patient) throws Exception {
         List<Patient> list = new ArrayList<>();
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
@@ -103,6 +107,12 @@ public class PatientController extends BaseController
             if(pat.getPatientSex().length()>1){
                     pat.setPatientSex(pat.getPatientSex().substring(0,1));
                 }
+            if(pat.getPatientPhone() != null){
+                pat.setPatientPhone(aesUtils.decrypt(pat.getPatientPhone()));
+            }
+            if(pat.getPatientName() != null){
+                pat.setPatientName(aesUtils.decrypt(pat.getPatientName()));
+            }
 //            if(pat.getPatientAge()==null || Objects.equals(pat.getPatientAge(), "")){
 //                pat.setPatientAge(appDataService.selectAppDataByPatientPhone(patient.getPatientPhone()).getPatientAge());
 //            }
@@ -136,9 +146,15 @@ public class PatientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:query')")
     @GetMapping(value = "/{patientId}")
-    public AjaxResult getInfo(@PathVariable("patientId") Long patientId)
-    {
-        return AjaxResult.success(patientService.selectPatientByPatientId(patientId));
+    public AjaxResult getInfo(@PathVariable("patientId") Long patientId) throws Exception {
+        Patient patient = patientService.selectPatientByPatientId(patientId);
+        if(patient.getPatientPhone() != null){
+            patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
+        }
+        if(patient.getPatientName() != null){
+            patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+        }
+        return AjaxResult.success(patient);
     }
 
     /**
@@ -174,8 +190,10 @@ public class PatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('patient:patient:add')")
     @Log(title = "患者", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Patient patient)
-    {
+    public AjaxResult add(@RequestBody Patient patient) throws Exception {
+        //加密
+        patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
+        patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
         return toAjax(patientService.insertPatient(patient));
     }
 
@@ -185,8 +203,10 @@ public class PatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('patient:patient:edit')")
     @Log(title = "患者", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Patient patient)
-    {
+    public AjaxResult edit(@RequestBody Patient patient) throws Exception {
+        //加密
+        patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
+        patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
         return toAjax(patientService.updatePatient(patient));
     }
 
