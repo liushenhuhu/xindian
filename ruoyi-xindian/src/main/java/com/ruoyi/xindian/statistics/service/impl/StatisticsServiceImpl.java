@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.statistics.service.impl;
 
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
+import com.ruoyi.xindian.statistics.domain.Reportstic;
 import com.ruoyi.xindian.statistics.domain.Statistics;
 import com.ruoyi.xindian.statistics.mapper.StatisticsMapper;
 import com.ruoyi.xindian.statistics.service.IStatisticsService;
@@ -54,4 +55,16 @@ public class StatisticsServiceImpl implements IStatisticsService {
     public List<Statistics> selectCountList(Statistics statistics) {
         return statisticsMapper.selectCountList(statistics);
     }
+
+    @Override
+    public List<AgeStatistics> getmonth(Reportstic str) {
+        return statisticsMapper.getmonth(str);
+    }
+
+    @Override
+    public List<AgeStatistics> getday(Reportstic str) {
+        return statisticsMapper.getday(str);
+    }
+
+
 }
