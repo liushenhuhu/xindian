@@ -112,7 +112,7 @@ public class VipPatientController extends BaseController
     public AjaxResult getInfo(@PathVariable("id") Long id) throws Exception {
         VipPatient vipPatient = vipPatientService.selectVipPatientById(id);
         vipPatient.setPatientPhone(aesUtils.decrypt(vipPatient.getPatientPhone()));
-        return AjaxResult.success();
+        return AjaxResult.success(vipPatient);
     }
 
     /**
