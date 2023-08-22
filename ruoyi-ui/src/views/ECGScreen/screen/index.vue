@@ -245,6 +245,7 @@ import {
   list,
   getlist
 } from "@/api/ECGScreen/equipment";
+import * as echarts from '../detail/echarts.min'
 import 'default-passive-events'
 import screenfull from 'screenfull'
 import {getUserInfo,getInfoId} from "@/api/patient_management/patient_management";
@@ -325,6 +326,7 @@ export default {
       timer10:null,
       timer11:null,
       time:null,//时间 X轴
+      index:0,
     };
   },
   async created() {
@@ -349,17 +351,25 @@ export default {
       }
     }
   },
-  activated() {
+  async activated() {
+    this.openLoading();
+    let hospitalId =this.$route.query.hospitalId
+    // console.log(hospitalId)
+    if(hospitalId&&hospitalId!==1){
+      await getInfoId(hospitalId).then(user => {
+        hospName=user.data.hospitalName
+      })
+    }
     this.clearList();
-    this.get_device();
-
+    this.get_device(hospName);
   },
   // beforeRouteLeave(to,from,next){
   //   this.clearIntervallist()
   //   next()
   // },
   deactivated(){//keep-alive的隐藏的钩子函数
-    // console.log("deactivated")
+   // console.log("deactivated")
+    this.index=0
     this.clearIntervallist()
   },
   // beforeDestroy(){
@@ -387,6 +397,10 @@ export default {
     async get_device(hospName){
       // console.log(this.timer0)
       // console.log("医院名称:"+hospName)
+      this.index++
+      if(this.index!==1){
+        return
+      }
       await this.$http.post('https://server.mindyard.cn:84/get_device',
          JSON.stringify({
            "ts": 0,
@@ -490,15 +504,18 @@ export default {
           this.data0 = res.data.result
           this.p0Iy=res.data.result.data.II;
           this.p0V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_0'))
+          let chart =   echarts.init(document.getElementById('child_0'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
 
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer0){
-            this.timer0=window.setInterval(()=>{
+          if(this.timer0){
+            window.clearInterval(this.timer0)
+            this.timer0=null
+          }
+          this.timer0=window.setInterval(()=>{
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer0)
                 this.timer0=null
@@ -549,7 +566,6 @@ export default {
               }
             }
           },5000)
-          }
           // console.log("timer00="+this.timer0)
         }).catch(err=>{
           // console.log("请求错误"+err)
@@ -580,14 +596,17 @@ export default {
           this.data1 = res.data.result
           this.p1Iy=res.data.result.data.II;
           this.p1V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_1'))
+          let chart =   echarts.init(document.getElementById('child_1'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p1Iy,this.p1V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer1) {
-            this.timer1 = window.setInterval(() => {
+          if(this.timer1){
+            window.clearInterval(this.timer1)
+            this.timer1=null
+          }
+          this.timer1 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer1)
                 this.timer1=null
@@ -633,7 +652,7 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p1Iy, this.p1V1y))
               }
             }, 5000)
-          }
+
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -664,14 +683,17 @@ export default {
           this.data2 = res.data.result
           this.p2Iy=res.data.result.data.II;
           this.p2V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_2'))
+          let chart =   echarts.init(document.getElementById('child_2'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p2Iy,this.p2V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer2) {
-            this.timer2 = window.setInterval(() => {
+          if(this.timer2){
+            window.clearInterval(this.timer2)
+            this.timer2=null
+          }
+          this.timer2 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer2)
                 this.timer2=null
@@ -718,7 +740,6 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p2Iy, this.p2V1y))
               }
             }, 5000)
-          }
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -749,14 +770,17 @@ export default {
           this.data3 = res.data.result
           this.p3Iy=res.data.result.data.II;
           this.p3V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_3'))
+          let chart =   echarts.init(document.getElementById('child_3'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p3Iy,this.p3V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer3) {
-            this.timer3 = window.setInterval(() => {
+          if(this.timer3){
+            window.clearInterval(this.timer3)
+            this.timer3=null
+          }
+          this.timer3 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer3)
                 this.timer3=null
@@ -801,7 +825,7 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p3Iy, this.p3V1y))
               }
             }, 5000)
-          }
+
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -832,13 +856,16 @@ export default {
           this.data4 = res.data.result
           this.p4Iy=res.data.result.data.II;
           this.p4V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_4'))
+          let chart =   echarts.init(document.getElementById('child_4'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p4Iy,this.p4V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer4) {
+          if(this.timer4){
+            window.clearInterval(this.timer4)
+            this.timer4=null
+          }
             this.timer4 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer4)
@@ -885,7 +912,6 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p4Iy, this.p4V1y))
               }
             }, 5000)
-          }
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -916,13 +942,16 @@ export default {
           this.data5 = res.data.result
           this.p5Iy=res.data.result.data.II;
           this.p5V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_5'))
+          let chart =   echarts.init(document.getElementById('child_5'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p5Iy,this.p5V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer5) {
+          if(this.timer5){
+            window.clearInterval(this.timer5)
+            this.timer5=null
+          }
             this.timer5 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer5)
@@ -968,7 +997,6 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p5Iy, this.p5V1y))
               }
             }, 5000)
-          }
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -999,13 +1027,16 @@ export default {
           this.data6 = res.data.result
           this.p6Iy=res.data.result.data.II;
           this.p6V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_6'))
+          let chart =   echarts.init(document.getElementById('child_6'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p6Iy,this.p6V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer6) {
+          if(this.timer6){
+            window.clearInterval(this.timer6)
+            this.timer6=null
+          }
             this.timer6 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer6)
@@ -1052,7 +1083,7 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p6Iy, this.p6V1y))
               }
             }, 5000)
-          }
+
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -1082,13 +1113,16 @@ export default {
           this.data7 = res.data.result
           this.p7Iy=res.data.result.data.II;
           this.p7V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_7'))
+          let chart =   echarts.init(document.getElementById('child_7'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p7Iy,this.p7V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer7) {
+          if(this.timer7){
+            window.clearInterval(this.timer7)
+            this.timer7=null
+          }
             this.timer7 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer7)
@@ -1135,7 +1169,7 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p7Iy, this.p7V1y))
               }
             }, 5000)
-          }
+
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -1165,14 +1199,17 @@ export default {
           this.data8 = res.data.result
           this.p8Iy=res.data.result.data.II;
           this.p8V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_8'))
+          let chart =   echarts.init(document.getElementById('child_8'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p8Iy,this.p8V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer8) {
-            this.timer8 = window.setInterval(() => {
+          if(this.timer8){
+            window.clearInterval(this.timer8)
+            this.timer8=null
+          }
+          this.timer8 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer8)
                 this.timer8=null
@@ -1218,7 +1255,7 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p8Iy, this.p8V1y))
               }
             }, 5000)
-          }
+
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -1248,13 +1285,16 @@ export default {
           this.data9 = res.data.result
           this.p9Iy=res.data.result.data.II;
           this.p9V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_9'))
+          let chart =   echarts.init(document.getElementById('child_9'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p9Iy,this.p9V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer9) {
+          if(this.timer9){
+            window.clearInterval(this.timer9)
+            this.timer9=null
+          }
             this.timer9 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer9)
@@ -1301,7 +1341,7 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p9Iy, this.p9V1y))
               }
             }, 5000)
-          }
+
         }).catch(err=>{
           // console.log("请求错误"+err)
         })
@@ -1331,13 +1371,16 @@ export default {
           this.data10 = res.data.result
           this.p10Iy=res.data.result.data.II;
           this.p10V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_10'))
+          let chart =   echarts.init(document.getElementById('child_10'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p10Iy,this.p10V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer10) {
+          if(this.timer10){
+            window.clearInterval(this.timer10)
+            this.timer10=null
+          }
             this.timer10 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer10)
@@ -1384,7 +1427,6 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p10Iy, this.p10V1y))
               }
             }, 5000)
-          }
         }).catch(err=>{
           // // console.log("请求错误"+err)
         })
@@ -1414,13 +1456,16 @@ export default {
           this.data11 = res.data.result
           this.p11Iy=res.data.result.data.II;
           this.p11V1y=res.data.result.data.V1;
-          let chart = this.$echarts.init(document.getElementById('child_11'))
+          let chart =   echarts.init(document.getElementById('child_11'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p11Iy,this.p11V1y))
           let tag=1
           let ts=1
           let code=200
-          if(!this.timer11) {
+          if(this.timer11){
+            window.clearInterval(this.timer11)
+            this.timer11=null
+          }
             this.timer11 = window.setInterval(() => {
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer11)
@@ -1466,7 +1511,7 @@ export default {
                 chart.setOption(this.chart(0, 1250, this.p11Iy, this.p11V1y))
               }
             }, 5000)
-          }
+
         }).catch(err=>{
           // // console.log("请求错误"+err)
         })
@@ -1501,18 +1546,18 @@ export default {
       this.timer11=null;
     },
     clearList(){
-      this.$echarts.init(document.getElementById('child_0')).dispose()
-      this.$echarts.init(document.getElementById('child_1')).dispose()
-      this.$echarts.init(document.getElementById('child_2')).dispose()
-      this.$echarts.init(document.getElementById('child_3')).dispose()
-      this.$echarts.init(document.getElementById('child_4')).dispose()
-      this.$echarts.init(document.getElementById('child_5')).dispose()
-      this.$echarts.init(document.getElementById('child_6')).dispose()
-      this.$echarts.init(document.getElementById('child_7')).dispose()
-      this.$echarts.init(document.getElementById('child_8')).dispose()
-      this.$echarts.init(document.getElementById('child_9')).dispose()
-      this.$echarts.init(document.getElementById('child_10')).dispose()
-      this.$echarts.init(document.getElementById('child_11')).dispose()
+        echarts.init(document.getElementById('child_0')).dispose()
+        echarts.init(document.getElementById('child_1')).dispose()
+        echarts.init(document.getElementById('child_2')).dispose()
+        echarts.init(document.getElementById('child_3')).dispose()
+        echarts.init(document.getElementById('child_4')).dispose()
+        echarts.init(document.getElementById('child_5')).dispose()
+        echarts.init(document.getElementById('child_6')).dispose()
+        echarts.init(document.getElementById('child_7')).dispose()
+        echarts.init(document.getElementById('child_8')).dispose()
+        echarts.init(document.getElementById('child_9')).dispose()
+        echarts.init(document.getElementById('child_10')).dispose()
+        echarts.init(document.getElementById('child_11')).dispose()
       this.data0={}
       this.data1={}
       this.data2={}

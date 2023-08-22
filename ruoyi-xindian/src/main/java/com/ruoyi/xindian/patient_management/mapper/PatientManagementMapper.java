@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.patient_management.mapper;
 
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
 import com.ruoyi.xindian.patient_management.vo.Limit;
@@ -117,4 +118,5 @@ public interface PatientManagementMapper
      */
 
     List<PatientManagement> selectAll(Limit limit);
+    PhoneList selectpatientByEquipmentCode(String deviceSn);
 }

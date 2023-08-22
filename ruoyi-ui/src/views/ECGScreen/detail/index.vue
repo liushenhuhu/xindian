@@ -6,9 +6,42 @@
       <el-button  @click="closeShow">关闭</el-button>
     </div>
 
+    <el-dialog
+      title="电话预警"
+      :visible.sync="dialog"
+      width="30%"
+      :modal="false"
+      center>
+      <div slot="title" class="header-title">
+        <span class="title-name">电话预警</span>
+      </div>
+      <div class="callbody">
+        <div class="text1"><span v-show="value!==null&&value!==''">{{label}}({{value}})</span></div>
+        <el-select v-model="value" placeholder="请选择" @change="select">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <img class="icon" @click="callPhone" src="~@/assets/images/call.png">
+      </div>
+      <div class="text2">
+        <span>姓名</span>
+        <span>通话时长</span>
+        <span>通话时间</span>
+      </div>
+      <el-input type="textarea" v-model="textarea"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialog = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
     <div class="top">
       <el-button @click="back">动态检测大屏</el-button>
       <el-button @click="inScreen">全屏切换</el-button>
+<!--      <el-button @click="call">电话预警</el-button>-->
       <!--      <el-button @click="outScreen">退出全屏</el-button>-->
       <div class="text">
         <span >姓名:{{data.patientName}}</span>
@@ -23,62 +56,62 @@
       <div class="left">
         <div class="container">
           <el-button @click="show(0)">展开</el-button>
-          <span :style="color(0)"></span>
+          <span id="span0" ></span>
           <div id="chart_0" ref="chart"></div>
         </div>
         <div class="container">
           <el-button @click="show(1)">展开</el-button>
-          <span :style="color(1)"></span>
+          <span id="span1" ></span>
           <div id="chart_1" ></div>
         </div>
         <div class="container">
           <el-button @click="show(2)">展开</el-button>
-          <span :style="color(2)"></span>
+          <span id="span2" ></span>
           <div id="chart_2" ></div>
         </div>
         <div class="container">
           <el-button @click="show(3)">展开</el-button>
-          <span :style="color(3)"></span>
+          <span id="span3" ></span>
           <div id="chart_3" ></div>
         </div>
         <div class="container">
           <el-button @click="show(4)">展开</el-button>
-          <span :style="color(4)"></span>
+          <span id="span4" ></span>
           <div id="chart_4" ></div>
         </div>
         <div class="container">
           <el-button @click="show(5)">展开</el-button>
-          <span :style="color(5)"></span>
+          <span id="span5" ></span>
           <div id="chart_5" ></div>
         </div>
         <div class="container">
           <el-button @click="show(6)">展开</el-button>
-          <span :style="color(6)"></span>
+          <span id="span6"  ></span>
           <div id="chart_6" ></div>
         </div>
         <div class="container">
           <el-button @click="show(7)">展开</el-button>
-          <span :style="color(7)"></span>
+          <span id="span7" ></span>
           <div id="chart_7" ></div>
         </div>
         <div class="container">
           <el-button @click="show(8)">展开</el-button>
-          <span :style="color(8)"></span>
+          <span id="span8" ></span>
           <div id="chart_8" ></div>
         </div>
         <div class="container">
           <el-button @click="show(9)">展开</el-button>
-          <span :style="color(9)"></span>
+          <span id="span9" ></span>
           <div id="chart_9" ></div>
         </div>
         <div class="container">
           <el-button @click="show(10)">展开</el-button>
-          <span :style="color(10)"></span>
+          <span id="span10" ></span>
           <div id="chart_10" ></div>
         </div>
         <div class="container">
           <el-button @click="show(11)">展开</el-button>
-          <span :style="color(11)"></span>
+          <span id="span11" ></span>
           <div id="chart_11" ></div>
         </div>
       </div>
@@ -107,70 +140,80 @@
 <script>
 import * as echarts from './echarts.min'
 import screenfull from 'screenfull'
-import 'default-passive-events'
+import request from '@/utils/request'
 let meanChart;
 let Anachart;
 let sdnnchart;
 let pnn20chart;
 let pnn50chart;
 let chart;
-let I,II,III,aVR,aVL,aVF,V1,V2,V3,V4,V5,V6
-let data1,newData1
-let chartI,chartII,chartIII,chartaVR,chartaVL,chartaVF,chartV1,chartV2,chartV3,chartV4,chartV5,chartV6
-let time
+let data1,newData1,time=[];
+let I=[],II=[],III=[],aVR=[],aVL=[],aVF=[],V1=[],V2=[],V3=[],V4=[],V5=[],V6=[];
+let chartI,chartII,chartIII,chartaVR,chartaVL,chartaVF,chartV1,chartV2,chartV3,chartV4,chartV5,chartV6;
 export default {
   name: "Index",
   data() {
     return {
       // 版本号
+      options: [],
+      value:'',
+      label:'',
+      textarea:'',
       isFullFlag:false,
       isShow:false,
+      dialog: false,
       deviceSn:null,
       data: {},//前10秒数据
       newData: null,//最新10秒数据
       ts:0,//时间段
       timer:null,
-      chartjump:null
+      chartjump:null,
+      index:0
     };
   },
   created() {
     this.deviceSn=this.$route.query.deviceSn;
     if(this.deviceSn!==null){
+      this.index++
+      if(this.index!==1){
+        return
+      }
       this.getlist()
+      // this.getPhoneList()
+      // this.getsdkURL()
     }
   },
   activated() {
-    console.log("activated")
     this.deviceSn=this.$route.query.deviceSn;
     this.data= {}
     newData1=null
-    data1={}
+    data1=null
     if(this.deviceSn!==null){
-      this.getlist()
-    }
-  },
-  computed: {
-    color() {
-      return id=> {
-        if(this.data.noise){
-          if(this.data.noise[id]){
-            return 'background-color:red;';
-          }
-        }
-        return ;
-      };
-
-    },
-  },
-  watch:{
-    $route(to,from){
-      if(this.$route.path!=='/Screen/detail'){
-        window.clearInterval(this.timer)
-        this.timer=null
-        console.log("路由变化")
+      this.index++
+      if(this.index!==1){
+        return
       }
+      this.getlist()
+      // this.getPhoneList()
+      // this.getsdkURL()
     }
   },
+  // watch:{
+  //   data:function (newval,oldval){
+  //     console.log(newval)
+  //     if(newval){
+  //     newval.noise.forEach((item,index)=>{
+  //       // document.getElementById('xxx')
+  //         // .css({'background-color':'red'})
+  //       if(item===true){
+  //         document.getElementById('span'+index).style.backgroundColor="red"
+  //       }else
+  //         document.getElementById('span'+index).style.backgroundColor="greenyellow"
+  //     })
+  //     }
+  //     }
+  //   },
+
   mounted(){
     chart = echarts.init(document.getElementById('chartshow'))
     pnn20chart = this.$echarts.init(document.getElementById("pnn20"))
@@ -188,24 +231,94 @@ export default {
     });
   },
   beforeDestroy(){
-    console.log("关闭页面")
+   // console.log("关闭页面")
     window.clearInterval(this.timer)
     this.timer=null
     this.data={}
     newData1=null
-    data1={}
+    data1=null
     this.disposeList()
   },
   deactivated(){//keep-alive的隐藏的钩子函数
-    console.log("离开页面")
+  //  console.log("离开页面")
     window.clearInterval(this.timer)
     this.timer=null
     this.data={}
     newData1=null
-    data1={}
+    this.index=0
     this.disposeList()
   },
   methods: {
+    getsdkURL(){
+      request({ url: '/callPhone/web/getsdkURL',
+        method: 'post',
+        }).then(res=>{
+        this.injectTcccWebSDK(res.msg)
+      })
+    },
+    injectTcccWebSDK(SdkURL) {
+      if (window.tccc) {
+        // console.warn('已经初始化SDK了，请确认是否重复执行初始化');
+        return;
+      }
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.setAttribute('crossorigin', 'anonymous');
+        script.src = SdkURL;
+        document.body.appendChild(script);
+        script.addEventListener('load', () => {
+          // 加载JS SDK文件成功，此时可使用全局变量"tccc"
+          window.tccc.on(window.tccc.events.ready, () => {
+            /**
+             * Tccc SDK初始化成功，此时可调用外呼、监听呼入事件等功能。
+             * 注意⚠️：请确保只初始化一次SDK
+             * */
+            resolve('初始化成功')
+          });
+          window.tccc.on(window.tccc.events.tokenExpired, ({message}) => {
+            // console.error('初始化失败', message)
+            reject(message)
+          })
+        })
+      })
+  },
+    getPhoneList(){
+
+      request({ url: '/patient_management/patient_management/getPhone',
+        method: 'get',
+        params:{'deviceSn':this.deviceSn}
+      }).then(res=>{
+        console.log(res.data)
+        if(res.data===undefined){
+          return
+        }
+        res.data.forEach(item=>{
+          if(item.phone!==null){
+            this.options.push({value:item.phone?item.phone:"", label: item.role})
+          }
+        })
+      })
+    },
+    select(val){
+      this.options.forEach(item=>{
+        if(item.value===val){
+          this.label=item.label
+          return
+        }
+      })
+    },
+    callPhone(){
+      window.tccc.Call.startOutboundCall({
+        phoneNumber: '18336826103',
+      }).then((res) => {
+        this.sessionId = res.data.sessionId;
+      }).catch((err) => {
+        const error = err.errorMsg;
+      })
+    },
+    call(){
+      this.dialog=true
+    },
     getlist(){
       this.$http.post('https://server.mindyard.cn:84/detect_decg',
         JSON.stringify({
@@ -227,6 +340,12 @@ export default {
         res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
         this.data=res.data.result
         data1=res.data.result
+        data1.noise.forEach((item,index)=>{
+          if(item===true){
+            document.getElementById('span'+index).style.backgroundColor="red"
+          }else
+            document.getElementById('span'+index).style.backgroundColor="greenyellow"
+        })
         I=res.data.result.data.I
         II=res.data.result.data.II
         III=res.data.result.data.III
@@ -245,6 +364,7 @@ export default {
         this.setpnn50()
         this.setpnn20()
         this.setAna()
+        this.timex()
         chartI=echarts.init(document.getElementById("chart_0"))
         chartII=echarts.init(document.getElementById("chart_1"))
         chartIII=echarts.init(document.getElementById("chart_2"))
@@ -257,7 +377,6 @@ export default {
         chartV4=echarts.init(document.getElementById("chart_9"))
         chartV5=echarts.init(document.getElementById("chart_10"))
         chartV6=echarts.init(document.getElementById("chart_11"))
-        time=this.timex()
         chartI.clear()
         chartI.setOption({
           animation: true,
@@ -2903,12 +3022,12 @@ export default {
              },
            }
          ).then(res=>{
+           console.log(res.data)
            newData1=null
            newData1=res.data.result
            newData1.hr_mean=newData1.hr_mean.toFixed()
-         })
-           .catch(err=>{
-             console.log("错误信息"+err)
+         }).catch(err=>{
+             // console.log("错误信息"+err)
            })
         let ts=2
         if(this.timer){
@@ -2920,10 +3039,31 @@ export default {
               window.clearInterval(this.timer)
               this.timer=null
             }
+          console.log(newData1)
           if(newData1){
             ts++
+            this.data=null
             this.data=newData1
+            I=[]
+            II=[]
+            III=[]
+            aVR=[]
+            aVL=[]
+            aVF=[]
+            V1=[]
+            V2=[]
+            V3=[]
+            V4=[]
+            V5=[]
+            V6=[]
+            data1=[]
             data1=newData1
+            data1.noise.forEach((item,index)=>{
+              if(item===true){
+                document.getElementById('span'+index).style.backgroundColor="red"
+              }else
+                document.getElementById('span'+index).style.backgroundColor="greenyellow"
+            })
             I=newData1.data.I
             II=newData1.data.II
             III=newData1.data.III
@@ -2941,7 +3081,7 @@ export default {
             this.setpnn50()
             this.setpnn20()
             this.setAna()
-            time=this.timex()
+            this.timex()
             chartI.clear()
             chartI.setOption({
               animation: true,
@@ -5584,12 +5724,12 @@ export default {
             newData1=res.data.result
             newData1.hr_mean=newData1.hr_mean.toFixed()
           }).catch(err=>{
-            console.log("错误信息"+err)
+            // console.log("错误信息"+err)
           })
         },10300)
 
       }).catch(err=>{
-        console.log("错误信息"+err)
+        // console.log("错误信息"+err)
       })
 
     },
@@ -5616,22 +5756,18 @@ export default {
       // chart.dispose()
     },
     timex(){
-      let timex = (function () {
-        let now = new Date();
-        let res = [];
-        let lenth = 2500;
-        while (lenth--) {
-          res.push(now.toLocaleTimeString());
-          now = new Date(now.valueOf() - 4);
-        }
-        return res;
-      })();
+      time=[]
+      let now = new Date();
+      let lenth = 2500;
+      while (lenth--) {
+        time.push(now.toLocaleTimeString());
+        now = new Date(now.valueOf() - 4);
+      }
       const datenow = new Date()
       for (let b = 0; b < 2500; b++) {
-        timex.unshift((new Date(datenow.valueOf() - (b * 4))).toLocaleTimeString());//datenow.valueOf()返回datenow数组的值
-        timex.pop();
+        time.unshift((new Date(datenow.valueOf() - (b * 4))).toLocaleTimeString());//datenow.valueOf()返回datenow数组的值
+        time.pop();
       }
-      return timex
     },
     setMeanChart(){
 
@@ -5814,7 +5950,7 @@ export default {
             },
           },
         ],
-      })
+      },true)
     },
     setAna(){
       // Anachart = this.$echarts.getInstanceByDom(document.getElementById("anaoption"))
@@ -5902,7 +6038,7 @@ export default {
             }
           }
         ]
-      })
+      },true)
     },
     setsdnn(){
       // sdnnchart = this.$echarts.getInstanceByDom(document.getElementById("sdnnrmssd"))
@@ -5979,7 +6115,7 @@ export default {
             }
           }
         ]
-      });
+      },true);
     },
     setpnn20(){
       // pnn20chart = this.$echarts.getInstanceByDom(document.getElementById("pnn20"))
@@ -6097,7 +6233,7 @@ export default {
               ]
             },
           ]
-        })
+        },true)
     },
     setpnn50(){
       // pnn50chart = this.$echarts.getInstanceByDom(document.getElementById("pnn50"))
@@ -6216,7 +6352,7 @@ export default {
             ]
           },
         ]
-      })
+      },true)
 
     },
     show(index){
@@ -6517,7 +6653,8 @@ export default {
           }]
       }
       chart.clear()
-      chart.setOption(option)
+      chart.setOption(option,true)
+      data=[]
       this.isShow=true
       setTimeout(()=>{
         chart.resize();
@@ -6568,16 +6705,77 @@ export default {
   background-color: #4cc9f0;
   color: white;
 }
+::v-deep .el-dialog{
+  position:absolute;
+  top:50%;
+  left:50%;
+  z-index: 2000;
+  transform:translate(-50%,-55%);
+  background-color: rgb(47,49,89);
+  border-radius: 10px;
+}
+::v-deep .el-dialog__headerbtn .el-dialog__close{
+    color: white;
+  }
+::v-deep .el-dialog--center .el-dialog__body{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+::v-deep .el-select{
+  width: 200px;
+}
+::v-deep .el-select > .el-input{
+  display: inline-block;
+}
+::v-deep .jss21{
+  display:none;
+}
+
 .home{
   width: 100%;
   height: 100vh;
-  background-color: rgb(3,4,74);
+  background-color: rgb(3, 4, 73);
   position: relative;
+  .callbody{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    text-align: center;
+    color: white;
+    .text1{
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .icon{
+      width: 80px;
+      height: 80px;
+      margin: 20px auto;
+      background-color: white;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  }
+  .text2{
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    color: white;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+  }
+  .header-title{
+    text-align: left;
+    color: white;
+    font-size: 14px;
+  }
   .showbox{
     position: absolute;
     width: 98%;
     height:52vh;
-    z-index: 2000;
+    z-index: 1000;
     border: 1px solid #6EDDF1;
     top: 50%;
     left: 50%;

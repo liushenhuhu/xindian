@@ -7,6 +7,7 @@ import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
@@ -238,6 +239,9 @@ private AesUtils aesUtils;
         return patientManagementMapper.selectSingleHistoryInfoList(singleHistoryInfo);
     }
 
-
+    @Override
+    public PhoneList selectpatientByEquipmentCode(String deviceSn) {
+        return patientManagementMapper.selectpatientByEquipmentCode(deviceSn);
+    }
 
 }

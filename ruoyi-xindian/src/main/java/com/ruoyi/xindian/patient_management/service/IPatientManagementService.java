@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.patient_management.service;
 
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
 import com.ruoyi.xindian.patient_management.vo.Limit;
@@ -97,4 +98,6 @@ public interface IPatientManagementService
      * 分批次修改
      */
     void aesCopy(Limit limit) throws Exception;
+
+    public PhoneList selectpatientByEquipmentCode(String deviceSn);
 }

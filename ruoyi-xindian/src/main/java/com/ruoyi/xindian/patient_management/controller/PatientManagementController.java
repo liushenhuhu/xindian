@@ -28,10 +28,7 @@ import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
-import com.ruoyi.xindian.patient_management.domain.Details;
-import com.ruoyi.xindian.patient_management.domain.PatientManagement;
-import com.ruoyi.xindian.patient_management.domain.PatientManagmentDept;
-import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
+import com.ruoyi.xindian.patient_management.domain.*;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.util.DateUtil;
@@ -691,6 +688,25 @@ public class PatientManagementController extends BaseController {
         patientManagementService.aesCopy(limit);
         return AjaxResult.success();
     }
-
+    /**
+     *
+     * 根据在线的设备号查询患者手机号、家人电话
+     *
+     **/
+    @GetMapping("/getPhone")
+    public AjaxResult getPhone(@RequestParam("deviceSn")String deviceSn) throws Exception {
+        PhoneList one=patientManagementService.selectpatientByEquipmentCode(deviceSn);
+        if(one==null){
+            return AjaxResult.success();
+        }
+        List<RolePhone> list=new ArrayList<>();
+        RolePhone a1 = new RolePhone("患者", aesUtils.decrypt(one.getPatientPhone()));
+        RolePhone a2 = new RolePhone("家人", aesUtils.decrypt(one.getFamilyPhone()));
+        RolePhone a3 = new RolePhone("医生", aesUtils.decrypt(one.getDoctorPhone()));
+        list.add(a1);
+        list.add(a2);
+        list.add(a3);
+        return AjaxResult.success(list);
+    }
 
 }
