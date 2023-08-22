@@ -9,28 +9,23 @@ import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.equipment.controller.EquipmentController;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
-import com.ruoyi.xindian.patient.domain.Patient;
-import com.ruoyi.xindian.patient.service.IPatientService;
-import com.ruoyi.xindian.patient_management.domain.*;
+import com.ruoyi.xindian.patient_management.domain.OnlineParam;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +97,7 @@ public class OnlineController extends BaseController {
         }
 
         String url = "https://server.mindyard.cn:84/get_device";
+//        String url = "http://202.102.249.124:84/get_device";
         //请求
         RestTemplate restTemplate = new RestTemplate();
 
@@ -134,6 +130,7 @@ public class OnlineController extends BaseController {
     public AjaxResult update2(HttpServletRequest request1) {
 //        String url = "http://219.155.7.235:5003/get_device2";
         String url = "https://server.mindyard.cn:84/get_device2";
+//        String url = "http://202.102.249.124:84/get_device2";
 
         LoginUser loginUser = tokenService.getLoginUser(request1);
         SysUser userInfo = sysUserMapper.selectUserById(loginUser.getUser().getUserId());

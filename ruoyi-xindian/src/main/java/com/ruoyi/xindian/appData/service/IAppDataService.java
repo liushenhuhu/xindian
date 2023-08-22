@@ -2,6 +2,7 @@ package com.ruoyi.xindian.appData.service;
 
 import java.util.List;
 import com.ruoyi.xindian.appData.domain.AppData;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 
 /**
  * app相关数据Service接口
@@ -68,4 +69,7 @@ public interface IAppDataService
     public int deleteAppDataByAppDataId(Long appDataId);
 
     public int deleteDataByAppDataIds(String[] appDataIds);
+
+
+    void appAesCopy(Limit limit) throws Exception;
 }

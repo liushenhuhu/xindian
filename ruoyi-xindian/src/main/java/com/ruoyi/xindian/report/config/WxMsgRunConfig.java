@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.report.config;
 
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
@@ -46,6 +47,9 @@ public class WxMsgRunConfig {
     private IReportService reportService;
 
 
+    @Autowired
+    private AesUtils aesUtils;
+
     private final LocalTime start = LocalTime.of(8, 0); // 8:00 AM
     private final LocalTime end = LocalTime.of(18, 0); // 6:00 PM
 
@@ -59,21 +63,21 @@ public class WxMsgRunConfig {
         LocalTime now = LocalTime.now();
 
         redisTemplate.opsForList().leftPushAll("DocList"+pid,doctorList);
-        redisTemplate.opsForValue().set("reportPT:"+pid,pid,10, TimeUnit.MINUTES);
-        if (now.isAfter(start) && now.isBefore(end)) {
-
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            CompletableFuture.runAsync(() ->{
-                System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
-                try{
-                    wxPublicRequest.dockerMsg();
-                }catch (Exception e){
-                    System.out.println(e);
-                }
-                System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
-            },executorService);
-            executorService.shutdown(); // 回收线程池
-        }
+        redisTemplate.opsForValue().set("reportPT:"+pid,pid,1, TimeUnit.MINUTES);
+//        if (now.isAfter(start) && now.isBefore(end)) {
+//
+//            ExecutorService executorService = Executors.newSingleThreadExecutor();
+//            CompletableFuture.runAsync(() ->{
+//                System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
+//                try{
+//                    wxPublicRequest.dockerMsg();
+//                }catch (Exception e){
+//                    System.out.println(e);
+//                }
+//                System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
+//            },executorService);
+//            executorService.shutdown(); // 回收线程池
+//        }
 
     }
 
@@ -81,7 +85,7 @@ public class WxMsgRunConfig {
      * 判断当前患者是否已经被抢单
      * @param pId
      */
-    public void redisTOrAdd(String pId){
+    public void redisTOrAdd(String pId) throws Exception {
         Report report2 = reportService.selectReportByPId(pId);
         LocalTime now = LocalTime.now();
 
@@ -100,7 +104,7 @@ public class WxMsgRunConfig {
                     report2.setReportTime(new Date());
                     report2.setStartTime(new Date());
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
-                    WxUtil.send(dPhone);
+//                    WxUtil.send(aesUtils.decrypt(dPhone));
                     redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
                 }else {
                     List<Object> doctors = redisTemplate.opsForList().range("DocList"+pId, 0, -1);
@@ -116,14 +120,14 @@ public class WxMsgRunConfig {
                         report2.setReportTime(new Date());
                         report2.setStartTime(new Date());
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
-                                            WxUtil.send(dPhone);
+//                        WxUtil.send(aesUtils.decrypt(dPhone));
                     }
                 }
 
                 reportService.updateReport(report2);
-                redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set("reportDT:"+pId,pId,3, TimeUnit.MINUTES);
             }else {
-                redisTemplate.opsForValue().set("reportPT:"+pId,pId,10, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set("reportPT:"+pId,pId,1, TimeUnit.MINUTES);
 //                redisTemplate.opsForValue().set("reportPT:"+pId,pId,1, TimeUnit.MINUTES);
             }
         }
@@ -133,7 +137,7 @@ public class WxMsgRunConfig {
      * 判断当前患者是否已经诊断完，没有的话，换时间
      * @param pId
      */
-    public void redisDTTime(String pId){
+    public void redisDTTime(String pId) throws Exception {
         Report report2 = reportService.selectReportByPId(pId);
         LocalTime now = LocalTime.now();
 
@@ -152,7 +156,7 @@ public class WxMsgRunConfig {
                     int rand = StrUtil.randomInt(doctors.size());
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();
-                    report2.setdPhone(dPhone);
+//                    WxUtil.send(aesUtils.decrypt(dPhone));
 
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
                     WxUtil.send(dPhone);
@@ -169,13 +173,13 @@ public class WxMsgRunConfig {
                         String dPhone= doctor.getDoctorPhone();
                         report2.setdPhone(dPhone);
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
-                        WxUtil.send(dPhone);
+//                        WxUtil.send(aesUtils.decrypt(dPhone));
                     }
                 }
 
             }
             reportService.updateReport(report2);
-            redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set("reportDT:"+pId,pId,3, TimeUnit.MINUTES);
         }
 
     }
@@ -190,14 +194,14 @@ public class WxMsgRunConfig {
         redisTemplate.delete("DocList"+pId);
         List<Doctor> doctors = new ArrayList<>(doctorList);
         redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
-        redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("reportDT:"+pId,pId,3, TimeUnit.MINUTES);
     }
 
 
     /**
      * 项目启动后，运行，判断项目断开期间是否有抢单的订单未被医生抢到
      */
-    public void reportItemT(){
+    public void reportItemT() throws Exception {
 
         List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementList();
         List<PatientManagement> patientManagements1 = patientManagementService.selectPatientManagementList1();
@@ -217,7 +221,7 @@ public class WxMsgRunConfig {
                         String dPhone= doctor.getDoctorPhone();
                         report.setdPhone(dPhone);
                         report.setDiagnosisDoctor(doctor.getDoctorName());
-                        WxUtil.send(dPhone);
+                        WxUtil.send(aesUtils.decrypt(dPhone));
                         redisTemplate.opsForList().leftPushAll("DocList"+c.getpId(),doctors);
                     }else {
                         List<Object> doctors = redisTemplate.opsForList().range("DocList"+c.getpId(), 0, -1);
@@ -231,7 +235,7 @@ public class WxMsgRunConfig {
                             String dPhone= doctor.getDoctorPhone();
                             report.setdPhone(dPhone);
                             report.setDiagnosisDoctor(doctor.getDoctorName());
-                            WxUtil.send(dPhone);
+                            WxUtil.send(aesUtils.decrypt(dPhone));
                         }
 
                     }

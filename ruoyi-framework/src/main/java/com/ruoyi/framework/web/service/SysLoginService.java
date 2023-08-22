@@ -7,6 +7,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.RegisterBody;
 import com.ruoyi.common.utils.*;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.smsConfig.SmsCodeAuthenticationToken;
 import com.ruoyi.system.mapper.SysUserMapper;
@@ -69,26 +70,30 @@ public class SysLoginService {
     @Autowired
     private ISysRoleService sysRoleService;
 
+    @Autowired
+    private AesUtils aesUtils;
+
     /**
      * 微信登录方法
      */
-    public String wxLogin(String decryptResult,String openId,String unionId){
+    public String wxLogin(String decryptResult,String openId,String unionId) throws Exception {
         JSONObject jsonObject = JSONObject.parseObject(decryptResult);
         String nickName = "微信用户";
         String numberPhone = jsonObject.getString("phoneNumber");
-        SysUser wxUser = userService.selectUserByPhone(numberPhone);
+        String encrypt = aesUtils.encrypt(numberPhone);
+        SysUser wxUser = userService.selectUserByPhone(encrypt);
         //如果没有新建
         SysUser user = new SysUser();
         if(wxUser==null){
-            user.setUserName(numberPhone);
+            user.setUserName(encrypt);
             user.setNickName(nickName);
-            user.setPhonenumber(numberPhone);
+            user.setPhonenumber(encrypt);
             user.setOpenId(openId);
             user.setCreateTime(DateUtils.getNowDate());
             user.setUnionId(unionId);
 //            user.setPassword(SecurityUtils.encryptPassword("123456"));
             userService.insertUser(user);
-            Long userId = userService.selectUserByUserName(numberPhone).getUserId();
+            Long userId = userService.selectUserByUserName(encrypt).getUserId();
             userService.setUserRole(userId, 100L);
 //            //绑定用户
 //            userService.insertAppData(user);
@@ -118,14 +123,14 @@ public class SysLoginService {
 
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager
-                    .authenticate(new SmsCodeAuthenticationToken(numberPhone));
+                    .authenticate(new SmsCodeAuthenticationToken(encrypt));
         } catch (Exception e) {
 
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(numberPhone, Constants.LOGIN_FAIL, e.getMessage()));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(encrypt, Constants.LOGIN_FAIL, e.getMessage()));
             throw new ServiceException(e.getMessage());
 
         }
-        AsyncManager.me().execute(AsyncFactory.recordLogininfor(numberPhone, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(encrypt, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
 
@@ -150,8 +155,9 @@ public class SysLoginService {
         Authentication authentication = null;
         try {
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            authentication = authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
             if (e instanceof BadCredentialsException) {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
@@ -223,8 +229,9 @@ public class SysLoginService {
      * @return 结果
      */
 
-    public AjaxResult smsLogin(String mobile, String code, String uuid) {
+    public AjaxResult smsLogin(String mobile, String code, String uuid) throws Exception {
 
+        String encrypt = aesUtils.encrypt(mobile);
         // 用户验证
         Authentication authentication = null;
         try {

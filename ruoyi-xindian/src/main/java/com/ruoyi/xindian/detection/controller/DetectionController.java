@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -56,16 +57,25 @@ public class DetectionController extends BaseController
     private ISysUserService sysUserService;
 
 
+    @Resource
+    private AesUtils aesUtils;
 
     /**
      * 查询detection列表
      */
     @PreAuthorize("@ss.hasPermi('detection:detection:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Detection detection)
-    {
+    public TableDataInfo list(Detection detection) throws Exception {
+        if (detection.getPatientPhone()!=null&&!"".equals(detection.getPatientPhone())){
+            detection.setPatientPhone(aesUtils.encrypt(detection.getPatientPhone()));
+        }
         startPage();
         List<Detection> list = detectionService.selectDetectionList(detection);
+        for (Detection c:list){
+            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+                c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+            }
+        }
         return getDataTable(list);
     }
 
@@ -87,9 +97,12 @@ public class DetectionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('detection:detection:query')")
     @GetMapping(value = "/{detectionId}")
-    public AjaxResult getInfo(@PathVariable("detectionId") Long detectionId)
-    {
-        return AjaxResult.success(detectionService.selectDetectionByDetectionId(detectionId));
+    public AjaxResult getInfo(@PathVariable("detectionId") Long detectionId) throws Exception {
+        Detection detection = detectionService.selectDetectionByDetectionId(detectionId);
+        if (detection.getPatientPhone()!=null&&!"".equals(detection.getPatientPhone())){
+            detection.setPatientPhone(aesUtils.decrypt(detection.getPatientPhone()));
+        }
+        return AjaxResult.success();
     }
 
     /**
@@ -98,8 +111,10 @@ public class DetectionController extends BaseController
     @PreAuthorize("@ss.hasPermi('detection:detection:add')")
     @Log(title = "detection", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Detection detection)
-    {
+    public AjaxResult add(@RequestBody Detection detection) throws Exception {
+        if (detection.getPatientPhone()!=null&&!"".equals(detection.getPatientPhone())){
+            detection.setPatientPhone(aesUtils.encrypt(detection.getPatientPhone()));
+        }
         return toAjax(detectionService.insertDetection(detection));
     }
 
@@ -109,8 +124,10 @@ public class DetectionController extends BaseController
     @PreAuthorize("@ss.hasPermi('detection:detection:edit')")
     @Log(title = "detection", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Detection detection)
-    {
+    public AjaxResult edit(@RequestBody Detection detection) throws Exception {
+        if (detection.getPatientPhone()!=null&&!"".equals(detection.getPatientPhone())){
+            detection.setPatientPhone(aesUtils.encrypt(detection.getPatientPhone()));
+        }
         return toAjax(detectionService.updateDetection(detection));
     }
 
@@ -128,8 +145,8 @@ public class DetectionController extends BaseController
      * 获取当前天次数
      */
     @GetMapping("/getDetectionNumByPhone/{patientPhone}")
-    public AjaxResult getDetectionNumByPhone(@PathVariable String patientPhone)
-    {
+    public AjaxResult getDetectionNumByPhone(@PathVariable String patientPhone) throws Exception {
+        String encrypt = aesUtils.encrypt(patientPhone);
         HashMap<String, Object> params = new HashMap<>();
         Detection detection = new Detection();
         LocalDate now = LocalDate.now();
@@ -141,10 +158,10 @@ public class DetectionController extends BaseController
         String end = endofDay.format(formatter);
         params.put("beginDetectionTime",start);
         params.put("endDetectionTime",end);
-        detection.setPatientPhone(patientPhone);
+        detection.setPatientPhone(encrypt);
         detection.setParams(params);
         List<Detection> detections = detectionService.selectDetectionList(detection);
-        SysUser sysUser = sysUserService.selectUserByPhone(patientPhone);
+        SysUser sysUser = sysUserService.selectUserByPhone(encrypt);
         if(detections.size()<= sysUser.getDetectionNum()){
             Long d=sysUser.getDetectionNum()-detections.size();
             return AjaxResult.success(d);

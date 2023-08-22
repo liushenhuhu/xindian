@@ -50,6 +50,7 @@ public class VipCode implements Serializable {
     /**
      * 激活码生成时间
      */
+    @Excel(name = "激活码生成时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;
 

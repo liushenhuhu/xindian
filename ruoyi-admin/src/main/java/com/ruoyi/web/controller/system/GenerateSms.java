@@ -3,10 +3,13 @@ package com.ruoyi.web.controller.system;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginBody;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.xindian.util.PhoneCheckUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -15,10 +18,13 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -34,14 +40,45 @@ public class GenerateSms {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Resource
+    private TokenService tokenService;
+
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
     @ApiOperation("生成验证码")
     @ApiImplicitParam(name = "mobile", value = "手机号码", required = true, dataType = "String", paramType = "query")
     @PostMapping("/sms/code")
     @ResponseBody
     public AjaxResult sms(@RequestBody LoginBody loginBody) {
+        return phoneCodeUserGet(loginBody);
+    }
 
+
+    @ApiOperation("生成验证码")
+    @ApiImplicitParam(name = "mobile", value = "手机号码", required = true, dataType = "String", paramType = "query")
+    @PostMapping("/phoneCode/code")
+    @ResponseBody
+    public AjaxResult phoneCode(@RequestBody LoginBody loginBody, HttpServletRequest request) {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        loginBody.setUserId(loginUser.getUser().getUserId());
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("userPhoneTimeCode:" + loginUser.getUser().getUserId()))){
+            return AjaxResult.error("请勿重复请求验证码");
+        }
+        return phoneCodeUserGet(loginBody);
+    }
+
+
+    private AjaxResult phoneCodeUserGet(LoginBody loginBody){
         String mobile = loginBody.getMobile();
+        if (!PhoneCheckUtils.isPhoneLegal(mobile)) {
+            return AjaxResult.error("手机号格式不对，请重新输入");
+        }
+        if (loginBody.getUserId()!=null){
+            redisTemplate.opsForValue().set("userPhoneTimeOne:" + loginBody.getUserId(),mobile,50, TimeUnit.SECONDS);
+        }
+
+
         // 保存验证码信息
         String uuid = IdUtils.simpleUUID();
         String verifyKey = Constants.SMS_CAPTCHA_CODE_KEY + uuid;
@@ -60,22 +97,19 @@ public class GenerateSms {
         logger.info(" 为 {} 设置短信验证码：{}", mobile, code);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("uuid", uuid);
-        ajax.put("smsCode", code);
-        ajax.put("codeResult", codeResult);
+//        ajax.put("smsCode", code);
+//        ajax.put("codeResult", codeResult);
         return ajax;
     }
+
 
     @PostMapping("/sms/check")
     @ResponseBody
     public AjaxResult checkCode(@RequestBody LoginBody loginBody) {
-/*        String mobile = loginBody.getMobile();
-        String code = loginBody.getCode();
-        String cacheObject = redisCache.getCacheObject(mobile);
-        if (code != null && !"".equals(code) && code.equals(cacheObject)) {
-            return AjaxResult.success("操作成功");
-        } else {
-            return AjaxResult.error("验证码信息错误");
-        }*/
+        return sure(loginBody);
+    }
+
+    private AjaxResult sure(LoginBody loginBody){
         String mobile = loginBody.getMobile();
         String inputCode = loginBody.getSmsCode();
         String uuid = loginBody.getUuid();
@@ -103,6 +137,13 @@ public class GenerateSms {
             return AjaxResult.success("验证码正确");
         }
     }
+
+    @PostMapping("/phoneCode/check")
+    @ResponseBody
+    public AjaxResult phoneCodeCheck(@RequestBody LoginBody loginBody) {
+        return sure(loginBody);
+    }
+
 
     public AjaxResult getCode(String telephone, int code) {
 ////        String host = "http://smsyun.market.alicloudapi.com";

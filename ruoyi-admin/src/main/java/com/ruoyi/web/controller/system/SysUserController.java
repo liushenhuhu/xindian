@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.sign.AesUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,15 +51,25 @@ public class SysUserController extends BaseController
     @Autowired
     private ISysPostService postService;
 
+    @Autowired
+    private AesUtils aesUtils;
+
     /**
      * 获取用户列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysUser user)
-    {
+    public TableDataInfo list(SysUser user) throws Exception {
         startPage();
         List<SysUser> list = userService.selectUserList(user);
+        for (SysUser c :list){
+            if (c.getUserName()!=null){
+                c.setUserName(aesUtils.decrypt(c.getUserName()));
+            }
+            if (c.getPhonenumber()!=null){
+                c.setPhonenumber(aesUtils.decrypt(c.getPhonenumber()));
+            }
+        }
         return getDataTable(list);
     }
 
@@ -95,8 +107,7 @@ public class SysUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping(value = { "/", "/{userId}" })
-    public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId)
-    {
+    public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) throws Exception {
         userService.checkUserDataScope(userId);
         AjaxResult ajax = AjaxResult.success();
         List<SysRole> roles = roleService.selectRoleAll();
@@ -105,6 +116,12 @@ public class SysUserController extends BaseController
         if (StringUtils.isNotNull(userId))
         {
             SysUser sysUser = userService.selectUserById(userId);
+            if (sysUser.getUserName()!=null){
+                sysUser.setUserName(aesUtils.decrypt(sysUser.getUserName()));
+            }
+            if (sysUser.getPhonenumber()!=null){
+                sysUser.setPhonenumber(aesUtils.decrypt(sysUser.getPhonenumber()));
+            }
             ajax.put(AjaxResult.DATA_TAG, sysUser);
             ajax.put("postIds", postService.selectPostListByUserId(userId));
             ajax.put("roleIds", sysUser.getRoles().stream().map(SysRole::getRoleId).collect(Collectors.toList()));
@@ -118,8 +135,7 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:add')")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysUser user)
-    {
+    public AjaxResult add(@Validated @RequestBody SysUser user) throws Exception {
         if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName())))
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
@@ -136,6 +152,12 @@ public class SysUserController extends BaseController
         }
         user.setCreateBy(getUsername());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        if (user.getUserName()!=null){
+            user.setUserName(aesUtils.encrypt(user.getUserName()));
+        }
+        if (user.getPhonenumber()!=null){
+            user.setPhonenumber(aesUtils.encrypt(user.getPhonenumber()));
+        }
         return toAjax(userService.insertUser(user));
     }
 
@@ -145,8 +167,7 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysUser user)
-    {
+    public AjaxResult edit(@Validated @RequestBody SysUser user) throws Exception {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
         if (StringUtils.isNotEmpty(user.getPhonenumber())
@@ -160,6 +181,12 @@ public class SysUserController extends BaseController
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setUpdateBy(getUsername());
+        if (user.getUserName()!=null){
+            user.setUserName(aesUtils.encrypt(user.getUserName()));
+        }
+        if (user.getPhonenumber()!=null){
+            user.setPhonenumber(aesUtils.encrypt(user.getPhonenumber()));
+        }
         return toAjax(userService.updateUser(user));
     }
 
@@ -184,8 +211,13 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:resetPwd')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/resetPwd")
-    public AjaxResult resetPwd(@RequestBody SysUser user)
-    {
+    public AjaxResult resetPwd(@RequestBody SysUser user) throws Exception {
+        if (user.getUserName()!=null){
+            user.setUserName(aesUtils.encrypt(user.getUserName()));
+        }
+        if (user.getPhonenumber()!=null){
+            user.setPhonenumber(aesUtils.encrypt(user.getPhonenumber()));
+        }
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
@@ -199,8 +231,13 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
-    public AjaxResult changeStatus(@RequestBody SysUser user)
-    {
+    public AjaxResult changeStatus(@RequestBody SysUser user) throws Exception {
+        if (user.getUserName()!=null){
+            user.setUserName(aesUtils.encrypt(user.getUserName()));
+        }
+        if (user.getPhonenumber()!=null){
+            user.setPhonenumber(aesUtils.encrypt(user.getPhonenumber()));
+        }
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
         user.setUpdateBy(getUsername());

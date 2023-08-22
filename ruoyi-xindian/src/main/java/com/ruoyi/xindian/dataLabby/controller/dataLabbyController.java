@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.dataLabby.domain.dataLabbyDto;
 import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
 import com.ruoyi.xindian.hospital.domain.Doctor;
@@ -67,6 +68,8 @@ public class dataLabbyController extends BaseController
     @Resource
     private WxMsgRunConfig wxMsgRunConfig;
 
+    @Resource
+    private AesUtils aesUtils;
     private final Lock lock = new ReentrantLock();
     /**
      * 查询订单列表
@@ -185,10 +188,9 @@ public class dataLabbyController extends BaseController
      * 抢单
      */
     @GetMapping(value = "/dataLabby/{reportId}")
-    public AjaxResult getOrder(@PathVariable("reportId") String pId)
-    {
+    public AjaxResult getOrder(@PathVariable("reportId") String pId) throws Exception {
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        String phonenumber = loginUser.getUser().getPhonenumber();
+        String phonenumber = aesUtils.encrypt(loginUser.getUser().getPhonenumber());
         Doctor doctor = doctorService.selectDoctorByDoctorPhone(phonenumber);
         lock.lock();
         try{

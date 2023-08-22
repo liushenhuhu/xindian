@@ -6,19 +6,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Detection" id="DetectionResult">
         <result property="detectionId"    column="detection_id"    />
-        <result property="patientPhone"    column="patient_phone"    />
+        <result property="patientPhone"    column="patient_phone_aes"    />
         <result property="detectionTime"    column="detection_time"    />
         <result property="detectionPid"    column="detection_pid"    />
     </resultMap>
 
     <sql id="selectDetectionVo">
-        select detection_id, patient_phone, detection_time, detection_pid from detection
+        select detection_id, patient_phone_aes, detection_time, detection_pid from detection
     </sql>
 
     <select id="selectDetectionList" parameterType="Detection" resultMap="DetectionResult">
         <include refid="selectDetectionVo"/>
         <where>  
-            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone_aes = #{patientPhone}</if>
             <if test="detectionPid != null  and detectionPid != ''"> and detection_pid = #{detectionPid}</if>
             <if test="params.beginDetectionTime != null and params.beginDetectionTime != '' and params.endDetectionTime != null and params.endDetectionTime != ''"> and detection_time between #{params.beginDetectionTime} and #{params.endDetectionTime}</if>
         </where>
@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into detection
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="detectionId != null">detection_id,</if>
-            <if test="patientPhone != null">patient_phone,</if>
+            <if test="patientPhone != null">patient_phone_aes,</if>
             <if test="detectionTime != null">detection_time,</if>
             <if test="detectionPid != null">detection_pid,</if>
          </trim>
@@ -48,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateDetection" parameterType="Detection">
         update detection
         <trim prefix="SET" suffixOverrides=",">
-            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="patientPhone != null">patient_phone_aes = #{patientPhone},</if>
             <if test="detectionTime != null">detection_time = #{detectionTime},</if>
             <if test="detectionPid != null">detection_pid = #{detectionPid},</if>
         </trim>

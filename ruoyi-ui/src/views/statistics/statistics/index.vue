@@ -131,8 +131,6 @@ export default {
   },
   mounted(){
     this.drawLine();
-
-
   },
   methods: {
     drawLine() {
@@ -188,14 +186,15 @@ export default {
     },
     selectDoctor() {
       selectDoctor().then(response => {
+        console.log(response)
         this.options = response;
       })
     },
     getListData(){
-      dateList(this.queryParams).then(response => {
-        //console.log(response.rows);
-        this.tableData = response.rows;
-        this.total = response.total;
+      countList(this.queryParams).then(r=>{
+        console.log(r)
+        this.tableData=r.rows
+        this.total = r.total;
       })
     },
     lowNumber(val){
@@ -243,6 +242,8 @@ export default {
     },
     /** 查询 */
     getList() {
+
+      this.getListData()
       if (this.queryParams.year.length!==4){
         let dateYear = new Date(this.queryParams.year)
         this.queryParams.year= dateYear.getFullYear()+''
@@ -253,20 +254,19 @@ export default {
         this.queryParams.endTime = this.daterangeConnectionTime[1];
       }
       listStatistics(this.queryParams).then(response => {
-        //console.log(response.rows);
+        console.log(response.rows);
         let data = response.rows;
         let countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         for (let j = 0; j < data.length; j++) {
           countArr[data[j].month - 1] = parseInt(data[j].count);
         }
+        console.log('response',response)
         this.countArr = countArr;
         this.drawLine();
         //console.log(countArr);
+
       });
-      countList(this.queryParams).then(r=>{
-        this.tableData=r.rows
-        this.total = r.total;
-      })
+
     },
     /** 搜索按钮操作 */
     handleQuery() {

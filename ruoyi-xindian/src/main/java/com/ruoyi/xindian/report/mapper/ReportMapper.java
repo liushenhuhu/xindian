@@ -1,6 +1,9 @@
 package com.ruoyi.xindian.report.mapper;
 
 import java.util.List;
+
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.report.domain.Report;
 
 /**
@@ -69,4 +72,9 @@ public interface ReportMapper
     public Report selectReportByPId(String pId);
 
     public List<Report> groupByPatientPhone(String dPhone);
+
+
+    List<Report> selectA(Limit limit);
+
+
 }

@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.alert_log.domain.AssignedAno;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +36,16 @@ public class AlertLogController extends BaseController {
     @Autowired
     private ISysUserService userService;
 
+
+    @Resource
+    private AesUtils aesUtils;
+
     /**
      * 查询预警日志列表
      */
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AlertLog alertLog) {
+    public TableDataInfo list(AlertLog alertLog) throws Exception {
         List<AlertLog> list = new ArrayList<>();
         SysUser sysUser = userService.selectUserById(getUserId());
         if (sysUser != null && sysUser.getRoleId()!=null && sysUser.getRoleId() == 101) {
@@ -77,6 +83,14 @@ public class AlertLogController extends BaseController {
             } else if (alertLog.getEcgType().equals("single")) {
                 list = alertLogService.selectAlertLogListSingle(alertLog);
 //                return getTable(list,)
+            }
+        }
+        for (AlertLog c:list){
+            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+                c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+            }
+            if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
+                c.setPatientName(aesUtils.decrypt(c.getPatientName()));
             }
         }
         return getDataTable(list);

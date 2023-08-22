@@ -167,7 +167,7 @@ public class TProductController extends BaseController
     /**
      * 导出商品信息列表
      */
-//    @PreAuthorize("@ss.hasPermi('product:product:export')")
+    @PreAuthorize("@ss.hasPermi('product:product:export')")
     @Log(title = "商品信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, TProduct tProduct)
@@ -188,6 +188,7 @@ public class TProductController extends BaseController
         product.setStringImg(productImgs);
         return AjaxResult.success(product);
     }
+
     @GetMapping(value = "/web/getProductInfo/{productId}")
     public AjaxResult getProductInfo(@PathVariable("productId") Long productId) {
         TProduct product = tProductService.selectTProductByProductId(productId);

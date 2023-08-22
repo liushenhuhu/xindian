@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
@@ -53,26 +54,43 @@ public class PatientRelationshipController extends BaseController
     private IMedicalHistoryService medicalHistoryService;
 
 
+    @Autowired
+    private AesUtils aesUtils;
+
     /**
      * 查询患者关系表列表
      */
 //    @PreAuthorize("@ss.hasPermi('relationship:relationship:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PatientRelationship patientRelationship)
-    {
+    public TableDataInfo list(PatientRelationship patientRelationship) throws Exception {
+        if (patientRelationship.getFatherPhone()!=null&&!"".equals(patientRelationship.getFatherPhone())){
+            patientRelationship.setFatherPhone(aesUtils.encrypt(patientRelationship.getFatherPhone()));
+        }
+        if (patientRelationship.getSonPhone()!=null&&!"".equals(patientRelationship.getSonPhone())){
+            patientRelationship.setSonPhone(aesUtils.encrypt(patientRelationship.getSonPhone()));
+        }
         startPage();
         List<PatientRelationship> list = patientRelationshipService.selectPatientRelationshipList(patientRelationship);
         for (PatientRelationship relationship : list) {
+
             Patient patient = patientService.selectPatientByPatientPhone(relationship.getSonPhone());
-            if(patient != null)
-                relationship.setRelationshipPatientName(patient.getPatientName());
+            if (relationship.getFatherPhone()!=null&&!"".equals(relationship.getFatherPhone())){
+                relationship.setFatherPhone(aesUtils.decrypt(relationship.getFatherPhone()));
+            }
+            if (relationship.getSonPhone()!=null&&!"".equals(relationship.getSonPhone())){
+                relationship.setSonPhone(aesUtils.decrypt(relationship.getSonPhone()));
+            }
+            if(patient != null){
+                relationship.setRelationshipPatientName(aesUtils.decrypt(patient.getPatientName()));
+            }
+
         }
         if(patientRelationship!=null && patientRelationship.getFatherPhone() != null){
             PatientRelationship relationship = new PatientRelationship();
             Patient patient = patientService.selectPatientByPatientPhone(patientRelationship.getFatherPhone());
-            relationship.setRelationshipPatientName(patient.getPatientName());
-            relationship.setFatherPhone(patientRelationship.getFatherPhone());
-            relationship.setSonPhone(patientRelationship.getFatherPhone());
+            relationship.setRelationshipPatientName(aesUtils.decrypt(patient.getPatientName()));
+            relationship.setFatherPhone(aesUtils.decrypt(patientRelationship.getFatherPhone()));
+            relationship.setSonPhone(aesUtils.decrypt(patientRelationship.getFatherPhone()));
             relationship.setRelationship("自己");
             list.add(0,relationship);
 
@@ -98,9 +116,16 @@ public class PatientRelationshipController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('relationship:relationship:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
-        return AjaxResult.success(patientRelationshipService.selectPatientRelationshipById(id));
+    public AjaxResult getInfo(@PathVariable("id") Long id) throws Exception {
+
+        PatientRelationship patientRelationship = patientRelationshipService.selectPatientRelationshipById(id);
+        if (patientRelationship.getFatherPhone()!=null&&!"".equals(patientRelationship.getFatherPhone())){
+            patientRelationship.setFatherPhone(aesUtils.decrypt(patientRelationship.getFatherPhone()));
+        }
+        if (patientRelationship.getSonPhone()!=null&&!"".equals(patientRelationship.getSonPhone())){
+            patientRelationship.setSonPhone(aesUtils.decrypt(patientRelationship.getSonPhone()));
+        }
+        return AjaxResult.success(patientRelationship);
     }
     private PatientRelationship getRelationship(PatientRelationshipDto patientRelationship){
         PatientRelationship relationship = new PatientRelationship();
@@ -143,13 +168,13 @@ public class PatientRelationshipController extends BaseController
     }
 
 
-    private AppData getAppData(PatientRelationshipDto patientRelationship){
+    private AppData getAppData(PatientRelationshipDto patientRelationship) throws Exception {
         AppData appData = new AppData();
         appData.setBirthDay(patientRelationship.getBirthDay());
         appData.setPatientPhone(patientRelationship.getSonPhone());
         appData.setUserName(patientRelationship.getSonPhone());
         appData.setPatientSex(patientRelationship.getPatientSex());
-        appData.setPatientName(patientRelationship.getRelationshipPatientName());
+        appData.setPatientName(aesUtils.encrypt(patientRelationship.getRelationshipPatientName()));
         return appData;
     }
     private MedicalHistory getMedicalHistory(PatientRelationshipDto patientRelationship){
@@ -164,9 +189,9 @@ public class PatientRelationshipController extends BaseController
 
 
 
-    private Patient getPatient(PatientRelationshipDto patientRelationship){
+    private Patient getPatient(PatientRelationshipDto patientRelationship) throws Exception {
         Patient patient = new Patient();
-        patient.setPatientName(patientRelationship.getRelationshipPatientName());
+        patient.setPatientName(aesUtils.encrypt(patientRelationship.getRelationshipPatientName()));
         patient.setPatientPhone(patientRelationship.getSonPhone());
         patient.setPatientSex(patientRelationship.getPatientSex());
         patient.setBirthDay(patientRelationship.getBirthDay());
@@ -179,9 +204,20 @@ public class PatientRelationshipController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('relationship:relationship:add')")
     @Log(title = "患者关系表", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PatientRelationshipDto patientRelationship)
-    {
+    public AjaxResult add(@RequestBody PatientRelationshipDto patientRelationship) throws Exception {
         PatientRelationship relationship = getRelationship(patientRelationship);
+        if (relationship.getFatherPhone()!=null&&!"".equals(relationship.getFatherPhone())){
+            relationship.setFatherPhone(aesUtils.encrypt(relationship.getFatherPhone()));
+        }
+        if (relationship.getSonPhone()!=null&&!"".equals(relationship.getSonPhone())){
+            relationship.setSonPhone(aesUtils.encrypt(relationship.getSonPhone()));
+        }
+        if (patientRelationship.getFatherPhone()!=null&&!"".equals(patientRelationship.getFatherPhone())){
+            patientRelationship.setFatherPhone(aesUtils.encrypt(patientRelationship.getFatherPhone()));
+        }
+        if (patientRelationship.getSonPhone()!=null&&!"".equals(patientRelationship.getSonPhone())){
+            patientRelationship.setSonPhone(aesUtils.encrypt(patientRelationship.getSonPhone()));
+        }
         if(patientRelationship.getRelationshipPatientName() != null){
             AppData appData = getAppData(patientRelationship);
             MedicalHistory medicalHistory = getMedicalHistory(patientRelationship);
@@ -210,10 +246,22 @@ public class PatientRelationshipController extends BaseController
 
 
     @PostMapping("/addPatient")
-    public AjaxResult addPatient(@RequestBody PatientRelationshipDto patientRelationship)
-    {
+    public AjaxResult addPatient(@RequestBody PatientRelationshipDto patientRelationship) throws Exception {
+
         PatientRelationship relationship = getRelationship1(patientRelationship);
         patientRelationship.setSonPhone(relationship.getSonPhone());
+        if (relationship.getFatherPhone()!=null&&!"".equals(relationship.getFatherPhone())){
+            relationship.setFatherPhone(aesUtils.encrypt(relationship.getFatherPhone()));
+        }
+        if (relationship.getSonPhone()!=null&&!"".equals(relationship.getSonPhone())){
+            relationship.setSonPhone(aesUtils.encrypt(relationship.getSonPhone()));
+        }
+        if (patientRelationship.getFatherPhone()!=null&&!"".equals(patientRelationship.getFatherPhone())){
+            patientRelationship.setFatherPhone(aesUtils.encrypt(patientRelationship.getFatherPhone()));
+        }
+        if (patientRelationship.getSonPhone()!=null&&!"".equals(patientRelationship.getSonPhone())){
+            patientRelationship.setSonPhone(aesUtils.encrypt(patientRelationship.getSonPhone()));
+        }
         if(patientRelationship.getRelationshipPatientName() != null){
             AppData appData = getAppData(patientRelationship);
 
@@ -246,8 +294,16 @@ public class PatientRelationshipController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('relationship:relationship:edit')")
     @Log(title = "患者关系表", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PatientRelationship patientRelationship)
-    {
+    public AjaxResult edit(@RequestBody PatientRelationship patientRelationship) throws Exception {
+        if (patientRelationship.getFatherPhone()!=null&&!"".equals(patientRelationship.getFatherPhone())){
+            patientRelationship.setFatherPhone(aesUtils.encrypt(patientRelationship.getFatherPhone()));
+        }
+        if (patientRelationship.getSonPhone()!=null&&!"".equals(patientRelationship.getSonPhone())){
+            patientRelationship.setSonPhone(aesUtils.encrypt(patientRelationship.getSonPhone()));
+        }
+        if (patientRelationship.getRelationshipPatientName()!=null&&!"".equals(patientRelationship.getRelationshipPatientName())){
+            patientRelationship.setRelationshipPatientName(patientRelationship.getRelationshipPatientName());
+        }
         return toAjax(patientRelationshipService.updatePatientRelationship(patientRelationship));
     }
 

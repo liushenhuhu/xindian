@@ -3,6 +3,7 @@ package com.ruoyi.xindian.wx_pay.controller;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.wx_pay.VO.WxCardInvoiceAuthurlVO;
 import com.ruoyi.xindian.wx_pay.util.AjaxResult;
 import com.ruoyi.xindian.wx_pay.util.OrderNoUtils;
@@ -16,6 +17,7 @@ import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +38,8 @@ public class WXMsgPushController {
     @Autowired
     private WXPublicRequest wxPublicRequest;
 
+    @Resource
+    private AesUtils aesUtils;
 
     @GetMapping("/test")
     public AjaxResult test1(String tt) throws Exception {
@@ -78,7 +82,18 @@ public class WXMsgPushController {
     }
 
 
-
+    @GetMapping("/aes")
+    public AjaxResult aes(String id) throws Exception {
+        String encrypt = aesUtils.encrypt(id);
+        System.out.println(encrypt);
+        return AjaxResult.success(encrypt);
+    }
+    @GetMapping("/aesd")
+    public AjaxResult aesd(String id) throws Exception {
+        String encrypt = aesUtils.decrypt(id);
+        System.out.println(encrypt);
+        return AjaxResult.success(encrypt);
+    }
 
 
 }

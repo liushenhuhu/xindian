@@ -10,11 +10,11 @@
         <result property="weight" column="weight"/>
         <result property="pastMedicalHistory" column="past_medical_history"/>
         <result property="livingHabit" column="living_habit"/>
-        <result property="patientPhone" column="patient_phone"/>
+        <result property="patientPhone" column="patient_phone_aes"/>
     </resultMap>
 
     <sql id="selectMedicalHistoryVo">
-        select medical_history_id, height, weight, past_medical_history, living_habit, patient_phone
+        select medical_history_id, height, weight, past_medical_history, living_habit, patient_phone_aes
         from medical_history
     </sql>
 
@@ -27,7 +27,7 @@
             <if test="livingHabit != null  and livingHabit != ''">and living_habit like concat('%', #{livingHabit},
                 '%')
             </if>
-            <if test="patientPhone != null  and patientPhone != ''">and patient_phone like concat('%', #{patientPhone},
+            <if test="patientPhone != null  and patientPhone != ''">and patient_phone_aes like concat('%', #{patientPhone},
                 '%')
             </if>
         </where>
@@ -40,7 +40,10 @@
 
     <select id="selectMedicalHistoryByPatientPhone" parameterType="string" resultMap="MedicalHistoryResult">
         <include refid="selectMedicalHistoryVo"/>
-        where patient_phone = #{patientPhone}
+        where patient_phone_aes = #{patientPhone}
+    </select>
+    <select id="selectPastMedicalHistoryList" resultType="com.ruoyi.xindian.medical.domain.MedicalHistory">
+        select * from medical_history limit #{start},#{end}
     </select>
 
     <insert id="insertMedicalHistory" parameterType="MedicalHistory" useGeneratedKeys="true"
@@ -51,6 +54,7 @@
             <if test="weight != null">weight,</if>
             <if test="pastMedicalHistory != null">past_medical_history,</if>
             <if test="livingHabit != null">living_habit,</if>
+            <if test="patientPhone != null">patient_phone_aes,</if>
             <if test="patientPhone != null">patient_phone,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -58,6 +62,7 @@
             <if test="weight != null">#{weight},</if>
             <if test="pastMedicalHistory != null">#{pastMedicalHistory},</if>
             <if test="livingHabit != null">#{livingHabit},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
         </trim>
     </insert>
@@ -69,9 +74,12 @@
             <if test="weight != null">weight = #{weight},</if>
             <if test="pastMedicalHistory != null">past_medical_history = #{pastMedicalHistory},</if>
             <if test="livingHabit != null">living_habit = #{livingHabit},</if>
-            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="patientPhone != null">patient_phone_aes = #{patientPhone},</if>
         </trim>
         where medical_history_id = #{medicalHistoryId}
+    </update>
+    <update id="setPastMedicalHistoryList">
+
     </update>
 
     <delete id="deleteMedicalHistoryByMedicalHistoryId" parameterType="Long">
@@ -90,6 +98,6 @@
     <delete id="deleteMedicalHistoryByPatientPhone" parameterType="String">
         delete
         from medical_history
-        where patient_phone = #{patientPhone}
+        where patient_phone_aes = #{patientPhone}
     </delete>
 </mapper>

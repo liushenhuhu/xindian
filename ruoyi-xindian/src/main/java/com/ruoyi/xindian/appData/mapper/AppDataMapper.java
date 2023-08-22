@@ -2,6 +2,7 @@ package com.ruoyi.xindian.appData.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.appData.domain.AppData;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 
 /**
  * app相关数据Mapper接口
@@ -62,4 +63,9 @@ public interface AppDataMapper
     public int deleteDataByAppDataIds(String[] appDataIds);
 
     public AppData selectAppDataByPatientPhone(String patientPhone);
+
+
+    List<AppData> searchAllByAppDataIdAppData(Limit limit);
+
+
 }

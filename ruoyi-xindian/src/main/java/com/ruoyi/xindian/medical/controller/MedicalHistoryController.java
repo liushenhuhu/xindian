@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
 import com.ruoyi.xindian.medical.domain.MedicalData;
@@ -44,6 +45,10 @@ public class MedicalHistoryController extends BaseController
 
     @Autowired
     private IAppDataService appDataService;
+
+
+    @Autowired
+    private AesUtils aesUtils;
 
     /**
      * 查询病史列表
@@ -87,10 +92,9 @@ public class MedicalHistoryController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:query')")
     @GetMapping(value = "/getByPatientPhone/{patientPhone}")
-    public AjaxResult getInfoByPatientPhone(@PathVariable("patientPhone") String patientPhone)
-    {
-
-        MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientPhone);
+    public AjaxResult getInfoByPatientPhone(@PathVariable("patientPhone") String patientPhone) throws Exception {
+        String encrypt = aesUtils.encrypt(patientPhone);
+        MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(encrypt);
         MedicalHistoryDto medicalHistoryDto = new MedicalHistoryDto();
         if(medicalHistory!=null){
             medicalHistoryDto.setMedicalHistoryId(medicalHistory.getMedicalHistoryId());
@@ -98,11 +102,11 @@ public class MedicalHistoryController extends BaseController
             medicalHistoryDto.setWeight(medicalHistory.getWeight());
             medicalHistoryDto.setPastMedicalHistory(medicalHistory.getPastMedicalHistory());
             medicalHistoryDto.setLivingHabit(medicalHistory.getLivingHabit());
-            medicalHistoryDto.setPatientPhone(medicalHistory.getPatientPhone());
-            Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
+            medicalHistoryDto.setPatientPhone(aesUtils.decrypt(medicalHistory.getPatientPhone()));
+            Patient patient = patientService.selectPatientByPatientPhone(encrypt);
             if(patient!=null){
                 medicalHistoryDto.setGender(patient.getPatientSex());
-                medicalHistoryDto.setUserName(patient.getPatientName());
+                medicalHistoryDto.setUserName(aesUtils.decrypt(patient.getPatientName()));
             }
         }
 
@@ -132,7 +136,7 @@ public class MedicalHistoryController extends BaseController
             medicalHistoryDto.setM_data(String.valueOf(med));
         }
         //获取出生日期
-        AppData appData = appDataService.selectAppDataByPatientPhone(patientPhone);
+        AppData appData = appDataService.selectAppDataByPatientPhone(encrypt);
         if(appData!=null){
             medicalHistoryDto.setBirthDay(appData.getBirthDay());
         }
@@ -146,8 +150,11 @@ public class MedicalHistoryController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:add')")
     @Log(title = "病史", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody MedicalHistory medicalHistory)
-    {
+    public AjaxResult add(@RequestBody MedicalHistory medicalHistory) throws Exception {
+        if (medicalHistory.getPatientPhone()!=null&&!"".equals(medicalHistory.getPatientPhone())){
+            medicalHistory.setPatientPhone(aesUtils.encrypt(medicalHistory.getPatientPhone()));
+        }
+
         return toAjax(medicalHistoryService.insertMedicalHistory(medicalHistory));
     }
 
@@ -157,8 +164,13 @@ public class MedicalHistoryController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('medicalHistory:medicalHistory:edit')")
     @Log(title = "病史", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody MedicalHistoryDto medicalHistory)
-    {
+    public AjaxResult edit(@RequestBody MedicalHistoryDto medicalHistory) throws Exception {
+        if (medicalHistory.getPatientPhone()!=null&&!"".equals(medicalHistory.getPatientPhone())){
+            medicalHistory.setPatientPhone(aesUtils.encrypt(medicalHistory.getPatientPhone()));
+        }
+        if (medicalHistory.getUserName()!=null&&!"".equals(medicalHistory.getUserName())){
+            medicalHistory.setUserName(aesUtils.encrypt(medicalHistory.getUserName()));
+        }
         System.out.println(medicalHistory);
         Patient patient = patientService.selectPatientByPatientPhone(medicalHistory.getPatientPhone());
         AppData appData = appDataService.selectAppDataByPatientPhone(medicalHistory.getPatientPhone());

@@ -1,44 +1,36 @@
 package com.ruoyi.web.controller.system;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.*;
-import java.security.spec.InvalidParameterSpecException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.itextpdf.text.pdf.codec.Base64;
 import com.ruoyi.common.config.WxAppConfig;
-
-import com.ruoyi.common.core.domain.model.WxOpenId;
-import com.ruoyi.xindian.appData.domain.AppData;
-import com.ruoyi.xindian.appData.service.IAppDataService;
-import com.ruoyi.xindian.hospital.domain.Doctor;
-import com.ruoyi.xindian.hospital.service.IDoctorService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginBody;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
+import com.ruoyi.common.core.domain.model.WxOpenId;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.framework.web.service.SysPermissionService;
 import com.ruoyi.system.service.ISysMenuService;
+import com.ruoyi.xindian.appData.domain.AppData;
+import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.BadPaddingException;
@@ -47,6 +39,13 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 登录验证
@@ -77,6 +76,13 @@ public class SysLoginController {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+    @Autowired
+    private AesUtils aesUtils;
+
     /**
      * 微信登录方法
      *
@@ -84,7 +90,7 @@ public class SysLoginController {
      * @return 结果
      */
     @PostMapping("/wxLogin")
-    public AjaxResult wxLogin(@RequestBody WxLoginBody wxloginBody) {
+    public AjaxResult wxLogin(@RequestBody WxLoginBody wxloginBody) throws Exception {
 
         logger.info("登录参数："+ JSON.toJSONString(wxloginBody));
         String code=wxloginBody.getCode();
@@ -118,13 +124,14 @@ public class SysLoginController {
             AjaxResult result = AjaxResult.success();
             result.put(Constants.TOKEN,token);
             result.put("phone",numberPhone);
-            AppData appData = appDataService.selectAppDataByPatientPhone(numberPhone);
+            String encrypt = aesUtils.encrypt(numberPhone);
+            AppData appData = appDataService.selectAppDataByPatientPhone(encrypt);
             if (null == appData) {
                 result.put("BindingState", false);
             } else {
                 result.put("BindingState", true);
             }
-            Doctor doctor = doctorService.selectDoctorByDoctorPhone(numberPhone);
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(encrypt);
             if(null == doctor){
                 result.put("IsDoctor",false);
             } else {
@@ -163,7 +170,6 @@ public class SysLoginController {
             System.arraycopy(iv,0,bytes,0,iv.length);
             iv=bytes;
         }
-
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
         String resultStr=null;
         try{
@@ -187,15 +193,16 @@ public class SysLoginController {
      * @return 结果
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginBody loginBody) {
+    public AjaxResult login(@RequestBody LoginBody loginBody) throws Exception {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
-        String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
+        String encrypt = aesUtils.encrypt(loginBody.getUsername());
+        String token = loginService.login(encrypt, loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
 
         AppData appData = new AppData();
-        appData.setUserName(loginBody.getUsername());
+        appData.setUserName(encrypt);
         List<AppData> appDataList = appDataService.selectAppDataList(appData);
         if (null == appDataList || appDataList.size() == 0) {
             ajax.put("BindingState", false);
@@ -215,7 +222,7 @@ public class SysLoginController {
     @ApiOperation("手机号登录")
     @ApiImplicitParam(name = "loginBody", value = "登录信息", dataType = "LoginBody")
     @PostMapping("/sms/login")
-    public AjaxResult smsLogin(@RequestBody LoginBody loginBody) {
+    public AjaxResult smsLogin(@RequestBody LoginBody loginBody) throws Exception {
         String mobile = loginBody.getMobile();
         String smsCode = loginBody.getSmsCode();
         String uuid = loginBody.getUuid();

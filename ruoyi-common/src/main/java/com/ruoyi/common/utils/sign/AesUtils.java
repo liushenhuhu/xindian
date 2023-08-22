@@ -1,12 +1,16 @@
-package com.ruoyi.xindian.util;
+package com.ruoyi.common.utils.sign;
 
-import com.ruoyi.common.utils.sign.Base64;
+
+
+
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.naming.ldap.PagedResultsControl;
 
 /**
  * AES 加解密
@@ -30,7 +34,7 @@ public class AesUtils {
     /**
      * 算法的名称
      */
-    private final String AES = "AES";
+    private static final String AES = "AES";
 
     /**
      * 默认 AES/CBC/PKCS5Padding
@@ -39,12 +43,12 @@ public class AesUtils {
      * 模式：CBC； 其中CBC、CFB模式需要向量；OFB模式不需要向量
      * 填充：PKCS5Padding
      */
-    private final String ALGORITHM = "AES/CBC/PKCS5Padding";
+    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
     /**
      * 编码 utf-8
      */
-    private final String UTF_8 = "utf-8";
+    private static final String UTF_8 = "utf-8";
 
     /**
      * 加密
@@ -79,7 +83,7 @@ public class AesUtils {
      * @return
      * @throws Exception
      */
-    public String decrypt(String needDecryptStr) throws Exception {
+    public  String decrypt(String needDecryptStr) throws Exception {
         byte[] raw = key.getBytes(UTF_8);
         //设置秘钥
         SecretKeySpec keySpec = new SecretKeySpec(raw, AES);

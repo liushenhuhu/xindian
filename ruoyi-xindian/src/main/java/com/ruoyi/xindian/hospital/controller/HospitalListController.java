@@ -51,6 +51,7 @@ public class HospitalListController extends BaseController
     /**
      * 查询医院列表
      */
+    @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
     @GetMapping("/list")
     public TableDataInfo list(Hospital hospital, HttpServletRequest request)
     {
@@ -90,6 +91,7 @@ public class HospitalListController extends BaseController
     /**
      * 查询医院列表
      */
+    @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
     @GetMapping("/listId")
     public TableDataInfo listId(Hospital hospital, HttpServletRequest request)
     {

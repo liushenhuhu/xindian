@@ -4,6 +4,7 @@ package com.ruoyi.xindian.wx_pay.util;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.order.mapper.InvoiceMapper;
 import com.ruoyi.xindian.wx_pay.VO.BizField;
@@ -56,6 +57,10 @@ public class WXPublicRequest {
 
     @Resource
     private ExecutorPool executorPool;
+
+
+    @Resource
+    private AesUtils aesUtils;
 
 
     /**
@@ -280,21 +285,37 @@ public class WXPublicRequest {
             if (bizField != null) {
                 invoice.setUserAuthInfo("biz_field");
                 invoice.setTitle(bizField.getTitle());
-                invoice.setTaxNo(bizField.getTax_no());
-                invoice.setAddr(bizField.getAddr());
-                invoice.setPhone(bizField.getPhone());
+                if (bizField.getTax_no()!=null&&!"".equals(bizField.getTax_no())){
+                    invoice.setTaxNo(aesUtils.encrypt(bizField.getTax_no()));
+                }
+                if (bizField.getAddr()!=null&&!"".equals(bizField.getAddr())){
+                    invoice.setAddr(aesUtils.encrypt(bizField.getAddr()));
+                }
+                if (bizField.getPhone()!=null&&!"".equals(bizField.getPhone())){
+                    invoice.setPhone(aesUtils.encrypt(bizField.getPhone()));
+                }
+                if (bizField.getBank_no()!=null&&!"".equals(bizField.getBank_no())){
+                    invoice.setBankNo(aesUtils.encrypt(bizField.getBank_no()));
+                }
                 invoice.setBankType(bizField.getBank_type());
-                invoice.setBankNo(bizField.getBank_no());
 
             } else {
                 UserField userField = sendMessageVo.getUser_auth_info().getUser_field();
                 invoice.setUserAuthInfo("user_field");
                 invoice.setTitle(userField.getTitle());
-                invoice.setTaxNo(userField.getTax_no());
-                invoice.setAddr(userField.getAddr());
-                invoice.setPhone(userField.getPhone());
+                if (userField.getTax_no()!=null&&!"".equals(bizField.getTax_no())){
+                    invoice.setTaxNo(aesUtils.encrypt(userField.getTax_no()));
+                }
+                if (userField.getAddr()!=null&&!"".equals(userField.getAddr())){
+                    invoice.setAddr(aesUtils.encrypt(userField.getAddr()));
+                }
+                if (userField.getPhone()!=null&&!"".equals(userField.getPhone())){
+                    invoice.setPhone(aesUtils.encrypt(userField.getPhone()));
+                }
+                if (userField.getBank_no()!=null&&!"".equals(userField.getBank_no())){
+                    invoice.setBankNo(aesUtils.encrypt(userField.getBank_no()));
+                }
                 invoice.setBankType(userField.getBank_type());
-                invoice.setBankNo(userField.getBank_no());
             }
             invoice.setCreateTime(new Date());
             invoice.setUpdateTime(new Date());

@@ -1,6 +1,9 @@
 package com.ruoyi.xindian.report.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.report.mapper.ReportMapper;
@@ -18,6 +21,9 @@ public class ReportServiceImpl implements IReportService
 {
     @Autowired
     private ReportMapper reportMapper;
+
+    @Autowired
+    private AesUtils aesUtils;
 
     /**
      * 查询报告
@@ -105,5 +111,23 @@ public class ReportServiceImpl implements IReportService
     @Override
     public List<Report> groupByPatientPhone(String dPhone) {
         return reportMapper.groupByPatientPhone(dPhone);
+    }
+
+    @Override
+    public void reportAes(Limit limit) throws Exception {
+
+        List<Report> reports = reportMapper.selectA(limit);
+        for (Report c : reports){
+            if (c.getdPhone()!=null&&!"".equals(c.getdPhone())){
+                c.setdPhone(aesUtils.encrypt(c.getdPhone()));
+            }
+            if (c.getPPhone()!=null&&!"".equals(c.getPPhone())){
+                c.setPPhone(aesUtils.encrypt(c.getPPhone()));
+            }
+            if (c.getDiagnosisDoctor()!=null&&!"".equals(c.getDiagnosisDoctor())){
+                c.setDiagnosisDoctor(aesUtils.encrypt(c.getDiagnosisDoctor()));
+            }
+            reportMapper.updateReport(c);
+        }
     }
 }

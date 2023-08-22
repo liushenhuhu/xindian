@@ -462,7 +462,6 @@ export default {
               Cookies.remove('rememberMe');
             }
 
-            console.log(this.loginForm)
 
             this.$store.dispatch("SmsLogin", this.loginForm).then(() => {
               this.$router.push({path: this.redirect || "/"}).catch(() => {
@@ -481,8 +480,6 @@ export default {
               Cookies.remove("password");
               Cookies.remove('rememberMe');
             }
-
-            console.log(this.loginForm)
 
             this.$store.dispatch("Login", this.loginForm).then(() => {
               this.$router.push({path: this.redirect || "/"}).catch(() => {

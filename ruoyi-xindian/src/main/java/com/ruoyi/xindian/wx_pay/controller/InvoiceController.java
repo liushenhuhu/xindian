@@ -10,6 +10,7 @@ import com.ruoyi.common.exception.file.InvalidExtensionException;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.order.service.InvoiceService;
 import com.ruoyi.xindian.product.domain.TProduct;
@@ -44,6 +45,10 @@ public class InvoiceController extends BaseController {
     @Resource
     private WXPublicRequest wxPublicRequest;
 
+
+    @Resource
+    private AesUtils aesUtils;
+
     @Value("${ruoyi.url}")
     private String url;
     /**
@@ -51,23 +56,60 @@ public class InvoiceController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('invoice:invoice:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Invoice invoice)
-    {
+    public TableDataInfo list(Invoice invoice) throws Exception {
         startPage();
         List<Invoice> list = invoiceService.selectInvoiceList(invoice);
+        for (Invoice c :list){
+            if (c.getTaxNo()!=null&&!"".equals(c.getTaxNo())){
+                c.setTaxNo(aesUtils.decrypt(c.getTaxNo()));
+            }
+            if (c.getAddr()!=null&&!"".equals(c.getAddr())){
+                c.setAddr(aesUtils.decrypt(c.getAddr()));
+            }
+            if (c.getPhone()!=null&&!"".equals(c.getPhone())){
+                c.setPhone(aesUtils.decrypt(c.getPhone()));
+            }
+            if (c.getBankNo()!=null&&!"".equals(c.getBankNo())){
+                c.setBankNo(aesUtils.decrypt(c.getBankNo()));
+            }
+        }
         return getDataTable(list);
     }
 
     @PreAuthorize("@ss.hasPermi('invoice:invoice:edit')")
     @GetMapping("/{id}")
-    public AjaxResult getID(@PathVariable("id") String orderId){
-        Invoice invoice = invoiceService.selectInvoiceId(orderId);
-        return AjaxResult.success(invoice);
+    public AjaxResult getID(@PathVariable("id") String orderId) throws Exception {
+        Invoice c = invoiceService.selectInvoiceId(orderId);
+        if (c.getTaxNo()!=null&&!"".equals(c.getTaxNo())){
+            c.setTaxNo(aesUtils.decrypt(c.getTaxNo()));
+        }
+        if (c.getAddr()!=null&&!"".equals(c.getAddr())){
+            c.setAddr(aesUtils.decrypt(c.getAddr()));
+        }
+        if (c.getPhone()!=null&&!"".equals(c.getPhone())){
+            c.setPhone(aesUtils.decrypt(c.getPhone()));
+        }
+        if (c.getBankNo()!=null&&!"".equals(c.getBankNo())){
+            c.setBankNo(aesUtils.decrypt(c.getBankNo()));
+        }
+        return AjaxResult.success(c);
     }
 
     @PutMapping
-    public AjaxResult put(Invoice invoice){
-        return AjaxResult.success(invoiceService.updateId(invoice));
+    public AjaxResult put(Invoice c) throws Exception {
+        if (c.getTaxNo()!=null&&!"".equals(c.getTaxNo())){
+            c.setTaxNo(aesUtils.encrypt(c.getTaxNo()));
+        }
+        if (c.getAddr()!=null&&!"".equals(c.getAddr())){
+            c.setAddr(aesUtils.encrypt(c.getAddr()));
+        }
+        if (c.getPhone()!=null&&!"".equals(c.getPhone())){
+            c.setPhone(aesUtils.encrypt(c.getPhone()));
+        }
+        if (c.getBankNo()!=null&&!"".equals(c.getBankNo())){
+            c.setBankNo(aesUtils.encrypt(c.getBankNo()));
+        }
+        return AjaxResult.success(invoiceService.updateId(c));
     }
     /**
      * 导出【请填写功能名称】列表

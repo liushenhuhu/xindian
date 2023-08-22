@@ -2,8 +2,10 @@ package com.ruoyi.xindian.order.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.order.domain.Area;
 import com.ruoyi.xindian.order.domain.MCity;
@@ -37,6 +39,8 @@ public class webOrderController extends BaseController {
     @Resource
     private AreaService areaService;
 
+    @Resource
+    private AesUtils aesUtils;
 
     @Resource
     private UserAddressService userAddressService;
@@ -44,10 +48,27 @@ public class webOrderController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('payOrder:payOrder:list')")
     @GetMapping("/list")
-    public TableDataInfo webOrderList(String orderId,String userPhone,String orderState,String orderStatus){
-
+    public TableDataInfo webOrderList(String orderId,String userPhone,String orderState,String orderStatus) throws Exception {
+        if (userPhone!=null&&!"".equals(userPhone)){
+            userPhone=aesUtils.encrypt(userPhone);
+        }
         startPage();
         List<OrderInfo> orderInfoList =  orderInfoService.webOrderList(orderId,userPhone,orderState,orderStatus);
+        for (OrderInfo c :orderInfoList){
+            SysUser sysUser = c.getSysUser();
+            if (sysUser!=null&&sysUser.getPhonenumber()!=null&&!"".equals(sysUser.getPhonenumber())){
+                c.getSysUser().setPhonenumber(aesUtils.decrypt(sysUser.getPhonenumber()));
+            }
+            if(c.getPatientPhone() != null&&!"".equals(c.getPatientPhone())){
+                c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+            }
+            if(c.getPatientName() != null&&!"".equals(c.getPatientName())){
+                c.setPatientName(aesUtils.decrypt(c.getPatientName()));
+            }
+            if(c.getStreetAddress() != null&&!"".equals(c.getStreetAddress())){
+                c.setStreetAddress(aesUtils.decrypt(c.getStreetAddress()));
+            }
+        }
         return getDataTable(orderInfoList);
     }
 
@@ -66,11 +87,20 @@ public class webOrderController extends BaseController {
     /**
      * 获取【请填写功能名称】详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:info:query')")
+//    @PreAuthorize("@ss.hasPermi('system:info:query')")
     @GetMapping(value = "query/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
-        return AjaxResult.success(orderInfoService.selectTOrderInfoById(id));
+    public AjaxResult getInfo(@PathVariable("id") String id) throws Exception {
+        OrderInfo c = orderInfoService.selectTOrderInfoById(id);
+        if(c.getPatientPhone() != null&&!"".equals(c.getPatientPhone())){
+            c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+        }
+        if(c.getPatientName() != null&&!"".equals(c.getPatientName())){
+            c.setPatientName(aesUtils.decrypt(c.getPatientName()));
+        }
+        if(c.getStreetAddress() != null&&!"".equals(c.getStreetAddress())){
+            c.setStreetAddress(aesUtils.decrypt(c.getStreetAddress()));
+        }
+        return AjaxResult.success(c);
     }
 
 
@@ -96,8 +126,16 @@ public class webOrderController extends BaseController {
      * @return
      */
     @PostMapping("/addressAdd")
-    public AjaxResult b(@RequestBody ShipaddressVo shipaddressVo){
-
+    public AjaxResult b(@RequestBody ShipaddressVo shipaddressVo) throws Exception {
+        if(shipaddressVo.getPatientPhone() != null&&!"".equals(shipaddressVo.getPatientPhone())){
+            shipaddressVo.setPatientPhone(aesUtils.decrypt(shipaddressVo.getPatientPhone()));
+        }
+        if(shipaddressVo.getPatientName() != null&&!"".equals(shipaddressVo.getPatientName())){
+            shipaddressVo.setPatientName(aesUtils.decrypt(shipaddressVo.getPatientName()));
+        }
+        if(shipaddressVo.getStreetAddress() != null&&!"".equals(shipaddressVo.getStreetAddress())){
+            shipaddressVo.setStreetAddress(aesUtils.decrypt(shipaddressVo.getStreetAddress()));
+        }
         Boolean is = orderInfoService.updateAddress(shipaddressVo);
         return AjaxResult.success(is);
     }
@@ -108,8 +146,9 @@ public class webOrderController extends BaseController {
      * @param id
      * @return
      */
+//    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:findId')")
     @GetMapping("/ListOrderId")
-    public AjaxResult orderId(String id){
+    public AjaxResult orderId(String id) throws Exception {
         OrderInfo orderInfo = orderInfoService.ListOrderId(id);
         if (orderInfo!=null) {
             orderInfo.setTotalFee(orderInfo.getTotalFee().multiply(new BigDecimal("0.01")));
@@ -118,6 +157,16 @@ public class webOrderController extends BaseController {
                 d.getProduct().setPrice(d.getProduct().getPrice().multiply(new BigDecimal("0.01")));
                 d.getProduct().setDiscount(d.getProduct().getDiscount().multiply(new BigDecimal("0.01")));
             }
+        }
+
+        if (orderInfo.getPatientPhone()!=null&&!"".equals(orderInfo.getPatientPhone())){
+            orderInfo.setPatientPhone(aesUtils.decrypt(orderInfo.getPatientPhone()));
+        }
+        if (orderInfo.getPatientName()!=null&&!"".equals(orderInfo.getPatientName())){
+            orderInfo.setPatientName(aesUtils.decrypt(orderInfo.getPatientName()));
+        }
+        if (orderInfo.getStreetAddress()!=null&&!"".equals(orderInfo.getStreetAddress())){
+            orderInfo.setStreetAddress(aesUtils.decrypt(orderInfo.getStreetAddress()));
         }
         return AjaxResult.success(orderInfo);
     }

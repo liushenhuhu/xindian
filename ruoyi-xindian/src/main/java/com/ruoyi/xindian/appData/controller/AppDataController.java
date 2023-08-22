@@ -6,16 +6,19 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,14 +46,36 @@ public class AppDataController extends BaseController {
     private ISysRoleService roleService;
 
 
+    @Resource
+    private AesUtils aesUtils;
     /**
      * 查询app相关数据列表
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AppData appData) {
+    public TableDataInfo list(AppData appData) throws Exception {
+        if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
+            appData.setUserName(aesUtils.encrypt(appData.getUserName()));
+        }
+        if (appData.getPatientPhone()!=null&&!"".equals(appData.getPatientPhone())){
+            appData.setPatientPhone(aesUtils.encrypt(appData.getPatientPhone()));
+        }
+        if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
+            appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
+        }
         startPage();
         List<AppData> list = appDataService.selectAppDataList(appData);
+        for (AppData c :list){
+            if (c.getUserName()!=null&&!"".equals(c.getUserName())){
+                c.setUserName(aesUtils.decrypt(c.getUserName()));
+            }
+            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+                c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+            }
+            if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
+                c.setPatientName(aesUtils.decrypt(c.getPatientName()));
+            }
+        }
         return getDataTable(list);
     }
 
@@ -59,9 +84,29 @@ public class AppDataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:list')")
     @PostMapping("/list1")
-    public TableDataInfo list1(@RequestBody AppData appData) {
+    public TableDataInfo list1(@RequestBody AppData appData) throws Exception {
+        if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
+            appData.setUserName(aesUtils.encrypt(appData.getUserName()));
+        }
+        if (appData.getPatientPhone()!=null&&!"".equals(appData.getPatientPhone())){
+            appData.setPatientPhone(aesUtils.encrypt(appData.getPatientPhone()));
+        }
+        if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
+            appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
+        }
         startPage();
         List<AppData> list = appDataService.selectAppDataList(appData);
+        for (AppData c :list){
+            if (c.getUserName()!=null&&!"".equals(c.getUserName())){
+                c.setUserName(aesUtils.decrypt(c.getUserName()));
+            }
+            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+                c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+            }
+            if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
+                c.setPatientName(aesUtils.decrypt(c.getPatientName()));
+            }
+        }
         return getDataTable(list);
     }
 
@@ -82,17 +127,36 @@ public class AppDataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('appData:appData:query')")
     @GetMapping(value = "/{appDataId}")
-    public AjaxResult getInfo(@PathVariable("appDataId") Long appDataId) {
-        return AjaxResult.success(appDataService.selectAppDataByAppDataId(appDataId));
+    public AjaxResult getInfo(@PathVariable("appDataId") Long appDataId) throws Exception {
+        AppData appData = appDataService.selectAppDataByAppDataId(appDataId);
+        if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
+            appData.setUserName(aesUtils.decrypt(appData.getUserName()));
+        }
+        if (appData.getPatientPhone()!=null&&!"".equals(appData.getPatientPhone())){
+            appData.setPatientPhone(aesUtils.decrypt(appData.getPatientPhone()));
+        }
+        if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
+            appData.setPatientName(aesUtils.decrypt(appData.getPatientName()));
+        }
+        return AjaxResult.success(appData);
     }
 
     /**
      * 新增app相关数据
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:add')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:add')")
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody AppData appData) {
+    public AjaxResult add(@RequestBody AppData appData) throws Exception {
+        if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
+            appData.setUserName(aesUtils.encrypt(appData.getUserName()));
+        }
+        if (appData.getPatientPhone()!=null&&!"".equals(appData.getPatientPhone())){
+            appData.setPatientPhone(aesUtils.encrypt(appData.getPatientPhone()));
+        }
+        if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
+            appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
+        }
         int res = 0;
         Patient patient = new Patient();
         Patient patientSel = new Patient();
@@ -144,7 +208,16 @@ public class AppDataController extends BaseController {
     @PreAuthorize("@ss.hasPermi('appData:appData:add')")
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
     @PostMapping("/doctor")
-    public AjaxResult add_doctor(@RequestBody AppData appData) {
+    public AjaxResult add_doctor(@RequestBody AppData appData) throws Exception {
+        if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
+            appData.setUserName(aesUtils.encrypt(appData.getUserName()));
+        }
+        if (appData.getPatientPhone()!=null&&!"".equals(appData.getPatientPhone())){
+            appData.setPatientPhone(aesUtils.encrypt(appData.getPatientPhone()));
+        }
+        if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
+            appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
+        }
         return toAjax(appDataService.insertAppData(appData));
     }
 
@@ -154,7 +227,16 @@ public class AppDataController extends BaseController {
     @PreAuthorize("@ss.hasPermi('appData:appData:edit')")
     @Log(title = "app相关数据", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody AppData appData) {
+    public AjaxResult edit(@RequestBody AppData appData) throws Exception {
+        if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
+            appData.setUserName(aesUtils.encrypt(appData.getUserName()));
+        }
+        if (appData.getPatientPhone()!=null&&!"".equals(appData.getPatientPhone())){
+            appData.setPatientPhone(aesUtils.encrypt(appData.getPatientPhone()));
+        }
+        if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
+            appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
+        }
         return toAjax(appDataService.updateAppData(appData));
     }
 
@@ -213,6 +295,13 @@ public class AppDataController extends BaseController {
         int res1 = appDataService.deleteAppDataByAppDataId(appData.getAppDataId());
         int res2 = patientService.deletePatientByPatientPhone(appData.getPatientPhone());
         return res1 + res2;
+    }
+
+
+    @GetMapping("/aesCopy")
+    public AjaxResult appAesCopy(Limit limit) throws Exception {
+        appDataService.appAesCopy(limit);
+        return AjaxResult.success();
     }
 
 }

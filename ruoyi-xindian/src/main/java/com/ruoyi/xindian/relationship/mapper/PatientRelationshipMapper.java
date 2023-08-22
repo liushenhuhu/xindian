@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.relationship.mapper;
 
 import java.util.List;
+
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,6 +29,7 @@ public interface PatientRelationshipMapper
      * @return 患者关系表集合
      */
     public List<PatientRelationship> selectPatientRelationshipList(PatientRelationship patientRelationship);
+    public List<PatientRelationship> selectPatientRelationshipListLimit(Limit limit);
 
     /**
      * 新增患者关系表
@@ -61,4 +64,7 @@ public interface PatientRelationshipMapper
     public int deletePatientRelationshipByIds(Long[] ids);
 
     PatientRelationship selectFatherPhonePatientRelationship(@Param("phone") String phone);
+
+
+
 }

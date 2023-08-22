@@ -30,8 +30,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        order_id,price,user_auth_info,
-        title,tax_no,addr,
+        order_id,price,user_auth_info, title
+        ,tax_no,addr,
         phone,bank_type,bank_no,
         custom_field_key,custom_field_value,open_id,
         create_time,update_time,state,
@@ -60,3 +60,4 @@
         </where>
     </select>
 </mapper>
+

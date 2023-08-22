@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.patient_management.service.impl;
 
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
@@ -10,7 +11,10 @@ import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.patient_management.vo.PInfoVO;
+import com.ruoyi.xindian.relationship.domain.PatientRelationship;
+import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
 import com.ruoyi.xindian.report.domain.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +37,12 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     @Autowired
     private HospitalMapper hospitalMapper;
 
+@Autowired
+private PatientRelationshipMapper patientRelationshipMapper;
 
 
+@Resource
+private AesUtils aesUtils;
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
 
@@ -183,6 +191,25 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     @Override
     public List<PatientManagement> selectPatientManagementList12(PatientManagement patientManagement) {
         return patientManagementMapper.selectPatientManagementList12(patientManagement);
+    }
+
+    @Override
+    public void aesCopy(Limit limit) throws Exception {
+//        List<PatientManagement> patientManagements = patientManagementMapper.selectAll(limit);
+//        for (PatientManagement c :patientManagements){
+//            c.setPatientPhone(aesUtils.encrypt(c.getPatientPhone()));
+//            patientManagementMapper.updatePatientManagement(c);
+//            System.out.println(c);
+//        }
+
+
+        List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipListLimit(limit);
+        for (PatientRelationship c:patientRelationships){
+
+            c.setFatherPhone(aesUtils.encrypt(c.getFatherPhone()));
+            c.setSonPhone(aesUtils.encrypt(c.getSonPhone()));
+            patientRelationshipMapper.updatePatientRelationship(c);
+        }
     }
 
     /**

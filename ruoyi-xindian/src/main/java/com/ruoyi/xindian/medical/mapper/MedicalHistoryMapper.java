@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.medical.mapper;
 
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 
 import java.util.List;
 
@@ -63,4 +64,6 @@ public interface MedicalHistoryMapper
     MedicalHistory selectMedicalHistoryByPatientPhone(String patientPhone);
 
     int deleteMedicalHistoryByPatientPhone(String patientPhone);
+
+    List<MedicalHistory> selectPastMedicalHistoryList(Limit limit);
 }

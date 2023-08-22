@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.hospital.service.impl;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Doctor;
@@ -33,6 +34,8 @@ public class DoctorServiceImpl implements IDoctorService
     @Resource
     private HospitalMapper hospitalMapper;
 
+    @Autowired
+    private AesUtils aesUtils;
 
     @Resource
     private SysUserMapper sysUserMapper;
@@ -129,7 +132,7 @@ public class DoctorServiceImpl implements IDoctorService
     }
 
     @Override
-    public List<ListDocVO> listDoc() {
+    public List<ListDocVO> listDoc() throws Exception {
 
         List<ListDocVO> listDocVOS = doctorMapper.selectDoc();
 
@@ -139,8 +142,8 @@ public class DoctorServiceImpl implements IDoctorService
             List<Doctor> doctors = doctorMapper.selectDoctorList(doctor);
             for (Doctor d : doctors){
                 DocVO listDocVO = new DocVO();
-                listDocVO.setLabel(d.getDoctorName());
-                listDocVO.setValue(d.getDoctorPhone());
+                listDocVO.setLabel(aesUtils.decrypt(d.getDoctorName()));
+                listDocVO.setValue(aesUtils.decrypt(d.getDoctorPhone()));
                 c.getChildren().add(listDocVO);
             }
         }

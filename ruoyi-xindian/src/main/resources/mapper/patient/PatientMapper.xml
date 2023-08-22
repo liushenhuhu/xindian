@@ -6,12 +6,12 @@
 
     <resultMap type="Patient" id="PatientResult">
         <result property="patientId" column="patient_id"/>
-        <result property="patientName" column="patient_name"/>
+        <result property="patientName" column="patient_name_aes"/>
         <result property="patientCode" column="patient_code"/>
         <result property="patientAge" column="patient_age"/>
         <result property="patientSex" column="patient_sex"/>
         <result property="patientSource" column="patient_source"/>
-        <result property="patientPhone" column="patient_phone"/>
+        <result property="patientPhone" column="patient_phone_aes"/>
         <result property="familyPhone" column="family_phone"/>
         <result property="equipmentId" column="equipment_id"/>
         <result property="monitoringStatus" column="monitoring_status"/>
@@ -23,12 +23,12 @@
 
     <sql id="selectPatientVo">
         select patient_id,
-               patient_name_aes as patient_name,
+               patient_name_aes,
                patient_code,
                patient_age,
                patient_sex,
                patient_source,
-               patient_phone_aes as patient_phone,
+               patient_phone_aes,
                family_phone,
                equipment_id,
                monitoring_status,
@@ -86,17 +86,17 @@
 
     <select id="selectPatientByPatientPhone" parameterType="String" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
-        where patient_phone = #{patientPhone}
+        where patient_phone_aes = #{patientPhone}
     </select>
 
     <select id="selectPatientByPatientName" parameterType="String" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
-        where patient_name = #{patientName}
+        where patient_name_aes = #{patientName}
     </select>
 
     <select id="selectPatientByNameAndPhone" parameterType="patient" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
-        where patient_name = #{patientName} and patient_phone = #{patientPhone}
+        where patient_name_aes = #{patientName} and patient_phone_aes = #{patientPhone}
     </select>
 
     <insert id="insertPatient" parameterType="Patient">
@@ -104,11 +104,13 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientId != null">patient_id,</if>
             <if test="patientName != null and patientName != ''">patient_name_aes,</if>
+            <if test="patientName != null and patientName != ''">patient_name,</if>
             <if test="patientCode != null and patientCode != ''">patient_code,</if>
             <if test="patientAge != null">patient_age,</if>
             <if test="patientSex != null">patient_sex,</if>
             <if test="patientSource != null">patient_source,</if>
             <if test="patientPhone != null">patient_phone_aes,</if>
+            <if test="patientPhone != null">patient_phone,</if>
             <if test="familyPhone != null">family_phone,</if>
             <if test="equipmentId != null">equipment_id,</if>
             <if test="monitoringStatus != null">monitoring_status,</if>
@@ -120,10 +122,12 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
             <if test="patientName != null and patientName != ''">#{patientName},</if>
+            <if test="patientName != null and patientName != ''">#{patientName},</if>
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
             <if test="patientAge != null">#{patientAge},</if>
             <if test="patientSex != null">#{patientSex},</if>
             <if test="patientSource != null">#{patientSource},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
             <if test="familyPhone != null">#{familyPhone},</if>
             <if test="equipmentId != null">#{equipmentId},</if>

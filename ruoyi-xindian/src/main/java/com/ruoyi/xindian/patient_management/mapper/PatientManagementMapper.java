@@ -3,8 +3,10 @@ package com.ruoyi.xindian.patient_management.mapper;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.patient_management.vo.PInfoVO;
 import com.ruoyi.xindian.report.domain.Report;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -73,6 +75,7 @@ public interface PatientManagementMapper
      * @return 结果
      */
     public int updatePatientManagement(PatientManagement patientManagement);
+    public int updatePatientManagementAes(@Param("aesList") List<PatientManagement> patientManagement);
 
     /**
      * 删除患者管理
@@ -98,6 +101,7 @@ public interface PatientManagementMapper
      * 通过phone获取历史信息
      */
     public List<SingleHistoryInfo> selectSingleHistoryInfoList(SingleHistoryInfo singleHistoryInfo);
+    public List<SingleHistoryInfo> selectSingleHistoryInfoListOne(Limit limit);
 
     List<DateListVO> selectAllDateList(PatientManagement patientManagement);
 
@@ -107,5 +111,10 @@ public interface PatientManagementMapper
     PInfoVO selectALLTotal02(Report report);
 
 
+    int updateApBeatInt(SingleHistoryInfo singleHistoryInfo);
+    /**
+     * 批量修改手机号加密
+     */
 
+    List<PatientManagement> selectAll(Limit limit);
 }

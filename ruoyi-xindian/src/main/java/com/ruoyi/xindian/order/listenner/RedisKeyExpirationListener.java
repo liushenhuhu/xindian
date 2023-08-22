@@ -63,7 +63,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             }
             if (split[0].equals("invoice")){
                 try {
-                    wxPublicRequest.getAuthurl(split[1]);
+                    wxPublicRequest.getInvoiceState(split[1]);
                 } catch (Exception e) {
                     System.out.println(e);
                 }

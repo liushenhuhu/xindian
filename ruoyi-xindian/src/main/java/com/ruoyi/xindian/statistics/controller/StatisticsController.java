@@ -2,12 +2,15 @@ package com.ruoyi.xindian.statistics.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.framework.interfaces.Aes;
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
 import com.ruoyi.xindian.statistics.domain.Statistics;
 import com.ruoyi.xindian.statistics.service.IStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
@@ -25,13 +28,25 @@ public class StatisticsController extends BaseController {
     @Autowired
     private IStatisticsService statisticsService;
 
+
+    @Resource
+    private AesUtils aesUtils;
     /**
      * 医生统计
      * @return
      */
     @GetMapping("doctor")
-    public List<Statistics> selectDoctor(){
-        return statisticsService.selectDoctor();
+    public List<Statistics> selectDoctor() throws Exception {
+        List<Statistics> statistics = statisticsService.selectDoctor();
+        for (Statistics c:statistics){
+            if (c.getDoctorName()!=null&&!"".equals(c.getDoctorName())){
+                c.setDoctorName(aesUtils.decrypt(c.getDoctorName()));
+            }
+            if (c.getDoctorPhone()!=null&&!"".equals(c.getDoctorPhone())){
+                c.setDoctorPhone(aesUtils.decrypt(c.getDoctorPhone()));
+            }
+        }
+        return statistics;
     }
 
     /**
@@ -40,17 +55,26 @@ public class StatisticsController extends BaseController {
      * @return
      */
     @GetMapping("/list")
-    public TableDataInfo list(Statistics str){
+    public TableDataInfo list(Statistics str) throws Exception {
+        if (str.getDoctorPhone()!=null&&!"".equals(str.getDoctorPhone())){
+            str.setDoctorPhone(aesUtils.encrypt(str.getDoctorPhone()));
+        }
         List<Statistics> list = statisticsService.selectDoctorData(str);
         return getDataTable(list);
     }
 
     @GetMapping("/countList")
-    public TableDataInfo countList(Statistics statistics){
+    public TableDataInfo countList(Statistics statistics) throws Exception {
         startPage();
         List<Statistics> statistics1 = statisticsService.selectCountList(statistics);
         for (Statistics c : statistics1){
 
+            if (c.getDoctorName()!=null&&!"".equals(c.getDoctorName())){
+                c.setDoctorName(aesUtils.decrypt(c.getDoctorName()));
+            }
+            if (c.getDoctorPhone()!=null&&!"".equals(c.getDoctorPhone())){
+                c.setDoctorPhone(aesUtils.decrypt(c.getDoctorPhone()));
+            }
             BigDecimal bigDecimal = new BigDecimal(String.valueOf(Double.parseDouble(c.getCountTime()) / 60));
             BigDecimal bigDecimal1 = bigDecimal.setScale(1, RoundingMode.UP);
             c.setCountTime(bigDecimal1 +"分钟");

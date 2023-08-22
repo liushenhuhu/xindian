@@ -114,7 +114,7 @@
         t_order_info.courier_company,
         t_order_info.courier_number,
             sys_user.nick_name,
-            sys_user.phonenumber
+            sys_user.phonenumber_aes
         FROM
             t_order_info
                 INNER JOIN
@@ -133,7 +133,7 @@
                 and t_order_info.order_status = #{orderStatus}
             </if>
             <if test="userPhone!=null&amp;&amp;userPhone!=''">
-                and sys_user.phonenumber like concat('%',#{userPhone},'%')
+                and sys_user.phonenumber_aes like concat('%',#{userPhone},'%')
             </if>
         </where>
 

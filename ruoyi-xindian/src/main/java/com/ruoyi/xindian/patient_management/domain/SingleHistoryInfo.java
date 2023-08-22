@@ -59,6 +59,48 @@ public class SingleHistoryInfo extends BaseEntity
     private Long tachycardia;
 
 
+    private String pId;
+
+
+    private String connectionTime;
+
+    private String startSingleTime;
+
+    private String endSingleTime;
+
+
+    public String getpId() {
+        return pId;
+    }
+
+    public void setpId(String pId) {
+        this.pId = pId;
+    }
+
+    public String getConnectionTime() {
+        return connectionTime;
+    }
+
+    public void setConnectionTime(String connectionTime) {
+        this.connectionTime = connectionTime;
+    }
+
+    public String getStartSingleTime() {
+        return startSingleTime;
+    }
+
+    public void setStartSingleTime(String startSingleTime) {
+        this.startSingleTime = startSingleTime;
+    }
+
+    public String getEndSingleTime() {
+        return endSingleTime;
+    }
+
+    public void setEndSingleTime(String endSingleTime) {
+        this.endSingleTime = endSingleTime;
+    }
+
     public void setEcgId(Long ecgId)
     {
         this.ecgId = ecgId;

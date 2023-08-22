@@ -8,9 +8,9 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
@@ -21,7 +21,6 @@ import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
-import com.ruoyi.xindian.util.AesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +65,7 @@ public class DoctorController extends BaseController
     /**
      * 查询医生列表
      */
-//    @PreAuthorize("@ss.hasPermi('doctor:doctor:list')")
+    @PreAuthorize("@ss.hasPermi('doctor:doctor:list')")
     @Aes
     @GetMapping("/list")
     public TableDataInfo list(Doctor doctor, HttpServletRequest request) throws Exception {

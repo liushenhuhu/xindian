@@ -64,7 +64,12 @@ export default {
     return {
       showSearch: true,
       statistics: [],
-      options: [],
+      options: [
+        {
+          doctorName: null,
+          doctorPhone: null
+        }
+      ],
       countArr: [],
       show: true,
       // 总条数
@@ -157,7 +162,7 @@ export default {
       }
       console.log(this.queryParams)
       listStatistics(this.queryParams).then(response => {
-        //console.log(response.rows);
+        console.log(response.rows);
         let data = response.rows;
         let countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         for (let j = 0; j < data.length; j++) {

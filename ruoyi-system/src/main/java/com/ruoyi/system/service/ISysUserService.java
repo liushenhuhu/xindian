@@ -118,7 +118,7 @@ public interface ISysUserService {
      * @param user 用户信息
      * @return 结果
      */
-    public int insertUser(SysUser user);
+    public int insertUser(SysUser user) throws Exception;
 
     /**
      * 注册用户信息

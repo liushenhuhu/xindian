@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -70,15 +71,21 @@ public class VipPatientController extends BaseController
     private ISysUserService sysUserService;
     @Resource
     private TokenService tokenService;
+
+
+    @Autowired
+    private AesUtils aesUtils;
     /**
      * 查询vip用户列表
      */
     @PreAuthorize("@ss.hasPermi('vipPatient:patient:list')")
     @GetMapping("/list")
-    public TableDataInfo list(VipPatient vipPatient)
-    {
+    public TableDataInfo list(VipPatient vipPatient) throws Exception {
         startPage();
         List<VipPatient> list = vipPatientService.selectVipPatientList(vipPatient);
+        for (VipPatient c:list){
+           c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+        }
         return getDataTable(list);
     }
 
@@ -88,9 +95,11 @@ public class VipPatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('vipPatient:patient:export')")
     @Log(title = "vip用户", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, VipPatient vipPatient)
-    {
+    public void export(HttpServletResponse response, VipPatient vipPatient) throws Exception {
         List<VipPatient> list = vipPatientService.selectVipPatientList(vipPatient);
+        for (VipPatient c:list){
+            c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+        }
         ExcelUtil<VipPatient> util = new ExcelUtil<VipPatient>(VipPatient.class);
         util.exportExcel(response, list, "vip用户数据");
     }
@@ -100,9 +109,10 @@ public class VipPatientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('vipPatient:patient:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
-        return AjaxResult.success(vipPatientService.selectVipPatientById(id));
+    public AjaxResult getInfo(@PathVariable("id") Long id) throws Exception {
+        VipPatient vipPatient = vipPatientService.selectVipPatientById(id);
+        vipPatient.setPatientPhone(aesUtils.decrypt(vipPatient.getPatientPhone()));
+        return AjaxResult.success();
     }
 
     /**
@@ -111,8 +121,8 @@ public class VipPatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('vipPatient:patient:add')")
     @Log(title = "vip用户", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody VipPatient vipPatient)
-    {
+    public AjaxResult add(@RequestBody VipPatient vipPatient) throws Exception {
+        vipPatient.setPatientPhone(aesUtils.encrypt(vipPatient.getPatientPhone()));
         return toAjax(vipPatientService.insertVipPatient(vipPatient));
     }
 
@@ -122,8 +132,8 @@ public class VipPatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('vipPatient:patient:edit')")
     @Log(title = "vip用户", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody VipPatient vipPatient)
-    {
+    public AjaxResult edit(@RequestBody VipPatient vipPatient) throws Exception {
+        vipPatient.setPatientPhone(aesUtils.encrypt(vipPatient.getPatientPhone()));
         //获取当前时间
         VipPatient vip = vipPatientService.selectVipPatientById(vipPatient.getId());
         vipPatient.setVipNum(vip.getVipNum() + vipPatient.getVipNum());
@@ -247,21 +257,22 @@ public class VipPatientController extends BaseController
      * @return
      */
     @GetMapping("/detectionNumSubtract")
-    public AjaxResult detectionNumSubtract(String patientPhone){
-
+    public AjaxResult detectionNumSubtract(String patientPhone) throws Exception {
+        String encrypt = aesUtils.encrypt(patientPhone);
         Boolean aBoolean = patientService.detectionNumSubtract(patientPhone);
 
         return AjaxResult.success(aBoolean);
     }
 
     @GetMapping("/detectionTime/{phone}")
-    public AjaxResult getDateTime(@PathVariable("phone")String phone){
+    public AjaxResult getDateTime(@PathVariable("phone")String phone) throws Exception {
+        String encrypt = aesUtils.encrypt(phone);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        VipPatient vipPhone = vipPatientService.findVipPhone(phone);
+        VipPatient vipPhone = vipPatientService.findVipPhone(encrypt);
         if (vipPhone!=null){
             return AjaxResult.success(simpleDateFormat.format(vipPhone.getEndDate()));
         }
-        SysUser sysUser = sysUserService.selectUserByPhone(phone);
+        SysUser sysUser = sysUserService.selectUserByPhone(encrypt);
         return AjaxResult.success(simpleDateFormat.format(sysUser.getDetectionTime()));
     }
 

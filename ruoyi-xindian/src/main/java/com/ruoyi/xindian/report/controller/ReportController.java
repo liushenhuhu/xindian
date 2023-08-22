@@ -13,6 +13,7 @@ import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.dataLabby.domain.dataLabby;
 import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
@@ -29,6 +30,7 @@ import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.patient_management.vo.PInfoVO;
 import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
@@ -113,6 +115,8 @@ public class ReportController extends BaseController
     private IHospitalService hospitalService;
 
 
+    @Autowired
+    private AesUtils aesUtils;
     @Resource
     private SysUserMapper sysUserMapper;
 
@@ -127,8 +131,7 @@ public class ReportController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('report:report:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Report report)
-    {
+    public TableDataInfo list(Report report) throws Exception {
         List<Report> list;
         startPage();
         list = reportService.selectReportList(report);
@@ -172,14 +175,19 @@ public class ReportController extends BaseController
                     medical.add("无");
                     reportM.setMedicalHistory(medical);
                 }
-//                if (patientManagement.getPatientPhone()!=null&&!"".equals(patientManagement.getPatientPhone())){
-//                    if (patientManagement.getPatientPhone().length()==14||patientManagement.getPatientPhone().length()==15){
-//                        reportM.setPatientPhone(patientManagement.getPatientPhone().substring(0,11));
-//                    }else {
-//                        reportM.setPatientPhone(patientManagement.getPatientPhone());
-//                    }
-//                }
+                if (patientManagement.getPatientPhone()!=null&&!"".equals(patientManagement.getPatientPhone())){
+                    patientManagement.setPatientPhone(aesUtils.decrypt(patientManagement.getPatientPhone()));
+                }
+                if (patientManagement.getPatientName()!=null&&!"".equals(patientManagement.getPatientName())){
+                    patientManagement.setPatientName(aesUtils.decrypt(patientManagement.getPatientName()));
+                }
 
+                if (patientManagement.getDiagnosisDoctor()!=null&&!"".equals(patientManagement.getDiagnosisDoctor())){
+                    patientManagement.setDiagnosisDoctor(aesUtils.decrypt(patientManagement.getDiagnosisDoctor()));
+                }
+                if (patientManagement.getDoctorPhone()!=null&&!"".equals(patientManagement.getDoctorPhone())){
+                    patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
+                }
                 patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
                 birthDay = patient.getBirthDay();
                 if(birthDay != null)
@@ -187,7 +195,7 @@ public class ReportController extends BaseController
                 else {
                     reportM.setPatientAge(patient.getPatientAge());
                 }
-                reportM.setPatientName(patient.getPatientName());
+                reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
                 reportM.setPatientSex(patient.getPatientSex());
             }
             resList.add(reportM);
@@ -213,12 +221,11 @@ public class ReportController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('report:report:query')")
     @GetMapping(value = "/{reportId}")
-    public AjaxResult getInfo(@PathVariable("reportId") Long reportId)
-    {
+    public AjaxResult getInfo(@PathVariable("reportId") Long reportId) throws Exception {
         Report report = reportService.selectReportByReportId(reportId);
-//        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())&&(report.getPPhone().length()==14||report.getPPhone().length()==15)){
-//            report.setPPhone(report.getPPhone().substring(0,11));
-//        }
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
+            report.setPPhone(aesUtils.decrypt(report.getPPhone()));
+        }
         return AjaxResult.success(report);
     }
 
@@ -227,12 +234,11 @@ public class ReportController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('report:report:query')")
     @GetMapping(value = "/getInfoByPid/{pId}")
-    public AjaxResult getInfoByPid(@PathVariable("pId") String pId)
-    {
+    public AjaxResult getInfoByPid(@PathVariable("pId") String pId) throws Exception {
         Report report = reportService.selectReportByPId(pId);
-//        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())&&(report.getPPhone().length()==14||report.getPPhone().length()==15)){
-//            report.setPPhone(report.getPPhone().substring(0,11));
-//        }
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
+            report.setPPhone(aesUtils.decrypt(report.getPPhone()));
+        }
         return AjaxResult.success(report);
     }
 
@@ -252,13 +258,16 @@ public class ReportController extends BaseController
     /**
      * 修改报告
      */
-//    @PreAuthorize("@ss.hasPermi('report:report:edit')")
+    @PreAuthorize("@ss.hasPermi('report:report:edit')")
     @Log(title = "报告", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Report report) throws Exception {
 //        User currentUser = ShiroUtils.getSysUser();
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
+        if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
+            report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+        }
         List<Doctor> doctors = null;
         //当前报告信息
         Report report1 = reportService.selectReportByPId(s);
@@ -268,14 +277,18 @@ public class ReportController extends BaseController
         //患者请求医生
         Report report2 = reportService.selectReportByPId(report.getpId());
         StringBuilder stringBuilder = new StringBuilder();
-        if (report2.getPPhone().length()==14||report2.getPPhone().length()==15){
-            stringBuilder.append(report2.getPPhone(), 0, 11);
+        String phone = aesUtils.decrypt(report2.getPPhone());
+        if (phone.length()==14||phone.length()==15){
+            stringBuilder.append(aesUtils.encrypt(phone.substring(0,11)));
         }else {
             stringBuilder.append(report2.getPPhone());
         }
         SysUser sysUser = sysUserMapper.selectUserByPhone(String.valueOf(stringBuilder));
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
         Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
+        if (patient.getPatientName()!=null&&!"".equals(patient.getPatientName())){
+            patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+        }
 
 //        if (sysUser==null){
 //            PatientRelationship patientRelationship = patientRelationshipMapper.selectFatherPhonePatientRelationship(report2.getPPhone());
@@ -340,7 +353,7 @@ public class ReportController extends BaseController
 
 //            sysUserMapper.updateDetectionNumAdd(sysUser.getPhonenumber));
             if (sysUser==null){
-                WxUtil.send(String.valueOf(stringBuilder));
+                WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
             }else {
                 try {
                     wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断被拒");
@@ -352,7 +365,7 @@ public class ReportController extends BaseController
         }else if(report.getDiagnosisStatus()==1){//医生诊断
             reportService.updateReport(report);
             if (sysUser==null){
-                WxUtil.send(String.valueOf(stringBuilder));
+                WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
             }else {
                 try {
                     wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
@@ -460,73 +473,27 @@ public class ReportController extends BaseController
      * 获取时间信息
      */
     @GetMapping("/get_week_info")
-    public AjaxResult getWeekInfo(Report rep) {
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(new Date());
-//        int weekIdx = calendar.get(Calendar.DAY_OF_WEEK) - 1;//1 星期一
-//        if(weekIdx<0) weekIdx=0;
-//        int flag=1;
-//        int index=0;
-//        ArrayList<String> weekDay = new ArrayList<>();
-//        HashMap<String, Integer> normal = new HashMap<>();
-//        HashMap<String, Integer> abnormal = new HashMap<>();
-//        HashMap<String, Object> params = new HashMap<>();
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//        String maxTime="0000";
-//        String minTime="9999";
-//        for (int i = 0; i < 7; i++) {
-//            Date date = DateUtils.addDays(new Date(), index);
-//            String formatDate = format.format(date);
-//            if(maxTime.compareTo(formatDate)<0) maxTime=formatDate;
-//            if(minTime.compareTo(formatDate)>0) minTime=formatDate;
-//            normal.put(formatDate,0);
-//            abnormal.put(formatDate,0);
-//            weekIdx+=flag;
-//            index+=flag;
-//            if(weekIdx==8){
-//                weekIdx=0;
-//                flag=-1;
-//                index=-1;
-//            }
-//        }
+    public AjaxResult getWeekInfo(Report rep) throws Exception {
 
-//        Report report = new Report();
-////        params.put("beginReportTime",minTime);
-////        params.put("endReportTime",maxTime);
-////        report.setParams(params);
-//        report.setPPhone(rep.getPPhone());
-//        List<Report> reports = reportService.selectReportList(rep);
-//        String key="";
-//        HashMap<String, Object> result = new HashMap<>();
-//
-//        for (Report re : reports) {
-//            key= new SimpleDateFormat("yyyy-MM-dd").format(re.getReportTime());
-//
-//            if(re.getIntelligentDiagnosis()!=null && re.getIntelligentDiagnosis().contains("正常")){
-//                if(normal.containsKey(key)){
-//                    normal.put(key,normal.get(key)+1);
-//                } else{
-//                    normal.put(key,1);
-//                }
-//            }
-//            else {
-//                if(abnormal.containsKey(key)){
-//                    abnormal.put(key,abnormal.get(key)+1);
-//                } else{
-//                    abnormal.put(key,1);
-//                }
-//            }
-//        }
-//        result.put("normal",normal);
-//        result.put("abnormal",abnormal);
+        if (rep.getPPhone()!=null&&!"".equals(rep.getPPhone())){
+            rep.setPPhone(aesUtils.encrypt(rep.getPPhone()));
+        }
+        if (rep.getdPhone()!=null&&!"".equals(rep.getdPhone())){
+            rep.setdPhone(aesUtils.encrypt(rep.getdPhone()));
+        }
         PInfoVO pInfoVO = patientManagementService.updatePatient(rep);
 
 
         return AjaxResult.success(pInfoVO);
     }
     @GetMapping("/getDealWithInfo")
-    public AjaxResult getDealWithInfo(Report rep) {
-
+    public AjaxResult getDealWithInfo(Report rep) throws Exception {
+        if (rep.getPPhone()!=null&&!"".equals(rep.getPPhone())){
+            rep.setPPhone(aesUtils.encrypt(rep.getPPhone()));
+        }
+        if (rep.getdPhone()!=null&&!"".equals(rep.getdPhone())){
+            rep.setdPhone(aesUtils.encrypt(rep.getdPhone()));
+        }
         HashMap<String, Integer> result = new HashMap<>();
 
         //已处理
@@ -556,8 +523,13 @@ public class ReportController extends BaseController
     }
 
     @GetMapping("/doctorFinishList")
-    public TableDataInfo doctorFinishList(Report report)
-    {
+    public TableDataInfo doctorFinishList(Report report) throws Exception {
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
+            report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+        }
+        if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
+            report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+        }
         startPage();
         List<Report> patientPhone = reportService.groupByPatientPhone(report.getdPhone());
 
@@ -602,14 +574,7 @@ public class ReportController extends BaseController
             }
             reportM.setPatientName(patient.getPatientName());
             reportM.setPatientSex(patient.getPatientSex());
-            StringBuilder stringBuilder = new StringBuilder();
-//            if (r.getPPhone().length()==14||r.getPPhone().length()==15){
-//                stringBuilder.append(r.getPPhone() ,0,11);
-//            }
-//            else {
-                stringBuilder.append(r.getPPhone());
-//            }
-            reportM.setPatientPhone(String.valueOf(stringBuilder));
+            reportM.setPatientPhone(String.valueOf(r.getPPhone()));
             resList.add(reportM);
         }
         return getTable(resList,new PageInfo(patientPhone).getTotal());
@@ -623,8 +588,12 @@ public class ReportController extends BaseController
     }
 
 
+    /**
+     * 查询抢单的用户信息
+     * @return
+     */
     @GetMapping("/docOrPatientList")
-    public AjaxResult docOrPatientList(){
+    public AjaxResult docOrPatientList() throws Exception {
         List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementList();
         for (PatientManagement management : patientManagements) {
             if(DateUtil.isValidDate(management.getBirthDay())){
@@ -634,15 +603,34 @@ public class ReportController extends BaseController
                     System.out.println(1);
                 }
             }
-//            if (management.getPatientPhone().length()==14||management.getPatientPhone().length()==15){
-//                management.setPatientPhone(management.getPatientPhone().substring(0,11));
-//            }
+            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+                management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
+
+            }
+            if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
+                management.setPatientName(aesUtils.decrypt(management.getPatientName()));
+            }
+            if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
+                management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
+            }
         }
         return AjaxResult.success(patientManagements);
     }
 
+    /**
+     * web选择医生诊断
+     * @param report
+     * @return
+     */
     @GetMapping("/docUpdate")
-    public AjaxResult docUpdate( Report report){
+    public AjaxResult docUpdate( Report report) throws Exception {
+
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
+            report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+        }
+        if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
+            report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+        }
         Report report1 = reportService.selectReportByPId(report.getpId());
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
         report.setReportId(report1.getReportId());
@@ -655,8 +643,15 @@ public class ReportController extends BaseController
         List<Doctor> doctors = doctorService.selectDoctorList(doctor);
         //定时器, 30分钟无医生诊断, 换医生诊断.
         wxMsgRunConfig.redisDTStart(report.getpId(),doctors);
-        WxUtil.send(report.getdPhone());
+        WxUtil.send(aesUtils.decrypt(report.getdPhone()));
         int i = reportService.updateReport(report);
+        return AjaxResult.success();
+    }
+
+
+    @GetMapping("/reportAesCopy")
+    public AjaxResult reportAesCopy(Limit limit) throws Exception {
+        reportService.reportAes(limit);
         return AjaxResult.success();
     }
 }

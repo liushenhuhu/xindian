@@ -1,10 +1,9 @@
 package com.ruoyi.xindian.util;
 
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.hospital.domain.Doctor;
-import com.ruoyi.xindian.log.domain.LogUser;
-import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.patient.domain.Patient;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -57,19 +56,36 @@ public class RequestAspect {
 
         if (null != argsName) {
             //单导预警
+            if ("alertLog".equalsIgnoreCase(argsName[0])) {
+                AlertLog dto = (AlertLog) args[0];
+                if(!StringUtils.isEmpty(dto.getPatientName())){
+                    //需要加密的数据
+                    dto.setPatientName("小李");
+                }
 
+                args[0] = dto;
+                return joinPoint.proceed(args);
+            }
             //医生管理
             if ("doctor".equalsIgnoreCase(argsName[0])) {
                 Doctor dto = (Doctor) args[0];
                 if(!StringUtils.isEmpty(dto.getDoctorPhone())){
                     //需要加密的数据
                     dto.setDoctorPhone(aesUtils.encrypt(dto.getDoctorPhone()));
+                    args[0] = dto;
                 }
                 if(!StringUtils.isEmpty(dto.getDoctorName())){
                     //需要加密的数据
                     dto.setDoctorName(aesUtils.encrypt(dto.getDoctorName()));
+                    args[0] = dto;
                 }
-                args[0] = dto;
+                if(!StringUtils.isEmpty(dto.getDoctorName()) && !StringUtils.isEmpty(dto.getDoctorPhone())){
+                    //需要加密的数据
+                    dto.setDoctorPhone(aesUtils.encrypt(dto.getDoctorPhone()));
+                    dto.setDoctorName(aesUtils.encrypt(dto.getDoctorName()));
+                    args[0] = dto;
+                }
+
                 return joinPoint.proceed(args);
             }
             //患者管理
@@ -83,6 +99,11 @@ public class RequestAspect {
                 if(!StringUtils.isEmpty(dto.getPatientPhone())){
                     //需要加密的数据
                     dto.setPatientPhone(aesUtils.encrypt(dto.getPatientPhone()));
+                }
+                if(!StringUtils.isEmpty(dto.getPatientName()) && !StringUtils.isEmpty(dto.getPatientPhone())){
+                    //需要加密的数据
+                    dto.setPatientPhone(aesUtils.encrypt(dto.getPatientPhone()));
+                    dto.setPatientName(aesUtils.encrypt(dto.getPatientName()));
                 }
                 args[0] = dto;
                 return joinPoint.proceed(args);
@@ -108,15 +129,17 @@ public class RequestAspect {
             //地址管理
 
             //发票管理
-            /*if ("invoice".equalsIgnoreCase(argsName[0])) {
-                Invoice dto = (Invoice) args[0];
-                if(!StringUtils.isEmpty(dto.get())){
-                    //需要加密的数据
-                    dto.setPhonenumber(aesUtils.encrypt(dto.getPhonenumber()));
-                }
-                args[0] = dto;
-                return joinPoint.proceed(args);
-            }*/
+
+            //登录
+//            if ("logUser".equalsIgnoreCase(argsName[0])) {
+//                LogUser dto = (LogUser) args[0];
+//                if(!StringUtils.isEmpty(dto.getPhonenumber())){
+//                    //需要加密的数据
+//                    dto.setPhonenumber(aesUtils.encrypt(dto.getPhonenumber()));
+//                }
+//                args[0] = dto;
+//                return joinPoint.proceed(args);
+//            }
 
 
         }

@@ -5,13 +5,13 @@
 <mapper namespace="com.ruoyi.xindian.statistics.mapper.StatisticsMapper">
 
     <select id="selectDoctor" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
-        select doctor_name,doctor_phone from doctor
+        select doctor_name_aes as doctor_name,doctor_phone_aes as doctor_phone from doctor
     </select>
 
     <select id="selectDoctorData" parameterType="com.ruoyi.xindian.statistics.domain.Statistics" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
         select month(report_time) as month, count(1) as count from report where year(report_time)=#{year} and diagnosis_status = 1 and start_time is not null
         <if test="doctorPhone != '' and doctorPhone != null">
-            and d_phone = #{doctorPhone}
+            and d_phone_aes = #{doctorPhone}
         </if>
         <if test="reportType != '' and reportType != null">
             and report_type like concat(#{reportType},"%")
@@ -76,9 +76,9 @@
         select c.doctorName,TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)  as timeCount, MONTH(c.f_time) as month
         from (
             select r.diagnosis_doctor as doctorName, r.start_time as b_time,r.report_time as f_time from report r
-           where MONTH(r.report_time) = #{month} and MONTH(r.start_time) = #{month} and r.diagnosis_doctor is not null and r.diagnosis_status = 1
+           where MONTH(r.report_time) = #{month} and MONTH(r.start_time) = #{month} and r.diagnosis_doctor_aes is not null and r.diagnosis_status = 1
             <if test="doctorPhone != '' and doctorPhone != null">
-                and r.d_phone = #{doctorPhone}
+                and r.d_phone_aes = #{doctorPhone}
             </if>
             <if test="reportType != '' and reportType != null">
                 and r.report_type like concat(#{reportType},"%")
@@ -91,15 +91,15 @@
     </select>
     <select id="selectCountList" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
 
-        select c.doctorName ,sum(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as countTime ,count(c.doctorName) as count ,avg(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as averageTime
+        select c.doctorName as doctorName,sum(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as countTime ,count(c.doctorName) as count ,avg(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as averageTime
         from (
-                 select r.diagnosis_doctor as doctorName, r.start_time as b_time,r.report_time as f_time  from report r
-                                                                                                                   INNER JOIN doctor d ON r.diagnosis_doctor =  d.doctor_name
-                 where  r.diagnosis_doctor is not null and r.diagnosis_status = 1  and start_time is not null
+                 select r.diagnosis_doctor_aes as doctorName, r.start_time as b_time,r.report_time as f_time  from report r
+                                                                                                                   INNER JOIN doctor d ON r.diagnosis_doctor_aes =  d.doctor_name_aes
+                 where  r.diagnosis_doctor_aes is not null and r.diagnosis_status = 1  and start_time is not null
                         <if test="startTime!=null&amp;&amp;startTime!=''&amp;&amp;endTime!=null&amp;&amp;endTime!=''">
                             and  r.report_time BETWEEN #{startTime}  and #{endTime}
                         </if>
-             ) as c GROUP BY c.doctorName ORDER BY  averageTime asc
+             ) as c GROUP BY c.doctorName ORDER BY averageTime asc
     </select>
 
 

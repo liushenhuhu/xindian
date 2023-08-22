@@ -3,6 +3,7 @@ package com.ruoyi.xindian.order.controller;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
@@ -13,6 +14,7 @@ import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.service.ProductService;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,19 +57,32 @@ public class OrderController {
 
     @Resource
     private IVipPatientService vipPatientService;
+
+
+    @Resource
+    private AesUtils aesUtils;
     /**
      * 查询用户所存在的订单
      * @return
      */
+//    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:query')")
     @GetMapping("/userOrderList")
-    public AjaxResult userOrderList(HttpServletRequest request,OrderInfo orderInfo){
+    public AjaxResult userOrderList(HttpServletRequest request,OrderInfo orderInfo) throws Exception {
         //获取token中发送请求的用户信息
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<OrderInfo> orderInfoList =  orderInfoService.selectUserOrderList(loginUser,orderInfo);
         if (orderInfoList!=null&&!orderInfoList.isEmpty()){
             for (OrderInfo c:orderInfoList){
                 c.setTotalFee(c.getTotalFee().multiply(new BigDecimal("0.01")));
-
+                if(c.getPatientPhone() != null&&!"".equals(c.getPatientPhone())){
+                    c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+                }
+                if(c.getPatientName() != null&&!"".equals(c.getPatientName())){
+                    c.setPatientName(aesUtils.decrypt(c.getPatientName()));
+                }
+                if(c.getStreetAddress() != null&&!"".equals(c.getStreetAddress())){
+                    c.setStreetAddress(aesUtils.decrypt(c.getStreetAddress()));
+                }
                 for (SuborderOrderInfo d : c.getSuborderOrderInfos()){
 
                     d.getProduct().setPrice(d.getProduct().getPrice().multiply(new BigDecimal("0.01")));
@@ -84,6 +99,7 @@ public class OrderController {
      * @param orderId
      * @return
      */
+//    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:remove')")
     @GetMapping("/delete")
     public AjaxResult deleteOrder(String orderId){
         Boolean isDel  = orderInfoService.deleteOrder(orderId);
@@ -101,6 +117,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/orderAdd")
+//    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:add')")
     public AjaxResult orderAdd(HttpServletRequest request,Long productId,Integer sum,String addressId){
 
 
@@ -162,6 +179,7 @@ public class OrderController {
      * @param sum
      * @return
      */
+//    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:add')")
     @PostMapping("/orderKpOrFwAdd")
     public AjaxResult orderKpOrFwAdd(HttpServletRequest request,Long productId,Integer sum){
 

@@ -9,20 +9,20 @@
         <result property="pId"    column="p_id"    />
         <result property="diagnosisStatus"    column="diagnosis_status"    />
         <result property="diagnosisConclusion"    column="diagnosis_conclusion"    />
-        <result property="diagnosisDoctor"    column="diagnosis_doctor"    />
+        <result property="diagnosisDoctor"    column="diagnosis_doctor_aes"    />
         <result property="reportTime"    column="report_time"    />
         <result property="startTime"    column="start_time"    />
         <result property="reportType"    column="report_type"    />
         <result property="intelligentDiagnosis"    column="intelligent_diagnosis"    />
-        <result property="dPhone"    column="d_phone"    />
+        <result property="dPhone"    column="d_phone_aes"    />
         <result property="handlingSuggestion"    column="handling_suggestion"    />
         <result property="healthAdvice"    column="health_advice"    />
-        <result property="pPhone"    column="p_phone"    />
+        <result property="pPhone"    column="p_phone_aes"    />
         <result property="patientSymptom"    column="patient_symptom"    />
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor, report_time, report_type, intelligent_diagnosis, d_phone, handling_suggestion, health_advice, p_phone,patient_symptom,start_time from report
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
@@ -31,14 +31,14 @@
             <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
             <if test="diagnosisStatus != null"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
-            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor like concat('%', #{diagnosisDoctor}, '%')</if>
+            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor_aes like concat('%', #{diagnosisDoctor}, '%')</if>
             <if test="startReportTime != null and startReportTime != '' and endReportTime != null and endReportTime != ''"> and report_time between #{startReportTime} and DATE_ADD(#{endReportTime}, INTERVAL 1 DAY) </if>
             <if test="reportType != null  and reportType != ''"> and report_type like concat(#{reportType}, '%')</if>
             <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis = #{intelligentDiagnosis}</if>
-            <if test="dPhone != null  and dPhone != ''"> and d_phone = #{dPhone}</if>
+            <if test="dPhone != null  and dPhone != ''"> and d_phone_aes = #{dPhone}</if>
             <if test="handlingSuggestion != null  and handlingSuggestion != ''"> and handling_suggestion = #{handlingSuggestion}</if>
             <if test="healthAdvice != null  and healthAdvice != ''"> and health_advice = #{healthAdvice}</if>
-            <if test="pPhone != null  and pPhone != ''"> and p_phone like concat( #{pPhone},'%')</if>
+            <if test="pPhone != null  and pPhone != ''"> and p_phone_aes = #{pPhone}</if>
             <if test="patientSymptom != null  and patientSymptom != ''"> and patient_symptom = #{patientSymptom}</if>
         </where>
         order by report_time desc
@@ -55,9 +55,12 @@
     </select>
 
     <select id="groupByPatientPhone" parameterType="string" resultMap="ReportResult">
-        SELECT p_phone
+        SELECT p_phone_aes
         FROM report
-        WHERE d_phone = #{dPhone} and diagnosis_status= 1 GROUP BY p_phone
+        WHERE d_phone_aes = #{dPhone} and diagnosis_status= 1 GROUP BY p_phone_aes
+    </select>
+    <select id="selectA" resultType="com.ruoyi.xindian.report.domain.Report">
+        select * from report limit #{start},#{end}
     </select>
 
 
@@ -67,14 +70,14 @@
             <if test="pId != null and pId != ''">p_id,</if>
             <if test="diagnosisStatus != null">diagnosis_status,</if>
             <if test="diagnosisConclusion != null">diagnosis_conclusion,</if>
-            <if test="diagnosisDoctor != null">diagnosis_doctor,</if>
+            <if test="diagnosisDoctor != null">diagnosis_doctor_aes,</if>
             <if test="reportTime != null">report_time,</if>
             <if test="reportType != null">report_type,</if>
             <if test="intelligentDiagnosis != null">intelligent_diagnosis,</if>
-            <if test="dPhone != null">d_phone,</if>
+            <if test="dPhone != null">d_phone_aes,</if>
             <if test="handlingSuggestion != null">handling_suggestion,</if>
             <if test="healthAdvice != null">health_advice,</if>
-            <if test="pPhone != null">p_phone,</if>
+            <if test="pPhone != null">p_phone_aes,</if>
             <if test="patientSymptom != null">patient_symptom,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -98,15 +101,15 @@
             <if test="pId != null and pId != ''">p_id = #{pId},</if>
             <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
             <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
-            <if test="diagnosisDoctor != null">diagnosis_doctor = #{diagnosisDoctor},</if>
+            <if test="diagnosisDoctor != null">diagnosis_doctor_aes = #{diagnosisDoctor},</if>
             <if test="reportTime != null">report_time = #{reportTime},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="reportType != null">report_type = #{reportType},</if>
             <if test="intelligentDiagnosis != null">intelligent_diagnosis = #{intelligentDiagnosis},</if>
-            <if test="dPhone != null">d_phone = #{dPhone},</if>
+            <if test="dPhone != null">d_phone_aes = #{dPhone},</if>
             <if test="handlingSuggestion != null">handling_suggestion = #{handlingSuggestion},</if>
             <if test="healthAdvice != null">health_advice = #{healthAdvice},</if>
-            <if test="pPhone != null">p_phone = #{pPhone},</if>
+            <if test="pPhone != null">p_phone_aes = #{pPhone},</if>
             <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
         </trim>
         where report_id = #{reportId}
@@ -123,10 +126,10 @@
             <if test="intelligentDiagnosis != null">intelligent_diagnosis = #{intelligentDiagnosis},</if>
             <if test="handlingSuggestion != null">handling_suggestion = #{handlingSuggestion},</if>
             <if test="healthAdvice != null">health_advice = #{healthAdvice},</if>
-            <if test="pPhone != null">p_phone = #{pPhone},</if>
+            <if test="pPhone != null">p_phone_aes = #{pPhone},</if>
             <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
-            diagnosis_doctor = null,
-            d_phone = null
+            diagnosis_doctor_aes = null,
+            d_phone_aes = null
         </trim>
         where report_id = #{reportId}
     </update>

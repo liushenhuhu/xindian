@@ -68,7 +68,7 @@ public interface IDoctorService
     /**
      * 查询医院所在医生
      */
-    List<ListDocVO> listDoc();
+    List<ListDocVO> listDoc() throws Exception;
 
 
     List<Doctor> selectUserDoc(Doctor doctor);

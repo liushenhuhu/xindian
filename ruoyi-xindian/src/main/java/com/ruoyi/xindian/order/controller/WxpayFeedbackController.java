@@ -76,7 +76,7 @@ public class WxpayFeedbackController extends BaseController
     /**
      * 新增反馈
      */
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
+    @Log(title = "新增反馈", businessType = BusinessType.INSERT)
     @PostMapping("/feedbackAdd")
     public AjaxResult add(@RequestBody WxpayFeedback wxpayFeedback)
     {

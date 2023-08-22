@@ -219,6 +219,7 @@ public class EquipmentController extends BaseController {
         return AjaxResult.success(EquipmentCodeList);
     }
 
+//    @PreAuthorize("@ss.hasPermi('equipment:equipment:code')")
     @GetMapping("/code")
     public AjaxResult code(String equimentCode){
         Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equimentCode);

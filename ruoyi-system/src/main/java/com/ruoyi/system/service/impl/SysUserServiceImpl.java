@@ -8,6 +8,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,6 +61,8 @@ public class SysUserServiceImpl implements ISysUserService {
     @Autowired
     protected Validator validator;
 
+    @Resource
+    private AesUtils aesUtils;
     @Override
     public SysUser selectWxUserByOpenId(String openId) {
         return userMapper.selectWxUserByOpenId(openId);
@@ -236,8 +240,11 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     @Transactional
-    public int insertUser(SysUser user) {
-
+    public int insertUser(SysUser user) throws Exception {
+//        String encrypt = aesUtils.encrypt(user.getPhonenumber());
+//        user.setPhonenumber(encrypt);
+//        String encrypt1 = aesUtils.encrypt(user.getUserName());
+//        user.setUserName(encrypt1);
         Calendar calendar = Calendar.getInstance();
         // 设置日期
         calendar.setTime(new Date());

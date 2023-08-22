@@ -35,6 +35,7 @@ public class SysUser extends BaseEntity
     /** 用户账号 */
     @Excel(name = "登录名称")
     private String userName;
+    private String userNameAes;
 
     /** 用户昵称 */
     @Excel(name = "用户名称")
@@ -47,6 +48,8 @@ public class SysUser extends BaseEntity
     /** 手机号码 */
     @Excel(name = "手机号码")
     private String phonenumber;
+
+    private String phonenumberAes;
 
     /** 用户性别 */
     @Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")
@@ -117,6 +120,22 @@ public class SysUser extends BaseEntity
     private String unionId;
 
     private Date detectionTime;
+
+    public String getUserNameAes() {
+        return userNameAes;
+    }
+
+    public void setUserNameAes(String userNameAes) {
+        this.userNameAes = userNameAes;
+    }
+
+    public String getPhonenumberAes() {
+        return phonenumberAes;
+    }
+
+    public void setPhonenumberAes(String phonenumberAes) {
+        this.phonenumberAes = phonenumberAes;
+    }
 
     public Date getDetectionTime() {
         return detectionTime;

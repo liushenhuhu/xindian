@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.report.service;
 
 import java.util.List;
+
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.report.domain.Report;
 
 /**
@@ -82,5 +84,6 @@ public interface IReportService
     public List<Report> groupByPatientPhone(String dPhone);
 
 
+    void reportAes(Limit limit) throws Exception;
 
 }

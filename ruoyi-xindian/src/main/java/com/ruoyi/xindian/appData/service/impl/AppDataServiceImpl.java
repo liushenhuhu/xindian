@@ -1,6 +1,11 @@
 package com.ruoyi.xindian.appData.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.mapper.MedicalHistoryMapper;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.appData.mapper.AppDataMapper;
@@ -18,6 +23,12 @@ public class AppDataServiceImpl implements IAppDataService
 {
     @Autowired
     private AppDataMapper appDataMapper;
+
+    @Autowired
+    private MedicalHistoryMapper medicalHistoryMapper;
+
+    @Autowired
+    private AesUtils aesUtils;
 
     /**
      * 查询app相关数据
@@ -99,5 +110,29 @@ public class AppDataServiceImpl implements IAppDataService
     @Override
     public int deleteDataByAppDataIds(String[] appDataIds) {
         return appDataMapper.deleteDataByAppDataIds(appDataIds);
+    }
+
+    @Override
+    public void appAesCopy(Limit limit) throws Exception {
+//        List<AppData> appData = appDataMapper.searchAllByAppDataIdAppData(limit);
+//        for (AppData c : appData){
+//            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+//                c.setPatientPhone(aesUtils.encrypt(c.getPatientPhone()));
+//            }
+//            if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
+//                c.setPatientName(aesUtils.encrypt(c.getPatientName()));
+//            }
+//            if (c.getUserName()!=null&&!"".equals(c.getUserName())){
+//                c.setUserName(aesUtils.encrypt(c.getUserName()));
+//            }
+//            appDataMapper.updateAppData(c);
+//        }
+
+        List<MedicalHistory> medicalHistories = medicalHistoryMapper.selectPastMedicalHistoryList(limit);
+        for (MedicalHistory c:medicalHistories){
+            c.setPatientPhone(aesUtils.encrypt(c.getPatientPhone()));
+            medicalHistoryMapper.updateMedicalHistory(c);
+        }
+
     }
 }
