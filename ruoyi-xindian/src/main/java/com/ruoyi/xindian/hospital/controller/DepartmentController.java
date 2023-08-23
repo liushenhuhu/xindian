@@ -67,6 +67,7 @@ public class DepartmentController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Department department, HttpServletRequest request)
     {
+
         LoginUser loginUser = tokenService.getLoginUser(request);
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
@@ -85,11 +86,16 @@ public class DepartmentController extends BaseController
             startPage();
             List<Department> departments = departmentService.selectDepartmentList(department);
             return getDataTable(departments);
+        }else {
+            if(department.getHospitalCode()!=null&&!"".equals(department.getHospitalCode())){
+                department.getHospitalCodeList().add( department.getHospitalCode());
+            }
+            startPage();
+            List<Department> list = departmentService.selectDepartmentList(department);
+            return getDataTable(list);
+
         }
 
-        startPage();
-        List<Department> list = departmentService.selectDepartmentList(department);
-        return getDataTable(list);
 
     }
     @GetMapping("/getAllDepartment")
