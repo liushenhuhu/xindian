@@ -43,7 +43,7 @@
         where patient_phone_aes = #{patientPhone}
     </select>
     <select id="selectPastMedicalHistoryList" resultType="com.ruoyi.xindian.medical.domain.MedicalHistory">
-        select * from medical_history limit #{start},#{end}
+        select * from medical_history where patient_phone_aes is null limit #{start},#{end}
     </select>
 
     <insert id="insertMedicalHistory" parameterType="MedicalHistory" useGeneratedKeys="true"
@@ -63,7 +63,7 @@
             <if test="pastMedicalHistory != null">#{pastMedicalHistory},</if>
             <if test="livingHabit != null">#{livingHabit},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
-            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="patientPhone != null">#{patientPhoneAes},</if>
         </trim>
     </insert>
 

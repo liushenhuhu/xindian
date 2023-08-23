@@ -42,7 +42,7 @@ public interface IAppDataService
      * @param appData app相关数据
      * @return 结果
      */
-    public int insertAppData(AppData appData);
+    public int insertAppData(AppData appData) throws Exception;
 
     /**
      * 修改app相关数据

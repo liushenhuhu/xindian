@@ -1,11 +1,13 @@
 package com.ruoyi.xindian.medical.service.impl;
 
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.mapper.MedicalHistoryMapper;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,6 +21,9 @@ public class MedicalHistoryServiceImpl implements IMedicalHistoryService
 {
     @Autowired
     private MedicalHistoryMapper medicalHistoryMapper;
+
+    @Resource
+    private AesUtils aesUtils;
 
     /**
      * 查询病史
@@ -56,8 +61,10 @@ public class MedicalHistoryServiceImpl implements IMedicalHistoryService
      * @return 结果
      */
     @Override
-    public int insertMedicalHistory(MedicalHistory medicalHistory)
-    {
+    public int insertMedicalHistory(MedicalHistory medicalHistory) throws Exception {
+        if (medicalHistory.getPatientPhone()!=null&&!"".equals(medicalHistory.getPatientPhone())){
+            medicalHistory.setPatientPhoneAes(aesUtils.decrypt(medicalHistory.getPatientPhone()));
+        }
         return medicalHistoryMapper.insertMedicalHistory(medicalHistory);
     }
 

@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.dataLabby.domain.dataLabbyDto;
 import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
 import com.ruoyi.xindian.hospital.domain.Doctor;
@@ -65,6 +67,8 @@ public class dataLabbyController extends BaseController
     @Autowired
     private IPatientService patientService;
 
+    @Resource
+    private TokenService tokenService;
     @Resource
     private WxMsgRunConfig wxMsgRunConfig;
 
@@ -188,9 +192,9 @@ public class dataLabbyController extends BaseController
      * 抢单
      */
     @GetMapping(value = "/dataLabby/{reportId}")
-    public AjaxResult getOrder(@PathVariable("reportId") String pId) throws Exception {
-        LoginUser loginUser = SecurityUtils.getLoginUser();
-        String phonenumber = aesUtils.encrypt(loginUser.getUser().getPhonenumber());
+    public AjaxResult getOrder(@PathVariable("reportId") String pId, HttpServletRequest request) throws Exception {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        String phonenumber = loginUser.getUser().getPhonenumber();
         Doctor doctor = doctorService.selectDoctorByDoctorPhone(phonenumber);
         lock.lock();
         try{
@@ -201,6 +205,8 @@ public class dataLabbyController extends BaseController
             if(report.getdPhone()!=null){
                 return AjaxResult.error("当前订单已被抢走！");
             }
+            report.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
+            report.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
             report.setdPhone(phonenumber);
             report.setDiagnosisDoctor(doctor.getDoctorName());
             report.setDiagnosisStatus(2L);

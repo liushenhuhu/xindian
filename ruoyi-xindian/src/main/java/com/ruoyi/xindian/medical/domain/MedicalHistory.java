@@ -37,8 +37,17 @@ public class MedicalHistory extends BaseEntity
     /** 患者电话 */
     @Excel(name = "患者电话")
     private String patientPhone;
+    private String patientPhoneAes;
 
-    public void setMedicalHistoryId(Long medicalHistoryId) 
+    public String getPatientPhoneAes() {
+        return patientPhoneAes;
+    }
+
+    public void setPatientPhoneAes(String patientPhoneAes) {
+        this.patientPhoneAes = patientPhoneAes;
+    }
+
+    public void setMedicalHistoryId(Long medicalHistoryId)
     {
         this.medicalHistoryId = medicalHistoryId;
     }

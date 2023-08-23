@@ -193,6 +193,8 @@ public class PatientRelationshipController extends BaseController
         Patient patient = new Patient();
         patient.setPatientName(aesUtils.encrypt(patientRelationship.getRelationshipPatientName()));
         patient.setPatientPhone(patientRelationship.getSonPhone());
+        patient.setPatientNameAes(patientRelationship.getRelationshipPatientName());
+        patient.setPatientPhoneAes(aesUtils.decrypt(patientRelationship.getSonPhone()));
         patient.setPatientSex(patientRelationship.getPatientSex());
         patient.setBirthDay(patientRelationship.getBirthDay());
         return patient;

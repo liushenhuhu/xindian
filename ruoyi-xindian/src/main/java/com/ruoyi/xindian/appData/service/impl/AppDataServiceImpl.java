@@ -66,8 +66,13 @@ public class AppDataServiceImpl implements IAppDataService
      * @return 结果
      */
     @Override
-    public int insertAppData(AppData appData)
-    {
+    public int insertAppData(AppData appData) throws Exception {
+        if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
+            appData.setPatientNameAes(aesUtils.decrypt(appData.getPatientName()));
+        }
+        if (appData.getPatientPhone()!=null&&!"".equals(appData.getPatientPhone())){
+            appData.setPatientPhoneAes(aesUtils.decrypt(appData.getPatientPhone()));
+        }
         return appDataMapper.insertAppData(appData);
     }
 
@@ -132,6 +137,7 @@ public class AppDataServiceImpl implements IAppDataService
         for (MedicalHistory c:medicalHistories){
             c.setPatientPhone(aesUtils.encrypt(c.getPatientPhone()));
             medicalHistoryMapper.updateMedicalHistory(c);
+//            System.out.println(c);
         }
 
     }

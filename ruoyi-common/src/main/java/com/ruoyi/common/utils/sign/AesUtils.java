@@ -1,16 +1,12 @@
 package com.ruoyi.common.utils.sign;
 
 
-
-
-import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.naming.ldap.PagedResultsControl;
 
 /**
  * AES 加解密

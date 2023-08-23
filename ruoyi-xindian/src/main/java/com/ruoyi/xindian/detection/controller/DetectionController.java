@@ -18,6 +18,9 @@ import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.util.WxUtil;
+import com.ruoyi.xindian.vipPatient.domain.VipPatient;
+import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
+import com.ruoyi.xindian.vipPatient.service.impl.VipPatientServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,6 +59,8 @@ public class DetectionController extends BaseController
     @Resource
     private ISysUserService sysUserService;
 
+    @Resource
+    private IVipPatientService vipPatientService;
 
     @Resource
     private AesUtils aesUtils;
@@ -147,29 +152,12 @@ public class DetectionController extends BaseController
     @GetMapping("/getDetectionNumByPhone/{patientPhone}")
     public AjaxResult getDetectionNumByPhone(@PathVariable String patientPhone) throws Exception {
         String encrypt = aesUtils.encrypt(patientPhone);
-        HashMap<String, Object> params = new HashMap<>();
-        Detection detection = new Detection();
-        LocalDate now = LocalDate.now();
-        LocalDateTime startOfDay = now.atStartOfDay();
-        LocalDateTime endofDay = now.atTime(LocalTime.MAX);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        String start = startOfDay.format(formatter);
-        String end = endofDay.format(formatter);
-        params.put("beginDetectionTime",start);
-        params.put("endDetectionTime",end);
-        detection.setPatientPhone(encrypt);
-        detection.setParams(params);
-        List<Detection> detections = detectionService.selectDetectionList(detection);
+        VipPatient vipPhone = vipPatientService.findVipPhone(encrypt);
+        if (vipPhone!=null){
+            return AjaxResult.success(vipPhone.getVipNum());
+        }
         SysUser sysUser = sysUserService.selectUserByPhone(encrypt);
-        if(detections.size()<= sysUser.getDetectionNum()){
-            Long d=sysUser.getDetectionNum()-detections.size();
-            return AjaxResult.success(d);
-        }
-        else{
-            return AjaxResult.error("今日次数已用用完");
-        }
-
+        return AjaxResult.success(sysUser.getDetectionNum());
 
 
     }

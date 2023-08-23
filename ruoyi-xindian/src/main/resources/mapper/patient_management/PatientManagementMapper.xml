@@ -407,7 +407,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, report_time desc
+        order by online_status desc, connection_time desc
     </select>
 
     <select id="selectPatientManagementListDECG12_COUNT" parameterType="PatientManagement" resultType="long">
@@ -552,20 +552,20 @@
         GROUP BY  DATE_FORMAT(connection_time,'%Y-%m-%d')
     </select>
     <select id="selectALLTotal" resultType="com.ruoyi.xindian.patient_management.vo.PInfoVO">
-        SELECT COUNT(r.p_phone) as totalCollection
+        SELECT COUNT(r.p_phone_aes) as totalCollection
         FROM report r INNER JOIN patient_management p  ON r.p_id = p.p_id
-        WHERE p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone = #{pPhone}
+        WHERE p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone_aes = #{pPhone}
 
     </select>
     <select id="selectALLTotal01" resultType="com.ruoyi.xindian.patient_management.vo.PInfoVO">
-        SELECT COUNT(r.p_phone) as totalSingle
+        SELECT COUNT(r.p_phone_aes) as totalSingle
         FROM report r INNER JOIN patient_management p  ON r.p_id = p.p_id
-        WHERE p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone = #{pPhone} and p.ecg_type like concat(#{ecgType},'%')
+        WHERE p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone_aes = #{pPhone} and p.ecg_type like concat(#{ecgType},'%')
     </select>
     <select id="selectALLTotal02" resultType="com.ruoyi.xindian.patient_management.vo.PInfoVO">
-        SELECT COUNT(r.p_phone) as totalConsult
+        SELECT COUNT(r.p_phone_aes) as totalConsult
         FROM report r INNER JOIN patient_management p  ON r.p_id = p.p_id
-        WHERE  p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone = #{pPhone} and r.diagnosis_status = '1'
+        WHERE  p.connection_time BETWEEN #{startReportTime} and  DATE_ADD(#{endReportTime} ,INTERVAL 1 DAY)and r.p_phone_aes = #{pPhone} and r.diagnosis_status = '1'
     </select>
     <select id="selectPatientManagementJECGList1"
             resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement">

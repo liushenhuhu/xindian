@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertAppData" parameterType="AppData" useGeneratedKeys="true" keyProperty="appDataId">
-        insert into app_data
+        replace into app_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientName != null">patient_name_aes,</if>
             <if test="patientName != null">patient_name,</if>
@@ -64,12 +64,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientName != null">#{patientName},</if>
-            <if test="patientName != null">#{patientName},</if>
+            <if test="patientName != null">#{patientNameAes},</if>
             <if test="patientSex != null">#{patientSex},</if>
             <if test="patientAge != null">#{patientAge},</if>
             <if test="patientCode != null">#{patientCode},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
-            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="patientPhone != null">#{patientPhoneAes},</if>
             <if test="userName != null">#{userName},</if>
             <if test="userName != null">#{userName},</if>
             <if test="birthDay != null">#{birthDay},</if>

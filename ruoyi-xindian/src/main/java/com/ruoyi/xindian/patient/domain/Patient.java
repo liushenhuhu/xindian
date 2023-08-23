@@ -33,6 +33,7 @@ public class Patient extends BaseEntity {
      */
     @Excel(name = "患者姓名")
     private String patientName;
+    private String patientNameAes;
 
     /**
      * 患者身份证号
@@ -71,6 +72,7 @@ public class Patient extends BaseEntity {
      */
     @Excel(name = "患者电话")
     private String patientPhone;
+    private String patientPhoneAes;
 
     /**
      * 家属电话
@@ -113,6 +115,22 @@ public class Patient extends BaseEntity {
     private Long hospitalId;
 
     private List<String> hospitalNameList = new ArrayList<>();
+
+    public String getPatientNameAes() {
+        return patientNameAes;
+    }
+
+    public void setPatientNameAes(String patientNameAes) {
+        this.patientNameAes = patientNameAes;
+    }
+
+    public String getPatientPhoneAes() {
+        return patientPhoneAes;
+    }
+
+    public void setPatientPhoneAes(String patientPhoneAes) {
+        this.patientPhoneAes = patientPhoneAes;
+    }
 
     public List<String> getHospitalNameList() {
         return hospitalNameList;

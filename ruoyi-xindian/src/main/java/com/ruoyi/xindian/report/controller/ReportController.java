@@ -132,6 +132,12 @@ public class ReportController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('report:report:list')")
     @GetMapping("/list")
     public TableDataInfo list(Report report) throws Exception {
+        if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
+            report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+        }
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
+            report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+        }
         List<Report> list;
         startPage();
         list = reportService.selectReportList(report);
@@ -156,7 +162,15 @@ public class ReportController extends BaseController
             medical=new ArrayList<>();
             reportM=new ReportM();
             patientManagement = patientManagementService.selectPatientManagementByPId(r.getpId());
-
+            if (r.getPPhone()!=null&&!"".equals(r.getPPhone())){
+                r.setPPhone(aesUtils.decrypt(r.getPPhone()));
+            }
+            if (r.getdPhone()!=null&&!"".equals(r.getdPhone())){
+                r.setdPhone(aesUtils.decrypt(r.getdPhone()));
+            }
+            if (r.getDiagnosisDoctor()!=null&&!"".equals(r.getDiagnosisDoctor())){
+                r.setDiagnosisDoctor(aesUtils.decrypt(r.getDiagnosisDoctor()));
+            }
             BeanUtils.copyProperties(r,reportM);
             if(patientManagement != null){
                 medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientManagement.getPatientPhone());
@@ -175,6 +189,8 @@ public class ReportController extends BaseController
                     medical.add("无");
                     reportM.setMedicalHistory(medical);
                 }
+
+                patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
                 if (patientManagement.getPatientPhone()!=null&&!"".equals(patientManagement.getPatientPhone())){
                     patientManagement.setPatientPhone(aesUtils.decrypt(patientManagement.getPatientPhone()));
                 }
@@ -186,9 +202,8 @@ public class ReportController extends BaseController
                     patientManagement.setDiagnosisDoctor(aesUtils.decrypt(patientManagement.getDiagnosisDoctor()));
                 }
                 if (patientManagement.getDoctorPhone()!=null&&!"".equals(patientManagement.getDoctorPhone())){
-                    patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
+                    patientManagement.setDoctorPhone(aesUtils.decrypt(patientManagement.getDoctorPhone()));
                 }
-                patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
                 birthDay = patient.getBirthDay();
                 if(birthDay != null)
                     reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
@@ -346,6 +361,7 @@ public class ReportController extends BaseController
             notDealWith.setDoctorPhone(report.getdPhone());
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
+            notDealWith.setDoctorPhoneAes(report.getdPhone());
             notDealWith.setRefuseTime(calendar.getTime());
             notDealWith.setRefuseReason(report.getDiagnosisConclusion());
             notDealWithService.insertNotDealWith(notDealWith);
@@ -572,9 +588,9 @@ public class ReportController extends BaseController
             else {
                 reportM.setPatientAge(patient.getPatientAge());
             }
-            reportM.setPatientName(patient.getPatientName());
+            reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
             reportM.setPatientSex(patient.getPatientSex());
-            reportM.setPatientPhone(String.valueOf(r.getPPhone()));
+            reportM.setPatientPhone(aesUtils.decrypt(String.valueOf(r.getPPhone())));
             resList.add(reportM);
         }
         return getTable(resList,new PageInfo(patientPhone).getTotal());
@@ -633,6 +649,8 @@ public class ReportController extends BaseController
         }
         Report report1 = reportService.selectReportByPId(report.getpId());
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+        report.setDiagnosisDoctorAes(aesUtils.decrypt(doctor1.getDoctorName()));
+        report.setDPhoneAes(aesUtils.decrypt(doctor1.getDoctorPhone()));
         report.setReportId(report1.getReportId());
         report.setDiagnosisStatus(2L);
         report.setDiagnosisDoctor(doctor1.getDoctorName());

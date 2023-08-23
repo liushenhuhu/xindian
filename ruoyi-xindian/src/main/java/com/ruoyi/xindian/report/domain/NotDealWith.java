@@ -34,6 +34,7 @@ public class NotDealWith extends BaseEntity
     /** 医生电话 */
     @Excel(name = "医生电话")
     private String doctorPhone;
+    private String doctorPhoneAes;
 
     /** 拒绝理由 */
     @Excel(name = "拒绝理由")

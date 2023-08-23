@@ -41,6 +41,7 @@ public class Report extends BaseEntity
     /** 诊断医生 */
     @Excel(name = "诊断医生")
     private String diagnosisDoctor;
+    private String diagnosisDoctorAes;
 
     /** 报告时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -59,6 +60,7 @@ public class Report extends BaseEntity
     /** 医生电话 */
     @Excel(name = "医生电话")
     private String dPhone;
+    private String dPhoneAes;
 
     /** 处置建议 */
     @Excel(name = "处置建议")

@@ -63,21 +63,21 @@ public class WxMsgRunConfig {
         LocalTime now = LocalTime.now();
 
         redisTemplate.opsForList().leftPushAll("DocList"+pid,doctorList);
-        redisTemplate.opsForValue().set("reportPT:"+pid,pid,1, TimeUnit.MINUTES);
-//        if (now.isAfter(start) && now.isBefore(end)) {
-//
-//            ExecutorService executorService = Executors.newSingleThreadExecutor();
-//            CompletableFuture.runAsync(() ->{
-//                System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
-//                try{
-//                    wxPublicRequest.dockerMsg();
-//                }catch (Exception e){
-//                    System.out.println(e);
-//                }
-//                System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
-//            },executorService);
-//            executorService.shutdown(); // 回收线程池
-//        }
+        redisTemplate.opsForValue().set("reportPT:"+pid,pid,10, TimeUnit.MINUTES);
+        if (now.isAfter(start) && now.isBefore(end)) {
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            CompletableFuture.runAsync(() ->{
+                System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
+                try{
+                    wxPublicRequest.dockerMsg();
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+                System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
+            },executorService);
+            executorService.shutdown(); // 回收线程池
+        }
 
     }
 
@@ -100,6 +100,8 @@ public class WxMsgRunConfig {
                     int rand = StrUtil.randomInt(doctors.size());
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();
+                    report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
+                    report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                     report2.setdPhone(dPhone);
                     report2.setReportTime(new Date());
                     report2.setStartTime(new Date());
@@ -117,6 +119,8 @@ public class WxMsgRunConfig {
                         Doctor doctor =doctorList.get(rand);
                         String dPhone= doctor.getDoctorPhone();
                         report2.setdPhone(dPhone);
+                        report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
+                        report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                         report2.setReportTime(new Date());
                         report2.setStartTime(new Date());
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
@@ -125,9 +129,9 @@ public class WxMsgRunConfig {
                 }
 
                 reportService.updateReport(report2);
-                redisTemplate.opsForValue().set("reportDT:"+pId,pId,3, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
             }else {
-                redisTemplate.opsForValue().set("reportPT:"+pId,pId,1, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set("reportPT:"+pId,pId,10, TimeUnit.MINUTES);
 //                redisTemplate.opsForValue().set("reportPT:"+pId,pId,1, TimeUnit.MINUTES);
             }
         }
@@ -156,8 +160,9 @@ public class WxMsgRunConfig {
                     int rand = StrUtil.randomInt(doctors.size());
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();
-//                    WxUtil.send(aesUtils.decrypt(dPhone));
-
+                    WxUtil.send(aesUtils.decrypt(dPhone));
+                    report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
+                    report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
                     WxUtil.send(dPhone);
                     redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
@@ -172,14 +177,16 @@ public class WxMsgRunConfig {
                         Doctor doctor =doctorList.get(rand);
                         String dPhone= doctor.getDoctorPhone();
                         report2.setdPhone(dPhone);
+                        report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
+                        report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
-//                        WxUtil.send(aesUtils.decrypt(dPhone));
+                        WxUtil.send(aesUtils.decrypt(dPhone));
                     }
                 }
 
             }
             reportService.updateReport(report2);
-            redisTemplate.opsForValue().set("reportDT:"+pId,pId,3, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
         }
 
     }
@@ -194,7 +201,7 @@ public class WxMsgRunConfig {
         redisTemplate.delete("DocList"+pId);
         List<Doctor> doctors = new ArrayList<>(doctorList);
         redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
-        redisTemplate.opsForValue().set("reportDT:"+pId,pId,3, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
     }
 
 

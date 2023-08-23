@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.patient.mapper;
 
 import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
 
@@ -45,6 +46,7 @@ public interface PatientMapper
      * @return 结果
      */
     public int updatePatient(Patient patient);
+    public int updatePatientAes(Patient patient);
 
     /**
      * 删除患者
@@ -88,4 +90,7 @@ public interface PatientMapper
 
 
     int updateDetectionNumInt(@Param("patientPhone") String patientPhone);
+
+
+    List<Patient> selectAlertLogListPatients(Limit limit);
 }

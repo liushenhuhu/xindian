@@ -24,6 +24,7 @@ public class AppData extends BaseEntity
     /** 患者姓名 */
     @Excel(name = "患者姓名")
     private String patientName;
+    private String patientNameAes;
 
     /** 患者性别 */
     @Excel(name = "患者性别")
@@ -40,6 +41,7 @@ public class AppData extends BaseEntity
     /** 患者手机号 */
     @Excel(name = "患者手机号")
     private String patientPhone;
+    private String patientPhoneAes;
 
     /** 用户名 */
     @Excel(name = "用户名")
@@ -55,6 +57,22 @@ public class AppData extends BaseEntity
 
     /** 关系*/
     private String relation;
+
+    public String getPatientNameAes() {
+        return patientNameAes;
+    }
+
+    public void setPatientNameAes(String patientNameAes) {
+        this.patientNameAes = patientNameAes;
+    }
+
+    public String getPatientPhoneAes() {
+        return patientPhoneAes;
+    }
+
+    public void setPatientPhoneAes(String patientPhoneAes) {
+        this.patientPhoneAes = patientPhoneAes;
+    }
 
     public String getRelation() {
         return relation;

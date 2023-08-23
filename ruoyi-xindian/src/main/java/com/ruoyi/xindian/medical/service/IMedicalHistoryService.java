@@ -36,7 +36,7 @@ public interface IMedicalHistoryService
      * @param medicalHistory 病史
      * @return 结果
      */
-    public int insertMedicalHistory(MedicalHistory medicalHistory);
+    public int insertMedicalHistory(MedicalHistory medicalHistory) throws Exception;
 
     /**
      * 修改病史

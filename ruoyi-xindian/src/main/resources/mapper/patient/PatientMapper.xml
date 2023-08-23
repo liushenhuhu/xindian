@@ -98,6 +98,9 @@
         <include refid="selectPatientVo"/>
         where patient_name_aes = #{patientName} and patient_phone_aes = #{patientPhone}
     </select>
+    <select id="selectAlertLogListPatients" resultType="com.ruoyi.xindian.patient.domain.Patient">
+        select * from patient where patient_phone_aes is null limit #{start},#{end}
+    </select>
 
     <insert id="insertPatient" parameterType="Patient">
         insert into patient
@@ -122,13 +125,13 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
             <if test="patientName != null and patientName != ''">#{patientName},</if>
-            <if test="patientName != null and patientName != ''">#{patientName},</if>
+            <if test="patientName != null and patientName != ''">#{patientNameAes},</if>
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
             <if test="patientAge != null">#{patientAge},</if>
             <if test="patientSex != null">#{patientSex},</if>
             <if test="patientSource != null">#{patientSource},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
-            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="patientPhone != null">#{patientPhoneAes},</if>
             <if test="familyPhone != null">#{familyPhone},</if>
             <if test="equipmentId != null">#{equipmentId},</if>
             <if test="monitoringStatus != null">#{monitoringStatus},</if>
@@ -172,6 +175,9 @@
         update patient
         set detection_num = detection_num - 1
         where patient_phone_aes = #{patientPhone}
+    </update>
+    <update id="updatePatientAes">
+        update patient set patient_phone_aes = #{patientPhoneAes}, patient_name_aes = #{patientNameAes} where patient_id=#{patientId}
     </update>
 
     <delete id="deletePatientByPatientId" parameterType="Long">

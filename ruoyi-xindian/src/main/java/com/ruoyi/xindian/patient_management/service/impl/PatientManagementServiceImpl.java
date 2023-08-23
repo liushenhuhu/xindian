@@ -6,6 +6,8 @@ import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.mapper.PatientMapper;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
@@ -42,6 +44,8 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
 private PatientRelationshipMapper patientRelationshipMapper;
 
 
+@Resource
+private PatientMapper patientMapper;
 @Resource
 private AesUtils aesUtils;
     @Resource
@@ -204,12 +208,22 @@ private AesUtils aesUtils;
 //        }
 
 
-        List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipListLimit(limit);
-        for (PatientRelationship c:patientRelationships){
-
-            c.setFatherPhone(aesUtils.encrypt(c.getFatherPhone()));
-            c.setSonPhone(aesUtils.encrypt(c.getSonPhone()));
-            patientRelationshipMapper.updatePatientRelationship(c);
+//        List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipListLimit(limit);
+//        for (PatientRelationship c:patientRelationships){
+//
+//            c.setFatherPhone(aesUtils.encrypt(c.getFatherPhone()));
+//            c.setSonPhone(aesUtils.encrypt(c.getSonPhone()));
+//            patientRelationshipMapper.updatePatientRelationship(c);
+//        }
+        List<Patient> patients = patientMapper.selectAlertLogListPatients(limit);
+        for (Patient c:patients){
+            if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
+                c.setPatientNameAes(aesUtils.encrypt(c.getPatientName()));
+            }
+            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+                c.setPatientPhoneAes(aesUtils.encrypt(c.getPatientPhone()));
+            }
+            patientMapper.updatePatientAes(c);
         }
     }
 

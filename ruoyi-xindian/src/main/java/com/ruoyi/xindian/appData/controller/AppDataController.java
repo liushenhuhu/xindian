@@ -148,6 +148,12 @@ public class AppDataController extends BaseController {
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody AppData appData) throws Exception {
+
+        int res = 0;
+        Patient patient = new Patient();
+        Patient patientSel = new Patient();
+        patient.setPatientNameAes(appData.getPatientName());
+        patient.setPatientPhoneAes(appData.getPatientPhone());
         if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
             appData.setUserName(aesUtils.encrypt(appData.getUserName()));
         }
@@ -157,10 +163,6 @@ public class AppDataController extends BaseController {
         if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
             appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
         }
-        int res = 0;
-        Patient patient = new Patient();
-        Patient patientSel = new Patient();
-
         patientSel.setPatientPhone(appData.getPatientPhone());
         patient.setPatientName(appData.getPatientName());
         patient.setPatientPhone(appData.getPatientPhone());
@@ -218,6 +220,7 @@ public class AppDataController extends BaseController {
         if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
             appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
         }
+
         return toAjax(appDataService.insertAppData(appData));
     }
 

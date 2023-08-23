@@ -170,7 +170,8 @@ public class DoctorController extends BaseController
 
     @GetMapping(value = "/getInfoByDoctorPhone/{doctorPhone}")
     public AjaxResult getInfoByDoctorPhone(@PathVariable("doctorPhone") String doctorPhone) throws Exception {
-        Doctor doctor = doctorService.selectDoctorByDoctorPhone(doctorPhone);
+        String encrypt = aesUtils.encrypt(doctorPhone);
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(encrypt);
         doctor.setDoctorPhone(aesUtils.decrypt(doctor.getDoctorPhone()));
         doctor.setDoctorName(aesUtils.decrypt(doctor.getDoctorName()));
         Department department = new Department();
@@ -187,7 +188,8 @@ public class DoctorController extends BaseController
     @Log(title = "医生", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Doctor doctor) throws Exception {
-        Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(doctor.getDoctorPhone());
+        String encrypt = aesUtils.encrypt(doctor.getDoctorPhone());
+        Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(encrypt);
         if (doctor1!=null){
             return AjaxResult.error("手机号已存在");
         }
