@@ -1,13 +1,11 @@
 <template>
   <div>
     <div class="body">
-
-<!-- 心电图 -->
       <div class="noright">
         <div class="ecg">
+          <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
           <div>
-            <div id="1" class="line" @dblclick="showChart1()">
-            </div>
+            <div id="1" class="line" @dblclick="showChart1()"></div>
           </div>
           <div>
             <div id="2" class="line" @dblclick="showChart2()"></div>
@@ -35,90 +33,116 @@
           </div>
         </div>
       </div>
-
-      <div class="noleft" style="position: relative;flex-direction: row;width: 80vw">
+      <div class="noleft">
         <div class="patientMessage">
-          <div class="patientMessage-1">
-            <div class="patientMessage-1-1"><strong>姓名:</strong>{{ data.name }}</div>
-            <div class="patientMessage-1-1"><strong>性别:</strong>{{ data.gender }}</div>
-            <div class="patientMessage-1-1"><strong>年龄:</strong>{{ data.age }}岁</div>
-            <div class="patientMessage-1-1"><strong>送检科室:</strong> -</div>
-            <div class="patientMessage-1-1"><strong>申请单号:</strong> -</div>
-            <div class="patientMessage-1-1"><strong>门诊号:</strong> -</div>
-            <div class="patientMessage-1-1"><strong>住院号:</strong> -</div>
-            <div class="patientMessage-1-1"><strong>病人编号:</strong> -</div>
-          </div>
-          <div class="patientMessage-2">
-            <div class="patientMessage-2-1"><strong>HR:</strong>{{ data.hr }}bpm</div>
-            <div class="patientMessage-2-1"><strong>PR:</strong>{{ data.pr }}ms</div>
-            <div class="patientMessage-2-1"><strong>QRS:</strong>{{ data.qrs }}ms</div>
-            <div class="patientMessage-2-1"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>
-            <div class="patientMessage-2-1"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg
-            </div>
-            <div class="patientMessage-2-1"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>
-            <div class="patientMessage-2-1"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>
-          </div>
+          <el-descriptions class="patientMessage1" title="患者信息" :column="1" border>
+            <el-descriptions-item>
+              <template slot="label"><strong>姓名:</strong></template>{{ data.name }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label"><strong>性别:</strong></template>{{ data.gender }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label"><strong>年龄:</strong></template>{{ data.age }}岁
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label"><strong>送检科室:</strong></template> -
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label"><strong>申请单号:</strong></template> -
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label"><strong>门诊号:</strong></template> -
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label"><strong>住院号:</strong></template> -
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label"><strong>病人编号:</strong></template> -
+            </el-descriptions-item>
+          </el-descriptions>
+<!--          <div class="patientMessage-1">-->
+<!--            <div class="patientMessage-1-1"><strong>姓名:</strong>{{ data.name }}</div>-->
+<!--            <div class="patientMessage-1-1"><strong>性别:</strong>{{ data.gender }}</div>-->
+<!--            <div class="patientMessage-1-1"><strong>年龄:</strong>{{ data.age }}岁</div>-->
+<!--            <div class="patientMessage-1-1"><strong>送检科室:</strong> -</div>-->
+<!--            <div class="patientMessage-1-1"><strong>申请单号:</strong> -</div>-->
+<!--            <div class="patientMessage-1-1"><strong>门诊号:</strong> -</div>-->
+<!--            <div class="patientMessage-1-1"><strong>住院号:</strong> -</div>-->
+<!--            <div class="patientMessage-1-1"><strong>病人编号:</strong> -</div>-->
+<!--          </div>-->
+<!--          <div class="patientMessage-2">-->
+<!--            <div class="patientMessage-2-1"><strong>HR:</strong>{{ data.hr }}bpm</div>-->
+<!--            <div class="patientMessage-2-1"><strong>PR:</strong>{{ data.pr }}ms</div>-->
+<!--            <div class="patientMessage-2-1"><strong>QRS:</strong>{{ data.qrs }}ms</div>-->
+<!--            <div class="patientMessage-2-1"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>-->
+<!--            <div class="patientMessage-2-1"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg-->
+<!--            </div>-->
+<!--            <div class="patientMessage-2-1"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>-->
+<!--            <div class="patientMessage-2-1"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>-->
+<!--          </div>-->
         </div>
         <div class="automaticResult">
-          <div><div class="doctor-1"><strong>自动分析结果，仅供参考</strong></div>
-            <div>
-              <div style="width: 20vw;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
-            </div></div>
-          <div style="margin-left: 5vw"><div class="doctor-1">
+          <div class="doctor-1"><strong>自动分析结果，仅供参考</strong></div>
+          <div>
+            <div style="width: 95%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
+          </div>
+          <div class="doctor-1"><strong>患者症状</strong></div>
+          <div>
+            <div style="width: 95%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.patientSymptom }}</div>
+          </div>
+          <div class="doctor-1">
             <strong>医师诊断</strong>
             <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 20vw">常用术语</el-button>
           </div>
-            <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-              <div v-for="(item) in items">
-                <div>{{ item.name }}</div>
-                <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
-                        v-for="itemc in item.label"
-                        :key="itemc"
-                        @click="putDown(itemc,$event)">{{ itemc }}
-                </button>
-              </div>
-              <div slot="footer" class="dialog-footer">
-                <!--                  <el-button @click="cancleDialog()">取 消</el-button>-->
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-              </div>
-            </el-dialog>
-            <div>
-              <el-input
-                style="width: 20vw;"
-                type="textarea"
-                placeholder="请在这里输入医生诊断结果"
-                data-value="1111"
-                :rows="6"
-                class="font"
-                v-model="this.arr.toString()"
-              >
-              </el-input>
-            </div></div>
-
+          <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
+            <div v-for="(item,index) in items">
+              <div>{{ item.name }}</div>
+              <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
+                      v-for="(itemc,indexc) in item.label"
+                      :key="itemc"
+                      @click="putDown(itemc)">{{ itemc }}
+              </button>
+            </div>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            </div>
+          </el-dialog>
+          <div>
+            <el-input
+              style="width: 95%;"
+              type="textarea"
+              v-model="data.resultByDoctor"
+              placeholder="请在这里输入医生诊断结果"
+              data-value="1111"
+              :rows="6"
+              class="font">{{ data.resultByDoctor }}
+            </el-input>
+          </div>
         </div>
-        <div class="upload" style="position: absolute">
+        <div class="upload">
           <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
           <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
         </div>
-        <div class="doctor" style="flex: none;flex-basis:100%">
-          <div style="width: 25vw">
+        <div class="doctor">
+          <div>
             <strong>医师:</strong>
             <el-input v-model="data.doctorName" clearable
-                      :style="{width: '80%',}">{{ data.doctorName }}
+                      :style="{width: '90%',}">{{ data.doctorName }}
             </el-input>
           </div>
-          <div style="width:25vw">
+          <div>
             <strong>日期:</strong>
             <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
-                      :style="{width: '80%',}"></el-input>
+                      :style="{width: '90%',}"></el-input>
             <el-input v-else v-model="data.dataTime" clearable
-                      :style="{width: '80%',}"></el-input>
+                      :style="{width: '90%',}"></el-input>
           </div>
         </div>
       </div>
 
     </div>
-
     <div class="lineI" v-show="open1">
       <div id="I1" class="lineshow"></div>
       <button @click="clickClose" class="noName">关闭</button>
@@ -155,7 +179,6 @@
       <div id="I9" class="lineshow"></div>
       <button @click="clickClose" class="noName">关闭</button>
     </div>
-    <child ref="drawShow"></child>
   </div>
 </template>
 
@@ -164,13 +187,9 @@ import echarts from 'echarts'
 import $ from 'jquery';
 import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/report/report";
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
-import child from './child'
 
 export default {
   name: "index",
-  components:{
-    child
-  },
   data() {
     return {
       videoVisible: false,//echarts弹出框显示
@@ -211,7 +230,6 @@ export default {
       isSelected: false,//术语按钮没有被按下
       selectedButtons: [],//选中的按钮
       pId: null,
-      arr: [],
       data: {
         name: "",
         gender: "",
@@ -234,6 +252,7 @@ export default {
         diagnosisData: null,
         bSuggest: "",
         cSuggest: "",
+        patientSymptom:"无",
       },
       data12: {
         x: [],
@@ -268,14 +287,21 @@ export default {
     var pId = this.$route.query.pId;
     if (pId) {
       this.pId = pId;
-      //console.log(this.pId);
       getReportByPId(this.pId).then(response => {
-        console.log("请求成功：", response.data)
-        this.data.resultByDoctor = response.intelligent_diagnosis
+        console.log( response.data)
+        this.data.resultByDoctor = response.diagnosisConclusion
         this.data.doctorName = response.diagnosisDoctor
         this.data.diagnosisData = response.reportTime
         this.data.pphone = response.data.pphone
+        if (response.data.patientSymptom!=null){
+          this.data.patientSymptom = response.data.patientSymptom
+        }
+
       });
+      // var show = sessionStorage.getItem(pId + "show");
+      // if (!show) {
+      //   this.get();
+      // }
     }
   },
   mounted() {
@@ -285,59 +311,31 @@ export default {
   },
   methods: {
     showChart1() {
-      // 找到对应的canvas
-      var canvas = $("#1").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open1 = !this.open1;
     },
     showChart2() {
-      var canvas = $("#2").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open2 = !this.open2;
     },
     showChart3() {
-      var canvas = $("#3").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open3 = !this.open3;
     },
     showChart4() {
-      var canvas = $("#4").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open4 = !this.open4;
     },
     showChart5() {
-      var canvas = $("#5").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open5 = !this.open5;
     },
     showChart6() {
-      var canvas = $("#6").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open6 = !this.open6;
     },
     showChart7() {
-      var canvas = $("#7").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open7 = !this.open7;
     },
     showChart8() {
-      var canvas = $("#8").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open8 = !this.open8;
     },
     showChart9() {
-      var canvas = $("#9").find("canvas")[0];
-      // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      this.open9 = !this.open9;
     },
     clickClose() {
       this.open1 = false;
@@ -351,19 +349,40 @@ export default {
       this.open9 = false;
     },
     //按下常用术语按钮
-    putDown(key,event) {
-      event.currentTarget.classList.toggle('selected')
-      if(this.arr.length > 0){
-        let index = this.arr.indexOf(key);
-        //console.log(index)
-        if(index !== -1){
-          this.arr.splice(index,1);
-        }else {
-          this.arr.push(key);
-        }
-      }else {
-        this.arr.push(key);
+    putDown(key) {
+      console.log(key)
+      if (this.data.resultByDoctor === null)
+        this.data.resultByDoctor = []
+      console.log(this.data.resultByDoctor)
+      let index = this.data.resultByDoctor.indexOf(key);
+      console.log("if", index2, this.isSelected)
+      if (index2 !== -1) {
+        this.data.resultByDoctor.splice(index2, 1);
+      } else {
+        this.data.resultByDoctor.push(key)
       }
+      // if (this.isSelected) {
+      //   this.isSelected = false
+      //   let index = this.data.resultByDoctor.indexOf(key);
+      //   console.log("if", index, this.isSelected)
+      //   if (index !== -1) {
+      //     // this.selectedButtons.splice(index, 1);
+      //     // this.data.resultByDoctor=this.selectedButtons
+      //     this.data.resultByDoctor.splice(index, 1);
+      //   } else {
+      //     // this.data.resultByDoctor += key + ';';
+      //     this.data.resultByDoctor.push(key)
+      //     //this.selectedButtons.push(key)
+      //     // this.data.resultByDoctor=this.selectedButtons
+      //   }
+      // } else {
+      //   this.isSelected = true
+      //   console.log("else", this.isSelected)
+      //   // this.data.resultByDoctor += key + ';';
+      //   this.data.resultByDoctor.push(key)
+      //   // this.selectedButtons.push(key)
+      //   // this.data.resultByDoctor=this.selectedButtons
+      // }
     },
     //请求数据
     get() {
@@ -401,16 +420,20 @@ export default {
           _th.data.name = data.result.patientName
           _th.data.result = data.result.intelligent_diagnosis
           _th.data.hr = data.result.ecg_analysis_data["平均心率"]
+          // this.data.pr = data.result.ecg_analysis_data[""]
+          // this.data.qrs = data.result.ecg_analysis_data[""]
+          // this.data.qt = data.result.ecg_analysis_data[""]
+          // this.data.p = data.result.ecg_analysis_data[""]
+          // this.data.pv5 = data.result.ecg_analysis_data[""]
+          // this.data.rv5 = data.result.ecg_analysis_data[""]
           _th.data.datas = data.result.II
           console.log("获取到的导联数据", _th.data.datas)
           console.log("获取到的导联数据长度", _th.data.datas.length)
           _th.nArr = _th.getNewArray(_th.data.datas, 600);
           console.log("数据以600一条分好组", _th.nArr)
-
           for (var i = 0; i < 600; i++) {
             _th.x.push(i);
           }
-
           var chart1 = echarts.init(document.getElementById("1"));
           chart1.clear()
           chart1.setOption({
@@ -440,14 +463,13 @@ export default {
               axisLine: {
                 show: false//x轴线
               },
-              //interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  ////opacity: 100,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -464,14 +486,13 @@ export default {
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
-              minInterval: 1,
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  ////opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
 
                 }
               },
@@ -482,13 +503,13 @@ export default {
               {
                 type: 'line',
                 smooth: true,
-                showSymbol: true,
+                showSymbol: false,
                 data: _th.nArr[0],
                 lineStyle: {
                   normal: {
                     color: "#000000",
                     width: 1,
-                    // //opacity: 1,
+                    // opacity: 1,
                   }
                 },
                 markLine: {
@@ -498,7 +519,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    ////opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -543,10 +564,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  ////opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -566,10 +587,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  ////opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -594,7 +615,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    ////opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -641,10 +662,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  ////opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -664,10 +685,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  ////opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -692,7 +713,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -737,10 +758,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -760,10 +781,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -788,7 +809,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -833,10 +854,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -856,10 +877,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -884,7 +905,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -929,10 +950,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -952,10 +973,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -980,7 +1001,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1025,10 +1046,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1048,10 +1069,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1076,7 +1097,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1121,10 +1142,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1144,10 +1165,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1172,7 +1193,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1217,10 +1238,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1240,10 +1261,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1268,7 +1289,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1315,10 +1336,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1338,10 +1359,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
 
                 }
               },
@@ -1358,7 +1379,7 @@ export default {
                   normal: {
                     color: "#000000",
                     width: 1,
-                    // //opacity: 1,
+                    // opacity: 1,
                   }
                 },
                 markLine: {
@@ -1368,7 +1389,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1413,10 +1434,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1436,10 +1457,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1464,7 +1485,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1511,10 +1532,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1534,10 +1555,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1562,7 +1583,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1607,10 +1628,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1630,10 +1651,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1658,7 +1679,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1703,10 +1724,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1726,10 +1747,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1754,7 +1775,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1799,10 +1820,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1822,10 +1843,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1850,7 +1871,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1895,10 +1916,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -1918,10 +1939,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -1946,7 +1967,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -1991,10 +2012,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -2014,10 +2035,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -2042,7 +2063,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -2087,10 +2108,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               }
             },
@@ -2110,10 +2131,10 @@ export default {
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "red", //网格的颜色
+                  color: "#f8c1bf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  //opacity: 0.6,//透明度
+                  opacity: 0.6,//透明度
                 }
               },
               max: 1,
@@ -2138,7 +2159,7 @@ export default {
                     type: "solid",
                     color: '#b33939',
                     width: 1,
-                    //opacity: 0.5,
+                    opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
@@ -2152,8 +2173,6 @@ export default {
           $(window).resize(function () {
             chart99.resize();
           });
-
-
         },
         error: function (data) {
           alert("数据请求错误,请刷新页面或联系管理员")
@@ -2169,10 +2188,6 @@ export default {
         + (str.getMonth() + 1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes() + ":" + str.getSeconds();
       return nowTime;
     },
-    /*cancleDialog(){
-      this.dialogFormVisible = false;
-      this.arr = [];
-    },*/
     //发送短信
     sendMsg() {
       console.log("患者电话: " + this.data.pphone)
@@ -2262,6 +2277,69 @@ export default {
       }
       return newArray;
     },
+    //canvas画图
+    // drawgrid() {
+    //   var c_canvas = document.getElementById("grids");
+    //   this.drawSmallGrid(c_canvas);
+    //   this.drawMediumGrid(c_canvas);
+    //   this.drawBigGrid(c_canvas);
+    // },
+    // drawSmallGrid(c_canvas) {
+    //   this.ctx = c_canvas.getContext("2d");
+    //   this.ctx.strokeStyle = "#f1dedf";
+    //   this.ctx.strokeWidth = 1;
+    //   this.ctx.beginPath();
+    //   for (var x = 0.5; x < 750; x += 3) {
+    //     this.ctx.moveTo(x, 0);
+    //     this.ctx.lineTo(x, 750);
+    //     this.ctx.stroke();
+    //   }
+    //   for (var y = 0.5; y < 750; y += 3) {
+    //     this.ctx.moveTo(0, y);
+    //     this.ctx.lineTo(750, y);
+    //     this.ctx.stroke();
+    //   }
+    //   this.ctx.closePath();
+    // },
+    // drawMediumGrid(c_canvas) {
+    //   this.ctx = c_canvas.getContext("2d");
+    //   this.ctx.strokeStyle = "#fdbeb9";
+    //   this.ctx.strokeWidth = 2
+    //   //宽度是小网格的2倍
+    //   this.ctx.beginPath();
+    //   for (var x = 0.5; x < 750; x += 15) {
+    //     this.ctx.moveTo(x, 0);
+    //     this.ctx.lineTo(x, 750);
+    //     this.ctx.stroke();
+    //   }
+    //   for (var y = 0.5; y < 750; y += 15) {
+    //     this.ctx.moveTo(0, y);
+    //     this.ctx.lineTo(750, y);
+    //     this.ctx.stroke();
+    //   }
+    //   this.ctx.closePath();
+    //   return;
+    // },
+    //
+    // drawBigGrid(c_canvas) {
+    //   this.ctx = c_canvas.getContext("2d");
+    //   this.ctx.strokeStyle = "#e0514b";
+    //   this.ctx.strokeWidth = 3;
+    //   this.ctx.beginPath();
+    //   for (var x = 0.5; x < 750; x += 75) {
+    //     this.ctx.moveTo(x, 0);
+    //     this.ctx.lineTo(x, 750);
+    //     this.ctx.stroke();
+    //   }
+    //   for (var y = 0.5; y < 750; y += 75) {
+    //     this.ctx.moveTo(0, y);
+    //     this.ctx.lineTo(750, y);
+    //     this.ctx.stroke();
+    //   }
+    //   this.ctx.closePath();
+    //   return;
+    // }
+
   },
 }
 </script>
@@ -2273,9 +2351,9 @@ export default {
 
 .noleft {
   display: flex;
-  width: 35%;
   flex-direction: column;
-  //flex-wrap: wrap;
+  padding-left: 0.5vw;
+  width: 35%;
   //background-color: #71f9d5;
 }
 
@@ -2284,9 +2362,11 @@ export default {
   //justify-content:space-between;
   align-items: stretch;
   //background-color: #e01806;
-  height: 10vw;
+  height: 30vw;
 }
-
+.patientMessage1{
+  width: 15vw;
+}
 .patientMessage-1 {
   width: 15vw;
   display: flex;
@@ -2312,9 +2392,6 @@ export default {
 .automaticResult {
   //height: 27vw;
   margin-top: 2vw;
-  //width: 45vw;
-  display: flex;
-  justify-content: center;
 }
 
 .doctor-1 {
@@ -2326,31 +2403,28 @@ export default {
 
 .doctor {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 5vw;
-  width: 100vw;
   line-height: 6vw;
-  margin-left: 25.6vw;
 }
 
 .noright {
   width: 65%;
   display: flex;
+  flex-direction: column;
   //border: 1px solid #000000;
 }
 
 .ecg {
   //width: 50vw;
   //  height: 50vw;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
 }
 
 .line {
   height: 9vw;
-  width: 100%;
+  width: 55vw;
   margin: 0;
   padding: 0;
 
@@ -2361,12 +2435,8 @@ export default {
   //height: 5vw;
   display: flex;
   justify-content: space-around;
-  top:29vh;
-  left:5vw;
 }
-.flexBox{
-  display: flex;
-}
+
 .anNiu {
   height: 3vw;
   width: 8vw;
@@ -2398,8 +2468,8 @@ export default {
 }
 
 .selected {
-  background-color: #435bf7;
-  color: #fff !important;
+  //background-color: #435bf7;
+  //color: #fff !important;
 }
 .font {
   font-size: 1vw;
