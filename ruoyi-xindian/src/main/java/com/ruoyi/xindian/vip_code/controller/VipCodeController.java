@@ -10,6 +10,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
@@ -39,7 +40,8 @@ public class VipCodeController extends BaseController {
 
     @Autowired
     private ISysUserService iSysUserService;
-
+    @Autowired
+    private SysUserMapper sysUserMapper;
     //web分页查询激活码
     @GetMapping("/web/list")
     public TableDataInfo list(VipCode vipCode){
@@ -136,6 +138,7 @@ public class VipCodeController extends BaseController {
                 calendar.add(a, data);
                 vip.setEndDate(calendar.getTime());
                 iVipPatientService.insertVipPatient(vip);
+                sysUserMapper.updateDeteTime(sysUser.getPhonenumber());
             }else {//普通激活码
                 //设置加上去的时间
                 calendar.setTime(sysUser.getDetectionTime());

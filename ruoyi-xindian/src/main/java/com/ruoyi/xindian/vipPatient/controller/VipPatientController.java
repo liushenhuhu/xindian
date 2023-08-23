@@ -81,6 +81,9 @@ public class VipPatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('vipPatient:patient:list')")
     @GetMapping("/list")
     public TableDataInfo list(VipPatient vipPatient) throws Exception {
+        if(vipPatient.getPatientPhone()!=null&&!"".equals(vipPatient.getPatientPhone())){
+            vipPatient.setPatientPhone(aesUtils.encrypt(vipPatient.getPatientPhone()));
+        }
         startPage();
         List<VipPatient> list = vipPatientService.selectVipPatientList(vipPatient);
         for (VipPatient c:list){
@@ -135,18 +138,18 @@ public class VipPatientController extends BaseController
     public AjaxResult edit(@RequestBody VipPatient vipPatient) throws Exception {
         vipPatient.setPatientPhone(aesUtils.encrypt(vipPatient.getPatientPhone()));
         //获取当前时间
-        VipPatient vip = vipPatientService.selectVipPatientById(vipPatient.getId());
-        vipPatient.setVipNum(vip.getVipNum() + vipPatient.getVipNum());
-        Date endDate = vipPatient.getEndDate();
-        // 创建 Calendar 实例并设置原始日期
-        Calendar calendar = Calendar.getInstance();
-        // 设置日期
-        calendar.setTime(endDate);
-        // 加一年
-        calendar.add(Calendar.YEAR, 1);
-        // 获取加一年后的日期
-        Date newDate = calendar.getTime();
-        vip.setEndDate(newDate);
+//        VipPatient vip = vipPatientService.selectVipPatientById(vipPatient.getId());
+        vipPatient.setVipNum(vipPatient.getVipNum());
+//        Date endDate = vipPatient.getEndDate();
+//        // 创建 Calendar 实例并设置原始日期
+//        Calendar calendar = Calendar.getInstance();
+//        // 设置日期
+//        calendar.setTime(endDate);
+//        // 加一年
+//        calendar.add(Calendar.YEAR, 1);
+//        // 获取加一年后的日期
+//        Date newDate = calendar.getTime();
+//        vip.setEndDate(newDate);
 
         return toAjax(vipPatientService.updateVipPatient(vipPatient));
     }
