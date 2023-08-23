@@ -352,7 +352,6 @@ export default {
     }
   },
   async activated() {
-    this.openLoading();
     let hospitalId =this.$route.query.hospitalId
     // console.log(hospitalId)
     if(hospitalId&&hospitalId!==1){
