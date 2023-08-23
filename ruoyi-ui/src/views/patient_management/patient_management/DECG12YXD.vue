@@ -28,14 +28,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="患者id" prop="pId">
+      <el-form-item label="患者id" prop="pId">
         <el-input
           v-model="queryParams.pId"
           placeholder="请输入患者id"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
       <el-form-item label="医院名称" prop="hospitalName">
         <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>
           <el-option

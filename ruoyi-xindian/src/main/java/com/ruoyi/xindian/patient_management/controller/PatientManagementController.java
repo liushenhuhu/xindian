@@ -150,8 +150,8 @@ public class PatientManagementController extends BaseController {
                 }
             }
         }
-        if (patientManagement.getPatPhone()!=null){
-            patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
+        if (patientManagement.getPatientPhone()!=null){
+            patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }
         if (patientManagement.getPatientName()!=null){
             patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));

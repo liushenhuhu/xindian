@@ -77,14 +77,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="患者电话" prop="patientPhone">
+<!--      <el-form-item label="患者电话" prop="patientPhone">
         <el-input
           v-model="queryParams.patientPhone"
           placeholder="请输入患者电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>

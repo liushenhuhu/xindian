@@ -128,14 +128,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="pId" prop="pId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.pId"-->
-<!--          placeholder="请输入pId"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
+      <el-form-item label="pId" prop="pId">
+        <el-input
+          v-model="queryParams.pId"
+          placeholder="请输入pId"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
