@@ -17,29 +17,35 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科室" prop="departmentCode">
-<!--        <el-input-->
-<!--          v-model="queryParams.departmentCode"-->
-<!--          placeholder="请输入科室代号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-        <el-autocomplete
-          popper-class="my-autocomplete"
-          v-model="state"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入科室"
-          @select="handleSelect">
-          <i
-            class="el-icon-circle-close"
-            slot="suffix"
-            @click="handleIconClick">
-          </i>
-          <template slot-scope="{ item }">
-            <div class="name">{{ item.value }}</div>
-          </template>
-        </el-autocomplete>
-      </el-form-item>
+<!--      <el-form-item label="科室" prop="departmentCode">-->
+<!--&lt;!&ndash;        <el-input&ndash;&gt;-->
+<!--&lt;!&ndash;          v-model="queryParams.departmentCode"&ndash;&gt;-->
+<!--&lt;!&ndash;          placeholder="请输入科室代号"&ndash;&gt;-->
+<!--&lt;!&ndash;          clearable&ndash;&gt;-->
+<!--&lt;!&ndash;          @keyup.enter.native="handleQuery"&ndash;&gt;-->
+<!--&lt;!&ndash;        />&ndash;&gt;-->
+
+<!--&lt;!&ndash;          <el-cascader&ndash;&gt;-->
+<!--&lt;!&ndash;            v-model="state"&ndash;&gt;-->
+<!--&lt;!&ndash;            :options="options"&ndash;&gt;-->
+<!--&lt;!&ndash;            @change="handleChange"></el-cascader>&ndash;&gt;-->
+
+<!--        <el-autocomplete-->
+<!--          popper-class="my-autocomplete"-->
+<!--          v-model="state"-->
+<!--          :fetch-suggestions="querySearch"-->
+<!--          placeholder="请输入科室"-->
+<!--          @select="handleSelect">-->
+<!--          <i-->
+<!--            class="el-icon-circle-close"-->
+<!--            slot="suffix"-->
+<!--            @click="handleIconClick">-->
+<!--          </i>-->
+<!--          <template slot-scope="{ item }">-->
+<!--            <div class="name">{{ item.value }}</div>-->
+<!--          </template>-->
+<!--        </el-autocomplete>-->
+<!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -283,6 +289,7 @@ export default {
       var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
       // 调用 callback 返回建议列表的数据
       cb(results);
+      console.log(results)
     },
     createFilter(queryString) {
       return (restaurant) => {

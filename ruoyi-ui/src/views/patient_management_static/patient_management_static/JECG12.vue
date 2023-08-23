@@ -101,16 +101,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="诊断医生" prop="field101">
-        <el-select v-model="queryParams.DoctorName" placeholder="请选择诊断医生" clearable :style="{width: '100%'}">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="诊断医生" prop="field101">-->
+<!--        <el-select v-model="queryParams.DoctorName" placeholder="请选择诊断医生" clearable :style="{width: '100%'}">-->
+<!--          <el-option-->
+<!--            v-for="item in options"-->
+<!--            :key="item.value"-->
+<!--            :label="item.label"-->
+<!--            :value="item.value">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
 
       <el-form-item label="风险等级" prop="ecgLevel">
         <el-select v-model="queryParams.ecgLevel" placeholder="请选择风险等级" clearable>
@@ -618,6 +618,24 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams={
+          pId: null,
+          patientCode: null,
+          hospitalCode: null,
+          equipmentCode: null,
+          connectionTime: null,
+          patientName: null,
+          ecgType: 'JECG12',
+          PatPhone: null,
+          intelligentDiagnosis: null,
+          diagnosisStatus: 0,
+          diagnosisConclusion: null,
+          diagnosisDoctor: null,
+          reportTime: null,
+          ecgLevel: null,
+          DoctorName: null,
+          doctorPhone: null
+      }
       this.resetForm("queryForm");
       this.handleQuery();
     },

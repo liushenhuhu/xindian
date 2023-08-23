@@ -633,6 +633,23 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams={
+          pId: null,
+          patientCode: null,
+          hospitalCode: null,
+          equipmentCode: null,
+          connectionTime: null,
+          patientName: null,
+          ecgType: 'JECGsingle',
+          PatPhone: null,
+          intelligentDiagnosis: null,
+          diagnosisStatus: 2,
+          diagnosisConclusion: null,
+          diagnosisDoctor: null,
+          reportTime: null,
+          ecgLevel: null,
+          doctorPhone: null
+      }
       this.resetForm("queryForm");
       this.handleQuery();
     },

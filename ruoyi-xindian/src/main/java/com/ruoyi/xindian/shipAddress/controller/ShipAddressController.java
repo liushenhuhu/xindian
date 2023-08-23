@@ -40,9 +40,18 @@ public class ShipAddressController extends BaseController {
      * 查询
      */
 //    @PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:list')")
-    @Aes
+
     @GetMapping("/list")
     public AjaxResult list(ShipAddress shipAddress,HttpServletRequest request) throws Exception {
+        if(shipAddress.getPatientPhone()!=null&&!"".equals(shipAddress.getPatientPhone())){
+            shipAddress.setPatientPhone(aesUtils.encrypt(shipAddress.getPatientPhone()));
+        }
+        if(shipAddress.getPatientName()!=null&&!"".equals(shipAddress.getPatientName())){
+            shipAddress.setPatientName(aesUtils.encrypt(shipAddress.getPatientName()));
+        }
+        if(shipAddress.getStreetAddress()!=null&&!"".equals(shipAddress.getStreetAddress())){
+            shipAddress.setStreetAddress(aesUtils.encrypt(shipAddress.getStreetAddress()));
+        }
         LoginUser loginUser = tokenService.getLoginUser(request);
         shipAddress.setUserId(loginUser.getUser().getUserId());
         List<ShipAddress> list = shipAddressService.selectShipAddressList(shipAddress);
@@ -66,6 +75,15 @@ public class ShipAddressController extends BaseController {
     @PreAuthorize("@ss.hasPermi('shipAddress:shipAddress:list')")
     @GetMapping("/webList")
     public TableDataInfo webList(ShipAddress shipAddress,HttpServletRequest request) throws Exception {
+        if(shipAddress.getPatientPhone()!=null&&!"".equals(shipAddress.getPatientPhone())){
+            shipAddress.setPatientPhone(aesUtils.encrypt(shipAddress.getPatientPhone()));
+        }
+        if(shipAddress.getPatientName()!=null&&!"".equals(shipAddress.getPatientName())){
+            shipAddress.setPatientName(aesUtils.encrypt(shipAddress.getPatientName()));
+        }
+        if(shipAddress.getStreetAddress()!=null&&!"".equals(shipAddress.getStreetAddress())){
+            shipAddress.setStreetAddress(aesUtils.encrypt(shipAddress.getStreetAddress()));
+        }
         startPage();
         List<ShipAddress> list = shipAddressService.selectShipAddressList(shipAddress);
         for (ShipAddress address : list) {

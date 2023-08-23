@@ -104,6 +104,9 @@ public class PatientManagementController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
+        if(patientManagement.getHospitalCode()!=null&&!"".equals(patientManagement.getHospitalCode())){
+            patientManagement.getHospitalCodeList().add(patientManagement.getHospitalCode());
+        }
 
 //        Long userId = getUserId();
         SysUser sysUser = userService.selectUserById(loginUser.getUser().getUserId());
@@ -138,7 +141,7 @@ public class PatientManagementController extends BaseController {
 
         String code = patientManagement.getHospitalCode();
         if (code!=null&&!"".equals(code)){
-            patientManagement.getHospitalCodeList().add(code);
+
             Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
             AssociatedHospital associatedHospital = new AssociatedHospital();
             associatedHospital.setHospitalId(hospital.getHospitalId());

@@ -128,10 +128,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="pId" prop="pId">
+      <el-form-item label="患者管理id" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入pId"
+          placeholder="请输入患者管理id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -644,6 +644,23 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams={
+          pId: null,
+          patientCode: null,
+          hospitalCode: null,
+          equipmentCode: null,
+          connectionTime: null,
+          patientName: null,
+          ecgType: 'JECGsingle',
+          PatPhone: null,
+          intelligentDiagnosis: null,
+          diagnosisStatus: 0,
+          diagnosisConclusion: null,
+          diagnosisDoctor: null,
+          reportTime: null,
+          ecgLevel: null,
+          doctorPhone: null
+      }
       this.resetForm("queryForm");
       this.handleQuery();
     },

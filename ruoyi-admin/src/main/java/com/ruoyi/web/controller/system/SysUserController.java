@@ -60,6 +60,12 @@ public class SysUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysUser user) throws Exception {
+        if(user.getPhonenumber()!=null&&!"".equals(user.getPhonenumber())){
+            user.setPhonenumber(aesUtils.encrypt(user.getPhonenumber()));
+        }
+        if(user.getUserName()!=null&&!"".equals(user.getUserName())){
+            user.setUserName(aesUtils.encrypt(user.getUserName()));
+        }
         startPage();
         List<SysUser> list = userService.selectUserList(user);
         for (SysUser c :list){

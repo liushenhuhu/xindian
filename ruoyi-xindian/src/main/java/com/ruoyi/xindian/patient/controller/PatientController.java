@@ -66,6 +66,10 @@ public class PatientController extends BaseController
     @Aes
     public TableDataInfo list(Patient patient) throws Exception {
         List<Patient> list = new ArrayList<>();
+        if(patient.getPatientSource()!=null&&!"".equals(patient.getPatientSource())){
+            patient.getHospitalNameList().add(patient.getPatientSource());
+        }
+
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalName = sysUser.getHospitalName();
@@ -81,7 +85,7 @@ public class PatientController extends BaseController
                     return getDataTable(list);
                 }
             }
-            patient.getHospitalNameList().add(hospitalName);
+
             if (patient.getHospitalId()!=null){
                 AssociatedHospital associatedHospital = new AssociatedHospital();
                 associatedHospital.setHospitalId(patient.getHospitalId());
