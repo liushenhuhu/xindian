@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.alert_log.controller;
 
+import com.ruoyi.common.annotation.Aes;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -43,6 +44,7 @@ public class AlertLogController extends BaseController {
     /**
      * 查询预警日志列表
      */
+    @Aes
     @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
     @GetMapping("/list")
     public TableDataInfo list(AlertLog alertLog) throws Exception {

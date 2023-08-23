@@ -60,9 +60,8 @@ public class RequestAspect {
                 AlertLog dto = (AlertLog) args[0];
                 if(!StringUtils.isEmpty(dto.getPatientName())){
                     //需要加密的数据
-                    dto.setPatientName("小李");
+                    dto.setPatientName(aesUtils.encrypt(dto.getPatientName()));
                 }
-
                 args[0] = dto;
                 return joinPoint.proceed(args);
             }
@@ -72,20 +71,12 @@ public class RequestAspect {
                 if(!StringUtils.isEmpty(dto.getDoctorPhone())){
                     //需要加密的数据
                     dto.setDoctorPhone(aesUtils.encrypt(dto.getDoctorPhone()));
-                    args[0] = dto;
                 }
                 if(!StringUtils.isEmpty(dto.getDoctorName())){
                     //需要加密的数据
                     dto.setDoctorName(aesUtils.encrypt(dto.getDoctorName()));
-                    args[0] = dto;
                 }
-                if(!StringUtils.isEmpty(dto.getDoctorName()) && !StringUtils.isEmpty(dto.getDoctorPhone())){
-                    //需要加密的数据
-                    dto.setDoctorPhone(aesUtils.encrypt(dto.getDoctorPhone()));
-                    dto.setDoctorName(aesUtils.encrypt(dto.getDoctorName()));
-                    args[0] = dto;
-                }
-
+                args[0] = dto;
                 return joinPoint.proceed(args);
             }
             //患者管理
@@ -100,47 +91,9 @@ public class RequestAspect {
                     //需要加密的数据
                     dto.setPatientPhone(aesUtils.encrypt(dto.getPatientPhone()));
                 }
-                if(!StringUtils.isEmpty(dto.getPatientName()) && !StringUtils.isEmpty(dto.getPatientPhone())){
-                    //需要加密的数据
-                    dto.setPatientPhone(aesUtils.encrypt(dto.getPatientPhone()));
-                    dto.setPatientName(aesUtils.encrypt(dto.getPatientName()));
-                }
                 args[0] = dto;
                 return joinPoint.proceed(args);
             }
-            //动态
-
-            //静态
-
-            //12导预警
-
-            //单导预警
-
-            //预警消息
-
-            //用户管理
-
-            //登录日志
-
-            //订单管理
-
-            //会员管理
-
-            //地址管理
-
-            //发票管理
-
-            //登录
-//            if ("logUser".equalsIgnoreCase(argsName[0])) {
-//                LogUser dto = (LogUser) args[0];
-//                if(!StringUtils.isEmpty(dto.getPhonenumber())){
-//                    //需要加密的数据
-//                    dto.setPhonenumber(aesUtils.encrypt(dto.getPhonenumber()));
-//                }
-//                args[0] = dto;
-//                return joinPoint.proceed(args);
-//            }
-
 
         }
         return joinPoint.proceed();

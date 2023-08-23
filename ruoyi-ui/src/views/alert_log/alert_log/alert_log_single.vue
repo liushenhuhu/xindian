@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="日志id" prop="logId">
+<!--      <el-form-item label="日志id" prop="logId">
         <el-input
           v-model="queryParams.logId"
           placeholder="请输入日志id"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="发生时间" prop="logTime">
         <el-form-item >
           <el-date-picker
@@ -46,14 +46,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者id" prop="pId">
+<!--      <el-form-item label="患者id" prop="pId">
         <el-input
           v-model="queryParams.pId"
           placeholder="请输入患者id"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="患者姓名" prop="patientName">
         <el-input
           v-model="queryParams.patientName"
@@ -87,7 +87,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+<!--      <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -97,8 +97,8 @@
           v-hasPermi="['alert_log:alert_log:add']"
         >新增
         </el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+<!--      <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -109,7 +109,7 @@
           v-hasPermi="['alert_log:alert_log:edit']"
         >修改
         </el-button>
-      </el-col>
+      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -192,14 +192,14 @@
             v-hasPermi="['alert_log:alert_log:look']"
           >查看日志
           </el-button>
-          <el-button
+<!--          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['alert_log:alert_log:edit']"
           >修改
-          </el-button>
+          </el-button>-->
           <el-button
             size="mini"
             type="text"
