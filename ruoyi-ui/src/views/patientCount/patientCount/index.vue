@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="患者电话" prop="phonenumberAes">
+      <el-form-item label="用户电话" prop="phonenumberAes">
         <el-input
           v-model="queryParams.phonenumberAes"
-          placeholder="请输入患者电话"
+          placeholder="请输入用户电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -82,8 +82,8 @@
 
     <el-table v-loading="loading" :data="patientList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="${comment}" align="center" prop="id" />-->
-      <el-table-column label="患者电话" align="center" prop="phonenumberAes" />
+      <el-table-column label="用户id" align="center" prop="userId" />
+      <el-table-column label="用户电话" align="center" prop="phonenumberAes" />
       <el-table-column label="结束时间" align="center" prop="detectionTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.detectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -121,8 +121,8 @@
     <!-- 添加或修改vip用户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="患者电话" prop="phonenumberAes">
-          <el-input v-model="form.phonenumberAes" placeholder="请输入患者电话" />
+        <el-form-item label="用户电话" prop="phonenumberAes">
+          <el-input v-model="form.phonenumberAes" placeholder="请输入用户电话" />
         </el-form-item>
         <el-form-item label="结束时间" prop="detectionTime">
           <el-date-picker clearable
@@ -186,7 +186,7 @@ export default {
       // 表单校验
       rules: {
         phonenumberAes: [
-          { required: true, message: "患者电话不能为空", trigger: "blur" }
+          { required: true, message: "用户电话不能为空", trigger: "blur" }
         ],
         detectionTime: [
           { required: true, message: "结束时间不能为空", trigger: "blur" }
