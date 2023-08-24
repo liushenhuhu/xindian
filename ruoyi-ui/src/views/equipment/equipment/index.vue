@@ -43,29 +43,29 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-      <el-form-item label="科室" prop="departmentCode">
+<!--      <el-form-item label="科室" prop="departmentCode">-->
         <!--        <el-input-->
         <!--          v-model="queryParams.departmentCode"-->
         <!--          placeholder="请输入科室代号"-->
         <!--          clearable-->
         <!--          @keyup.enter.native="handleQuery"-->
         <!--        />-->
-        <el-autocomplete
-          popper-class="my-autocomplete"
-          v-model="state"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入科室"
-          @select="handleSelect">
-          <i
-            class="el-icon-circle-close"
-            slot="suffix"
-            @click="handleIconClick">
-          </i>
-          <template slot-scope="{ item }">
-            <div class="name">{{ item.value }}</div>
-          </template>
-        </el-autocomplete>
-      </el-form-item>
+<!--        <el-autocomplete-->
+<!--          popper-class="my-autocomplete"-->
+<!--          v-model="state"-->
+<!--          :fetch-suggestions="querySearch"-->
+<!--          placeholder="请输入科室"-->
+<!--          @select="handleSelect">-->
+<!--          <i-->
+<!--            class="el-icon-circle-close"-->
+<!--            slot="suffix"-->
+<!--            @click="handleIconClick">-->
+<!--          </i>-->
+<!--          <template slot-scope="{ item }">-->
+<!--            <div class="name">{{ item.value }}</div>-->
+<!--          </template>-->
+<!--        </el-autocomplete>-->
+<!--      </el-form-item>-->
 
       <el-form-item label="设备种类" prop="equipmentType">
         <el-select v-model="queryParams.equipmentType" placeholder="请选择设备种类" clearable>

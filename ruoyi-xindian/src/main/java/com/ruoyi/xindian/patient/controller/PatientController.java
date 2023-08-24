@@ -66,24 +66,15 @@ public class PatientController extends BaseController
     @Aes
     public TableDataInfo list(Patient patient) throws Exception {
         List<Patient> list = new ArrayList<>();
-        if(patient.getPatientSource()!=null&&!"".equals(patient.getPatientSource())){
-            patient.getHospitalNameList().add(patient.getPatientSource());
-        }
-
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
-            String hospitalName = sysUser.getHospitalName();
-
-            if(hospitalName==null){
-                String hospitalCode = sysUser.getHospitalCode();
-                if(hospitalCode!=null) {
-                    Hospital hospital = hospitalService.selectHospitalByHospitalCode(hospitalCode);
-                    hospitalName=hospital.getHospitalName();
-                   patient.setHospitalId(hospital.getHospitalId());
-                }
-                else{
-                    return getDataTable(list);
-                }
+            String userHospitalCode= sysUser.getHospitalCode();
+            if(userHospitalCode!=null){
+                Hospital hospital = hospitalService.selectHospitalByHospitalCode(userHospitalCode);
+                patient.getHospitalNameList().add(hospital.getHospitalName());
+                patient.setHospitalId(hospital.getHospitalId());
+            }else {
+                return getDataTable(list);
             }
 
             if (patient.getHospitalId()!=null){
@@ -97,9 +88,24 @@ public class PatientController extends BaseController
                     }
                 }
             }
+            if (patient.getPatientSource()!=null&&!"".equals(patient.getPatientSource())){
+                List<String> patientList = patient.getHospitalNameList();
+                if (patientList!=null&&patientList.size()>0){
+                    for (String c : patientList){
+                        if (c.equals(patient.getPatientSource())){
+                            patient.getHospitalNameList().clear();
+                            patient.getHospitalNameList().add(patient.getPatientSource());
+                            break;
+                        }
+                    }
+                }
+            }
             startPage();
             list = patientService.selectPatientList(patient);
         } else {
+            if(patient.getPatientSource()!=null&&!"".equals(patient.getPatientSource())){
+                patient.getHospitalNameList().add(patient.getPatientSource());
+            }
             startPage();
             list = patientService.selectPatientList(patient);
         }

@@ -246,8 +246,14 @@ public class SysLoginController {
      * @return 用户信息
      */
     @GetMapping("getInfo")
-    public AjaxResult getInfo() {
+    public AjaxResult getInfo() throws Exception {
         SysUser user = SecurityUtils.getLoginUser().getUser();
+        if (user.getUserName()!=null&&!"".equals(user.getUserName())){
+            user.setUserName(aesUtils.decrypt(user.getUserName()));
+        }
+        if (user.getPhonenumber()!=null&&!"".equals(user.getPhonenumber())){
+            user.setPhonenumber(aesUtils.decrypt(user.getPhonenumber()));
+        }
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合

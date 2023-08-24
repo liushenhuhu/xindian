@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,8 @@ import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
 
+import javax.annotation.Resource;
+
 /**
  * 个人信息 业务处理
  * 
@@ -43,14 +46,22 @@ public class SysProfileController extends BaseController
     @Autowired
     private TokenService tokenService;
 
+    @Resource
+    private AesUtils aesUtils;
+
     /**
      * 个人信息
      */
     @GetMapping
-    public AjaxResult profile()
-    {
+    public AjaxResult profile() throws Exception {
         LoginUser loginUser = getLoginUser();
         SysUser user = loginUser.getUser();
+        if (user.getUserName()!=null&&!"".equals(user.getUserName())){
+            user.setUserName(aesUtils.decrypt(user.getUserName()));
+        }
+        if (user.getPhonenumber()!=null&&!"".equals(user.getPhonenumber())){
+            user.setPhonenumber(aesUtils.decrypt(user.getPhonenumber()));
+        }
         AjaxResult ajax = AjaxResult.success(user);
         ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
         ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));
@@ -62,8 +73,13 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult updateProfile(@RequestBody SysUser user)
-    {
+    public AjaxResult updateProfile(@RequestBody SysUser user) throws Exception {
+        if (user.getUserName()!=null&&!"".equals(user.getUserName())){
+            user.setUserName(aesUtils.encrypt(user.getUserName()));
+        }
+        if (user.getPhonenumber()!=null&&!"".equals(user.getPhonenumber())){
+            user.setPhonenumber(aesUtils.encrypt(user.getPhonenumber()));
+        }
         LoginUser loginUser = getLoginUser();
         SysUser sysUser = loginUser.getUser();
         user.setUserName(sysUser.getUserName());

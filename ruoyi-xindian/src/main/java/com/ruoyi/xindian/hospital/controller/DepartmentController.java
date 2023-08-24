@@ -83,6 +83,20 @@ public class DepartmentController extends BaseController
                     department.getHospitalCodeList().add(hospital1.getHospitalCode());
                 }
             }
+            if (department.getHospitalCode()!=null&&!"".equals(department.getHospitalCode())){
+                List<String> departmentList = department.getHospitalCodeList();
+                if (departmentList!=null&&departmentList.size()>0){
+                    for (String c : departmentList){
+                        if (c.equals(department.getHospitalCode())){
+
+                            department.getHospitalCodeList().clear();
+                            department.getHospitalCodeList().add(department.getHospitalCode());
+                            break;
+                        }
+                    }
+                }
+            }
+
             startPage();
             List<Department> departments = departmentService.selectDepartmentList(department);
             return getDataTable(departments);

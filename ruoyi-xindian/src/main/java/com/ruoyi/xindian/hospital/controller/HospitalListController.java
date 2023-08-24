@@ -51,7 +51,7 @@ public class HospitalListController extends BaseController
     /**
      * 查询医院列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
     @GetMapping("/list")
     public TableDataInfo list(Hospital hospital, HttpServletRequest request)
     {
@@ -60,6 +60,9 @@ public class HospitalListController extends BaseController
         //判断是否为管理员
         if (SecurityUtils.isAdmin(loginUser.getUser().getUserId()))
         {
+            if (hospital.getHospitalCode()!=null&&!"".equals(hospital.getHospitalCode())){
+                hospital.getHospitalCodeList().add(hospital.getHospitalCode());
+            }
             startPage();
            list = hospitalService.selectHospitalList(hospital);
         }
@@ -80,6 +83,19 @@ public class HospitalListController extends BaseController
                     hospital.getHospitalCodeList().add(hospital1.getHospitalCode());
                 }
             }
+            if (hospital.getHospitalCode()!=null&&!"".equals(hospital.getHospitalCode())){
+                List<String> hospitalCodeList = hospital.getHospitalCodeList();
+                if (hospitalCodeList!=null&&hospitalCodeList.size()>0){
+                    for (String c : hospitalCodeList){
+                        if (c.equals(hospital.getHospitalCode())){
+
+                            hospital.getHospitalCodeList().clear();
+                            hospital.getHospitalCodeList().add(hospital.getHospitalCode());
+                            break;
+                        }
+                    }
+                }
+            }
 
             startPage();
             list = hospitalService.selectUserId(hospital);
@@ -91,7 +107,7 @@ public class HospitalListController extends BaseController
     /**
      * 查询医院列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
     @GetMapping("/listId")
     public TableDataInfo listId(Hospital hospital, HttpServletRequest request)
     {

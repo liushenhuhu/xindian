@@ -104,6 +104,7 @@ public class PatientManagementController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
+
         if(patientManagement.getHospitalCode()!=null&&!"".equals(patientManagement.getHospitalCode())){
             patientManagement.getHospitalCodeList().add(patientManagement.getHospitalCode());
         }
@@ -113,13 +114,31 @@ public class PatientManagementController extends BaseController {
         if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 101) {
             //101---医院
             String hospitalCode = sysUser.getHospitalCode();
-            patientManagement.setHospitalCode(hospitalCode);
-//            String phonenumber = sysUser.getPhonenumber();
-//            if(!"15888888888".equals(phonenumber)){
-//                patientManagement.setDoctorPhone(phonenumber);
-//                if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
-//                    patientManagement.setDiagnosisStatus(2L);
-//            }
+            patientManagement.getHospitalCodeList().clear();
+            patientManagement.getHospitalCodeList().add(hospitalCode);
+            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(hospitalCode);
+            AssociatedHospital associatedHospital = new AssociatedHospital();
+            associatedHospital.setHospitalId(hospital.getHospitalId());
+            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+            if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                for (AssociatedHospital c:associatedHospitals){
+                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                    patientManagement.getHospitalCodeList().add(hospital1.getHospitalCode());
+                }
+            }
+            String code = patientManagement.getHospitalCode();
+            if (code!=null&&!"".equals(code)){
+                List<String> patientList = patientManagement.getHospitalCodeList();
+                if (patientList!=null&&patientList.size()>0){
+                    for (String c : patientList){
+                        if (c.equals(patientManagement.getHospitalCode())){
+                                patientManagement.getHospitalCodeList().clear();
+                                patientManagement.getHospitalCodeList().add(patientManagement.getHospitalCode());
+                                break;
+                        }
+                    }
+                }
+            }
         } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 106) {
             // 106---科室账号
             Equipment equipment = new Equipment();
@@ -139,20 +158,7 @@ public class PatientManagementController extends BaseController {
                 patientManagement.setDiagnosisStatus(2L);
         }
 
-        String code = patientManagement.getHospitalCode();
-        if (code!=null&&!"".equals(code)){
 
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(code);
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    patientManagement.getHospitalCodeList().add(hospital1.getHospitalCode());
-                }
-            }
-        }
         if (patientManagement.getPatientPhone()!=null){
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }

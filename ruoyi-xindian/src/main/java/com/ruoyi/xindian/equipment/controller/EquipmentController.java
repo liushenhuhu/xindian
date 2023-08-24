@@ -79,8 +79,7 @@ public class EquipmentController extends BaseController {
             String hospitalCode = sysUser.getHospitalCode();
             equipment.getHospitalCodeList().add(hospitalCode);
             if (equipment.getHospitalCode()!=null){
-                String hId = equipment.getHospitalCode();
-                Hospital hospital = hospitalService.selectHospitalByHospitalCode(hId);
+                Hospital hospital = hospitalService.selectHospitalByHospitalCode(hospitalCode);
                 AssociatedHospital associatedHospital = new AssociatedHospital();
                 associatedHospital.setHospitalId(hospital.getHospitalId());
                 List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
@@ -91,9 +90,26 @@ public class EquipmentController extends BaseController {
                     }
                 }
             }
+            if (equipment.getHospitalCode()!=null&&!"".equals(equipment.getHospitalCode())){
+                List<String> equipmentList = equipment.getHospitalCodeList();
+                if (equipmentList!=null&&equipmentList.size()>0){
+                    for (String c : equipmentList){
+                        if (c.equals(equipment.getHospitalCode())){
+
+                            equipment.getHospitalCodeList().clear();
+                            equipment.getHospitalCodeList().add(equipment.getHospitalCode());
+                            break;
+                        }
+                    }
+                }
+            }
             startPage();
             list = equipmentService.selectEquipmentList(equipment);
         } else {
+            if (equipment.getHospitalCode()!=null&&!"".equals(equipment.getHospitalCode())){
+                Hospital hospital = hospitalService.selectCode(equipment.getHospitalCode());
+                equipment.getHospitalCodeList().add(hospital.getHospitalCode());
+            }
             startPage();
             list = equipmentService.selectEquipmentList(equipment);
         }
