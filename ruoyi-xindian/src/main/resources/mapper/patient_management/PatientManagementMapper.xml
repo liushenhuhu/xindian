@@ -637,7 +637,7 @@
     </select>
     <select id="selectpatientByEquipmentCode"
             resultType="com.ruoyi.xindian.patient_management.domain.PhoneList" >
-        select p.patient_phone_aes,p.family_phone,m.doctor_phone
+        select p.patient_phone_aes as patient_phone,p.family_phone,m.doctor_phone
         from patient_management m inner join patient p on m.patient_phone_aes=p.patient_phone_aes
         where m.online_status=1 and m.equipment_code=#{deviceSn}
         --         order by m.connection_time desc

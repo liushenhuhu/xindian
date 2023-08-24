@@ -41,7 +41,7 @@
     <div class="top">
       <el-button @click="back">动态检测大屏</el-button>
       <el-button @click="inScreen">全屏切换</el-button>
-<!--      <el-button @click="call">电话预警</el-button>-->
+      <el-button @click="call">电话预警</el-button>
       <!--      <el-button @click="outScreen">退出全屏</el-button>-->
       <div class="text">
         <span >姓名:{{data.patientName}}</span>
@@ -179,8 +179,8 @@ export default {
         return
       }
       this.getlist()
-      // this.getPhoneList()
-      // this.getsdkURL()
+      this.getPhoneList()
+      this.getsdkURL()
     }
   },
   activated() {
@@ -194,25 +194,10 @@ export default {
         return
       }
       this.getlist()
-      // this.getPhoneList()
-      // this.getsdkURL()
+      this.getPhoneList()
+      this.getsdkURL()
     }
   },
-  // watch:{
-  //   data:function (newval,oldval){
-  //     console.log(newval)
-  //     if(newval){
-  //     newval.noise.forEach((item,index)=>{
-  //       // document.getElementById('xxx')
-  //         // .css({'background-color':'red'})
-  //       if(item===true){
-  //         document.getElementById('span'+index).style.backgroundColor="red"
-  //       }else
-  //         document.getElementById('span'+index).style.backgroundColor="greenyellow"
-  //     })
-  //     }
-  //     }
-  //   },
 
   mounted(){
     chart = echarts.init(document.getElementById('chartshow'))
@@ -265,9 +250,12 @@ export default {
         const script = document.createElement('script');
         script.setAttribute('crossorigin', 'anonymous');
         script.src = SdkURL;
-        document.body.appendChild(script);
+        document.body.appendChild(script)
+
         script.addEventListener('load', () => {
           // 加载JS SDK文件成功，此时可使用全局变量"tccc"
+          //隐藏悬浮按钮
+          window.tccc.UI.hidefloatButton()
           window.tccc.on(window.tccc.events.ready, () => {
             /**
              * Tccc SDK初始化成功，此时可调用外呼、监听呼入事件等功能。
@@ -283,12 +271,11 @@ export default {
       })
   },
     getPhoneList(){
-
       request({ url: '/patient_management/patient_management/getPhone',
         method: 'get',
         params:{'deviceSn':this.deviceSn}
       }).then(res=>{
-        console.log(res.data)
+        console.log(res)
         if(res.data===undefined){
           return
         }
@@ -308,6 +295,7 @@ export default {
       })
     },
     callPhone(){
+
       window.tccc.Call.startOutboundCall({
         phoneNumber: '18336826103',
       }).then((res) => {

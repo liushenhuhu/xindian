@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true"  label-width="68px">
-      <el-form-item label="报告时间">
+      <el-form-item label="选择时间">
         <el-date-picker
           v-model="daterangeReportTime"
           style="width: 240px"
@@ -19,6 +19,16 @@
           value-format="yyyy"
           placeholder="选择年">
         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="心电类型">
+        <el-select v-model="queryParams.reportType" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -50,7 +60,8 @@ export default {
       queryParams: {
         startTime:'',
         endTime:'',
-        year:''
+        year:'',
+        reportType:'',
       },
       // 表单参数
       form: {
@@ -60,6 +71,13 @@ export default {
       },
       data:[],
       month:[],
+      options: [{
+        value: 'JECGsingle',
+        label: '静态单导'
+      }, {
+        value: 'JECG12',
+        label: '静态12导'
+      }]
     };
   },
   created() {
@@ -71,7 +89,15 @@ export default {
   methods: {
     /** 查询报告列表 */
     getList() {
+      var  startTime = Date.parse(this.queryParams.startTime);
+      var  endTime = Date.parse(this.queryParams.endTime);
+      var days=(endTime - startTime)/(1*24*60*60*1000) + 1;
+      if(days<7&&days>0){
+        this.queryParams.startTime=this.getNextDate(startTime,7-days)
+      }
+      console.log(this.queryParams)
       getreportcount(this.queryParams).then(res=>{
+        console.log(res)
         this.date=[]
         this.data=[]
         this.month=[]
@@ -88,12 +114,22 @@ export default {
         this.chart2()
       })
     },
+
+    getNextDate(date,day) {
+      var dd = new Date(date);
+      dd.setDate(dd.getDate() - day);
+      var y = dd.getFullYear();
+      var m = dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1;
+      var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
+
+      return y + "-" + m + "-" + d;
+    },
     chart1(){
       let myChart1 = this.$echarts.init(document.getElementById('chart1'));
       let option = {
         title:{
           show:true,
-          text:'每日报告提交统计'
+          text:'用户心电数据上传次数   每日统计'
         },
         xAxis: {
           type: 'category',
@@ -137,7 +173,7 @@ export default {
       let option = {
         title:{
           show:true,
-          text:'每月报告提交统计'
+          text:'用户心电数据上传次数   每月统计'
         },
         xAxis: {
           type: 'category',
@@ -172,7 +208,6 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      console.log(this.daterangeReportTime)
       if(this.daterangeReportTime!==null){
         this.queryParams.startTime = this.daterangeReportTime[0];
         this.queryParams.endTime = this.daterangeReportTime[1];
@@ -180,7 +215,6 @@ export default {
         this.queryParams.startTime=''
         this.queryParams.endTime =''
       }
-
       console.log(this.queryParams)
       this.getList();
     },
@@ -190,7 +224,8 @@ export default {
       this.queryParams={
         startTime:'',
         endTime:'',
-        year:''
+        year:'',
+        reportType:''
       }
       this.date=[]
       this.data=[]

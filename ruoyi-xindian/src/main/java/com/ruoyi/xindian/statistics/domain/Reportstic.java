@@ -7,4 +7,5 @@ public class Reportstic {
     private String startTime;
     private String endTime;
     private String year;
+    private String reportType;
 }

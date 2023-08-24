@@ -107,14 +107,20 @@
         SELECT Month(report_time) as name,COUNT(*) AS value
         FROM report r
         WHERE YEAR(r.report_time)=#{year}
+        <if test="reportType!=null&amp;&amp;reportType!=''">
+            and r.report_type like concat(#{reportType},"%")
+        </if>
         GROUP BY name
         ORDER BY name asc
     </select>
 
     <select id="getday" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
-        SELECT DATE_FORMAT(report_time,'%c-%d') as name,COUNT(*) AS value
+        SELECT DATE_FORMAT(report_time,'%c-%e') as name,COUNT(*) AS value
         FROM report r
         WHERE r.report_time BETWEEN #{startTime} and DATE_ADD(#{endTime} ,INTERVAL 1 DAY)
+        <if test="reportType!=null&amp;&amp;reportType!=''">
+            and r.report_type like concat(#{reportType},"%")
+        </if>
         GROUP BY name
         ORDER BY name asc
     </select>

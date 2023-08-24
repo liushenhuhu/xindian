@@ -703,12 +703,18 @@ public class PatientManagementController extends BaseController {
             return AjaxResult.success();
         }
         List<RolePhone> list=new ArrayList<>();
-        RolePhone a1 = new RolePhone("患者", aesUtils.decrypt(one.getPatientPhone()));
-        RolePhone a2 = new RolePhone("家人", aesUtils.decrypt(one.getFamilyPhone()));
-        RolePhone a3 = new RolePhone("医生", aesUtils.decrypt(one.getDoctorPhone()));
-        list.add(a1);
-        list.add(a2);
-        list.add(a3);
+        if(one.getPatientPhone()!=null&&!"".equals(one.getPatientPhone())){
+            RolePhone a1 = new RolePhone("患者", aesUtils.decrypt(one.getPatientPhone()));
+            list.add(a1);
+        }
+//        if(one.getFamilyPhone()!=null&&!"".equals(one.getFamilyPhone())) {
+//            RolePhone a2 = new RolePhone("家人", aesUtils.decrypt(one.getFamilyPhone()));
+//            list.add(a2);
+//        }
+//        if(one.getDoctorPhone()!=null&&!"".equals(one.getDoctorPhone())) {
+//            RolePhone a3 = new RolePhone("医生", aesUtils.decrypt(one.getDoctorPhone()));
+//            list.add(a3);
+//        }
         return AjaxResult.success(list);
     }
 

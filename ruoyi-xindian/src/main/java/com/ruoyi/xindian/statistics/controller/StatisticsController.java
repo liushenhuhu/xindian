@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author lixinlong
@@ -176,15 +179,40 @@ public class StatisticsController extends BaseController {
             str.setStartTime(LocalDateTime.now().plusDays(-13).format(DateTimeFormatter.ofPattern("YYYY-MM-dd")));
             str.setEndTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd")));
         }
-
         if("".equals(str.getYear())||str.getYear()==null){
             str.setYear(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY")));
         }
+
+        List<LocalDate> middleDate = getMiddleDate(LocalDate.parse(str.getStartTime()), LocalDate.parse(str.getEndTime()));
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("M-d");
+        List<AgeStatistics> list3 = new ArrayList<>();
+        for (LocalDate localDate : middleDate) {
+            list3.add(new AgeStatistics(localDate.format(fmt),0));
+        }
+
         List<AgeStatistics> list1 = statisticsService.getday(str);
         List<AgeStatistics> list2 = statisticsService.getmonth(str);
+        List<Object> collect = list3.stream().map(item -> {
+            for (int i = 0; i < list1.size(); i++) {
+                if (item.getName().equals(list1.get(i).getName())) {
+                    item.setValue(list1.get(i).getValue());
+                }
+            }
+            return item;
+        }).collect(Collectors.toList());
+
         Map<String,Object> map = new HashMap<String,Object>();
-        map.put("day",list1);
+        map.put("day",collect);
         map.put("month",list2);
         return map;
     }
+    public static List<LocalDate> getMiddleDate(LocalDate begin, LocalDate end) {
+        List<LocalDate> localDateList = new ArrayList<>();
+        long length = end.toEpochDay() - begin.toEpochDay();
+        for (long i = length; i >= 0; i--) {
+            localDateList.add(end.minusDays(i));
+        }
+        return localDateList;
+    }
+
 }

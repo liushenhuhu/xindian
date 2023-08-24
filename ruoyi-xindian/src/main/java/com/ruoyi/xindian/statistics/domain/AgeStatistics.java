@@ -13,6 +13,14 @@ public class AgeStatistics {
 
     private Integer value;
 
+    public AgeStatistics() {
+    }
+
+    public AgeStatistics(String name, Integer value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public String getName() {
         return name;
     }
