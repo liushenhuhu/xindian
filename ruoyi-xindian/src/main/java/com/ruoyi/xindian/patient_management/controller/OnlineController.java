@@ -4,6 +4,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.equipment.controller.EquipmentController;
@@ -59,6 +60,12 @@ public class OnlineController extends BaseController {
     @Resource
     private SysUserMapper sysUserMapper;
 
+
+
+    @Resource
+    private AesUtils aesUtils;
+
+
     @GetMapping("/updateAll")
     public AjaxResult updateAll(HttpServletRequest request) {
         AjaxResult result1 = update1(request);
@@ -69,14 +76,22 @@ public class OnlineController extends BaseController {
         return AjaxResult.success(map);
     }
     @GetMapping("/{patientPhone}")
-    public AjaxResult getOnlineStatus(@PathVariable String patientPhone,HttpServletRequest request) {
+    public AjaxResult getOnlineStatus(@PathVariable String patientPhone,HttpServletRequest request) throws Exception {
+        String encrypt = aesUtils.encrypt(patientPhone);
         update1(request);
         update2(request);
         PatientManagement patientManagement = new PatientManagement();
-        patientManagement.setPatientPhone(patientPhone);
+        patientManagement.setPatientPhone(encrypt);
         patientManagement.setOnlineStatus("1");
         List<PatientManagement> patientManagements = patientManagementService.selectPatientManagementListDECG12(patientManagement);
+
         if(patientManagements!=null && patientManagements.size()!=0){
+            if (patientManagements.get(0).getPatientPhone()!=null&&!"".equals(patientManagements.get(0).getPatientPhone())){
+                patientManagements.get(0).setPatientPhone(aesUtils.decrypt(patientManagements.get(0).getPatientPhone()));
+            }
+            if (patientManagements.get(0).getPatientName()!=null&&!"".equals(patientManagements.get(0).getPatientName())){
+                patientManagements.get(0).setPatientName(aesUtils.decrypt(patientManagements.get(0).getPatientName()));
+            }
             return AjaxResult.success(patientManagements.get(0));
         }
         return AjaxResult.error("无在线设备");

@@ -195,8 +195,11 @@ public class PatientController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Patient patient) throws Exception {
         //加密
+        patient.setPatientNameAes(patient.getPatientName());
+        patient.setPatientPhoneAes(patient.getPatientPhone());
         patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
         patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
+
         return toAjax(patientService.insertPatient(patient));
     }
 
