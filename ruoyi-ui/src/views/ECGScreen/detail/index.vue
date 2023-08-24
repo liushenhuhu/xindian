@@ -41,7 +41,7 @@
     <div class="top">
       <el-button @click="back">动态检测大屏</el-button>
       <el-button @click="inScreen">全屏切换</el-button>
-      <el-button @click="call">电话预警</el-button>
+<!--      <el-button @click="call">电话预警</el-button>-->
       <!--      <el-button @click="outScreen">退出全屏</el-button>-->
       <div class="text">
         <span >姓名:{{data.patientName}}</span>
@@ -179,8 +179,8 @@ export default {
         return
       }
       this.getlist()
-      this.getPhoneList()
-      this.getsdkURL()
+      // this.getPhoneList()
+      // this.getsdkURL()
     }
   },
   activated() {
@@ -194,11 +194,10 @@ export default {
         return
       }
       this.getlist()
-      this.getPhoneList()
-      this.getsdkURL()
+      // this.getPhoneList()
+      // this.getsdkURL()
     }
   },
-
   mounted(){
     chart = echarts.init(document.getElementById('chartshow'))
     pnn20chart = this.$echarts.init(document.getElementById("pnn20"))
