@@ -13,6 +13,7 @@
             <result property="tradeState" column="trade_state" jdbcType="VARCHAR"/>
             <result property="payerTotal" column="payer_total" jdbcType="DECIMAL"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -21,6 +22,6 @@
         id,order_no,transaction_id,
         payment_type,trade_type,trade_state,
         payer_total,content,create_time,
-        update_time
+        update_time,user_name
     </sql>
 </mapper>

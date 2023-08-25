@@ -1,7 +1,6 @@
 package com.ruoyi.xindian.wx_pay.service.impl;
 
 
-
 import com.ruoyi.xindian.wx_pay.enums.OrderStatus;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.service.PaymentInfoService;
@@ -37,6 +36,8 @@ public class WxPayServiceImpl implements WxPayService {
 
     @Resource
     private CloseableHttpClient wxPayNoSignClient; //无需应答签名
+
+
 
 
     private final ReentrantLock lock = new ReentrantLock();

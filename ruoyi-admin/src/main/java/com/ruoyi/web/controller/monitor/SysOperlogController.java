@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.monitor;
 
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.sign.AesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,12 +34,19 @@ public class SysOperlogController extends BaseController
     @Autowired
     private ISysOperLogService operLogService;
 
+    @Resource
+    private AesUtils aesUtils;
+
     @PreAuthorize("@ss.hasPermi('monitor:operlog:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysOperLog operLog)
-    {
+    public TableDataInfo list(SysOperLog operLog) throws Exception {
         startPage();
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
+        for (SysOperLog c :list){
+            if (c.getOperName()!=null&&!"".equals(c.getOperName())){
+                c.setOperName(aesUtils.decrypt(c.getOperName()));
+            }
+        }
         return getDataTable(list);
     }
 

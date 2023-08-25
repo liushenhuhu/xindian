@@ -166,7 +166,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderInfo.setOrderState(orderStatus.getType());
 
                 baseMapper.update(orderInfo, queryWrapper);
-                WxUtil.send("15286981260");
+//                WxUtil.send("15286981260");
             }
         }
 

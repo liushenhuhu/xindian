@@ -5,14 +5,20 @@ package com.ruoyi.xindian.wx_pay.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.PaymentInfo;
+import com.ruoyi.xindian.wx_pay.mapper.OrderInfoMapper;
 import com.ruoyi.xindian.wx_pay.mapper.PaymentInfoMapper;
+import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.service.PaymentInfoService;
 import com.ruoyi.xindian.wx_pay.util.PayType;
 import com.ruoyi.xindian.wx_pay.util.WXPayUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -20,6 +26,12 @@ import java.util.Map;
 @Slf4j
 public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, PaymentInfo> implements PaymentInfoService {
 
+
+    @Resource
+    private OrderInfoService orderInfoService;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
     /**
      * 记录支付日志
      * @param xml
@@ -42,6 +54,11 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         String totalFee = (String)plainTextMap.get("total_fee");
         //用户实际支付金额
 
+        OrderInfo orderByOrderNo = orderInfoService.getOrderByOrderNo(orderNo);
+
+        SysUser sysUser = sysUserMapper.selectUserById(orderByOrderNo.getUserId());
+
+
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setOrderNo(orderNo);
         paymentInfo.setPaymentType(PayType.WXPAY.getType());
@@ -50,6 +67,7 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         paymentInfo.setTradeState(tradeState);
         paymentInfo.setPayerTotal(new BigDecimal(totalFee));
         paymentInfo.setContent(xml);
+        paymentInfo.setUserName(sysUser.getUserName());
 
         baseMapper.insert(paymentInfo);
     }

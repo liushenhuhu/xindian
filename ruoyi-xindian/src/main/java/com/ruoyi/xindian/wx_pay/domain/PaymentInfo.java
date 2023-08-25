@@ -79,6 +79,8 @@ public class PaymentInfo implements Serializable {
     @Excel(name = "更新时间")
     private Date updateTime;
 
+    private String userName;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
