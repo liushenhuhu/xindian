@@ -3,134 +3,141 @@
     <div id="pdfDom" style="padding: 10px;">
       <div id="app">
         <div class="page">
-          <div class="header">
-            <div class="header-left">
-              <div class="header-1">
-                <div class="header-1-1"><strong>姓名:</strong>{{ data.name }}</div>
-                <div class="header-1-1"><strong>性别:</strong>{{ data.gender }}</div>
-                <div class="header-1-1"><strong>年龄:</strong>{{ data.age }}岁</div>
-                <div class="header-1-1"><strong>送检科室:</strong> -</div>
-                <div class="header-1-1"><strong>申请单号:</strong> -</div>
+          <div class="box">
+            <div class="patientMessage">
+              <div class="h11">
+                <span></span>
+                <p>患者信息</p>
               </div>
-              <div class="header-2">
-                <div class="header-2-1"><strong>门诊号:</strong> -</div>
-                <div class="header-2-1"><strong>住院号:</strong> -</div>
-                <div class="header-2-1"><strong>病人编号:</strong> -</div>
-                <div class="header-2-1"><strong>HR:</strong>{{ data.hr }}bpm</div>
-                <div class="header-2-1"><strong>PR:</strong>{{ data.pr }}ms</div>
-              </div>
-              <div class="header-3">
-                <div class="header-3-1"><strong>QRS:</strong>{{ data.qrs }}ms</div>
-                <div class="header-3-1"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>
-                <div class="header-3-1"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg</div>
-                <div class="header-3-1"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>
-                <div class="header-3-1"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>
+              <div class="info">
+                <div class="textbox"><strong>姓名:</strong>{{ data.name }}</div>
+                <div class="textbox"><strong>性别:</strong>{{ data.gender }}</div>
+                <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
+                <div class="textbox"><strong>送检科室:</strong> -</div>
+                <div class="textbox"><strong>申请单号:</strong> -</div>
+                <div class="textbox"><strong>门诊号:</strong> -</div>
+                <div class="textbox"><strong>住院号:</strong> -</div>
+                <div class="textbox"><strong>病人编号:</strong> -</div>
+                <div class="textbox"><strong>HR:</strong>{{ data.hr }}bpm</div>
+                <div class="textbox"><strong>PR:</strong>{{ data.pr }}ms</div>
+                <div class="textbox"><strong>QRS:</strong>{{ data.qrs }}ms</div>
+                <div class="textbox"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>
+                <div class="textbox"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg</div>
+                <div class="textbox"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>
+                <div class="textbox"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>
               </div>
             </div>
-            <div class="header-right">
-              <div class="header-4">
-                <div class="header-4-1"><strong>自动分析结果，仅供参考</strong></div>
-                <div class="header-4-1">
-                  <div style="width: 100%;height: 3vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
+            <div class="result1 size mmargin">
+                <div class="h11">
+                  <span></span>
+                  <p>自动分析结果，仅供参考</p>
                 </div>
-                <div class="header-4-1"><strong>患者症状</strong></div>
-                <div class="header-4-1">
-                  <div style="width: 100%;height: 3vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.patientSymptom }}</div>
+                <div class="text">
+                  <div class="ml">{{ data.result }}</div>
                 </div>
-                <div class="header-4-1">
-                  <strong>医师诊断</strong>
-                  <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 20vw">常用术语</el-button>
+                <div class="h11">
+                  <span></span>
+                  <p>患者症状</p>
                 </div>
-                <div>
-                  <el-input
-                    type="textarea"
-                    v-model="data.resultByDoctor"
-                    placeholder="请在这里输入医生诊断结果"
-                    data-value="1111"
-                    :rows="4"
-                    class="font">{{ data.resultByDoctor }}
+                <div class="text">
+                  <div class="ml">{{ data.patientSymptom }}</div>
+                </div>
+            </div>
+            <div class="result2 size mmargin">
+              <div class="h11">
+                <span></span>
+                <p>医师诊断</p>
+                <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 15vw;font-size:2vh">常用术语</el-button>
+              </div>
+              <div class="mt">
+                <el-input
+                  type="textarea"
+                  v-model="data.resultByDoctor"
+                  placeholder="请在这里输入医生诊断结果"
+                  data-value="1111"
+                  :rows="4"
+                  class="font">{{ data.resultByDoctor }}
+                </el-input>
+                <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
+                  <div v-for="(item,index) in items">
+                    <div>{{ item.name }}</div>
+                    <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
+                            v-for="(itemc,indexc) in item.label"
+                            :key="itemc"
+                            @click="putDown(itemc)">{{ itemc }}
+                    </button>
+                  </div>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                  </div>
+                </el-dialog>
+              </div>
+              <div class="doctor">
+                <div class="input">
+                  <strong>医师:</strong>
+                  <el-input v-model="data.doctorName" clearable>{{ data.doctorName }}
                   </el-input>
-                  <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-                    <div v-for="(item,index) in items">
-                      <div>{{ item.name }}</div>
-                      <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
-                              v-for="(itemc,indexc) in item.label"
-                              :key="itemc"
-                              @click="putDown(itemc)">{{ itemc }}
-                      </button>
-                    </div>
-                    <div slot="footer" class="dialog-footer">
-                      <el-button @click="dialogFormVisible = false">取 消</el-button>
-                      <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-                    </div>
-                  </el-dialog>
                 </div>
+                <div class="input">
+                  <strong>日期:</strong>
+                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable></el-input>
+                  <el-input v-else v-model="data.dataTime" clearable></el-input>
+                </div>
+              </div>
+              <div class="oder">
+                <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
+                <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
               </div>
             </div>
           </div>
+
           <div style="padding-left: 2vw;font-size: 1vw">10mm/mV 25mm/s</div>
           <div class="body">
-            <!--            <div class="demo-image__preview">-->
-            <!--              <el-image :src="baseImage"></el-image>-->
-            <!--            </div>-->
-            <div class="body-1">
-              <div>
-                <div id="I" class="line" @dblclick="clicktrueI"></div>
-              </div>
-              <div>
-                <div id="II" class="line" @dblclick="clicktrueII"></div>
-              </div>
-              <div>
-                <div id="III" class="line" @dblclick="clicktrueIII"></div>
-              </div>
-              <div>
-                <div id="aVR" class="line" @dblclick="clicktrueaVR"></div>
-              </div>
-              <div>
-                <div id="aVL" class="line" @dblclick="clicktrueaVL"></div>
-              </div>
-              <div>
-                <div id="aVF" class="line" @dblclick="clicktrueaVF"></div>
-              </div>
+          <!--            <div class="demo-image__preview">-->
+          <!--              <el-image :src="baseImage"></el-image>-->
+          <!--            </div>-->
+          <div class="body-1">
+            <div>
+              <div id="I" class="line" @dblclick="clicktrueI"></div>
             </div>
-            <div class="body-1">
-              <div>
-                <div id="V1" class="line" @dblclick="clicktrueV1"></div>
-              </div>
-              <div>
-                <div id="V2" class="line" @dblclick="clicktrueV2"></div>
-              </div>
-              <div>
-                <div id="V3" class="line" @dblclick="clicktrueV3"></div>
-              </div>
-              <div>
-                <div id="V4" class="line" @dblclick="clicktrueV4"></div>
-              </div>
-              <div>
-                <div id="V5" class="line" @dblclick="clicktrueV5"></div>
-              </div>
-              <div>
-                <div id="V6" class="line" @dblclick="clicktrueV6"></div>
-              </div>
+            <div>
+              <div id="II" class="line" @dblclick="clicktrueII"></div>
+            </div>
+            <div>
+              <div id="III" class="line" @dblclick="clicktrueIII"></div>
+            </div>
+            <div>
+              <div id="aVR" class="line" @dblclick="clicktrueaVR"></div>
+            </div>
+            <div>
+              <div id="aVL" class="line" @dblclick="clicktrueaVL"></div>
+            </div>
+            <div>
+              <div id="aVF" class="line" @dblclick="clicktrueaVF"></div>
             </div>
           </div>
-          <div class="bottom">
-            <div class="doctordata">
-              <strong>医师:</strong>
-              <el-input v-model="data.doctorName" clearable
-                        :style="{width: '30%',}">{{ data.doctorName }}
-              </el-input>
-              <strong>日期:</strong>
-              <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
-                        :style="{width: '30%',}"></el-input>
-              <el-input v-else v-model="data.dataTime" clearable
-                        :style="{width: '30%',}"></el-input>
+          <div class="body-1">
+            <div>
+              <div id="V1" class="line" @dblclick="clicktrueV1"></div>
             </div>
-            <div class="oder">
-              <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
-              <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
+            <div>
+              <div id="V2" class="line" @dblclick="clicktrueV2"></div>
+            </div>
+            <div>
+              <div id="V3" class="line" @dblclick="clicktrueV3"></div>
+            </div>
+            <div>
+              <div id="V4" class="line" @dblclick="clicktrueV4"></div>
+            </div>
+            <div>
+              <div id="V5" class="line" @dblclick="clicktrueV5"></div>
+            </div>
+            <div>
+              <div id="V6" class="line" @dblclick="clicktrueV6"></div>
             </div>
           </div>
+        </div>
         </div>
       </div>
       <div class="lineI" v-show="openI">
@@ -3265,21 +3272,115 @@ export default {
 
 .page {
   width: 100%;
-  height: 86vw;
+  //height: 100vh;
   //border: 3px solid #0000ff;
 }
-
-.header {
+.box{
+  overflow: hidden;
   width: 100%;
-  height: 15vw;
   display: flex;
-  flex-wrap: nowrap;
-  padding-left: 2vw;
-  margin-bottom: 2vw;
-  font-size: 1vw;
-  color: #000000;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top:1.5vh;
+  margin-bottom: 1.5vh;
+  border-radius: 2vh;
+  background-color: #e8e8e8;
+  //opacity: 0.6;
+  .patientMessage {
+    display: flex;
+    justify-content:space-between;
+    flex-direction: column;
+    flex-wrap: wrap;
+    //background-color: #e01806;
+    //height: 20vh;
+    margin: 1.5vh 0 1.5vh 0;
+    width: 35%;
+    .info{
+      width: 90%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-left: 1.6vw;
+      .textbox{
+        width:45%;
+        margin-bottom: 2vh;
+        font-size: 2.1vh;
+      }
+    }
+  }
+  .h11{
+    width: 100%;
+    font-size: 2.5vh;
+    background-color: #dcdcdc;
+    font-weight: 700;
+    height: 40px;
+    display: flex;
+    span{
+      width: 6px;
+      height: 100%;
+      background-color: #00afff;
+    }
+    p{
+      margin-left: 1vw;
+      line-height: 40px;
+    }
+  }
+  //.h11::before{
+  //  display: inline-block;
+  //  content:'';
+  //  width: 2px;
+  //  height: 100%;
+  //  background-color: #00afff;
+  //}
+  .result1{
+    width: 32%;
+    //height: 12vh;
+    .text{
+      height: 15vh;
+    }
+  }
+  .result2{
+    width: 32.5%;
+    //height: 12vh;
+    .text{
+      height: 12vh;
+    }
+    .oder{
+      display: flex;
+      justify-content: center;
+    }
+  }
 }
-
+.size{
+  font-size: 2.3vh;
+}
+.mmargin{
+  margin: 1.5vh 0 1.5vh 0;
+}
+.ml{
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
+.mt{
+  margin-top: 2vh;
+}
+.doctor {
+  margin:4vh 0 4vh 0 ;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  .input{
+    display: flex;
+    flex-direction: row;
+    //margin-left: 1vw;
+    strong{
+      white-space: nowrap;
+      line-height: 36px;
+      margin-right: .5vw;
+      font-size: 1.8vh;
+    }
+  }
+}
 .header-left {
   width: 60%;
   height: 100%;
@@ -3287,50 +3388,6 @@ export default {
   flex-wrap: nowrap
 }
 
-.header-1 {
-  width: 28%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-}
-
-.header-2 {
-  width: 28%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-}
-
-.header-3 {
-  width: 44%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-}
-
-.header-right {
-  width: 40%;
-  height: 100%;
-}
-
-.header-4 {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-}
-
-.header-4-1-1 {
-  width: 100%;
-  height: 6vw;
-}
 
 .font {
   font-size: 1vw;
@@ -3358,20 +3415,22 @@ export default {
   //border: 1px solid #000000;
   margin-top: 2vw;
 }
-
+.ml{
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
 //.bottom-left{
 //  display: flex;
 //  //flex-direction: row;
 //}
 
+
 .anNiu {
   height: 3vw;
-  width: 7vw;
-  //float: right;
-  //margin-right: 6vw;
-  font-size: 1.5vw;
-  //margin-top: 1vw;
-  //margin-left: 5vw;
+  width: 8vw;
+  font-size: 1vw;
+  line-height: 1vw;
+  text-align: center;
 }
 
 

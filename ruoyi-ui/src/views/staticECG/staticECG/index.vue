@@ -34,66 +34,46 @@
         </div>
       </div>
       <div class="noleft">
-        <div class="patientMessage">
-          <el-descriptions class="patientMessage1" title="患者信息" :column="3" border>
-            <el-descriptions-item>
-              <template slot="label"><strong>姓名:</strong></template>{{ data.name }}
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>性别:</strong></template>{{ data.gender }}
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>年龄:</strong></template>{{ data.age }}岁
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>送检科室:</strong></template> -
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>申请单号:</strong></template> -
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>门诊号:</strong></template> -
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>住院号:</strong></template> -
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>病人编号:</strong></template> -
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>HR:</strong></template>{{ data.hr }}
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>PR:</strong></template>{{ data.pr }}
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>QRS:</strong></template>{{ data.qrs }}
-            </el-descriptions-item><el-descriptions-item>
-            <template slot="label"><strong>QT/QTc:</strong></template>{{ data.qt }}
-          </el-descriptions-item><el-descriptions-item>
-            <template slot="label"><strong>P/QRS/T:</strong></template>{{ data.p }}
-          </el-descriptions-item><el-descriptions-item>
-            <template slot="label"><strong>PV5/SV1:</strong></template>{{ data.pv5 }}
-          </el-descriptions-item>
-            <el-descriptions-item>
-              <template slot="label"><strong>RV5/SV1:</strong></template>{{ data.rv5_sv1 }}
-            </el-descriptions-item>
-          </el-descriptions>
-        </div>
-
-
-        <div class="automaticResult">
-          <div class="doctor-1"><strong>自动分析结果，仅供参考</strong></div>
-          <div>
-            <div style="width: 95%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.result }}</div>
+        <div class="box">
+          <div class="h11">
+            <span></span>
+            <p>患者信息</p>
           </div>
-          <div class="doctor-1"><strong>患者症状</strong></div>
-          <div>
-            <div style="width: 95%;height: 10vw;border: 1px solid #c4c4c4;padding: 0.5vw;">{{ data.patientSymptom }}</div>
+          <div class="patientMessage">
+            <div class="textbox"><strong>姓名:</strong>{{ data.name }}</div>
+            <div class="textbox"><strong>性别:</strong>{{ data.gender }}</div>
+            <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
+            <div class="textbox"><strong>送检科室:</strong> -</div>
+            <div class="textbox"><strong>申请单号:</strong> -</div>
+            <div class="textbox"><strong>门诊号:</strong> -</div>
+            <div class="textbox"><strong>住院号:</strong> -</div>
+            <div class="textbox"><strong>病人编号:</strong> -</div>
+            <div class="textbox"><strong>HR:</strong>{{ data.hr }}</div>
+            <div class="textbox"><strong>PR:</strong>{{ data.pr }}</div>
+            <div class="textbox"><strong>QRS:</strong>{{ data.qrs }}</div>
+            <div class="textbox"><strong>QT/QTc:</strong>{{ data.qt }}</div>
+            <div class="textbox"><strong>P/QRS/T:</strong>{{ data.p }}</div>
+            <div class="textbox"><strong>PV5/SV1:</strong>{{ data.pv5 }}</div>
+            <div class="textbox"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}</div>
           </div>
-          <div class="doctor-1">
-            <strong>医师诊断</strong>
-            <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 20vw">常用术语</el-button>
+          <div class="h11">
+            <span></span>
+            <p>自动分析结果，仅供参考</p>
+          </div>
+          <div class="result size mmargin">
+            <div class="ml">{{ data.result }}</div>
+          </div>
+          <div class="h11">
+            <span></span>
+            <p>患者症状</p>
+          </div>
+          <div class="result size mmargin">
+            <div class="ml">{{ data.patientSymptom }}</div>
+          </div>
+          <div class="h11">
+            <span></span>
+            <p>医师诊断</p>
+            <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 15vw;font-size:2.5vh">常用术语</el-button>
           </div>
           <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
             <div v-for="(item) in items">
@@ -108,44 +88,37 @@
             <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
             </div>
           </el-dialog>
-          <div>
-            <el-input
-              style="width: 20vw;"
-              type="textarea"
-              placeholder="请在这里输入医生诊断结果"
-              data-value="1111"
-              :rows="6"
-              class="font"
-              v-model="this.arr.toString()"
-            >
-            </el-input>
+          <div class="mmargin">
+              <el-input
+                style="width: 28vw;"
+                type="textarea"
+                placeholder="请在这里输入医生诊断结果"
+                data-value="1111"
+                :rows="6"
+                class="font"
+                v-model="this.arr.toString()"
+              >
+              </el-input>
           </div>
-        </div>
-        <div class="upload">
-          <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
-          <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
-        </div>
-        <div class="doctor">
-          <div>
-            <strong>医师:</strong>
-            <el-input v-model="data.doctorName" clearable
-                      :style="{width: '90%',}">{{ data.doctorName }}
-            </el-input>
+          <div class="doctor">
+            <div class="input">
+              <strong>医师:</strong>
+              <el-input v-model="data.doctorName" clearable>{{ data.doctorName }}</el-input>
+            </div>
+            <div class="input">
+              <strong>日期:</strong>
+              <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable></el-input>
+              <el-input v-else v-model="data.dataTime" clearable></el-input>
+            </div>
           </div>
-          <div>
-            <strong>日期:</strong>
-            <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
-                      :style="{width: '90%',}"></el-input>
-            <el-input v-else v-model="data.dataTime" clearable
-                      :style="{width: '90%',}"></el-input>
+          <div class="upload">
+            <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
+            <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
           </div>
         </div>
       </div>
-
     </div>
-      <div class="nobottom">
-
-    </div>
+    <div class="nobottom"></div>
 
     <div>
       <div class="lineI" v-show="open1">
@@ -195,10 +168,12 @@ import $ from 'jquery';
 import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/report/report";
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 import child from './child'
+import CacheList from "@/views/monitor/cache/list.vue";
 
 export default {
   name: "index",
   components:{
+    CacheList,
     child
   },
   data() {
@@ -2301,55 +2276,82 @@ export default {
 .body {
   display: flex;
 }
-
+::v-deep el-button{
+  background-color: #1890ff;
+}
 .noleft {
+  flex: 1;
   display: flex;
   flex-direction: row;
-  //padding-left: -5vw;
-  width: 35%;
-  //height: 15vh;
-  //background-color: #71f9d5;
   flex-wrap: wrap;
+  color: #000000;
+  //background-color: rgba(108, 176, 245, 0.98);
+  //background: linear-gradient(to left,#ffffff, rgba(158, 173, 189, 0.98));
+  .box{
+    overflow: hidden;
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top:1.5vh;
+    margin-bottom: 1.5vh;
+    border-radius: 2vh;
+    background-color: #e8e8e8;
+    //opacity: 0.6;
+    .h11:first-child{
+      margin-top: 1.5vh;
+    }
+    .h11{
+      width: 100%;
+      font-size: 2.5vh;
+      background-color: #e2e2e3;
+      font-weight: 700;
+      height: 40px;
+      display: flex;
+      span{
+        width: 6px;
+        height: 100%;
+        background-color: #00afff;
+      }
+      p{
+        height: 40px;
+        line-height: 40px;
+        margin: 0;
+        margin-left: 1vw;
+      }
+    }
+    .result{
+      height: 12vh;
+      width: 100%;
+    }
+  }
 }
-
+.size{
+  font-size: 2.3vh;
+}
+.mmargin{
+  margin: 1.5vh 0 1.5vh 0;
+}
+.ml{
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
 .patientMessage {
-  //display: flex;
-  //justify-content:space-between;
-  align-items: stretch;
-  //background-color: #e01806;
-  height: 6vh;
-}
-.patientMessage11 {
-  //display: flex;
-  //justify-content:space-between;
-  align-items: stretch;
-  //background-color: #e01806;
-  height: 4vh;
-}
-.patientMessage1{
-  width: 25vw;
-}
-.patientMessage-1 {
-  width: 15vw;
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  justify-content:space-between;
+  flex-wrap: wrap;
+  //background-color: #e01806;
+  //height: 20vh;
+  margin: 1.5vh 0 1.5vh 0;
+  width: 90%;
+  .textbox{
+    width:50%;
+    margin-bottom: 1.5vh;
+    font-size: 2.1vh;
+  }
 }
 
-.patientMessage-2 {
-  width: 15vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-.patientMessage-1-1 {
-  font-size: 1.3vw;
-}
-
-.patientMessage-2-1 {
-  font-size: 1.3vw;
-}
 
 
 
@@ -2368,13 +2370,22 @@ export default {
 
 .doctor {
   display: flex;
-  flex-direction: column;
-  height: 5vw;
-  line-height: 6vw;
+  width: 100%;
+  justify-content: center;
+  .input{
+    display: flex;
+    flex-direction: row;
+    //margin-left: 1vw;
+    strong{
+      white-space: nowrap;
+      line-height: 36px;
+      margin-right: .5vw;
+    }
+  }
 }
 
 .noright {
-  width: 65%;
+  width: 55vw;
   display: flex;
   flex-direction: column;
   //border: 1px solid #000000;
