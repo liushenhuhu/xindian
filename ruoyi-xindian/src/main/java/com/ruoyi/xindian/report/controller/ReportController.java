@@ -275,6 +275,7 @@ public class ReportController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('report:report:edit')")
     @Log(title = "报告", businessType = BusinessType.UPDATE)
+    @FwLogAnnotation("提交心电解读,减少服务次数")
     @PutMapping
     public AjaxResult edit(@RequestBody Report report) throws Exception {
 //        User currentUser = ShiroUtils.getSysUser();

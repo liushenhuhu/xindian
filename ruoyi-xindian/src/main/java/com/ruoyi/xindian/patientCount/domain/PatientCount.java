@@ -35,13 +35,22 @@ public class PatientCount implements Serializable {
     private Date detectionTime;
 
     /** 检测次数 */
-    @Excel(name = "检测次数")
+    @Excel(name = "剩余服务次数")
     private Long detectionNum;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @TableField(exist = false)
     private Date begindetectionTime;
+
     @TableField(exist = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date enddetectionTime;
+
+    @TableField(exist = false)
+    @Excel(name = "总服务次数")
+    private Long totalNum;
+
+    @TableField(exist = false)
+    @Excel(name = "使用次数")
+    private Long usesNum;
 }

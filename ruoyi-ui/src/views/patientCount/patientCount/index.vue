@@ -20,10 +20,10 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="检测次数" prop="detectionNum">
+      <el-form-item label="总服务次数" prop="detectionNum">
         <el-input
           v-model="queryParams.detectionNum"
-          placeholder="请输入检测次数"
+          placeholder="请输入总服务次数"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -89,7 +89,9 @@
           <span>{{ parseTime(scope.row.detectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="检测次数" align="center" prop="detectionNum" />
+      <el-table-column label="总服务次数" align="center" prop="totalNum" />
+      <el-table-column label="剩余服务次数" align="center" prop="detectionNum" />
+      <el-table-column label="使用次数" align="center" prop="usesNum" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -132,7 +134,7 @@
                           placeholder="请选择结束时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="检测次数" prop="detectionNum">
+        <el-form-item label="服务次数" prop="detectionNum">
           <el-input v-model="form.detectionNum" placeholder="请输入检测次数" />
         </el-form-item>
       </el-form>
@@ -285,7 +287,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userIds = row.userId || this.userIds;
-      this.$modal.confirm('是否确认删除vip用户编号为"' + userIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
         return delPatient(userIds);
       }).then(() => {
         this.getList();

@@ -8,6 +8,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.fw_log.domain.FwLog;
+import com.ruoyi.xindian.fw_log.service.FwLogService;
 import com.ruoyi.xindian.patientCount.domain.PatientCount;
 
 import com.ruoyi.xindian.patientCount.service.PatientCountService;
@@ -18,16 +20,22 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-
+/**
+ *
+ * 用户服务次数管理
+ *
+ * **/
 @RestController
 @RequestMapping("/patientCount/patientCount")
 public class PatientCountController extends BaseController {
     @Autowired
     private PatientCountService patientCountService;
     @Autowired
+    private FwLogService fwLogService;
+    @Autowired
     private AesUtils aesUtils;
     /**
-     * 查询vip用户列表
+     * 查询用户列表
      */
     @PreAuthorize("@ss.hasPermi('patientCount:patientCount:list')")
     @GetMapping("/list")
@@ -47,8 +55,16 @@ public class PatientCountController extends BaseController {
                 .orderByDesc(PatientCount::getDetectionNum);
 
         List<PatientCount> list = patientCountService.list(wrapper);
+        LambdaQueryWrapper<FwLog> wrapper1=new LambdaQueryWrapper<>();
+
         for (PatientCount c:list){
+            wrapper1.eq(FwLog::getUserName,c.getPhonenumberAes())
+                    .eq(FwLog::getFwStatus,2);
+            int count = fwLogService.count(wrapper1);
+            c.setUsesNum((long) count);
             c.setPhonenumberAes(aesUtils.decrypt(c.getPhonenumberAes()));
+            c.setTotalNum(count+c.getDetectionNum());
+            wrapper1.clear();
         }
         return getDataTable(list);
     }
@@ -103,22 +119,20 @@ public class PatientCountController extends BaseController {
 //        return toAjax(patientCountService.insertpatientCount(patientCount));
 //    }
     /**
-     * 修改vip用户
+     * 修改用户
      */
     @PreAuthorize("@ss.hasPermi('patientCount:patientCount:edit')")
     @Log(title = "用户", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PatientCount patientCount) throws Exception {
         patientCount.setPhonenumberAes(aesUtils.encrypt(patientCount.getPhonenumberAes()));
-        patientCount.setDetectionNum(patientCount.getDetectionNum());
-
         return toAjax(patientCountService.updateById(patientCount));
     }
     /**
-     * 删除vip用户
+     * 删除用户
      */
     @PreAuthorize("@ss.hasPermi('patientCount:patientCount:remove')")
-    @Log(title = "vip用户", businessType = BusinessType.DELETE)
+    @Log(title = "用户", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
