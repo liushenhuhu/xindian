@@ -12,13 +12,13 @@
       <!--左上角盒子-->
       <div class="top-left-div">
         <div hidden
-          v-for="item in colorList"
-          :key="item.color"
-          :class="[
+             v-for="item in colorList"
+             :key="item.color"
+             :class="[
             currentColor.color == item.color ? 'color-div-a' : 'color-div',
           ]"
-          :style="{ backgroundColor: item.color }"
-          @click="changeColor(item)"
+             :style="{ backgroundColor: item.color }"
+             @click="changeColor(item)"
         ></div>
         <!--拾色器按钮-->
         <div class="getcolor-div" hidden title="拾色器">
@@ -103,13 +103,15 @@
             top: canvasPosition.y + 'px',
             left: canvasPosition.x + 'px',
           }"
-          @mousewheel="handleMouseWheel"
-          @contextmenu="handleContextmenu"
-          @mousedown="handleMousedown"
-          @mouseup="handleMouseup"
-          @mousemove="handleMousemove"
 
+          @contextmenu="handleContextmenu"
+          @mousedown.left="handleMousedown"
+          @mouseup.left="handleMouseup"
+          @mousemove="handleMousemove"
+          @click.left="handleClickLeft"
+          @click.right="handleClickRight"
         ></canvas>
+        <!--    @mousewheel="handleMouseWheel"    -->
       </div>
     </div>
 
@@ -140,7 +142,7 @@ export default {
       isLoading: false, //加载状态
       colorImg: require("@/assets/images/color.png"), //拾色器图标
       imgSize: { height: "", width: "" }, //图片原始尺寸
-      imgZoom: 1, //图片缩放倍数(默认一倍)
+      imgZoom: 1.3, //图片缩放倍数(默认一倍)
       canvasSize: { height: "", width: "" }, //画布尺寸
       canvasPosition: { x: "", y: "" }, //画布位置
       mousePosition: { x: "", y: "" }, //屏幕中鼠标位置
@@ -182,11 +184,13 @@ export default {
       typesData: [],
       lableData: [],    //标记数据
       time: "",
-      x1: ""
+      x1: "",
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+
+  },
   created() {
 
   },
@@ -226,10 +230,10 @@ export default {
 
     //初始化画布
     async initCanvas(img) {
-      await (this.canvasSize = { height: img.height, width: img.width }); //通过图片尺寸设置画布尺寸
-      this.imgSize = { height: img.height, width: img.width }; //记录下图片原始尺寸
+      await (this.canvasSize = { height: img.height*1.4, width: img.width*1.4 }); //通过图片尺寸设置画布尺寸
+      this.imgSize = { height: img.height*1.4, width: img.width*1.4 }; //记录下图片原始尺寸
       ctx = document.getElementById("myCanvas").getContext("2d"); //获取上下文
-      await ctx.drawImage(img, 0, 0, img.width, img.height); //在canvas中绘制图片(图片、起始位置、绘图尺寸)
+      await ctx.drawImage(img, 0, 0, img.width*1.4, img.height*1.4); //在canvas中绘制图片(图片、起始位置、绘图尺寸)
       let canvasDiv = document.getElementsByClassName("canvas-div")[0];
       this.canvasPosition = {
         x: canvasDiv.offsetWidth / 2 - img.width / 2,
@@ -370,7 +374,6 @@ export default {
         .toDataURL("image/png")); //获取canvas的base64
     },
 
-
     //阻止默认右键冒泡事件，去除右键菜单
     handleContextmenu(e) {
       e.preventDefault();
@@ -413,9 +416,90 @@ export default {
       this.canvasSize = { height: height, width: width }; //更新画布尺寸
       this.canvasPosition = { x: newX, y: newY }; //更新画布位置
     },
+    //鼠标右击事件
+    handleClickLeft(e1){
+      //判断鼠标是否在标记点
+      this.canvasData.forEach((e2,index) => {
+        if( e1.offsetX >= e2.data[0][0]-3 && e1.offsetX <= e2.data[0][0]+3 && e1.offsetY <= e2.data[0][1]+3 && e1.offsetY >= e2.data[0][1]-3){
+          if(window.confirm('确认删除当前标记点吗？')){
+            this.canvasData.splice(index,1);
+            this.chartsData.splice(index,1);
+            //删除点  重新绘制列表数据
+            this.drawToArrs();
+            return true;
+          }else {
+            return false;
+          }
+        }
+      })
+    },
+    drawPoints(x,y,index) {
+      //标记类型
+      let str = this.radio1;
+      ctx.font = "bold 15px Arial";
+      ctx.fillText (str, x-3,y-26,[300]);
+      //计算两点之间的参数
+      if(this.chartsData[index - 1] === undefined){
+        //取两点之间的中点距离,显示值
+        /*let place = 0;
+        let time = this.calculateMS(Math.ceil(x),Math.ceil(this.chartsData[index + 1].X));
+        ctx.font = "bold 20px Arial";
+        ctx.fillText (parseFloat(time).toFixed(3),x + place,y+20 );*/
+      }else{
+        //console.log(456)
+        //取两点之间的中点距离,显示值
+        let place = 0;
+        for (let i = 0; i < this.chartsData.length; i++) {
+          //console.log("删除后"+this.chartsData[i])
+          if(i === index){
+            place = (this.chartsData[i].X - this.chartsData[i - 1].X) / 2;
+          }
+        }
+        // 显示毫秒值
+        let time = this.calculateMS(Math.ceil(x),Math.ceil(this.chartsData[index - 1].X));
+        ctx.font = "bold 20px Arial";
+        ctx.fillText (parseFloat(time).toFixed(3),x - place,y+20 );
+      }
+      ctx.beginPath(); //新建路径
+      //绘制圆点   arc参数为：x,y，半径、起始角、终止角
+      ctx.arc(
+        x,
+        y,
+        3,
+        0,
+        2 * Math.PI
+      );
+      ctx.fillStyle = this.currentColor.color; //填充颜色
+      ctx.strokeStyle = this.currentColor.color; //线条颜色
+      ctx.fill(); //填充
+      ctx.stroke(); //绘制线条
+    },
 
+    //通过保存的大列表绘制图形
+    drawToArrs() {
+      if(this.canvasData.length === 0){
+        this.canvasData = []; //清空图形数据
+        this.currentDrawData = {}; //清空当前绘图数据
+        this.chartsData = [];
+        this.lableData = [];
+      }
+      document.getElementById("myCanvas").getContext("2d").clearRect(0, 0, this.canvasSize.width, this.canvasSize.height); //清除画布图形
+      document.getElementById("myCanvas").getContext("2d").drawImage(
+        this.currentBgImg,
+        0,
+        0,
+        this.canvasSize.width,
+        this.canvasSize.height
+      );//重绘背景
+      console.log("123:"+this.canvasData.length)
+      console.log("456:"+this.chartsData)
+      this.canvasData.forEach((e3,index) => {
+        this.drawPoints(e3.data[0][0],e3.data[0][1],index);
+      })
+    },
     //鼠标按下事件
     handleMousedown(e) {
+      //console.log(e)
       if (e.button == 0) {
         this.isDrag = true; //左键按下打开拖拽
         let el = document.getElementById("myCanvas");
@@ -435,9 +519,11 @@ export default {
         y: e.offsetY,
       };
     },
-
     //鼠标移动事件
-     handleMousemove(e) {
+    handleMousemove(e) {
+      if(e.button===2){
+        return
+      }
       if (this.isDrag) {
         this.mouseDrag(e); //处理拖拽
         return;
@@ -470,10 +556,106 @@ export default {
         this.canvasSize.width,
         this.canvasSize.height
       ); //在canvas中绘制图片
-       this.drawToArr(); //重绘列表数据
+      this.drawToArr(); //重绘列表数据
       //绘制点
       if (this.currentModel.model == "point") {
         return;
+      }
+    },
+
+    //鼠标右键点击事件
+    handleClickRight(e){
+      //点模式的松开
+      if (this.currentModel.model == "point") {
+        let x = e.offsetX;
+        let minArr = [];
+        let maxArr = [];
+        let minIndexArr = [];
+        let maxIndexArr = [];
+        for (let i = 0; i < this.chartsData.length; i++) {
+          if(this.chartsData[i].X > x){
+            minArr.push(this.chartsData[i].X);
+            minIndexArr.push(i);
+          }
+          if(this.chartsData[i].X < x){
+            maxArr.push(this.chartsData[i].X);
+            maxIndexArr.push(i);
+          }
+        }
+
+        let minX = 0;
+        let maxX = 0;
+        let minIndex = 0;
+        let maxIndex = 0;
+        let obj = {
+          'X': e.offsetX,
+          'Y': e.offsetY
+        };
+
+        if(minArr.length>0 && maxArr.length>0){
+          minX = Math.min.apply(Math,minArr);
+          maxX = Math.max.apply(Math,maxArr);
+          /*for (let i = 0; i < minArr.length; i++) {
+            if(minArr[i] === minX){
+              minIndex = i;
+            }
+          }*/
+          for (let i = 0; i < this.chartsData.length; i++) {
+            //console.log("chartsData="+this.chartsData[i]);
+            //console.log("minX="+minX);
+            if(this.chartsData[i].X === minX){
+              console.log(this.chartsData[i]);
+              console.log(minX)
+              minIndex = i;
+            }
+          }
+          //console.log("minArr:"+minArr)
+          //console.log("minIndex:"+minIndex)
+          //console.log("minX:"+minX)
+          console.log("中间")
+          this.chartsData.splice(minIndex,0,obj)
+          this.currentDrawData = {
+            type: "point",
+            data: [[e.offsetX , e.offsetY]],
+            lables: this.lableData
+          };
+          this.canvasData.splice(minIndex,0,this.currentDrawData);
+          //console.log("qqqq:"+minIndex)
+          this.drawToArrs();
+          //this.drawPointCenter(e,minIndex);
+        }else if(maxArr.length>0){
+          console.log("右")
+          this.drawPointRight(e); //用鼠标松开时的位置画点
+          this.currentDrawData.data.forEach((e) => {
+            e[0] = e[0] / this.imgZoom; //将坐标数据还原至真实数据
+            e[1] = e[1] / this.imgZoom;
+            e[2] = this.radio1;
+            e[3] = this.time;
+            //e[4] = this.x1
+            this.canvasData.push(this.currentDrawData); //添加当前绘图数据至大列表
+          });
+        } else if(minArr.length>0){
+          console.log("左")
+          this.drawPointLeft(e); //用鼠标松开时的位置画点
+          this.currentDrawData.data.forEach((e) => {
+            e[0] = e[0] / this.imgZoom; //将坐标数据还原至真实数据
+            e[1] = e[1] / this.imgZoom;
+            e[2] = this.radio1;
+            e[3] = this.time;
+            //e[4] = this.x1
+            this.canvasData.splice(0,0,this.currentDrawData); //添加当前绘图数据至大列表
+          });
+        }else {
+          this.drawPoint(e); //用鼠标松开时的位置画点
+          this.currentDrawData.data.forEach((e) => {
+            e[0] = e[0] / this.imgZoom; //将坐标数据还原至真实数据
+            e[1] = e[1] / this.imgZoom;
+            e[2] = this.radio1;
+            e[3] = this.time;
+            //e[4] = this.x1
+            this.canvasData.push(this.currentDrawData); //添加当前绘图数据至大列表
+          });
+        }
       }
     },
 
@@ -489,16 +671,12 @@ export default {
       await this.canvasData.forEach((e) => {
         //绘制点
         if (e.type == "point") {
-          //console.log(e.lables[0].time)
+          //console.log(e.data[0][0])
           ctx.beginPath();
           ctx.font = "bold 15px Arial";
           ctx.fillText (e.data[0][2],e.data[0][0] * this.imgZoom-3,e.data[0][1] * this.imgZoom-26);
           ctx.font = "bold 20px Arial";
-          ctx.fillText (e.data[0][3],(e.data[0][0] - 120) * this.imgZoom,(e.data[0][1] + 20) * this.imgZoom);
-          /*e.lables.forEach((e) => {
-            console.log("e.X:======"+e.X)
-            ctx.fillText (e.time,e.X * this.imgZoom,e.Y * this.imgZoom);
-          })*/
+          ctx.fillText (e.data[0][3],(e.data[0][0] - 180) * this.imgZoom,(e.data[0][1] + 20) * this.imgZoom);
 
           ctx.arc(
             e.data[0][0] * this.imgZoom,
@@ -513,14 +691,6 @@ export default {
           ctx.stroke();
         }
       });
-      // 遍历标记点，开始绘制
-      /*await this.lableData.forEach((e) => {
-        //console.log("e:========"+e.X)
-        let d = (e.X * this.imgZoom - this.chartsData[this.chartsData.length - 2].X * this.imgZoom)/2;
-        ctx.fillText (e.time,(e.X - d) * this.imgZoom,e.Y * this.imgZoom);
-        //let d = (this.canvasMousePosition.x - this.chartsData[this.chartsData.length - 2].X)*this.imgZoom/2;
-        //ctx.fillText (e.time,this.canvasMousePosition.x - d,this.canvasMousePosition.y );
-      })*/
     },
 
     //鼠标松开事件
@@ -531,19 +701,7 @@ export default {
       if (e.button !== 2) {
         return; //非右键松开
       }
-      //点模式的松开
-      if (this.currentModel.model == "point") {
-        this.drawPoint(e); //用鼠标松开时的位置画点
-        this.currentDrawData.data.forEach((e) => {
-          e[0] = e[0] / this.imgZoom; //将坐标数据还原至真实数据
-          e[1] = e[1] / this.imgZoom;
-          e[2] = this.radio1;
-          e[3] = this.time;
-          //e[4] = this.x1
-        });
-        this.canvasData.push(this.currentDrawData); //添加当前绘图数据至大列表
-        //console.log(this.canvasData)
-      }
+
       this.isMouseDown = false; //关闭鼠标状态
       this.canvasMousePosition = {
         x: e.offsetX, //更新位置
@@ -564,36 +722,33 @@ export default {
       ctx.font = "bold 15px Arial";
       ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
       //计算两点之间的参数
-      //console.log(this.chartsData[this.chartsData.length - 1])
       if(this.chartsData[this.chartsData.length - 1] === undefined){
-          let obj = {
-            'X': e.offsetX,
-            'Y': e.offsetY
-          };
-          this.chartsData.push(obj);
-      }else{
-        //console.log("length:"+this.chartsData[this.chartsData.length - 1].X)
         let obj = {
           'X': e.offsetX,
           'Y': e.offsetY
         };
         this.chartsData.push(obj);
-        //ctx.lineTo(e.offsetX, e.offsetY);  //起点坐标
-        //ctx.lineTo(this.chartsData[this.chartsData.length - 1].X, this.chartsData[this.chartsData.length - 1].Y);  //下一个坐标
-        //ctx.stroke();
+      }else{
+        let obj = {
+          'X': e.offsetX,
+          'Y': e.offsetY
+        };
+        this.chartsData.push(obj);
+
+        //取两点之间的中点距离,显示值
+        let place = 0;
+        for (let i = 0; i < this.chartsData.length; i++) {
+          //console.log("删除前"+this.chartsData[i])
+          if(i === this.chartsData.length-1){
+            place = (this.chartsData[i].X - this.chartsData[i - 1].X) / 2;
+          }
+        }
+
         // 显示毫秒值
         this.time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[this.chartsData.length - 2].X));
         let time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[this.chartsData.length - 2].X));
-        //let d = (e.offsetX * this.imgZoom - this.chartsData[this.chartsData.length - 2].X)/2;
-        //this.x1 = (e.offsetX - d);
-        /*let obj1 = {
-          "X": e.offsetX - d,
-          "Y": e.offsetY,
-          "time": time
-        }*/
-        //this.lableData.push(obj1);
         ctx.font = "bold 20px Arial";
-        ctx.fillText (parseFloat(time).toFixed(3),this.canvasMousePosition.x - 120,this.canvasMousePosition.y+20 );
+        ctx.fillText (parseFloat(time).toFixed(3),this.canvasMousePosition.x - place,this.canvasMousePosition.y+20 );
       }
       ctx.beginPath(); //新建路径
       //绘制圆点   arc参数为：x,y，半径、起始角、终止角
@@ -615,6 +770,201 @@ export default {
         data: [[e.offsetX , e.offsetY]],
         lables: this.lableData
       };
+    },
+    //画点
+    drawPointRight(e) {
+      //获取画布中鼠标坐标
+      this.canvasMousePosition = {
+        x: e.offsetX,
+        y: e.offsetY,
+      };
+
+      //标记类型
+      let str = this.radio1;
+      ctx.font = "bold 15px Arial";
+      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
+      //计算两点之间的参数
+      if(this.chartsData[this.chartsData.length - 1] === undefined){
+        let obj = {
+          'X': e.offsetX,
+          'Y': e.offsetY
+        };
+        this.chartsData.push(obj);
+      }else{
+        let obj = {
+          'X': e.offsetX,
+          'Y': e.offsetY
+        };
+        this.chartsData.push(obj);
+
+        //取两点之间的中点距离,显示值
+        let place = (this.chartsData[this.chartsData.length-1].X - this.chartsData[this.chartsData.length-2].X) / 2;
+        /*for (let i = 0; i < this.chartsData.length; i++) {
+          //console.log("删除前"+this.chartsData[i])
+          if(i === this.chartsData.length-1){
+            place = (this.chartsData[i].X - this.chartsData[i - 1].X) / 2;
+          }
+        }*/
+
+        // 显示毫秒值
+        this.time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[this.chartsData.length - 2].X));
+        let time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[this.chartsData.length - 2].X));
+        ctx.font = "bold 20px Arial";
+        ctx.fillText (parseFloat(time).toFixed(3),e.offsetX - place,this.canvasMousePosition.y+20 );
+      }
+      ctx.beginPath(); //新建路径
+      //绘制圆点   arc参数为：x,y，半径、起始角、终止角
+      ctx.arc(
+        this.canvasMousePosition.x,
+        this.canvasMousePosition.y,
+        3,
+        0,
+        2 * Math.PI
+      );
+      ctx.fillStyle = this.currentColor.color; //填充颜色
+      ctx.strokeStyle = this.currentColor.color; //线条颜色
+      ctx.fill(); //填充
+      ctx.stroke(); //绘制线条
+      //生成点绘图数据
+      this.currentDrawData = {
+        type: "point",
+        //color: this.currentColor.color,
+        data: [[e.offsetX , e.offsetY]],
+        lables: this.lableData
+      };
+    },
+    //画点
+    drawPointLeft(e) {
+      //获取画布中鼠标坐标
+      this.canvasMousePosition = {
+        x: e.offsetX,
+        y: e.offsetY,
+      };
+
+      //标记类型
+      let str = this.radio1;
+      ctx.font = "bold 15px Arial";
+      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
+      //计算两点之间的参数
+      if(this.chartsData[this.chartsData.length - 1] === undefined){
+        let obj = {
+          'X': e.offsetX,
+          'Y': e.offsetY
+        };
+        this.chartsData.splice(0,0,obj);
+      }else{
+        let obj = {
+          'X': e.offsetX,
+          'Y': e.offsetY
+        };
+        this.chartsData.splice(0,0,obj);
+        //取两点之间的中点距离,显示值
+        let place = (this.chartsData[1].X - e.offsetX) / 2;
+        //console.log(place)
+        /*for (let i = 0; i < this.chartsData.length; i++) {
+          //console.log("删除前"+this.chartsData[i])
+          if(i === this.chartsData.length-1){
+            place = (this.chartsData[i].X - this.chartsData[i - 1].X) / 2;
+          }
+        }*/
+
+        // 显示毫秒值
+        this.time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[1].X));
+        let time = this.calculateMS(Math.ceil(this.chartsData[1].X),Math.ceil(e.offsetX));
+        ctx.font = "bold 20px Arial";
+        ctx.fillText (parseFloat(time).toFixed(3),this.chartsData[1].X - place,e.offsetY+20 );
+      }
+      ctx.beginPath(); //新建路径
+      //绘制圆点   arc参数为：x,y，半径、起始角、终止角
+      ctx.arc(
+        this.canvasMousePosition.x,
+        this.canvasMousePosition.y,
+        3,
+        0,
+        2 * Math.PI
+      );
+      ctx.fillStyle = this.currentColor.color; //填充颜色
+      ctx.strokeStyle = this.currentColor.color; //线条颜色
+      ctx.fill(); //填充
+      ctx.stroke(); //绘制线条
+      //生成点绘图数据
+      this.currentDrawData = {
+        type: "point",
+        //color: this.currentColor.color,
+        data: [[e.offsetX , e.offsetY]],
+        lables: this.lableData
+      };
+    },
+    //画点
+    drawPointCenter(e,index) {
+      this.canvasMousePosition = {
+        x: e.offsetX,
+        y: e.offsetY,
+      };
+      //标记类型
+      let str = this.radio1;
+      ctx.font = "bold 15px Arial";
+      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
+      //计算两点之间的参数
+      /*let obj = {
+        'X': e.offsetX,
+        'Y': e.offsetY
+      };
+      this.chartsData.splice(0,0,obj);*/
+      console.log(index)
+      //  右
+      let place1 = (this.chartsData[index+1].X - e.offsetX) / 2;
+      // 显示毫秒值
+      let time1 = this.calculateMS(Math.ceil(this.chartsData[index+1].X),Math.ceil(e.offsetX));
+      ctx.font = "bold 20px Arial";
+      ctx.fillText (parseFloat(time1).toFixed(3),this.chartsData[index+1].X - place1,e.offsetY+20 );
+      ctx.beginPath(); //新建路径
+      //绘制圆点   arc参数为：x,y，半径、起始角、终止角
+      ctx.arc(
+        this.canvasMousePosition.x,
+        this.canvasMousePosition.y,
+        3,
+        0,
+        2 * Math.PI
+      );
+      ctx.fillStyle = this.currentColor.color; //填充颜色
+      ctx.strokeStyle = this.currentColor.color; //线条颜色
+      ctx.fill(); //填充
+      ctx.stroke(); //绘制线条
+
+      //计算两点之间的参数
+      /*let obj = {
+        'X': e.offsetX,
+        'Y': e.offsetY
+      };
+      this.chartsData.splice(0,0,obj);*/
+      //  左
+      let place2 = (e.offsetX - this.chartsData[index-1].X) / 2;
+      // 显示毫秒值
+      let time2 = this.calculateMS(Math.ceil(this.chartsData[index-1].X),Math.ceil(e.offsetX));
+      ctx.font = "bold 20px Arial";
+      ctx.fillText (parseFloat(time2).toFixed(3),e.offsetX - place2,e.offsetY+20 );
+      ctx.beginPath(); //新建路径
+      //绘制圆点   arc参数为：x,y，半径、起始角、终止角
+      ctx.arc(
+        this.canvasMousePosition.x,
+        this.canvasMousePosition.y,
+        3,
+        0,
+        2 * Math.PI
+      );
+      ctx.fillStyle = this.currentColor.color; //填充颜色
+      ctx.strokeStyle = this.currentColor.color; //线条颜色
+      ctx.fill(); //填充
+      ctx.stroke(); //绘制线条
+
+      //生成点绘图数据
+      /*this.currentDrawData = {
+        type: "point",
+        //color: this.currentColor.color,
+        data: [[e.offsetX , e.offsetY]],
+        lables: this.lableData
+      };*/
     },
     calculateMS (x1,x2){
       //大屏  一个小方格之间距离为18    一个小方格表示0.04s
