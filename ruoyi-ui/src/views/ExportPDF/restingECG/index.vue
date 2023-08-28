@@ -46,8 +46,10 @@
             <div class="result2 size mmargin">
               <div class="h11">
                 <span></span>
+                <div class="between">
                 <p>医师诊断</p>
-                <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 15vw;font-size:2vh">常用术语</el-button>
+                  <el-button type="text" @click="dialogFormVisible = true" style="margin-right: 1vw;font-size:2vh">常用术语</el-button>
+                </div>
               </div>
               <div class="mt">
                 <el-input
@@ -3324,6 +3326,14 @@ export default {
       margin-left: 1vw;
       line-height: 40px;
     }
+    .between{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      p{
+        line-height: 40px;
+      }
+    }
   }
   //.h11::before{
   //  display: inline-block;
@@ -3356,6 +3366,9 @@ export default {
 }
 .mmargin{
   margin: 1.5vh 0 1.5vh 0;
+}
+.margin{
+  width: 100%;
 }
 .ml{
   margin-left: 2vw;

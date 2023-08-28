@@ -72,8 +72,10 @@
           </div>
           <div class="h11">
             <span></span>
-            <p>医师诊断</p>
-            <el-button type="text" @click="dialogFormVisible = true" style="margin-left: 15vw;font-size:2.5vh">常用术语</el-button>
+            <div class="between">
+              <p>医师诊断</p>
+              <el-button type="text" @click="dialogFormVisible = true" style="margin-right: 1vw;font-size:2.5vh">常用术语</el-button>
+            </div>
           </div>
           <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
             <div v-for="(item) in items">
@@ -88,9 +90,9 @@
             <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
             </div>
           </el-dialog>
-          <div class="mmargin">
+          <div class="margin">
               <el-input
-                style="width: 28vw;"
+                style="width: 90%;"
                 type="textarea"
                 placeholder="请在这里输入医生诊断结果"
                 data-value="1111"
@@ -2320,6 +2322,17 @@ export default {
         margin: 0;
         margin-left: 1vw;
       }
+      .between{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        p{
+          height: 40px;
+          line-height: 40px;
+          margin: 0;
+          margin-left: 1vw;
+        }
+      }
     }
     .result{
       height: 12vh;
@@ -2332,6 +2345,13 @@ export default {
 }
 .mmargin{
   margin: 1.5vh 0 1.5vh 0;
+}
+.margin{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5vw;
+  margin-top: 1vw;
 }
 .ml{
   margin-left: 2vw;
