@@ -47,6 +47,7 @@
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           </el-form-item>
         </el-form>
+        <el-divider content-position="left">医生每月诊断次数统计图</el-divider>
         <div id="myChart" :style="{width: '80%', height: '300%'}"> </div>
 <!--        <div id="table1" style="align-content: center;display: none">-->
 <!--          <el-button type="primary" icon="el-icon-back" size="mini" @click="backQuery">返回</el-button>-->
@@ -68,7 +69,7 @@
 
 
 
-        <el-divider content-position="left">诊断平均时间排行</el-divider>
+        <el-divider content-position="left">医生诊断平均时间排行</el-divider>
         <el-table
           :data="tableData"
           style="width: 100%;text-align: center">
@@ -140,9 +141,9 @@ export default {
       let status = this;
       myChart.off('click');
       myChart.setOption({
-        title: {
-          text: '诊断次数统计图'
-        },
+        // title: {
+        //   text: '医生每月诊断次数统计图'
+        // },
         tooltip: {},
         xAxis: {
           data: ["一月", "二月", "三月", "四月", "五月",
@@ -281,5 +282,12 @@ export default {
   },
 }
 </script>
-<style>
+<style lang="scss" scoped>
+.el-divider {
+  ::v-deep .el-divider__text {
+    font-weight: 700 !important;
+    font-size: 20px;
+  }
+}
+
 </style>

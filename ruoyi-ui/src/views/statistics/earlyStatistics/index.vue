@@ -9,6 +9,7 @@
       <ageChild></ageChild>
     </el-card>
   </div>
+  <el-divider content-position="left">预警分类统计图</el-divider>
   <div class="circle">
     <el-card class="card2">
       <div id="main0" style="width: 22vw;height:25vh;color: black;font-weight: 800">静态12导预警</div>
@@ -345,6 +346,10 @@ export default {
   }
 }
 
-
-
+   .el-divider {
+     ::v-deep .el-divider__text {
+       font-weight: 700 !important;
+       font-size: 20px;
+     }
+   }
 </style>

@@ -157,17 +157,18 @@ public class webOrderController extends BaseController {
                 d.getProduct().setPrice(d.getProduct().getPrice().multiply(new BigDecimal("0.01")));
                 d.getProduct().setDiscount(d.getProduct().getDiscount().multiply(new BigDecimal("0.01")));
             }
+            if (orderInfo.getPatientPhone()!=null&&!"".equals(orderInfo.getPatientPhone())){
+                orderInfo.setPatientPhone(aesUtils.decrypt(orderInfo.getPatientPhone()));
+            }
+            if (orderInfo.getPatientName()!=null&&!"".equals(orderInfo.getPatientName())){
+                orderInfo.setPatientName(aesUtils.decrypt(orderInfo.getPatientName()));
+            }
+            if (orderInfo.getStreetAddress()!=null&&!"".equals(orderInfo.getStreetAddress())){
+                orderInfo.setStreetAddress(aesUtils.decrypt(orderInfo.getStreetAddress()));
+            }
         }
 
-        if (orderInfo.getPatientPhone()!=null&&!"".equals(orderInfo.getPatientPhone())){
-            orderInfo.setPatientPhone(aesUtils.decrypt(orderInfo.getPatientPhone()));
-        }
-        if (orderInfo.getPatientName()!=null&&!"".equals(orderInfo.getPatientName())){
-            orderInfo.setPatientName(aesUtils.decrypt(orderInfo.getPatientName()));
-        }
-        if (orderInfo.getStreetAddress()!=null&&!"".equals(orderInfo.getStreetAddress())){
-            orderInfo.setStreetAddress(aesUtils.decrypt(orderInfo.getStreetAddress()));
-        }
+
         return AjaxResult.success(orderInfo);
     }
 

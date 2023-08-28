@@ -129,7 +129,7 @@ export default {
       let option = {
         title:{
           show:true,
-          text:'用户心电数据上传次数   每日统计'
+          text:'用户心电检测数据上传次数   每日统计'
         },
         xAxis: {
           type: 'category',
@@ -173,7 +173,7 @@ export default {
       let option = {
         title:{
           show:true,
-          text:'用户心电数据上传次数   每月统计'
+          text:'用户心电检测数据上传次数   每月统计'
         },
         xAxis: {
           type: 'category',
@@ -242,13 +242,13 @@ export default {
 
 .box-card {
   width: 90%;
-  height: 60vh;
+  height: 39vh;
   margin:0 auto;
   margin-bottom: 10px;
 }
 .chart{
   width: 100%;
-  height: 100%;
+  height: 90%;
 }
 .el-card__body{
   height: 100%;

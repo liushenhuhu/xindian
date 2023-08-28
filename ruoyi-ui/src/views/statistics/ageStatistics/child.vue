@@ -1,6 +1,6 @@
 <template>
   <div id="cf-double-column" :style="{ width: '100%', height: '100%' }">
-    <p class="title"><span class="title-left"></span>男女比例图</p>
+    <p class="title"><span class="title-left"></span>心电患者男女比例图</p>
     <div id="chart" :style="{ width: '60%', height: '600px',position: 'relative',left: '20%' }"></div>
     <div class="footer-name">
       <p></p>

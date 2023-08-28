@@ -1,10 +1,10 @@
 <template>
   <div id="cf-double-column" :style="{ width: '100%', height: '100%' }">
-    <p class="title"><span class="title-left"></span>男女比例图</p>
+    <p class="title"><span class="title-left"></span>心电患者男女比例图</p>
     <div id="chart" :style="{ width: '60vw', height: '500px' }"></div>
     <div class="footer-name">
-      <p>{{menCount}}</p>
-      <p>{{womenCount}}</p>
+      <p>男：{{menCount}}人</p>
+      <p>女：{{womenCount}}人</p>
     </div>
   </div>
 </template>
@@ -60,14 +60,14 @@ export default {
       let colorLeft = ["#3DA1FF", "#2749FC"];
       let colorRight = ["#FB857D", "#F6504A"];
       let option = {
-        title: {
-          text: "男                    女",
-          top: "bottom",
-          left: "center",
-          textStyle: {
-            color: "black ", //标签文字颜色改为白色
-          },
-        },
+        // title: {
+        //   // text: "男                      女",
+        //   top: "bottom",
+        //   left: "center",
+        //   textStyle: {
+        //     color: "black ", //标签文字颜色改为白色
+        //   },
+        // },
         legend: {
           top: "5%",
           right: "10%",
@@ -389,13 +389,15 @@ export default {
     position: relative;
     bottom: 0;
     color: #333333;
-    font-size: 0.88rem;
+    font-size: 0.92rem;
     width: 100%;
     p {
       display: inline-block;
-      width: 25%;
-      padding: 0 2rem;
+      width: 26%;
+      padding: 0 3.5rem;
       margin: 0;
+      color: #1e1e1e;
+      font-weight: 700;
     }
     p:nth-of-type(1) {
       text-align: right;
