@@ -110,6 +110,9 @@
         <if test="reportType!=null&amp;&amp;reportType!=''">
             and r.report_type like concat(#{reportType},"%")
         </if>
+        <if test="reportType==null or reportType==''">
+            and r.report_type like concat('JECG',"%")
+        </if>
         GROUP BY name
         ORDER BY name asc
     </select>
@@ -120,6 +123,9 @@
         WHERE r.report_time BETWEEN #{startTime} and DATE_ADD(#{endTime} ,INTERVAL 1 DAY)
         <if test="reportType!=null&amp;&amp;reportType!=''">
             and r.report_type like concat(#{reportType},"%")
+        </if>
+        <if test="reportType==null or reportType==''">
+            and r.report_type like concat('JECG',"%")
         </if>
         GROUP BY name
         ORDER BY name asc
