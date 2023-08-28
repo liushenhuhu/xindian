@@ -57,14 +57,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="默认地址标识符" prop="defaultFlag">
+<!--      <el-form-item label="默认地址标识符" prop="defaultFlag">
         <el-input
           v-model="queryParams.defaultFlag"
           placeholder="请输入默认地址标识符"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
