@@ -48,7 +48,7 @@
                 <span></span>
                 <div class="between">
                 <p>医师诊断</p>
-                  <el-button type="text" @click="dialogFormVisible = true" style="margin-right: 1vw;font-size:2vh">常用术语</el-button>
+                  <el-button type="text" @click="dialogFormVisible = true" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2vh">常用术语</el-button>
                 </div>
               </div>
               <div class="mt">
@@ -3315,7 +3315,7 @@ export default {
     font-size: 2.5vh;
     background-color: #dcdcdc;
     font-weight: 700;
-    height: 40px;
+    height: 4vh;
     display: flex;
     span{
       width: 6px;
@@ -3324,14 +3324,14 @@ export default {
     }
     p{
       margin-left: 1vw;
-      line-height: 40px;
+      line-height: 4vh;
     }
     .between{
       width: 100%;
       display: flex;
       justify-content: space-between;
       p{
-        line-height: 40px;
+        line-height: 4vh;
       }
     }
   }

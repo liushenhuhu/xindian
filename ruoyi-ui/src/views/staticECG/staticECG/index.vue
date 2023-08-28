@@ -74,7 +74,7 @@
             <span></span>
             <div class="between">
               <p>医师诊断</p>
-              <el-button type="text" @click="dialogFormVisible = true" style="margin-right: 1vw;font-size:2.5vh">常用术语</el-button>
+              <el-button type="text" @click="dialogFormVisible = true" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语</el-button>
             </div>
           </div>
           <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
@@ -2309,7 +2309,7 @@ export default {
       font-size: 2.5vh;
       background-color: #e2e2e3;
       font-weight: 700;
-      height: 40px;
+      height: 4vh;
       display: flex;
       span{
         width: 6px;
@@ -2318,7 +2318,7 @@ export default {
       }
       p{
         height: 40px;
-        line-height: 40px;
+        line-height: 4vh;
         margin: 0;
         margin-left: 1vw;
       }
@@ -2327,8 +2327,8 @@ export default {
         display: flex;
         justify-content: space-between;
         p{
-          height: 40px;
-          line-height: 40px;
+          height: 4vh;
+          line-height: 4vh;
           margin: 0;
           margin-left: 1vw;
         }
