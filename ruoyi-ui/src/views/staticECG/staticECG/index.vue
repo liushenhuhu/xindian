@@ -87,7 +87,7 @@
               </button>
             </div>
             <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            <el-button type="primary" @click="dialogForm">确 定</el-button>
             </div>
           </el-dialog>
           <div class="margin">
@@ -98,7 +98,7 @@
                 data-value="1111"
                 :rows="6"
                 class="font"
-                v-model="this.arr.toString()"
+                v-model="data.resultByDoctor"
               >
               </el-input>
           </div>
@@ -275,10 +275,9 @@ export default {
     var pId = this.$route.query.pId;
     if (pId) {
       this.pId = pId;
-      //console.log(this.pId);
       getReportByPId(this.pId).then(response => {
-        console.log(response)
-        this.data.resultByDoctor = response.data.intelligent_diagnosis
+        this.data.resultByDoctor = response.data.diagnosisConclusion
+        this.arr[0]=response.data.diagnosisConclusion
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
@@ -373,6 +372,10 @@ export default {
         this.arr.push(key);
       }
     },
+    dialogForm(){
+      this.data.resultByDoctor = this.arr.toString()
+      this.dialogFormVisible=false;
+    },
     //请求数据
     get() {
       const loading = this.$loading({
@@ -402,6 +405,7 @@ export default {
         success: function (data) {
           console.log("请求成功：", data)
           loading.close()
+          _th.arr[0]=data.result.diagnosis_conclusion
           _th.data.resultByDoctor = data.result.diagnosis_conclusion
           _th.data.doctorName = data.result.diagnosis_doctor
           _th.data.age = data.result.age

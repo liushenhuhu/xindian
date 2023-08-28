@@ -9,10 +9,11 @@
         <result property="patientPhone"    column="patient_phone"    />
         <result property="endDate"    column="end_date"    />
         <result property="vipNum"    column="vip_num"    />
+        <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectVipPatientVo">
-        select id, patient_phone, end_date, vip_num from vip_patient
+        select id, patient_phone, end_date, vip_num,create_time from vip_patient
     </sql>
 
     <select id="selectVipPatientList" parameterType="VipPatient" resultMap="VipPatientResult">
@@ -40,11 +41,13 @@
             <if test="patientPhone != null and patientPhone != ''">patient_phone,</if>
             <if test="endDate != null">end_date,</if>
             <if test="vipNum != null">vip_num,</if>
+            <if test=" createTime!= null">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientPhone != null and patientPhone != ''">#{patientPhone},</if>
             <if test="endDate != null">#{endDate},</if>
             <if test="vipNum != null">#{vipNum},</if>
+            <if test="createTime != null">#{createTime},</if>
         </trim>
     </insert>
 

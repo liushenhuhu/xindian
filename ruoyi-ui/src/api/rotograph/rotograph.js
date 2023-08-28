@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询轮播广告列表
 export function listRotograph(query) {
   return request({
-    url: '/rotograph/rotograph/list',
+    url: '/rotograph/rotograph/listWeb',
     method: 'get',
     params: query
   })

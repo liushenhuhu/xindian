@@ -239,14 +239,14 @@ public class SysLoginService {
 
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager
-                    .authenticate(new SmsCodeAuthenticationToken(mobile));
+                    .authenticate(new SmsCodeAuthenticationToken(encrypt));
         } catch (Exception e) {
 
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(mobile, Constants.LOGIN_FAIL, e.getMessage()));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(encrypt, Constants.LOGIN_FAIL, e.getMessage()));
             throw new ServiceException(e.getMessage());
 
         }
-        AsyncManager.me().execute(AsyncFactory.recordLogininfor(mobile, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(encrypt, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
 
 //        if (!soloLogin) {

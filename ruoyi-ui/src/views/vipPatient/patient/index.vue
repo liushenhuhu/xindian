@@ -84,6 +84,11 @@
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="${comment}" align="center" prop="id" />-->
       <el-table-column label="患者电话" align="center" prop="patientPhone" />
+      <el-table-column label="成为会员时间" align="center" prop="createTime" >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="结束时间" align="center" prop="endDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>

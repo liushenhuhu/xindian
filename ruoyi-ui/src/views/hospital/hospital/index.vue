@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="省份" prop="province">
+      <el-form-item label="省份" prop="province"  label-width="100px">
         <el-input
           v-model="queryParams.province"
           placeholder="请输入省份"
@@ -9,7 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName">
+      <el-form-item label="医院名称" prop="hospitalName"  label-width="100px">
         <el-input
           v-model="queryParams.hospitalName"
           placeholder="请输入医院名称"
@@ -17,7 +17,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院代号" prop="hospitalCode">
+      <el-form-item label="医院代号" prop="hospitalCode"  label-width="100px">
         <el-input
           v-model="queryParams.hospitalCode"
           placeholder="请输入医院代号"
@@ -25,63 +25,63 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院账号" prop="hospitalAccount">
-        <el-input
-          v-model="queryParams.hospitalAccount"
-          placeholder="请输入医院账号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="医院密码" prop="hospitalPassword">
-        <el-input
-          v-model="queryParams.hospitalPassword"
-          placeholder="请输入医院密码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="设备数量" prop="equipmentNumber">
-        <el-input
-          v-model="queryParams.equipmentNumber"
-          placeholder="请输入设备数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="患者总数" prop="patientNumber">
-        <el-input
-          v-model="queryParams.patientNumber"
-          placeholder="请输入患者总数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="正在监测患者数" prop="monitoringPatientNumber">
-        <el-input
-          v-model="queryParams.monitoringPatientNumber"
-          placeholder="请输入正在监测患者数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="账号总数" prop="accountNumber">
-        <el-input
-          v-model="queryParams.accountNumber"
-          placeholder="请输入账号总数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="首次收到心电数据时间" prop="firstEcgTime">
-        <el-date-picker clearable
-                        v-model="queryParams.firstEcgTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择首次收到心电数据时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="是否开通数据统计" prop="ifStatistics">
+<!--      <el-form-item label="医院账号" prop="hospitalAccount">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.hospitalAccount"-->
+<!--          placeholder="请输入医院账号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="医院密码" prop="hospitalPassword">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.hospitalPassword"-->
+<!--          placeholder="请输入医院密码"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="设备数量" prop="equipmentNumber">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.equipmentNumber"-->
+<!--          placeholder="请输入设备数量"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="患者总数" prop="patientNumber">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.patientNumber"-->
+<!--          placeholder="请输入患者总数"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="正在监测患者数" prop="monitoringPatientNumber">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.monitoringPatientNumber"-->
+<!--          placeholder="请输入正在监测患者数"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="账号总数" prop="accountNumber">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.accountNumber"-->
+<!--          placeholder="请输入账号总数"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="首次收到心电数据时间" prop="firstEcgTime">-->
+<!--        <el-date-picker clearable-->
+<!--                        v-model="queryParams.firstEcgTime"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择首次收到心电数据时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
+      <el-form-item label="是否开通数据统计" prop="ifStatistics"  label-width="140px">
         <el-select v-model="queryParams.ifStatistics" placeholder="请选择是否开通数据统计" clearable>
           <el-option
             v-for="dict in dict.type.if"
