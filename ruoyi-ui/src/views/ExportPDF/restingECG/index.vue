@@ -57,7 +57,7 @@
                   v-model="data.resultByDoctor"
                   placeholder="请在这里输入医生诊断结果"
                   data-value="1111"
-                  :rows="4"
+                  :rows="5"
                   class="font">{{ data.resultByDoctor }}
                 </el-input>
                 <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
@@ -3346,14 +3346,15 @@ export default {
     width: 32%;
     //height: 12vh;
     .text{
-      height: 15vh;
+      height: 16vh;
+      border: 1px darkgray solid;
     }
   }
   .result2{
     width: 32.5%;
     //height: 12vh;
     .text{
-      height: 12vh;
+      height: 15vh;
     }
     .oder{
       display: flex;
@@ -3370,15 +3371,12 @@ export default {
 .margin{
   width: 100%;
 }
-.ml{
-  margin-left: 2vw;
-  margin-right: 2vw;
-}
 .mt{
-  margin-top: 2vh;
+  //margin-top: 2vh;
+  height: 13vh;
 }
 .doctor {
-  margin:4vh 0 4vh 0 ;
+  margin:6vh 0 4vh 0 ;
   display: flex;
   width: 100%;
   justify-content: center;
@@ -3407,6 +3405,7 @@ export default {
   font-weight: 700;
   color: #6f0600;
   background-color: #fff;
+  height: 13vh;
 }
 
 .body {
@@ -3429,7 +3428,7 @@ export default {
   margin-top: 2vw;
 }
 .ml{
-  margin-left: 2vw;
+  margin-left: 1vw;
   margin-right: 2vw;
 }
 //.bottom-left{

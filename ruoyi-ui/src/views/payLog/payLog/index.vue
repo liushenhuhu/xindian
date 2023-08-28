@@ -90,6 +90,7 @@
 <!--      <el-table-column label="支付记录id" align="center" prop="id" />-->
       <el-table-column label="商户订单编号" align="center" prop="orderNo" />
       <el-table-column label="支付系统交易编号" align="center" prop="transactionId" />
+      <el-table-column label="交易时间" align="center" prop="createTime" />
       <el-table-column label="支付类型" align="center" prop="paymentType" />
       <el-table-column label="交易类型" align="center" prop="tradeType" />
       <el-table-column label="交易状态" align="center" prop="tradeState">

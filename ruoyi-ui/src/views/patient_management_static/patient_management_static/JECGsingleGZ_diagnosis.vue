@@ -40,7 +40,7 @@
         <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
           <el-option
             v-for="dict in dict.type.hospital_name_list"
-            :key="dict.value"
+            :key="dict.hospitalId"
             :label="dict.label"
             :value="dict.value"
           />
