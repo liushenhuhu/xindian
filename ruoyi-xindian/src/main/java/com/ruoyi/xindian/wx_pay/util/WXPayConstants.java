@@ -27,6 +27,7 @@ public class WXPayConstants {
     public static final String PATERNER_KEY = "ADFHJWhduenfks17shGDYE6278jfww12";//商户key秘钥   填写你们自己的
     /*退款*/
     public static final String REFUND_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";//申请退款路径接口
+    public static final String ORDER_QUERY_URL = "https://api.mch.weixin.qq.com/pay/orderquery";//查询订单状态
 
     public static final String WE_CHAT_CALL_BACK_DOMAIN_URL = " http://6nxme4.natappfree.cc";//获取用户
 

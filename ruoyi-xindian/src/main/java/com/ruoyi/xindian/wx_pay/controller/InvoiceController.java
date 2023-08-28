@@ -130,6 +130,7 @@ public class InvoiceController extends BaseController {
 
         Invoice invoice1 = JSONObject.parseObject(invoice, Invoice.class);
         if (!file.isEmpty()) {
+            invoice1.setState("已处理");
             invoice1.setOpenId(orderId);
             String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
             invoice1.setInvoiceUrl(url+avatar);

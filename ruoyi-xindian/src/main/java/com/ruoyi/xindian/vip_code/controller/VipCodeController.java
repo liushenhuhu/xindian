@@ -12,6 +12,8 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.fw_log.domain.FwLog;
+import com.ruoyi.xindian.fw_log.mapper.FwLogMapper;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
@@ -21,9 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 @RequestMapping("/vipcode/vipcode")
@@ -42,6 +48,11 @@ public class VipCodeController extends BaseController {
     private ISysUserService iSysUserService;
     @Autowired
     private SysUserMapper sysUserMapper;
+
+
+    @Resource
+    private FwLogMapper fwLogMapper;
+
     //web分页查询激活码
     @GetMapping("/web/list")
     public TableDataInfo list(VipCode vipCode){
@@ -150,7 +161,24 @@ public class VipCodeController extends BaseController {
             }
 
         }
-
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() ->{
+            System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
+            try{
+                FwLog fwLog = new FwLog();
+                fwLog.setUserName(sysUser.getPhonenumber());
+                fwLog.setMsg("激活激活码获得心电解读服务");
+                fwLog.setStatus("1");
+                fwLog.setLogTime(new Date());
+                fwLog.setFwStatus("1");
+                fwLog.setFwNum(one.getNum());
+                fwLogMapper.insert(fwLog);
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            System.out.println("异步线程 =====> 结束添加购买服务日志 =====> " + new Date());
+        },executorService);
+        executorService.shutdown(); // 回收线程池
         return AjaxResult.success("激活成功");
     }
 

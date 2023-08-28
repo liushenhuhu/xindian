@@ -16,12 +16,25 @@
             <result property="userName" column="user_name" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="orderTitle" column="order_title" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,order_no,transaction_id,
-        payment_type,trade_type,trade_state,
-        payer_total,content,create_time,
-        update_time,user_name
+    <sql id="selectTPaymentInfoVo">
+        select id, order_no, transaction_id, payment_type, trade_type, trade_state, payer_total, content, create_time, update_time, user_name, order_title from t_payment_info
     </sql>
+
+    <select id="selectTPaymentInfoList" parameterType="PaymentInfo" resultMap="BaseResultMap">
+        <include refid="selectTPaymentInfoVo"/>
+        <where>
+            <if test="orderNo != null  and orderNo != ''"> and order_no like concat('%', #{orderNo},'%')</if>
+            <if test="transactionId != null  and transactionId != ''"> and transaction_id concat('%', #{transactionId},'%')</if>
+            <if test="paymentType != null  and paymentType != ''"> and payment_type = #{paymentType}</if>
+            <if test="tradeType != null  and tradeType != ''"> and trade_type = #{tradeType}</if>
+            <if test="tradeState != null  and tradeState != ''"> and trade_state = #{tradeState}</if>
+            <if test="payerTotal != null "> and payer_total = #{payerTotal}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="orderTitle != null  and orderTitle != ''"> and order_title = #{orderTitle}</if>
+        </where>
+    </select>
 </mapper>

@@ -7,18 +7,27 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.dataLabby.domain.dataLabby;
 import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
 import com.ruoyi.xindian.detection.domain.Detection;
 import com.ruoyi.xindian.detection.service.IDetectionService;
+import com.ruoyi.xindian.fw_log.domain.FwLog;
+import com.ruoyi.xindian.fw_log.mapper.FwLogMapper;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
@@ -125,6 +134,10 @@ public class ReportController extends BaseController
 
     @Resource
     private WxMsgRunConfig wxMsgRunConfig;
+
+
+    @Resource
+    private FwLogMapper fwLogMapper;
 
     /**
      * 查询报告列表
@@ -275,9 +288,8 @@ public class ReportController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('report:report:edit')")
     @Log(title = "报告", businessType = BusinessType.UPDATE)
-    @FwLogAnnotation("提交心电解读,减少服务次数")
     @PutMapping
-    public AjaxResult edit(@RequestBody Report report) throws Exception {
+    public AjaxResult edit(@RequestBody Report report, HttpServletRequest request) throws Exception {
 //        User currentUser = ShiroUtils.getSysUser();
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
@@ -334,7 +346,7 @@ public class ReportController extends BaseController
                 if(doctors!=null && doctors.size()!=0){
 
                     if (report.getpId()!=null&&!"".equals(report.getpId())){
-                        wxMsgRunConfig.redisAdd(report.getpId(),doctors);
+//                        wxMsgRunConfig.redisAdd(report.getpId(),doctors);
                     }
 
                 } else{
@@ -347,6 +359,34 @@ public class ReportController extends BaseController
                 vipPatientController.detectionNumSubtract(sysUser1.getPhonenumber());
 
                 int i = reportService.updateReport(report);
+
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            CompletableFuture.runAsync(() ->{
+                System.out.println("异步线程 =====> 开始记录服务使用日志 =====> " + new Date());
+                try{
+                    FwLog fwLog = new FwLog();
+                    fwLog.setUserName(sysUser.getPhonenumber());
+                    fwLog.setMsg("提交心电报告减少一次心电服务次数");
+                    fwLog.setStatus("1");
+                    fwLog.setLogTime(new Date());
+                    fwLog.setFwStatus("2");
+                    fwLog.setFwNum(1);
+                    String ipAddr = IpUtils.getIpAddr(request);
+                    fwLog.setIpaddr(ipAddr);
+                    try {
+                        String address = getAddress(ipAddr);
+                        fwLog.setLoginLocation(address);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                    fwLogMapper.insert(fwLog);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+                System.out.println("异步线程 =====> 结束记录服务使用日志 =====> " + new Date());
+            },executorService);
+            executorService.shutdown(); // 回收线程池
                 return toAjax(i);
 
 
@@ -394,6 +434,16 @@ public class ReportController extends BaseController
         return toAjax(1);
     }
 
+    public String getAddress(String ip){
+        String json_result = null;
+        String url = "https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_id=6006&format=json&query=" + ip;
+        HttpResponse res = HttpRequest.get(url).execute();
+        JSONObject resJson = JSONObject.parseObject(res.body());
+        JSONArray resArr = JSONArray.parseArray(resJson.getString("data"));
+        resJson = JSONObject.parseObject("" + resArr.get(0));
+
+        return resJson.getString("location");
+    }
     /**
      * 患者提交报告到大厅
      *

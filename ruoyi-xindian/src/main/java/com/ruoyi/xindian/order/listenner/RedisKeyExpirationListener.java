@@ -3,6 +3,7 @@ package com.ruoyi.xindian.order.listenner;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.alert_log.service.IAlertLogService;
 import com.ruoyi.xindian.report.config.WxMsgRunConfig;
+import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.data.redis.connection.Message;
@@ -39,6 +40,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     @Resource
     private WxMsgRunConfig wxMsgRunConfig;
 
+    @Resource
+    private WXPayController wxPayController;
+
     private final Lock lock = new ReentrantLock();
 
     /**
@@ -60,6 +64,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 System.out.println("订单创建15分钟，开始判断订单是否支付并进行数据删除-------------------");
                 orderInfoService.redisOrderKey(split[1]);
                 return;
+            }
+            if (split[0].equals("orderQuery")){
+                wxPayController.orderQuery(split[1]);
             }
             if (split[0].equals("invoice")){
                 try {

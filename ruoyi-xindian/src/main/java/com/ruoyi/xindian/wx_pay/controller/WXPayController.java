@@ -15,6 +15,7 @@ import com.ruoyi.xindian.wx_pay.service.WxPayService;
 import com.ruoyi.xindian.wx_pay.util.HttpClientUtil;
 import com.ruoyi.xindian.wx_pay.util.WXPayConstants;
 import com.ruoyi.xindian.wx_pay.util.WXPayUtil;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,16 +26,17 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.ruoyi.xindian.wx_pay.enums.OrderStatus.SUCCESS;
 
 
 /**
- * @author 陳樂
+ * @author wang
  * @version 1.0.0
  * @ClassName WXPayController.java
  * @Description 微信支付相关接口
- * @createTime 2022年04月09日 13:09:00
+ * @createTime 2023年07月09日 13:09:00
  */
 @RestController
 @RequestMapping(value = "/api/v1")
@@ -46,7 +48,8 @@ public class WXPayController {
     private OrderInfoService orderInfoService;
 
 
-
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     private RefundInfoService refundsInfoService;
@@ -199,9 +202,7 @@ public class WXPayController {
                 }catch (Exception e){
                     ajaxResult.error("订单状态修改失败");
                 }
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -302,5 +303,58 @@ public class WXPayController {
         return resMap;
     }
 
+
+    /**
+     * 查询订单知否支付
+     * @param id
+     * @return
+     */
+    public Boolean orderQuery(String id){
+
+        // 返回参数
+        String resXml = "";
+        try {
+            // 拼接统一下单地址参数
+            Map<String, Object> paraMap = new HashMap<>();
+            OrderInfo order =  orderInfoService.createOrderByOrderID(id);
+
+            if (order==null){
+                return false;
+            }
+            if (!order.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
+                return false;
+            }
+            String orderNum = order.getOrderNo();//商户订单号，由随机数组成
+            System.out.println("订单号= "+orderNum);
+            // 封装必需的参数
+            paraMap.put("appid", WXPayConstants.APP_ID);
+            paraMap.put("mch_id", WXPayConstants.MCH_ID);//商家ID
+            paraMap.put("nonce_str", WXPayUtil.generateNonceStr());//获取随机字符串 Nonce Str
+            paraMap.put("out_trade_no", order.getOrderNo());//订单号
+            String sign = WXPayUtil.generateSignature(paraMap, WXPayConstants.PATERNER_KEY);//商户密码
+            //生成签名. 注意，若含有sign_type字段，必须和signType参数保持一致。
+            paraMap.put("sign", sign);
+            //将所有参数(map)转xml格式
+            String xml = WXPayUtil.mapToXml(paraMap);
+            System.out.println("xml:"+xml);
+            // 退款 https://api.mch.weixin.qq.com/secapi/pay/refund
+            String orderQueryUrl = WXPayConstants.ORDER_QUERY_URL;//申请退款路径接口
+            System.out.println("orderQueryUrl:"+orderQueryUrl);
+            //发送post请求"查看订单状态"
+            String xmlStr = HttpClientUtil.doPostXml(orderQueryUrl, xml);;
+            System.out.println("订单 xmlStr:"+xmlStr);
+            /*退款成功回调修改订单状态*/
+            Map<String, Object> map = WXPayUtil.xmlToMap(xmlStr);//XML格式字符串转换为Map
+            if (map.get("result_code").equals("SUCCESS")&&map.get("return_code").equals("SUCCESS")&&map.get("trade_state").equals("SUCCESS")){
+                wxPayService.processOrder(xmlStr);
+                return true;
+            }
+            redisTemplate.opsForValue().set("orderQuery:"+id,id,20, TimeUnit.SECONDS);
+            return false;
+
+        } catch (Exception e) {
+         return false;
+        }
+    }
 
 }

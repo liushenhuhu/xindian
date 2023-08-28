@@ -86,6 +86,7 @@ public class DoctorController extends BaseController
                     doctor.getHospitalNameList().add(hospital1.getHospitalName());
                 }
             }
+            startPage();
             List<Doctor> doctors = doctorService.selectUserDoc(doctor);
             for (Doctor value : doctors) {
                 department.setDepartmentCode(value.getDepartmentCode());

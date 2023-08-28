@@ -94,7 +94,13 @@
       <el-table-column label="名称" align="center" prop="title" />
       <el-table-column label="税号" align="center" prop="taxNo" />
       <el-table-column label="openid" align="center" prop="openId" />
-      <el-table-column label="发票状态" align="center" prop="state" />
+      <el-table-column label="发票状态" align="center" prop="state" >
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.state === '已处理'  ? 'primary' : 'danger'"
+            disable-transitions>{{scope.row.state}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -110,7 +116,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handle(scope.row)"
             v-hasPermi="['invoice:invoice:edit']"
           >查看pdf格式发票</el-button>
           <el-button
@@ -351,6 +357,10 @@ export default {
       this.file=file.raw;
       this.isWHow='2'
     },
+    handle(row){
+      // console.log(row)
+      window.open(row.invoiceUrl,'_blank')
+    },
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
@@ -424,7 +434,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+     /* this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.orderId != null) {
             updateInvoice(this.form).then(response => {
@@ -440,7 +450,8 @@ export default {
             });
           }
         }
-      });
+      });*/
+      this.open=false
     },
     /** 删除按钮操作 */
     handleDelete(row) {

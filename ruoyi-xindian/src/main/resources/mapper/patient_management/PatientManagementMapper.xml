@@ -489,7 +489,7 @@
         </where>
     </select>
 
-    <select id="selectPatientManagementListJECG12_COUNT" parameterType="PatientManagement" resultType="long">
+    <select id="selectPatientManagementListJECG12_COUNT" parameterType="PatientManagement" resultType="long" >
         <include refid="selectPatientManagementCount"/>
         <where>
             <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
@@ -573,8 +573,7 @@
         where diagnosis_status = 2 and d_phone_aes is not null and diagnosis_doctor_aes is not null
         order by report_time desc
     </select>
-    <select id="selectPatientManagementList12"
-            resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement">
+    <select id="selectPatientManagementList12" resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">
         select m.p_id, m.patient_code, m.hospital_code, m.equipment_code,
         connection_time, bed_number, case_history_number,
         ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,

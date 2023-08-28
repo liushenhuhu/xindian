@@ -10,6 +10,8 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.fw_log.domain.FwLog;
+import com.ruoyi.xindian.fw_log.mapper.FwLogMapper;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -42,6 +44,9 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -66,6 +71,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private SysUserMapper sysUserMapper;
 
 
+    @Resource
+    private FwLogMapper fwLogMapper;
 
     @Resource
     private ProductMapper productMapper;
@@ -198,11 +205,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 calendar.add(Calendar.MONTH, 6);
                 Date time = calendar.getTime();
                 vipPatient.setEndDate(time);
-                vipPatientService.updateVipPatient(vipPatient);
+
             }else if (product.getFrequency()>=30){
                 Date data = getData(endDate);
                 vipPatient.setEndDate(data);
-                vipPatientService.updateVipPatient(vipPatient);
             }
             else {
                 Calendar calendar = Calendar.getInstance();
@@ -212,8 +218,29 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 calendar.add(Calendar.MONTH, 1);
                 Date time = calendar.getTime();
                 vipPatient.setEndDate(time);
-                vipPatientService.updateVipPatient(vipPatient);
             }
+
+
+            vipPatientService.updateVipPatient(vipPatient);
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            CompletableFuture.runAsync(() ->{
+                System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
+                try{
+                    FwLog fwLog = new FwLog();
+                    fwLog.setUserName(sysUser.getPhonenumber());
+                    fwLog.setMsg("购买心电解读服务");
+                    fwLog.setStatus("1");
+                    fwLog.setLogTime(new Date());
+                    fwLog.setFwStatus("1");
+                    fwLog.setFwNum(product.getFrequency());
+                    fwLogMapper.insert(fwLog);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+                System.out.println("异步线程 =====> 结束添加购买服务日志 =====> " + new Date());
+            },executorService);
+            executorService.shutdown(); // 回收线程池
         }else {
             if (product.getIsVip()==0){
 
@@ -230,11 +257,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     calendar.add(Calendar.MONTH, 6);
                     Date time = calendar.getTime();
                     vipPatient.setEndDate(time);
-                    vipPatientService.insertVipPatient(vipPatient);
+
                 }else if (product.getFrequency()>=30){
                     Date data = getData(date);
                     vipPatient.setEndDate(data);
-                    vipPatientService.insertVipPatient(vipPatient);
                 }
                 else {
                     Calendar calendar = Calendar.getInstance();
@@ -244,10 +270,27 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     calendar.add(Calendar.MONTH, 1);
                     Date time = calendar.getTime();
                     vipPatient.setEndDate(time);
-                    vipPatientService.insertVipPatient(vipPatient);
                 }
+                vipPatientService.insertVipPatient(vipPatient);
                 sysUserMapper.updateDeteTime(sysUser.getPhonenumber());
-
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                CompletableFuture.runAsync(() ->{
+                    System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
+                    try{
+                        FwLog fwLog = new FwLog();
+                        fwLog.setUserName(sysUser.getPhonenumber());
+                        fwLog.setMsg("购买心电解读服务");
+                        fwLog.setStatus("1");
+                        fwLog.setLogTime(new Date());
+                        fwLog.setFwStatus("1");
+                        fwLog.setFwNum(product.getFrequency());
+                        fwLogMapper.insert(fwLog);
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+                    System.out.println("异步线程 =====> 结束添加购买服务日志 =====> " + new Date());
+                },executorService);
+                executorService.shutdown(); // 回收线程池
             }else {
                 SysUser p = sysUserMapper.selectUserByPhone(sysUser.getPhonenumber());
                 p.setDetectionNum(p.getDetectionNum() + (product.getFrequency()*suborderOrderInfo.getSum()) );
@@ -259,11 +302,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     calendar.add(Calendar.MONTH, 6);
                     Date time = calendar.getTime();
                     p.setDetectionTime(time);
-                   sysUserMapper.updateUser(p);
                 }else if (product.getFrequency()>=30){
                     Date data = getData(p.getDetectionTime());
                     p.setDetectionTime(data);
-                    sysUserMapper.updateUser(p);
                 }
                 else {
                     Calendar calendar = Calendar.getInstance();
@@ -273,8 +314,27 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     calendar.add(Calendar.MONTH, 1);
                     Date time = calendar.getTime();
                     p.setDetectionTime(time);
-                    sysUserMapper.updateUser(p);
+
                 }
+                sysUserMapper.updateUser(p);
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                CompletableFuture.runAsync(() ->{
+                    System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
+                    try{
+                        FwLog fwLog = new FwLog();
+                        fwLog.setUserName(sysUser.getPhonenumber());
+                        fwLog.setMsg("购买心电解读服务");
+                        fwLog.setStatus("1");
+                        fwLog.setLogTime(new Date());
+                        fwLog.setFwStatus("1");
+                        fwLog.setFwNum(product.getFrequency());
+                        fwLogMapper.insert(fwLog);
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+                    System.out.println("异步线程 =====> 结束添加购买服务日志 =====> " + new Date());
+                },executorService);
+                executorService.shutdown(); // 回收线程池
             }
         }
 
@@ -497,6 +557,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
 
         redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("orderQuery:"+orderInfo.getId(),orderInfo,20, TimeUnit.SECONDS);
 
         return orderInfo.getId();
 
@@ -545,9 +606,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
         redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
-
+        redisTemplate.opsForValue().set("orderQuery:"+orderInfo.getId(),orderInfo,20, TimeUnit.SECONDS);
         return orderInfo.getId();
-
     }
 
     /**
