@@ -267,6 +267,12 @@ public class ReportController extends BaseController
         if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
             report.setPPhone(aesUtils.decrypt(report.getPPhone()));
         }
+        if (report.getDiagnosisDoctor()!=null&&!"".equals(report.getDiagnosisDoctor())){
+            report.setDiagnosisDoctor(aesUtils.decrypt(report.getDiagnosisDoctor()));
+        }
+        if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
+            report.setdPhone(aesUtils.decrypt(report.getdPhone()));
+        }
         return AjaxResult.success(report);
     }
 

@@ -105,7 +105,7 @@
           <div class="doctor">
             <div class="input">
               <strong>医师:</strong>
-              <el-input v-model="data.doctorName" clearable>{{ data.doctorName }}</el-input>
+              <el-input v-model="data.doctorName" clearable></el-input>
             </div>
             <div class="input">
               <strong>日期:</strong>
@@ -277,10 +277,10 @@ export default {
       this.pId = pId;
       //console.log(this.pId);
       getReportByPId(this.pId).then(response => {
-        console.log("请求成功：", response.data)
-        this.data.resultByDoctor = response.intelligent_diagnosis
-        this.data.doctorName = response.diagnosisDoctor
-        this.data.diagnosisData = response.reportTime
+        console.log(response)
+        this.data.resultByDoctor = response.data.intelligent_diagnosis
+        this.data.doctorName = response.data.diagnosisDoctor
+        this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
       });
     }
