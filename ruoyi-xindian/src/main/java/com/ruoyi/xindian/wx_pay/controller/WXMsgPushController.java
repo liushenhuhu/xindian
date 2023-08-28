@@ -90,7 +90,7 @@ public class WXMsgPushController {
     }
     @GetMapping("/aesd")
     public AjaxResult aesd(String id) throws Exception {
-        String encrypt = aesUtils.decrypt("4TUjmX8ENuqtMj+JURORXQ==");
+        String encrypt = aesUtils.decrypt(id);
         System.out.println(encrypt);
         return AjaxResult.success(encrypt);
     }

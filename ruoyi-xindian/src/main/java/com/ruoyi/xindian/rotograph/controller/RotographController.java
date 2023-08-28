@@ -47,8 +47,8 @@ public class RotographController extends BaseController
      * 查询轮播广告列表
      */
 //    @PreAuthorize("@ss.hasPermi('rotograph:rotograph:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(Rotograph rotograph)
+    @GetMapping("/listWeb")
+    public TableDataInfo Web(Rotograph rotograph)
     {
         rotograph.setDeleteflag(0);
         startPage();
@@ -56,6 +56,15 @@ public class RotographController extends BaseController
         return getDataTable(list);
     }
 
+
+    @GetMapping("/list")
+    public AjaxResult list(Rotograph rotograph)
+    {
+        rotograph.setDeleteflag(0);
+//        startPage();
+        List<Rotograph> list = rotographService.selectRotographList(rotograph);
+        return AjaxResult.success(list);
+    }
     /**
      * 导出轮播广告列表
      */

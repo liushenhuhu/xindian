@@ -271,6 +271,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     Date time = calendar.getTime();
                     vipPatient.setEndDate(time);
                 }
+                vipPatient.setCreateTime(date);
                 vipPatientService.insertVipPatient(vipPatient);
                 sysUserMapper.updateDeteTime(sysUser.getPhonenumber());
                 ExecutorService executorService = Executors.newSingleThreadExecutor();

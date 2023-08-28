@@ -64,14 +64,14 @@
                   <div v-for="(item,index) in items">
                     <div>{{ item.name }}</div>
                     <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
-                            v-for="(itemc,indexc) in item.label"
+                            v-for="itemc in item.label"
                             :key="itemc"
-                            @click="putDown(itemc)">{{ itemc }}
+                            @click="putDown(itemc,$event)">{{ itemc }}
                     </button>
                   </div>
                   <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                    <el-button type="primary" @click="dialogForm">确 定</el-button>
                   </div>
                 </el-dialog>
               </div>
@@ -451,6 +451,7 @@ export default {
       openV6: false,
       pphone: "",
       baseImage: "",
+      arr:[],
     };
   },
   created() {
@@ -459,9 +460,10 @@ export default {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
         console.log("请求成功：", response.data)
-        this.data.resultByDoctor = response.diagnosisConclusion
-        this.data.doctorName = response.diagnosisDoctor
-        this.data.diagnosisData = response.reportTime
+        this.data.resultByDoctor = response.data.diagnosisConclusion
+        this.arr[0]=response.data.diagnosisConclusion
+        this.data.doctorName = response.data.diagnosisDoctor
+        this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
         if(response.data.patientSymptom!=null){
           this.data.patientSymptom = response.data.patientSymptom
@@ -488,6 +490,7 @@ export default {
       }
       return newArray;
     },
+
     //展开框
     clicktrueI() {
       this.openI = !this.openI;
@@ -526,40 +529,20 @@ export default {
       this.openV6 = !this.openV6;
     },
     //按下常用术语按钮
-    putDown(key) {
-      console.log(key)
-      if (this.data.resultByDoctor === null)
-        this.data.resultByDoctor = []
-      console.log(this.data.resultByDoctor)
-      let index = this.data.resultByDoctor.indexOf(key);
-      console.log("if", index, this.isSelected)
-      if (index !== -1) {
-        this.data.resultByDoctor.splice(index, 1);
-      } else {
-        this.data.resultByDoctor.push(key)
+    putDown(key,event) {
+      //console.log(event.currentTarget.classList.toggle('selected'))
+      event.currentTarget.classList.toggle('selected')
+      if(this.arr.length > 0){
+        let index = this.arr.indexOf(key);
+        //console.log(index)
+        if(index !== -1){
+          this.arr.splice(index,1);
+        }else {
+          this.arr.push(key);
+        }
+      }else {
+        this.arr.push(key);
       }
-      // if (this.isSelected) {
-      //   this.isSelected = false
-      //   let index = this.data.resultByDoctor.indexOf(key);
-      //   console.log("if", index, this.isSelected)
-      //   if (index !== -1) {
-      //     // this.selectedButtons.splice(index, 1);
-      //     // this.data.resultByDoctor=this.selectedButtons
-      //     this.data.resultByDoctor.splice(index, 1);
-      //   } else {
-      //     // this.data.resultByDoctor += key + ';';
-      //     this.data.resultByDoctor.push(key)
-      //     //this.selectedButtons.push(key)
-      //     // this.data.resultByDoctor=this.selectedButtons
-      //   }
-      // } else {
-      //   this.isSelected = true
-      //   console.log("else", this.isSelected)
-      //   // this.data.resultByDoctor += key + ';';
-      //   this.data.resultByDoctor.push(key)
-      //   // this.selectedButtons.push(key)
-      //   // this.data.resultByDoctor=this.selectedButtons
-      // }
     },
     //关闭展开框
     clickclose() {
@@ -575,6 +558,10 @@ export default {
       this.openV4 = false;
       this.openV5 = false;
       this.openV6 = false;
+    },
+    dialogForm(){
+      this.data.resultByDoctor = this.arr.toString()
+      this.dialogFormVisible=false;
     },
     //请求数据
     get() {
@@ -605,6 +592,7 @@ export default {
         success: function (data) {
           console.log("请求成功：", data)
           loading.close()
+          _th.arr[0]=data.result.diagnosis_conclusion
           _th.data.resultByDoctor = data.result.diagnosis_conclusion
           _th.data.doctorName = data.result.diagnosis_doctor
           _th.data.age = data.result.age
@@ -3349,6 +3337,10 @@ export default {
       height: 16vh;
       border: 1px darkgray solid;
     }
+  }
+  .selected {
+    background-color: #435bf7;
+    color: #fff !important;
   }
   .result2{
     width: 32.5%;

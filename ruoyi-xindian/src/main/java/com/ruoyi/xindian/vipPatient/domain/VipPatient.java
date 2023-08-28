@@ -33,7 +33,18 @@ public class VipPatient extends BaseEntity
     @Excel(name = "检测次数")
     private Long vipNum;
 
+    private Date createTime;
     private Long vipType;
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public Long getVipType() {
         return vipType;
