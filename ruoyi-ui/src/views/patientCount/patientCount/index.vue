@@ -20,14 +20,14 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="总服务次数" prop="detectionNum">
-        <el-input
-          v-model="queryParams.detectionNum"
-          placeholder="请输入总服务次数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="总服务次数" prop="detectionNum" label-width="90px">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.detectionNum"-->
+<!--          placeholder="请输入总服务次数"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -248,12 +248,7 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
-    /** 新增按钮操作 */
-    // handleAdd() {
-    //   this.reset();
-    //   this.open = true;
-    //   this.title = "添加vip用户";
-    // },
+
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -261,7 +256,7 @@ export default {
       getPatient(userId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改vip用户";
+        this.title = "修改用户服务次数";
       });
     },
     /** 提交按钮 */
