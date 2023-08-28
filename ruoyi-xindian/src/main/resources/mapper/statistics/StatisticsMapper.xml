@@ -16,6 +16,9 @@
         <if test="reportType != '' and reportType != null">
             and report_type like concat(#{reportType},"%")
         </if>
+        <if test="reportType==null or reportType==''">
+            and report_type like concat('JECG',"%")
+        </if>
         GROUP BY month(report_time) ORDER BY month
     </select>
 

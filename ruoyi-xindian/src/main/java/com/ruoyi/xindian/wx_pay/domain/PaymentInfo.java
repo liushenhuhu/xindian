@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 
+ *
  * @TableName t_payment_info
  */
 @TableName(value ="t_payment_info")
@@ -71,6 +72,7 @@ public class PaymentInfo implements Serializable {
      * 创建时间
      */
     @Excel(name = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**

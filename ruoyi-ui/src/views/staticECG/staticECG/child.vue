@@ -981,7 +981,7 @@ export default {
 .container {
   user-select: none;
   height: 80%;
-  width: 90%;
+  width: 85%;
   position: fixed;
   top:50%;
   left:50%;

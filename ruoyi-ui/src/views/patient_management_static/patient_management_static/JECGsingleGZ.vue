@@ -41,7 +41,7 @@
         <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
           <el-option
             v-for="dict in dict.type.hospital_name_list"
-            :key="dict.value"
+            :key="dict.hospitalId"
             :label="dict.label"
             :value="dict.value"
           />
@@ -192,9 +192,9 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" :row-class-name="tableRowClassName">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="上传时间" align="center" prop="connectionTime" width="100">
+      <el-table-column label="上传时间" align="center" prop="connectionTime" width="100" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
@@ -532,6 +532,15 @@ export default {
     this.getList();
   },
   methods: {
+    tableRowClassName({row, rowIndex}){
+      /*console.log(row.ecgLevel)
+      if (row.ecgLevel === 2) {
+        return 'warning-row';
+      } else if (row.ecgLevel === 3) {
+        return 'success-row';
+      }
+      return '';*/
+    },
     reload () {
       this.isRouterAlive = false;            //先关闭，
       this.$nextTick(function () {
@@ -742,3 +751,12 @@ export default {
   }
 };
 </script>
+<style>
+.el-table .warning-row {
+  background: #ffe7cf;
+}
+
+.el-table .success-row {
+  background: rgba(250, 250, 250, 0.47);
+}
+</style>
