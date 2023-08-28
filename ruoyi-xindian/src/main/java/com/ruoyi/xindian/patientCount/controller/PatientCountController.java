@@ -13,6 +13,8 @@ import com.ruoyi.xindian.fw_log.service.FwLogService;
 import com.ruoyi.xindian.patientCount.domain.PatientCount;
 
 import com.ruoyi.xindian.patientCount.service.PatientCountService;
+import com.ruoyi.xindian.vipPatient.domain.VipPatient;
+import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
@@ -32,6 +34,8 @@ public class PatientCountController extends BaseController {
     private PatientCountService patientCountService;
     @Autowired
     private FwLogService fwLogService;
+    @Autowired
+    private IVipPatientService vipPatientService;
     @Autowired
     private AesUtils aesUtils;
     /**
@@ -56,15 +60,19 @@ public class PatientCountController extends BaseController {
 
         List<PatientCount> list = patientCountService.list(wrapper);
         LambdaQueryWrapper<FwLog> wrapper1=new LambdaQueryWrapper<>();
-
         for (PatientCount c:list){
             wrapper1.eq(FwLog::getUserName,c.getPhonenumberAes())
                     .eq(FwLog::getFwStatus,2);
             int count = fwLogService.count(wrapper1);
             c.setUsesNum((long) count);
+            wrapper1.clear();
+            VipPatient vip=vipPatientService.findVipPhone(c.getPhonenumberAes());
+            if(vip!=null){
+                c.setDetectionNum(vip.getVipNum());
+                c.setDetectionTime(vip.getEndDate());
+            }
             c.setPhonenumberAes(aesUtils.decrypt(c.getPhonenumberAes()));
             c.setTotalNum(count+c.getDetectionNum());
-            wrapper1.clear();
         }
         return getDataTable(list);
     }

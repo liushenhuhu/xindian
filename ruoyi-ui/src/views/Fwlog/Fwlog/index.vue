@@ -9,10 +9,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="IP" prop="ipaddr">
+      <el-form-item label="IP地址" prop="ipaddr">
         <el-input
           v-model="queryParams.ipaddr"
-          placeholder="请输入用户电话"
+          placeholder="请输入IP地址"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -93,8 +93,8 @@
     <el-table v-loading="loading" :data="FwlogList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户电话" align="center" prop="userName" />
-      <el-table-column label="IP" align="center" prop="ipaddr" />
-      <el-table-column label="IP地址" align="center" prop="loginLocation" />
+      <el-table-column label="IP地址" align="center" prop="ipaddr" />
+      <el-table-column label="IP归属地" align="center" prop="loginLocation" />
       <el-table-column label="操作内容" align="center" prop="msg" />
       <el-table-column label="操作状态" align="center" prop="status" >
         <template slot-scope="scope">
