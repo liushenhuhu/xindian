@@ -171,6 +171,9 @@ public class PatientManagementController extends BaseController {
         if (patientManagement.getDoctorPhone()!=null&&!"".equals(patientManagement.getDoctorPhone())){
             patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
         }
+        if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
+            patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
+        }
 
         startPage();
         if (null == patientManagement.getEcgType()) {
@@ -250,6 +253,9 @@ public class PatientManagementController extends BaseController {
         if (patientManagement.getPatientName()!=null){
             patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
         }
+        if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
+            patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
+        }
         startPage();
         if (null == patientManagement.getEcgType()) {
             list = patientManagementService.selectPatientManagementList(patientManagement);
@@ -321,6 +327,9 @@ public class PatientManagementController extends BaseController {
         }
         if (patientManagement.getPatientName()!=null){
             patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
+        }
+        if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
+            patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
         }
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
         startPage();

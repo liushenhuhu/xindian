@@ -33,72 +33,7 @@
         select user_id from ano_user GROUP BY user_id ORDER BY user_id asc
     </select>
 
-    <select id="selectPatientByPatientCode" parameterType="String" resultMap="PatientResult">
-        <include refid="selectPatientVo"/>
-        where patient_code = #{patientCode}
-    </select>
 
-    <select id="selectPatientByPatientName" parameterType="String" resultMap="PatientResult">
-        <include refid="selectPatientVo"/>
-        where patient_name = #{patientName}
-    </select>
-
-    <select id="selectPatientByNameAndPhone" parameterType="patient" resultMap="PatientResult">
-        <include refid="selectPatientVo"/>
-        where patient_name = #{patientName} and patient_phone = #{patientPhone}
-    </select>
-
-    <insert id="insertPatient" parameterType="Patient">
-        insert into patient
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="patientId != null">patient_id,</if>
-            <if test="patientName != null and patientName != ''">patient_name,</if>
-            <if test="patientCode != null and patientCode != ''">patient_code,</if>
-            <if test="patientAge != null">patient_age,</if>
-            <if test="patientSex != null">patient_sex,</if>
-            <if test="patientSource != null">patient_source,</if>
-            <if test="patientPhone != null">patient_phone,</if>
-            <if test="familyPhone != null">family_phone,</if>
-            <if test="equipmentId != null">equipment_id,</if>
-            <if test="monitoringStatus != null">monitoring_status,</if>
-            <if test="bindingState != null">binding_state,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="patientId != null">#{patientId},</if>
-            <if test="patientName != null and patientName != ''">#{patientName},</if>
-            <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
-            <if test="patientAge != null">#{patientAge},</if>
-            <if test="patientSex != null">#{patientSex},</if>
-            <if test="patientSource != null">#{patientSource},</if>
-            <if test="patientPhone != null">#{patientPhone},</if>
-            <if test="familyPhone != null">#{familyPhone},</if>
-            <if test="equipmentId != null">#{equipmentId},</if>
-            <if test="monitoringStatus != null">#{monitoringStatus},</if>
-            <if test="bindingState != null">#{bindingState},</if>
-        </trim>
-    </insert>
-
-    <update id="updatePatient" parameterType="Patient">
-        update patient
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="patientName != null and patientName != ''">patient_name = #{patientName},</if>
-            <if test="patientCode != null and patientCode != ''">patient_code = #{patientCode},</if>
-            <if test="patientAge != null">patient_age = #{patientAge},</if>
-            <if test="patientSex != null">patient_sex = #{patientSex},</if>
-            <if test="patientSource != null">patient_source = #{patientSource},</if>
-            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
-            <if test="familyPhone != null">family_phone = #{familyPhone},</if>
-            <if test="equipmentId != null">equipment_id = #{equipmentId},</if>
-            <if test="monitoringStatus != null">monitoring_status = #{monitoringStatus},</if>
-            <if test="bindingState != null">binding_state = #{bindingState},</if>
-        </trim>
-        where patient_id = #{patientId}
-    </update>
-
-    <update id="updateMonitoringStatus">
-        update patient
-        set monitoring_status = 0;
-    </update>
 
     <update id="groupConcat">
         SET group_concat_max_len = 1000000;

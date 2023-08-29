@@ -29,7 +29,7 @@
         <result property="diagnosisDoctor"    column="diagnosis_doctor_aes"    />
         <result property="reportTime"    column="report_time"    />
         <result property="ecgLevel"    column="ecg_level"    />
-        <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="doctorPhone"    column="doctor_phone_aes"    />
         <result property="birthDay"    column="birth_day"    />
         <result property="pacemaker"    column="pacemaker"    />
         <result property="uploadTime"    column="upload_time"    />
@@ -96,7 +96,7 @@
                ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
                m.patient_phone_aes, family_phone,  monitoring_status,
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
-               diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone,
+               diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone_aes,
                birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
                end_time, time_duration, d_phone_aes, report_state,patient_symptom
         from patient_management m
@@ -579,7 +579,7 @@
         ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
         m.patient_phone_aes, family_phone,  monitoring_status,
         equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
-        diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone,
+        diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone_aes,
         birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
         end_time, time_duration, d_phone_aes, report_state,patient_symptom,TIMESTAMPDIFF(SECOND,start_time,report_time) as avgTime
         from patient_management m
@@ -636,7 +636,7 @@
     </select>
     <select id="selectpatientByEquipmentCode"
             resultType="com.ruoyi.xindian.patient_management.domain.PhoneList" >
-        select p.patient_phone_aes as patient_phone,p.family_phone,m.doctor_phone
+        select p.patient_phone_aes as patient_phone,p.family_phone,m.doctor_phone_aes
         from patient_management m inner join patient p on m.patient_phone_aes=p.patient_phone_aes
         where m.online_status=1 and m.equipment_code=#{deviceSn}
         --         order by m.connection_time desc
@@ -656,7 +656,7 @@
             <if test="onlineStatus != null">online_status,</if>
             <if test="patientPhone != null">patient_phone_aes,</if>
             <if test="ecgLevel != null">ecg_level,</if>
-            <if test="doctorPhone != null">doctor_phone,</if>
+            <if test="doctorPhone != null">doctor_phone_aes,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -686,7 +686,7 @@
             <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
             <if test="patientPhone != null">patient_phone_aes = #{patientPhone},</if>
             <if test="ecgLevel != null">ecg_level = #{ecgLevel},</if>
-            <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
+            <if test="doctorPhone != null">doctor_phone_aes = #{doctorPhone},</if>
             <if test="detectionState != null">detection_state = #{detectionState},</if>
         </trim>
         where p_id = #{pId}
