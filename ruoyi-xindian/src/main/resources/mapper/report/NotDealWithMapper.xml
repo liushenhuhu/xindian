@@ -37,6 +37,7 @@
             <if test="id != null">id,</if>
             <if test="refuseTime != null">refuse_time,</if>
             <if test="pid != null">pId,</if>
+            <if test="doctorPhone != null">doctor_phone,</if>
             <if test="doctorPhoneAes != null">doctor_phone_aes,</if>
             <if test="refuseReason != null">refuse_reason,</if>
         </trim>
@@ -44,6 +45,7 @@
             <if test="id != null">#{id},</if>
             <if test="refuseTime != null">#{refuseTime},</if>
             <if test="pid != null">#{pid},</if>
+            <if test="doctorPhone != null">#{doctorPhone},</if>
             <if test="doctorPhoneAes != null">#{doctorPhoneAes},</if>
             <if test="refuseReason != null">#{refuseReason},</if>
         </trim>

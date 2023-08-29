@@ -18,7 +18,7 @@
         <result property="bindingState" column="binding_state"/>
         <result property="birthDay"    column="birth_day"    />
         <result property="detectionNum"    column="detection_num"    />
-<!--        <result property="detectionTime"    column="detection_time"    />-->
+        <!--        <result property="detectionTime"    column="detection_time"    />-->
     </resultMap>
 
     <sql id="selectPatientVo">
@@ -78,7 +78,7 @@
         </where>
         order by monitoring_status desc, patient_id desc
     </select>
-<!--    <if test="detectionTime != null "> and detection_time = #{detectionTime}</if>-->
+    <!--    <if test="detectionTime != null "> and detection_time = #{detectionTime}</if>-->
     <select id="selectPatientByPatientId" parameterType="Long" resultMap="PatientResult">
         <include refid="selectPatientVo"/>
         where patient_id = #{patientId}
@@ -107,11 +107,13 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientId != null">patient_id,</if>
             <if test="patientName != null and patientName != ''">patient_name_aes,</if>
+            <if test="patientName != null and patientName != ''">patient_name,</if>
             <if test="patientCode != null and patientCode != ''">patient_code,</if>
             <if test="patientAge != null">patient_age,</if>
             <if test="patientSex != null">patient_sex,</if>
             <if test="patientSource != null">patient_source,</if>
             <if test="patientPhone != null">patient_phone_aes,</if>
+            <if test="patientPhone != null">patient_phone,</if>
             <if test="familyPhone != null">family_phone,</if>
             <if test="equipmentId != null">equipment_id,</if>
             <if test="monitoringStatus != null">monitoring_status,</if>
@@ -123,11 +125,13 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
             <if test="patientName != null and patientName != ''">#{patientName},</if>
+            <if test="patientName != null and patientName != ''">#{patientNameAes},</if>
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
             <if test="patientAge != null">#{patientAge},</if>
             <if test="patientSex != null">#{patientSex},</if>
             <if test="patientSource != null">#{patientSource},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="patientPhone != null">#{patientPhoneAes},</if>
             <if test="familyPhone != null">#{familyPhone},</if>
             <if test="equipmentId != null">#{equipmentId},</if>
             <if test="monitoringStatus != null">#{monitoringStatus},</if>
