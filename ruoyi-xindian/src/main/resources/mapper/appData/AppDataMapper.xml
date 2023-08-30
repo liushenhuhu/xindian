@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.appData.mapper.AppDataMapper">
 
     <resultMap type="AppData" id="AppDataResult">
@@ -52,28 +52,22 @@
         replace into app_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="patientName != null">patient_name_aes,</if>
-            <if test="patientName != null">patient_name,</if>
             <if test="patientSex != null">patient_sex,</if>
             <if test="patientAge != null">patient_age,</if>
             <if test="patientCode != null">patient_code,</if>
             <if test="patientPhone != null">patient_phone_aes,</if>
-            <if test="patientPhone != null">patient_phone,</if>
             <if test="userName != null">user_name_aes,</if>
-            <if test="userName != null">user_name,</if>
             <if test="birthDay != null">birth_day,</if>
-        </trim>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientName != null">#{patientName},</if>
-            <if test="patientName != null">#{patientNameAes},</if>
             <if test="patientSex != null">#{patientSex},</if>
             <if test="patientAge != null">#{patientAge},</if>
             <if test="patientCode != null">#{patientCode},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
-            <if test="patientPhone != null">#{patientPhoneAes},</if>
-            <if test="userName != null">#{userName},</if>
             <if test="userName != null">#{userName},</if>
             <if test="birthDay != null">#{birthDay},</if>
-        </trim>
+         </trim>
     </insert>
 
     <update id="updateAppData" parameterType="AppData">

@@ -2,6 +2,7 @@ package com.ruoyi.xindian.equipment.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.equipment.domain.Equipment;
+import com.ruoyi.xindian.patient_management.vo.Limit;
 
 /**
  * 设备Mapper接口
@@ -64,4 +65,7 @@ public interface EquipmentMapper
     void updateEquipmentStatus(String[] equipmentList);
 
     public Equipment selectEquipmentByEquipmentCode(String equipmentCode);
+
+
+    List<Equipment> selectALl(Limit limit);
 }

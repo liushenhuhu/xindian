@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.ISysUserService;
@@ -64,6 +65,8 @@ public class EquipmentController extends BaseController {
     @Autowired
     private IHospitalService hospitalService;
 
+    @Resource
+    private AesUtils aesUtils;
 
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
@@ -72,7 +75,7 @@ public class EquipmentController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Equipment equipment) {
+    public TableDataInfo list(Equipment equipment) throws Exception {
         List<Equipment> list = new ArrayList<>();
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
@@ -118,6 +121,9 @@ public class EquipmentController extends BaseController {
             if(value.getDepartmentCode()==null){
                 continue;
             }
+            if (value.getPatientPhone()!=null&&!"".equals(value.getPatientPhone())){
+                value.setPatientPhone(aesUtils.decrypt(value.getPatientPhone()));
+            }
             department.setDepartmentCode(value.getDepartmentCode());
             List<Department> departments = departmentService.selectDepartmentList(department);
             value.setEquipmentName(departments.get(0).getDepartmentName());
@@ -131,7 +137,7 @@ public class EquipmentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('equipment:equipment:export')")
     @Log(title = "设备", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Equipment equipment) {
+    public void export(HttpServletResponse response, Equipment equipment) throws Exception {
         List<Equipment> list = new ArrayList<>();
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
@@ -140,6 +146,11 @@ public class EquipmentController extends BaseController {
             list = equipmentService.selectEquipmentList(equipment);
         } else {
             list = equipmentService.selectEquipmentList(equipment);
+        }
+        for (Equipment c:list){
+            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+                c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
+            }
         }
         ExcelUtil<Equipment> util = new ExcelUtil<Equipment>(Equipment.class);
         util.exportExcel(response, list, "设备数据");
@@ -150,7 +161,7 @@ public class EquipmentController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('equipment:equipment:query')")
     @GetMapping(value = "/{equipmentId}")
-    public AjaxResult getInfo(@PathVariable("equipmentId") Long equipmentId) {
+    public AjaxResult getInfo(@PathVariable("equipmentId") Long equipmentId) throws Exception {
 
         Equipment equipment = equipmentService.selectEquipmentByEquipmentId(equipmentId);
         if(equipment.getDepartmentCode()!=null){
@@ -158,6 +169,10 @@ public class EquipmentController extends BaseController {
             department.setDepartmentCode(equipment.getDepartmentCode());
             List<Department> departments = departmentService.selectDepartmentList(department);
             equipment.setEquipmentName(departments.get(0).getDepartmentName());
+
+        }
+        if (equipment.getPatientPhone()!=null&&!"".equals(equipment.getPatientPhone())){
+            equipment.setPatientPhone(aesUtils.decrypt(equipment.getPatientPhone()));
         }
         return AjaxResult.success(equipment);
     }
@@ -168,7 +183,10 @@ public class EquipmentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('equipment:equipment:add')")
     @Log(title = "设备", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Equipment equipment) {
+    public AjaxResult add(@RequestBody Equipment equipment) throws Exception {
+        if (equipment.getPatientPhone()!=null&&!"".equals(equipment.getPatientPhone())){
+            equipment.setPatientPhone(aesUtils.encrypt(equipment.getPatientPhone()));
+        }
         return toAjax(equipmentService.insertEquipment(equipment));
     }
 
@@ -178,7 +196,10 @@ public class EquipmentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('equipment:equipment:edit')")
     @Log(title = "设备", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Equipment equipment) {
+    public AjaxResult edit(@RequestBody Equipment equipment) throws Exception {
+        if (equipment.getPatientPhone()!=null&&!"".equals(equipment.getPatientPhone())){
+            equipment.setPatientPhone(aesUtils.encrypt(equipment.getPatientPhone()));
+        }
         return toAjax(equipmentService.updateEquipment(equipment));
     }
 
@@ -209,9 +230,12 @@ public class EquipmentController extends BaseController {
      * 获取开关机状态
      */
     @GetMapping("/getOnOffStatus")
-    public AjaxResult getOnOffStatus(HttpServletRequest request) {
+    public AjaxResult getOnOffStatus(HttpServletRequest request) throws Exception {
         String equipmentCode = request.getParameter("equipmentCode");
         Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentCode);
+        if (equipment.getPatientPhone()!=null&&!"".equals(equipment.getPatientPhone())){
+            equipment.setPatientPhone(aesUtils.decrypt(equipment.getPatientPhone()));
+        }
         return AjaxResult.success(equipment);
 
     }

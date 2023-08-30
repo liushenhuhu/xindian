@@ -29,7 +29,7 @@
         <result property="diagnosisDoctor"    column="diagnosis_doctor_aes"    />
         <result property="reportTime"    column="report_time"    />
         <result property="ecgLevel"    column="ecg_level"    />
-        <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="doctorPhone"    column="doctor_phone_aes"    />
         <result property="birthDay"    column="birth_day"    />
         <result property="pacemaker"    column="pacemaker"    />
         <result property="uploadTime"    column="upload_time"    />
@@ -61,10 +61,11 @@
     <sql id="selectSingleHistoryInfoVo">
         select ecg_id, patient_phone_aes, normal_ecg, ap_beat, pv_beat, atrial_fibrillation, atrial_flutter, left_block, right_block, bradycardia, tachycardia from single_history_info
     </sql>
+<!--    patient_management.connection_time,-->
+<!--    patient_management.p_id,-->
     <select id="selectSingleHistoryInfoList" parameterType="SingleHistoryInfo" resultMap="SingleHistoryInfoResult">
         SELECT
-        patient_management.connection_time,
-        patient_management.p_id,
+
         single_history_info.ecg_id,
         single_history_info.patient_phone_aes,
         single_history_info.normal_ecg,
@@ -78,25 +79,28 @@
         single_history_info.tachycardia
         FROM
         single_history_info
-        INNER JOIN
-        patient_management
-        ON
-        single_history_info.patient_phone_aes = patient_management.patient_phone_aes
         <where>
-            <if test="patientPhone != null  and patientPhone != ''"> and single_history_info.patient_phone_aes = #{patientPhone}</if>
-            <if test="startSingleTime!=null and startSingleTime != '' and endSingleTime!=null and endSingleTime !=''">
-                and patient_management.connection_time BETWEEN #{startSingleTime} and  DATE_ADD(#{endSingleTime} ,INTERVAL 1 DAY)
-            </if>
-        </where>
-    </select>
+                <if test="patientPhone != null  and patientPhone != ''"> and single_history_info.patient_phone_aes = #{patientPhone}</if>
 
+            </where>
+    </select>
+<!--    INNER JOIN-->
+<!--    patient_management-->
+<!--    ON-->
+<!--    single_history_info.patient_phone_aes = patient_management.patient_phone_aes-->
+<!--    <where>-->
+<!--        <if test="patientPhone != null  and patientPhone != ''"> and single_history_info.patient_phone_aes = #{patientPhone}</if>-->
+<!--        <if test="startSingleTime!=null and startSingleTime != '' and endSingleTime!=null and endSingleTime !=''">-->
+<!--            and patient_management.connection_time BETWEEN #{startSingleTime} and  DATE_ADD(#{endSingleTime} ,INTERVAL 1 DAY)-->
+<!--        </if>-->
+<!--    </where>-->
     <sql id="selectPatientManagementVo">
         select m.p_id, m.patient_code, m.hospital_code, m.equipment_code,
                connection_time, bed_number, case_history_number,
                ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
                m.patient_phone_aes, family_phone,  monitoring_status,
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
-               diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone,
+               diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone_aes,
                birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
                end_time, time_duration, d_phone_aes, report_state,patient_symptom
         from patient_management m
@@ -533,7 +537,7 @@
         <include refid="selectPatientManagementVo"/>
         where m.p_id = #{pId}
     </select>
-    <!--    getPhoneByPId-->
+<!--    getPhoneByPId-->
     <select id="getPhoneByPId" parameterType="String" resultMap="PatientManagementResult">
         select patient_phone_aes from patient_management
         where p_id = #{pId}
@@ -541,14 +545,14 @@
     <select id="selectAllDateList" resultType="com.ruoyi.xindian.patient_management.vo.DateListVO">
         select   DATE_FORMAT(connection_time,'%Y-%m-%d') as date,COUNT(connection_time) as info
         from patient_management m
-        inner join patient p on p.patient_phone_aes = m.patient_phone_aes
-        inner join equipment e on m.equipment_code = e.equipment_code
-        left join hospital h on m.hospital_code = h.hospital_code
-        left join report r on m.p_id = r.p_id
-        <where>
-            <if test="ecgType != null  and ecgType != ''"> and ecg_type like concat(#{ecgType}, '%') </if>
-            <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone_aes = #{patientPhone}</if>
-        </where>
+            inner join patient p on p.patient_phone_aes = m.patient_phone_aes
+            inner join equipment e on m.equipment_code = e.equipment_code
+            left join hospital h on m.hospital_code = h.hospital_code
+            left join report r on m.p_id = r.p_id
+      <where>
+        <if test="ecgType != null  and ecgType != ''"> and ecg_type like concat(#{ecgType}, '%') </if>
+        <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone_aes = #{patientPhone}</if>
+    </where>
         GROUP BY  DATE_FORMAT(connection_time,'%Y-%m-%d')
     </select>
     <select id="selectALLTotal" resultType="com.ruoyi.xindian.patient_management.vo.PInfoVO">
@@ -579,7 +583,7 @@
         ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
         m.patient_phone_aes, family_phone,  monitoring_status,
         equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
-        diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone,
+        diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone_aes,
         birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
         end_time, time_duration, d_phone_aes, report_state,patient_symptom,TIMESTAMPDIFF(SECOND,start_time,report_time) as avgTime
         from patient_management m
@@ -621,8 +625,8 @@
                     #{item}
                 </foreach>
             </if>
-            and diagnosis_status=1 and start_time is not null
-            order by report_time desc
+        and diagnosis_status=1 and start_time is not null
+        order by report_time desc
         </where>
 
 
@@ -636,7 +640,7 @@
     </select>
     <select id="selectpatientByEquipmentCode"
             resultType="com.ruoyi.xindian.patient_management.domain.PhoneList" >
-        select p.patient_phone_aes as patient_phone,p.family_phone,m.doctor_phone
+        select p.patient_phone_aes as patient_phone,p.family_phone,m.doctor_phone_aes
         from patient_management m inner join patient p on m.patient_phone_aes=p.patient_phone_aes
         where m.online_status=1 and m.equipment_code=#{deviceSn}
         --         order by m.connection_time desc
@@ -656,7 +660,7 @@
             <if test="onlineStatus != null">online_status,</if>
             <if test="patientPhone != null">patient_phone_aes,</if>
             <if test="ecgLevel != null">ecg_level,</if>
-            <if test="doctorPhone != null">doctor_phone,</if>
+            <if test="doctorPhone != null">doctor_phone_aes,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -686,7 +690,7 @@
             <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
             <if test="patientPhone != null">patient_phone_aes = #{patientPhone},</if>
             <if test="ecgLevel != null">ecg_level = #{ecgLevel},</if>
-            <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
+            <if test="doctorPhone != null">doctor_phone_aes = #{doctorPhone},</if>
             <if test="detectionState != null">detection_state = #{detectionState},</if>
         </trim>
         where p_id = #{pId}

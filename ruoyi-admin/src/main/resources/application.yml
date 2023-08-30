@@ -73,8 +73,8 @@ spring:
     # 数据库索引
     database: 0
     # 密码
-    #password: zzu@2022
-    password:
+    password: zzu@2022
+#    password:
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -89,15 +89,15 @@ spring:
         max-wait: -1ms
 
 # 配置InfluxDB
-influx:
-  #influxdb服务器的地址
-  url: http://219.155.7.235:8086
-  #用户名
-  user: zzu
-  #密码
-  password: Zzu@2023
-  #指定的数据库
-  database: ecg_mark
+  influx:
+    #influxdb服务器的地址
+    url: http://219.155.7.235:8086
+    #用户名
+    user: zzu
+    #密码
+    password: Zzu@2023
+    #指定的数据库
+    database: ecg_mark
 
 # token配置
 token:

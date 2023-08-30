@@ -48,7 +48,10 @@
           </el-form-item>
         </el-form>
         <el-divider content-position="left">医生每月诊断次数统计图</el-divider>
-        <div id="myChart" :style="{width: '80%', height: '300%'}"> </div>
+        <el-card class="box-card">
+          <div id="myChart"  :style="{width: '100%', height: '300%'}"> </div>
+        </el-card>
+
 <!--        <div id="table1" style="align-content: center;display: none">-->
 <!--          <el-button type="primary" icon="el-icon-back" size="mini" @click="backQuery">返回</el-button>-->
 <!--          <el-table-->
@@ -288,6 +291,13 @@ export default {
     font-weight: 700 !important;
     font-size: 20px;
   }
+}
+
+.box-card {
+  width: 90%;
+  height: 35vh;
+  margin:0 auto;
+  margin-bottom: 10px;
 }
 
 </style>

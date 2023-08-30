@@ -55,7 +55,6 @@
             <if test="pastMedicalHistory != null">past_medical_history,</if>
             <if test="livingHabit != null">living_habit,</if>
             <if test="patientPhone != null">patient_phone_aes,</if>
-            <if test="patientPhone != null">patient_phone,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="height != null">#{height},</if>
@@ -63,7 +62,6 @@
             <if test="pastMedicalHistory != null">#{pastMedicalHistory},</if>
             <if test="livingHabit != null">#{livingHabit},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
-            <if test="patientPhone != null">#{patientPhoneAes},</if>
         </trim>
     </insert>
 

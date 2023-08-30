@@ -12,13 +12,13 @@
         <result property="hospitalCode"    column="hospital_code"    />
         <result property="departmentCode"    column="department_code"    />
         <result property="equipmentType"    column="equipment_type"    />
-        <result property="patientPhone"    column="patient_phone"    />
+        <result property="patientPhone"    column="patient_phone_aes"    />
         <result property="pId"    column="p_id"    />
         <result property="onOffStatus"    column="on_off_status"    />
     </resultMap>
 
     <sql id="selectEquipmentVo">
-        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code, department_code, equipment_type, patient_phone, p_id, on_off_status from equipment
+        select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code, department_code, equipment_type, patient_phone_aes, p_id, on_off_status from equipment
     </sql>
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
@@ -29,7 +29,7 @@
             <if test="equipmentStatus != null  and equipmentStatus != ''"> and equipment_status like concat('%', #{equipmentStatus}, '%')</if>
             <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
             <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
-            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone like concat('%', #{patientPhone}, '%')</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone_aes like concat('%', #{patientPhone}, '%')</if>
             <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
             <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
                 and  hospital_code in
@@ -50,7 +50,9 @@
         <include refid="selectEquipmentVo"/>
         where equipment_code = #{equipmentCode}
     </select>
-
+    <select id="selectALl" resultType="com.ruoyi.xindian.equipment.domain.Equipment">
+        select * from equipment limit #{start},#{end}
+    </select>
 
 
     <insert id="insertEquipment" parameterType="Equipment">
@@ -63,7 +65,7 @@
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
             <if test="departmentCode != null and departmentCode != ''">department_code,</if>
             <if test="equipmentType != null">equipment_type,</if>
-            <if test="patientPhone != null">patient_phone,</if>
+            <if test="patientPhone != null">patient_phone_aes,</if>
             <if test="pId != null">p_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -88,7 +90,7 @@
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code = #{hospitalCode},</if>
             <if test="departmentCode != null and departmentCode != ''">department_code = #{departmentCode},</if>
             <if test="equipmentType != null">equipment_type = #{equipmentType},</if>
-            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="patientPhone != null">patient_phone_aes = #{patientPhone},</if>
             <if test="pId != null">p_id = #{pId},</if>
         </trim>
         where equipment_id = #{equipmentId}
@@ -115,4 +117,6 @@
             #{equipmentId}
         </foreach>
     </delete>
+
+
 </mapper>

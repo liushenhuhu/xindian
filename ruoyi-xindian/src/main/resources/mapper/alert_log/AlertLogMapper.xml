@@ -24,7 +24,7 @@
         <result property="patientSex" column="patient_sex"/>
         <result property="userId" column="user_id"/>
         <result property="ecgType" column="ecg_type"/>
-        <result property="doctorPhone" column="doctor_phone"/>
+        <result property="doctorPhone" column="doctor_phone_aes"/>
     </resultMap>
 
 
@@ -44,7 +44,7 @@
                patient_age,
                patient_sex,
                ecg_type,
-               doctor_phone
+               doctor_phone_aes
         from alert_log al
                  inner join patient_management pm on al.p_id = pm.p_id
                  inner join patient p on pm.patient_phone_aes = p.patient_phone_aes
@@ -137,7 +137,7 @@
             <if test="patientAge != null ">and patient_age = #{patientAge}</if>
             <if test="patientSex != null ">and patient_sex = #{patientSex}</if>
             <if test="ecgType != null ">and ecg_type = #{ecgType}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone like concat('%', #{doctorPhone},
+            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone_aes like concat('%', #{doctorPhone},
                 '%')
             </if>
         </where>
@@ -164,7 +164,7 @@
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
             <if test="patientAge != null ">and patient_age = #{patientAge}</if>
             <if test="patientSex != null ">and patient_sex = #{patientSex}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone like concat('%', #{doctorPhone},
+            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone_aes like concat('%', #{doctorPhone},
                 '%')
             </if>
         </where>
@@ -214,7 +214,7 @@
             <if test="anoStatus != null ">and ano_status = #{anoStatus}</if>
             <if test="patientAge != null ">and patient_age = #{patientAge}</if>
             <if test="patientSex != null ">and patient_sex = #{patientSex}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone like concat('%', #{doctorPhone},
+            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone_aes like concat('%', #{doctorPhone},
                 '%')
             </if>
         </where>

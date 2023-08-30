@@ -16,10 +16,9 @@ import javax.annotation.Resource;
  * @author ruoyi
  */
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
-public class RuoYiApplication implements ApplicationRunner
+public class RuoYiApplication
 {
-    @Resource
-    private WxMsgRunConfig wxMsgRunConfig;
+
 
     public static void main(String[] args)
     {
@@ -38,9 +37,5 @@ public class RuoYiApplication implements ApplicationRunner
     }
 
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-//        wxMsgRunConfig.reportItemT();
-//        System.out.println("开始了");
-    }
+
 }

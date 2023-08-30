@@ -276,6 +276,7 @@ export default {
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
+        console.log(response)
         this.data.result = response.data.intelligentDiagnosis
         this.data.resultByDoctor = response.data.diagnosisConclusion
         this.arr[0]=response.data.diagnosisConclusion

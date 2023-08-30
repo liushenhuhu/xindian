@@ -106,7 +106,7 @@ public class WxMsgRunConfig {
                     report2.setReportTime(new Date());
                     report2.setStartTime(new Date());
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
-//                    WxUtil.send(aesUtils.decrypt(dPhone));
+                    WxUtil.send(aesUtils.decrypt(dPhone));
                     redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
                 }else {
                     List<Object> doctors = redisTemplate.opsForList().range("DocList"+pId, 0, -1);
@@ -124,7 +124,7 @@ public class WxMsgRunConfig {
                         report2.setReportTime(new Date());
                         report2.setStartTime(new Date());
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
-//                        WxUtil.send(aesUtils.decrypt(dPhone));
+                        WxUtil.send(aesUtils.decrypt(dPhone));
                     }
                 }
 
@@ -164,7 +164,6 @@ public class WxMsgRunConfig {
                     report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
                     report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
-                    WxUtil.send(dPhone);
                     redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
                 }else {
                     List<Object> doctors = redisTemplate.opsForList().range("DocList"+pId, 0, -1);

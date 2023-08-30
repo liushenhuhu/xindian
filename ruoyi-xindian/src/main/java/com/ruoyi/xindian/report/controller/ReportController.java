@@ -352,7 +352,7 @@ public class ReportController extends BaseController
                 if(doctors!=null && doctors.size()!=0){
 
                     if (report.getpId()!=null&&!"".equals(report.getpId())){
-//                        wxMsgRunConfig.redisAdd(report.getpId(),doctors);
+                        wxMsgRunConfig.redisAdd(report.getpId(),doctors);
                     }
 
                 } else{

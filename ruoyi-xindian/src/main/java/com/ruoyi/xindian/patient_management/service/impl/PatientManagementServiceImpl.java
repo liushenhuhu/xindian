@@ -2,6 +2,8 @@ package com.ruoyi.xindian.patient_management.service.impl;
 
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.equipment.domain.Equipment;
+import com.ruoyi.xindian.equipment.mapper.EquipmentMapper;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
@@ -20,6 +22,7 @@ import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
 import com.ruoyi.xindian.report.domain.Report;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,6 +46,8 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
 @Autowired
 private PatientRelationshipMapper patientRelationshipMapper;
 
+@Autowired
+private EquipmentMapper equipmentMapper;
 
 @Resource
 private PatientMapper patientMapper;
@@ -215,16 +220,27 @@ private AesUtils aesUtils;
 //            c.setSonPhone(aesUtils.encrypt(c.getSonPhone()));
 //            patientRelationshipMapper.updatePatientRelationship(c);
 //        }
-        List<Patient> patients = patientMapper.selectAlertLogListPatients(limit);
-        for (Patient c:patients){
-            if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
-                c.setPatientNameAes(aesUtils.encrypt(c.getPatientName()));
-            }
+//        List<Patient> patients = patientMapper.selectAlertLogListPatients(limit);
+//        for (Patient c:patients){
+//            if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
+//                c.setPatientNameAes(aesUtils.encrypt(c.getPatientName()));
+//            }
+//            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+//                c.setPatientPhoneAes(aesUtils.encrypt(c.getPatientPhone()));
+//            }
+//            patientMapper.updatePatientAes(c);
+//        }
+
+        List<Equipment> equipmentList = equipmentMapper.selectALl(limit);
+        for(Equipment c : equipmentList){
+
             if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
-                c.setPatientPhoneAes(aesUtils.encrypt(c.getPatientPhone()));
+                c.setPatientPhone(aesUtils.encrypt(c.getPatientPhone()));
+                equipmentMapper.updateEquipment(c);
             }
-            patientMapper.updatePatientAes(c);
         }
+
+
     }
 
     /**
