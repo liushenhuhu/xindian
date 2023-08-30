@@ -276,6 +276,7 @@ export default {
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
+        this.data.result = response.data.intelligentDiagnosis
         this.data.resultByDoctor = response.data.diagnosisConclusion
         this.arr[0]=response.data.diagnosisConclusion
         this.data.doctorName = response.data.diagnosisDoctor
@@ -291,59 +292,77 @@ export default {
   },
   methods: {
     showChart1() {
+      var pId = this.pId;
       // 找到对应的canvas
       var canvas = $("#1").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 1;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     showChart2() {
+      var pId = this.pId;
       var canvas = $("#2").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 2;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     showChart3() {
+      var pId = this.pId;
       var canvas = $("#3").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 3;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     showChart4() {
+      var pId = this.pId;
       var canvas = $("#4").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 4;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     showChart5() {
+      var pId = this.pId;
       var canvas = $("#5").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 5;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     showChart6() {
+      var pId = this.pId;
       var canvas = $("#6").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 6;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     showChart7() {
+      var pId = this.pId;
       var canvas = $("#7").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 7;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     showChart8() {
+      var pId = this.pId;
       var canvas = $("#8").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 8;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     showChart9() {
+      var pId = this.pId;
       var canvas = $("#9").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
       var base64 = canvas.toDataURL("image/png",1);
-      this.$refs.drawShow.openDrawShow(base64);
+      var level = 9;
+      this.$refs.drawShow.openDrawShow(base64,pId,level);
     },
     clickClose() {
       this.open1 = false;
@@ -355,6 +374,7 @@ export default {
       this.open7 = false;
       this.open8 = false;
       this.open9 = false;
+
     },
     //按下常用术语按钮
     putDown(key,event) {
@@ -386,7 +406,7 @@ export default {
         target: document.querySelector('#table')//loadin覆盖的dom元素节点
       });
       var _th = this
-      console.log("pId:", this.pId)
+      //console.log("pId:", this.pId)
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
@@ -411,7 +431,7 @@ export default {
           _th.data.age = data.result.age
           _th.data.gender = data.result.gender
           _th.data.name = data.result.patientName
-          _th.data.result = data.result.intelligent_diagnosis
+          //_th.data.result = data.result.intelligent_diagnosis
           _th.data.hr = data.result.ecg_analysis_data["平均心率"]
           _th.data.datas = data.result.II
           console.log("获取到的导联数据", _th.data.datas)

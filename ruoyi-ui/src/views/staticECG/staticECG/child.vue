@@ -32,6 +32,18 @@
           <el-radio-button label="V">室早</el-radio-button>
           <el-radio-button label="X">干扰</el-radio-button>
         </el-radio-group>
+        <el-popover
+          style="margin:auto;"
+          placement="bottom-start"
+          title="提示"
+          width="220"
+          trigger="hover">
+          <p class="tipck">1. 左上角按钮可以选择类型;</p>
+          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>
+          <p class="tipck">3. 左键单击点，可以删除点;</p>
+          <p class="tipck">4. 右键单击可以描点。</p>
+          <el-button slot="reference"><i class="el-icon-info icon"></i></el-button>
+        </el-popover>
       </div>
       <!--右上角盒子-->
       <div class="top-right-div">
@@ -131,6 +143,7 @@
 </template>
 <script>
 import markImg from "@/assets/images/lableBackImg.jpg"; //初始背景
+import {checkByTagId, addXArr} from "@/api/staticECG/staticECG";
 let ctx = ""; //画布上下文
 export default {
   props: {},
@@ -185,6 +198,23 @@ export default {
       lableData: [],    //标记数据
       time: "",
       x1: "",
+      pId: "",
+      level: "",
+      xArr: [],
+      yArr: [],
+      types: [],
+      subArr: {
+        pId: '',
+        xArr: '',
+        yArr: '',
+        types: '',
+        level: ''
+      },
+      //tagId: '',
+      queryParam: {
+        pId: '',
+        level: ''
+      },
     };
   },
   computed: {},
@@ -198,7 +228,9 @@ export default {
 
   },
   methods: {
-    openDrawShow(file){
+    openDrawShow(file,pIds,level){
+      this.pId = pIds;
+      this.level = level;
       this.loadBgImg(file).then((img) => {
         this.currentBgImg = img; //存下加载完成后的背景图
         this.initCanvas(img); //图片加载完后初始化画布
@@ -213,6 +245,34 @@ export default {
         myCanvas.drawImage(img, 0, 0);
       };
       this.drawShow=true;
+      //查询是否标记过数据，若标记，回显
+      this.queryParam.pId = pIds;
+      this.queryParam.level = level;
+      checkByTagId(this.queryParam).then(response => {
+        //console.log(this.yArr)
+        if(response.length > 0){
+          for (let i = 0; i < JSON.parse(response[0].xArr).length; i++) {
+            var x = this.computerPlace(JSON.parse(response[0].xArr)[i]);
+            let obj = {
+              'X': (x - this.canvasSize.width*(this.level-1)),
+              'Y': JSON.parse(response[0].yArr)[i] / this.imgZoom
+            }
+            this.chartsData.push(obj);
+            this.currentDrawData = {
+              data: [[(x - this.canvasSize.width*(this.level-1)) / this.imgZoom, JSON.parse(response[0].yArr)[i] / this.imgZoom, JSON.parse(response[0].types)[i]]]
+            }
+            this.canvasData.push(this.currentDrawData);
+          }
+          //console.log(this.canvasData)
+          this.canvasData.forEach((e3,index) => {
+            this.drawPoints(e3.data[0][0],e3.data[0][1],index,e3.data[0][2]);
+          })
+          //将数据回显
+          this.xArr = JSON.parse(response[0].xArr);
+          this.yArr = JSON.parse(response[0].yArr);
+          this.types = JSON.parse(response[0].types);
+        }
+      });
     },
     //必须异步加载图片
     loadBgImg(markImg) {
@@ -299,6 +359,11 @@ export default {
       this.currentDrawData = {}; //清空当前绘图数据
       this.chartsData = [];
       this.lableData = [];
+      this.xArr = [];
+      this.yArr = [];
+      this.types = [];
+      //this.pId = "";
+      //this.subArr = [];
       //this.polygonTempList = {}; //清空多边形临时列表
       document.getElementById("myCanvas").getContext("2d").clearRect(0, 0, this.canvasSize.width, this.canvasSize.height); //清除画布图形
       document.getElementById("myCanvas").getContext("2d").drawImage(
@@ -314,38 +379,37 @@ export default {
       this.currentDrawData = {}; //清空当前绘图数据
       this.chartsData = [];
       this.lableData = [];
+      this.xArr = [];
+      this.yArr = [];
+      this.types = [];
+      //this.pId = "";
+      //this.subArr = [];
       //this.polygonTempList = {}; //清空多边形临时列表
       document.getElementById("myCanvas").getContext("2d").clearRect(0, 0, this.canvasSize.width, this.canvasSize.height); //清除画布图形
     },
     //提交坐标数据
     async clickSubmit(){
-      // this.isLoading = true;
-      // if(this.canvasData && this.canvasData.length > 0){
-      //   var datas = this.canvasData;
-      //   datas.forEach(item => {
-      //     delete item.type;
-      //   })
-      //   //console.log(datas);
-      //   addLable(datas).then(response => {
-      //     this.$modal.msgSuccess("坐标提交成功!");
-      //     this.recoverysize();
-      //     this.isLoading = false;
-      //   })
-      // }else {
-      //   this.$modal.msgWarning("请标记后提交！");
-      //   this.isLoading = false;
-      // }
-      /*let ctxx = document.getElementById('myCanvas')
-      var MIME_TYPE = "image/png";
-      var imgURL = ctxx.toDataURL(MIME_TYPE);
-
-      var dlLink = document.createElement('a');
-      dlLink.download = 'testesteste';
-      dlLink.href = imgURL;
-      dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
-      document.body.appendChild(dlLink);
-      dlLink.click();
-      document.body.removeChild(dlLink);*/
+      this.isLoading = true;
+      if(this.canvasData.length > 0){
+        //console.log("提交====="+this.yArr)
+        this.subArr.pId = this.pId;
+        this.subArr.level = this.level;
+        this.subArr.xArr = JSON.stringify(this.xArr);
+        this.subArr.yArr = JSON.stringify(this.yArr);
+        this.subArr.types = JSON.stringify(this.types);
+        //console.log("pId===="+this.pId);
+        //console.log("xArr===="+this.xArr);
+        //console.log("subArr===="+this.subArr);
+        //console.log(this.subArr);
+        addXArr(this.subArr).then(response => {
+          this.$modal.msgSuccess("坐标提交成功!");
+          //this.recoverysize();
+          this.isLoading = false;
+        })
+      }else {
+        this.$modal.msgWarning("请标记后提交！");
+        this.isLoading = false;
+      }
     },
 
     //复原
@@ -357,9 +421,6 @@ export default {
       await (this.canvasPosition = {
         x: canvasDiv.offsetWidth / 2 - this.imgSize.width / 2,
         y: canvasDiv.offsetHeight / 2 - this.imgSize.height / 2 - 25,
-        /*x: canvasDiv.offsetWidth / 2 - this.img.width / 2,
-        y: canvasDiv.offsetHeight / 2 - this.img.height / 2 - 25,*/
-
       }); //复原位置
       await ctx.drawImage(
         this.currentBgImg,
@@ -424,6 +485,9 @@ export default {
           if(window.confirm('确认删除当前标记点吗？')){
             this.canvasData.splice(index,1);
             this.chartsData.splice(index,1);
+            this.xArr.splice(index,1);
+            this.yArr.splice(index,1);
+            this.types.splice(index,1);
             //删除点  重新绘制列表数据
             this.drawToArrs();
             return true;
@@ -433,30 +497,28 @@ export default {
         }
       })
     },
-    drawPoints(x,y,index) {
+    drawPoints(x,y,index,type) {
+      //console.log(type);
       //标记类型
-      let str = this.radio1;
+      //console.log('test')
+      console.log(x,y)
+      let str = type;
       ctx.font = "bold 15px Arial";
       ctx.fillText (str, x-3,y-26,[300]);
       //计算两点之间的参数
       if(this.chartsData[index - 1] === undefined){
-        //取两点之间的中点距离,显示值
-        /*let place = 0;
-        let time = this.calculateMS(Math.ceil(x),Math.ceil(this.chartsData[index + 1].X));
-        ctx.font = "bold 20px Arial";
-        ctx.fillText (parseFloat(time).toFixed(3),x + place,y+20 );*/
+        //console.log("====undefined")
       }else{
-        //console.log(456)
         //取两点之间的中点距离,显示值
         let place = 0;
         for (let i = 0; i < this.chartsData.length; i++) {
-          //console.log("删除后"+this.chartsData[i])
           if(i === index){
             place = (this.chartsData[i].X - this.chartsData[i - 1].X) / 2;
           }
         }
         // 显示毫秒值
         let time = this.calculateMS(Math.ceil(x),Math.ceil(this.chartsData[index - 1].X));
+        //console.log(time)
         ctx.font = "bold 20px Arial";
         ctx.fillText (parseFloat(time).toFixed(3),x - place,y+20 );
       }
@@ -491,10 +553,10 @@ export default {
         this.canvasSize.width,
         this.canvasSize.height
       );//重绘背景
-      console.log("123:"+this.canvasData.length)
-      console.log("456:"+this.chartsData)
+      //console.log("123:"+this.canvasData.length)
+      //console.log("456:"+this.chartsData)
       this.canvasData.forEach((e3,index) => {
-        this.drawPoints(e3.data[0][0],e3.data[0][1],index);
+        this.drawPoints(e3.data[0][0],e3.data[0][1],index,e3.data[0][2]);
       })
     },
     //鼠标按下事件
@@ -565,6 +627,35 @@ export default {
 
     //鼠标右键点击事件
     handleClickRight(e){
+      let multiple = 0;
+      if(this.level === 1){
+        multiple = 0;
+      }
+      if(this.level === 2){
+        multiple = 600;
+      }
+      if(this.level === 3){
+        multiple = 1200;
+      }
+      if(this.level === 4){
+        multiple = 1800;
+      }
+      if(this.level === 5){
+        multiple = 2400;
+      }
+      if(this.level === 6){
+        multiple = 3000;
+      }
+      if(this.level === 7){
+        multiple = 3600;
+      }
+      if(this.level === 8){
+        multiple = 4200;
+      }
+      if(this.level === 9){
+        multiple = 4800;
+      }
+
       //点模式的松开
       if (this.currentModel.model == "point") {
         let x = e.offsetX;
@@ -595,24 +686,19 @@ export default {
         if(minArr.length>0 && maxArr.length>0){
           minX = Math.min.apply(Math,minArr);
           maxX = Math.max.apply(Math,maxArr);
-          /*for (let i = 0; i < minArr.length; i++) {
-            if(minArr[i] === minX){
-              minIndex = i;
-            }
-          }*/
           for (let i = 0; i < this.chartsData.length; i++) {
             //console.log("chartsData="+this.chartsData[i]);
             //console.log("minX="+minX);
             if(this.chartsData[i].X === minX){
-              console.log(this.chartsData[i]);
-              console.log(minX)
+              //console.log(this.chartsData[i]);
+              //console.log(minX)
               minIndex = i;
             }
           }
           //console.log("minArr:"+minArr)
           //console.log("minIndex:"+minIndex)
           //console.log("minX:"+minX)
-          console.log("中间")
+          //console.log("中间")
           this.chartsData.splice(minIndex,0,obj)
           this.currentDrawData = {
             type: "point",
@@ -620,11 +706,21 @@ export default {
             lables: this.lableData
           };
           this.canvasData.splice(minIndex,0,this.currentDrawData);
+          //点x轴位置
+          let indexs = this.computerNum(e.offsetX)+multiple;
+          this.xArr.push(indexs);
+          this.yArr.push(e.offsetY);
+          this.types.push(this.radio1);
           //console.log("qqqq:"+minIndex)
           this.drawToArrs();
           //this.drawPointCenter(e,minIndex);
         }else if(maxArr.length>0){
-          console.log("右")
+          //console.log("右")
+          //点x轴位置
+          let indexs = this.computerNum(e.offsetX)+multiple;
+          this.xArr.push(indexs);
+          this.yArr.push(e.offsetY);
+          this.types.push(this.radio1);
           this.drawPointRight(e); //用鼠标松开时的位置画点
           this.currentDrawData.data.forEach((e) => {
             e[0] = e[0] / this.imgZoom; //将坐标数据还原至真实数据
@@ -635,7 +731,12 @@ export default {
             this.canvasData.push(this.currentDrawData); //添加当前绘图数据至大列表
           });
         } else if(minArr.length>0){
-          console.log("左")
+          //console.log("左")
+          //点x轴位置
+          let indexs = this.computerNum(e.offsetX)+multiple;
+          this.xArr.push(indexs);
+          this.yArr.push(e.offsetY);
+          this.types.push(this.radio1);
           this.drawPointLeft(e); //用鼠标松开时的位置画点
           this.currentDrawData.data.forEach((e) => {
             e[0] = e[0] / this.imgZoom; //将坐标数据还原至真实数据
@@ -646,6 +747,12 @@ export default {
             this.canvasData.splice(0,0,this.currentDrawData); //添加当前绘图数据至大列表
           });
         }else {
+          //点x轴位置
+          let indexs = this.computerNum(e.offsetX)+multiple;
+          this.xArr.push(indexs);
+          this.yArr.push(e.offsetY);
+          this.types.push(this.radio1);
+          //console.log("aaaaaaaaaaaaa======"+indexs);
           this.drawPoint(e); //用鼠标松开时的位置画点
           this.currentDrawData.data.forEach((e) => {
             e[0] = e[0] / this.imgZoom; //将坐标数据还原至真实数据
@@ -708,7 +815,18 @@ export default {
         y: e.offsetY,
       };
     },
-
+    //计算点 Index
+    computerNum(x){
+      let a = x/20.02;
+      let b = a*5;
+      return b;
+    },
+    //计算位置
+    computerPlace(x){
+      let a = x*20.02;
+      let b = a/5;
+      return b;
+    },
     //画点
     drawPoint(e) {
       //获取画布中鼠标坐标
@@ -717,6 +835,9 @@ export default {
         y: e.offsetY,
       };
 
+      //计算点位置
+      /*let pointIndex = this.computerNum(e.offsetX);
+      console.log("pointIndex===="+Math.round(pointIndex));*/
       //标记类型
       let str = this.radio1;
       ctx.font = "bold 15px Arial";
@@ -911,7 +1032,7 @@ export default {
         'Y': e.offsetY
       };
       this.chartsData.splice(0,0,obj);*/
-      console.log(index)
+      //console.log(index)
       //  右
       let place1 = (this.chartsData[index+1].X - e.offsetX) / 2;
       // 显示毫秒值
@@ -995,6 +1116,15 @@ export default {
     background-color: rgba(39, 55, 70, 1);
     .top-left-div {
       display: flex;
+      .icon{
+        font-size: 30px;
+        color: white;
+      }
+      .el-button{
+        padding: 0;
+        border: 0;
+        background-color: rgba(207,218,238,0);
+      }
       .color-div-a,
       .color-div {
         border-radius: 50%;
@@ -1003,7 +1133,7 @@ export default {
         margin: 5px 10px;
         &:hover {
           cursor: pointer;
-          box-shadow: 0px 0px 10px #fff;
+          box-shadow: 0px 0px 10px lightgray;
         }
       }
       .color-div-a {

@@ -36,8 +36,8 @@ module.exports = {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
         // target: `https://ecg.mindyard.cn:84`,
-        // target: `https://develop.mindyard.cn:84`,
-        target: `http://localhost:9000`,
+        //target: `https://develop.mindyard.cn:84`,
+         target: `http://localhost:9000`,
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
