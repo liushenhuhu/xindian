@@ -98,10 +98,10 @@ public class dataLabbyController extends BaseController
             return getTable(resList,new PageInfo(list).getTotal());
         }
         if(hospitalCode==null || hospitalCode.equals("")){
-            return getDataTable(null);
+            return getDataTable(new ArrayList<>());
         }
         Hospital hospital = hospitalService.selectHospitalByHospitalCode(hospitalCode);
-        if(hospital==null) return getDataTable(null);
+        if(hospital==null) return getDataTable(new ArrayList<>());
         order.setHospitalId(hospital.getHospitalId());
         startPage();
         List<dataLabby> list = orderService.selectOrderList(order);
