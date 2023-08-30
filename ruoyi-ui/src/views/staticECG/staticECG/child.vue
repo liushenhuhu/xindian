@@ -254,17 +254,19 @@ export default {
           for (let i = 0; i < JSON.parse(response[0].xArr).length; i++) {
             var x = this.computerPlace(JSON.parse(response[0].xArr)[i]);
             let obj = {
-              'X': (x - this.canvasSize.width*(this.level-1)),
+             // 'X': (x - this.canvasSize.width*(this.level-1)),
+              'X': x,
               'Y': JSON.parse(response[0].yArr)[i] / this.imgZoom
             }
             this.chartsData.push(obj);
             this.currentDrawData = {
-              data: [[(x - this.canvasSize.width*(this.level-1)) / this.imgZoom, JSON.parse(response[0].yArr)[i] / this.imgZoom, JSON.parse(response[0].types)[i]]]
+              data: [[x*this.imgZoom, JSON.parse(response[0].yArr)[i] *this.imgZoom, JSON.parse(response[0].types)[i]]]
             }
             this.canvasData.push(this.currentDrawData);
           }
           //console.log(this.canvasData)
           this.canvasData.forEach((e3,index) => {
+            console.log(e3)
             this.drawPoints(e3.data[0][0],e3.data[0][1],index,e3.data[0][2]);
           })
           //将数据回显
@@ -817,15 +819,16 @@ export default {
     },
     //计算点 Index
     computerNum(x){
-      let a = x/20.02;
-      let b = a*5;
-      return b;
+      let a = x/(this.canvasSize.width/599);
+      //let b = a*5;
+      //console.log(b)
+      return a;
     },
     //计算位置
     computerPlace(x){
-      let a = x*20.02;
-      let b = a/5;
-      return b;
+      let a = (x%600)*(this.canvasSize.width/599);
+      //let b = a/5;
+      return a;
     },
     //画点
     drawPoint(e) {
