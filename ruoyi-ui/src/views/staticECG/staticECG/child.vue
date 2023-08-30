@@ -253,14 +253,16 @@ export default {
         if(response.length > 0){
           for (let i = 0; i < JSON.parse(response[0].xArr).length; i++) {
             var x = this.computerPlace(JSON.parse(response[0].xArr)[i]);
+            var y = this.computerPlaceY(JSON.parse(response[0].yArr)[i])
             let obj = {
              // 'X': (x - this.canvasSize.width*(this.level-1)),
+              //'Y': JSON.parse(response[0].yArr)[i] / this.imgZoom
               'X': x,
-              'Y': JSON.parse(response[0].yArr)[i] / this.imgZoom
+              'Y': y
             }
             this.chartsData.push(obj);
             this.currentDrawData = {
-              data: [[x*this.imgZoom, JSON.parse(response[0].yArr)[i] *this.imgZoom, JSON.parse(response[0].types)[i]]]
+              data: [[x*this.imgZoom, y *this.imgZoom, JSON.parse(response[0].types)[i]]]
             }
             this.canvasData.push(this.currentDrawData);
           }
@@ -503,7 +505,7 @@ export default {
       //console.log(type);
       //标记类型
       //console.log('test')
-      console.log(x,y)
+      //console.log(x,y)
       let str = type;
       ctx.font = "bold 15px Arial";
       ctx.fillText (str, x-3,y-26,[300]);
@@ -711,7 +713,7 @@ export default {
           //点x轴位置
           let indexs = this.computerNum(e.offsetX)+multiple;
           this.xArr.push(indexs);
-          this.yArr.push(e.offsetY);
+          this.yArr.push(this.computerNumY(e.offsetY));
           this.types.push(this.radio1);
           //console.log("qqqq:"+minIndex)
           this.drawToArrs();
@@ -721,7 +723,7 @@ export default {
           //点x轴位置
           let indexs = this.computerNum(e.offsetX)+multiple;
           this.xArr.push(indexs);
-          this.yArr.push(e.offsetY);
+          this.yArr.push(this.computerNumY(e.offsetY));
           this.types.push(this.radio1);
           this.drawPointRight(e); //用鼠标松开时的位置画点
           this.currentDrawData.data.forEach((e) => {
@@ -737,7 +739,7 @@ export default {
           //点x轴位置
           let indexs = this.computerNum(e.offsetX)+multiple;
           this.xArr.push(indexs);
-          this.yArr.push(e.offsetY);
+          this.yArr.push(this.computerNumY(e.offsetY));
           this.types.push(this.radio1);
           this.drawPointLeft(e); //用鼠标松开时的位置画点
           this.currentDrawData.data.forEach((e) => {
@@ -752,7 +754,7 @@ export default {
           //点x轴位置
           let indexs = this.computerNum(e.offsetX)+multiple;
           this.xArr.push(indexs);
-          this.yArr.push(e.offsetY);
+          this.yArr.push(this.computerNumY(e.offsetY));
           this.types.push(this.radio1);
           //console.log("aaaaaaaaaaaaa======"+indexs);
           this.drawPoint(e); //用鼠标松开时的位置画点
@@ -820,14 +822,35 @@ export default {
     //计算点 Index
     computerNum(x){
       let a = x/(this.canvasSize.width/599);
-      //let b = a*5;
-      //console.log(b)
       return a;
     },
     //计算位置
     computerPlace(x){
       let a = (x%600)*(this.canvasSize.width/599);
-      //let b = a/5;
+      return a;
+    },
+    computerNumY(y){
+      var avgY = this.canvasSize.height/2;
+      var a = 0;
+      if(y<=avgY){
+        a = (avgY-y)/avgY;
+      }
+      if(y>=avgY){
+        a = -(y-avgY)/avgY;
+      }
+      //let a = y/(this.canvasSize.height/4);
+      return a;
+    },
+    //计算位置
+    computerPlaceY(y){
+      var avgY = this.canvasSize.height/2;
+      var a = 0;
+      if(y>0){
+        a = (1-y)*avgY;
+      }
+      if(y<0){
+        a = (1-y)*avgY;
+      }
       return a;
     },
     //画点
