@@ -22,15 +22,16 @@ export function addRotograph(data) {
   return request({
     url: '/rotograph/rotograph',
     method: 'post',
-    data: data
+    data: data,
+
   })
 }
 
 // 修改轮播广告
 export function updateRotograph(data) {
   return request({
-    url: '/rotograph/rotograph',
-    method: 'put',
+    url: '/rotograph/rotograph/web/update',
+    method: 'post',
     data: data
   })
 }

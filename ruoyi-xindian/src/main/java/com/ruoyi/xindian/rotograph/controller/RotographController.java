@@ -1,22 +1,19 @@
 package com.ruoyi.xindian.rotograph.controller;
 
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.config.RuoYiConfig;
-import com.ruoyi.common.utils.file.FileUploadUtils;
+
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
+import com.ruoyi.xindian.product.domain.TProduct;
+import com.ruoyi.xindian.util.FileUploadUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -43,6 +40,8 @@ public class RotographController extends BaseController
     @Autowired
     private ServerConfig serverConfig;
 
+    @Resource
+    private FileUploadUtils fileUploadUtils;
     /**
      * 查询轮播广告列表
      */
@@ -94,10 +93,13 @@ public class RotographController extends BaseController
     @PreAuthorize("@ss.hasPermi('rotograph:rotograph:add')")
     @Log(title = "轮播广告", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Rotograph rotograph)
+    public AjaxResult add(@RequestParam("rotograph")String rotograph,@RequestParam(value = "file",required = false) MultipartFile file)
     {
-        rotograph.setDeleteflag(0);
-        return toAjax(rotographService.insertRotograph(rotograph));
+        Rotograph rotograph1 = JSONObject.parseObject(rotograph, Rotograph.class);
+        rotograph1.setDeleteflag(0);
+        String fileUploadUrl = fileUploadUtils.uploadImgUrl(file, "rotograph", "rotograph");
+        rotograph1.setImageUrl(fileUploadUrl);
+        return toAjax(rotographService.insertRotograph(rotograph1));
     }
 
     /**
@@ -105,10 +107,13 @@ public class RotographController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('rotograph:rotograph:edit')")
     @Log(title = "轮播广告", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody Rotograph rotograph)
+    @PostMapping("/web/update")
+    public AjaxResult edit(@RequestParam("rotograph")String rotograph,@RequestParam(value = "file",required = false) MultipartFile file)
     {
-        return toAjax(rotographService.updateRotograph(rotograph));
+        Rotograph rotograph1 = JSONObject.parseObject(rotograph, Rotograph.class);
+        String fileUploadUrl = fileUploadUtils.uploadImgUrl(file, "rotograph", "rotograph");
+        rotograph1.setImageUrl(fileUploadUrl);
+        return toAjax(rotographService.updateRotograph(rotograph1));
     }
 
     /**
@@ -130,15 +135,19 @@ public class RotographController extends BaseController
         {
             MultipartFile file = rotograph.getFile();
             // 上传文件路径
-            String filePath = RuoYiConfig.getUploadPath();
+            //String filePath = RuoYiConfig.getUploadPath();
             // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
+//            String fileName = FileUploadUtils.upload(filePath, file);
+//            String url = serverConfig.getUrl() + fileName;
+//
+//            AjaxResult ajax = AjaxResult.success();
+//            ajax.put("url", url);
+//            ajax.put("fileName", fileName);
+//            ajax.put("newFileName", FileUtils.getName(fileName))                                                                ;
+//            ajax.put("originalFilename", file.getOriginalFilename());
+            String url = fileUploadUtils.uploadImgUrl(file, "rotograph","rotograph");
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", url);
-            ajax.put("fileName", fileName);
-            ajax.put("newFileName", FileUtils.getName(fileName))                                                                ;
-            ajax.put("originalFilename", file.getOriginalFilename());
             return ajax;
         }
         catch (Exception e)

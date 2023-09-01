@@ -145,6 +145,16 @@
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="唯一标识" align="center" prop="id" />-->
       <el-table-column label="标题" align="center" prop="title" />
+      <el-table-column label="图片" align="center" prop="imageUrl" >
+        <template slot-scope="scope">
+          <div class="demo-image__preview">
+            <el-image  v-if="scope.row.imageUrl" style="width: 100px; height: 100px; margin-left:10px;"
+                       :src="scope.row.imageUrl"
+                       :preview-src-list="scope.row.imageUrl"
+            ></el-image>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="开始时间" align="center" prop="startTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -155,8 +165,9 @@
           <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="位置" align="center" prop="position" />
-      <el-table-column label="显示顺序" align="center" prop="linkId" />
+
+<!--      <el-table-column label="位置" align="center" prop="position" />-->
+<!--      <el-table-column label="显示顺序" align="center" prop="linkId" />-->
 <!--      <el-table-column label="摘要" align="center" prop="abstract" />-->
 <!--      <el-table-column label="描述" align="center" prop="description" />-->
 <!--      <el-table-column label="显示位置" align="center" prop="showPosition" />-->
@@ -223,20 +234,27 @@
             placeholder="请选择结束时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="位置" prop="position">
-          <el-input v-model="form.position" placeholder="请输入不同端标识(医生，用户)" />
-        </el-form-item>
-        <el-form-item label="摘要" prop="abstract">
-          <el-input v-model="form.abstract" placeholder="请输入摘要" />
-        </el-form-item>
-        <el-form-item label="描述" prop="description">
-          <el-input v-model="form.description" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+<!--        <el-form-item label="位置" prop="position">-->
+<!--          <el-input v-model="form.position" placeholder="请输入不同端标识(医生，用户)" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="摘要" prop="abstract">-->
+<!--          <el-input v-model="form.abstract" placeholder="请输入摘要" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="描述" prop="description">-->
+<!--          <el-input v-model="form.description" type="textarea" placeholder="请输入内容" />-->
+<!--        </el-form-item>-->
 <!--        <el-form-item label="显示位置" prop="showPosition">-->
 <!--          <el-input v-model="form.showPosition" placeholder="请输入显示位置" />-->
 <!--        </el-form-item>-->
         <el-form-item label="上传图片" prop="imageUrl">
-          <el-input v-model="form.imageUrl" placeholder="请输入图片位置" />
+          <el-upload
+            class="avatar-uploader"
+            action="#"
+            :on-change="handleChange"
+            :auto-upload="false"><!--不进行默认上传-->
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
 <!--        <el-form-item label="创建时间" prop="createDate">-->
 <!--          <el-date-picker clearable-->
@@ -291,6 +309,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      imageUrl:'',
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -353,7 +372,12 @@ export default {
         updateDate: null,
         deleteflag: null
       };
+      this.imageUrl=''
       this.resetForm("form");
+    },
+    handleChange(file, fileList) {
+      this.imageUrl=URL.createObjectURL(file.raw)
+      this.form.file=file.raw;
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -373,8 +397,10 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.$router.push({path: "/addAD"});
-      window.open(routeUrl.href, '_blank');
+      // this.$router.push({path: "/addAD"});
+      // window.open(routeUrl.href, '_blank');
+      this.open = true;
+      this.reset();
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -390,17 +416,27 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          var formData = new FormData();
+          if(this.form.file){
+            formData.append("file",this.form.file)
+          }
+          formData.append("rotograph",JSON.stringify(this.form))
+
           if (this.form.id != null) {
-            updateRotograph(this.form).then(response => {
+            updateRotograph(formData).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              this.reset()
             });
           } else {
-            addRotograph(this.form).then(response => {
+            console.log(this.form)
+
+            addRotograph(formData).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+              this.reset()
             });
           }
         }
@@ -425,3 +461,34 @@ export default {
   }
 };
 </script>
+<style>
+.avatar-uploader {
+  margin-top: 20px;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 200px;
+  height: 150px;
+}
+
+.avatar-uploader:hover {
+  border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 200px;
+  height: 150px;
+  line-height: 150px;
+  text-align: center;
+}
+
+.avatar {
+  width: 200px;
+  height: 150px;
+  display: flex;
+}
+</style>
