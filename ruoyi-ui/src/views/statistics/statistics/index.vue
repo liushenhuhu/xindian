@@ -50,7 +50,7 @@
         </el-form>
         <el-divider content-position="left">医生每月诊断次数统计图</el-divider>
         <el-card class="box-card">
-          <div id="myChart"  :style="{width: '100%', height: '300%'}"> </div>
+          <div id="myChart"  :style="{width: '100%', height: '100%'}"> </div>
         </el-card>
 
 <!--        <div id="table1" style="align-content: center;display: none">-->
@@ -173,6 +173,10 @@ export default {
           }
         },
       });
+      setTimeout(function (){
+        myChart.resize()
+        }
+      )
       myChart.on('click', function (params) {
 
         status.queryParams.month = status.lowNumber(params.name)
@@ -315,6 +319,10 @@ export default {
   height: 35vh;
   margin:0 auto;
   margin-bottom: 10px;
+}
+::v-deep .el-card__body{
+  padding: 0;
+  height: 100%;
 }
 
 </style>
