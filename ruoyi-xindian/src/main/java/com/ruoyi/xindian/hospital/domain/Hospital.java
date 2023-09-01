@@ -70,6 +70,16 @@ public class Hospital extends BaseEntity
 
     private String price;
 
+    private String hospitalInfo;
+
+    public String getHospitalInfo() {
+        return hospitalInfo;
+    }
+
+    public void setHospitalInfo(String hospitalInfo) {
+        this.hospitalInfo = hospitalInfo;
+    }
+
     public List<String> getHospitalCodeList() {
         return hospitalCodeList;
     }

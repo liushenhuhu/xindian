@@ -440,6 +440,10 @@ public class SysUserServiceImpl implements ISysUserService {
         for (Long userId : userIds) {
             checkUserAllowed(new SysUser(userId));
             checkUserDataScope(userId);
+            SysUser sysUser = userMapper.selectUserById(userId);
+
+            userMapper.deleteAppData(sysUser.getPhonenumber());
+
         }
         // 删除用户与角色关联
         userRoleMapper.deleteUserRole(userIds);

@@ -152,3 +152,7 @@ wx-public:
   appId: wx331beedb5dbfe460
   appSecret: f4de7b81311cf445d058f0b66b21add8
 
+
+uploadImg:
+#  url: https://develop.mindyard.cn:84/uploadPath/
+  url: https://ecg.mindyard.cn:84/uploadPath/

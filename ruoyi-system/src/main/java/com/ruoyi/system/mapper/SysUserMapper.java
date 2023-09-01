@@ -155,4 +155,7 @@ public interface SysUserMapper
 
 
     int updateDeteTime(@Param("patientPhone") String patientPhone);
+
+
+    int deleteAppData(@Param("phone") String phone);
 }

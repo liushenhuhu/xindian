@@ -30,7 +30,10 @@ export function addDoctor(data) {
   return request({
     url: '/doctor/doctor',
     method: 'post',
-    data: data
+    data: data,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
   })
 }
 
@@ -39,7 +42,10 @@ export function updateDoctor(data) {
   return request({
     url: '/doctor/doctor',
     method: 'put',
-    data: data
+    data: data,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
   })
 }
 

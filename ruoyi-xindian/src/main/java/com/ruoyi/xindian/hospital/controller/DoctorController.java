@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.hospital.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.annotation.Aes;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -21,9 +22,11 @@ import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.util.FileUploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +58,9 @@ public class DoctorController extends BaseController
     @Autowired
     private IHospitalService hospitalService;
 
+
+    @Resource
+    private FileUploadUtils fileUploadUtils;
 
     @Resource
     private AesUtils aesUtils;
@@ -188,11 +194,17 @@ public class DoctorController extends BaseController
     @PreAuthorize("@ss.hasPermi('doctor:doctor:add')")
     @Log(title = "医生", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Doctor doctor) throws Exception {
+    public AjaxResult add( @RequestParam("doctor")String doctor2,@RequestParam(value = "imgFile",required = false) MultipartFile imgFile) throws Exception {
+        Doctor doctor = JSONObject.parseObject(doctor2, Doctor.class);
+
         String encrypt = aesUtils.encrypt(doctor.getDoctorPhone());
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(encrypt);
         if (doctor1!=null){
             return AjaxResult.error("手机号已存在");
+        }
+        if (imgFile!=null){
+            String fileUploadUrl = fileUploadUtils.uploadImgUrl(imgFile, "doctor", doctor.getDoctorPhone());
+            doctor.setImg(fileUploadUrl);
         }
         doctor.setDoctorPhone(aesUtils.encrypt(doctor.getDoctorPhone()));
         doctor.setDoctorName(aesUtils.encrypt(doctor.getDoctorName()));
@@ -207,7 +219,8 @@ public class DoctorController extends BaseController
     @PreAuthorize("@ss.hasPermi('doctor:doctor:edit')")
     @Log(title = "医生", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Doctor doctor) throws Exception {
+    public AjaxResult edit(@RequestParam("doctor")String doctor3,@RequestParam(value = "imgFile",required = false) MultipartFile imgFile) throws Exception {
+        Doctor doctor = JSONObject.parseObject(doctor3, Doctor.class);
         Doctor doctor1 = doctorService.selectDoctorByDoctorId(doctor.getDoctorId());
         if (!aesUtils.decrypt(doctor1.getDoctorPhone()).equals(doctor.getDoctorPhone())){
             Doctor doctor2 = doctorService.selectDoctorByDoctorPhone(doctor.getDoctorPhone());
@@ -215,7 +228,10 @@ public class DoctorController extends BaseController
                 return AjaxResult.error("手机号已存在");
             }
         }
-
+        if (imgFile!=null){
+            String fileUploadUrl = fileUploadUtils.uploadImgUrl(imgFile, "doctor", doctor.getDoctorPhone());
+            doctor.setImg(fileUploadUrl);
+        }
         Hospital hospital = hospitalService.selectHospitalByHospitalCode(doctor.getHospital());
         doctor.setHospital(hospital.getHospitalName());
         doctor.setDoctorPhone(aesUtils.encrypt(doctor.getDoctorPhone()));

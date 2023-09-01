@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,6 +68,9 @@ public class TProductController extends BaseController
 
     @Value("${ruoyi.url}")
     private String url;
+
+    @Resource
+    private com.ruoyi.xindian.util.FileUploadUtils fileUploadUtils;
 
     /**
      * 查询商品信息列表
@@ -221,11 +225,12 @@ public class TProductController extends BaseController
         try
         {
             for(int i=0;i<files.size();i++) {//循环单个上传
-                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), files.get(i), MimeTypeUtils.IMAGE_EXTENSION);
+                String fileUploadUrl = fileUploadUtils.uploadImgUrl(files.get(i), "product", "product");
+//                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), files.get(i), MimeTypeUtils.IMAGE_EXTENSION);
                 if(i==0){
-                    tProduct.setProductUrl(url+avatar);
+                    tProduct.setProductUrl(fileUploadUrl);
                 }else {
-                    tProduct.setUrlOne(url+avatar);
+                    tProduct.setUrlOne(fileUploadUrl);
                 }
             }
         }
@@ -256,13 +261,15 @@ public class TProductController extends BaseController
         try{
             if (file1!=null)
             {
-                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file1, MimeTypeUtils.IMAGE_EXTENSION);
-                tProduct1.setProductUrl(url+avatar);
+                String fileUploadUrl = fileUploadUtils.uploadImgUrl(file1, "product", "product");
+//                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file1, MimeTypeUtils.IMAGE_EXTENSION);
+                tProduct1.setProductUrl(fileUploadUrl);
             }
             if (file2!=null)
             {
-                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file2, MimeTypeUtils.IMAGE_EXTENSION);
-                tProduct1.setUrlOne(url+avatar);
+                String fileUploadUrl = fileUploadUtils.uploadImgUrl(file2, "product", "product");
+//                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file2, MimeTypeUtils.IMAGE_EXTENSION);
+                tProduct1.setUrlOne(fileUploadUrl);
             }
         }
         catch (Exception e)
@@ -297,9 +304,10 @@ public class TProductController extends BaseController
     {
         if (!file.isEmpty())
         {
-            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
+            String fileUploadUrl = fileUploadUtils.uploadImgUrl(file, "product", "product");
+//            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
             AjaxResult ajax = AjaxResult.success();
-            ajax.put("imgUrl", url+avatar);
+            ajax.put("imgUrl", fileUploadUrl);
             return ajax;
         }
         return AjaxResult.error("上传图片异常，请联系管理员");
@@ -333,11 +341,12 @@ public class TProductController extends BaseController
 
 
             for (int i = 0; i < files.length; i++) {
+                String fileUploadUrl = fileUploadUtils.uploadImgUrl(files[i], "product", "product");
                 //循环单个上传
-                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), files[i], MimeTypeUtils.IMAGE_EXTENSION);
+//                String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), files[i], MimeTypeUtils.IMAGE_EXTENSION);
                 ProductImgs productImgs=new ProductImgs();
                 productImgs.setProductId(productId);
-                productImgs.setImg(url + avatar);
+                productImgs.setImg(fileUploadUrl);
                 products.add(productImgs);
             }
         }

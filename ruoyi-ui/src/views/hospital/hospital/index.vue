@@ -194,7 +194,7 @@
     />
 
     <!-- 添加或修改医院对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="省份" prop="province">
           <el-input v-model="form.province" placeholder="请输入省份" />
@@ -239,6 +239,9 @@
               :label="dict.value"
             >{{dict.label}}</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="医院介绍">
+          <el-input type="textarea" v-model="form.hospitalInfo"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -289,7 +292,8 @@ export default {
         monitoringPatientNumber: null,
         accountNumber: null,
         firstEcgTime: null,
-        ifStatistics: null
+        ifStatistics: null,
+        hospitalInfo:null,
       },
       // 表单参数
       form: {},

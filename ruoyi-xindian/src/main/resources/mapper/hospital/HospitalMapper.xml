@@ -17,10 +17,11 @@
         <result property="accountNumber"    column="account_number"    />
         <result property="firstEcgTime"    column="first_ecg_time"    />
         <result property="ifStatistics"    column="if_statistics"    />
+        <result property="hospitalInfo"    column="hospital_info"    />
     </resultMap>
 
     <sql id="selectHospitalVo">
-        select hospital_id, province, hospital_name, hospital_code, hospital_account, hospital_password, equipment_number, patient_number, monitoring_patient_number, account_number, first_ecg_time, if_statistics, img from hospital
+        select hospital_id, province, hospital_name, hospital_code, hospital_account, hospital_password, equipment_number, patient_number, monitoring_patient_number, account_number, first_ecg_time, if_statistics, img,hospital_info from hospital
     </sql>
 
     <select id="selectHospitalList" parameterType="Hospital" resultMap="HospitalResult">
@@ -92,6 +93,7 @@
             <if test="accountNumber != null">account_number,</if>
             <if test="firstEcgTime != null">first_ecg_time,</if>
             <if test="ifStatistics != null">if_statistics,</if>
+            <if test="hospitalInfo != null">hospital_info,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="hospitalId != null">#{hospitalId},</if>
@@ -106,6 +108,7 @@
             <if test="accountNumber != null">#{accountNumber},</if>
             <if test="firstEcgTime != null">#{firstEcgTime},</if>
             <if test="ifStatistics != null">#{ifStatistics},</if>
+            <if test="hospitalInfo != null">#{hospitalInfo},</if>
         </trim>
     </insert>
 
@@ -123,6 +126,7 @@
             <if test="accountNumber != null">account_number = #{accountNumber},</if>
             <if test="firstEcgTime != null">first_ecg_time = #{firstEcgTime},</if>
             <if test="ifStatistics != null">if_statistics = #{ifStatistics},</if>
+            <if test="hospitalInfo != null">hospital_info = #{hospitalInfo},</if>
         </trim>
         where hospital_id = #{hospitalId}
     </update>

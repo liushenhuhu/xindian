@@ -186,6 +186,25 @@
         <el-form-item label="收费价格" prop="chargePrice">
           <el-input v-model="form.chargePrice" placeholder="请输入收费价格" />
         </el-form-item>
+        <el-form-item label="医生图片">
+          <el-upload
+            action="#"
+            :auto-upload="false"
+            list-type="picture-card"
+            :file-list="imgFileList"
+            :limit="1"
+            :on-preview="handlePictureCardPreview"
+            :on-change="handleAvatarSuccess"
+            :on-remove="handleRemove">
+            <img v-if="form.img" :src="form.img" class="avatar">
+
+            <i v-else class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
+        </el-form-item>
+
         <el-form-item label="医生类型" prop="isDoc">
           <el-radio-group v-model="form.isDoc">
             <el-radio  label="0">测试用的医生账号</el-radio>
@@ -213,6 +232,9 @@ export default {
   dicts: ['hospital_name_list'],
   data() {
     return {
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: false,
       //科室
       restaurants: [],
       state: '',
@@ -222,6 +244,10 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      imgFileList:[],
+      uploadFile:{
+
+      },
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -284,6 +310,7 @@ export default {
     this.loadAll();
   },
   methods: {
+
     querySearch(queryString, cb) {
       var restaurants = this.restaurants;
       var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
@@ -295,6 +322,31 @@ export default {
       return (restaurant) => {
         return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
+    },
+    handleAvatarSuccess(file,fileList){
+      if (!/\.(jpg|JPG)$/.test(file.name)) {
+        this.$message({
+          type: 'warning',
+          message: '只支持格式为jpg/JPG的文件！'
+        })
+        fileList.pop()
+        return false
+      }
+      this.form.img=null
+      this.imgFileList = fileList
+      this.form.imgFile=file
+    },
+    handleRemove(file,fileList) {
+      this.imgFileList = fileList
+      this.form.imgFile=null
+    },
+    handlePictureCardPreview(file) {
+
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleDownload(file) {
+      console.log(file);
     },
     loadAll() {
         listDepartment(this.queryParams).then(response => {
@@ -379,15 +431,18 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.imgFileList=[]
       this.reset();
       this.open = true;
       this.title = "添加医生";
       listHospitalId(null).then(r=>{
         this.options=r.rows
       })
+
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.imgFileList=[]
       this.reset();
       const doctorId = row.doctorId || this.ids
       getDoctor(doctorId).then(response => {
@@ -396,11 +451,11 @@ export default {
           this.options1=r.data
         })
         this.form = response.data;
+
         this.form.hospital = response.data.hospitalCode
         console.log(response.data)
         this.open = true;
         this.title = "修改医生";
-
       });
       listHospitalId(null).then(r=>{
         this.options=r.rows
@@ -410,14 +465,20 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          let data=new FormData();
+          data.append("doctor",JSON.stringify(this.form))
+          if(this.form.imgFile!==undefined){
+            data.append("imgFile",this.form.imgFile.raw)
+          }
+
           if (this.form.doctorId != null) {
-            updateDoctor(this.form).then(response => {
+            updateDoctor(data).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addDoctor(this.form).then(response => {
+            addDoctor(data).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -445,3 +506,10 @@ export default {
   }
 };
 </script>
+<style>
+.avatar {
+  width: 160px;
+  height: 150px;
+  display: flex;
+}
+</style>

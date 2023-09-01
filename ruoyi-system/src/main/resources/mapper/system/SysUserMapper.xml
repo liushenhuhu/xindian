@@ -364,7 +364,9 @@
             #{userId}
         </foreach>
     </delete>
-
+    <delete id="deleteAppData">
+        delete from app_data where patient_phone_aes=#{phone}
+    </delete>
 
 
     <select id="selectUserByPhone" parameterType="String" resultMap="SysUserResult">
@@ -387,5 +389,7 @@
     <update id="updateDetectionNumAdd">
         update sys_user set detection_num = detection_num +1 where phonenumber_aes = #{patientPhone}
     </update>
+
+
 
 </mapper>

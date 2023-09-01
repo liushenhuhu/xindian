@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.sign.AesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,18 +34,40 @@ public class SysNoticeController extends BaseController
     @Autowired
     private ISysNoticeService noticeService;
 
+    @Autowired
+    private AesUtils aesUtils;
+
     /**
      * 获取通知公告列表
      */
     @PreAuthorize("@ss.hasPermi('system:notice:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysNotice notice)
-    {
+    public TableDataInfo list(SysNotice notice) throws Exception {
+        if (notice.getCreateBy()!=null&&!"".equals(notice.getCreateBy())){
+            notice.setCreateBy(aesUtils.encrypt(notice.getCreateBy()));
+        }
         startPage();
         List<SysNotice> list = noticeService.selectNoticeList(notice);
+        for (SysNotice c:list){
+            if (c.getCreateBy()!=null&&!"".equals(c.getCreateBy())){
+                c.setCreateBy(aesUtils.decrypt(c.getCreateBy()));
+            }
+        }
         return getDataTable(list);
     }
 
+    @GetMapping("/appList")
+    public AjaxResult appList() throws Exception {
+        SysNotice sysNotice = new SysNotice();
+        sysNotice.setStatus(String.valueOf(0));
+        List<SysNotice> list = noticeService.selectNoticeList(sysNotice);
+        for (SysNotice c:list){
+            if (c.getCreateBy()!=null&&!"".equals(c.getCreateBy())){
+                c.setCreateBy(aesUtils.decrypt(c.getCreateBy()));
+            }
+        }
+        return AjaxResult.success(list.get(0));
+    }
     /**
      * 根据通知公告编号获取详细信息
      */
