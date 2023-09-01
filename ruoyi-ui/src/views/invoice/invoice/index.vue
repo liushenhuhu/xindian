@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="订单价格" prop="price">
-        <el-input
-          v-model="queryParams.orderId"
-          placeholder="请输入订单编号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="订单价格" prop="price">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.orderId"-->
+<!--          placeholder="请输入订单编号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="抬头类型" prop="userAuthInfo">
         <el-select v-model="queryParams.userAuthInfo" clearable placeholder="请选择抬头类型">
           <el-option

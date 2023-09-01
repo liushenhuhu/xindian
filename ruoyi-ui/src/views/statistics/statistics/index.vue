@@ -45,6 +45,7 @@
 
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
         <el-divider content-position="left">医生每月诊断次数统计图</el-divider>
@@ -201,6 +202,8 @@ export default {
         this.total = r.total;
       })
     },
+
+
     lowNumber(val){
 
       let str = "";
@@ -281,7 +284,21 @@ export default {
       this.show = true;
       document.getElementById("myChart").style.display='';
       document.getElementById("table1").style.display='none';
-    }
+    },
+
+    resetQuery(){
+      this.queryParams= {
+        doctorName: null,
+        doctorPhone: null,
+        month: null,
+        reportType:null,
+        year:'2023',
+        startTime:null,
+        endTime:null,
+      }
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
   },
 }
 </script>

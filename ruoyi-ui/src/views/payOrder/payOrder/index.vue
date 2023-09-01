@@ -18,7 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="订单状态" prop="orderState">
-        <el-select v-model="queryParams.orderStatus" clearable placeholder="请选择订单状态">
+        <el-select v-model="queryParams.orderState" clearable placeholder="请选择订单状态">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -300,7 +300,7 @@ export default {
         openId: null,
         orderId:null,
         userPhone:null,
-
+        orderState:null,
       },
       options: [{
       value: '未支付',
@@ -489,6 +489,7 @@ export default {
     },
     // 表单重置
     reset() {
+
       this.shipaddress={
         addressId: null,
           country: null,
@@ -516,6 +517,21 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams={
+        pageNum: 1,
+        pageSize: 10,
+        title: null,
+        orderNo: null,
+        userId: null,
+        totalFee: null,
+        codeUrl: null,
+        addressId: null,
+        orderStatus: null,
+        openId: null,
+        orderId:null,
+        userPhone:null,
+        orderState:null,
+      }
       this.resetForm("queryForm");
       this.handleQuery();
     },

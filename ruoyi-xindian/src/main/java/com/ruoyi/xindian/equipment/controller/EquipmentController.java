@@ -111,6 +111,9 @@ public class EquipmentController extends BaseController {
         } else {
             if (equipment.getHospitalCode()!=null&&!"".equals(equipment.getHospitalCode())){
                 Hospital hospital = hospitalService.selectCode(equipment.getHospitalCode());
+                if (hospital==null){
+                    return getDataTable(list);
+                }
                 equipment.getHospitalCodeList().add(hospital.getHospitalCode());
             }
             startPage();
