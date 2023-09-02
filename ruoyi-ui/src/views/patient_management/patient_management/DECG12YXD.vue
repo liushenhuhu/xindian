@@ -10,7 +10,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
+      <el-form-item label="患者性别" prop="patientSex">
+        <el-select placeholder="请选择性别" v-model="queryParams.patientSex">
+          <el-option label="男" value="男"></el-option>
+          <el-option label="女" value="女"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="患者电话" prop="patientPhone">
         <el-input
           v-model="queryParams.patientPhone"
@@ -54,7 +59,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-<!--      <el-form-item label="连接时间">
+   <el-form-item label="连接时间">
         <el-date-picker
           v-model="daterangeConnectionTime"
           style="width: 240px"
@@ -64,7 +69,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>-->
+      </el-form-item>
       <el-form-item label="在线状态" prop="onlineStatus">
         <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
           <el-option
@@ -75,14 +80,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="医生电话" prop="doctorPhone">
-        <el-input
-          v-model="queryParams.doctorPhone"
-          placeholder="请输入医生电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="医生电话" prop="doctorPhone">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.doctorPhone"-->
+<!--          placeholder="请输入医生电话"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -395,7 +400,8 @@ export default {
         patientName: null,
         ecgType: 'DECG12',
         patientPhone: null,
-        doctorPhone: null
+        doctorPhone: null,
+        patientSex:null
       },
       // isRed1: false,
       // isRed2: false,
@@ -462,6 +468,7 @@ export default {
         this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
       }
       listPatient_management(this.queryParams).then(response => {
+        console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -483,7 +490,8 @@ export default {
         patientName: null,
         ecgType: 'DECG12YXD',
         patientPhone: null,
-        doctorPhone: null
+        doctorPhone: null,
+        patientSex:null
       };
       this.resetForm("form");
     },
@@ -495,6 +503,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.daterangeConnectionTime=[]
       this.handleQuery();
     },
     // 多选框选中数据

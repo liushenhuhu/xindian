@@ -95,7 +95,7 @@
 <!--        </if>-->
 <!--    </where>-->
     <sql id="selectPatientManagementVo">
-        select m.p_id, m.patient_code, m.hospital_code, m.equipment_code,
+        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code,
                connection_time, bed_number, case_history_number,
                ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
                m.patient_phone_aes, family_phone,  monitoring_status,
@@ -130,7 +130,7 @@
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -179,7 +179,7 @@
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -226,7 +226,7 @@
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -268,7 +268,7 @@
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
@@ -298,7 +298,7 @@
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -339,7 +339,7 @@
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -379,7 +379,7 @@
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -419,7 +419,7 @@
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -499,7 +499,7 @@
             <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
@@ -578,7 +578,7 @@
         order by report_time desc
     </select>
     <select id="selectPatientManagementList12" resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">
-        select m.p_id, m.patient_code, m.hospital_code, m.equipment_code,
+        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code,
         connection_time, bed_number, case_history_number,
         ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
         m.patient_phone_aes, family_phone,  monitoring_status,
@@ -595,7 +595,7 @@
             <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
-            <if test="patientCode != null  and patientCode != ''">and m.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>

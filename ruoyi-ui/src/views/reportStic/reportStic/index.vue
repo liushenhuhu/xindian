@@ -77,6 +77,12 @@ export default {
       }, {
         value: 'JECG12',
         label: '静态12导'
+      },{
+        value: 'DECGsingle',
+        label: '动态单导'
+      }, {
+        value: 'DECG12',
+        label: '动态12导'
       }]
     };
   },

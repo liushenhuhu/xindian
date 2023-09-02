@@ -107,29 +107,27 @@
 
 
     <select id="getmonth" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
-        SELECT Month(report_time) as name,COUNT(*) AS value
-        FROM report r
-        WHERE YEAR(r.report_time)=#{year}
+        SELECT Month(connection_time) as name,COUNT(*) AS value
+        FROM patient_management r
+        WHERE YEAR(r.connection_time)=#{year}
         <if test="reportType!=null&amp;&amp;reportType!=''">
-            and r.report_type like concat(#{reportType},"%")
+            and r.ecg_type like concat(#{reportType},"%")
         </if>
-        <if test="reportType==null or reportType==''">
-            and r.report_type like concat('JECG',"%")
-        </if>
+
         GROUP BY name
         ORDER BY name asc
     </select>
 
     <select id="getday" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
-        SELECT DATE_FORMAT(report_time,'%c-%e') as name,COUNT(*) AS value
-        FROM report r
-        WHERE r.report_time BETWEEN #{startTime} and DATE_ADD(#{endTime} ,INTERVAL 1 DAY)
+        SELECT DATE_FORMAT(connection_time,'%c-%e') as name,COUNT(*) AS value
+        FROM patient_management r
+        WHERE r.connection_time BETWEEN #{startTime} and DATE_ADD(#{endTime} ,INTERVAL 1 DAY)
         <if test="reportType!=null&amp;&amp;reportType!=''">
-            and r.report_type like concat(#{reportType},"%")
+            and r.ecg_type like concat(#{reportType},"%")
         </if>
-        <if test="reportType==null or reportType==''">
-            and r.report_type like concat('JECG',"%")
-        </if>
+<!--        <if test="reportType==null or reportType==''">-->
+<!--            and r.report_type like concat('JECG',"%")-->
+<!--        </if>-->
         GROUP BY name
         ORDER BY name asc
     </select>
