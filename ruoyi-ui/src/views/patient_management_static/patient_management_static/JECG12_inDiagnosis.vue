@@ -10,7 +10,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
+      <el-form-item label="患者性别" prop="patientSex">
+        <el-select placeholder="请选择性别" v-model="queryParams.patientSex">
+          <el-option label="男" value="男"></el-option>
+          <el-option label="女" value="女"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="患者电话" prop="patientPhone">
         <el-input
           v-model="queryParams.PatPhone"
@@ -496,7 +501,8 @@ export default {
         diagnosisDoctor: null,
         reportTime: null,
         ecgLevel: null,
-        doctorPhone: null
+        doctorPhone: null,
+        patientSex:null
       },
       // 表单参数
       form: {},
@@ -623,7 +629,8 @@ export default {
         diagnosisDoctor: null,
         reportTime: null,
         ecgLevel: null,
-        doctorPhone: null
+        doctorPhone: null,
+        patientSex:null
       };
       this.resetForm("form");
     },

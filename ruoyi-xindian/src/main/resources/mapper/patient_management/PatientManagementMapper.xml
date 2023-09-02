@@ -129,7 +129,7 @@
         <include refid="selectPatientManagementVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -179,7 +179,7 @@
         <include refid="selectPatientManagementVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -227,7 +227,7 @@
         <include refid="selectPatientManagementCount"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -270,7 +270,7 @@
         <include refid="selectPatientManagementVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
@@ -301,7 +301,7 @@
         <include refid="selectPatientManagementVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -343,7 +343,7 @@
         <include refid="selectPatientManagementVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -384,7 +384,7 @@
         <include refid="selectPatientManagementVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -425,7 +425,7 @@
         <include refid="selectPatientManagementCount"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -467,7 +467,7 @@
         <where>
             <if test="diagnosisStatus != null  and diagnosisStatus != ''"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="hospitalCode != null  and hospitalCode != ''">and m.hospital_code like concat('%', #{hospitalCode},'%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -507,7 +507,7 @@
         <where>
             <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId
-                <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if></if>
+                <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if></if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
@@ -604,7 +604,7 @@
         <where>
             <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
-            <if test="patientSex != null  and pId != ''"> and patient_sex = #{patientSex}</if>
+            <if test="patientSex != null  and patientSex != ''"> and p.patient_sex = #{patientSex}</if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
