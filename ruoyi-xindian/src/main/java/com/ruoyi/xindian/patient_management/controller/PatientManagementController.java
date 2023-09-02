@@ -214,6 +214,9 @@ public class PatientManagementController extends BaseController {
             if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
                 management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
             }
+            if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
+                management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
+            }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
@@ -293,6 +296,9 @@ public class PatientManagementController extends BaseController {
             }
             if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
                 management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
+            }
+            if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
+                management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
             }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);

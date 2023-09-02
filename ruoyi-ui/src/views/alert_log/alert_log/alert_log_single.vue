@@ -152,8 +152,8 @@
       <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
             <el-table-column label="患者电话" align="center" prop="patientPhone"/>
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
-      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+<!--      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>-->
+            <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if_status" :value="scope.row.anoStatus"/>

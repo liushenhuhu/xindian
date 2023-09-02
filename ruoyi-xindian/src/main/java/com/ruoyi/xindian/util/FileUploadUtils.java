@@ -15,9 +15,12 @@ import java.time.LocalDate;
 public class FileUploadUtils {
 
 
-    @Value("${uploadImg.url}")
+    @Value("${ruoyi.url}")
     private String url;
 
+
+    @Value("${ruoyi.profile}")
+    private String proFile;
 
     public String uploadImgUrl(MultipartFile file,String location,String phone){
         LocalDate now = LocalDate.now();
@@ -48,12 +51,11 @@ public class FileUploadUtils {
             // Generate a unique file name based on the current time
             String fileName = System.currentTimeMillis() + "-" + location;
 //            String mainDir="E:/saveImg/";
-            String mainDir="/home/chenpeng/workspace/system/xindian/uploadPath/";
-            File dir = new File(mainDir+userId+"/"+time+"/");
+            File dir = new File(proFile+userId+"/"+time+"/");
             if(!dir.exists()){
                 boolean mkdirs = dir.mkdirs();
             }
-            Path path = Paths.get( mainDir+userId+"/"+time+"/" + "/" + fileName + extension);
+            Path path = Paths.get( proFile+userId+"/"+time+"/" + "/" + fileName + extension);
             // Save the file to disk
             Files.write(path, file.getBytes());
             // Return the file path
@@ -61,6 +63,12 @@ public class FileUploadUtils {
         } catch (IOException e) {
             throw new RuntimeException("Failed to save file: " + e.getMessage());
         }
+    }
+
+    private Boolean deleteFile(String img){
+        String[] fronts = img.split("uploadPath");
+        File file = new File(proFile+fronts[1]);
+        return file.delete();
     }
 
 

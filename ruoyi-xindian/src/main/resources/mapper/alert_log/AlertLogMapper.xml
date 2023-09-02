@@ -37,6 +37,7 @@
                al.p_id,
                pm.hospital_code,
                pm.patient_code,
+               h.hospital_name,
                patient_name_aes,
                pm.patient_phone_aes,
                family_phone,
