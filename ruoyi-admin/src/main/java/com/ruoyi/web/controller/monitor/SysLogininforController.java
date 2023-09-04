@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.monitor;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.system.domain.SysOperLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,22 +33,31 @@ public class SysLogininforController extends BaseController
 {
     @Autowired
     private ISysLogininforService logininforService;
-
+    @Autowired
+    private AesUtils aesUtils;
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysLogininfor logininfor)
-    {
+    public TableDataInfo list(SysLogininfor logininfor) throws Exception {
         startPage();
         List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
+        for (SysLogininfor c :list){
+            if (c.getUserName()!=null&&!"".equals(c.getUserName())){
+                c.setUserName(aesUtils.decrypt(c.getUserName()));
+            }
+        }
         return getDataTable(list);
     }
 
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysLogininfor logininfor)
-    {
+    public void export(HttpServletResponse response, SysLogininfor logininfor) throws Exception {
         List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
+        for (SysLogininfor c :list){
+            if (c.getUserName()!=null&&!"".equals(c.getUserName())){
+                c.setUserName(aesUtils.decrypt(c.getUserName()));
+            }
+        }
         ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>(SysLogininfor.class);
         util.exportExcel(response, list, "登录日志");
     }

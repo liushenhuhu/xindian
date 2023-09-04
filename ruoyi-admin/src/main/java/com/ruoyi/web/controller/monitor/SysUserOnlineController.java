@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import com.ruoyi.common.utils.sign.AesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,11 +39,11 @@ public class SysUserOnlineController extends BaseController
 
     @Autowired
     private RedisCache redisCache;
-
+    @Autowired
+    private AesUtils aesUtils;
     @PreAuthorize("@ss.hasPermi('monitor:online:list')")
     @GetMapping("/list")
-    public TableDataInfo list(String ipaddr, String userName)
-    {
+    public TableDataInfo list(String ipaddr, String userName) throws Exception {
         Collection<String> keys = redisCache.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         for (String key : keys)
@@ -75,6 +77,11 @@ public class SysUserOnlineController extends BaseController
         }
         Collections.reverse(userOnlineList);
         userOnlineList.removeAll(Collections.singleton(null));
+        for (SysUserOnline sysUserOnline : userOnlineList) {
+            if (sysUserOnline.getUserName()!=null&&!"".equals(sysUserOnline.getUserName())){
+                sysUserOnline.setUserName(aesUtils.decrypt(sysUserOnline.getUserName()));
+            }
+        }
         return getDataTable(userOnlineList);
     }
 

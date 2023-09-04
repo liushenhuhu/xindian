@@ -53,9 +53,13 @@ public class SysOperlogController extends BaseController
     @Log(title = "操作日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysOperLog operLog)
-    {
+    public void export(HttpServletResponse response, SysOperLog operLog) throws Exception {
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
+        for (SysOperLog c :list){
+            if (c.getOperName()!=null&&!"".equals(c.getOperName())){
+                c.setOperName(aesUtils.decrypt(c.getOperName()));
+            }
+        }
         ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
         util.exportExcel(response, list, "操作日志");
     }
