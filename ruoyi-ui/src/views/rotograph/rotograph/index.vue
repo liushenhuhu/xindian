@@ -408,8 +408,10 @@ export default {
       const id = row.id || this.ids
       getRotograph(id).then(response => {
         this.form = response.data;
+        this.imageUrl=response.data.imageUrl
         this.open = true;
         this.title = "修改轮播广告";
+        console.log(response)
       });
     },
     /** 提交按钮 */
