@@ -21,6 +21,7 @@ import com.ruoyi.xindian.patient_management.vo.PInfoVO;
 import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
 import com.ruoyi.xindian.report.domain.Report;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -220,25 +221,25 @@ private AesUtils aesUtils;
 //            c.setSonPhone(aesUtils.encrypt(c.getSonPhone()));
 //            patientRelationshipMapper.updatePatientRelationship(c);
 //        }
-//        List<Patient> patients = patientMapper.selectAlertLogListPatients(limit);
-//        for (Patient c:patients){
-//            if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
-//                c.setPatientNameAes(aesUtils.encrypt(c.getPatientName()));
-//            }
+        List<Patient> patients = patientMapper.selectAlertLogListPatients(limit);
+        for (Patient c:patients){
+            if (c.getFamilyPhone()!=null&&!"".equals(c.getFamilyPhone())){
+                c.setFamilyPhone(aesUtils.encrypt(c.getFamilyPhone()));
+                patientMapper.updatePatientAes(c);
+            }
+
+        }
+
+//        List<Equipment> equipmentList = equipmentMapper.selectALl(limit);
+//        for(Equipment c : equipmentList){
+//
 //            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
-//                c.setPatientPhoneAes(aesUtils.encrypt(c.getPatientPhone()));
+//                c.setPatientPhone(aesUtils.encrypt(c.getPatientPhone()));
+//                equipmentMapper.updateEquipment(c);
 //            }
-//            patientMapper.updatePatientAes(c);
 //        }
 
-        List<Equipment> equipmentList = equipmentMapper.selectALl(limit);
-        for(Equipment c : equipmentList){
 
-            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
-                c.setPatientPhone(aesUtils.encrypt(c.getPatientPhone()));
-                equipmentMapper.updateEquipment(c);
-            }
-        }
 
 
     }

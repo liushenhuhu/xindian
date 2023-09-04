@@ -193,11 +193,12 @@ public class dataLabbyController extends BaseController
      */
     @GetMapping(value = "/dataLabby/{reportId}")
     public AjaxResult getOrder(@PathVariable("reportId") String pId, HttpServletRequest request) throws Exception {
-        LoginUser loginUser = tokenService.getLoginUser(request);
-        String phonenumber = loginUser.getUser().getPhonenumber();
-        Doctor doctor = doctorService.selectDoctorByDoctorPhone(phonenumber);
+
         lock.lock();
         try{
+            LoginUser loginUser = tokenService.getLoginUser(request);
+            String phonenumber = loginUser.getUser().getPhonenumber();
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(phonenumber);
             Report report = reportService.selectReportByPId(pId);
             if (report==null){
                 return AjaxResult.error("当前订单不存在");
