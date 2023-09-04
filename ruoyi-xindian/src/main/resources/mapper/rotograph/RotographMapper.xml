@@ -98,12 +98,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteRotographById" parameterType="Long">
-#         delete from rotograph where id = #{id}
-        update rotograph set deleteflag = 1 where #{id}
+         delete from rotograph where id = #{id}
+#        update rotograph set deleteflag = 1 where #{id}
     </delete>
 
     <delete id="deleteRotographByIds" parameterType="String">
-        update rotograph set deleteflag = 1 where id in
+        delete from rotograph  where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -111,8 +111,13 @@ public class RotographController extends BaseController
     public AjaxResult edit(@RequestParam("rotograph")String rotograph,@RequestParam(value = "file",required = false) MultipartFile file)
     {
         Rotograph rotograph1 = JSONObject.parseObject(rotograph, Rotograph.class);
-        String fileUploadUrl = fileUploadUtils.uploadImgUrl(file, "rotograph", "rotograph");
-        rotograph1.setImageUrl(fileUploadUrl);
+        if(file != null){
+            String fileUploadUrl = fileUploadUtils.uploadImgUrl(file, "rotograph", "rotograph");
+            rotograph1.setImageUrl(fileUploadUrl);
+        }else {
+            rotograph1.setImageUrl(null);
+        }
+
         return toAjax(rotographService.updateRotograph(rotograph1));
     }
 
