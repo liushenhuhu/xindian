@@ -99,7 +99,7 @@
         where patient_name_aes = #{patientName} and patient_phone_aes = #{patientPhone}
     </select>
     <select id="selectAlertLogListPatients" resultType="com.ruoyi.xindian.patient.domain.Patient">
-        select * from patient where patient_phone_aes is null limit #{start},#{end}
+        select * from patient limit #{start},#{end}
     </select>
 
     <insert id="insertPatient" parameterType="Patient">
@@ -173,7 +173,7 @@
         where patient_phone_aes = #{patientPhone}
     </update>
     <update id="updatePatientAes">
-        update patient set patient_phone_aes = #{patientPhoneAes}, patient_name_aes = #{patientNameAes} where patient_id=#{patientId}
+        update patient set  family_phone = #{familyPhone} where patient_id=#{patientId}
     </update>
 
     <delete id="deletePatientByPatientId" parameterType="Long">
