@@ -195,8 +195,8 @@
 
     <!-- 添加或修改医院对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="省份" prop="province">
+      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
+        <el-form-item label="省份" prop="province" >
           <el-input v-model="form.province" placeholder="请输入省份" />
         </el-form-item>
         <el-form-item label="医院名称" prop="hospitalName">
