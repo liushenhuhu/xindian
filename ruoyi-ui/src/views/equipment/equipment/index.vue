@@ -140,11 +140,7 @@
           <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="医院代号" align="center" prop="hospitalCode">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.hospital_name_list" :value="scope.row.hospitalCode"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
       <el-table-column label="科室" align="center" prop="equipmentName"/>
       <el-table-column label="设备种类" align="center" prop="equipmentType">
         <template slot-scope="scope">

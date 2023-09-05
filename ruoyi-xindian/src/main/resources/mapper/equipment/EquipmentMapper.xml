@@ -22,7 +22,23 @@
     </sql>
 
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
-        <include refid="selectEquipmentVo"/>
+        SELECT
+        hospital.hospital_name as hospital_code,
+        equipment_id,
+        equipment_code,
+        equipment_version,
+        equipment_status,
+        equipment_type,
+        p_id,
+        on_off_status,
+        department_code,
+        patient_phone_aes
+        FROM
+        equipment
+        INNER JOIN
+        hospital
+        ON
+        equipment.hospital_code = hospital.hospital_code
         <where>
             <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="equipmentVersion != null  and equipmentVersion != ''"> and equipment_version like concat('%', #{equipmentVersion}, '%')</if>
@@ -32,7 +48,7 @@
             <if test="patientPhone != null  and patientPhone != ''"> and patient_phone_aes like concat('%', #{patientPhone}, '%')</if>
             <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
             <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
-                and  hospital_code in
+                and  equipment.hospital_code in
                 <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
