@@ -18,13 +18,12 @@
                 <div class="textbox"><strong>门诊号:</strong> -</div>
                 <div class="textbox"><strong>住院号:</strong> -</div>
                 <div class="textbox"><strong>病人编号:</strong> -</div>
-                <div class="textbox"><strong>HR:</strong>{{ data.hr }}bpm</div>
-                <div class="textbox"><strong>PR:</strong>{{ data.pr }}ms</div>
-                <div class="textbox"><strong>QRS:</strong>{{ data.qrs }}ms</div>
-                <div class="textbox"><strong>QT/QTc:</strong>{{ data.qt }}ms/{{ data.qtc }}ms</div>
-                <div class="textbox"><strong>P/QRS/T:</strong>{{ data.p }}/{{ data.qrs_deg }}/{{ data.t }}deg</div>
-                <div class="textbox"><strong>PV5/SV1:</strong>{{ data.pv5 }}/{{ data.sv1 }}mV</div>
-                <div class="textbox"><strong>RV5/SV1:</strong>{{ data.rv5_sv1 }}mV</div>
+                <div class="textbox"><strong>心率:</strong>{{ data.hr }}bpm</div>
+                <div class="textbox"><strong>P波:</strong>{{ data.p }}ms</div>
+                <div class="textbox"><strong>PR间期:</strong>{{ data.pr }}ms</div>
+                <div class="textbox"><strong>QRS波群:</strong>{{ data.qrs }}ms</div>
+                <div class="textbox"><strong>QTc:</strong>{{ data.qtc }}ms</div>
+                <div class="textbox"><strong>HRV:</strong>{{ data.hrv }}ms</div>
               </div>
             </div>
             <div class="result1 size mmargin">
@@ -216,12 +215,7 @@ export default {
         gender: "",
         age: "",
         result: "",
-        hr: "",
-        pr: "",
-        qrs: "",
         qt: "",
-        qtc: "",
-        p: "",
         qrs_deg: "",
         t: "",
         pv5: "",
@@ -234,6 +228,12 @@ export default {
         bSuggest: "",
         cSuggest: "",
         patientSymptom:"无",
+        hr:'',
+        p:'',
+        pr:'',
+        qrs:'',
+        qtc:'',
+        hrv:''
       },
       markData: [
         {xAxis: 0},
@@ -560,7 +560,7 @@ export default {
       this.openV6 = false;
     },
     dialogForm(){
-      this.data.resultByDoctor = this.arr.toString()
+      this.data.resultByDoctor = this.data.resultByDoctor+this.arr.toString()
       this.dialogFormVisible=false;
     },
     //请求数据
@@ -599,6 +599,12 @@ export default {
           _th.data.gender = data.result.gender
           _th.data.name = data.result.patientName
           _th.data.result = data.result.intelligent_diagnosis
+          _th.data.hr=data.result.ecg_analysis_data["平均心率"]
+          _th.data.p=data.result.ecg_analysis_data["P波时限"]
+          _th.data.pr=data.result.ecg_analysis_data["PR间期"]
+          _th.data.qrs=data.result.ecg_analysis_data["QRS波时限"]
+          _th.data.qtc=data.result.ecg_analysis_data["QTc"]
+          _th.data.hrv=data.result.ecg_analysis_data["RMSSD"]
           _th.data.hr = data.result.ecg_analysis_data["平均心率"]
           _th.data.pr = data.result.ecg_analysis_data["PR_dis_avg"]
           _th.data.qrs = data.result.ecg_analysis_data["QRS_dis_avg"]
@@ -3183,6 +3189,13 @@ export default {
     },
     //保存数据
     btnUpload() {
+      if(this.data.resultByDoctor==''||this.data.resultByDoctor==null){
+        this.$message({
+          type: 'error',
+          message: '诊断结果不能为空!'
+        });
+        return
+      }
       var form = {
         pId: this.pId,
         diagnosisStatus: '1',
