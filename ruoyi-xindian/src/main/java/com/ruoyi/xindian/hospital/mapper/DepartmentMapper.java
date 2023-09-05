@@ -2,6 +2,8 @@ package com.ruoyi.xindian.hospital.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.Department;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 
 /**
  * 科室Mapper接口
@@ -63,4 +65,8 @@ public interface DepartmentMapper
 
 
     Department selectHospitalCodeDepartment(Department department);
+
+
+    List<ListValueAndLabelVO> depList();
+    List<DocVO> depGroupList();
 }

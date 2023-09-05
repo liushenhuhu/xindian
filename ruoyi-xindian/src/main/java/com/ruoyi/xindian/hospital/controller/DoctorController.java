@@ -252,6 +252,21 @@ public class DoctorController extends BaseController
 
 
 
+    @GetMapping("/docList")
+    public AjaxResult docList(Doctor doctor) throws Exception {
+        List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+        for (Doctor value:doctors){
+            if(!StringUtils.isEmpty(value.getDoctorName())){
+                value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
+            }
+            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+                value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
+            }
+        }
+        return AjaxResult.success(doctors);
+    }
+
+
     @GetMapping("/isDoc")
     public AjaxResult idDoc(){
         return AjaxResult.success(doctorService.selectIsDoc());

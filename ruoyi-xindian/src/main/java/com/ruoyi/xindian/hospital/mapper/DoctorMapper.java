@@ -2,7 +2,7 @@ package com.ruoyi.xindian.hospital.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.Doctor;
-import com.ruoyi.xindian.patient_management.vo.ListDocVO;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 
 /**
  * 医生Mapper接口
@@ -66,5 +66,5 @@ public interface DoctorMapper
      */
     public int deleteDoctorByDoctorIds(Long[] doctorIds);
 
-    List<ListDocVO> selectDoc();
+    List<ListValueAndLabelVO> selectDoc();
 }

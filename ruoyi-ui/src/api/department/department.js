@@ -16,6 +16,12 @@ export function getDepartment(departmentId) {
     method: 'get'
   })
 }
+export function depList() {
+  return request({
+    url: '/department/department/depList',
+    method: 'get'
+  })
+}
 
 // 新增科室
 export function addDepartment(data) {

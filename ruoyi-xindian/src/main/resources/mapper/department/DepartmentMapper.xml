@@ -42,6 +42,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDepartmentVo"/>
         where hospital_code = #{hospitalCode} and department_name = #{departmentName}
     </select>
+    <select id="depList" resultType="com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO">
+        SELECT
+            hospital.hospital_name as label,
+            hospital.hospital_code as `value`
+        FROM
+            hospital
+                INNER JOIN
+            department
+            ON
+                hospital.hospital_code = department.hospital_code
+        GROUP BY hospital.hospital_code
+    </select>
+    <select id="depGroupList" resultType="com.ruoyi.xindian.patient_management.vo.DocVO">
+        SELECT
+            department.department_name as label
+        FROM
+            department
+        GROUP BY department.department_name
+    </select>
 
     <insert id="insertDepartment" parameterType="Department" useGeneratedKeys="true" keyProperty="departmentId">
         insert into department

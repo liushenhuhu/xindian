@@ -77,6 +77,16 @@ public class EquipmentController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(Equipment equipment) throws Exception {
         List<Equipment> list = new ArrayList<>();
+
+        if (equipment.getDepartmentName()!=null&&!"".equals(equipment.getDepartmentName())){
+            Department department1 = new Department();
+            department1.setDepartmentName(equipment.getDepartmentName());
+
+            List<Department> departments1 = departmentService.selectDepartmentList(department1);
+            for (Department c:departments1){
+                equipment.getDepartmentCodeList().add(c.getDepartmentCode());
+            }
+        }
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalCode = sysUser.getHospitalCode();

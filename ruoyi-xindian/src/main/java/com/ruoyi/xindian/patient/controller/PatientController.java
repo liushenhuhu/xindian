@@ -122,6 +122,9 @@ public class PatientController extends BaseController
             if(pat.getPatientName() != null){
                 pat.setPatientName(aesUtils.decrypt(pat.getPatientName()));
             }
+            if (pat.getFamilyPhone()!=null&&!"".equals(pat.getFamilyPhone())){
+                pat.setFamilyPhone(aesUtils.decrypt(pat.getFamilyPhone()));
+            }
 //            if(pat.getPatientAge()==null || Objects.equals(pat.getPatientAge(), "")){
 //                pat.setPatientAge(appDataService.selectAppDataByPatientPhone(patient.getPatientPhone()).getPatientAge());
 //            }

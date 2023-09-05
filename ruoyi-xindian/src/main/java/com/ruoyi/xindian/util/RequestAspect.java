@@ -62,6 +62,10 @@ public class RequestAspect {
                     //需要加密的数据
                     dto.setPatientName(aesUtils.encrypt(dto.getPatientName()));
                 }
+                if(!StringUtils.isEmpty(dto.getPatientPhone())){
+                    //需要加密的数据
+                    dto.setPatientPhone(aesUtils.encrypt(dto.getPatientPhone()));
+                }
                 args[0] = dto;
                 return joinPoint.proceed(args);
             }

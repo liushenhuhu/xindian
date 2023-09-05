@@ -37,6 +37,12 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="departmentCodeList != null and departmentCodeList.size()>0">
+                and  department_code in
+                <foreach collection="departmentCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
         order by equipment_status desc
     </select>

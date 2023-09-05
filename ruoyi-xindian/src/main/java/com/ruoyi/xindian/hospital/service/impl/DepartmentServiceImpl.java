@@ -9,6 +9,8 @@ import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.hospital.mapper.DepartmentMapper;
@@ -121,5 +123,28 @@ public class DepartmentServiceImpl implements IDepartmentService
     @Override
     public Department selectCode(Department department) {
         return departmentMapper.selectHospitalCodeDepartment(department);
+    }
+
+    @Override
+    public List<ListValueAndLabelVO> depList() {
+        List<ListValueAndLabelVO> listValueAndLabelVOS = departmentMapper.depList();
+
+        for (ListValueAndLabelVO c :listValueAndLabelVOS){
+            Department department = new Department();
+            department.getHospitalCodeList().add(c.getValue());
+            List<Department> departments = departmentMapper.selectDepartmentList(department);
+            for (Department a :departments){
+                DocVO listValueAndLabelVO = new DocVO();
+                listValueAndLabelVO.setLabel(a.getDepartmentName());
+                listValueAndLabelVO.setValue(a.getDepartmentCode());
+                c.getChildren().add(listValueAndLabelVO);
+            }
+        }
+        return listValueAndLabelVOS;
+    }
+
+    @Override
+    public List<DocVO> depGroupList() {
+        return departmentMapper.depGroupList();
     }
 }

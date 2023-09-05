@@ -184,9 +184,9 @@
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
-            <el-form-item label="每日诊断次数" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.detectionNum }}</span>
-            </el-form-item>
+<!--            <el-form-item label="每日诊断次数" width="200" style="padding-left: 40px">-->
+<!--              <span>{{ scope.row.detectionNum }}</span>-->
+<!--            </el-form-item>-->
             <!--            <el-form-item label="医院" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.patientSource }}</span>
                         </el-form-item>-->

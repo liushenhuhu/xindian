@@ -11,7 +11,7 @@ import com.ruoyi.xindian.hospital.mapper.DoctorMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.patient_management.vo.DocVO;
-import com.ruoyi.xindian.patient_management.vo.ListDocVO;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -132,11 +132,11 @@ public class DoctorServiceImpl implements IDoctorService
     }
 
     @Override
-    public List<ListDocVO> listDoc() throws Exception {
+    public List<ListValueAndLabelVO> listDoc() throws Exception {
 
-        List<ListDocVO> listDocVOS = doctorMapper.selectDoc();
+        List<ListValueAndLabelVO> listDocVOS = doctorMapper.selectDoc();
 
-        for (ListDocVO c : listDocVOS){
+        for (ListValueAndLabelVO c : listDocVOS){
             Doctor doctor = new Doctor();
             doctor.getHospitalNameList().add(c.getLabel());
             List<Doctor> doctors = doctorMapper.selectDoctorList(doctor);
