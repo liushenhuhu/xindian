@@ -62,13 +62,23 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName">
+      <el-form-item label="患者电话" prop="patientPhone">
         <el-input
-          v-model="queryParams.hospitalName"
-          placeholder="请输入医院名称"
+          v-model="queryParams.patientPhone"
+          placeholder="请输入患者电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="医院名称" prop="hospitalCode">
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+          <el-option
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalCode">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="是否标注" prop="anoStatus">
         <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
@@ -264,10 +274,11 @@
 
 <script>
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
+import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "Alert_log_single",
-  dicts: ['sex', 'if_status'],
+  dicts: ['sex', 'if_status','hospital_name_list'],
   data() {
     return {
       currentScrollPos:0,
@@ -287,6 +298,7 @@ export default {
       alert_logList: [],
       // 弹出层标题
       title: "",
+      options:[],
       // 是否显示弹出层
       open: false,
       // 时间范围
@@ -331,6 +343,9 @@ export default {
     if (this.$route.query.pId) {
       this.queryParams.pId = this.$route.query.pId;
     }
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
     this.getList();
   },
 /*  activated() {

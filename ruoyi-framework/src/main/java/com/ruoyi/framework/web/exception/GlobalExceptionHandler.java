@@ -1,6 +1,8 @@
 package com.ruoyi.framework.web.exception;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -116,6 +118,11 @@ public class GlobalExceptionHandler
         return AjaxResult.error("服务器内部异常，请联系管理员！");
     }
 
+
+    @ExceptionHandler(CommunicationsException.class)
+    public Object handleCommunicationsException(CommunicationsException e){
+        return AjaxResult.error("网络异常，请检测网络");
+    }
     /**
      * 演示模式异常
      */

@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDoctorVo"/>
         where doctor_phone_aes = #{doctorPhone}
     </select>
-    <select id="selectDoc" resultType="com.ruoyi.xindian.patient_management.vo.ListDocVO">
+    <select id="selectDoc" resultType="com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO">
         SELECT hospital as label ,hospital as value
         FROM doctor
         GROUP BY hospital

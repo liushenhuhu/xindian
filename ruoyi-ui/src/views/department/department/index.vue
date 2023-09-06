@@ -83,11 +83,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="科室代号" align="center" prop="departmentCode" />
       <el-table-column label="科室名称" align="center" prop="departmentName" />
-      <el-table-column label="医院代号" align="center" prop="hospitalCode">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.hospital_name_list" :value="scope.row.hospitalCode"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -199,6 +195,7 @@ export default {
     getList() {
       this.loading = true;
       listDepartment(this.queryParams).then(response => {
+        console.log(response)
         this.departmentList = response.rows;
         this.total = response.total;
         this.loading = false;

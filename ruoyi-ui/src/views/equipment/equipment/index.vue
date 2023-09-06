@@ -28,12 +28,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="医院代号" prop="hospitalCode">
-        <el-input
-          v-model="queryParams.hospitalCode"
-          placeholder="请输入医院代号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+          <el-option
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalName">
+          </el-option>
+        </el-select>
       </el-form-item>
 <!--      <el-form-item label="科室代号" prop="departmentCode">-->
 <!--        <el-input-->
@@ -43,29 +45,17 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-<!--      <el-form-item label="科室" prop="departmentCode">-->
-        <!--        <el-input-->
-        <!--          v-model="queryParams.departmentCode"-->
-        <!--          placeholder="请输入科室代号"-->
-        <!--          clearable-->
-        <!--          @keyup.enter.native="handleQuery"-->
-        <!--        />-->
-<!--        <el-autocomplete-->
-<!--          popper-class="my-autocomplete"-->
-<!--          v-model="state"-->
-<!--          :fetch-suggestions="querySearch"-->
-<!--          placeholder="请输入科室"-->
-<!--          @select="handleSelect">-->
-<!--          <i-->
-<!--            class="el-icon-circle-close"-->
-<!--            slot="suffix"-->
-<!--            @click="handleIconClick">-->
-<!--          </i>-->
-<!--          <template slot-scope="{ item }">-->
-<!--            <div class="name">{{ item.value }}</div>-->
-<!--          </template>-->
-<!--        </el-autocomplete>-->
-<!--      </el-form-item>-->
+      <el-form-item label="科室" prop="departmentCode">
+<!--        <el-cascader :options="option" clearable v-model="queryParams.departmentCode"></el-cascader>-->
+        <el-select v-model="queryParams.departmentName" placeholder="请选择科室" clearable>
+          <el-option
+            v-for="item in option"
+            :key="item.label"
+            :label="item.label"
+            :value="item.label">
+          </el-option>
+        </el-select>
+      </el-form-item>
 
       <el-form-item label="设备种类" prop="equipmentType">
         <el-select v-model="queryParams.equipmentType" placeholder="请选择设备种类" clearable>
@@ -150,11 +140,7 @@
           <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="医院代号" align="center" prop="hospitalCode">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.hospital_name_list" :value="scope.row.hospitalCode"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
       <el-table-column label="科室" align="center" prop="equipmentName"/>
       <el-table-column label="设备种类" align="center" prop="equipmentType">
         <template slot-scope="scope">
@@ -272,7 +258,7 @@ import {updateMonitoringStatus} from "@/api/patient/patient";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
 import {updateOnline1, updateOnline2, updateOnlineAll} from "@/api/online/online";
 import {addDict, listHospitalId} from "@/api/hospital/hospital";
-import {listDepartment} from "@/api/department/department";
+import {depList, listDepartment} from "@/api/department/department";
 import {hospitalCodeFind} from "@/api/doctor/doctor";
 
 export default {
@@ -308,6 +294,7 @@ export default {
 
       // 状态列表
       statusList: [],
+      option:[],
 
       // 查询参数
       queryParams: {
@@ -318,6 +305,7 @@ export default {
         equipmentStatus: null,
         hospitalCode: null,
         departmentCode: null,
+        departmentName: null,
         equipmentType: null,
         patientPhone: null
       },
@@ -351,6 +339,13 @@ export default {
   },
 
   created() {
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
+    depList().then(r=>{
+      console.log(r)
+      this.option=r.data
+    })
     this.getList();
     this.loadAll();
   },
@@ -394,7 +389,7 @@ export default {
     getList() {
       this.loading = true;
       listEquipment(this.queryParams).then(response => {
-
+        console.log(response)
         this.equipmentList = response.rows;
         this.total = response.total;
 
@@ -433,6 +428,17 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams= {
+        pageNum: 1,
+          equipmentCode: null,
+          equipmentVersion: null,
+          equipmentStatus: null,
+          hospitalCode: null,
+          departmentCode: null,
+          departmentName: null,
+          equipmentType: null,
+          patientPhone: null
+      },
       this.resetForm("queryForm");
       this.handleQuery();
     },

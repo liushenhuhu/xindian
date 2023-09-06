@@ -94,6 +94,9 @@ public class AlertLogController extends BaseController {
             if (c.getPatientName()!=null&&!"".equals(c.getPatientName())){
                 c.setPatientName(aesUtils.decrypt(c.getPatientName()));
             }
+            if(c.getFamilyPhone()!=null&&!"".equals(c.getFamilyPhone())){
+                c.setFamilyPhone(aesUtils.decrypt(c.getFamilyPhone()));
+            }
         }
         return getDataTable(list);
     }
