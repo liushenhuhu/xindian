@@ -36,7 +36,7 @@ public class MarkController extends BaseController {
     @PostMapping("/addStatic")
     public AjaxResult addStatic(@RequestBody Mark mark){
         String state = "1";
-        mark.setpId(mark.getpId()+"-"+mark.getLevel());
+        mark.setpId(mark.getpId());
         //先查询，是否存在相同数据  Tag='pId'
         List<Mark> markList = checkMark(mark.getpId());
         //System.out.println("pId  ============= "+pId);
@@ -44,9 +44,6 @@ public class MarkController extends BaseController {
             state = deleteMark(markList.get(0).getpId());
         }
         if(state.equals("success") || state.equals("1")){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            mark.setDate(sdf.format(new Date()));
-            System.out.println(mark);
             List<Mark> list = new ArrayList<Mark>();
             list.add(mark);
             influxdbUtils.insertBatchByPoints(list,mark.getpId());
@@ -57,8 +54,7 @@ public class MarkController extends BaseController {
 
     @PostMapping("/checkMarkByTagId")
     public List<Mark> checkMarkByTagId(@RequestBody Mark mark) {
-        String tagId = mark.getpId()+"-"+mark.getLevel();
-        String queryCondition = " where \"pId\" = '"+tagId+"'";  //查询条件
+        String queryCondition = " where \"pId\" = '"+mark.getpId()+"'";  //查询条件
         // 此处查询所有内容,如果
         String queryCmd = "SELECT * FROM ecg_mark"
                 // 添加查询条件(注意查询条件选择tag值,选择field数值会严重拖慢查询速度)

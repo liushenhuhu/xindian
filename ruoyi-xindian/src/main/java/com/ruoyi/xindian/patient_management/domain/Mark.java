@@ -20,16 +20,8 @@ public class Mark {
 
     @Column(name="pId",tag=true)
     private String pId;
-    @Column(name="level")
-    private String level;
-    @Column(name="xArr")
-    private String xArr;
-    @Column(name="yArr")
-    private String yArr;
-    @Column(name="types")
-    private String types;
-    @Column(name="date")
-    private String date;
+    @Column(name="data")
+    private String data;
 
     @Column(name="time")
     private String time;
@@ -42,29 +34,7 @@ public class Mark {
         this.pId = pId;
     }
 
-    public String getxArr() {
-        return xArr;
-    }
 
-    public void setxArr(String xArr) {
-        this.xArr = xArr;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
 
     public String getTime() {
         return time;
@@ -74,31 +44,12 @@ public class Mark {
         this.time = time;
     }
 
-    public String getTypes() {
-        return types;
-    }
-
-    public void setTypes(String types) {
-        this.types = types;
-    }
-
-    public String getyArr() {
-        return yArr;
-    }
-
-    public void setyArr(String yArr) {
-        this.yArr = yArr;
-    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("pId", pId)
-                .append("level", level)
-                .append("xArr", xArr)
-                .append("yArr", yArr)
-                .append("types", types)
-                .append("date", date)
+                .append("date", data)
                 .append("time", time)
                 .toString();
     }
