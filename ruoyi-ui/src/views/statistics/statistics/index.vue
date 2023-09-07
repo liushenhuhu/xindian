@@ -50,7 +50,7 @@
         </el-form>
         <el-divider content-position="left">医生每月诊断次数统计图</el-divider>
         <el-card class="box-card">
-          <div id="myChart"  :style="{width: '100%', height: '100%'}"> </div>
+          <div id="myChart" class="myChart" > </div>
         </el-card>
 
 <!--        <div id="table1" style="align-content: center;display: none">-->
@@ -154,29 +154,65 @@ export default {
             "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
           axisLabel:{
             interval: 0,
-            rotate : 40,
+            //rotate : 40,
+          },
+          axisLine: {
+            show: true,
+            lineStyle:{
+              width:1,
+              type:"dotted"
+            }
+          },
+          axisTick: {
+            show: false
           }
         },
-        yAxis: {},
+        yAxis: {
+          axisLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            show: false
+          },
+          splitLine: {
+            show: false
+          },
+        },
         series: [{
           //name: '诊断次数',
           type: 'bar',
-          data: this.countArr
-        }],
-        label: {//饼图文字的显示
-          show: true, //默认  显示文字
-          position: 'top',
-          verticalAlign: 'middle',
-          textStyle: { // 数值样式
-            color: '#ed7d31',
-            fontSize: 12
+          data: this.countArr,
+          label: {//饼图文字的显示
+            show: true, //默认  显示文字
+            distance: 5.5,
+            position: 'top',
+            //verticalAlign: 'middle',
+            color: '#73C0DE',
+            fontSize: 18
+          },
+          itemStyle:{
+            normal:{
+              color:'#73C0DE',
+              barBorderRadius: [10, 10, 10, 10],
+              shadowBlur: 8,
+              shadowOffsetX: 3,
+              shadowOffsetY: -2,
+              shadowColor: "#73C0DE"
+            }
           }
-        },
+        }],
+
       });
-      setTimeout(function (){
+      setTimeout(()=>{
         myChart.resize()
         }
       )
+      window.addEventListener('resize', () => {
+        myChart.resize();
+      });
       myChart.on('click', function (params) {
 
         status.queryParams.month = status.lowNumber(params.name)
@@ -319,6 +355,10 @@ export default {
   height: 35vh;
   margin:0 auto;
   margin-bottom: 10px;
+}
+.myChart{
+  height: 35vh;
+  width: 100%;
 }
 ::v-deep .el-card__body{
   padding: 0;

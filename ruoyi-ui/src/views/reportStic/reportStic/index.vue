@@ -145,7 +145,10 @@ export default {
           }
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          splitLine:{
+            show:false
+          }
         },
         series: [
           {
@@ -153,6 +156,7 @@ export default {
             type: 'bar',
             itemStyle: {        //上方显示数值
               normal: {
+                color:'#432344',
                 label: {
                   show: true, //开启显示
                   position: 'top', //在上方显示
@@ -170,8 +174,8 @@ export default {
       window.addEventListener('resize', () => {
         myChart1.resize();
       });
-      myChart1.on('click', function (params) {
-
+      setTimeout(()=>{
+        myChart1.resize();
       })
     },
     chart2(){
@@ -186,7 +190,10 @@ export default {
           data: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          splitLine:{
+            show:false
+          }
         },
         series: [
           {
@@ -194,6 +201,7 @@ export default {
             type: 'bar',
             itemStyle: {        //上方显示数值
               normal: {
+                color:'#7f1313',
                 label: {
                   show: true, //开启显示
                   position: 'top', //在上方显示
@@ -208,6 +216,9 @@ export default {
         ]
       };
       myChart2.setOption(option,true)
+      setTimeout(()=>{
+        myChart2.resize();
+      })
       window.addEventListener('resize', () => {
         myChart2.resize();
       });
@@ -254,7 +265,7 @@ export default {
 }
 .chart{
   width: 100%;
-  height: 90%;
+  height: 38vh;
 }
 .el-card__body{
   height: 100%;

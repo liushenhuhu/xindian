@@ -17,7 +17,7 @@
       </div>
       <div class="callbody">
         <div class="text1"><span v-show="value!==null&&value!==''">{{label}}({{value}})</span></div>
-        <el-select v-model="value" placeholder="请选择" @change="select">
+        <el-select v-model="value" placeholder="请选择拨号人" @change="select">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -28,11 +28,18 @@
         <img class="icon" @click="callPhone" src="~@/assets/images/call.png">
       </div>
       <div class="text2">
-        <span>姓名</span>
-        <span>通话时长</span>
-        <span>通话时间</span>
+        <div class="in">
+          <span>姓名</span>
+          <span>通话时长</span>
+          <span>通话时间</span>
+        </div>
+        <div class="in" v-for="item in calldata" :key="item.id">
+          <span>{{item.role}}</span>
+          <span>{{item.duration}}</span>
+          <span>{{item.startTime}}</span>
+        </div>
       </div>
-      <el-input type="textarea" v-model="textarea"></el-input>
+<!--      <el-input type="textarea" v-model="textarea"></el-input>-->
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialog = false">确 定</el-button>
       </span>
@@ -41,7 +48,7 @@
     <div class="top">
       <el-button @click="back">动态检测大屏</el-button>
       <el-button @click="inScreen">全屏切换</el-button>
-<!--      <el-button @click="call">电话预警</el-button>-->
+      <el-button @click="call">电话预警</el-button>
       <!--      <el-button @click="outScreen">退出全屏</el-button>-->
       <div class="text">
         <span >姓名:{{data.patientName}}</span>
@@ -168,7 +175,9 @@ export default {
       ts:0,//时间段
       timer:null,
       chartjump:null,
-      index:0
+      index:0,
+      calldata:[],
+      pid:null,
     };
   },
   created() {
@@ -179,7 +188,7 @@ export default {
         return
       }
       this.getlist()
-      // this.getPhoneList()
+      //this.getPhoneList()
       // this.getsdkURL()
     }
   },
@@ -194,7 +203,7 @@ export default {
         return
       }
       this.getlist()
-      // this.getPhoneList()
+      //this.getPhoneList()
       // this.getsdkURL()
     }
   },
@@ -270,6 +279,8 @@ export default {
       })
   },
     getPhoneList(){
+      this.options=[]
+      this.calldata=[]
       request({ url: '/patient_management/patient_management/getPhone',
         method: 'get',
         params:{'deviceSn':this.deviceSn}
@@ -284,6 +295,17 @@ export default {
           }
         })
       })
+      request({ url: '/callLog/callLog/web/list',
+        method: 'get',
+        params:{'deviceSn':this.deviceSn}
+      }).then(res=>{
+        console.log(res)
+        this.pid=res.data.pid
+          res.data.list.forEach(item=>{
+            this.calldata.push(item)
+          })
+
+      })
     },
     select(val){
       this.options.forEach(item=>{
@@ -294,16 +316,16 @@ export default {
       })
     },
     callPhone(){
-
-      window.tccc.Call.startOutboundCall({
-        phoneNumber: '18336826103',
-      }).then((res) => {
-        this.sessionId = res.data.sessionId;
-      }).catch((err) => {
-        const error = err.errorMsg;
-      })
+      // window.tccc.Call.startOutboundCall({
+      //   phoneNumber: '18336826103',
+      // }).then((res) => {
+      //   this.sessionId = res.data.sessionId;
+      // }).catch((err) => {
+      //   const error = err.errorMsg;
+      // })
     },
     call(){
+      this.getPhoneList()
       this.dialog=true
     },
     getlist(){
@@ -6746,12 +6768,19 @@ export default {
   }
   .text2{
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     padding: 10px;
     color: white;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     margin-bottom: 20px;
+    .in{
+      display: flex;
+      justify-content: space-between;
+      padding: 6px;
+      color: #85edd8;
+      align-items: center;
+    }
   }
   .header-title{
     text-align: left;

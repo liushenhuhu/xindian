@@ -57,8 +57,8 @@ export default {
         return res;
       };
       // [起始最深颜色,结束的浅颜色]
-      let colorLeft = ["#3DA1FF", "#2749FC"];
-      let colorRight = ["#FB857D", "#F6504A"];
+      let colorLeft = ["#b75d5d", "#7F0E0F"];
+      let colorRight = ["#1c9898", "#105270"];
       let option = {
         // title: {
         //   // text: "男                      女",
@@ -166,7 +166,7 @@ export default {
               show: false,
             },
             splitLine: {
-              show: true,
+              show: false,
             },
             axisTick: {
               show: false,
@@ -209,7 +209,7 @@ export default {
               show: false,
             },
             splitLine: {
-              show: true,
+              show: false,
             },
             axisTick: {
               show: false,
@@ -227,6 +227,10 @@ export default {
             showBackground: true,
             backgroundStyle: {
               barBorderRadius: 30,
+              color:'#f5f0f0',
+              borderColor: "#7F0E0F",
+              borderWidth: 1,
+              borderType: "dotted"
             },
             xAxisIndex: 0,
             yAxisIndex: 0,
@@ -239,11 +243,7 @@ export default {
                 // 线性渐变，前四个参数分别是 x0, y0, x2, y2, 范围从 0 - 1，分别表示右,下,左,上。例如（0，0，0，1）表示从正上开始向下渐变；如果是（1，0，0，0），则是从正右开始向左渐变。
                 // 相当于在图形包围盒中的百分比，如果最后一个参数传 true，则该四个值是绝对的像素位置
                 color: new echarts.graphic.LinearGradient(
-                  0,
-                  0,
-                  1,
-                  0,
-                  [
+                  0, 0, 1, 0, [
                     {
                       offset: 0,
                       color: colorLeft[1], //指0%处的颜色
@@ -262,10 +262,10 @@ export default {
             label: {
               normal: {
                 show: true,
-                position: "insideRight",
+                position: "insideLeft",
                 textStyle: {
                   color: "#ffffff",
-                  fontSize: "12",
+                  fontSize: 15,
                 },
               },
             },
@@ -279,6 +279,10 @@ export default {
             showBackground: true,
             backgroundStyle: {
               barBorderRadius: 30,
+              color:'#e5f0f4',
+              borderColor: "#105270",
+              borderWidth: 1,
+              borderType: "dotted"
             },
             data: data2,
             barWidth: 20,
@@ -289,10 +293,7 @@ export default {
                 // 线性渐变，前四个参数分别是 x0, y0, x2, y2, 范围从 0 - 1，分别表示右,下,左,上。例如（0，0，0，1）表示从正上开始向下渐变；如果是（1，0，0，0），则是从正右开始向左渐变。
                 // 相当于在图形包围盒中的百分比，如果最后一个参数传 true，则该四个值是绝对的像素位置
                 color: new echarts.graphic.LinearGradient(
-                  0,
-                  0,
-                  1,
-                  0,
+                  0, 0, 1, 0,
                   [
                     {
                       offset: 0,
@@ -311,10 +312,10 @@ export default {
             label: {
               normal: {
                 show: true,
-                position: "insideLeft",
+                position: "insideRight",
                 textStyle: {
                   color: "#ffffff",
-                  fontSize: "12",
+                  fontSize: 15,
                 },
               },
             },

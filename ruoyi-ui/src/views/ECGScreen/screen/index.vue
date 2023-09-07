@@ -515,10 +515,10 @@ export default {
     dotColor(){
       return num => {
         if(Number(num)>=0.55){
+
           return 'background-color: red;';
         }
         if(Number(num)>=0.3&&Number(num)<=0.55){
-
           return 'background-color: #E1C943;';
         }
         return ;
@@ -641,7 +641,7 @@ export default {
           let chart =echarts.init(document.getElementById('child_0'))
           //this.setColor(0)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
+          chart.setOption(this.chart(this.data0, 0,this.p0Iy,this.p0V1y))
 
           let tag=1
           let ts=1
@@ -688,7 +688,7 @@ export default {
                 // console.log(tag)
                 //this.setColor(0)
                 chart.clear();
-                chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
+                chart.setOption(this.chart(this.data0, 0,this.p0Iy,this.p0V1y))
               }
             }
             else {
@@ -699,7 +699,7 @@ export default {
                 tag--
                 //this.setColor(0)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250,this.p0Iy,this.p0V1y))
+                chart.setOption(this.chart(this.data0, 1250,this.p0Iy,this.p0V1y))
               }
             }
           },5000)
@@ -735,7 +735,7 @@ export default {
           this.p1V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_1'))
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p1Iy,this.p1V1y))
+          chart.setOption(this.chart(this.data1, 0,this.p1Iy,this.p1V1y))
           //this.setColor(1)
           let tag=1
           let ts=1
@@ -779,7 +779,7 @@ export default {
                 })
                 if(code!==201){
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p2Iy, this.p2V1y))
+                  chart.setOption(this.chart(this.data1, 0, this.p2Iy, this.p2V1y))
                   //this.setColor(1)
                 }
               } else {
@@ -788,7 +788,7 @@ export default {
                 this.p1V1y = this.newData1.data.V1
                 tag--
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p1Iy, this.p1V1y))
+                chart.setOption(this.chart(this.data1, 1250, this.p1Iy, this.p1V1y))
                 //this.setColor(1)
               }
             }, 5000)
@@ -826,7 +826,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_2'))
           //this.setColor(2)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p2Iy,this.p2V1y))
+          chart.setOption(this.chart(this.data2, 0,this.p2Iy,this.p2V1y))
           let tag=1
           let ts=1
           let code=200
@@ -870,7 +870,7 @@ export default {
                 if(code!==201){
                   //this.setColor(2)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p2Iy, this.p2V1y))
+                  chart.setOption(this.chart(this.data2, 0, this.p2Iy, this.p2V1y))
                 }
 
               } else {
@@ -880,7 +880,7 @@ export default {
                 tag--
                 //this.setColor(2)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p2Iy, this.p2V1y))
+                chart.setOption(this.chart(this.data2, 1250, this.p2Iy, this.p2V1y))
               }
             }, 5000)
         }).catch(err=>{
@@ -916,7 +916,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_3'))
           //this.setColor(3)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p3Iy,this.p3V1y))
+          chart.setOption(this.chart(this.data3, 0,this.p3Iy,this.p3V1y))
           let tag=1
           let ts=1
           let code=200
@@ -959,7 +959,7 @@ export default {
                 if(code!==201){
                   //this.setColor(3)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p3Iy, this.p3V1y))
+                  chart.setOption(this.chart(this.data3, 0, this.p3Iy, this.p3V1y))
                 }
               } else {
                 this.data3 = this.newData3
@@ -968,7 +968,7 @@ export default {
                 tag--
                 //this.setColor(3)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p3Iy, this.p3V1y))
+                chart.setOption(this.chart(this.data3, 1250, this.p3Iy, this.p3V1y))
               }
             }, 5000)
 
@@ -1005,7 +1005,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_4'))
           //this.setColor(4)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p4Iy,this.p4V1y))
+          chart.setOption(this.chart(this.data4, 0,this.p4Iy,this.p4V1y))
           let tag=1
           let ts=1
           let code=200
@@ -1048,7 +1048,7 @@ export default {
                 if(code!==201){
                   //this.setColor(4)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p4Iy, this.p4V1y))
+                  chart.setOption(this.chart(this.data4, 0, this.p4Iy, this.p4V1y))
                 }
 
               } else {
@@ -1058,7 +1058,7 @@ export default {
                 tag--
                 //this.setColor(4)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p4Iy, this.p4V1y))
+                chart.setOption(this.chart(this.data4, 1250, this.p4Iy, this.p4V1y))
               }
             }, 5000)
         }).catch(err=>{
@@ -1094,7 +1094,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_5'))
           //this.setColor(5)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p5Iy,this.p5V1y))
+          chart.setOption(this.chart(this.data5, 0,this.p5Iy,this.p5V1y))
           let tag=1
           let ts=1
           let code=200
@@ -1137,7 +1137,7 @@ export default {
                 if(code!==201){
                   //this.setColor(5)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p5Iy, this.p5V1y))
+                  chart.setOption(this.chart(this.data5, 0, this.p5Iy, this.p5V1y))
                 }
               } else {
                 this.data5 = this.newData5
@@ -1146,7 +1146,7 @@ export default {
                 tag--
                 //this.setColor(5)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p5Iy, this.p5V1y))
+                chart.setOption(this.chart(this.data5, 1250, this.p5Iy, this.p5V1y))
               }
             }, 5000)
         }).catch(err=>{
@@ -1182,7 +1182,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_6'))
           //this.setColor(6)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p6Iy,this.p6V1y))
+          chart.setOption(this.chart(this.data6, 0,this.p6Iy,this.p6V1y))
           let tag=1
           let ts=1
           let code=200
@@ -1225,7 +1225,7 @@ export default {
                 if(code!==201){
                   //this.setColor(6)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p6Iy, this.p6V1y))
+                  chart.setOption(this.chart(this.data6, 0, this.p6Iy, this.p6V1y))
                 }
 
               } else {
@@ -1235,7 +1235,7 @@ export default {
                 tag--
                 //this.setColor(6)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p6Iy, this.p6V1y))
+                chart.setOption(this.chart(this.data6, 1250, this.p6Iy, this.p6V1y))
               }
             }, 5000)
 
@@ -1271,7 +1271,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_7'))
           //this.setColor(7)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p7Iy,this.p7V1y))
+          chart.setOption(this.chart(this.data7, 0,this.p7Iy,this.p7V1y))
           let tag=1
           let ts=1
           let code=200
@@ -1314,7 +1314,7 @@ export default {
                 if(code!==201){
                   //this.setColor(7)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p7Iy, this.p7V1y))
+                  chart.setOption(this.chart(this.data7, 0, this.p7Iy, this.p7V1y))
                 }
 
               } else {
@@ -1324,7 +1324,7 @@ export default {
                 tag--
                 //this.setColor(7)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p7Iy, this.p7V1y))
+                chart.setOption(this.chart(this.data7, 1250, this.p7Iy, this.p7V1y))
               }
             }, 5000)
 
@@ -1360,7 +1360,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_8'))
           //this.setColor(8)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p8Iy,this.p8V1y))
+          chart.setOption(this.chart(this.data8, 0,this.p8Iy,this.p8V1y))
           let tag=1
           let ts=1
           let code=200
@@ -1403,7 +1403,7 @@ export default {
                 if(code!==201){
                   //this.setColor(8)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p8Iy, this.p8V1y))
+                  chart.setOption(this.chart(this.data8, 0, this.p8Iy, this.p8V1y))
                 }
 
               } else {
@@ -1413,7 +1413,7 @@ export default {
                 tag--
                 //this.setColor(8)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p8Iy, this.p8V1y))
+                chart.setOption(this.chart(this.data8, 1250, this.p8Iy, this.p8V1y))
               }
             }, 5000)
 
@@ -1449,7 +1449,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_9'))
           //this.setColor(9)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p9Iy,this.p9V1y))
+          chart.setOption(this.chart(this.data9, 0,this.p9Iy,this.p9V1y))
           let tag=1
           let ts=1
           let code=200
@@ -1492,7 +1492,7 @@ export default {
                 if(code!==201){
                   //this.setColor(9)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p9Iy, this.p9V1y))
+                  chart.setOption(this.chart(this.data9, 0, this.p9Iy, this.p9V1y))
                 }
 
               } else {
@@ -1502,7 +1502,7 @@ export default {
                 tag--
                 //this.setColor(9)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p9Iy, this.p9V1y))
+                chart.setOption(this.chart(this.data9, 1250, this.p9Iy, this.p9V1y))
               }
             }, 5000)
 
@@ -1538,7 +1538,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_10'))
           //this.setColor(10)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p10Iy,this.p10V1y))
+          chart.setOption(this.chart(this.data10, 0,this.p10Iy,this.p10V1y))
           let tag=1
           let ts=1
           let code=200
@@ -1581,7 +1581,7 @@ export default {
                 if(code!==201){
                   //this.setColor(10)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p1Iy, this.p1V1y))
+                  chart.setOption(this.chart(this.data10, 0, this.p1Iy, this.p1V1y))
                 }
 
               } else {
@@ -1591,7 +1591,7 @@ export default {
                 tag--
                 //this.setColor(10)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p10Iy, this.p10V1y))
+                chart.setOption(this.chart(this.data10, 1250, this.p10Iy, this.p10V1y))
               }
             }, 5000)
         }).catch(err=>{
@@ -1626,7 +1626,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_11'))
           //this.setColor(11)
           chart.clear();
-          chart.setOption(this.chart(0, 0,this.p11Iy,this.p11V1y))
+          chart.setOption(this.chart(this.data11, 0,this.p11Iy,this.p11V1y))
           let tag=1
           let ts=1
           let code=200
@@ -1669,7 +1669,7 @@ export default {
                 if(code!==201){
                   //this.setColor(11)
                   chart.clear();
-                  chart.setOption(this.chart(0, 0, this.p11Iy, this.p11V1y))
+                  chart.setOption(this.chart(this.data11, 0, this.p11Iy, this.p11V1y))
                 }
               } else {
                 this.data11 = this.newData11
@@ -1678,7 +1678,7 @@ export default {
                 tag--
                 //this.setColor(11)
                 chart.clear();
-                chart.setOption(this.chart(0, 1250, this.p11Iy, this.p11V1y))
+                chart.setOption(this.chart(this.data11, 1250, this.p11Iy, this.p11V1y))
               }
             }, 5000)
 
@@ -1699,9 +1699,9 @@ export default {
       window.clearInterval(this.timer6);
       window.clearInterval(this.timer7);
       window.clearInterval(this.timer8);
-      window.clearInterval(this.timer9);
-      window.clearInterval(this.timer10);
-      window.clearInterval(this.timer11);
+      // window.clearInterval(this.timer9);
+      // window.clearInterval(this.timer10);
+      // window.clearInterval(this.timer11);
       this.timer0=null;
       this.timer1=null;
       this.timer2=null;
@@ -1711,9 +1711,9 @@ export default {
       this.timer6=null;
       this.timer7=null;
       this.timer8=null;
-      this.timer9=null;
-      this.timer10=null;
-      this.timer11=null;
+      // this.timer9=null;
+      // this.timer10=null;
+      // this.timer11=null;
     },
     clearList(){
         echarts.init(document.getElementById('child_0')).dispose()
@@ -1749,9 +1749,9 @@ export default {
       this.newData6={}
       this.newData7={}
       this.newData8={}
-      this.newData9={}
-      this.newData10={}
-      this.newData11={}
+      // this.newData9={}
+      // this.newData10={}
+      // this.newData11={}
       this.p0Iy=[]
       this.p0V1y=[]
       this.p1Iy=[]
@@ -1770,12 +1770,12 @@ export default {
       this.p7V1y=[]
       this.p8Iy=[]
       this.p8V1y=[]
-      this.p9Iy=[]
-      this.p9V1y=[]
-      this.p10Iy=[]
-      this.p10V1y=[]
-      this.p11Iy=[]
-      this.p11V1y=[]
+      // this.p9Iy=[]
+      // this.p9V1y=[]
+      // this.p10Iy=[]
+      // this.p10V1y=[]
+      // this.p11Iy=[]
+      // this.p11V1y=[]
       this.ts=0
     },
     handleCurrentChange(pages){
@@ -1846,70 +1846,18 @@ export default {
       }
       return timex
     },
-    setColor(i){
-      let data=null
-      switch(i) {
-        case 0:
-          data=this.data0
-          break;
-        case 1:
-          data=this.data1
-          break;
-        case 2:
-          data=this.data2
-          break;
-        case 3:
-          data=this.data3
-          break;
-        case 4:
-          data=this.data4
-          break;
-        case 5:
-          data=this.data5
-          break;
-        case 6:
-          data=this.data6
-          break;
-        case 7:
-          data=this.data7
-          break;
-        case 8:
-          data=this.data8
-          break;
-        case 9:
-          data=this.data9
-          break;
-        case 10:
-          data=this.data10
-          break;
-        case 11:
-          data=this.data11
-          break;
-      }
-      console.log(typeof Number(data.GengSi)+ data.GengSi)
-      if(Number(data.GengSi) >=0.5){
-        document.getElementById('span'+i+'-1').style.backgroundColor="red"
-      }
-      if(Number(data.FangChan)>=0.5){
-        document.getElementById('span'+i+'-2').style.backgroundColor="red"
-      }
-      if(Number(data.XSL_pr)>=0.5){
-        document.getElementById('span'+i+'-3').style.backgroundColor="red"
-      }
-      if(Number(data.RRGC_pr)>=0.5){
-        document.getElementById('span'+i+'-4').style.backgroundColor="red"
-      }
-      if(Number(data.ShiChan)>=0.5){
-        document.getElementById('span'+i+'-6').style.backgroundColor="red"
-      }
-    },
-    chart(id,j,pIy,pV1y){
+    chart(data,j,pIy,pV1y){
       this.time=this.timex()
       let p1Iy=[]
       let p1V1y=[]
+      let color='#92c2ff'
       for (let i = j; i < 1250+j; i++) {
         p1Iy.push(pIy[i])
         p1V1y.push(pV1y[i]-1)
+      }
+      if(Number(data.GengSi) >=0.55||Number(data.FangChan)>=0.55
+        ||Number(data.XSL_pr)>=0.55||Number(data.RRGC_pr)>=0.55||Number(data.ShiChan)>=0.55){
+       color='red'
       }
       // p1Iy=p1Iy.reverse()
       // p1V1y=p1V1y.reverse()
@@ -1959,7 +1907,9 @@ export default {
           splitLine: {
             interval: 249,
               show: true,
-              lineStyle: {opacity: 0.5,},
+              lineStyle: {opacity: 0.5,
+                //color: "#ff0000"
+              },
           } /*网格线*/
         },
         yAxis: {
@@ -1969,10 +1919,15 @@ export default {
             splitNumber: 3,
             axisLabel: { //修改坐标系字体颜色
             show: false,
-              textStyle: {color: "#8DB6DB"}
+              textStyle: {
+                color: "#8DB6DB"
+            }
           },
           splitLine: {
-            lineStyle: {opacity: 0.5,},
+            lineStyle: {
+              opacity: 0.5,
+              //color: "#ff0000"
+              },
             show: true
           } /*网格线*/
         },
@@ -1981,8 +1936,9 @@ export default {
             sampling: 'average',
             itemStyle: {
               normal: {
-                lineStyle: {color: '#92c2ff' /*折线的颜色*/},
-                color: "#66b3ff" /*图例(legend)的颜色,不是图例说明文字的颜色*/
+                lineStyle: {//color: '#92c2ff' /*折线的颜色*/
+                  color: color },
+                color: color /*图例(legend)的颜色,不是图例说明文字的颜色*/
               }
             },
             symbol: "none",

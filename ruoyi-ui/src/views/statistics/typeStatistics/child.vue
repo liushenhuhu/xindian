@@ -58,6 +58,7 @@ export default {
           data: this.yArr,
           itemStyle: {        //上方显示数值
             normal: {
+              color:'#c76e4a',
               label: {
                 show: true, //开启显示
                 position: 'top', //在上方显示

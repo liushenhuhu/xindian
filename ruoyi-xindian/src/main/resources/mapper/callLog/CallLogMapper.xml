@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.callLog.mapper.CallLogMapper">
+    
+    <resultMap type="CallLog" id="CallLogResult">
+        <result property="id"    column="id"    />
+        <result property="pId"    column="p_id"    />
+        <result property="role"    column="role"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="duration"    column="duration"    />
+        <result property="userName"    column="user_name"    />
+    </resultMap>
+
+    <sql id="selectCallLogVo">
+        select id, p_id, role, start_time, end_time, duration,user_name from call_log
+    </sql>
+
+    <select id="selectCallLogList" parameterType="CallLog" resultMap="CallLogResult">
+        <include refid="selectCallLogVo"/>
+        <where>  
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+            <if test="role != null  and role != ''"> and role = #{role}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="duration != null  and duration != ''"> and duration = #{duration}</if>
+        </where>
+    </select>
+    
+    <select id="selectCallLogById" parameterType="Long" resultMap="CallLogResult">
+        <include refid="selectCallLogVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectCallLogWebList" resultType="com.ruoyi.xindian.callLog.domain.CallLog">
+        <include refid="selectCallLogVo"/>
+        where p_id=#{pId}
+        limit 0,3
+    </select>
+    <select id="selectPidByDeviceSn" parameterType="String" resultType="Long">
+        select p.patient_id
+        from patient_management m inner join patient p on m.patient_phone_aes=p.patient_phone_aes
+        where m.online_status=1 and m.equipment_code=#{deviceSn}
+    </select>
+    <insert id="insertCallLog" parameterType="CallLog" useGeneratedKeys="true" keyProperty="id">
+        insert into call_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pId != null and pId != ''">p_id,</if>
+            <if test="role != null">role,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="duration != null">duration,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pId != null and pId != ''">#{pId},</if>
+            <if test="role != null">#{role},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="duration != null">#{duration},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCallLog" parameterType="CallLog">
+        update call_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pId != null and pId != ''">p_id = #{pId},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCallLogById" parameterType="Long">
+        delete from call_log where id = #{id}
+    </delete>
+
+    <delete id="deleteCallLogByIds" parameterType="String">
+        delete from call_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
