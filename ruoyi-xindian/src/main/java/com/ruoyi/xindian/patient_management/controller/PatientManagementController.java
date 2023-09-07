@@ -736,6 +736,10 @@ public class PatientManagementController extends BaseController {
 //            RolePhone a3 = new RolePhone("医生", aesUtils.decrypt(one.getDoctorPhone()));
 //            list.add(a3);
 //        }
+        RolePhone a3 = new RolePhone("医生", "");
+        list.add(a3);
+        RolePhone a2 = new RolePhone("家人", "");
+        list.add(a2);
         return AjaxResult.success(list);
     }
 

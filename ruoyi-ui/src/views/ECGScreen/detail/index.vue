@@ -16,13 +16,13 @@
         <span class="title-name">电话预警</span>
       </div>
       <div class="callbody">
-        <div class="text1"><span v-show="value!==null&&value!==''">{{label}}({{value}})</span></div>
-        <el-select v-model="value" placeholder="请选择拨号人" @change="select">
+        <div class="text1"><span>{{label}}({{value}})</span></div>
+        <el-select v-model="label" placeholder="请选择拨号人" @change="select">
           <el-option
             v-for="item in options"
-            :key="item.value"
+            :key="item.label"
             :label="item.label"
-            :value="item.value">
+            :value="{value:item.value,label:item.label}">
           </el-option>
         </el-select>
         <img class="icon" @click="callPhone" src="~@/assets/images/call.png">
@@ -224,7 +224,7 @@ export default {
     });
   },
   beforeDestroy(){
-   // console.log("关闭页面")
+   // //console.log("关闭页面")
     window.clearInterval(this.timer)
     this.timer=null
     this.data={}
@@ -233,7 +233,7 @@ export default {
     this.disposeList()
   },
   deactivated(){//keep-alive的隐藏的钩子函数
-  //  console.log("离开页面")
+  //  //console.log("离开页面")
     window.clearInterval(this.timer)
     this.timer=null
     this.data={}
@@ -285,21 +285,27 @@ export default {
         method: 'get',
         params:{'deviceSn':this.deviceSn}
       }).then(res=>{
-        console.log(res)
+        //console.log(res)
         if(res.data===undefined){
           return
         }
         res.data.forEach(item=>{
-          if(item.phone!==null){
+          if(item.role=="患者"){
+            this.value=item.phone
+            this.label=item.role
+          }
+          if(item.phone!==null||item.phone==""){
             this.options.push({value:item.phone?item.phone:"", label: item.role})
           }
+
         })
+        //console.log(this.options)
       })
       request({ url: '/callLog/callLog/web/list',
         method: 'get',
         params:{'deviceSn':this.deviceSn}
       }).then(res=>{
-        console.log(res)
+        ////console.log(res)
         this.pid=res.data.pid
           res.data.list.forEach(item=>{
             this.calldata.push(item)
@@ -308,12 +314,15 @@ export default {
       })
     },
     select(val){
+      ////console.log(val)
       this.options.forEach(item=>{
-        if(item.value===val){
+        if(item.label===val.label){
           this.label=item.label
+          this.value=item.value
           return
         }
       })
+      ////console.log(this.value)
     },
     callPhone(){
       // window.tccc.Call.startOutboundCall({
@@ -3031,12 +3040,12 @@ export default {
              },
            }
          ).then(res=>{
-           console.log(res.data)
+           //console.log(res.data)
            newData1=null
            newData1=res.data.result
            newData1.hr_mean=newData1.hr_mean.toFixed()
          }).catch(err=>{
-             // console.log("错误信息"+err)
+             // //console.log("错误信息"+err)
            })
         let ts=2
         if(this.timer){
@@ -3048,7 +3057,7 @@ export default {
               window.clearInterval(this.timer)
               this.timer=null
             }
-          console.log(newData1)
+          //console.log(newData1)
           if(newData1){
             ts++
             this.data=null
@@ -5733,12 +5742,12 @@ export default {
             newData1=res.data.result
             newData1.hr_mean=newData1.hr_mean.toFixed()
           }).catch(err=>{
-            // console.log("错误信息"+err)
+            // //console.log("错误信息"+err)
           })
         },10300)
 
       }).catch(err=>{
-        // console.log("错误信息"+err)
+        // //console.log("错误信息"+err)
       })
 
     },
