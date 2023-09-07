@@ -64,3 +64,10 @@ export function hospitalCodeFind(doctorId) {
   })
 }
 
+export function docList() {
+  return request({
+    url: '/doctor/doctor/docList',
+    method: 'get',
+    params: null
+  })
+}

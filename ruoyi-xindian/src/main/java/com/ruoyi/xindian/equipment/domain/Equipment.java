@@ -45,6 +45,8 @@ public class Equipment extends BaseEntity
     @Excel(name = "科室代号")
     private String departmentCode;
 
+    private String departmentName;
+
     /** 设备种类（静态动态） */
     @Excel(name = "设备种类", readConverterExp = "静=态动态")
     private String equipmentType;
@@ -64,6 +66,11 @@ public class Equipment extends BaseEntity
      * @return
      */
     private List<String> hospitalCodeList = new ArrayList<>();
+
+
+    private List<String> departmentCodeList = new ArrayList<>();
+
+
 
     public Equipment() {
     }

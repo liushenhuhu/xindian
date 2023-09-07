@@ -42,13 +42,13 @@
         />
       </el-form-item>
       <el-form-item label="医院名称" prop="hospitalName">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
           <el-option
-            v-for="dict in dict.type.hospital_name_list"
-            :key="dict.hospitalId"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalCode">
+          </el-option>
         </el-select>
       </el-form-item>
 <!--      <el-form-item label="设备号" prop="equipmentCode">
@@ -80,14 +80,14 @@
                 />
               </el-select>
             </el-form-item>-->
-<!--      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
         <el-input
           v-model="queryParams.intelligentDiagnosis"
           placeholder="请输入智能诊断"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
 <!--      <el-form-item label="诊断状态" prop="diagnosisStatus">-->
 <!--        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>-->
 <!--          <el-option-->
@@ -107,12 +107,14 @@
         />
       </el-form-item>-->
       <el-form-item label="诊断医生" prop="diagnosisDoctor">
-        <el-input
-          v-model="queryParams.diagnosisDoctor"
-          placeholder="请输入诊断医生"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.diagnosisDoctor" placeholder="请选择诊断医生" >
+          <el-option
+            v-for="item in option2"
+            :key="item.doctorId"
+            :label="item.doctorName"
+            :value="item.doctorName">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="风险等级" prop="ecgLevel">
         <el-select v-model="queryParams.ecgLevel" placeholder="请选择风险等级" clearable>
@@ -446,6 +448,8 @@ import axios from "axios";
 import $ from "jquery";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
+import {listHospitalId} from "@/api/hospital/hospital";
+import {docList} from "@/api/doctor/doctor";
 
 export default {
   name: "JECGsingleGZ_inDiagnosis",
@@ -471,12 +475,14 @@ export default {
         hospital:null,
       },
       option:[],
+      option2:[],
       value:[],
       dialogFormVisible:false,
       // 患者管理表格数据
       patient_managementList: [],
       // 弹出层标题
       title: "",
+      options:[],
       // 是否显示弹出层
       open: false,
       // 时间范围
@@ -532,6 +538,12 @@ export default {
   },
 
   created() {
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
+    docList().then(q=>{
+      this.option2=q.data
+    })
     this.getList();
   },
   methods: {

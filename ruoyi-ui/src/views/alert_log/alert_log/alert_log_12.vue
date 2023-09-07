@@ -62,13 +62,23 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName">
+      <el-form-item label="患者电话" prop="patientPhone">
         <el-input
-          v-model="queryParams.hospitalName"
-          placeholder="请输入医院名称"
+          v-model="queryParams.patientPhone"
+          placeholder="请输入患者电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="医院名称" prop="hospitalCode">
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+          <el-option
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalCode">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="是否标注" prop="anoStatus">
         <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
@@ -264,10 +274,11 @@
 
 <script>
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
+import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "Alert_log_12",
-  dicts: ['sex', 'if_status'],
+  dicts: ['sex', 'if_status','hospital_name_list'],
   data() {
     return {
       currentScrollPos:0,
@@ -277,6 +288,7 @@ export default {
       ids: [],
       // 非单个禁用
       single: true,
+      options:[],
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -304,7 +316,8 @@ export default {
         patientName: null,
         hospitalName: null,
         anoStatus: null,
-        ecgType: '12'
+        ecgType: '12',
+        patientPhone:null,
       },
       // 表单参数
       form: {},
@@ -331,6 +344,9 @@ export default {
     if (this.$route.query.pId) {
       this.queryParams.pId = this.$route.query.pId;
     }
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
     this.getList();
   },
 /*  activated() {
@@ -342,6 +358,7 @@ export default {
   methods: {
     /** 查询预警日志列表 */
     getList() {
+
       this.loading = true;
       this.queryParams.params = {};
       if (null != this.daterangeLogTime && '' != this.daterangeLogTime) {

@@ -15,7 +15,17 @@
       </div>
 
     <div class="mainbox" >
-      <div class="container" >
+      <div class="container">
+        <div class="event" v-if="data0!=null&&JSON.stringify(data0)!='{}'">
+          <div class="son">心机梗塞<span id="span0-1" :style="dotColor(data0.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span0-2" :style="dotColor(data0.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span0-3" :style="dotColor(data0.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span0-5"></span></div>
+          <div class="son">室颤室扑<span id="span0-6" :style="dotColor(data0.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span0-7"></span></div>
+          <div class="son">长RR间期<span id="span0-4" :style="dotColor(data0.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span0-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_0"></div>
           <!--          <div class="chart" id="chart_0"></div>-->
@@ -35,6 +45,16 @@
       </div>
 
       <div class="container">
+        <div class="event" v-if="data1!=null&&JSON.stringify(data1)!='{}'">
+          <div class="son">心机梗塞<span id="span1-1" :style="dotColor(data1.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span1-2" :style="dotColor(data1.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span1-3" :style="dotColor(data1.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span1-5"></span></div>
+          <div class="son">室颤室扑<span id="span1-6" :style="dotColor(data1.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span1-7"></span></div>
+          <div class="son">长RR间期<span id="span1-4" :style="dotColor(data1.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span1-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_1"></div>
           <div class="infleft" @click="jump(data1.deviceSn)">
@@ -53,6 +73,16 @@
       </div>
 
       <div class="container"  >
+        <div class="event" v-if="data2!=null&&JSON.stringify(data2)!='{}'">
+          <div class="son">心机梗塞<span id="span2-1" :style="dotColor(data2.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span2-2" :style="dotColor(data2.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span2-3" :style="dotColor(data2.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span2-5"></span></div>
+          <div class="son">室颤室扑<span id="span2-6" :style="dotColor(data2.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span2-7"></span></div>
+          <div class="son">长RR间期<span id="span2-4" :style="dotColor(data2.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span2-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_2"></div>
           <!--          <div class="chart" id="chart_0"></div>-->
@@ -72,6 +102,16 @@
       </div>
 
       <div class="container"  >
+        <div class="event"  v-if="data3!=null&&JSON.stringify(data3)!='{}'">
+          <div class="son">心机梗塞<span id="span3-1" :style="dotColor(data3.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span3-2" :style="dotColor(data3.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span3-3" :style="dotColor(data3.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span3-5"></span></div>
+          <div class="son">室颤室扑<span id="span3-6" :style="dotColor(data3.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span3-7"></span></div>
+          <div class="son">长RR间期<span id="span3-4" :style="dotColor(data3.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span3-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_3"></div>
           <!--          <div class="chart" id="chart_0"></div>-->
@@ -91,6 +131,16 @@
       </div>
 
       <div class="container" >
+        <div class="event"  v-if="data4!=null&&JSON.stringify(data4)!='{}'">
+          <div class="son">心机梗塞<span id="span4-1" :style="dotColor(data4.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span4-2" :style="dotColor(data4.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span4-3" :style="dotColor(data4.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span4-5"></span></div>
+          <div class="son">室颤室扑<span id="span4-6" :style="dotColor(data4.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span4-7"></span></div>
+          <div class="son">长RR间期<span id="span4-4" :style="dotColor(data4.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span4-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_4"></div>
           <!--          <div class="chart" id="chart_0"></div>-->
@@ -110,6 +160,16 @@
       </div>
 
       <div class="container" >
+        <div class="event"  v-if="data5!=null&&JSON.stringify(data5)!='{}'">
+          <div class="son">心机梗塞<span id="span5-1" :style="dotColor(data5.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span5-2" :style="dotColor(data5.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span5-3" :style="dotColor(data5.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span5-5"></span></div>
+          <div class="son">室颤室扑<span id="span5-6" :style="dotColor(data5.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span5-7"></span></div>
+          <div class="son">长RR间期<span id="span5-4" :style="dotColor(data5.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span5-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_5"></div>
           <div class="infleft" @click="jump(data5.deviceSn)">
@@ -128,6 +188,16 @@
       </div>
 
       <div class="container" >
+        <div class="event"  v-if="data6!=null&&JSON.stringify(data6)!='{}'">
+          <div class="son">心机梗塞<span id="span6-1" :style="dotColor(data6.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span6-2" :style="dotColor(data6.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span6-3" :style="dotColor(data6.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span6-5"></span></div>
+          <div class="son">室颤室扑<span id="span6-6" :style="dotColor(data6.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span6-7"></span></div>
+          <div class="son">长RR间期<span id="span6-4" :style="dotColor(data6.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span6-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_6"></div>
           <div class="infleft" @click="jump(data6.deviceSn)">
@@ -146,6 +216,16 @@
       </div>
 
       <div class="container" >
+        <div class="event"  v-if="data7!=null&&JSON.stringify(data7)!='{}'">
+          <div class="son">心机梗塞<span id="span7-1" :style="dotColor(data7.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span7-2" :style="dotColor(data7.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span7-3" :style="dotColor(data7.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span7-5"></span></div>
+          <div class="son">室颤室扑<span id="span7-6" :style="dotColor(data7.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span7-7"></span></div>
+          <div class="son">长RR间期<span id="span7-4" :style="dotColor(data7.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span7-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_7"></div>
           <!--          <div class="chart" id="chart_0"></div>-->
@@ -163,7 +243,18 @@
         </div>
         <div class="panel-footer"></div>
       </div>
+
       <div class="container" >
+        <div class="event"  v-if="data8!=null&&JSON.stringify(data8)!='{}'">
+          <div class="son">心机梗塞<span id="span8-1" :style="dotColor(data8.GengSi)"></span></div>
+          <div class="son">房颤房扑<span id="span8-2" :style="dotColor(data8.FangChan)"></span></div>
+          <div class="son">心室率过低<span id="span8-3" :style="dotColor(data8.XSL_pr)"></span></div>
+          <div class="son">室性心动过速<span id="span8-5"></span></div>
+          <div class="son">室颤室扑<span id="span8-6" :style="dotColor(data8.ShiChan)"></span></div>
+          <div class="son">窦室传导<span id="span8-7"></span></div>
+          <div class="son">长RR间期<span id="span8-4" :style="dotColor(data8.RRGC_pr)"></span></div>
+          <div class="son">QTc间期过长<span id="span8-8"></span></div>
+        </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_8"></div>
           <!--          <div class="chart" id="chart_0"></div>-->
@@ -181,58 +272,90 @@
         </div>
         <div class="panel-footer"></div>
       </div>
-      <div class="container" >
-        <div class="containcontent">
-          <div class="chart chartEvent" ref="chart" id="child_9"></div>
-          <div class="infleft" @click="jump(data9.deviceSn)">
-            <div class="name">心率:</div>
-            <div class="hart" ><span :style="color(data9.hr_mean)">{{data9.hr_mean}}</span></div>
-          </div>
-        </div>
-        <div class="containMsg" @click="jump(data9.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data9.patientName}}</span></div>
-          <div class="name" >性别:<span>{{data9.gender}}</span></div>
-          <div class="name" >年龄:<span>{{data9.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data9.hospName}}</span></div>
-          <div class="name" >设备号:<span>{{data9.deviceSn}}</span></div>
-        </div>
-        <div class="panel-footer"></div>
-      </div>
 
-      <div class="container" >
-        <div class="containcontent">
-          <div class="chart chartEvent" ref="chart" id="child_10"></div>
-          <div class="infleft" @click="jump(data10.deviceSn)">
-            <div class="name">心率:</div>
-            <div class="hart" ><span :style="color(data10.hr_mean)">{{data10.hr_mean}}</span></div>
-          </div>
-        </div>
-        <div class="containMsg" @click="jump(data10.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data10.patientName}}</span></div>
-          <div class="name" >性别:<span>{{data10.gender}}</span></div>
-          <div class="name" >年龄:<span>{{data10.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data10.hospName}}</span></div>
-          <div class="name" >设备号:<span>{{data10.deviceSn}}</span></div>
-        </div>
-        <div class="panel-footer"></div>
-      </div>
-      <div class="container" >
-        <div class="containcontent">
-          <div class="chart chartEvent" ref="chart" id="child_11"></div>
-          <div class="infleft" @click="jump(data11.deviceSn)">
-            <div class="name">心率:</div>
-            <div class="hart" ><span :style="color(data11.hr_mean)">{{data11.hr_mean}}</span></div>
-          </div>
-        </div>
-        <div class="containMsg" @click="jump(data11.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data11.patientName}}</span></div>
-          <div class="name" >性别:<span>{{data11.gender}}</span></div>
-          <div class="name" >年龄:<span>{{data11.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data11.hospName}}</span></div>
-          <div class="name" >设备号:<span>{{data11.deviceSn}}</span></div>
-        </div>
-        <div class="panel-footer"></div>
-      </div>
+<!--      <div class="container" >-->
+<!--        <div class="event"  v-if="data9!=null&&JSON.stringify(data9)!='{}'">-->
+<!--          <div class="son">心机梗塞<span id="span9-1" :style="dotColor(data9.GengSi)"></span></div>-->
+<!--          <div class="son">房颤房扑<span id="span9-2" :style="dotColor(data9.FangChan)"></span></div>-->
+<!--          <div class="son">心室率过低<span id="span9-3" :style="dotColor(data9.XSL_pr)"></span></div>-->
+<!--          <div class="son">长RR间期<span id="span9-4" :style="dotColor(data9.RRGC_pr)"></span></div>-->
+<!--          <div class="son">室性心动过速<span id="span9-5"></span></div>-->
+<!--          <div class="son">室颤室扑<span id="span9-6" :style="dotColor(data9.ShiChan)"></span></div>-->
+<!--          <div class="son">窦室传导<span id="span9-7"></span></div>-->
+<!--          <div class="son">QTc间期过长<span id="span9-8"></span></div>-->
+<!--        </div>-->
+<!--        <div class="containcontent">-->
+<!--          <div class="chart chartEvent" ref="chart" id="child_9"></div>-->
+<!--          <div class="infleft" @click="jump(data9.deviceSn)">-->
+<!--            <div class="name">心率:</div>-->
+<!--            <div class="hart" ><span :style="color(data9.hr_mean)">{{data9.hr_mean}}</span></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="containMsg" @click="jump(data9.deviceSn)" >-->
+<!--          <div class="name effect">姓名:<span>{{data9.patientName}}</span></div>-->
+<!--          <div class="name" >性别:<span>{{data9.gender}}</span></div>-->
+<!--          <div class="name" >年龄:<span>{{data9.age}}</span></div>-->
+<!--          <div class="name" >所属医院:<span>{{data9.hospName}}</span></div>-->
+<!--          <div class="name" >设备号:<span>{{data9.deviceSn}}</span></div>-->
+<!--        </div>-->
+<!--        <div class="panel-footer"></div>-->
+<!--      </div>-->
+
+<!--      <div class="container" >-->
+<!--        <div class="event"  v-if="data10!=null&&JSON.stringify(data10)!='{}'">-->
+<!--          <div class="son">心机梗塞<span id="span10-1" :style="dotColor(data10.GengSi)"></span></div>-->
+<!--          <div class="son">房颤房扑<span id="span10-2" :style="dotColor(data10.FangChan)"></span></div>-->
+<!--          <div class="son">心室率过低<span id="span10-3" :style="dotColor(data10.XSL_pr)"></span></div>-->
+<!--          <div class="son">长RR间期<span id="span10-4" :style="dotColor(data10.RRGC_pr)"></span></div>-->
+<!--          <div class="son">室性心动过速<span id="span10-5"></span></div>-->
+<!--          <div class="son">室颤室扑<span id="span10-6" :style="dotColor(data10.ShiChan)"></span></div>-->
+<!--          <div class="son">窦室传导<span id="span10-7"></span></div>-->
+<!--          <div class="son">QTc间期过长<span id="span10-8"></span></div>-->
+<!--        </div>-->
+<!--        <div class="containcontent">-->
+<!--          <div class="chart chartEvent" ref="chart" id="child_10"></div>-->
+<!--          <div class="infleft" @click="jump(data10.deviceSn)">-->
+<!--            <div class="name">心率:</div>-->
+<!--            <div class="hart" ><span :style="color(data10.hr_mean)">{{data10.hr_mean}}</span></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="containMsg" @click="jump(data10.deviceSn)" >-->
+<!--          <div class="name effect">姓名:<span>{{data10.patientName}}</span></div>-->
+<!--          <div class="name" >性别:<span>{{data10.gender}}</span></div>-->
+<!--          <div class="name" >年龄:<span>{{data10.age}}</span></div>-->
+<!--          <div class="name" >所属医院:<span>{{data10.hospName}}</span></div>-->
+<!--          <div class="name" >设备号:<span>{{data10.deviceSn}}</span></div>-->
+<!--        </div>-->
+<!--        <div class="panel-footer"></div>-->
+<!--      </div>-->
+
+<!--      <div class="container" >-->
+<!--        <div class="event"  v-if="data11!=null&&JSON.stringify(data11)!='{}'">-->
+<!--          <div class="son">心机梗塞<span id="span11-1" :style="dotColor(data11.GengSi)"></span></div>-->
+<!--          <div class="son">房颤房扑<span id="span11-2" :style="dotColor(data11.FangChan)"></span></div>-->
+<!--          <div class="son">心室率过低<span id="span11-3" :style="dotColor(data11.XSL_pr)"></span></div>-->
+<!--          <div class="son">长RR间期<span id="span11-4" :style="dotColor(data11.RRGC_pr)"></span></div>-->
+<!--          <div class="son">室性心动过速<span id="span11-5"></span></div>-->
+<!--          <div class="son">室颤室扑<span id="span11-6" :style="dotColor(data11.ShiChan)"></span></div>-->
+<!--          <div class="son">窦室传导<span id="span11-7"></span></div>-->
+<!--          <div class="son">QTc间期过长<span id="span11-8"></span></div>-->
+<!--        </div>-->
+<!--        <div class="containcontent">-->
+<!--          <div class="chart chartEvent" ref="chart" id="child_11"></div>-->
+<!--          <div class="infleft" @click="jump(data11.deviceSn)">-->
+<!--            <div class="name">心率:</div>-->
+<!--            <div class="hart" ><span :style="color(data11.hr_mean)">{{data11.hr_mean}}</span></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="containMsg" @click="jump(data11.deviceSn)" >-->
+<!--          <div class="name effect">姓名:<span>{{data11.patientName}}</span></div>-->
+<!--          <div class="name" >性别:<span>{{data11.gender}}</span></div>-->
+<!--          <div class="name" >年龄:<span>{{data11.age}}</span></div>-->
+<!--          <div class="name" >所属医院:<span>{{data11.hospName}}</span></div>-->
+<!--          <div class="name" >设备号:<span>{{data11.deviceSn}}</span></div>-->
+<!--        </div>-->
+<!--        <div class="panel-footer"></div>-->
+<!--      </div>-->
 
     </div>
 
@@ -388,8 +511,20 @@ export default {
         }
         return ;
       };
-
     },
+    dotColor(){
+      return num => {
+        if(Number(num)>=0.55){
+          return 'background-color: red;';
+        }
+        if(Number(num)>=0.3&&Number(num)<=0.55){
+
+          return 'background-color: #E1C943;';
+        }
+        return ;
+      };
+    }
+
   },
 
   methods: {
@@ -416,9 +551,9 @@ export default {
          // console.log(this.arr)
          let length =  res.data.result.dev_list.length;//总设备个数
          this.total=length;
-         this.pagenum = (length%12==0) ? (length/12) : length/12+1;//总页数
-           for (let i = 0; i < length; i+=12) {
-             this.currentpage.push(this.arr.slice(i,i+12))
+         this.pagenum = (length%9==0) ? (length/9) : length/9+1;//总页数
+           for (let i = 0; i < length; i+=9) {
+             this.currentpage.push(this.arr.slice(i,i+9))
            }
           this.$message.success({
             message: '设备列表获取成功',
@@ -467,15 +602,15 @@ export default {
         if(num>=9){
           this.list9()
         }
-        if(num>=10){
-          this.list10()
-        }
-        if(num>=11){
-          this.list11()
-        }
-        if(num>=12){
-          this.list12()
-        }
+        // if(num>=10){
+        //   this.list10()
+        // }
+        // if(num>=11){
+        //   this.list11()
+        // }
+        // if(num>=12){
+        //   this.list12()
+        // }
       }
       this.closeFullScreen()
     },
@@ -503,7 +638,8 @@ export default {
           this.data0 = res.data.result
           this.p0Iy=res.data.result.data.II;
           this.p0V1y=res.data.result.data.V1;
-          let chart =   echarts.init(document.getElementById('child_0'))
+          let chart =echarts.init(document.getElementById('child_0'))
+          //this.setColor(0)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
 
@@ -550,6 +686,7 @@ export default {
                 })
               if(code!==201){
                 // console.log(tag)
+                //this.setColor(0)
                 chart.clear();
                 chart.setOption(this.chart(0, 0,this.p0Iy,this.p0V1y))
               }
@@ -560,6 +697,7 @@ export default {
                 this.p0Iy= this.newData0.data.II
                 this.p0V1y=this.newData0.data.V1
                 tag--
+                //this.setColor(0)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250,this.p0Iy,this.p0V1y))
               }
@@ -598,6 +736,7 @@ export default {
           let chart =   echarts.init(document.getElementById('child_1'))
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p1Iy,this.p1V1y))
+          //this.setColor(1)
           let tag=1
           let ts=1
           let code=200
@@ -641,6 +780,7 @@ export default {
                 if(code!==201){
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p2Iy, this.p2V1y))
+                  //this.setColor(1)
                 }
               } else {
                 this.data1 = this.newData1
@@ -649,6 +789,7 @@ export default {
                 tag--
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p1Iy, this.p1V1y))
+                //this.setColor(1)
               }
             }, 5000)
 
@@ -683,6 +824,7 @@ export default {
           this.p2Iy=res.data.result.data.II;
           this.p2V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_2'))
+          //this.setColor(2)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p2Iy,this.p2V1y))
           let tag=1
@@ -726,6 +868,7 @@ export default {
                   // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(2)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p2Iy, this.p2V1y))
                 }
@@ -735,6 +878,7 @@ export default {
                 this.p2Iy = this.newData2.data.II
                 this.p2V1y = this.newData2.data.V1
                 tag--
+                //this.setColor(2)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p2Iy, this.p2V1y))
               }
@@ -770,6 +914,7 @@ export default {
           this.p3Iy=res.data.result.data.II;
           this.p3V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_3'))
+          //this.setColor(3)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p3Iy,this.p3V1y))
           let tag=1
@@ -812,6 +957,7 @@ export default {
                   // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(3)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p3Iy, this.p3V1y))
                 }
@@ -820,6 +966,7 @@ export default {
                 this.p3Iy = this.newData3.data.II
                 this.p3V1y = this.newData3.data.V1
                 tag--
+                //this.setColor(3)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p3Iy, this.p3V1y))
               }
@@ -856,6 +1003,7 @@ export default {
           this.p4Iy=res.data.result.data.II;
           this.p4V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_4'))
+          //this.setColor(4)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p4Iy,this.p4V1y))
           let tag=1
@@ -898,6 +1046,7 @@ export default {
                   // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(4)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p4Iy, this.p4V1y))
                 }
@@ -907,6 +1056,7 @@ export default {
                 this.p4Iy = this.newData4.data.II
                 this.p4V1y = this.newData4.data.V1
                 tag--
+                //this.setColor(4)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p4Iy, this.p4V1y))
               }
@@ -942,6 +1092,7 @@ export default {
           this.p5Iy=res.data.result.data.II;
           this.p5V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_5'))
+          //this.setColor(5)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p5Iy,this.p5V1y))
           let tag=1
@@ -984,6 +1135,7 @@ export default {
                   // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(5)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p5Iy, this.p5V1y))
                 }
@@ -992,6 +1144,7 @@ export default {
                 this.p5Iy = this.newData5.data.II
                 this.p5V1y = this.newData5.data.V1
                 tag--
+                //this.setColor(5)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p5Iy, this.p5V1y))
               }
@@ -1027,6 +1180,7 @@ export default {
           this.p6Iy=res.data.result.data.II;
           this.p6V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_6'))
+          //this.setColor(6)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p6Iy,this.p6V1y))
           let tag=1
@@ -1069,6 +1223,7 @@ export default {
                   // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(6)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p6Iy, this.p6V1y))
                 }
@@ -1078,6 +1233,7 @@ export default {
                 this.p6Iy = this.newData6.data.II
                 this.p6V1y = this.newData6.data.V1
                 tag--
+                //this.setColor(6)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p6Iy, this.p6V1y))
               }
@@ -1113,6 +1269,7 @@ export default {
           this.p7Iy=res.data.result.data.II;
           this.p7V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_7'))
+          //this.setColor(7)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p7Iy,this.p7V1y))
           let tag=1
@@ -1155,6 +1312,7 @@ export default {
                   // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(7)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p7Iy, this.p7V1y))
                 }
@@ -1164,6 +1322,7 @@ export default {
                 this.p7Iy = this.newData7.data.II
                 this.p7V1y = this.newData7.data.V1
                 tag--
+                //this.setColor(7)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p7Iy, this.p7V1y))
               }
@@ -1199,6 +1358,7 @@ export default {
           this.p8Iy=res.data.result.data.II;
           this.p8V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_8'))
+          //this.setColor(8)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p8Iy,this.p8V1y))
           let tag=1
@@ -1241,6 +1401,7 @@ export default {
                   // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(8)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p8Iy, this.p8V1y))
                 }
@@ -1250,6 +1411,7 @@ export default {
                 this.p8Iy = this.newData8.data.II
                 this.p8V1y = this.newData8.data.V1
                 tag--
+                //this.setColor(8)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p8Iy, this.p8V1y))
               }
@@ -1285,6 +1447,7 @@ export default {
           this.p9Iy=res.data.result.data.II;
           this.p9V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_9'))
+          //this.setColor(9)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p9Iy,this.p9V1y))
           let tag=1
@@ -1327,6 +1490,7 @@ export default {
                   // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(9)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p9Iy, this.p9V1y))
                 }
@@ -1336,6 +1500,7 @@ export default {
                 this.p9Iy = this.newData9.data.II
                 this.p9V1y = this.newData9.data.V1
                 tag--
+                //this.setColor(9)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p9Iy, this.p9V1y))
               }
@@ -1371,6 +1536,7 @@ export default {
           this.p10Iy=res.data.result.data.II;
           this.p10V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_10'))
+          //this.setColor(10)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p10Iy,this.p10V1y))
           let tag=1
@@ -1413,6 +1579,7 @@ export default {
                   // // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(10)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p1Iy, this.p1V1y))
                 }
@@ -1422,6 +1589,7 @@ export default {
                 this.p10Iy = this.newData10.data.II
                 this.p10V1y = this.newData10.data.V1
                 tag--
+                //this.setColor(10)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p10Iy, this.p10V1y))
               }
@@ -1456,6 +1624,7 @@ export default {
           this.p11Iy=res.data.result.data.II;
           this.p11V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_11'))
+          //this.setColor(11)
           chart.clear();
           chart.setOption(this.chart(0, 0,this.p11Iy,this.p11V1y))
           let tag=1
@@ -1498,6 +1667,7 @@ export default {
                   // // console.log("请求错误" + err)
                 })
                 if(code!==201){
+                  //this.setColor(11)
                   chart.clear();
                   chart.setOption(this.chart(0, 0, this.p11Iy, this.p11V1y))
                 }
@@ -1506,6 +1676,7 @@ export default {
                 this.p11Iy = this.newData11.data.II
                 this.p11V1y = this.newData11.data.V1
                 tag--
+                //this.setColor(11)
                 chart.clear();
                 chart.setOption(this.chart(0, 1250, this.p11Iy, this.p11V1y))
               }
@@ -1554,9 +1725,9 @@ export default {
         echarts.init(document.getElementById('child_6')).dispose()
         echarts.init(document.getElementById('child_7')).dispose()
         echarts.init(document.getElementById('child_8')).dispose()
-        echarts.init(document.getElementById('child_9')).dispose()
-        echarts.init(document.getElementById('child_10')).dispose()
-        echarts.init(document.getElementById('child_11')).dispose()
+        // echarts.init(document.getElementById('child_9')).dispose()
+        // echarts.init(document.getElementById('child_10')).dispose()
+        // echarts.init(document.getElementById('child_11')).dispose()
       this.data0={}
       this.data1={}
       this.data2={}
@@ -1613,6 +1784,9 @@ export default {
       this.pages=pages
       this.openLoading()
       // // console.log("当前页"+this.pages)
+      console.log(this.pages)
+      console.log(this.pagenum)
+      console.log(this.currentpage)
       if(this.pagenum>=this.pages){
         const num=this.currentpage[this.pages-1].length
         if(num>=1){
@@ -1642,15 +1816,15 @@ export default {
         if(num>=9){
           this.list9()
         }
-        if(num>=10){
-          this.list10()
-        }
-        if(num>=11){
-          this.list11()
-        }
-        if(num>=12){
-          this.list12()
-        }
+        // if(num>=10){
+        //   this.list10()
+        // }
+        // if(num>=11){
+        //   this.list11()
+        // }
+        // if(num>=12){
+        //   this.list12()
+        // }
       }
       this.closeFullScreen()
     },
@@ -1671,6 +1845,63 @@ export default {
         timex.pop();
       }
       return timex
+    },
+    setColor(i){
+      let data=null
+      switch(i) {
+        case 0:
+          data=this.data0
+          break;
+        case 1:
+          data=this.data1
+          break;
+        case 2:
+          data=this.data2
+          break;
+        case 3:
+          data=this.data3
+          break;
+        case 4:
+          data=this.data4
+          break;
+        case 5:
+          data=this.data5
+          break;
+        case 6:
+          data=this.data6
+          break;
+        case 7:
+          data=this.data7
+          break;
+        case 8:
+          data=this.data8
+          break;
+        case 9:
+          data=this.data9
+          break;
+        case 10:
+          data=this.data10
+          break;
+        case 11:
+          data=this.data11
+          break;
+      }
+      console.log(typeof Number(data.GengSi)+ data.GengSi)
+      if(Number(data.GengSi) >=0.5){
+        document.getElementById('span'+i+'-1').style.backgroundColor="red"
+      }
+      if(Number(data.FangChan)>=0.5){
+        document.getElementById('span'+i+'-2').style.backgroundColor="red"
+      }
+      if(Number(data.XSL_pr)>=0.5){
+        document.getElementById('span'+i+'-3').style.backgroundColor="red"
+      }
+      if(Number(data.RRGC_pr)>=0.5){
+        document.getElementById('span'+i+'-4').style.backgroundColor="red"
+      }
+      if(Number(data.ShiChan)>=0.5){
+        document.getElementById('span'+i+'-6').style.backgroundColor="red"
+      }
     },
     chart(id,j,pIy,pV1y){
       this.time=this.timex()
@@ -1705,9 +1936,9 @@ export default {
         },
         grid: {
           left: 17,
-            right: 15,
-            top: 20,
-            bottom: 20
+          right: 15,
+          top: 20,
+          bottom: 16
         },
         legend: {
           data: ['II导联', 'V1导联'],
@@ -1851,6 +2082,8 @@ export default {
 .home{
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   .title {
     display: flex;
     flex-direction: row;
@@ -1899,26 +2132,53 @@ export default {
   align-content: space-around;
   width:100%;
   min-height: 90vh;
+  flex: 1;
   background-color: rgb(3,4,74);
   .container {
     width: 33%;
     height: 20%;
-    min-height: 21vh;
+    min-height: 30vh;//21
     position: relative;
     border: 1px solid rgba(25, 186, 139, 0.17);
     background: url("~@/assets/images/container.png");
     padding: 0.3vw 0.1vw;
     margin-bottom: .5vw;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    .event{
+      display: flex;
+      font-size: 1vw;
+      flex-wrap: wrap;
+      justify-content: center;
+      color:#6EDDF1;
+      .son{
+        width: 23%;
+        text-align: center;
+        span{
+          display: inline-block;
+          width: 0.7vw;
+          height: 0.7vw;
+          margin-left: 2px;
+          border-radius: 50%;
+          background-color: #62be38;
+        }
+      }
+
+    }
     .containcontent{
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      height: 80%;
+      height: 20vh;
       .chart{
         width: 100%;
-        height: 18vh;
+        height: 19vh;
+      }
+      .chartEvent{
+
       }
       .infleft{
         display: flex;

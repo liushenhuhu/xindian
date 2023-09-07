@@ -43,13 +43,13 @@
         />
       </el-form-item>-->
       <el-form-item label="医院名称" prop="hospitalName">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
           <el-option
-            v-for="dict in dict.type.hospital_name_list"
-            :key="dict.hospitalId"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalCode">
+          </el-option>
         </el-select>
       </el-form-item>
 <!--      <el-form-item label="设备号" prop="equipmentCode">
@@ -81,15 +81,15 @@
                 />
               </el-select>
             </el-form-item>-->
-<!--      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
         <el-input
           v-model="queryParams.intelligentDiagnosis"
           placeholder="请输入智能诊断"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
-<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">-->
+      </el-form-item>
+<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">&ndash;&gt;-->
 <!--        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>-->
 <!--          <el-option-->
 <!--            v-for="dict in dict.type.diagnosis_status"-->
@@ -107,14 +107,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="诊断医生" prop="diagnosisDoctor">
-        <el-input
-          v-model="queryParams.diagnosisDoctor"
-          placeholder="请输入诊断医生"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="诊断医生" prop="diagnosisDoctor">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.diagnosisDoctor"-->
+<!--          placeholder="请输入诊断医生"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="风险等级" prop="ecgLevel">
         <el-select v-model="queryParams.ecgLevel" placeholder="请选择风险等级" clearable>
           <el-option
@@ -125,14 +125,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="医生电话" prop="doctorPhone">
-        <el-input
-          v-model="queryParams.doctorPhone"
-          placeholder="请输入医生电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="医生电话" prop="doctorPhone">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.doctorPhone"-->
+<!--          placeholder="请输入医生电话"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="患者管理id" prop="pId">
         <el-input
           v-model="queryParams.pId"
@@ -443,6 +443,7 @@ import axios from "axios";
 import $ from "jquery";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
+import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "JECGsingleGZ",
@@ -484,6 +485,7 @@ export default {
       open: false,
       // 时间范围
       daterangeConnectionTime: [],
+      options:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -535,6 +537,9 @@ export default {
   },
 
   created() {
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
     this.getList();
   },
   methods: {

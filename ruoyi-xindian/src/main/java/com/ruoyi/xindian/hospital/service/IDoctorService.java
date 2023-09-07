@@ -1,7 +1,7 @@
 package com.ruoyi.xindian.hospital.service;
 
 import com.ruoyi.xindian.hospital.domain.Doctor;
-import com.ruoyi.xindian.patient_management.vo.ListDocVO;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 
 import java.util.List;
 
@@ -68,7 +68,7 @@ public interface IDoctorService
     /**
      * 查询医院所在医生
      */
-    List<ListDocVO> listDoc() throws Exception;
+    List<ListValueAndLabelVO> listDoc() throws Exception;
 
 
     List<Doctor> selectUserDoc(Doctor doctor);

@@ -16,12 +16,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectDepartmentList" parameterType="Department" resultMap="DepartmentResult">
-        <include refid="selectDepartmentVo"/>
+        SELECT
+        hospital.hospital_name as hospital_code,
+        department_id,
+        department_code,
+        department_name
+        FROM
+        department
+        INNER JOIN
+        hospital
+        ON
+        department.hospital_code = hospital.hospital_code
         <where>  
             <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
             <if test="departmentName != null  and departmentName != ''"> and department_name like concat('%', #{departmentName}, '%')</if>
             <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
-                and  hospital_code in
+                and  department.hospital_code in
                 <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
@@ -41,6 +51,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectHospitalCodeDepartment" resultType="com.ruoyi.xindian.hospital.domain.Department">
         <include refid="selectDepartmentVo"/>
         where hospital_code = #{hospitalCode} and department_name = #{departmentName}
+    </select>
+    <select id="depList" resultType="com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO">
+        SELECT
+            hospital.hospital_name as label,
+            hospital.hospital_code as `value`
+        FROM
+            hospital
+                INNER JOIN
+            department
+            ON
+                hospital.hospital_code = department.hospital_code
+        GROUP BY hospital.hospital_code
+    </select>
+    <select id="depGroupList" resultType="com.ruoyi.xindian.patient_management.vo.DocVO">
+        SELECT
+            department.department_name as label
+        FROM
+            department
+        GROUP BY department.department_name
     </select>
 
     <insert id="insertDepartment" parameterType="Department" useGeneratedKeys="true" keyProperty="departmentId">

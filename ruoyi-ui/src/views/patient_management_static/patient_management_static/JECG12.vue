@@ -42,13 +42,13 @@
         />
       </el-form-item>
       <el-form-item label="医院名称" prop="hospitalName">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
           <el-option
-            v-for="dict in dict.type.hospital_name_list"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalCode">
+          </el-option>
         </el-select>
       </el-form-item>
 <!--      <el-form-item label="设备号" prop="equipmentCode">
@@ -80,14 +80,14 @@
                 />
               </el-select>
             </el-form-item>-->
-<!--      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
+      <el-form-item label="智能诊断" prop="intelligentDiagnosis">
         <el-input
           v-model="queryParams.intelligentDiagnosis"
           placeholder="请输入智能诊断"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
 <!--      <el-form-item label="诊断状态" prop="diagnosisStatus">
         <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
           <el-option
@@ -127,14 +127,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="医生电话" prop="doctorPhone">
-        <el-input
-          v-model="queryParams.doctorPhone"
-          placeholder="请输入医生电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="医生电话" prop="doctorPhone">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.doctorPhone"-->
+<!--          placeholder="请输入医生电话"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <!--      <el-form-item label="pId" prop="pId">-->
       <!--        <el-input-->
       <!--          v-model="queryParams.pId"-->
@@ -450,6 +450,7 @@ import {updateOnlineAll} from "@/api/online/online";
 import {addReport} from "@/api/report/report";
 import {listDoctorName} from "@/api/doctor/doctor";
 import th from "element-ui/src/locale/lang/th";
+import {listHospitalId} from "@/api/hospital/hospital";
 
 
 export default {
@@ -541,6 +542,9 @@ export default {
   },
 
   created() {
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
     listDoctorName().then(response => {
       console.log(response)
       for (var i = 0; i < response.length; i++) {
