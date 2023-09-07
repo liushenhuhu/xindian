@@ -182,29 +182,35 @@ export default {
       videoVisible: false,//echarts弹出框显示
       markdata: [
         {xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
+        {xAxis: 20},
+        {xAxis: 40},
+        {xAxis: 60},
+        {xAxis: 80},
         {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
+        {xAxis: 120},
+        {xAxis: 140},
+        {xAxis: 160},
+        {xAxis: 180},
         {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
+        {xAxis: 220},
+        {xAxis: 240},
+        {xAxis: 260},
+        {xAxis: 280},
         {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
+        {xAxis: 320},
+        {xAxis: 340},
+        {xAxis: 360},
+        {xAxis: 380},
         {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
+        {xAxis: 420},
+        {xAxis: 440},
+        {xAxis: 460},
+        {xAxis: 480},
         {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
+        {xAxis: 520},
+        {xAxis: 540},
+        {xAxis: 560},
+        {xAxis: 580},
         {xAxis: 600},
         {yAxis: -1},
         {yAxis: -0.5},
@@ -283,6 +289,16 @@ export default {
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
+        if (!this.data.doctorName){
+          const date = new Date();
+          const year = date.getFullYear().toString().padStart(4, '0');
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const day = date.getDate().toString().padStart(2, '0');
+          const hour = date.getHours().toString().padStart(2, '0');
+          const minute = date.getMinutes().toString().padStart(2, '0');
+          const second = date.getSeconds().toString().padStart(2, '0');
+          this.data.diagnosisData=`${year}-${month}-${day} ${hour}:${minute}:${second}`
+        }
         console.log(this.data)
       });
     }
@@ -457,8 +473,8 @@ export default {
           chart1.setOption({
             title: {
               text: "",
-              top: 0,
-              left: 0,
+              top: 5,
+              left: 5,
             },
             grid: {
               left: '1',
@@ -470,25 +486,23 @@ export default {
             xAxis: {
               type: 'category',
               data: _th.x,
-              // position:"bottom",
               axisLabel: {
-                show: false,//x 轴刻度数字
-                interval: 4,//中间隔4个数字
+                show: false,
+                interval: 3,
               },
               axisTick: {
-                show: false//x轴刻度线
+                show: false
               },
               axisLine: {
-                show: false//x轴线
+                show: false
               },
-              //interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-                  ////opacity: 100,//透明度
+                  ////opacity: 0.6,//透明度
                 }
               }
             },
@@ -505,7 +519,6 @@ export default {
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
-              minInterval: 1,
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
@@ -513,7 +526,6 @@ export default {
                   width: 0.5, //网格的宽度
                   type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
                   ////opacity: 0.6,//透明度
-
                 }
               },
               max: 1,
@@ -573,7 +585,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -2460,7 +2472,7 @@ export default {
 }
 
 .line {
-  height: 9vw;
+  height: 15vh;
   width: 55vw;
   margin: 0;
   padding: 0;

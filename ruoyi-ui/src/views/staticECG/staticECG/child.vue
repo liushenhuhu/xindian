@@ -39,7 +39,7 @@
           width="220"
           trigger="hover">
           <p class="tipck">1. 左上角按钮可以选择类型;</p>
-          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>
+<!--          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>-->
           <p class="tipck">3. 左键单击点，可以删除点;</p>
           <p class="tipck">4. 右键单击可以描点。</p>
           <el-button slot="reference"><i class="el-icon-info icon"></i></el-button>
@@ -119,10 +119,11 @@
           @contextmenu="handleContextmenu"
           @mousedown.left="handleMousedown"
           @mouseup.left="handleMouseup"
-          @mousemove="handleMousemove"
+
           @click.left="handleClickLeft"
           @click.right="handleClickRight"
         ></canvas>
+        <!--  @mousemove="handleMousemove"-->
         <!--    @mousewheel="handleMouseWheel"    -->
       </div>
     </div>
@@ -200,6 +201,13 @@ export default {
       x1: "",
       pId: "",
       level: "",
+      arrList1:[],
+      arrList2:[],
+      arrList3:[],
+      arrList4:[],
+      arrList5:[],
+      arrList6:[],
+      arrList7:[],
       xArr: [],
       yArr: [],
       types: [],
@@ -213,11 +221,19 @@ export default {
       //tagId: '',
       queryParam: {
         pId: '',
-        level: ''
+        level: '',
       },
     };
   },
-  computed: {},
+  computed: {
+    //排序
+    arrList(){
+      return {
+        pId: this.pId,
+        data:JSON.stringify([...this.arrList1,...this.arrList2,...this.arrList3,...this.arrList4,...this.arrList5,...this.arrList6,...this.arrList7])
+      }
+    }
+  },
   watch: {
 
   },
@@ -249,32 +265,204 @@ export default {
       this.queryParam.pId = pIds;
       this.queryParam.level = level;
       checkByTagId(this.queryParam).then(response => {
-        //console.log(this.yArr)
         if(response.length > 0){
-          for (let i = 0; i < JSON.parse(response[0].xArr).length; i++) {
-            var x = this.computerPlace(JSON.parse(response[0].xArr)[i]);
-            var y = this.computerPlaceY(JSON.parse(response[0].yArr)[i])
-            let obj = {
-             // 'X': (x - this.canvasSize.width*(this.level-1)),
-              //'Y': JSON.parse(response[0].yArr)[i] / this.imgZoom
-              'X': x,
-              'Y': y
+          let array = JSON.parse(response[0].data);
+          //需要将数据分组
+          for (let i = 0; i < array.length; i++) {
+            //console.log(parseInt(array[i].x / 600));
+            let num = parseInt(array[i].x / 600);
+            if(num === 0){
+              if(this.level === 1){
+                var x = this.computerPlace(array[i].x);
+                var y = this.computerPlaceY(array[i].y)
+                let obj = {
+                  'X': x,
+                  'Y': y
+                }
+                this.chartsData.push(obj);
+                this.currentDrawData = {
+                  data: [[x*this.imgZoom, y *this.imgZoom, array[i].type]]
+                }
+                this.canvasData.push(this.currentDrawData);
+                //将数据回显
+                this.xArr.push(array[i].x);
+                this.yArr.push(array[i].y);
+                this.types.push(array[i].type);
+              }else {
+                let obj = {
+                  'x': array[i].x,
+                  'y': array[i].y,
+                  'type': array[i].type
+                }
+                this.arrList1.push(obj);
+
+              }
             }
-            this.chartsData.push(obj);
-            this.currentDrawData = {
-              data: [[x*this.imgZoom, y *this.imgZoom, JSON.parse(response[0].types)[i]]]
+            if(num === 1){
+              if(this.level === 2){
+                var x = this.computerPlace(array[i].x);
+                var y = this.computerPlaceY(array[i].y)
+                let obj = {
+                  'X': x,
+                  'Y': y
+                }
+                this.chartsData.push(obj);
+                this.currentDrawData = {
+                  data: [[x*this.imgZoom, y *this.imgZoom, array[i].type]]
+                }
+                this.canvasData.push(this.currentDrawData);
+                //将数据回显
+                this.xArr.push(array[i].x);
+                this.yArr.push(array[i].y);
+                this.types.push(array[i].type);
+                console.log("第二段：")
+                console.log(this.xArr)
+              }else {
+                let obj = {
+                  'x': array[i].x,
+                  'y': array[i].y,
+                  'type': array[i].type
+                }
+                this.arrList2.push(obj);
+              }
             }
-            this.canvasData.push(this.currentDrawData);
+            if(num === 2){
+              if(this.level === 3){
+                var x = this.computerPlace(array[i].x);
+                var y = this.computerPlaceY(array[i].y)
+                let obj = {
+                  'X': x,
+                  'Y': y
+                }
+                this.chartsData.push(obj);
+                this.currentDrawData = {
+                  data: [[x*this.imgZoom, y *this.imgZoom, array[i].type]]
+                }
+                this.canvasData.push(this.currentDrawData);
+                //将数据回显
+                this.xArr.push(array[i].x);
+                this.yArr.push(array[i].y);
+                this.types.push(array[i].type);
+              }else {
+                let obj = {
+                  'x': array[i].x,
+                  'y': array[i].y,
+                  'type': array[i].type
+                }
+                this.arrList3.push(obj);
+              }
+            }
+            if(num === 3){
+              if(this.level === 4){
+                var x = this.computerPlace(array[i].x);
+                var y = this.computerPlaceY(array[i].y)
+                let obj = {
+                  'X': x,
+                  'Y': y
+                }
+                this.chartsData.push(obj);
+                this.currentDrawData = {
+                  data: [[x*this.imgZoom, y *this.imgZoom, array[i].type]]
+                }
+                this.canvasData.push(this.currentDrawData);
+                //将数据回显
+                this.xArr.push(array[i].x);
+                this.yArr.push(array[i].y);
+                this.types.push(array[i].type);
+              }else {
+                let obj = {
+                  'x': array[i].x,
+                  'y': array[i].y,
+                  'type': array[i].type
+                }
+                this.arrList4.push(obj);
+              }
+            }
+            if(num === 4){
+              if(this.level === 5){
+                var x = this.computerPlace(array[i].x);
+                var y = this.computerPlaceY(array[i].y)
+                let obj = {
+                  'X': x,
+                  'Y': y
+                }
+                this.chartsData.push(obj);
+                this.currentDrawData = {
+                  data: [[x*this.imgZoom, y *this.imgZoom, array[i].type]]
+                }
+                this.canvasData.push(this.currentDrawData);
+                //将数据回显
+                this.xArr.push(array[i].x);
+                this.yArr.push(array[i].y);
+                this.types.push(array[i].type);
+              }else {
+                let obj = {
+                  'x': array[i].x,
+                  'y': array[i].y,
+                  'type': array[i].type
+                }
+                this.arrList5.push(obj);
+              }
+            }
+            if(num === 5){
+              if(this.level === 6){
+                var x = this.computerPlace(array[i].x);
+                var y = this.computerPlaceY(array[i].y)
+                let obj = {
+                  'X': x,
+                  'Y': y
+                }
+                this.chartsData.push(obj);
+                this.currentDrawData = {
+                  data: [[x*this.imgZoom, y *this.imgZoom, array[i].type]]
+                }
+                this.canvasData.push(this.currentDrawData);
+                //将数据回显
+                this.xArr.push(array[i].x);
+                this.yArr.push(array[i].y);
+                this.types.push(array[i].type);
+              }else {
+                let obj = {
+                  'x': array[i].x,
+                  'y': array[i].y,
+                  'type': array[i].type
+                }
+                this.arrList6.push(obj);
+              }
+            }
+            if(num === 6){
+              if(this.level === 7){
+                var x = this.computerPlace(array[i].x);
+                var y = this.computerPlaceY(array[i].y)
+                let obj = {
+                  'X': x,
+                  'Y': y
+                }
+                this.chartsData.push(obj);
+                this.currentDrawData = {
+                  data: [[x*this.imgZoom, y *this.imgZoom, array[i].type]]
+                }
+                this.canvasData.push(this.currentDrawData);
+                //将数据回显
+                this.xArr.push(array[i].x);
+                this.yArr.push(array[i].y);
+                this.types.push(array[i].type);
+              }else {
+                let obj = {
+                  'x': array[i].x,
+                  'y': array[i].y,
+                  'type': array[i].type
+                }
+                this.arrList7.push(obj);
+              }
+            }
+
           }
-          //console.log(this.canvasData)
           this.canvasData.forEach((e3,index) => {
-            console.log(e3)
+            //console.log(e3.data[0][0])
             this.drawPoints(e3.data[0][0],e3.data[0][1],index,e3.data[0][2]);
           })
-          //将数据回显
-          this.xArr = JSON.parse(response[0].xArr);
-          this.yArr = JSON.parse(response[0].yArr);
-          this.types = JSON.parse(response[0].types);
+
         }
       });
     },
@@ -294,10 +482,10 @@ export default {
 
     //初始化画布
     async initCanvas(img) {
-      await (this.canvasSize = { height: img.height*1.4, width: img.width*1.4 }); //通过图片尺寸设置画布尺寸
-      this.imgSize = { height: img.height*1.4, width: img.width*1.4 }; //记录下图片原始尺寸
+      await (this.canvasSize = { height: img.height*1.05, width: img.width*1.05 }); //通过图片尺寸设置画布尺寸
+      this.imgSize = { height: img.height*1.05, width: img.width*1.05 }; //记录下图片原始尺寸
       ctx = document.getElementById("myCanvas").getContext("2d"); //获取上下文
-      await ctx.drawImage(img, 0, 0, img.width*1.4, img.height*1.4); //在canvas中绘制图片(图片、起始位置、绘图尺寸)
+      await ctx.drawImage(img, 0, 0, img.width*1.05, img.height*1.05); //在canvas中绘制图片(图片、起始位置、绘图尺寸)
       let canvasDiv = document.getElementsByClassName("canvas-div")[0];
       this.canvasPosition = {
         x: canvasDiv.offsetWidth / 2 - img.width / 2,
@@ -386,6 +574,34 @@ export default {
       this.xArr = [];
       this.yArr = [];
       this.types = [];
+      this.arrList1 = [];
+      this.arrList2 = [];
+      this.arrList3 = [];
+      this.arrList4 = [];
+      this.arrList5 = [];
+      this.arrList6 = [];
+      this.arrList7 = [];
+      /*if(this.level === 1){
+        this.arrList1 = [];
+      }
+      if(this.level === 2){
+        this.arrList2 = [];
+      }
+      if(this.level === 3){
+        this.arrList3 = [];
+      }
+      if(this.level === 4){
+        this.arrList4 = [];
+      }if(this.level === 5){
+        this.arrList5 = [];
+      }
+      if(this.level === 6){
+        this.arrList6 = [];
+      }
+      if(this.level === 7){
+        this.arrList7 = [];
+      }*/
+
       //this.pId = "";
       //this.subArr = [];
       //this.polygonTempList = {}; //清空多边形临时列表
@@ -395,17 +611,90 @@ export default {
     async clickSubmit(){
       this.isLoading = true;
       if(this.canvasData.length > 0){
-        //console.log("提交====="+this.yArr)
-        this.subArr.pId = this.pId;
-        this.subArr.level = this.level;
-        this.subArr.xArr = JSON.stringify(this.xArr);
-        this.subArr.yArr = JSON.stringify(this.yArr);
-        this.subArr.types = JSON.stringify(this.types);
-        //console.log("pId===="+this.pId);
-        //console.log("xArr===="+this.xArr);
-        //console.log("subArr===="+this.subArr);
-        //console.log(this.subArr);
-        addXArr(this.subArr).then(response => {
+        for (let i = 0; i < this.xArr.length; i++) {
+          if(this.level === 1){
+            let obj = {
+              x: this.xArr[i],
+              y: this.yArr[i],
+              type: this.types[i]
+            }
+            this.arrList1.push(obj);
+          }
+          if(this.level === 2){
+            let obj = {
+              x: this.xArr[i],
+              y: this.yArr[i],
+              type: this.types[i]
+            }
+            this.arrList2.push(obj);
+          }
+          if(this.level === 3){
+            let obj = {
+              x: this.xArr[i],
+              y: this.yArr[i],
+              type: this.types[i]
+            }
+            this.arrList3.push(obj);
+          }
+          if(this.level === 4){
+            let obj = {
+              x: this.xArr[i],
+              y: this.yArr[i],
+              type: this.types[i]
+            }
+            this.arrList4.push(obj);
+          }
+          if(this.level === 5){
+            let obj = {
+              x: this.xArr[i],
+              y: this.yArr[i],
+              type: this.types[i]
+            }
+            this.arrList5.push(obj);
+          }
+          if(this.level === 6){
+            let obj = {
+              x: this.xArr[i],
+              y: this.yArr[i],
+              type: this.types[i]
+            }
+            this.arrList6.push(obj);
+          }
+          if(this.level === 7){
+            let obj = {
+              x: this.xArr[i],
+              y: this.yArr[i],
+              type: this.types[i]
+            }
+            this.arrList7.push(obj);
+          }
+
+        }
+        /*console.log("===========");
+        console.log(this.arrList);*/
+        //从小到大升序排序
+        /*this.arrList1.sort(function(a, b){
+          return a.x-b.x
+        });
+        this.arrList2.sort(function(a, b){
+          return a.x-b.x
+        });
+        this.arrList3.sort(function(a, b){
+          return a.x-b.x
+        });
+        this.arrList4.sort(function(a, b){
+          return a.x-b.x
+        });
+        this.arrList5.sort(function(a, b){
+          return a.x-b.x
+        });
+        this.arrList6.sort(function(a, b){
+          return a.x-b.x
+        });
+        this.arrList7.sort(function(a, b){
+          return a.x-b.x
+        });*/
+        addXArr(this.arrList).then(response => {
           this.$modal.msgSuccess("坐标提交成功!");
           //this.recoverysize();
           this.isLoading = false;
@@ -463,7 +752,7 @@ export default {
 
     //滚动时改变画布
     changeCanvas(e, oldX, oldY) {
-      let zoomSpeed = 1.2; //缩放速度
+      let zoomSpeed = 1.0; //缩放速度
       e.wheelDelta < 0 && (zoomSpeed = 2 - zoomSpeed); //判断放大与缩小
       let posX = e.offsetX; //获取鼠标定点的位置（鼠标在图片上的位置）
       let posY = e.offsetY;
@@ -502,13 +791,6 @@ export default {
       })
     },
     drawPoints(x,y,index,type) {
-      //console.log(type);
-      //标记类型
-      //console.log('test')
-      //console.log(x,y)
-      let str = type;
-      ctx.font = "bold 15px Arial";
-      ctx.fillText (str, x-3,y-26,[300]);
       //计算两点之间的参数
       if(this.chartsData[index - 1] === undefined){
         //console.log("====undefined")
@@ -520,12 +802,28 @@ export default {
             place = (this.chartsData[i].X - this.chartsData[i - 1].X) / 2;
           }
         }
+
+        ctx.fillStyle = this.currentColor.color; //填充颜色
+        ctx.strokeStyle = this.currentColor.color; //线条颜色
         // 显示毫秒值
         let time = this.calculateMS(Math.ceil(x),Math.ceil(this.chartsData[index - 1].X));
         //console.log(time)
         ctx.font = "bold 20px Arial";
         ctx.fillText (parseFloat(time).toFixed(3),x - place,y+20 );
+        //显示值
+        let str = "("+(60/time).toFixed(1)+")";
+        ctx.font = "bold 20px Arial";
+        ctx.fillText (str,x - place,y+40 );
       }
+
+      let color = this.backColors(type);
+      ctx.fillStyle = color; //填充颜色
+      ctx.strokeStyle = color; //线条颜色
+      //标记类型
+      let str = type;
+      ctx.font = "bold 15px Arial";
+      ctx.fillText (str, x-3,y-26,[300]);
+
       ctx.beginPath(); //新建路径
       //绘制圆点   arc参数为：x,y，半径、起始角、终止角
       ctx.arc(
@@ -535,8 +833,6 @@ export default {
         0,
         2 * Math.PI
       );
-      ctx.fillStyle = this.currentColor.color; //填充颜色
-      ctx.strokeStyle = this.currentColor.color; //线条颜色
       ctx.fill(); //填充
       ctx.stroke(); //绘制线条
     },
@@ -560,6 +856,7 @@ export default {
       //console.log("123:"+this.canvasData.length)
       //console.log("456:"+this.chartsData)
       this.canvasData.forEach((e3,index) => {
+        //console.log(index,e3.data[0][2]);
         this.drawPoints(e3.data[0][0],e3.data[0][1],index,e3.data[0][2]);
       })
     },
@@ -691,33 +988,26 @@ export default {
           minX = Math.min.apply(Math,minArr);
           maxX = Math.max.apply(Math,maxArr);
           for (let i = 0; i < this.chartsData.length; i++) {
-            //console.log("chartsData="+this.chartsData[i]);
-            //console.log("minX="+minX);
             if(this.chartsData[i].X === minX){
-              //console.log(this.chartsData[i]);
-              //console.log(minX)
               minIndex = i;
             }
           }
-          //console.log("minArr:"+minArr)
-          //console.log("minIndex:"+minIndex)
-          //console.log("minX:"+minX)
-          //console.log("中间")
           this.chartsData.splice(minIndex,0,obj)
+          //this.lableData.splice(minIndex,0,this.radio1)
           this.currentDrawData = {
             type: "point",
-            data: [[e.offsetX , e.offsetY]],
-            lables: this.lableData
+            data: [[e.offsetX , e.offsetY, this.radio1]],
+            lables: this.lableData,
           };
           this.canvasData.splice(minIndex,0,this.currentDrawData);
           //点x轴位置
           let indexs = this.computerNum(e.offsetX)+multiple;
           this.xArr.push(indexs);
           this.yArr.push(this.computerNumY(e.offsetY));
-          this.types.push(this.radio1);
-          //console.log("qqqq:"+minIndex)
+          //this.types.push(this.radio1);
+          this.types.splice(minIndex,0,this.radio1);
+
           this.drawToArrs();
-          //this.drawPointCenter(e,minIndex);
         }else if(maxArr.length>0){
           //console.log("右")
           //点x轴位置
@@ -822,7 +1112,7 @@ export default {
     //计算点 Index
     computerNum(x){
       let a = x/(this.canvasSize.width/599);
-      return a;
+      return Math.round(a);
     },
     //计算位置
     computerPlace(x){
@@ -839,7 +1129,7 @@ export default {
         a = -(y-avgY)/avgY;
       }
       //let a = y/(this.canvasSize.height/4);
-      return a;
+      return a.toFixed(2);
     },
     //计算位置
     computerPlaceY(y){
@@ -861,13 +1151,6 @@ export default {
         y: e.offsetY,
       };
 
-      //计算点位置
-      /*let pointIndex = this.computerNum(e.offsetX);
-      console.log("pointIndex===="+Math.round(pointIndex));*/
-      //标记类型
-      let str = this.radio1;
-      ctx.font = "bold 15px Arial";
-      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
       //计算两点之间的参数
       if(this.chartsData[this.chartsData.length - 1] === undefined){
         let obj = {
@@ -891,12 +1174,27 @@ export default {
           }
         }
 
+        ctx.fillStyle = this.currentColor.color; //填充颜色
+        ctx.strokeStyle = this.currentColor.color; //线条颜色
         // 显示毫秒值
         this.time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[this.chartsData.length - 2].X));
         let time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[this.chartsData.length - 2].X));
         ctx.font = "bold 20px Arial";
         ctx.fillText (parseFloat(time).toFixed(3),this.canvasMousePosition.x - place,this.canvasMousePosition.y+20 );
+        //显示值
+        let str = "("+(60/time).toFixed(1)+")";
+        ctx.font = "bold 20px Arial";
+        ctx.fillText (str,this.chartsData[1].X - place,e.offsetY+40 );
       }
+
+      let color = this.backColor();
+      ctx.fillStyle = color; //填充颜色
+      ctx.strokeStyle = color; //线条颜色
+      //标记类型
+      let str = this.radio1;
+      ctx.font = "bold 15px Arial";
+      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
+
       ctx.beginPath(); //新建路径
       //绘制圆点   arc参数为：x,y，半径、起始角、终止角
       ctx.arc(
@@ -906,8 +1204,6 @@ export default {
         0,
         2 * Math.PI
       );
-      ctx.fillStyle = this.currentColor.color; //填充颜色
-      ctx.strokeStyle = this.currentColor.color; //线条颜色
       ctx.fill(); //填充
       ctx.stroke(); //绘制线条
       //生成点绘图数据
@@ -926,10 +1222,6 @@ export default {
         y: e.offsetY,
       };
 
-      //标记类型
-      let str = this.radio1;
-      ctx.font = "bold 15px Arial";
-      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
       //计算两点之间的参数
       if(this.chartsData[this.chartsData.length - 1] === undefined){
         let obj = {
@@ -946,19 +1238,28 @@ export default {
 
         //取两点之间的中点距离,显示值
         let place = (this.chartsData[this.chartsData.length-1].X - this.chartsData[this.chartsData.length-2].X) / 2;
-        /*for (let i = 0; i < this.chartsData.length; i++) {
-          //console.log("删除前"+this.chartsData[i])
-          if(i === this.chartsData.length-1){
-            place = (this.chartsData[i].X - this.chartsData[i - 1].X) / 2;
-          }
-        }*/
 
+        ctx.fillStyle = this.currentColor.color; //填充颜色
+        ctx.strokeStyle = this.currentColor.color; //线条颜色
         // 显示毫秒值
         this.time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[this.chartsData.length - 2].X));
         let time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[this.chartsData.length - 2].X));
         ctx.font = "bold 20px Arial";
         ctx.fillText (parseFloat(time).toFixed(3),e.offsetX - place,this.canvasMousePosition.y+20 );
+        //显示值
+        let str = "("+(60/time).toFixed(1)+")";
+        ctx.font = "bold 20px Arial";
+        ctx.fillText (str,this.chartsData[1].X - place,e.offsetY+40 );
       }
+
+      let color = this.backColor();
+      ctx.fillStyle = color; //填充颜色
+      ctx.strokeStyle = color; //线条颜色
+      //标记类型
+      let str = this.radio1;
+      ctx.font = "bold 15px Arial";
+      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
+
       ctx.beginPath(); //新建路径
       //绘制圆点   arc参数为：x,y，半径、起始角、终止角
       ctx.arc(
@@ -968,8 +1269,7 @@ export default {
         0,
         2 * Math.PI
       );
-      ctx.fillStyle = this.currentColor.color; //填充颜色
-      ctx.strokeStyle = this.currentColor.color; //线条颜色
+
       ctx.fill(); //填充
       ctx.stroke(); //绘制线条
       //生成点绘图数据
@@ -988,10 +1288,7 @@ export default {
         y: e.offsetY,
       };
 
-      //标记类型
-      let str = this.radio1;
-      ctx.font = "bold 15px Arial";
-      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
+
       //计算两点之间的参数
       if(this.chartsData[this.chartsData.length - 1] === undefined){
         let obj = {
@@ -1007,20 +1304,28 @@ export default {
         this.chartsData.splice(0,0,obj);
         //取两点之间的中点距离,显示值
         let place = (this.chartsData[1].X - e.offsetX) / 2;
-        //console.log(place)
-        /*for (let i = 0; i < this.chartsData.length; i++) {
-          //console.log("删除前"+this.chartsData[i])
-          if(i === this.chartsData.length-1){
-            place = (this.chartsData[i].X - this.chartsData[i - 1].X) / 2;
-          }
-        }*/
 
+        ctx.fillStyle = this.currentColor.color; //填充颜色
+        ctx.strokeStyle = this.currentColor.color; //线条颜色
         // 显示毫秒值
         this.time = this.calculateMS(Math.ceil(e.offsetX),Math.ceil(this.chartsData[1].X));
         let time = this.calculateMS(Math.ceil(this.chartsData[1].X),Math.ceil(e.offsetX));
         ctx.font = "bold 20px Arial";
         ctx.fillText (parseFloat(time).toFixed(3),this.chartsData[1].X - place,e.offsetY+20 );
+        //显示值
+        let str = "("+(60/time).toFixed(1)+")";
+        ctx.font = "bold 20px Arial";
+        ctx.fillText (str,this.chartsData[1].X - place,e.offsetY+40 );
       }
+
+      let color = this.backColor();
+      ctx.fillStyle = color; //填充颜色
+      ctx.strokeStyle = color; //线条颜色
+      //标记类型
+      let str = this.radio1;
+      ctx.font = "bold 15px Arial";
+      ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
+
       ctx.beginPath(); //新建路径
       //绘制圆点   arc参数为：x,y，半径、起始角、终止角
       ctx.arc(
@@ -1030,8 +1335,7 @@ export default {
         0,
         2 * Math.PI
       );
-      ctx.fillStyle = this.currentColor.color; //填充颜色
-      ctx.strokeStyle = this.currentColor.color; //线条颜色
+
       ctx.fill(); //填充
       ctx.stroke(); //绘制线条
       //生成点绘图数据
@@ -1043,7 +1347,7 @@ export default {
       };
     },
     //画点
-    drawPointCenter(e,index) {
+    /*drawPointCenter(e,index) {
       this.canvasMousePosition = {
         x: e.offsetX,
         y: e.offsetY,
@@ -1053,11 +1357,11 @@ export default {
       ctx.font = "bold 15px Arial";
       ctx.fillText (str, this.canvasMousePosition.x-3,this.canvasMousePosition.y-26,[300]);
       //计算两点之间的参数
-      /*let obj = {
+      /!*let obj = {
         'X': e.offsetX,
         'Y': e.offsetY
       };
-      this.chartsData.splice(0,0,obj);*/
+      this.chartsData.splice(0,0,obj);*!/
       //console.log(index)
       //  右
       let place1 = (this.chartsData[index+1].X - e.offsetX) / 2;
@@ -1074,17 +1378,18 @@ export default {
         0,
         2 * Math.PI
       );
-      ctx.fillStyle = this.currentColor.color; //填充颜色
-      ctx.strokeStyle = this.currentColor.color; //线条颜色
+      let colors = this.backColor();
+      ctx.fillStyle = colors; //填充颜色
+      ctx.strokeStyle = colors; //线条颜色
       ctx.fill(); //填充
       ctx.stroke(); //绘制线条
 
       //计算两点之间的参数
-      /*let obj = {
+      /!*let obj = {
         'X': e.offsetX,
         'Y': e.offsetY
       };
-      this.chartsData.splice(0,0,obj);*/
+      this.chartsData.splice(0,0,obj);*!/
       //  左
       let place2 = (e.offsetX - this.chartsData[index-1].X) / 2;
       // 显示毫秒值
@@ -1100,25 +1405,55 @@ export default {
         0,
         2 * Math.PI
       );
-      ctx.fillStyle = this.currentColor.color; //填充颜色
-      ctx.strokeStyle = this.currentColor.color; //线条颜色
+      let color = this.backColor();
+      ctx.fillStyle = color; //填充颜色
+      ctx.strokeStyle = color; //线条颜色
       ctx.fill(); //填充
       ctx.stroke(); //绘制线条
 
       //生成点绘图数据
-      /*this.currentDrawData = {
+      /!*this.currentDrawData = {
         type: "point",
         //color: this.currentColor.color,
         data: [[e.offsetX , e.offsetY]],
         lables: this.lableData
-      };*/
-    },
+      };*!/
+    },*/
     calculateMS (x1,x2){
       //大屏  一个小方格之间距离为18    一个小方格表示0.04s
       let a = x1 - x2;
-      let b = a/18;
+      let b = a/(this.canvasSize.width/30/5);
       let c = b * 0.04;
       return c.toFixed(3);
+    },
+    //判断标记类型，返回不同的颜色
+    backColor(){
+      if(this.radio1 === "N"){
+        return "black";
+      }
+      if(this.radio1 === "S"){
+        return "red";
+      }
+      if(this.radio1 === "V"){
+        return "blue";
+      }
+      if(this.radio1 === "X"){
+        return "green";
+      }
+    },
+    backColors(type){
+      if(type === "N"){
+        return "black";
+      }
+      if(type === "S"){
+        return "red";
+      }
+      if(type === "V"){
+        return "blue";
+      }
+      if(type === "X"){
+        return "green";
+      }
     }
   },
 
@@ -1128,13 +1463,13 @@ export default {
 .container {
   user-select: none;
   height: 80%;
-  width: 85%;
+  width: 90%;
   position: fixed;
   top:50%;
   left:50%;
   transform: translate(-45%,-50%);
   background: #ffffff;
-  z-index:1000;
+  z-index:1;
   .top-tool {
     height: 50px;
     display: flex;

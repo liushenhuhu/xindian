@@ -465,6 +465,16 @@ export default {
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
+        if (!this.data.doctorName){
+          const date = new Date();
+          const year = date.getFullYear().toString().padStart(4, '0');
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const day = date.getDate().toString().padStart(2, '0');
+          const hour = date.getHours().toString().padStart(2, '0');
+          const minute = date.getMinutes().toString().padStart(2, '0');
+          const second = date.getSeconds().toString().padStart(2, '0');
+          this.data.diagnosisData=`${year}-${month}-${day} ${hour}:${minute}:${second}`
+        }
         if(response.data.patientSymptom!=null){
           this.data.patientSymptom = response.data.patientSymptom
         }
