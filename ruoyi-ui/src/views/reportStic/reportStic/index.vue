@@ -36,10 +36,12 @@
       </el-form-item>
     </el-form>
     <el-card class="box-card">
+      <p class="title"><span class="title-left"></span>用户心电检测数据上传次数   每日统计</p>
       <div id="chart1" class="chart"></div>
     </el-card>
 
     <el-card class="box-card">
+      <p class="title"><span class="title-left"></span>用户心电检测数据上传次数   每月统计</p>
       <div id="chart2" class="chart"></div>
     </el-card>
 
@@ -133,10 +135,6 @@ export default {
     chart1(){
       let myChart1 = this.$echarts.init(document.getElementById('chart1'));
       let option = {
-        title:{
-          show:true,
-          text:'用户心电检测数据上传次数   每日统计'
-        },
         xAxis: {
           type: 'category',
           data: this.date,
@@ -156,7 +154,8 @@ export default {
             type: 'bar',
             itemStyle: {        //上方显示数值
               normal: {
-                color:'#432344',
+                barBorderRadius: [5, 5, 0, 0],
+                color:'#6579be',
                 label: {
                   show: true, //开启显示
                   position: 'top', //在上方显示
@@ -174,17 +173,13 @@ export default {
       window.addEventListener('resize', () => {
         myChart1.resize();
       });
-      setTimeout(()=>{
+      setTimeout(function (){
         myChart1.resize();
       })
     },
     chart2(){
       let myChart2 = this.$echarts.init(document.getElementById('chart2'));
       let option = {
-        title:{
-          show:true,
-          text:'用户心电检测数据上传次数   每月统计'
-        },
         xAxis: {
           type: 'category',
           data: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
@@ -195,13 +190,17 @@ export default {
             show:false
           }
         },
+        gird:{
+          top:0
+        },
         series: [
           {
             data: this.month,
             type: 'bar',
             itemStyle: {        //上方显示数值
               normal: {
-                color:'#7f1313',
+                barBorderRadius: [5, 5, 0, 0],
+                color:'#d47979',
                 label: {
                   show: true, //开启显示
                   position: 'top', //在上方显示
@@ -216,7 +215,7 @@ export default {
         ]
       };
       myChart2.setOption(option,true)
-      setTimeout(()=>{
+      setTimeout(function (){
         myChart2.resize();
       })
       window.addEventListener('resize', () => {
@@ -255,17 +254,32 @@ export default {
   }
 };
 </script>
-<style>
+<style lang="scss" scoped>
 
 .box-card {
   width: 90%;
   height: 39vh;
   margin:0 auto;
   margin-bottom: 10px;
+  .title {
+    text-align: left;
+    font-size: 1.13rem;
+    font-weight: bold;
+    color: #333333;
+    margin: 0;
+    .title-left {
+      display: inline-block;
+      width: 0.25rem;
+      height: 1rem;
+      background: linear-gradient(180deg, #3ea2ff 0%, #2746fc 100%);
+      border-radius: 0.13rem;
+      margin-right: 1rem;
+    }
+  }
 }
 .chart{
   width: 100%;
-  height: 38vh;
+  height: 35vh;
 }
 .el-card__body{
   height: 100%;

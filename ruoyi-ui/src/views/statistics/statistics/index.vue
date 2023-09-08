@@ -48,7 +48,7 @@
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
-        <el-divider content-position="left">医生每月诊断次数统计图</el-divider>
+        <el-divider content-position="left"><span class="title-left"></span>医生每月诊断次数统计图</el-divider>
         <el-card class="box-card">
           <div id="myChart" class="myChart" > </div>
         </el-card>
@@ -73,7 +73,7 @@
 
 
 
-        <el-divider content-position="left">医生诊断平均时间排行</el-divider>
+        <el-divider content-position="left"><span class="title-left"></span>医生诊断平均时间排行</el-divider>
         <el-table
           :data="tableData"
           style="width: 100%;text-align: center">
@@ -190,7 +190,7 @@ export default {
             distance: 5.5,
             position: 'top',
             //verticalAlign: 'middle',
-            color: '#73C0DE',
+            color: '#009ac7',
             fontSize: 18
           },
           itemStyle:{
@@ -349,7 +349,14 @@ export default {
     font-size: 20px;
   }
 }
-
+.title-left {
+  display: inline-block;
+  width: 0.25rem;
+  height: 1rem;
+  background: linear-gradient(180deg, #3ea2ff 0%, #2746fc 100%);
+  border-radius: 0.13rem;
+  margin-right: 1rem;
+}
 .box-card {
   width: 90%;
   height: 35vh;

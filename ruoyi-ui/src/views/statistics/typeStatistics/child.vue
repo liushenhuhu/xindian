@@ -40,9 +40,6 @@ export default {
       let status = this;
       myChart.off('click');
       myChart.setOption({
-        title: {
-          text: '心电类型统计图'
-        },
         tooltip: {},
         xAxis: {
           data: this.xArr,
@@ -58,6 +55,7 @@ export default {
           data: this.yArr,
           itemStyle: {        //上方显示数值
             normal: {
+              barBorderRadius: [5, 5, 0, 0],
               color:'#c76e4a',
               label: {
                 show: true, //开启显示

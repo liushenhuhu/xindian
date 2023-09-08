@@ -3,13 +3,14 @@
 
   <div class="top">
     <el-card class="card1" >
+      <p class="title"><span class="title-left"></span>心电类型统计图</p>
       <typeChild></typeChild>
     </el-card>
     <el-card class="card1">
       <ageChild></ageChild>
     </el-card>
   </div>
-  <el-divider content-position="left">预警分类统计图</el-divider>
+  <el-divider content-position="left"><span class="title-left"></span>预警分类统计图</el-divider>
   <div class="circle">
     <el-card class="card2">
       <div id="main0" style="width: 22vw;height:25vh;color: black;font-weight: 800">静态12导预警</div>
@@ -107,6 +108,9 @@ export default {
       window.addEventListener("resize", function () {
         main.resize();
       });
+      setTimeout(function (){
+        main.resize();
+      })
       // main.on('click', function(params) {
       //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
       // });
@@ -151,6 +155,9 @@ export default {
       window.addEventListener("resize", function () {
         main1.resize();
       });
+      setTimeout(function (){
+        main1.resize();
+      })
       main1.on('click', function(params) {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       });
@@ -197,6 +204,9 @@ export default {
       window.addEventListener("resize", function () {
         main.resize();
       });
+      setTimeout(function (){
+        main.resize();
+      })
       main.on('click', function(params) {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
       });
@@ -240,6 +250,9 @@ export default {
       window.addEventListener("resize", function () {
         main1.resize();
       });
+      setTimeout(function (){
+        main1.resize();
+      })
       main1.on('click', function(params) {
         th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       });
@@ -324,6 +337,14 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  .title-left{
+    display: inline-block;
+    width: 0.25rem;
+    height: 1rem;
+    background: linear-gradient(180deg, #3ea2ff 0%, #2746fc 100%);
+    border-radius: 0.13rem;
+    margin-right: 1rem;
+  }
   .top{
     width: 100%;
     height: 40%;
@@ -332,6 +353,20 @@ export default {
     text-align: center;
     .card1{
       margin-top: 5px;
+      .title {
+        text-align: left;
+        font-size: 1.13rem;
+        font-weight: bold;
+        color: #333333;
+        .title-left {
+          display: inline-block;
+          width: 0.25rem;
+          height: 1rem;
+          background: linear-gradient(180deg, #3ea2ff 0%, #2746fc 100%);
+          border-radius: 0.13rem;
+          margin-right: 1rem;
+        }
+      }
     }
   }
   .circle {
@@ -341,7 +376,7 @@ export default {
     justify-content: space-around;
     .card2{
         min-height: 280px;
-        min-width: 20vw;
+        width: 24.5%;
     }
   }
 }
