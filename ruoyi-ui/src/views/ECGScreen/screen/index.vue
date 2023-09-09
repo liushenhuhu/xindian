@@ -515,7 +515,6 @@ export default {
     dotColor(){
       return num => {
         if(Number(num)>=0.55){
-
           return 'background-color: red;';
         }
         if(Number(num)>=0.3&&Number(num)<=0.55){
@@ -1850,14 +1849,16 @@ export default {
       this.time=this.timex()
       let p1Iy=[]
       let p1V1y=[]
-      let color='#92c2ff'
+      let color1='#92c2ff'
+      let color2='#6EDDF1'
       for (let i = j; i < 1250+j; i++) {
         p1Iy.push(pIy[i])
         p1V1y.push(pV1y[i]-1)
       }
       if(Number(data.GengSi) >=0.55||Number(data.FangChan)>=0.55
         ||Number(data.XSL_pr)>=0.55||Number(data.RRGC_pr)>=0.55||Number(data.ShiChan)>=0.55){
-       color='red'
+        color1='#ff0000'
+        color2='#ff6600'
       }
       // p1Iy=p1Iy.reverse()
       // p1V1y=p1V1y.reverse()
@@ -1937,8 +1938,8 @@ export default {
             itemStyle: {
               normal: {
                 lineStyle: {//color: '#92c2ff' /*折线的颜色*/
-                  color: color },
-                color: color /*图例(legend)的颜色,不是图例说明文字的颜色*/
+                  color: color1 },
+                color: color1 /*图例(legend)的颜色,不是图例说明文字的颜色*/
               }
             },
             symbol: "none",
@@ -1952,8 +1953,8 @@ export default {
           {
             itemStyle: {
               normal: {
-                lineStyle: {color: '#6EDDF1' /*折线的颜色*/},
-                color: "#6EDDF1" /*图例(legend)的颜色,不是图例说明文字的颜色*/
+                lineStyle: {color: color2 /*折线的颜色*/},
+                color: color2 /*图例(legend)的颜色,不是图例说明文字的颜色*/
               }
             },
             symbol: "none",
