@@ -2093,12 +2093,12 @@ export default {
   .container {
     width: 33%;
     height: 20%;
-    min-height: 30vh;//21
+    min-height: 29.5vh;//21
     position: relative;
     border: 1px solid rgba(25, 186, 139, 0.17);
     background: url("~@/assets/images/container.png");
     padding: 0.3vw 0.1vw;
-    margin-bottom: .5vw;
+    margin-bottom: .5vh;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -2110,7 +2110,7 @@ export default {
       justify-content: center;
       color:#6EDDF1;
       .son{
-        width: 23%;
+        width: 25%;
         text-align: center;
         span{
           display: inline-block;
