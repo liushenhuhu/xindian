@@ -13,16 +13,16 @@
   <el-divider content-position="left"><span class="title-left"></span>预警分类统计图</el-divider>
   <div class="circle">
     <el-card class="card2">
-      <div id="main0" style="width: 22vw;height:25vh;color: black;font-weight: 800">静态12导预警</div>
+      <div id="main0" class="chart2">静态12导预警</div>
     </el-card>
     <el-card class="card2">
-      <div id="main1" style="width: 22vw;height:25vh;">静态单导预警</div>
+      <div id="main1" class="chart2">静态单导预警</div>
     </el-card>
     <el-card class="card2">
-      <div id="main2" style="width: 22vw;height:25vh;">动态12导预警</div>
+      <div id="main2" class="chart2">动态12导预警</div>
     </el-card>
     <el-card class="card2">
-      <div id="main3" style="width: 22vw;height:25vh;">动态单导预警</div>
+      <div id="main3" class="chart2">动态单导预警</div>
     </el-card>
   </div>
 
@@ -91,9 +91,15 @@ export default {
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
+            left:'23%',
+            right:'23%',
             data: this.countArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              // edgeDistance: "34%",
               formatter: function (arg) {
                 //console.log(arg);
                 return arg.name + '(' + arg.value + ")"
@@ -138,9 +144,14 @@ export default {
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
+            left:'23%',
+            right:'23%',
             data: this.DCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
               formatter: function (arg) {
                 //console.log(arg);
                 return arg.name + '(' + arg.value + ")"
@@ -187,9 +198,14 @@ export default {
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
+            left:'23%',
+            right:'23%',
             data: this.countArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
               formatter: function (arg) {
                 //console.log(arg);
                 return arg.name + '(' + arg.value + ")"
@@ -233,9 +249,14 @@ export default {
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
+            left:'23%',
+            right:'23%',
             data: this.DCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
               formatter: function (arg) {
                 //console.log(arg);
                 return arg.name + '(' + arg.value + ")"
@@ -332,6 +353,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+::v-deep .el-card__body{
+  padding: 10px;
+  height: 100%;
+}
 .mains {
   width: 100%;
   height: 100%;
@@ -375,8 +400,12 @@ export default {
     display: flex;
     justify-content: space-around;
     .card2{
-        min-height: 280px;
+        min-height: 35vh;
         width: 24.5%;
+      .chart2{
+        width: 100%;
+        height: 30vh;
+      }
     }
   }
 }
