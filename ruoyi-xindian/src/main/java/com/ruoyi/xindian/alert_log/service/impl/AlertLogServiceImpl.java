@@ -217,6 +217,9 @@ public class AlertLogServiceImpl implements IAlertLogService
                 List<AlertLog> alertLogs = list.stream().filter(item -> item.getName().length() == 4).collect(Collectors.toList());
 
                 if (alertLogs!=null&&alertLogs.size()>0){
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest01"))){
+                        redisTemplate.opsForList().remove("earlyLogTest01", 0, -1);
+                    }
                     //存入redis
                     redisTemplate.opsForList().leftPushAll("earlyLogTest01", alertLogs);
                     //给redis设置毫秒值
@@ -240,6 +243,9 @@ public class AlertLogServiceImpl implements IAlertLogService
                 //从mysql里查询这个集合
                 List<AlertLog> alertLogs = alertLogMapper.selectEarly(alertLog);
                 if (alertLogs!=null&&alertLogs.size()>0){
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest02"))){
+                        redisTemplate.opsForList().remove("earlyLogTest02", 0, -1);
+                    }
                     //存入redis
                     redisTemplate.opsForList().leftPushAll("earlyLogTest02", alertLogs);
                     //给redis设置毫秒值
@@ -263,6 +269,9 @@ public class AlertLogServiceImpl implements IAlertLogService
                 //从mysql里查询这个集合
                 List<AlertLog> alertLogs = alertLogMapper.selectEarly(alertLog);
                 if (alertLogs!=null&&alertLogs.size()>0){
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest03"))){
+                        redisTemplate.opsForList().remove("earlyLogTest03", 0, -1);
+                    }
                     //存入redis
                     redisTemplate.opsForList().leftPushAll("earlyLogTest03", alertLogs);
                     //给redis设置毫秒值
@@ -286,6 +295,9 @@ public class AlertLogServiceImpl implements IAlertLogService
                 //从mysql里查询这个集合
                 List<AlertLog> alertLogs = alertLogMapper.selectEarly(alertLog);
                 if (alertLogs!=null&&alertLogs.size()>0){
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("earlyLogTest04"))){
+                        redisTemplate.opsForList().remove("earlyLogTest04", 0, -1);
+                    }
                     //存入redis
                     redisTemplate.opsForList().leftPushAll("earlyLogTest04", alertLogs);
                     //给redis设置毫秒值

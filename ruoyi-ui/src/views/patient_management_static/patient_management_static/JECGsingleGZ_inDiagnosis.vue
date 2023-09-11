@@ -317,7 +317,7 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-s-order"
+            icon="el-icon-s-operation"
             @click="selectECG(scope.row)"
           >另选医生诊断
           </el-button>
@@ -328,6 +328,13 @@
             @click="lookECG(scope.row)"
             v-hasPermi="['patient:patient:alert']"
           >查看报告
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-order"
+            @click="lookHistoryData(scope.row)"
+          >查看历史数据
           </el-button>
           <el-button
             size="mini"
@@ -730,6 +737,10 @@ export default {
       this.download('patient_management/patient_management/export', {
         ...this.queryParams
       }, `patient_management_${new Date().getTime()}.xlsx`)
+    },
+    lookHistoryData(val){
+      console.log(val)
+      this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECGsingle"}});
     },
     /** 查看心电图*/
     lookECG(row) {

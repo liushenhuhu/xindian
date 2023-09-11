@@ -45,17 +45,17 @@
 <!--          v-hasPermi="['vipPatient:patient:add']"-->
 <!--        >新增</el-button>-->
 <!--      </el-col>-->
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['patientCount:patientCount:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['patientCount:patientCount:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -90,17 +90,18 @@
         </template>
       </el-table-column>
       <el-table-column label="总服务次数" align="center" prop="totalNum" />
+      <el-table-column label="总购买服务次数" align="center" prop="payNum" />
       <el-table-column label="剩余服务次数" align="center" prop="detectionNum" />
       <el-table-column label="使用次数" align="center" prop="usesNum" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['patientCount:patientCount:edit']"
-          >修改</el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['patientCount:patientCount:edit']"-->
+<!--          >修改</el-button>-->
           <el-button
             size="mini"
             type="text"

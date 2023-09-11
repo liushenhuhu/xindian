@@ -210,7 +210,7 @@
 <!--        <el-form-item label="科室代号" prop="departmentCode">-->
 <!--          <el-input v-model="form.departmentCode" placeholder="请输入科室代号"/>-->
 <!--        </el-form-item>-->
-        <el-form-item label="科室" prop="departmentCode">
+        <el-form-item label="科室" prop="equipmentName">
 
           <el-select v-model="form.equipmentName" placeholder="请选择科室" clearable>
             <el-option
@@ -319,7 +319,7 @@ export default {
         hospitalCode: [
           {required: true, message: "医院代号不能为空", trigger: "blur"}
         ],
-        departmentCode: [
+        equipmentName: [
           {required: true, message: "科室代号不能为空", trigger: "blur"}
         ],
         equipmentStatus: [

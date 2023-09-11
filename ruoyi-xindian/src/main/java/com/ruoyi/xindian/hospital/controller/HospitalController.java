@@ -45,7 +45,7 @@ public class HospitalController extends BaseController
     /**
      * 查询医院列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospital:list')")
     @GetMapping("/list")
     public TableDataInfo list(Hospital hospital)
     {

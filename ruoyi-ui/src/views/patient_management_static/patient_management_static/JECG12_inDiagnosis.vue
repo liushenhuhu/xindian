@@ -319,9 +319,16 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-s-order"
+            icon="el-icon-s-operation"
             @click="selectECG(scope.row)"
           >另选医生诊断
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-order"
+            @click="lookHistoryData(scope.row)"
+          >查看历史数据
           </el-button>
           <el-button
             size="mini"
@@ -555,6 +562,10 @@ export default {
       updateOnlineAll().then(res => {
         this.getList();
       })
+    },
+    lookHistoryData(val){
+      console.log(val)
+      this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECG12"}});
     },
     selectECG(row){
       this.reportList.pId = row.pId

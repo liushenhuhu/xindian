@@ -32,6 +32,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorCompletionService;
@@ -79,7 +80,7 @@ public class WXPublicRequest {
 
 
     /**
-     * 微信公众号调用接口
+     * 微信公众号消息推送（患者提交报告，通知医生抢单）
      * @param first
      * @param userOpenid
      * @param name
@@ -127,7 +128,153 @@ public class WXPublicRequest {
 
     }
 
+    /**
+     * 微信公众号消息推送（设备绑定失败）
+     * @param userOpenid
+     * @param name
+     */
+    public  void sendEquipmentMsgFail(
+                                  String userOpenid,
+                                  String name,
+                                  String phone) throws ParseException {
 
+        String OrderMsgTemplateId = "Dqi5udHKuCur46kwIhRqx-36RqvNN8w662V5spRxc6Q";
+
+        // 卡片详情跳转页，设置此值，当点击消息时会打开指定的页面
+//        String detailUrl = "https://baidu.com";
+
+
+//        详细内容
+//
+//                绑定状态 {{phrase2.DATA}}
+//                失败原因 {{thing5.DATA}}
+
+        WxMpInMemoryConfigStorage wxStorage = new WxMpInMemoryConfigStorage();
+        wxStorage.setAppId(WXPayConstants.WX_PUBLIC_ID);
+        wxStorage.setSecret(WXPayConstants.WX_PUBLIC_SECRET);
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(wxStorage);
+        // 此处的 key/value 需和模板消息对应
+        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+                new WxMpTemplateData("phrase2", name),
+                new WxMpTemplateData("thing5", phone),
+                new WxMpTemplateData("remark", "点击查看详情")
+        );
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(userOpenid)
+                .templateId(OrderMsgTemplateId)
+                .data(wxMpTemplateDataList)
+//                .url(detailUrl)
+                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+                .build();
+        try {
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        } catch (Exception e) {
+            System.out.println("推送失败：" + e.getMessage());
+        }
+
+    }
+
+    /**
+     * 微信公众号消息推送（患者请求管理员绑定设备绑定设备）
+     * @param first
+     * @param userOpenid
+     * @param name
+     */
+    public  void sendEquipmentMsg(String first,
+                              String userOpenid,
+                              String name,
+                              String phone,String zhong,Date time) throws ParseException {
+
+        String OrderMsgTemplateId = "IdoOZSP4uaLaIwZyyfOzXfHvouQ-haCZTHFbDzYiIjM";
+
+        // 卡片详情跳转页，设置此值，当点击消息时会打开指定的页面
+//        String detailUrl = "https://baidu.com";
+
+
+//        详细内容
+//                客户名称 {{thing1.DATA}}
+//                客户电话 {{phone_number2.DATA}}
+//                详细地址 {{thing3.DATA}}
+//                接收时间 {{time6.DATA}}
+
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy-MM-dd HH:mm");
+        String timeNow = sdf.format(time);
+        WxMpInMemoryConfigStorage wxStorage = new WxMpInMemoryConfigStorage();
+        wxStorage.setAppId(WXPayConstants.WX_PUBLIC_ID);
+        wxStorage.setSecret(WXPayConstants.WX_PUBLIC_SECRET);
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(wxStorage);
+        // 此处的 key/value 需和模板消息对应
+        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+                new WxMpTemplateData("thing1", name),
+                new WxMpTemplateData("phone_number2", phone),
+                new WxMpTemplateData("thing3", first),
+                new WxMpTemplateData("time6", timeNow),
+                new WxMpTemplateData("thing4",zhong ),
+                new WxMpTemplateData("remark", "点击查看详情")
+        );
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(userOpenid)
+                .templateId(OrderMsgTemplateId)
+                .data(wxMpTemplateDataList)
+//                .url(detailUrl)
+                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+                .build();
+        try {
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        } catch (Exception e) {
+            System.out.println("推送失败：" + e.getMessage());
+        }
+
+    }
+
+
+    /**
+     * 小程序消息推送（设备绑定状态 通知患者）
+     * @param userOpenid
+     * @param state
+     * @throws Exception
+     */
+    public  void boundEquipmentMsg( String userOpenid, String equipmentName, String reason,String state) throws Exception {
+
+        MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity(new MessageValueEntity(equipmentName),new MessageValueEntity(state),new MessageValueEntity(reason));
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("touser", userOpenid); //用户openid
+        paramsMap.put("miniprogram_state", "fomal");
+        paramsMap.put("page", "pages/record/index");
+        paramsMap.put("template_id", "0Zlja-FFGdgUb5UTG0PZOPegETQUEliGJZweViOdb-I"); //推送消息模板id
+        paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
+        String wxAccessToken = getWXAccessToken();
+
+        HttpHeaders headers = new HttpHeaders(); //构建请求头
+        headers.setContentType(MediaType.APPLICATION_JSON); //设置内容类型为json
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap, headers); //构建http请求实体
+
+        //发送请求路径拼接获取到的access_token
+        SendMessageVo sendMessageVo = restTemplate.postForObject("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" +
+                wxAccessToken, request, SendMessageVo.class);
+
+        if (null == sendMessageVo) {
+            throw new RuntimeException("推送消息失败");
+        }
+        if (sendMessageVo.getErrcode() != 0) {
+            log.error("推送消息失败,原因：{}", sendMessageVo.getErrmsg());
+        }
+        log.info("推送消息成功");
+
+    }
+
+    /**
+     * 小程序消息推送（诊断结束，通知患者）
+     * @param first
+     * @param userOpenid
+     * @param name
+     * @param serviceName
+     * @param state
+     * @throws Exception
+     */
     public  void sendMsg(String first, String userOpenid, String name, String serviceName,String state) throws Exception {
 
         MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity();

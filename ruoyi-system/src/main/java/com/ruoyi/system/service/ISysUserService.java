@@ -227,4 +227,8 @@ public interface ISysUserService {
     public int insertAppData(SysUser sysUser);
     public int insertPatient(SysUser sysUser);
     public int insertMedical(SysUser sysUser);
+
+
+
+    List<SysUser> userAndVipAndWFLog(SysUser sysUser);
 }

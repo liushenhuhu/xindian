@@ -325,6 +325,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-s-order"
+            @click="lookHistoryData(scope.row)"
+          >查看历史数据
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-position"
             @click="sendMsg(scope.row)"
           >发送短信
@@ -692,6 +699,10 @@ export default {
       this.download('patient_management/patient_management/export', {
         ...this.queryParams
       }, `patient_management_${new Date().getTime()}.xlsx`)
+    },
+    lookHistoryData(val){
+      console.log(val)
+      this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECGsingle"}});
     },
     /** 查看心电图*/
     lookECG(row) {

@@ -18,6 +18,8 @@ import com.ruoyi.common.exception.DemoModeException;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 
+import java.security.GeneralSecurityException;
+
 /**
  * 全局异常处理器
  *
@@ -118,6 +120,13 @@ public class GlobalExceptionHandler
         return AjaxResult.error("服务器内部异常，请联系管理员！");
     }
 
+
+    @ExceptionHandler(GeneralSecurityException.class)
+    public Object handleGeneralSecurityException(GeneralSecurityException e)
+    {
+        log.error(e.getMessage(), e);
+        return AjaxResult.error("服务器内部异常，请联系管理员！");
+    }
 
     @ExceptionHandler(CommunicationsException.class)
     public Object handleCommunicationsException(CommunicationsException e){

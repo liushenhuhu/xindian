@@ -558,7 +558,7 @@
             left join report r on m.p_id = r.p_id
       <where>
         <if test="ecgType != null  and ecgType != ''"> and ecg_type like concat(#{ecgType}, '%') </if>
-        <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone_aes = #{patientPhone}</if>
+        and m.patient_phone_aes = #{patientPhone}
     </where>
         GROUP BY  DATE_FORMAT(connection_time,'%Y-%m-%d')
     </select>

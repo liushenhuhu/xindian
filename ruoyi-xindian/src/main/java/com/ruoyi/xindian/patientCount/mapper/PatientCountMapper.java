@@ -11,6 +11,10 @@ import java.util.List;
  */
 public interface PatientCountMapper extends BaseMapper<PatientCount> {
 
+
+
+    List<PatientCount> selectAllByList(PatientCount patientCount);
+
 }
 
 

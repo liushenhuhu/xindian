@@ -9,12 +9,58 @@
         <result property="phonenumberAes"    column="phonenumber_aes"    />
         <result property="detectionTime"    column="detection_time"    />
         <result property="detectionNum"    column="detection_num"    />
-        
-    </resultMap>
+        <result property="userNameAes"    column="user_name_aes"    />
 
+    </resultMap>
+    <resultMap id="CountResult" type="com.ruoyi.xindian.patientCount.domain.PatientCount" extends="PatientCountResult">
+        <association property="vipPatient" javaType="vipPatient" resultMap="com.ruoyi.xindian.vipPatient.mapper.VipPatientMapper.VipPatientResult"/>
+        <collection property="fwLogs" ofType="fwLog" resultMap="com.ruoyi.xindian.fw_log.mapper.FwLogMapper.BaseResultMap"/>
+    </resultMap>
     <sql id="selectPatientCountVo">
         select user_id, phonenumber_aes, detection_time, detection_num from sys_user
     </sql>
+    <select id="selectAllByList" resultType="com.ruoyi.xindian.patientCount.domain.PatientCount" resultMap="CountResult">
+        SELECT
+            fw_log.fw_status,
+            fw_log.fw_num,
+            fw_log.`status`,
+            fw_log.log_time,
+            detection_num,
+            detection_time,
+            user_name_aes,
+            user_id,
+            phonenumber_aes,
+            vip_patient.end_date,
+            vip_patient.vip_num
+        FROM
+            fw_log
+                RIGHT JOIN
+            sys_user
+            ON
+                fw_log.user_name = phonenumber_aes
+                LEFT JOIN
+            vip_patient
+            ON
+                phonenumber_aes = vip_patient.patient_phone
+        <where>
+            <if test="phonenumberAes!=null and phonenumberAes!=''">
+                and phonenumber_aes = #{phonenumberAes}
+            </if>
+            <if test="begindetectionTime!=null and begindetectionTime!='' and enddetectionTime!=null and enddetectionTime!=''">
+               and detection_time between #{begindetectionTime} and DATE_ADD(#{enddetectionTime}, INTERVAL 1 DAY)
+            </if>
+        </where>
+        order by detection_time desc
+    </select>
+
+
+
+
+
+
+
+
+
 
 
 </mapper>

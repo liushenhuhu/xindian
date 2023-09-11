@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.service.ISysDictDataService;
@@ -208,6 +209,9 @@ public class PatientController extends BaseController
         patient.setPatientPhoneAes(patient.getPatientPhone());
         patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
         patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
+        if (StringUtils.isNotEmpty(patient.getFamilyPhone())){
+            patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
+        }
 
         return toAjax(patientService.insertPatient(patient));
     }
@@ -222,6 +226,9 @@ public class PatientController extends BaseController
         //加密
         patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
         patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
+        if (StringUtils.isNotEmpty(patient.getFamilyPhone())){
+            patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
+        }
         return toAjax(patientService.updatePatient(patient));
     }
 

@@ -1,6 +1,10 @@
 package com.ruoyi.xindian.vip_code.controller;
 
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
@@ -8,6 +12,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
@@ -138,18 +143,28 @@ public class VipCodeController extends BaseController {
 
             vipPatient.setVipNum(vipPatient.getVipNum()+one.getNum());
             iVipPatientService.updateVipPatient(vipPatient);
+            SysUser sysUser2 = new SysUser();
+            sysUser2.setUserId(sysUser.getUserId());
+            sysUser2.setDetectionTime(vipPatient.getEndDate());
+            sysUserMapper.updateUser(sysUser2);
         }else {
             if(one.getIsVip()==1){//激活码是vip
+                Date date = new Date();
                 //升级为vip
                 VipPatient vip = new VipPatient();
                 vip.setPatientPhone(sysUser.getPhonenumber());
                 vip.setVipNum(Long.valueOf(one.getNum())+sysUser.getDetectionNum());
                 //加时间
-                calendar.setTime(new Date());
+                calendar.setTime(date);
                 calendar.add(a, data);
                 vip.setEndDate(calendar.getTime());
+                vip.setCreateTime(date);
                 iVipPatientService.insertVipPatient(vip);
                 sysUserMapper.updateDeteTime(sysUser.getPhonenumber());
+                SysUser sysUser2 = new SysUser();
+                sysUser2.setUserId(sysUser.getUserId());
+                sysUser2.setDetectionTime(vip.getEndDate());
+                sysUserMapper.updateUser(sysUser2);
             }else {//普通激活码
                 //设置加上去的时间
                 calendar.setTime(sysUser.getDetectionTime());
@@ -161,6 +176,7 @@ public class VipCodeController extends BaseController {
             }
 
         }
+
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() ->{
             System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
@@ -172,6 +188,14 @@ public class VipCodeController extends BaseController {
                 fwLog.setLogTime(new Date());
                 fwLog.setFwStatus("1");
                 fwLog.setFwNum(one.getNum());
+                String ipAddr = IpUtils.getIpAddr(request);
+                fwLog.setIpaddr(ipAddr);
+                try {
+                    String address = getAddress(ipAddr);
+                    fwLog.setLoginLocation(address);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
                 fwLogMapper.insert(fwLog);
             }catch (Exception e){
                 System.out.println(e);
@@ -194,6 +218,17 @@ public class VipCodeController extends BaseController {
             sb.append(base.charAt(rd.nextInt(base.length())));
         }
         return sb.toString();
+    }
+
+    public String getAddress(String ip){
+        String json_result = null;
+        String url = "https://sp0.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?resource_id=6006&format=json&query=" + ip;
+        HttpResponse res = HttpRequest.get(url).execute();
+        JSONObject resJson = JSONObject.parseObject(res.body());
+        JSONArray resArr = JSONArray.parseArray(resJson.getString("data"));
+        resJson = JSONObject.parseObject("" + resArr.get(0));
+
+        return resJson.getString("location");
     }
     //根据id获取详细信息
     @GetMapping("/web/detail/{id}")

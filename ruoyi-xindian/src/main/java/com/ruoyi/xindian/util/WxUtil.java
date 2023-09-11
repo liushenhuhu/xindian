@@ -104,6 +104,47 @@ public class WxUtil {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 通知患者设备绑定成功
+     * @param telephone
+     */
+    public static void sendPatient12(String telephone){
+        String host = "https://dfsmsv2.market.alicloudapi.com";
+        String path = "/data/send_sms_v2";
+        String method = "POST";
+        String appcode = "37a5b008bed84153ad0691d0c33fe42a";
+        Map<String, String> headers = new HashMap<String, String>();
+        //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+        headers.put("Authorization", "APPCODE " + appcode);
+        //根据API的要求，定义相对应的Content-Type
+        headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        Map<String, String> querys = new HashMap<String, String>();
+        Map<String, String> bodys = new HashMap<String, String>();
+        bodys.put("content", "code:1234");
+        bodys.put("phone_number", telephone);
+        bodys.put("template_id", "CST_cldra10649");
+        //【迈雅云】您的设备已绑定成功，请登录微信小程序「迈雅云」使用！
+
+        try {
+            /**
+             * 重要提示如下:
+             * HttpUtils请从
+             * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/src/main/java/com/aliyun/api/gateway/demo/util/HttpUtils.java
+             * 下载
+             *
+             * 相应的依赖请参照
+             * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
+             */
+            HttpResponse response = HttpUtil.doPost(host, path, method, headers, querys, bodys);
+            System.out.println(response.toString());
+            //获取response的body
+            //System.out.println(EntityUtils.toString(response.getEntity()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     //发送建议短信
     public static void sendAdvice(String telephone){
         String host = "https://dfsmsv2.market.alicloudapi.com";

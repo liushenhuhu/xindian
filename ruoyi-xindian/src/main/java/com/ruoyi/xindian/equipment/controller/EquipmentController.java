@@ -253,13 +253,14 @@ public class EquipmentController extends BaseController {
 
     }
     @GetMapping("/getEquipmentCodeListByPhone/{phone}")
-    public AjaxResult getEquipmentCodeListByPhone(@PathVariable String phone) {
-        Doctor doctor = doctorService.selectDoctorByDoctorPhone(phone);
+    public AjaxResult getEquipmentCodeListByPhone(@PathVariable String phone) throws Exception {
+        String encrypt = aesUtils.encrypt(phone);
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(encrypt);
         if(doctor == null){
             return AjaxResult.error("非医生无权限");
         }
         Equipment equipment = new Equipment();
-        equipment.setPatientPhone(phone);
+        equipment.setPatientPhone(encrypt);
         List<Equipment> equipmentList = equipmentService.selectEquipmentList(equipment);
         StringBuilder EquipmentCodeList= new StringBuilder();
         for (Equipment eq : equipmentList) {

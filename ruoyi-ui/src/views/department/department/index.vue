@@ -18,13 +18,13 @@
         />
       </el-form-item>
       <el-form-item label="医院名称" prop="hospitalCode">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" clearable>
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
           <el-option
-            v-for="dict in dict.type.hospital_name_list"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalCode">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -142,6 +142,7 @@
 
 <script>
 import { listDepartment, getDepartment, delDepartment, addDepartment, updateDepartment } from "@/api/department/department";
+import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "Department",
@@ -158,6 +159,7 @@ export default {
       multiple: true,
       // 显示搜索条件
       showSearch: true,
+      options:[],
       // 总条数
       total: 0,
       // 科室表格数据
@@ -188,6 +190,9 @@ export default {
     };
   },
   created() {
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
     this.getList();
   },
   methods: {

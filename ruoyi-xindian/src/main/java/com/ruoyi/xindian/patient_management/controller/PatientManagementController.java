@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -248,6 +249,89 @@ public class PatientManagementController extends BaseController {
     @GetMapping("/listP")
     public TableDataInfo listP(PatientManagement patientManagement,HttpServletRequest request) throws Exception {
 
+        List<PatientManagement> list = new ArrayList<>();
+        ArrayList<PatientManagmentDept> resList = new ArrayList<>();
+        if (patientManagement.getPatientPhone()!=null){
+            patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
+        }
+        if (patientManagement.getPatientName()!=null){
+            patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
+        }
+        if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
+            patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
+        }
+        startPage();
+        if (null == patientManagement.getEcgType()) {
+            list = patientManagementService.selectPatientManagementList(patientManagement);
+        } else if (patientManagement.getEcgType().equals("DECGsingle")) {
+            list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
+        } else if (patientManagement.getEcgType().equals("JECG12")) {
+            list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+        } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
+            list = patientManagementService.selectPatientManagementJECGList(patientManagement);
+        }else if (patientManagement.getEcgType().equals("JECGsingle")) {
+            list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
+        } else if (patientManagement.getEcgType().equals("DECG12")) {
+            list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
+        } else {
+            list = patientManagementService.selectPatientManagementList(patientManagement);
+        }
+        PatientManagmentDept patientManagmentDept;
+        Doctor doctor = new Doctor();
+        Department department = new Department();
+        for (PatientManagement management : list) {
+//            patientManagmentDept= (PatientManagmentDept) management;
+            if(DateUtil.isValidDate(management.getBirthDay())){
+                try {
+                    management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
+                } catch (ParseException e) {
+                    System.out.println(1);
+                }
+            }
+            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+                management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
+
+            }
+            if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
+                management.setPatientName(aesUtils.decrypt(management.getPatientName()));
+            }
+            if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
+                management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
+            }
+            if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
+                management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
+            }
+            patientManagmentDept = new PatientManagmentDept();
+            BeanUtils.copyProperties(management, patientManagmentDept);
+
+            if (patientManagmentDept.getDoctorPhone() != null) {
+                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
+                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+                if (doctors.get(0).getDepartmentCode() != null) {
+                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
+                    List<Department> departments = departmentService.selectDepartmentList(department);
+                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                }
+            }
+
+            if (management.getTimeDuration() == null) {
+                patientManagmentDept.setAcquisitionDuration("报告未生成");
+            } else {
+                patientManagmentDept.setAcquisitionDuration("记录时长: " + DateUtil.timeToString(management.getTimeDuration()));
+            }
+            resList.add(patientManagmentDept);
+        }
+        long total = new PageInfo(list).getTotal();
+        return getTable(resList, total);
+    }
+
+
+    @GetMapping("/getEquipmentCodeList")
+    public TableDataInfo getEquipmentCodeList(String[] equipmentCodeList,String patientPhone) throws Exception {
+
+        PatientManagement patientManagement = new PatientManagement();
+        patientManagement.getEquipmentCodeList().addAll(Arrays.asList(equipmentCodeList));
+        patientManagement.setPatientPhone(patientPhone);
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
         if (patientManagement.getPatientPhone()!=null){

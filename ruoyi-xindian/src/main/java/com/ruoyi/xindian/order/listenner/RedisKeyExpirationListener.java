@@ -2,6 +2,7 @@ package com.ruoyi.xindian.order.listenner;
 
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.alert_log.service.IAlertLogService;
+import com.ruoyi.xindian.equipment.service.EquipmentHeadingCodeService;
 import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
@@ -43,6 +44,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     @Resource
     private WXPayController wxPayController;
 
+    @Resource
+    private EquipmentHeadingCodeService equipmentHeadingCodeService;
+
     private final Lock lock = new ReentrantLock();
 
     /**
@@ -60,6 +64,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
         try {
             String expiredKey = message.toString();
             String[] split = expiredKey.split(":");
+            String[] split1 = expiredKey.split("!");
             if (split[0].equals("order")){
                 System.out.println("订单创建15分钟，开始判断订单是否支付并进行数据删除-------------------");
                 orderInfoService.redisOrderKey(split[1]);
@@ -76,6 +81,23 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 }
                 return;
             }
+            if (split1[0].equals("getEquipmentCodeTwo")){
+
+                try {
+                    equipmentHeadingCodeService.selectCodeState(split1[1]);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+            }
+            if (split1[0].equals("getEquipmentCodeT15")){
+                try {
+                    equipmentHeadingCodeService.selectCodeState15(split1[1]);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+            }
+
+
             //用于提交心电，加入抢单，十分钟过期，判断有没有诊断
             if (split[0].equals("reportPT")){
                 try {

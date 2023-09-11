@@ -1,0 +1,124 @@
+package com.ruoyi.xindian.equipment.controller;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.equipment.domain.AccountsMsg;
+import com.ruoyi.xindian.equipment.domain.Equipment;
+import com.ruoyi.xindian.equipment.domain.EquipmentHeadingCode;
+import com.ruoyi.xindian.equipment.mapper.EquipmentHeadingCodeMapper;
+import com.ruoyi.xindian.equipment.service.AccountsMsgService;
+import com.ruoyi.xindian.equipment.service.EquipmentHeadingCodeService;
+import com.ruoyi.xindian.equipment.service.IEquipmentService;
+import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
+import org.aspectj.weaver.loadtime.Aj;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+@RestController
+@RequestMapping("/headingCode/headingCode")
+public class EquipmentHeadingCodeController {
+
+
+
+    @Resource
+    private EquipmentHeadingCodeService equipmentHeadingCodeService;
+
+
+    @Resource
+    private IEquipmentService equipmentService;
+
+    @Resource
+    private IPatientService patientService;
+
+    @Resource
+    private WXPublicRequest wxPublicRequest;
+
+
+    @Resource
+    private AccountsMsgService accountsMsgService;
+
+    @Resource
+    private AesUtils aesUtils;
+
+
+    @Resource
+    private IMedicalHistoryService medicalHistoryService;
+
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
+
+    /**
+     * 查询设备编号以及给管理员发送消息
+     * @param code
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getEquipmentCode")
+    public AjaxResult getEquipmentCode(String code,String phone) throws Exception {
+
+        String encrypt = aesUtils.encrypt(phone);
+        EquipmentHeadingCode equipmentHeadingCode = new EquipmentHeadingCode();
+
+        equipmentHeadingCode = equipmentHeadingCodeService.selectByCode(code);
+        if (equipmentHeadingCode==null){
+           equipmentHeadingCode = equipmentHeadingCodeService.selectEquipmentCode(code);
+           if (equipmentHeadingCode==null){
+               return AjaxResult.error("识别码不存在");
+           }
+        }
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentHeadingCode.getEquipmentCode());
+        if (equipment==null){
+            return AjaxResult.error("SN码不存在");
+        }
+        Patient patient = patientService.selectPatientByPatientPhone(encrypt);
+        if (patient==null){
+            return AjaxResult.error("患者信息不存在");
+        }
+        if (equipment.getEquipmentStatus().equals("True")){
+            return AjaxResult.error("当前设备已被使用，请更换设备后重试");
+        }
+
+
+        MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(encrypt);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        EquipmentHeadingCode finalEquipmentHeadingCode = equipmentHeadingCode;
+        CompletableFuture.runAsync(() ->{
+            System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
+            try{
+                List<AccountsMsg> accountsMsgs = accountsMsgService.selectByList();
+                for (AccountsMsg c : accountsMsgs){
+                    wxPublicRequest.sendEquipmentMsg(finalEquipmentHeadingCode.getEquipmentCode(), c.getOpenId(),
+                            aesUtils.decrypt(patient.getPatientName()),aesUtils.decrypt(patient.getPatientPhone()),patient.getPatientSex()+"/高:"+medicalHistory.getHeight()+"/重"+medicalHistory.getWeight(),patient.getBirthDay());
+                }
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
+        },executorService);
+        executorService.shutdown(); // 回收线程池
+        redisTemplate.opsForValue().set("getEquipmentCodeTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),2, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("getEquipmentCodeT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),3,TimeUnit.MINUTES);
+        return AjaxResult.success();
+
+    }
+
+
+
+
+
+}

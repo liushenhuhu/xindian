@@ -222,7 +222,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
 
             vipPatientService.updateVipPatient(vipPatient);
-
+            SysUser sysUser1 = new SysUser();
+            sysUser1.setUserId(sysUser.getUserId());
+            sysUser1.setDetectionTime(vipPatient.getEndDate());
+            sysUserMapper.updateUser(sysUser1);
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             CompletableFuture.runAsync(() ->{
                 System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
@@ -274,6 +277,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 vipPatient.setCreateTime(date);
                 vipPatientService.insertVipPatient(vipPatient);
                 sysUserMapper.updateDeteTime(sysUser.getPhonenumber());
+                SysUser sysUser2 = new SysUser();
+                sysUser2.setUserId(sysUser.getUserId());
+                sysUser2.setDetectionTime(vipPatient.getEndDate());
+                sysUserMapper.updateUser(sysUser2);
                 ExecutorService executorService = Executors.newSingleThreadExecutor();
                 CompletableFuture.runAsync(() ->{
                     System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());

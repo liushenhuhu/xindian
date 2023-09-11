@@ -6,8 +6,10 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.fw_log.service.FwLogService;
 import com.ruoyi.xindian.patientCount.domain.PatientCount;
@@ -38,6 +40,9 @@ public class PatientCountController extends BaseController {
     private IVipPatientService vipPatientService;
     @Autowired
     private AesUtils aesUtils;
+
+    @Autowired
+    private ISysUserService sysUserService;
     /**
      * 查询用户列表
      */
@@ -48,31 +53,35 @@ public class PatientCountController extends BaseController {
             patientCount.setPhonenumberAes(aesUtils.encrypt(patientCount.getPhonenumberAes()));
         }
         startPage();
-        LambdaQueryWrapper<PatientCount> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(!"".equals(patientCount.getPhonenumberAes())&&patientCount.getPhonenumberAes()!=null,
-                        PatientCount::getPhonenumberAes,patientCount.getPhonenumberAes())
-                .between(!"".equals(patientCount.getBegindetectionTime())&&patientCount.getBegindetectionTime()!=null
-                                &&!"".equals(patientCount.getEnddetectionTime())&&patientCount.getEnddetectionTime()!=null,
-                        PatientCount::getDetectionTime,patientCount.getBegindetectionTime(),patientCount.getEnddetectionTime())
-                .eq(!"".equals(patientCount.getDetectionNum())&&patientCount.getDetectionNum()!=null,
-                        PatientCount::getDetectionNum,patientCount.getDetectionNum())
-                .orderByDesc(PatientCount::getDetectionNum);
-
-        List<PatientCount> list = patientCountService.list(wrapper);
-        LambdaQueryWrapper<FwLog> wrapper1=new LambdaQueryWrapper<>();
+        List<PatientCount> list = patientCountService.selectWFLogAndVip(patientCount);
         for (PatientCount c:list){
-            wrapper1.eq(FwLog::getUserName,c.getPhonenumberAes())
-                    .eq(FwLog::getFwStatus,2);
-            int count = fwLogService.count(wrapper1);
-            c.setUsesNum((long) count);
-            wrapper1.clear();
-            VipPatient vip=vipPatientService.findVipPhone(c.getPhonenumberAes());
-            if(vip!=null){
-                c.setDetectionNum(vip.getVipNum());
-                c.setDetectionTime(vip.getEndDate());
+            //使用次数
+            long usesNum = 0;
+            //购买次数
+            long  payNum = 0;
+            if (c.getFwLogs()!=null&&c.getFwLogs().size()>0){
+                for (FwLog b : c.getFwLogs()){
+                    if (b.getFwStatus()!=null&&"2".equals(b.getFwStatus())){
+                        usesNum +=b.getFwNum();
+                    }
+                    if (b.getFwStatus()!=null&&"1".equals(b.getFwStatus())){
+                        payNum +=b.getFwNum();
+                    }
+                }
             }
-            c.setPhonenumberAes(aesUtils.decrypt(c.getPhonenumberAes()));
-            c.setTotalNum(count+c.getDetectionNum());
+
+            //剩余次数
+            if (c.getVipPatient()!=null && c.getVipPatient().getVipNum()!=null){
+                c.setDetectionNum(c.getVipPatient().getVipNum());
+            }
+            //总次数
+            c.setTotalNum(usesNum+c.getDetectionNum());
+            c.setPayNum(payNum);
+            c.setUsesNum(usesNum);
+            if (StringUtils.isNotEmpty(c.getPhonenumberAes())){
+                c.setPhonenumberAes(aesUtils.decrypt(c.getPhonenumberAes()));
+            }
+
         }
         return getDataTable(list);
     }
@@ -87,20 +96,35 @@ public class PatientCountController extends BaseController {
         if(patientCount.getPhonenumberAes()!=null&&!"".equals(patientCount.getPhonenumberAes())){
             patientCount.setPhonenumberAes(aesUtils.encrypt(patientCount.getPhonenumberAes()));
         }
-        LambdaQueryWrapper<PatientCount> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(!"".equals(patientCount.getPhonenumberAes())&&patientCount.getPhonenumberAes()!=null,
-                        PatientCount::getPhonenumberAes,patientCount.getPhonenumberAes())
-                .between(!"".equals(patientCount.getBegindetectionTime())&&patientCount.getBegindetectionTime()!=null
-                                &&!"".equals(patientCount.getEnddetectionTime())&&patientCount.getEnddetectionTime()!=null,
-                        PatientCount::getDetectionTime,patientCount.getBegindetectionTime(),patientCount.getEnddetectionTime())
-                .eq(!"".equals(patientCount.getDetectionNum())&&patientCount.getDetectionNum()!=null,
-                        PatientCount::getDetectionNum,patientCount.getDetectionNum())
-                .orderByDesc(PatientCount::getDetectionNum);
-
-
-        List<PatientCount> list = patientCountService.list(wrapper);
+        List<PatientCount> list = patientCountService.selectWFLogAndVip(patientCount);
         for (PatientCount c:list){
-            c.setPhonenumberAes(aesUtils.decrypt(c.getPhonenumberAes()));
+            //使用次数
+            long usesNum = 0;
+            //购买次数
+            long  payNum = 0;
+            if (c.getFwLogs()!=null&&c.getFwLogs().size()>0){
+                for (FwLog b : c.getFwLogs()){
+                    if (b.getFwStatus()!=null&&"2".equals(b.getFwStatus())){
+                        usesNum +=b.getFwNum();
+                    }
+                    if (b.getFwStatus()!=null&&"1".equals(b.getFwStatus())){
+                        payNum +=b.getFwNum();
+                    }
+                }
+            }
+
+            //剩余次数
+            if (c.getVipPatient()!=null && c.getVipPatient().getVipNum()!=null){
+                c.setDetectionNum(c.getVipPatient().getVipNum());
+            }
+            //总次数
+            c.setTotalNum(usesNum+c.getDetectionNum());
+            c.setPayNum(payNum);
+            c.setUsesNum(usesNum);
+            if (StringUtils.isNotEmpty(c.getPhonenumberAes())){
+                c.setPhonenumberAes(aesUtils.decrypt(c.getPhonenumberAes()));
+            }
+
         }
         ExcelUtil<PatientCount> util = new ExcelUtil<PatientCount>(PatientCount.class);
         util.exportExcel(response, list, "vip用户数据");

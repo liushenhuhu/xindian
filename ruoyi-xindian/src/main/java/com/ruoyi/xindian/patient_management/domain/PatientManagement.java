@@ -47,7 +47,7 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "设备号")
     private String equipmentCode;
 
-    private List<String> equipmentCodeList;
+    private List<String> equipmentCodeList = new ArrayList<>();
 
     /**
      * 连接时间

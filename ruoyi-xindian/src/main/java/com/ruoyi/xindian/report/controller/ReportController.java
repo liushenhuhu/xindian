@@ -19,6 +19,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
@@ -223,6 +224,7 @@ public class ReportController extends BaseController
                 else {
                     reportM.setPatientAge(patient.getPatientAge());
                 }
+                reportM.setPatientPhone(patientManagement.getPatientPhone());
                 reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
                 reportM.setPatientSex(patient.getPatientSex());
             }
@@ -282,9 +284,17 @@ public class ReportController extends BaseController
 //    @PreAuthorize("@ss.hasPermi('report:report:add')")
     @Log(title = "报告", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Report report)
-    {
-        return toAjax(reportService.insertReport(report));
+    public AjaxResult add(@RequestBody Report rep) throws Exception {
+        if (rep.getPPhone()!=null&&!"".equals(rep.getPPhone())){
+            rep.setPPhone(aesUtils.encrypt(rep.getPPhone()));
+        }
+        if (rep.getdPhone()!=null&&!"".equals(rep.getdPhone())){
+            rep.setdPhone(aesUtils.encrypt(rep.getdPhone()));
+        }
+        if (StringUtils.isNotEmpty(rep.getDiagnosisDoctor())){
+            rep.setDiagnosisDoctor(aesUtils.encrypt(rep.getDiagnosisDoctor()));
+        }
+        return toAjax(reportService.insertReport(rep));
     }
 
 
@@ -299,8 +309,21 @@ public class ReportController extends BaseController
 //        User currentUser = ShiroUtils.getSysUser();
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
+            report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+        }
         if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
             report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+        }
+        if (StringUtils.isNotEmpty(report.getDiagnosisDoctor())){
+            report.setDiagnosisDoctor(aesUtils.encrypt(report.getDiagnosisDoctor()));
+            Doctor doctor = new Doctor();
+            doctor.setDoctorName(report.getDiagnosisDoctor());
+            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            if (doctors==null||doctors.size()==0){
+                return AjaxResult.error("当前医生不存在");
+            }
+            report.setdPhone(doctors.get(0).getDoctorPhone());
         }
         List<Doctor> doctors = null;
         //当前报告信息

@@ -1,46 +1,47 @@
 <template>
   <div class="app-container">
+    <router-view v-if="isRouterAlive"></router-view>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
-      <el-form-item label="患者姓名" prop="patientName">
-        <el-input
-          v-model="queryParams.patientName"
-          placeholder="请输入患者姓名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="患者性别" prop="patientSex">
-        <el-select placeholder="请选择性别" v-model="queryParams.patientSex">
-          <el-option label="男" value="男"></el-option>
-          <el-option label="女" value="女"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="患者电话" prop="patientPhone">
-        <el-input
-          v-model="queryParams.PatPhone"
-          placeholder="请输入患者电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="患者姓名" prop="patientName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.patientName"-->
+<!--          placeholder="请输入患者姓名"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="患者性别" prop="patientSex">-->
+<!--        <el-select placeholder="请选择性别" v-model="queryParams.patientSex">-->
+<!--          <el-option label="男" value="男"></el-option>-->
+<!--          <el-option label="女" value="女"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="患者电话" prop="patientPhone">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.PatPhone"-->
+<!--          placeholder="请输入患者电话"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
 
-<!--      <el-form-item label="患者身份证号" prop="patientCode">
-        <el-input
-          v-model="queryParams.patientCode"
-          placeholder="请输入患者身份证号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
-      <el-form-item label="患者id" prop="pId">
-        <el-input
-          v-model="queryParams.pId"
-          placeholder="请输入患者id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      <!--      <el-form-item label="患者身份证号" prop="patientCode">
+              <el-input
+                v-model="queryParams.patientCode"
+                placeholder="请输入患者身份证号"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>-->
+      <!--      <el-form-item label="患者id" prop="pId">
+              <el-input
+                v-model="queryParams.pId"
+                placeholder="请输入患者id"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>-->
       <el-form-item label="医院名称" prop="hospitalName">
         <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
           <el-option
@@ -51,25 +52,25 @@
           </el-option>
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="设备号" prop="equipmentCode">
-        <el-input
-          v-model="queryParams.equipmentCode"
-          placeholder="请输入设备号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="连接时间">
-        <el-date-picker
-          v-model="daterangeConnectionTime"
-          style="width: 205px"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetimerange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>-->
+      <!--      <el-form-item label="设备号" prop="equipmentCode">
+              <el-input
+                v-model="queryParams.equipmentCode"
+                placeholder="请输入设备号"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>-->
+      <!--      <el-form-item label="连接时间">
+              <el-date-picker
+                v-model="daterangeConnectionTime"
+                style="width: 205px"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="datetimerange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>-->
       <!--      <el-form-item label="在线状态" prop="onlineStatus">
               <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
                 <el-option
@@ -88,35 +89,34 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">
-        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
-          <el-option
-            v-for="dict in dict.type.diagnosis_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>-->
-<!--      <el-form-item label="诊断结论" prop="diagnosisConclusion">
-        <el-input
-          v-model="queryParams.diagnosisConclusion"
-          placeholder="请输入诊断结论"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
-<!--      <el-form-item label="诊断医生" prop="field101">-->
-<!--        <el-select v-model="queryParams.DoctorName" placeholder="请选择诊断医生" clearable :style="{width: '100%'}">-->
-<!--          <el-option-->
-<!--            v-for="item in options"-->
-<!--            :key="item.value"-->
-<!--            :label="item.label"-->
-<!--            :value="item.value">-->
-<!--          </el-option>-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-
+            <el-form-item label="诊断状态" prop="diagnosisStatus">
+              <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
+                <el-option
+                  v-for="item in options3"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+      <!--      <el-form-item label="诊断结论" prop="diagnosisConclusion">
+              <el-input
+                v-model="queryParams.diagnosisConclusion"
+                placeholder="请输入诊断结论"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>-->
+            <el-form-item label="诊断医生" prop="diagnosisDoctor">
+              <el-select v-model="queryParams.diagnosisDoctor" placeholder="请选择诊断医生" >
+                <el-option
+                  v-for="item in option2"
+                  :key="item.doctorId"
+                  :label="item.doctorName"
+                  :value="item.doctorName">
+                </el-option>
+              </el-select>
+            </el-form-item>
       <el-form-item label="风险等级" prop="ecgLevel">
         <el-select v-model="queryParams.ecgLevel" placeholder="请选择风险等级" clearable>
           <el-option
@@ -127,22 +127,14 @@
           />
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="医生电话" prop="doctorPhone">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.doctorPhone"-->
-<!--          placeholder="请输入医生电话"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-      <!--      <el-form-item label="pId" prop="pId">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.pId"-->
-      <!--          placeholder="请输入pId"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
+      <el-form-item label="患者管理id" prop="pId">
+        <el-input
+          v-model="queryParams.pId"
+          placeholder="请输入患者管理id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -150,29 +142,6 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['patient_management:patient_management:add']"-->
-<!--        >新增-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['patient_management:patient_management:edit']"-->
-<!--        >修改-->
-<!--        </el-button>-->
-<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -199,46 +168,13 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" :row-class-name="tableRowClassName">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="上传时间" align="center" prop="connectionTime" width="100">
+      <el-table-column label="上传时间" align="center" prop="connectionTime" width="100" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-
-      <!--      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
-            <el-table-column label="患者姓名" align="center" prop="patientName"/>
-            <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
-            <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-            <el-table-column label="患者性别" align="center" prop="patientSex">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="患者来源" align="center" prop="patientSource"/>
-            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-            <el-table-column label="家属电话" align="center" prop="familyPhone"/>
-            <el-table-column label="监测状态" align="center" prop="monitoringStatus">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-            <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
-            <el-table-column label="设备号" align="center" prop="equipmentCode"/>
-            <el-table-column label="在线状态" align="center" prop="onlineStatus">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="心电种类" align="center" prop="ecgType">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
-              </template>
-            </el-table-column>-->
-
-
       <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
       <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
         <template slot-scope="scope">
@@ -247,6 +183,7 @@
       </el-table-column>
       <el-table-column label="患者名称" align="center" prop="patientName" show-overflow-tooltip/>
       <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
+      <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
       <el-table-column label="医院名称" align="center" prop="hospitalName"/>
       <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >
         <template slot-scope="scope">
@@ -258,14 +195,11 @@
           <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
         </template>
       </el-table-column>
-      <!--      <el-table-column label="心电类型" align="center" prop="ecgType"/>-->
       <el-table-column label="心电种类" align="center" prop="ecgType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
         </template>
       </el-table-column>
-
-
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
@@ -317,9 +251,10 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.diagnosisStatus!==1"
             size="mini"
             type="text"
-            icon="el-icon-s-operation"
+            icon="el-icon-s-order"
             @click="selectECG(scope.row)"
           >选择医生诊断
           </el-button>
@@ -327,14 +262,8 @@
             size="mini"
             type="text"
             icon="el-icon-s-order"
-            @click="lookHistoryData(scope.row)"
-          >查看历史数据
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-order"
             @click="lookECG(scope.row)"
+            v-hasPermi="['patient:patient:alert']"
           >查看报告
           </el-button>
           <el-button
@@ -349,6 +278,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
+            v-hasPermi="['patient_management:patient_management:edit']"
           >修改
           </el-button>
           <el-button
@@ -356,6 +286,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
+            v-hasPermi="['patient_management:patient_management:remove']"
           >删除
           </el-button>
         </template>
@@ -424,7 +355,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="医生电话" prop="doctorPhone">
-          <el-input v-model="form.doctorPhone" placeholder="请输入医生电话"/>
+          <el-input v-model="form.doctorPhone" placeholder="请输入医生电话" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -448,38 +379,44 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listDoc,docUpdate
+  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listDoc, docUpdate
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
-import {addReport} from "@/api/report/report";
-import {listDoctorName} from "@/api/doctor/doctor";
-import th from "element-ui/src/locale/lang/th";
 import {listHospitalId} from "@/api/hospital/hospital";
-
+import {docList} from "@/api/doctor/doctor";
 
 export default {
-  name: "JECG12",
+  name: "JECGsingleGZ",
+  provide () {    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
+    return {
+      reload: this.reload
+    }
+  },
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list'],
   data() {
     return {
       currentScrollPos: 0,
-      isRouterAlive:true,
-      //诊断医生
-      options: [],
+      isRouterAlive: true,
       // 遮罩层
       loading: true,
-      value:[],
       // 选中数组
       ids: [],
       // 非单个禁用
       single: true,
-      pId:null,
+      reportList:{
+        pId:null,
+        dPhone:null,
+        hospital:null,
+      },
+      option:[],
+      value:[],
+      option2:[],
+      dialogFormVisible:false,
       // 非多个禁用
       multiple: true,
-      dialogFormVisible:false,
       // 显示搜索条件
       showSearch: false,
       // 总条数
@@ -488,11 +425,11 @@ export default {
       patient_managementList: [],
       // 弹出层标题
       title: "",
-      option:[],
       // 是否显示弹出层
       open: false,
       // 时间范围
       daterangeConnectionTime: [],
+      options:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -503,25 +440,25 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'JECG12',
-        PatPhone: null,
+        ecgType: this.$route.query.ecgType,
+        PatPhone:  this.$route.query.patientPhone,
         intelligentDiagnosis: null,
-        diagnosisStatus: 0,
+        diagnosisStatus: null,
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
         ecgLevel: null,
-        DoctorName: null,
         doctorPhone: null,
         patientSex:null
       },
-      reportList:{
-        pId:null,
-        dPhone:null,
-        hospital:null,
-      },
       // 表单参数
       form: {},
+      options3:[
+        {label:"未诊断",value:"0"},
+        {label:"诊断中",value:"2"},
+        {label:"已诊断",value:"1"},
+        {label:"拒接诊断",value:"3"},
+      ],
       // 表单校验
       rules: {
         patientPhone: [
@@ -536,6 +473,7 @@ export default {
       }
     };
   },
+
   beforeCreate() {
     // updateOnlineAll();
   },
@@ -549,36 +487,44 @@ export default {
   },
 
   created() {
+    // this.queryParams.PatPhone = this.$route.query.patientPhone
+    // this.queryParams.ecgType=this.$route.query.ecgType
+
+    docList().then(q=>{
+      this.option2=q.data
+    })
     listHospitalId(null).then(r=>{
       this.options=r.rows
     })
-    listDoctorName().then(response => {
-      console.log(response)
-      for (var i = 0; i < response.length; i++) {
-        var obj = {}
-        obj.value = response[i];
-        obj.label = response[i];
-        this.options[i] = obj;
-      }
-    });
     this.getList();
   },
   methods: {
-
+    tableRowClassName({row, rowIndex}){
+      /*console.log(row.ecgLevel)
+      if (row.ecgLevel === 2) {
+        return 'warning-row';
+      } else if (row.ecgLevel === 3) {
+        return 'success-row';
+      }
+      return '';*/
+    },
+    reload () {
+      this.isRouterAlive = false;            //先关闭，
+      this.$nextTick(function () {
+        this.isRouterAlive = true;         //再打开
+      })
+    },
     refreshList() {
       console.log("refresh======")
       updateOnlineAll().then(res => {
         this.getList();
       })
     },
-    lookHistoryData(val){
-      console.log(val)
-      this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECG12"}});
-    },
     selectECG(row){
       this.reportList.pId = row.pId
       this.dialogFormVisible = true;
       listDoc().then(r =>{
+        console.log(r)
         this.option = r.data
       })
     },
@@ -592,6 +538,41 @@ export default {
       })
     },
 
+    sendMsg(row){
+      const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+      let patientPhone = row.patientPhone
+      if (row.patientPhone.length===14||row.patientPhone.length===15){
+        patientPhone=row.patientPhone.substring(0,11)
+      }
+
+      var isPhoneNumberValid = reg.test(patientPhone);
+      if(isPhoneNumberValid) {
+        console.log(patientPhone)
+        console.log("患者电话: " + row.patientPhone)
+        console.log("患者姓名: " + row.patientName)
+        this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          sendMsgToPatient(patientPhone).then(response => {
+            this.$message({
+              type: 'success',
+              message: '发送成功!'
+            });
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      }
+      else{
+        this.$message.error('该患者手机号不合法！！！');
+      }
+    },
+
     /** 查询患者管理列表 */
     getList() {
       this.loading = true;
@@ -600,6 +581,8 @@ export default {
         this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
         this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
       }
+      this.queryParams.PatPhone = this.$route.query.patientPhone
+      this.queryParams.ecgType=this.$route.query.ecgType
       listPatient_management(this.queryParams).then(response => {
         console.log(response)
         this.patient_managementList = response.rows;
@@ -631,7 +614,26 @@ export default {
         doctorPhone: null,
         patientSex:null
       };
-      this.resetForm("form");
+      this.queryParams = {
+        pageNum: 1,
+          pageSize: 10,
+          pId: null,
+          patientCode: null,
+          hospitalCode: null,
+          equipmentCode: null,
+          connectionTime: null,
+          patientName: null,
+          ecgType: this.$route.query.ecgType,
+          PatPhone:  this.$route.query.patientPhone,
+          intelligentDiagnosis: null,
+          diagnosisStatus: null,
+          diagnosisConclusion: null,
+          diagnosisDoctor: null,
+          reportTime: null,
+          ecgLevel: null,
+          doctorPhone: null,
+          patientSex:null
+      }
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -641,22 +643,21 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.queryParams={
-          pId: null,
-          patientCode: null,
-          hospitalCode: null,
-          equipmentCode: null,
-          connectionTime: null,
-          patientName: null,
-          ecgType: 'JECG12',
-          PatPhone: null,
-          intelligentDiagnosis: null,
-          diagnosisStatus: 0,
-          diagnosisConclusion: null,
-          diagnosisDoctor: null,
-          reportTime: null,
-          ecgLevel: null,
-          DoctorName: null,
-          doctorPhone: null
+        pId: null,
+        patientCode: null,
+        hospitalCode: null,
+        equipmentCode: null,
+        connectionTime: null,
+        patientName: null,
+        ecgType: 'JECGsingle',
+        PatPhone: null,
+        intelligentDiagnosis: null,
+        diagnosisStatus: null,
+        diagnosisConclusion: null,
+        diagnosisDoctor: null,
+        reportTime: null,
+        ecgLevel: null,
+        doctorPhone: null
       }
       this.resetForm("queryForm");
       this.handleQuery();
@@ -714,40 +715,6 @@ export default {
       }).catch(() => {
       });
     },
-    //发送短信
-    sendMsg(row){
-      const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
-      let patientPhone = row.patientPhone
-      if (row.patientPhone.length===14||row.patientPhone.length===15){
-        patientPhone=row.patientPhone.substring(0,11)
-      }
-
-      var isPhoneNumberValid = reg.test(patientPhone);
-      if(isPhoneNumberValid) {
-        console.log("患者电话: " + row.patientPhone)
-        console.log("患者姓名: " + row.patientName)
-        this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          sendMsgToPatient(patientPhone).then(response => {
-            this.$message({
-              type: 'success',
-              message: '发送成功!'
-            });
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
-      }
-      else{
-        this.$message.error('该患者手机号不合法！！！');
-      }
-    },
     /** 导出按钮操作 */
     handleExport() {
       this.download('patient_management/patient_management/export', {
@@ -756,7 +723,7 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/restingECG", query: {pId: row.pId}});
+      this.$router.push({path: "/staticECG", query: {pId: row.pId,}});
     },
     /** 生成报告*/
     handleInform(row) {
@@ -768,7 +735,17 @@ export default {
     downloadInform(row) {
       let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
+
     }
   }
 };
 </script>
+<style>
+.el-table .warning-row {
+  background: #ffe7cf;
+}
+
+.el-table .success-row {
+  background: rgba(250, 250, 250, 0.47);
+}
+</style>
