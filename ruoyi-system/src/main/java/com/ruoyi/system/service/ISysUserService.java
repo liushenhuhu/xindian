@@ -229,6 +229,4 @@ public interface ISysUserService {
     public int insertMedical(SysUser sysUser);
 
 
-
-    List<SysUser> userAndVipAndWFLog(SysUser sysUser);
 }

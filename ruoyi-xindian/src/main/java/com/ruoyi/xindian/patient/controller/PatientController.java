@@ -167,6 +167,9 @@ public class PatientController extends BaseController
         if(patient.getPatientName() != null){
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
+        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+            patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
+        }
         return AjaxResult.success(patient);
     }
 
@@ -175,12 +178,21 @@ public class PatientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:query')")
     @GetMapping(value = "/getInfoByPhone/{patientPhone}")
-    public AjaxResult getInfoByPhone(@PathVariable("patientPhone") String patientPhone)
-    {
+    public AjaxResult getInfoByPhone(@PathVariable("patientPhone") String patientPhone) throws Exception {
         Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
         Date birthDay = patient.getBirthDay();
-        if(birthDay != null)
+        if(birthDay != null){
             patient.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+        }
+        if(patient.getPatientPhone() != null){
+            patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
+        }
+        if(patient.getPatientName() != null){
+            patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+        }
+        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+            patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
+        }
         return AjaxResult.success(patient);
     }
 
@@ -190,10 +202,22 @@ public class PatientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:query')")
     @GetMapping(value = "/getInfoByPatientName/{patientName}")
-    public AjaxResult getInfoByPatientName(@PathVariable("patientName") String patientName)
-    {
+    public AjaxResult getInfoByPatientName(@PathVariable("patientName") String patientName) throws Exception {
         Patient patient = patientService.selectPatientByPatientName(patientName);
         System.out.println(patient);
+        Date birthDay = patient.getBirthDay();
+        if(birthDay != null){
+            patient.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+        }
+        if(patient.getPatientPhone() != null){
+            patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
+        }
+        if(patient.getPatientName() != null){
+            patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+        }
+        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+            patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
+        }
         return AjaxResult.success(patient);
     }
 

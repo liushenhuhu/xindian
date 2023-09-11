@@ -8,6 +8,8 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysRoleService;
 
+import javax.annotation.Resource;
+
 /**
  * 用户权限处理
  * 
@@ -16,7 +18,7 @@ import com.ruoyi.system.service.ISysRoleService;
 @Component
 public class SysPermissionService
 {
-    @Autowired
+    @Resource
     private ISysRoleService roleService;
 
     @Autowired

@@ -386,7 +386,7 @@ public class ReportController extends BaseController
             }
             //咨询医生次数减一
                 vipPatientController.detectionNumSubtract(sysUser1.getPhonenumber());
-
+                report.setStartTime(new Date());
                 int i = reportService.updateReport(report);
 
 
