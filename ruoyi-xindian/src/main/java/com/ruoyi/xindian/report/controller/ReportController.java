@@ -319,12 +319,15 @@ public class ReportController extends BaseController
 //        User currentUser = ShiroUtils.getSysUser();
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
+
         if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
             report.setPPhone(aesUtils.encrypt(report.getPPhone()));
         }
         if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
             report.setdPhone(aesUtils.encrypt(report.getdPhone()));
         }
+
+
         if (StringUtils.isNotEmpty(report.getDiagnosisDoctor())){
             report.setDiagnosisDoctor(aesUtils.encrypt(report.getDiagnosisDoctor()));
             Doctor doctor = new Doctor();
@@ -338,6 +341,12 @@ public class ReportController extends BaseController
         List<Doctor> doctors = null;
         //当前报告信息
         Report report1 = reportService.selectReportByPId(s);
+        if (!SysUser.isAdmin(loginUser.getUser().getUserId())){
+            if (report1.getDiagnosisStatus()==1){
+                return AjaxResult.error("该数据已被诊断");
+            }
+        }
+
         report.setReportId(report1.getReportId());
         Date date = new Date();
         report.setReportTime(date);
@@ -459,6 +468,16 @@ public class ReportController extends BaseController
             }
             return toAjax(reportService.updateReportNull(report));
         }else if(report.getDiagnosisStatus()==1){//医生诊断
+            if (StringUtils.isNotEmpty(report.getStartDateTime())){
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date parse = simpleDateFormat.parse(report.getStartDateTime());
+                long time = parse.getTime();
+                long time1 = report1.getStartTime().getTime();
+                long dateTime = 2400000;
+                if (time-time1>dateTime){
+                    report.setStartTime(parse);
+                }
+            }
             reportService.updateReport(report);
             if (sysUser==null){
                 WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));

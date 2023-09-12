@@ -124,11 +124,11 @@
         <el-form-item label="医院代号" prop="hospitalCode">
           <el-select v-model="form.hospitalCode" placeholder="请选择医院代号">
             <el-option
-              v-for="dict in dict.type.hospital_name_list"
-              :key="dict.value"
-              :label="dict.label"
-:value="dict.value"
-            ></el-option>
+              v-for="item in options"
+              :key="item.hospitalId"
+              :label="item.hospitalName"
+              :value="item.hospitalCode">
+            </el-option>
           </el-select>
         </el-form-item>
       </el-form>

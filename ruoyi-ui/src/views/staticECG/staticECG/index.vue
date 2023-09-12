@@ -2341,12 +2341,21 @@ export default {
         });
         return
       }
+        const date = new Date();
+        const year = date.getFullYear().toString().padStart(4, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        const second = date.getSeconds().toString().padStart(2, '0');
+
+
 
       console.log(this.data.resultByDoctor)
       var form = {
         pId: this.pId,
         diagnosisStatus: '1',
-        reportType: "ECG",
+        startDateTime: `${year}-${month}-${day} ${hour}:${minute}:${second}`,
         diagnosisConclusion: this.data.resultByDoctor,
         reportTime: this.data.dataTime,
         diagnosisDoctor: this.data.doctorName,

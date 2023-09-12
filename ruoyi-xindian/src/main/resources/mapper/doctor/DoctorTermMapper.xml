@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.DoctorTermMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.hospital.domain.DoctorTerm">
+            <id property="termId" column=" term_id" jdbcType="INTEGER"/>
+            <result property="doctorPhone" column="doctor_phone" jdbcType="VARCHAR"/>
+            <result property="termText" column="term_text" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        select  term_id, doctor_phone, term_text, create_time from doctor_term
+    </sql>
+    <select id="selectDoctorTermList" parameterType="DoctorTerm" resultMap="BaseResultMap">
+        <include refid="Base_Column_List"/>
+        <where>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone = #{doctorPhone}</if>
+            <if test="termText != null  and termText != ''"> and term_text = #{termText}</if>
+        </where>
+    </select>
+</mapper>

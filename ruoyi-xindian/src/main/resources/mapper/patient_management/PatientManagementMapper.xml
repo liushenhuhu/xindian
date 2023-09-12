@@ -376,7 +376,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, connection_time desc
+        order by online_status desc, report_time desc
     </select>
 
     <select id="selectPatientManagementListDECG12" parameterType="PatientManagement" resultMap="PatientManagementResult">

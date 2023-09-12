@@ -158,6 +158,12 @@ public class DepartmentController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Department department)
     {
+        Department department1 = new Department();
+        department1.setDepartmentCode(department.getDepartmentCode());
+        List<Department> departments = departmentService.selectDepartmentList(department1);
+        if (departments!=null&&departments.size()>0){
+            return AjaxResult.error("科室代号已存在");
+        }
         return toAjax(departmentService.insertDepartment(department));
     }
 
