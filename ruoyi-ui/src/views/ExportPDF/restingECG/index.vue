@@ -94,7 +94,7 @@
                       @blur="handleInputConfirm"
                     >
                     </el-input>
-                    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
+                    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单击回车新增标签术语</el-button>
                     <div slot="footer" class="dialog-footer">
                       <el-button  @click="dialogVisibleTag=false">取 消</el-button>
                       <el-button type="primary" @click="termTag">确 定</el-button>
@@ -3629,7 +3629,7 @@ export default {
     padding: 10px 20px !important;
   }
   ::v-deep .button-new-tag[data-v-700a2669] {
-    line-height: 15px;
+    line-height: 10px;
   }
   ::v-deep .el-tag {
   padding: 0 10px !important;
