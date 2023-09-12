@@ -181,6 +181,7 @@ public class MedicalHistoryController extends BaseController
         if(appData!=null)
         {
             appData.setBirthDay(medicalHistory.getBirthDay());
+            appData.setPatientName(medicalHistory.getUserName());
             appDataService.updateAppData(appData);
         }
         return toAjax(medicalHistoryService.updateMedicalHistory(medicalHistory));

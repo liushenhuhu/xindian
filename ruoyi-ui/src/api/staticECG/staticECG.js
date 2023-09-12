@@ -17,4 +17,18 @@ export function checkByTagId(data) {
     data: data
   })
 }
+export function getTerm() {
+  return request({
+    url: '/term/term/list',
+    method: 'get',
+  })
+}
+export function addOrUpdateTerm(data) {
+  return request({
+    url: '/term/term',
+    method: 'put',
+    data: data
+  })
+}
+
 

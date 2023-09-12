@@ -192,7 +192,6 @@ public class DepartmentController extends BaseController
 
     }
 
-
     @GetMapping("/depList")
     public AjaxResult depList(){
         return AjaxResult.success(departmentService.depGroupList());

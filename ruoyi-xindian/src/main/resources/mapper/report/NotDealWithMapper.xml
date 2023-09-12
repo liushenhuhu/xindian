@@ -8,12 +8,12 @@
         <result property="id"    column="id"    />
         <result property="refuseTime"    column="refuse_time"    />
         <result property="pid"    column="pId"    />
-        <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="doctorPhone"    column="doctor_phone_aes"    />
         <result property="refuseReason"    column="refuse_reason"    />
     </resultMap>
 
     <sql id="selectNotDealWithVo">
-        select id, refuse_time, pId, doctor_phone, refuse_reason from Not_Deal_with
+        select id, refuse_time, pId, doctor_phone_aes, refuse_reason from Not_Deal_with
     </sql>
 
     <select id="selectNotDealWithList" parameterType="NotDealWith" resultMap="NotDealWithResult">
@@ -21,7 +21,7 @@
         <where>
             <if test="params.beginRefuseTime != null and params.beginRefuseTime != '' and params.endRefuseTime != null and params.endRefuseTime != ''"> and refuse_time between #{params.beginRefuseTime} and #{params.endRefuseTime}</if>
             <if test="pid != null  and pid != ''"> and pId = #{pid}</if>
-            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone = #{doctorPhone}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes = #{doctorPhone}</if>
             <if test="refuseReason != null  and refuseReason != ''"> and refuse_reason = #{refuseReason}</if>
         </where>
     </select>
@@ -37,7 +37,7 @@
             <if test="id != null">id,</if>
             <if test="refuseTime != null">refuse_time,</if>
             <if test="pid != null">pId,</if>
-            <if test="doctorPhoneAes != null">doctor_phone_aes,</if>
+            <if test="doctorPhoneAes != null">doctor_phone_aes_aes,</if>
             <if test="refuseReason != null">refuse_reason,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -54,7 +54,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="refuseTime != null">refuse_time = #{refuseTime},</if>
             <if test="pid != null">pId = #{pid},</if>
-            <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
+            <if test="doctorPhone != null">doctor_phone_aes = #{doctorPhone},</if>
             <if test="refuseReason != null">refuse_reason = #{refuseReason},</if>
         </trim>
         where id = #{id}

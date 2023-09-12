@@ -47,7 +47,8 @@
                 <span></span>
                 <div class="between">
                 <p>医师诊断</p>
-                  <el-button type="text" @click="dialogFormVisible = true" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2vh">常用术语</el-button>
+                  <el-button type="text" @click="dialogVisible" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2vh">新增术语</el-button>
+                  <el-button type="text" @click="Camera" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2vh">常用术语</el-button>
                 </div>
               </div>
               <div class="mt">
@@ -59,20 +60,47 @@
                   :rows="5"
                   class="font">{{ data.resultByDoctor }}
                 </el-input>
-                <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-                  <div v-for="(item,index) in items">
-                    <div>{{ item.name }}</div>
-                    <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
-                            v-for="itemc in item.label"
-                            :key="itemc"
-                            @click="putDown(itemc,$event)">{{ itemc }}
-                    </button>
-                  </div>
-                  <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogForm">确 定</el-button>
-                  </div>
-                </el-dialog>
+                <div class="tag-button-panging">
+                  <el-dialog title="常用术语" :visible.sync="dialogFormVisible" width="1200px">
+                    <div v-for="(item) in items">
+                      <div>{{ item.name }}</div>
+                      <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
+                              v-for="itemc in item.label"
+                              :key="itemc"
+                              @click="putDown(itemc,$event)">{{ itemc }}
+                      </button>
+                    </div>
+                    <div slot="footer" class="dialog-footer">
+                      <el-button  @click="dialogFormVisible=false">取 消</el-button>
+                      <el-button type="primary" @click="dialogForm">确 定</el-button>
+                    </div>
+                  </el-dialog>
+                  <el-dialog title="新增术语" :visible.sync="dialogVisibleTag">
+                    <el-tag
+                      :key="tag"
+                      v-for="tag in dynamicTags"
+                      closable
+                      :disable-transitions="false"
+                      @close="handleCloseTag(tag)">
+                      {{tag}}
+                    </el-tag>
+                    <el-input
+                      class="input-new-tag"
+                      v-if="inputVisible"
+                      v-model="inputValue"
+                      ref="saveTagInput"
+                      size="small"
+                      @keyup.enter.native="handleInputConfirm"
+                      @blur="handleInputConfirm"
+                    >
+                    </el-input>
+                    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
+                    <div slot="footer" class="dialog-footer">
+                      <el-button  @click="dialogVisibleTag=false">取 消</el-button>
+                      <el-button type="primary" @click="termTag">确 定</el-button>
+                    </div>
+                  </el-dialog>
+                </div>
               </div>
               <div class="doctor">
                 <div class="input">
@@ -200,6 +228,7 @@ import $ from 'jquery';
 import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/report/report";
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 import html2canvas from "html2canvas";
+import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
 
 export default {
   name: "index",
@@ -210,6 +239,10 @@ export default {
       items: [],//常用术语
       checkButton: [],
       pId: null,
+      dynamicTags: ['标签一', '标签二', '标签三'],
+      inputVisible: false,
+      inputValue: '',
+      dialogVisibleTag:null,
       data: {
         name: "",
         gender: "",
@@ -461,7 +494,6 @@ export default {
       getReportByPId(this.pId).then(response => {
         console.log("请求成功：", response.data)
         this.data.resultByDoctor = response.data.diagnosisConclusion
-        this.arr[0]=response.data.diagnosisConclusion
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
@@ -488,9 +520,47 @@ export default {
   },
   mounted() {
     this.get();
-    this.Camera();
   },
   methods: {
+
+    dialogVisible(){
+      getTerm().then(r=>{
+        if (r.rows.length>0){
+          this.dynamicTags = JSON.parse(r.rows[0].termText)
+        }
+        this.dialogVisibleTag = true
+      })
+    },
+    termTag(){
+      let obj = {
+        "termText": JSON.stringify(this.dynamicTags)
+      }
+      addOrUpdateTerm(obj).then(r=>{
+        this.$modal.msgSuccess("添加成功");
+        this.dialogVisibleTag = false
+      })
+
+    },
+    handleCloseTag(tag) {
+      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+    },
+
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+
+    handleInputConfirm() {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        this.dynamicTags.push(inputValue);
+      }
+      this.inputVisible = false;
+      this.inputValue = '';
+    },
+
     //截断数据（一条数据现在2000）
     getNewArray(array, subGroupLength) {
       let i = 0;
@@ -540,9 +610,9 @@ export default {
     },
     //按下常用术语按钮
     putDown(key,event) {
-      //console.log(event.currentTarget.classList.toggle('selected'))
+      // console.log(event.currentTarget.classList.toggle('selected'))
       event.currentTarget.classList.toggle('selected')
-      if(this.arr.length > 0){
+      console.log(this.arr)
         let index = this.arr.indexOf(key);
         //console.log(index)
         if(index !== -1){
@@ -550,9 +620,6 @@ export default {
         }else {
           this.arr.push(key);
         }
-      }else {
-        this.arr.push(key);
-      }
     },
     //关闭展开框
     clickclose() {
@@ -570,7 +637,12 @@ export default {
       this.openV6 = false;
     },
     dialogForm(){
-      this.data.resultByDoctor = this.data.resultByDoctor+this.arr.toString()
+      if (this.data.resultByDoctor){
+        this.data.resultByDoctor = this.data.resultByDoctor+','+this.arr.toString()
+      }else {
+        this.data.resultByDoctor =this.arr.toString()
+      }
+
       this.dialogFormVisible=false;
     },
     //请求数据
@@ -602,7 +674,6 @@ export default {
         success: function (data) {
           console.log("请求成功：", data)
           loading.close()
-          _th.arr[0]=data.result.diagnosis_conclusion
           _th.data.resultByDoctor = data.result.diagnosis_conclusion
           _th.data.doctorName = data.result.diagnosis_doctor
           _th.data.age = data.result.age
@@ -3242,6 +3313,7 @@ export default {
           label
         }));
         _th.items = result
+        _th.dialogFormVisible=true
         console.log(_th.items);
       })
     },
@@ -3433,15 +3505,6 @@ export default {
   flex: 1;
 }
 
-.bottom {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  width: 100%;
-  height: 4vw;
-  //border: 1px solid #000000;
-  margin-top: 2vw;
-}
 .ml{
   margin-left: 1vw;
   margin-right: 2vw;
@@ -3528,6 +3591,36 @@ export default {
   color: #000000 !important;
   border-radius: 0.5vw;
   border: 1px solid #000000;
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+.tag-button-panging{
+  ::v-deep .commentLabelBtn {
+    padding: 10px 20px !important;
+    line-height: 8px;
+  }
+  ::v-deep .el-button {
+    padding: 10px 20px !important;
+  }
+  ::v-deep .button-new-tag[data-v-700a2669] {
+    line-height: 15px;
+  }
+  ::v-deep .el-tag {
+  padding: 0 10px !important;
+}
 }
 
 </style>

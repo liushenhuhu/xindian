@@ -102,6 +102,7 @@
                         <if test="startTime!=null&amp;&amp;startTime!=''&amp;&amp;endTime!=null&amp;&amp;endTime!=''">
                             and  r.report_time BETWEEN #{startTime}  and #{endTime}
                         </if>
+                    and and report_type like concat('JECG','%')
              ) as c GROUP BY c.doctorName ORDER BY averageTime asc
     </select>
 

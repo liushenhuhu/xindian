@@ -212,7 +212,7 @@
 <!--        </el-form-item>-->
         <el-form-item label="科室" prop="equipmentName">
 
-          <el-select v-model="form.equipmentName" placeholder="请选择科室" clearable>
+          <el-select v-model="form.departmentCode" placeholder="请选择科室" clearable>
             <el-option
               v-for="item in options1"
               :key="item.departmentId"
@@ -259,7 +259,7 @@ import {getUserInfo, updateStatus} from "@/api/patient_management/patient_manage
 import {updateOnline1, updateOnline2, updateOnlineAll} from "@/api/online/online";
 import {addDict, listHospitalId} from "@/api/hospital/hospital";
 import {depList, listDepartment} from "@/api/department/department";
-import {hospitalCodeFind} from "@/api/doctor/doctor";
+import {hospitalCodeFind, hospitalCodeName} from "@/api/doctor/doctor";
 
 export default {
   name: "Equipment",
@@ -319,7 +319,7 @@ export default {
         hospitalCode: [
           {required: true, message: "医院代号不能为空", trigger: "blur"}
         ],
-        equipmentName: [
+        departmentCode: [
           {required: true, message: "科室代号不能为空", trigger: "blur"}
         ],
         equipmentStatus: [
@@ -359,6 +359,7 @@ export default {
     historyId(val){
       if (val!==""){
         hospitalCodeFind(val).then(r=>{
+          console.log(val)
           this.options1=r.data
         })
       }
@@ -462,9 +463,13 @@ export default {
       this.reset();
       const equipmentId = row.equipmentId || this.ids
       getEquipment(equipmentId).then(response => {
+        console.log(response)
         this.form = response.data;
         this.open = true;
         this.title = "修改设备";
+        hospitalCodeFind(response.data.hospitalCode).then(r=>{
+          this.options1=r.data
+        })
       });
       listHospitalId(null).then(r=>{
         this.options=r.rows
@@ -475,6 +480,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.equipmentId != null) {
+            console.log(this.form)
             updateEquipment(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;

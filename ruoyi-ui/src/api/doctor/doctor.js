@@ -63,6 +63,13 @@ export function hospitalCodeFind(doctorId) {
     method: 'get'
   })
 }
+export function hospitalCodeName(name) {
+  return request({
+    url: '/department/department/hospitalCodeName/' + name,
+    method: 'get'
+  })
+}
+
 
 export function docList() {
   return request({

@@ -73,7 +73,8 @@
             <span></span>
             <div class="between">
               <p>医师诊断</p>
-              <el-button type="text" @click="dialogFormVisible = true" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语</el-button>
+              <el-button type="text" @click="dialogVisible" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语</el-button>
+              <el-button type="text" @click="Camera" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语</el-button>
             </div>
           </div>
           <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
@@ -87,6 +88,31 @@
             </div>
             <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="dialogForm">确 定</el-button>
+            </div>
+          </el-dialog>
+          <el-dialog title="新增术语" :visible.sync="dialogVisibleTag">
+            <el-tag
+              :key="tag"
+              v-for="tag in dynamicTags"
+              closable
+              :disable-transitions="false"
+              @close="handleCloseTag(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="inputVisible"
+              v-model="inputValue"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="handleInputConfirm"
+              @blur="handleInputConfirm"
+            >
+            </el-input>
+            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
+            <div slot="footer" class="dialog-footer">
+              <el-button  @click="dialogVisibleTag=false">取 消</el-button>
+              <el-button type="primary" @click="termTag">确 定</el-button>
             </div>
           </el-dialog>
           <div class="margin">
@@ -170,6 +196,7 @@ import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/rep
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 import child from './child'
 import CacheList from "@/views/monitor/cache/list.vue";
+import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
 
 export default {
   name: "index",
@@ -220,9 +247,13 @@ export default {
       ],//没放大之前标记线
       dialogFormVisible: false,//弹出框
       items: "",//常用术语
+      dynamicTags: ['标签一', '标签二', '标签三'],
+      inputVisible: false,
+      inputValue: '',
       isSelected: false,//术语按钮没有被按下
       selectedButtons: [],//选中的按钮
       pId: null,
+      dialogVisibleTag:null,
       arr: [],
       data: {
         name: "",
@@ -285,7 +316,6 @@ export default {
         console.log(response)
         this.data.result = response.data.intelligentDiagnosis
         this.data.resultByDoctor = response.data.diagnosisConclusion
-        this.arr[0]=response.data.diagnosisConclusion
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
@@ -305,10 +335,48 @@ export default {
   },
   mounted() {
     this.get();
-    this.Camera();
+
     // this.drawgrid();//canvas 画图
   },
   methods: {
+    dialogVisible(){
+      getTerm().then(r=>{
+        if (r.rows.length>0){
+          this.dynamicTags = JSON.parse(r.rows[0].termText)
+        }
+        this.dialogVisibleTag = true
+      })
+    },
+    termTag(){
+      let obj = {
+        "termText": JSON.stringify(this.dynamicTags)
+      }
+      addOrUpdateTerm(obj).then(r=>{
+        this.$modal.msgSuccess("添加成功");
+        this.dialogVisibleTag = false
+      })
+
+    },
+    handleCloseTag(tag) {
+      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+    },
+
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+
+    handleInputConfirm() {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        this.dynamicTags.push(inputValue);
+      }
+      this.inputVisible = false;
+      this.inputValue = '';
+    },
+
     showChart1() {
       var pId = this.pId;
       // 找到对应的canvas
@@ -398,21 +466,21 @@ export default {
     putDown(key,event) {
       //console.log(event.currentTarget.classList.toggle('selected'))
       event.currentTarget.classList.toggle('selected')
-      if(this.arr.length > 0){
-        let index = this.arr.indexOf(key);
-        //console.log(index)
-        if(index !== -1){
-          this.arr.splice(index,1);
-        }else {
-          this.arr.push(key);
-        }
+      console.log(this.arr)
+      let index = this.arr.indexOf(key);
+      //console.log(index)
+      if(index !== -1){
+        this.arr.splice(index,1);
       }else {
         this.arr.push(key);
       }
     },
     dialogForm(){
-
-      this.data.resultByDoctor = this.data.resultByDoctor+this.arr.toString()
+      if (this.data.resultByDoctor){
+        this.data.resultByDoctor = this.data.resultByDoctor+','+this.arr.toString()
+      }else {
+        this.data.resultByDoctor =this.arr.toString()
+      }
       this.dialogFormVisible=false;
     },
     //请求数据
@@ -436,6 +504,7 @@ export default {
         data: JSON.stringify({
           pid: this.pId
         }),
+
         beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
           request.setRequestHeader("user", "zzu");
@@ -444,7 +513,6 @@ export default {
         success: function (data) {
           console.log("请求成功：", data)
           loading.close()
-          _th.arr[0]=data.result.diagnosis_conclusion
           _th.data.resultByDoctor = data.result.diagnosis_conclusion
           _th.data.doctorName = data.result.diagnosis_doctor
           _th.data.age = data.result.age
@@ -2266,6 +2334,14 @@ export default {
         });
         return
       }
+      if (this.data.doctorName==''||this.data.doctorName==null){
+        this.$message({
+          type: 'error',
+          message: '诊断医生不能为空!'
+        });
+        return
+      }
+
       console.log(this.data.resultByDoctor)
       var form = {
         pId: this.pId,
@@ -2303,6 +2379,7 @@ export default {
           label
         }));
         _th.items = result
+        _th.dialogFormVisible=true
         console.log("格式过的常用术语：", _th.items);
       })
     },
@@ -2561,5 +2638,19 @@ export default {
   transform: translate(-50%, -50%);
   border: 1px solid #fff;
 }
-
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
 </style>

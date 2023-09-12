@@ -22,6 +22,7 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.dataLabby.domain.dataLabby;
 import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
@@ -30,6 +31,8 @@ import com.ruoyi.xindian.detection.service.IDetectionService;
 import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.fw_log.mapper.FwLogMapper;
 import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.domain.DoctorTerm;
+import com.ruoyi.xindian.hospital.service.DoctorTermService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.medical.domain.MedicalData;
@@ -90,6 +93,9 @@ public class ReportController extends BaseController
 
 
     @Resource
+    private DoctorTermService doctorTermService;
+
+    @Resource
     private PatientRelationshipMapper patientRelationshipMapper;
 
     @Autowired
@@ -124,6 +130,10 @@ public class ReportController extends BaseController
     @Autowired
     private IHospitalService hospitalService;
 
+
+
+    @Resource
+    private TokenService tokenService;
 
     @Autowired
     private AesUtils aesUtils;
@@ -506,7 +516,7 @@ public class ReportController extends BaseController
      * 常用术语
      */
     @GetMapping("/getCommonTerms")
-    public AjaxResult getCommonTerms()
+    public AjaxResult getCommonTerms(HttpServletRequest request)
     {
         //正常
         String[] normal;
@@ -533,7 +543,7 @@ public class ReportController extends BaseController
         //选择性建议
         String[] ad;
         //返回map
-        HashMap<String, String[]> resMap = new HashMap<>();
+        LinkedHashMap<String, String[]> resMap = new LinkedHashMap<>();
         normal="正常心电图,大致正常心电图".split(",");
         heart_rhythm="窦性心律,异位心律,房性心律,室性心律,交界性心律,起搏心律".split(",");
         arrhythmia="窦性心律不齐, 心动过速, 心动过缓, 室性心动过速, 室上性心动过速, 交界性心动过速, 房性心动过速".split(", ");
@@ -559,7 +569,23 @@ public class ReportController extends BaseController
         resMap.put("危急值",critical_value);
         resMap.put("其它",other);
         resMap.put("选择性建议",ad);
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        DoctorTerm doctorTerm = new DoctorTerm();
+        doctorTerm.setDoctorPhone(loginUser.getUser().getUserName());
+        List<DoctorTerm> doctorTerms = doctorTermService.selectDoctorTermList(doctorTerm);
+        if (doctorTerms!=null&&doctorTerms.size()>0){
+            String text = doctorTerms.get(0).getTermText();
+            if (text.length()>2){
 
+                JSONArray objects = JSONArray.parseArray(text);
+                String[] stringArray = new String[objects.size()];
+                for (int i = 0; i < objects.size(); i++) {
+                    stringArray[i] = objects.getString(i);
+                }
+                resMap.put("医生术语",stringArray);
+            }
+
+        }
         return AjaxResult.success(resMap);
     }
 
