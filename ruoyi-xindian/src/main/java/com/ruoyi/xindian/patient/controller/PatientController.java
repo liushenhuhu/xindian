@@ -237,6 +237,9 @@ public class PatientController extends BaseController
             patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
         }
 
+        patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
+
+
         return toAjax(patientService.insertPatient(patient));
     }
 
@@ -252,6 +255,9 @@ public class PatientController extends BaseController
         patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
         if (StringUtils.isNotEmpty(patient.getFamilyPhone())){
             patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
+        }
+        if (patient.getBirthDay()!=null){
+            patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
         }
         return toAjax(patientService.updatePatient(patient));
     }

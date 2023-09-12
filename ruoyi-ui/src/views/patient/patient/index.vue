@@ -235,7 +235,7 @@
 
     <!-- 添加或修改患者对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="患者姓名" prop="patientName">
           <el-input v-model="form.patientName" placeholder="请输入患者姓名"/>
         </el-form-item>
@@ -243,8 +243,12 @@
           <el-input v-model="form.patientPhone" placeholder="请输入患者电话"/>
         </el-form-item>
 
-        <el-form-item label="患者年龄" prop="patientAge">
-          <el-input v-model="form.patientAge" placeholder="请输入患者年龄"/>
+        <el-form-item label="患者出生年月" prop="birthDay">
+          <el-date-picker
+            v-model="form.birthDay"
+            type="date"
+            placeholder="选择日期" value-format="yyyy-MM-dd">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="患者性别" prop="patientSex">
           <el-select v-model="form.patientSex" placeholder="请选择患者性别">
@@ -363,7 +367,8 @@ export default {
         equipmentId: null,
         monitoringStatus: null,
         bindingState: null,
-        detectionNum:null
+        detectionNum:null,
+    birthDay:null
       },
       // 表单参数
       form: {},
@@ -375,7 +380,7 @@ export default {
         patientPhone: [
           {required: true, message: "患者电话不能为空", trigger: "blur"}
         ],
-        patientAge: [
+        birthDay: [
           {required: true, message: "患者年龄不能为空", trigger: "blur"}
         ],
         patientSex: [
