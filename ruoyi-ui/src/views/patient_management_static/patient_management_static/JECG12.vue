@@ -42,7 +42,7 @@
         />
       </el-form-item>
       <el-form-item label="医院名称" prop="hospitalName">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" >
           <el-option
             v-for="item in options"
             :key="item.hospitalId"
@@ -552,15 +552,15 @@ export default {
     listHospitalId(null).then(r=>{
       this.options=r.rows
     })
-    listDoctorName().then(response => {
-      console.log(response)
-      for (var i = 0; i < response.length; i++) {
-        var obj = {}
-        obj.value = response[i];
-        obj.label = response[i];
-        this.options[i] = obj;
-      }
-    });
+    // listDoctorName().then(response => {
+    //   console.log(response)
+    //   for (var i = 0; i < response.length; i++) {
+    //     var obj = {}
+    //     obj.value = response[i];
+    //     obj.label = response[i];
+    //     this.options[i] = obj;
+    //   }
+    // });
     this.getList();
   },
   methods: {
