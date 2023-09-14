@@ -95,8 +95,14 @@ public class EquipmentHeadingCodeController {
 
 
         MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(encrypt);
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
         EquipmentHeadingCode finalEquipmentHeadingCode = equipmentHeadingCode;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeAgainTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone))){
+            redisTemplate.delete("getEquipmentCodeAgainTwo");
+        }
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeAgainT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone))){
+            redisTemplate.delete("getEquipmentCodeAgainT15");
+        }
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() ->{
             System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
             try{
@@ -111,8 +117,12 @@ public class EquipmentHeadingCodeController {
             System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
         },executorService);
         executorService.shutdown(); // 回收线程池
+
+
+
+
         redisTemplate.opsForValue().set("getEquipmentCodeTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),2, TimeUnit.MINUTES);
-        redisTemplate.opsForValue().set("getEquipmentCodeT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),3,TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("getEquipmentCodeT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),30,TimeUnit.MINUTES);
         return AjaxResult.success();
 
     }

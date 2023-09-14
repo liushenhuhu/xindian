@@ -197,10 +197,16 @@ public class EquipmentController extends BaseController {
     @Log(title = "设备", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Equipment equipment) throws Exception {
-        if (equipment.getPatientPhone()!=null&&!"".equals(equipment.getPatientPhone())){
+
+        if (equipment.getPatientPhone()!=null&&!"".equals(equipment.getPatientPhone())) {
             equipment.setPatientPhone(aesUtils.encrypt(equipment.getPatientPhone()));
         }
+        Equipment equipment1 = equipmentService.selectEquipmentByEquipmentCode(equipment.getEquipmentCode());
+        if (equipment1 != null) {
+            return AjaxResult.error("设备号已存在");
+        }
         return toAjax(equipmentService.insertEquipment(equipment));
+
     }
 
     /**

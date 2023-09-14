@@ -71,7 +71,7 @@ public class DoctorController extends BaseController
     /**
      * 查询医生列表
      */
-    @PreAuthorize("@ss.hasPermi('doctor:doctor:list')")
+//    @PreAuthorize("@ss.hasPermi('doctor:doctor:list')")
     @Aes
     @GetMapping("/list")
     public TableDataInfo list(Doctor doctor, HttpServletRequest request) throws Exception {

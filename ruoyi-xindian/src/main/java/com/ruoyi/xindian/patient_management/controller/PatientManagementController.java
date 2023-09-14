@@ -337,12 +337,6 @@ public class PatientManagementController extends BaseController {
         if (patientManagement.getPatientPhone()!=null){
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }
-        if (patientManagement.getPatientName()!=null){
-            patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
-        }
-        if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
-            patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
-        }
         startPage();
         if (null == patientManagement.getEcgType()) {
             list = patientManagementService.selectPatientManagementList(patientManagement);
@@ -362,6 +356,27 @@ public class PatientManagementController extends BaseController {
         PatientManagmentDept patientManagmentDept;
         Doctor doctor = new Doctor();
         Department department = new Department();
+
+        if (list==null||list.size()==0){
+            patientManagement.setPatientName(patientManagement.getPatientPhone());
+            patientManagement.setPatientPhone(null);
+            startPage();
+            if (null == patientManagement.getEcgType()) {
+                list = patientManagementService.selectPatientManagementList(patientManagement);
+            } else if (patientManagement.getEcgType().equals("DECGsingle")) {
+                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
+            } else if (patientManagement.getEcgType().equals("JECG12")) {
+                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+            } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
+                list = patientManagementService.selectPatientManagementJECGList(patientManagement);
+            }else if (patientManagement.getEcgType().equals("JECGsingle")) {
+                list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
+            } else if (patientManagement.getEcgType().equals("DECG12")) {
+                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
+            } else {
+                list = patientManagementService.selectPatientManagementList(patientManagement);
+            }
+        }
         for (PatientManagement management : list) {
 //            patientManagmentDept= (PatientManagmentDept) management;
             if(DateUtil.isValidDate(management.getBirthDay())){

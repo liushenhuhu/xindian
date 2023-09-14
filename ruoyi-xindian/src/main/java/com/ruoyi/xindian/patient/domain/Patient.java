@@ -114,6 +114,16 @@ public class Patient extends BaseEntity {
 
     private Long hospitalId;
 
+    private String doctorPhone;
+
+    public String getDoctorPhone() {
+        return doctorPhone;
+    }
+
+    public void setDoctorPhone(String doctorPhone) {
+        this.doctorPhone = doctorPhone;
+    }
+
     private List<String> hospitalNameList = new ArrayList<>();
 
     public String getPatientNameAes() {
