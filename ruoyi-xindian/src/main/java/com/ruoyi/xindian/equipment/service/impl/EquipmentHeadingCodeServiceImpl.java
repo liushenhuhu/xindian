@@ -107,8 +107,8 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                 }else {
                     if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeT15!"+split[0]+"="+split[1]))){
                         redisTemplate.opsForValue().set("getEquipmentCodeTwo!"+split[0]+"="+split[1],split[1],2, TimeUnit.MINUTES);
+                    }
                 }
-            }
         }
     }
 
@@ -122,29 +122,17 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
             SysUser sysUser = new SysUser();
             if (equipment.getEquipmentStatus().equals("True")){
 
-//                sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));
-//                if (sysUser!=null){
-//                    wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，请登迈雅云小程序查看","绑定成功");
-//                }else {
-//                    PatientRelationship patientRelationship = new PatientRelationship();
-//                    patientRelationship.setSonPhone(aesUtils.encrypt(split[1]));
-//                    List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipList(patientRelationship);
-//                    if (patientRelationships!=null&&patientRelationships.size()>0){
-//                        sysUser = sysUserMapper.selectUserByPhone(patientRelationships.get(0).getFatherPhone());
-//                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，请登迈雅云小程序查看","绑定成功");
-//                    }
-//                }
             }else {
                 sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));
                 if (sysUser!=null){
-                    wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备绑定失败，稍后管理员联系您","绑定失败");
+                    wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备绑定失败，请重新绑定或者联系客服","绑定失败");
                 }else {
                     PatientRelationship patientRelationship = new PatientRelationship();
                     patientRelationship.setSonPhone(aesUtils.encrypt(split[1]));
                     List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipList(patientRelationship);
                     if (patientRelationships!=null&&patientRelationships.size()>0){
                         sysUser = sysUserMapper.selectUserByPhone(patientRelationships.get(0).getFatherPhone());
-                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备绑定失败，稍后管理员联系您","绑定失败");
+                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备绑定失败，请重新绑定或者联系客服","绑定失败");
                     }
                 }
 
@@ -157,10 +145,49 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                 for (AccountsMsg c : accountsMsgs){
                     wxPublicRequest.sendEquipmentMsgFail(c.getOpenId(),"绑定失败",decrypt+"/"+split[1]);
                 }
+                redisTemplate.opsForValue().set("getEquipmentCodeAgainTwo!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),2, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set("getEquipmentCodeAgainT15!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),30,TimeUnit.MINUTES);
             }
         }
 
     }
+
+    @Override
+    public void selectCodeStateAgain(String code) throws Exception {
+
+
+        String[] split = code.split("=");
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(split[0]);
+        if (equipment!=null){
+
+            if (equipment.getEquipmentStatus().equals("True")){
+                SysUser sysUser = new SysUser();
+
+                sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));
+
+                if (sysUser!=null){
+
+                    wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，无需再重复绑定","绑定成功");
+                }else {
+                    PatientRelationship patientRelationship = new PatientRelationship();
+                    patientRelationship.setSonPhone(aesUtils.encrypt(split[1]));
+                    List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipList(patientRelationship);
+                    if (patientRelationships!=null&&patientRelationships.size()>0){
+                        sysUser = sysUserMapper.selectUserByPhone(patientRelationships.get(0).getFatherPhone());
+                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，无需再重复绑定","绑定成功");
+                    }
+                }
+
+            }else {
+                if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeAgainT15!"+split[0]+"="+split[1]))){
+                    redisTemplate.opsForValue().set("getEquipmentCodeAgainTwo!"+split[0]+"="+split[1],split[1],2, TimeUnit.MINUTES);
+                }
+            }
+        }
+
+
+    }
+
 }
 
 
