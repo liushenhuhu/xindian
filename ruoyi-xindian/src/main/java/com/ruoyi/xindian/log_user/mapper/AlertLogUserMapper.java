@@ -2,6 +2,7 @@ package com.ruoyi.xindian.log_user.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.log_user.domain.AlertLogUser;
+import com.ruoyi.xindian.log_user.domain.SelectVO;
 
 /**
  * 标注分配Mapper接口
@@ -58,4 +59,6 @@ public interface AlertLogUserMapper
      * @return 结果
      */
     public int deleteAlertLogUserByLogIds(String[] logIds);
+
+    public List<SelectVO> selectList();
 }

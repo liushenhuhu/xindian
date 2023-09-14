@@ -4,15 +4,17 @@
     <el-divider content-position="left">患者信息</el-divider>
 
   <el-row>
-    <el-col :span="12"><div class="grid-content bg-purple-dark">患者名称：{{form.patientName}}</div></el-col>
-    <el-col :span="12"><div class="grid-content bg-purple-dark">患者电话：{{form.patientPhone}}</div></el-col>
+    <el-col :span="10"><div class="grid-content bg-purple-dark">患者名称：{{form.patientName}}</div></el-col>
+    <el-col :span="14"><div class="grid-content bg-purple-dark">患者电话：{{form.patientPhone}}</div></el-col>
   </el-row>
 
   <el-row>
-    <el-col :span="8"><div class="grid-content bg-purple-dark">患者身份证：{{form.patientCode}}</div><span></span></el-col>
-    <el-col :span="8"><div class="grid-content bg-purple-dark">患者性别：{{form.patientSex}}</div><span></span></el-col>
-    <el-col :span="8"><div class="grid-content bg-purple-dark">家属电话：{{form.familyPhone}}</div><span></span></el-col>
+    <el-col :span="10"><div class="grid-content bg-purple-dark">患者身份证：{{form.patientCode}}</div><span></span></el-col>
+    <el-col :span="14"><div class="grid-content bg-purple-dark">家属电话：{{form.familyPhone}}</div><span></span></el-col>
   </el-row>
+    <el-row>
+      <el-col :span="24"><div class="grid-content bg-purple-dark">患者性别：{{form.patientSex}}</div><span></span></el-col>
+    </el-row>
     <el-divider content-position="left">单人预警统计图</el-divider>
 
 
@@ -102,3 +104,8 @@ export default {
   }
 }
 </script>
+<style>
+.el-row {
+  margin: 2vw;
+}
+</style>

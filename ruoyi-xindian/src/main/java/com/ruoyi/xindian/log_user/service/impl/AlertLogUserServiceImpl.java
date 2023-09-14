@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.log_user.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.xindian.log_user.domain.SelectVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.log_user.mapper.AlertLogUserMapper;
@@ -89,5 +91,10 @@ public class AlertLogUserServiceImpl implements IAlertLogUserService
     public int deleteAlertLogUserByLogId(String logId)
     {
         return alertLogUserMapper.deleteAlertLogUserByLogId(logId);
+    }
+
+    @Override
+    public List<SelectVO> selectList() {
+        return alertLogUserMapper.selectList();
     }
 }

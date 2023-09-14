@@ -96,7 +96,14 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                     System.out.println(e);
                 }
             }
+            if (split1[0].equals("getEquipmentCodeAgainTwo")){
 
+                try {
+                    equipmentHeadingCodeService.selectCodeStateAgain(split1[1]);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+            }
 
             //用于提交心电，加入抢单，十分钟过期，判断有没有诊断
             if (split[0].equals("reportPT")){

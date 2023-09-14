@@ -2,6 +2,7 @@ package com.ruoyi.xindian.log_user.service;
 
 import java.util.List;
 import com.ruoyi.xindian.log_user.domain.AlertLogUser;
+import com.ruoyi.xindian.log_user.domain.SelectVO;
 
 /**
  * 标注分配Service接口
@@ -58,4 +59,6 @@ public interface IAlertLogUserService
      * @return 结果
      */
     public int deleteAlertLogUserByLogId(String logId);
+
+    List<SelectVO> selectList();
 }

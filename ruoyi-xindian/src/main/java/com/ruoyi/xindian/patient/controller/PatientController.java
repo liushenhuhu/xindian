@@ -13,13 +13,19 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.domain.PatientMedicalHistoryDTO;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.relationship.domain.PatientRelationship;
+import com.ruoyi.xindian.relationship.domain.PatientRelationshipDto;
 import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +45,10 @@ import java.util.*;
 @RequestMapping("/patient/patient")
 public class PatientController extends BaseController
 {
+
+    @Autowired
+    private IMedicalHistoryService medicalHistoryService;
+
     @Autowired
     private IPatientService patientService;
 
@@ -233,9 +243,16 @@ public class PatientController extends BaseController
         patient.setPatientPhoneAes(patient.getPatientPhone());
         patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
         patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
+        Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+        if (patient1!=null){
+            return AjaxResult.error("手机号已重复");
+        }
         if (StringUtils.isNotEmpty(patient.getFamilyPhone())){
             patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
         }
+
+        patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
+
 
         return toAjax(patientService.insertPatient(patient));
     }
@@ -252,6 +269,9 @@ public class PatientController extends BaseController
         patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
         if (StringUtils.isNotEmpty(patient.getFamilyPhone())){
             patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
+        }
+        if (patient.getBirthDay()!=null){
+            patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
         }
         return toAjax(patientService.updatePatient(patient));
     }
@@ -315,4 +335,129 @@ public class PatientController extends BaseController
     {
         return toAjax(patientService.deletePatientByPatientPhone(patientPhone));
     }
+
+
+    /**
+     * 患者使用医生的手机号进行注册
+     * 患者新手机号为   医生手机号-患者姓名-随机三位字符串
+     * @param patientMedicalHistoryDTO
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/addPatientAndDocPhoneOrMed")
+    public AjaxResult addPatientAndDocPhoneOrMed(PatientMedicalHistoryDTO patientMedicalHistoryDTO) throws Exception {
+
+
+        if (StringUtils.isEmpty(patientMedicalHistoryDTO.getDoctorPhone())){
+            return AjaxResult.error("医生手机号不能为空");
+        }
+        if (StringUtils.isEmpty(patientMedicalHistoryDTO.getPatientName())){
+            return AjaxResult.error("患者姓名不能为空");
+        }
+
+        PatientMedicalHistoryDTO patientMedicalHistoryDTO1 = getRelationship(patientMedicalHistoryDTO);
+
+        if (StringUtils.isNotEmpty(patientMedicalHistoryDTO1.getPatientName())){
+            patientMedicalHistoryDTO1.setPatientName(aesUtils.encrypt(patientMedicalHistoryDTO1.getPatientName()));
+        }
+
+        if (StringUtils.isNotEmpty(patientMedicalHistoryDTO1.getPatientPhone())){
+            patientMedicalHistoryDTO1.setPatientPhone(aesUtils.encrypt(patientMedicalHistoryDTO1.getPatientPhone()));
+        }
+
+        MedicalHistory medicalHistory = getMedicalHistory(patientMedicalHistoryDTO1);
+
+        AppData appData = getAppData(patientMedicalHistoryDTO1);
+
+        Patient patient = getPatient(patientMedicalHistoryDTO1);
+
+        Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+        if(patient1!=null){
+            patient.setPatientId(patient1.getPatientId());
+            patientService.updatePatient(patient);
+        }else{
+            patientService.insertPatient(patient);
+        }
+        appDataService.insertAppData(appData);
+        MedicalHistory medicalHistory1 = medicalHistoryService.selectMedicalHistoryByPatientPhone(medicalHistory.getPatientPhone());
+        if(medicalHistory1!=null){
+            medicalHistory.setMedicalHistoryId(medicalHistory1.getMedicalHistoryId());
+            medicalHistoryService.updateMedicalHistory(medicalHistory);
+        }
+        else{
+            medicalHistoryService.insertMedicalHistory(medicalHistory);
+        }
+        return AjaxResult.success(aesUtils.decrypt(patient.getPatientPhone()));
+
+
+    }
+
+
+    /**
+     * 解析出患者信息
+     * @param patientRelationship
+     * @return
+     * @throws Exception
+     */
+    private Patient getPatient(PatientMedicalHistoryDTO patientRelationship) throws Exception {
+        Patient patient = new Patient();
+        patient.setPatientName(patientRelationship.getPatientName());
+        patient.setPatientPhone(patientRelationship.getPatientPhone());
+        patient.setPatientSex(patientRelationship.getPatientSex());
+        patient.setBirthDay(patientRelationship.getBirthDay());
+        if (patientRelationship.getBirthDay()!=null){
+            patient.setPatientAge(String.valueOf(DateUtil.getAge(patientRelationship.getBirthDay())));
+        }
+        return patient;
+    }
+
+    /**
+     * 通过医生的手机号生成患者对应的手机号
+     * @param patientRelationship
+     * @return
+     */
+    private PatientMedicalHistoryDTO getRelationship(PatientMedicalHistoryDTO patientRelationship){
+        StringBuilder patientPhone = new StringBuilder(patientRelationship.getDoctorPhone());
+        patientPhone.append("-").append(patientRelationship.getPatientName()).append("-");
+        Random random = new Random();
+        for (int i = 0; i < 3; i++) {
+            patientPhone.append(random.nextInt(10));
+        }
+        patientRelationship.setPatientPhone(String.valueOf(patientPhone));
+        return patientRelationship;
+    }
+
+    /**
+     * 解析出患者相关信息
+     * @param patientRelationship
+     * @return
+     */
+    private MedicalHistory getMedicalHistory(PatientMedicalHistoryDTO patientRelationship){
+        MedicalHistory medicalHistory = new MedicalHistory();
+        medicalHistory.setPastMedicalHistory(patientRelationship.getPastMedicalHistory());
+        medicalHistory.setLivingHabit(patientRelationship.getLivingHabit());
+        medicalHistory.setHeight(patientRelationship.getHeight());
+        medicalHistory.setWeight(patientRelationship.getWeight());
+        medicalHistory.setPatientPhone(patientRelationship.getPatientPhone());
+        return medicalHistory;
+    }
+
+
+    /**
+     * 解析除appData的所需数据
+     * @param patientRelationship
+     * @return
+     * @throws Exception
+     */
+    private AppData getAppData(PatientMedicalHistoryDTO patientRelationship) throws Exception {
+        AppData appData = new AppData();
+        appData.setBirthDay(patientRelationship.getBirthDay());
+        appData.setPatientPhone(patientRelationship.getPatientPhone());
+        appData.setUserName(patientRelationship.getPatientPhone());
+        appData.setPatientSex(patientRelationship.getPatientSex());
+        appData.setPatientName(patientRelationship.getPatientName());
+        return appData;
+    }
+
+
 }
