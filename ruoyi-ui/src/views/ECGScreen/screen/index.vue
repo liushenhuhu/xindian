@@ -778,7 +778,7 @@ export default {
                 })
                 if(code!==201){
                   chart.clear();
-                  chart.setOption(this.chart(this.data1, 0, this.p2Iy, this.p2V1y))
+                  chart.setOption(this.chart(this.data1, 0, this.p1Iy, this.p1V1y))
                   //this.setColor(1)
                 }
               } else {
@@ -881,6 +881,7 @@ export default {
                 chart.clear();
                 chart.setOption(this.chart(this.data2, 1250, this.p2Iy, this.p2V1y))
               }
+            console.log(this.p2Iy)
             }, 5000)
         }).catch(err=>{
           // console.log("请求错误"+err)

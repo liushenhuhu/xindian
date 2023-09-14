@@ -16,7 +16,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="patientSex" column="patient_sex"/>
         <result property="userId" column="user_id"/>
     </resultMap>
-
+    <resultMap type="SelectVO" id="SelectResult">
+<!--        <result property="id"    column="id"    />-->
+        <result property="label"    column="type"    />
+        <collection property="options" ofType="OptionVO">
+            <result property="value"    column="value"    />
+            <result property="label"    column="label"    />
+        </collection>
+    </resultMap>
+    
     <sql id="selectAlertLogUserVo">
         select log_id, log_type, event_name, event_description, p_id,
                ano_status, user_id
@@ -72,7 +80,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAlertLogUserVo"/>
         where log_id = #{logId}
     </select>
-        
+    
+    <select id="selectList" resultType="com.ruoyi.xindian.log_user.domain.SelectVO" resultMap="SelectResult">
+        select type,value,value as label
+        from alert_log_select
+
+    </select>
+
     <insert id="insertAlertLogUser" parameterType="AlertLogUser">
         insert into alert_log_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
