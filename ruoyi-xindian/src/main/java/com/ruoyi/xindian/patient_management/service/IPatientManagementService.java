@@ -33,6 +33,12 @@ public interface IPatientManagementService
      * @return 患者管理集合
      */
     public List<PatientManagement> selectPatientManagementList(PatientManagement patientManagement);
+
+
+    public List<PatientManagement> selectPatientManagementSPList(PatientManagement patientManagement);
+
+
+
     public List<PatientManagement> selectPatientManagementList();
     public List<PatientManagement> selectPatientManagementList1();
     public List<PatientManagement> selectPatientManagementJECGList(PatientManagement patientManagement);

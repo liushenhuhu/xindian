@@ -11,6 +11,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
@@ -207,7 +208,6 @@ public class PatientManagementController extends BaseController {
 
             if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
                 management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
-
             }
             if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
                 management.setPatientName(aesUtils.decrypt(management.getPatientName()));
@@ -218,18 +218,21 @@ public class PatientManagementController extends BaseController {
             if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
                 management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
             }
+            if (StringUtils.isNotEmpty(management.getDoctorPhone())){
+                management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
+            }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
-            if (patientManagmentDept.getDoctorPhone() != null) {
-                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
-                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
-                if (doctors.get(0).getDepartmentCode() != null) {
-                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
-                    List<Department> departments = departmentService.selectDepartmentList(department);
-                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
-                }
-            }
+//            if (patientManagmentDept.getDoctorPhone() != null) {
+//                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
+//                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+//                if (doctors.get(0).getDepartmentCode() != null) {
+//                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
+//                    List<Department> departments = departmentService.selectDepartmentList(department);
+//                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+//                }
+//            }
             if (management.getTimeDuration() == null) {
                 patientManagmentDept.setAcquisitionDuration("报告未生成");
             } else {
@@ -301,18 +304,22 @@ public class PatientManagementController extends BaseController {
             if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
                 management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
             }
+            if (StringUtils.isNotEmpty(management.getDoctorPhone())){
+                management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
+            }
+
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
-            if (patientManagmentDept.getDoctorPhone() != null) {
-                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
-                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
-                if (doctors.get(0).getDepartmentCode() != null) {
-                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
-                    List<Department> departments = departmentService.selectDepartmentList(department);
-                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
-                }
-            }
+//            if (patientManagmentDept.getDoctorPhone() != null) {
+//                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
+//                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+//                if (doctors.get(0).getDepartmentCode() != null) {
+//                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
+//                    List<Department> departments = departmentService.selectDepartmentList(department);
+//                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+//                }
+//            }
 
             if (management.getTimeDuration() == null) {
                 patientManagmentDept.setAcquisitionDuration("报告未生成");
@@ -326,59 +333,36 @@ public class PatientManagementController extends BaseController {
     }
 
 
+    /**
+     * 社区版获取患者信息
+     * @param patientManagement
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/getEquipmentCodeList")
-    public TableDataInfo getEquipmentCodeList(String[] equipmentCodeList,String patientPhone) throws Exception {
+    public TableDataInfo getEquipmentCodeList(PatientManagement patientManagement) throws Exception {
 
-        PatientManagement patientManagement = new PatientManagement();
-        patientManagement.getEquipmentCodeList().addAll(Arrays.asList(equipmentCodeList));
-        patientManagement.setPatientPhone(patientPhone);
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
         if (patientManagement.getPatientPhone()!=null){
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }
-        startPage();
-        if (null == patientManagement.getEcgType()) {
-            list = patientManagementService.selectPatientManagementList(patientManagement);
-        } else if (patientManagement.getEcgType().equals("DECGsingle")) {
-            list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
-        } else if (patientManagement.getEcgType().equals("JECG12")) {
-            list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-        } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-            list = patientManagementService.selectPatientManagementJECGList(patientManagement);
-        }else if (patientManagement.getEcgType().equals("JECGsingle")) {
-            list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
-        } else if (patientManagement.getEcgType().equals("DECG12")) {
-            list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
-        } else {
-            list = patientManagementService.selectPatientManagementList(patientManagement);
+        if (StringUtils.isNotEmpty(patientManagement.getDoctorPhone())){
+            patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
         }
+        startPage();
+        list = patientManagementService.selectPatientManagementSPList(patientManagement);
         PatientManagmentDept patientManagmentDept;
-        Doctor doctor = new Doctor();
-        Department department = new Department();
 
-        if (list==null||list.size()==0){
+        if (StringUtils.isNotEmpty(patientManagement.getPatientPhone())){
             patientManagement.setPatientName(patientManagement.getPatientPhone());
             patientManagement.setPatientPhone(null);
-            startPage();
-            if (null == patientManagement.getEcgType()) {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECGsingle")) {
-                list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECG12")) {
-                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-            } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-                list = patientManagementService.selectPatientManagementJECGList(patientManagement);
-            }else if (patientManagement.getEcgType().equals("JECGsingle")) {
-                list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
-            } else if (patientManagement.getEcgType().equals("DECG12")) {
-                list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
-            } else {
-                list = patientManagementService.selectPatientManagementList(patientManagement);
+            if (list==null||list.size()==0){
+                startPage();
+                list = patientManagementService.selectPatientManagementSPList(patientManagement);
             }
         }
         for (PatientManagement management : list) {
-//            patientManagmentDept= (PatientManagmentDept) management;
             if(DateUtil.isValidDate(management.getBirthDay())){
                 try {
                     management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
@@ -399,18 +383,11 @@ public class PatientManagementController extends BaseController {
             if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
                 management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
             }
+            if (StringUtils.isNotEmpty(management.getDoctorPhone())){
+                management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
+            }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
-
-            if (patientManagmentDept.getDoctorPhone() != null) {
-                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
-                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
-                if (doctors.get(0).getDepartmentCode() != null) {
-                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
-                    List<Department> departments = departmentService.selectDepartmentList(department);
-                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
-                }
-            }
 
             if (management.getTimeDuration() == null) {
                 patientManagmentDept.setAcquisitionDuration("报告未生成");
