@@ -69,4 +69,5 @@ public interface IEquipmentService
     void batchInsert(String path) throws Exception;
     List<String> batchSelect(String path,Integer sum) throws Exception;
 
+    int selectEquipmentOnlineNum();
 }

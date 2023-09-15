@@ -288,5 +288,12 @@ public class EquipmentController extends BaseController {
         }
         return AjaxResult.error();
     }
+    //查询在线设备数量
+    @GetMapping("/onlineNum")
+    public AjaxResult onlineNum(){
+        int count = equipmentService.selectEquipmentOnlineNum();
+
+        return AjaxResult.success(count);
+    }
 
 }

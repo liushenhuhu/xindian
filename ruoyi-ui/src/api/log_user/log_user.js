@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+// 查询selectList
+export function selectList() {
+  return request({
+    url: '/log_user/log_user/selectlist',
+    method: 'get'
+  })
+}
 // 查询标注分配列表
 export function listLog_user(query) {
   return request({

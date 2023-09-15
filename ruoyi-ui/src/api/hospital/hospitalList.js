@@ -16,4 +16,9 @@ export function delHospital(hospitalId) {
     method: 'delete'
   })
 }
-
+export function onlineNum() {
+  return request({
+    url: '/equipment/equipment/onlineNum',
+    method: 'get'
+  })
+}

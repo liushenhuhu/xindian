@@ -84,6 +84,11 @@ private AesUtils aesUtils;
     }
 
     @Override
+    public List<PatientManagement> selectPatientManagementSPList(PatientManagement patientManagement) {
+        return patientManagementMapper.selectPatientManagementSPList(patientManagement);
+    }
+
+    @Override
     public List<PatientManagement> selectPatientManagementList() {
         return patientManagementMapper.selectPatientManagementJECGList();
     }

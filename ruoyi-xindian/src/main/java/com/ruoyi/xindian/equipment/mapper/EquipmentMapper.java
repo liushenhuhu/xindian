@@ -68,4 +68,6 @@ public interface EquipmentMapper
 
 
     List<Equipment> selectALl(Limit limit);
+
+    int selectEquipmentOnlineNum();
 }

@@ -176,8 +176,10 @@ public class EquipmentServiceImpl implements IEquipmentService {
 
     }
 
-
-
+    @Override
+    public int selectEquipmentOnlineNum() {
+        return equipmentMapper.selectEquipmentOnlineNum();
+    }
 
 
 }

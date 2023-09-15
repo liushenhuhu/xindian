@@ -35,12 +35,14 @@
       <el-col :span="1.5">
         <el-button v-if="isQb" plain type="primary" icon="el-icon-edit" size="mini" @click="findXD">查看全部医院心电大屏</el-button>
       </el-col>
+      <div class="texta">总在线设备数：{{num}}</div>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refresh"></right-toolbar>
     </el-row>
     <el-table v-loading="loading" :data="hospitalList" @selection-change="handleSelectionChange">
       <el-table-column label="省份" align="center" prop="province" />
       <el-table-column label="医院名称" align="center" prop="hospitalName" />
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+      <el-table-column label="在线设备数量" align="center" prop="deviceOnlineNum" />
       <el-table-column label="是否开通数据统计" align="center" prop="ifStatistics">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if" :value="scope.row.ifStatistics"/>
@@ -72,8 +74,8 @@
 </template>
 
 <script>
-import {listHospital, getHospital, delHospital, addHospital, updateHospital, addDict} from "@/api/hospital/hospitalList";
-
+import {listHospital, getHospital, delHospital, addHospital, updateHospital, addDict,onlineNum} from "@/api/hospital/hospitalList";
+import {updateOnlineAll} from "@/api/online/online"
 export default {
   name: "HospitalList",
   dicts: ['if'],
@@ -116,6 +118,7 @@ export default {
       },
       // 表单参数
       form: {},
+      num:'',
       // 表单校验
       rules: {
         hospitalName: [
@@ -128,6 +131,7 @@ export default {
     };
   },
   created() {
+    this.updateOnline()
     this.getList();
   },
   methods: {
@@ -136,9 +140,19 @@ export default {
       console.log(hospitalId)
       this.$router.push({path:'ECGscreen',query:{hospitalId:hospitalId}})
     },
+    //请求设备在线设备数量修改在线状态
+    updateOnline(){
+      updateOnlineAll().then(res=>{
+        console.log(res)
+      })
+    },
     /** 查询医院列表 */
     getList() {
       this.loading = true;
+      onlineNum().then(res=>{
+        console.log("在线设备数量",res)
+        this.num=res.data
+      })
       listHospital(this.queryParams).then(response => {
         console.log(response)
         this.hospitalList = response.rows;
@@ -149,6 +163,7 @@ export default {
     },
     /** 刷新 */
     refresh() {
+      // this.updateOnline()
       this.getList();
     },
     // 取消按钮
@@ -197,26 +212,26 @@ export default {
       console.log(hospitalId)
       this.$router.push({path:'/ECGscreen',query:{hospitalId:hospitalId}})
     },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.hospitalId != null) {
-            updateHospital(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addHospital(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
+    // /** 提交按钮 */
+    // submitForm() {
+    //   this.$refs["form"].validate(valid => {
+    //     if (valid) {
+    //       if (this.form.hospitalId != null) {
+    //         updateHospital(this.form).then(response => {
+    //           this.$modal.msgSuccess("修改成功");
+    //           this.open = false;
+    //           this.getList();
+    //         });
+    //       } else {
+    //         addHospital(this.form).then(response => {
+    //           this.$modal.msgSuccess("新增成功");
+    //           this.open = false;
+    //           this.getList();
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
     /** 删除按钮操作 */
     handleDelete(row) {
       const hospitalIds = row.hospitalId || this.ids;
@@ -236,3 +251,14 @@ export default {
   }
 };
 </script>
+<style scoped>
+.mb8{
+  margin-top: 10px;
+  font-weight: 700;
+}
+.texta{
+  display: inline-flex;
+  margin-left: 25vw;
+  font-size: 22px;
+}
+</style>

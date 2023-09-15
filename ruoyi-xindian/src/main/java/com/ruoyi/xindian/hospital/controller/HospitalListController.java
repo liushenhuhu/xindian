@@ -100,7 +100,11 @@ public class HospitalListController extends BaseController
             startPage();
             list = hospitalService.selectUserId(hospital);
         }
-
+        for (Hospital hospital1 : list) {
+            if(hospital1.getDeviceOnlineNum()==null){
+                hospital1.setDeviceOnlineNum(0);
+            }
+        }
         return getDataTable(list);
     }
 
