@@ -18,14 +18,25 @@
         <result property="firstEcgTime"    column="first_ecg_time"    />
         <result property="ifStatistics"    column="if_statistics"    />
         <result property="hospitalInfo"    column="hospital_info"    />
+        <result property="deviceOnlineNum" column="num"/>
     </resultMap>
 
     <sql id="selectHospitalVo">
-        select hospital_id, province, hospital_name, hospital_code, hospital_account, hospital_password, equipment_number, patient_number, monitoring_patient_number, account_number, first_ecg_time, if_statistics, img,hospital_info from hospital
+        select hospital_id, province, hospital_name, hospital_code, hospital_account,
+               hospital_password, equipment_number, patient_number, monitoring_patient_number,
+               account_number, first_ecg_time, if_statistics, img,hospital_info
+        from hospital
     </sql>
-
+    <sql id="selectHospitalVo2">
+        select hospital_id, province, hospital_name, h.hospital_code, hospital_account,
+               hospital_password, equipment_number, patient_number, monitoring_patient_number,
+               account_number, first_ecg_time, if_statistics, img,hospital_info,et.num
+        from hospital h left join (select e.hospital_code,count(e.hospital_code) as num from equipment e
+                                   where e.equipment_status='True'
+                                   GROUP BY e.hospital_code) et on h.hospital_code = et.hospital_code
+    </sql>
     <select id="selectHospitalList" parameterType="Hospital" resultMap="HospitalResult">
-        <include refid="selectHospitalVo"/>
+        <include refid="selectHospitalVo2"/>
         <where>
             <if test="province != null  and province != ''"> and province like concat('%', #{province}, '%')</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name like concat('%', #{hospitalName}, '%')</if>
@@ -44,6 +55,8 @@
                 </foreach>
             </if>
         </where>
+        GROUP BY h.hospital_id
+        order by  et.num desc
     </select>
 
     <select id="selectHospitalByHospitalId" parameterType="Long" resultMap="HospitalResult">

@@ -75,6 +75,9 @@
     <select id="selectALl" resultType="com.ruoyi.xindian.equipment.domain.Equipment">
         select * from equipment limit #{start},#{end}
     </select>
+    <select id="selectEquipmentOnlineNum" resultType="java.lang.Integer">
+        select count(*) from equipment where equipment_status='True'
+    </select>
 
 
     <insert id="insertEquipment" parameterType="Equipment">

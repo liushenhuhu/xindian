@@ -71,6 +71,16 @@ public class Hospital extends BaseEntity
     private String price;
 
     private String hospitalInfo;
+    //设备在线数量
+    private Integer deviceOnlineNum;
+
+    public Integer getDeviceOnlineNum() {
+        return deviceOnlineNum;
+    }
+
+    public void setDeviceOnlineNum(Integer deviceOnlineNum) {
+        this.deviceOnlineNum = deviceOnlineNum;
+    }
 
     public String getHospitalInfo() {
         return hospitalInfo;
