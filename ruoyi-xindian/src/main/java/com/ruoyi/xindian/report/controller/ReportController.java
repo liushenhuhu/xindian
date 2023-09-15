@@ -354,7 +354,7 @@ public class ReportController extends BaseController
         Report report2 = reportService.selectReportByPId(report.getpId());
         StringBuilder stringBuilder = new StringBuilder();
         String phone = aesUtils.decrypt(report2.getPPhone());
-        if (phone.length()==14||phone.length()==15){
+        if (phone.length()>11){
             stringBuilder.append(aesUtils.encrypt(phone.substring(0,11)));
         }else {
             stringBuilder.append(report2.getPPhone());
@@ -366,10 +366,6 @@ public class ReportController extends BaseController
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
 
-//        if (sysUser==null){
-//            PatientRelationship patientRelationship = patientRelationshipMapper.selectFatherPhonePatientRelationship(report2.getPPhone());
-//            sysUser = sysUserMapper.selectUserByPhone(patientRelationship.getFatherPhone());
-//        }
         SysUser sysUser1 = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         if(report.getDiagnosisStatus()==2){
 
@@ -455,8 +451,6 @@ public class ReportController extends BaseController
             notDealWith.setRefuseReason(report.getDiagnosisConclusion());
             notDealWithService.insertNotDealWith(notDealWith);
 
-
-//            sysUserMapper.updateDetectionNumAdd(sysUser.getPhonenumber));
             if (sysUser==null){
                 WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
             }else {

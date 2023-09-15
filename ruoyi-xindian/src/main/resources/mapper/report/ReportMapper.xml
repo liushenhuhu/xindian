@@ -19,10 +19,11 @@
         <result property="healthAdvice"    column="health_advice"    />
         <result property="pPhone"    column="p_phone_aes"    />
         <result property="patientSymptom"    column="patient_symptom"    />
+        <result property="loginUserPhone"    column="login_user_phone"    />
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time from report
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time,login_user_phone from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">

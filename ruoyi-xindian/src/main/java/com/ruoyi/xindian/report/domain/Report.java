@@ -87,6 +87,11 @@ public class Report extends BaseEntity
     private String startDateTime;
 
     private String ecgType;
+
+
+    private String loginUserPhone;
+
+
     public String getpId() {
         return pId;
     }

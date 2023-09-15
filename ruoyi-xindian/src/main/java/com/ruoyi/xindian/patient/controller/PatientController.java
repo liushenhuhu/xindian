@@ -345,7 +345,7 @@ public class PatientController extends BaseController
      * @throws Exception
      */
     @PostMapping("/addPatientAndDocPhoneOrMed")
-    public AjaxResult addPatientAndDocPhoneOrMed(PatientMedicalHistoryDTO patientMedicalHistoryDTO) throws Exception {
+    public AjaxResult addPatientAndDocPhoneOrMed(@RequestBody PatientMedicalHistoryDTO patientMedicalHistoryDTO) throws Exception {
 
 
         if (StringUtils.isEmpty(patientMedicalHistoryDTO.getDoctorPhone())){
@@ -418,13 +418,23 @@ public class PatientController extends BaseController
      */
     private PatientMedicalHistoryDTO getRelationship(PatientMedicalHistoryDTO patientRelationship){
         StringBuilder patientPhone = new StringBuilder(patientRelationship.getDoctorPhone());
-        patientPhone.append("-").append(patientRelationship.getPatientName()).append("-");
+        patientPhone.append("-").append(randomGen(5)).append("-");
         Random random = new Random();
         for (int i = 0; i < 3; i++) {
             patientPhone.append(random.nextInt(10));
         }
         patientRelationship.setPatientPhone(String.valueOf(patientPhone));
         return patientRelationship;
+    }
+
+    public String randomGen(int place) {
+        String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder sb = new StringBuilder();
+        Random rd = new Random();
+        for(int i=0;i<place;i++) {
+            sb.append(base.charAt(rd.nextInt(base.length())));
+        }
+        return sb.toString();
     }
 
     /**
