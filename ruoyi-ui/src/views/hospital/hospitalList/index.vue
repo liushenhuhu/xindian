@@ -150,7 +150,7 @@ export default {
     getList() {
       this.loading = true;
       onlineNum().then(res=>{
-        console.log("在线设备数量"+res.data)
+        console.log("在线设备数量",res)
         this.num=res.data
       })
       listHospital(this.queryParams).then(response => {
@@ -163,7 +163,7 @@ export default {
     },
     /** 刷新 */
     refresh() {
-      this.updateOnline()
+      // this.updateOnline()
       this.getList();
     },
     // 取消按钮

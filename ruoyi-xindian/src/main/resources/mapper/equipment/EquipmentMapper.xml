@@ -76,7 +76,7 @@
         select * from equipment limit #{start},#{end}
     </select>
     <select id="selectEquipmentOnlineNum" resultType="java.lang.Integer">
-        select count(*) from equipment where equipment_status='True'
+        select count(equipment_id) from equipment where equipment_status='True'
     </select>
 
 
