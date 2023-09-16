@@ -482,7 +482,6 @@ export default {
         hospName=user.data.hospitalName
       })
     }
-    this.clearList();
     this.get_device(hospName);
   },
   // beforeRouteLeave(to,from,next){
@@ -492,6 +491,7 @@ export default {
   deactivated(){//keep-alive的隐藏的钩子函数
    // console.log("deactivated")
     this.index=0
+    this.clearList();
     this.clearIntervallist()
   },
   // beforeDestroy(){
@@ -546,6 +546,7 @@ export default {
            },
          }
        ).then(res=>{
+        this.clearList();
          this.arr=res.data.result.dev_list;
          // console.log(this.arr)
          let length =  res.data.result.dev_list.length;//总设备个数

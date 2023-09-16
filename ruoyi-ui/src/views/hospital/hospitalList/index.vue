@@ -163,7 +163,7 @@ export default {
     },
     /** 刷新 */
     refresh() {
-      // this.updateOnline()
+      this.updateOnline()
       this.getList();
     },
     // 取消按钮
