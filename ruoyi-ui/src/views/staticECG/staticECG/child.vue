@@ -770,7 +770,7 @@ export default {
       this.canvasSize = { height: height, width: width }; //更新画布尺寸
       this.canvasPosition = { x: newX, y: newY }; //更新画布位置
     },
-    //鼠标右击事件
+    //鼠标左击事件
     handleClickLeft(e1){
       //判断鼠标是否在标记点
       this.canvasData.forEach((e2,index) => {
