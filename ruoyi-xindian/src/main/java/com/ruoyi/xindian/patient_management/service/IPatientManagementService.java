@@ -35,7 +35,7 @@ public interface IPatientManagementService
     public List<PatientManagement> selectPatientManagementList(PatientManagement patientManagement);
 
 
-    public List<PatientManagement> selectPatientManagementSPList(PatientManagement patientManagement);
+    public List<PatientManagement> selectPatientManagementSPList(PatientManagement patientManagement, Integer pageSize,Integer pageNum);
 
 
 

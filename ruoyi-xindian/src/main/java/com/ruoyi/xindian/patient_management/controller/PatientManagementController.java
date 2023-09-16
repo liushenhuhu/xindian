@@ -221,6 +221,9 @@ public class PatientManagementController extends BaseController {
             if (StringUtils.isNotEmpty(management.getDoctorPhone())){
                 management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
             }
+            if (StringUtils.isNotEmpty(management.getDPhone())){
+                management.setDPhone(aesUtils.decrypt(management.getDPhone()));
+            }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
@@ -307,6 +310,9 @@ public class PatientManagementController extends BaseController {
             if (StringUtils.isNotEmpty(management.getDoctorPhone())){
                 management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
             }
+            if (StringUtils.isNotEmpty(management.getDPhone())){
+                management.setDPhone(aesUtils.decrypt(management.getDPhone()));
+            }
 
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
@@ -340,7 +346,7 @@ public class PatientManagementController extends BaseController {
      * @throws Exception
      */
     @GetMapping("/getEquipmentCodeList")
-    public TableDataInfo getEquipmentCodeList(PatientManagement patientManagement) throws Exception {
+    public TableDataInfo getEquipmentCodeList(PatientManagement patientManagement, Integer pageSize,Integer pageNum) throws Exception {
 
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
@@ -350,8 +356,9 @@ public class PatientManagementController extends BaseController {
         if (StringUtils.isNotEmpty(patientManagement.getDoctorPhone())){
             patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
         }
-        startPage();
-        list = patientManagementService.selectPatientManagementSPList(patientManagement);
+//        startPage();
+        list = patientManagementService.selectPatientManagementSPList(patientManagement,pageSize,pageNum);
+
         PatientManagmentDept patientManagmentDept;
 
         if (StringUtils.isNotEmpty(patientManagement.getPatientPhone())){
@@ -359,7 +366,7 @@ public class PatientManagementController extends BaseController {
             patientManagement.setPatientPhone(null);
             if (list==null||list.size()==0){
                 startPage();
-                list = patientManagementService.selectPatientManagementSPList(patientManagement);
+                list = patientManagementService.selectPatientManagementSPList(patientManagement,pageSize,pageNum);
             }
         }
         for (PatientManagement management : list) {
@@ -386,6 +393,9 @@ public class PatientManagementController extends BaseController {
             if (StringUtils.isNotEmpty(management.getDoctorPhone())){
                 management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
             }
+            if (StringUtils.isNotEmpty(management.getDPhone())){
+                management.setDPhone(aesUtils.decrypt(management.getDPhone()));
+            }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
@@ -397,7 +407,7 @@ public class PatientManagementController extends BaseController {
             resList.add(patientManagmentDept);
         }
         long total = new PageInfo(list).getTotal();
-        return getTable(resList, total);
+        return getTable(resList,total);
     }
 
     @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")

@@ -80,6 +80,7 @@
             <if test="healthAdvice != null">health_advice,</if>
             <if test="pPhone != null">p_phone_aes,</if>
             <if test="patientSymptom != null">patient_symptom,</if>
+            <if test="loginUserPhone != null">login_user_phone,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pId != null and pId != ''">#{pId},</if>
@@ -93,6 +94,7 @@
             <if test="handlingSuggestion != null">#{handlingSuggestion},</if>
             <if test="healthAdvice != null">#{healthAdvice},</if>
             <if test="patientSymptom != null">#{patientSymptom},</if>
+            <if test="loginUserPhone != null">loginUserPhone,</if>
         </trim>
     </insert>
 
@@ -112,6 +114,7 @@
             <if test="healthAdvice != null">health_advice = #{healthAdvice},</if>
             <if test="pPhone != null">p_phone_aes = #{pPhone},</if>
             <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
+            <if test="loginUserPhone != null">login_user_phone = #{loginUserPhone},</if>
         </trim>
         where report_id = #{reportId}
     </update>
@@ -129,6 +132,7 @@
             <if test="healthAdvice != null">health_advice = #{healthAdvice},</if>
             <if test="pPhone != null">p_phone_aes = #{pPhone},</if>
             <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
+            <if test="loginUserPhone != null">login_user_phone = #{loginUserPhone},</if>
             diagnosis_doctor_aes = null,
             d_phone_aes = null,
         </trim>

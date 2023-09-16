@@ -129,6 +129,28 @@ public class DoctorController extends BaseController
 
     }
 
+
+    @GetMapping("/getDocList")
+    public TableDataInfo getDocList(Doctor doctor) throws Exception {
+        Department department = new Department();
+        List<Doctor> list = doctorService.selectDoctorList(doctor);
+        for (Doctor value : list) {
+            department.setDepartmentCode(value.getDepartmentCode());
+            List<Department> departments = departmentService.selectDepartmentList(department);
+            value.setDepartmentName(departments.get(0).getDepartmentName());
+            //解密
+            if(!StringUtils.isEmpty(value.getDoctorName())){
+                value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
+            }
+            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+                value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
+            }
+        }
+        return getDataTable(list);
+
+    }
+
+
     @GetMapping("/nameList")
     public List<String> nameList()
     {
