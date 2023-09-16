@@ -46,7 +46,7 @@
     </el-dialog>
 
     <div class="top">
-      <el-button @click="back">动态检测大屏</el-button>
+<!--      <el-button @click="back">动态检测大屏</el-button>-->
       <el-button @click="inScreen">全屏切换</el-button>
       <el-button @click="call">电话预警</el-button>
       <!--      <el-button @click="outScreen">退出全屏</el-button>-->
