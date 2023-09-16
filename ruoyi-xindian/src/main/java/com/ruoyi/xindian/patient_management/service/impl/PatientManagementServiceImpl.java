@@ -1,11 +1,9 @@
 package com.ruoyi.xindian.patient_management.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.mapper.EquipmentMapper;
-import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
-import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -18,12 +16,9 @@ import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
 import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.patient_management.vo.PInfoVO;
-import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
 import com.ruoyi.xindian.report.domain.Report;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,16 +39,18 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     @Autowired
     private HospitalMapper hospitalMapper;
 
-@Autowired
-private PatientRelationshipMapper patientRelationshipMapper;
+    @Autowired
+    private PatientRelationshipMapper patientRelationshipMapper;
 
-@Autowired
-private EquipmentMapper equipmentMapper;
+    @Autowired
+    private EquipmentMapper equipmentMapper;
 
-@Resource
-private PatientMapper patientMapper;
-@Resource
-private AesUtils aesUtils;
+    @Resource
+    private PatientMapper patientMapper;
+
+    @Resource
+    private AesUtils aesUtils;
+
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
 
@@ -84,8 +81,11 @@ private AesUtils aesUtils;
     }
 
     @Override
-    public List<PatientManagement> selectPatientManagementSPList(PatientManagement patientManagement) {
-        return patientManagementMapper.selectPatientManagementSPList(patientManagement);
+    public List<PatientManagement> selectPatientManagementSPList(PatientManagement patientManagement, Integer pageSize,Integer pageNum) {
+
+        PageHelper.startPage(pageNum,pageSize);
+        List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementSPList(patientManagement);
+        return patientManagements;
     }
 
     @Override
