@@ -152,6 +152,13 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "诊断医生")
     private String diagnosisDoctor;
 
+
+    /**
+     * 诊断医生电话
+     */
+    @Excel(name = "诊断医生电话")
+    private String dPhone;
+
     /**
      * 报告时间
      */

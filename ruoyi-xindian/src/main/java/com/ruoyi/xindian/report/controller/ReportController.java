@@ -326,7 +326,9 @@ public class ReportController extends BaseController
         if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
             report.setdPhone(aesUtils.encrypt(report.getdPhone()));
         }
-
+        if (StringUtils.isNotEmpty(report.getLoginUserPhone())){
+            report.setLoginUserPhone(aesUtils.encrypt(report.getLoginUserPhone()));
+        }
 
         if (StringUtils.isNotEmpty(report.getDiagnosisDoctor())){
             report.setDiagnosisDoctor(aesUtils.encrypt(report.getDiagnosisDoctor()));
@@ -410,7 +412,7 @@ public class ReportController extends BaseController
                 System.out.println("异步线程 =====> 开始记录服务使用日志 =====> " + new Date());
                 try{
                     FwLog fwLog = new FwLog();
-                    fwLog.setUserName(sysUser.getPhonenumber());
+                    fwLog.setUserName(loginUser.getUser().getPhonenumber());
                     fwLog.setMsg("提交心电报告减少一次心电服务次数");
                     fwLog.setStatus("1");
                     fwLog.setLogTime(new Date());
@@ -451,13 +453,26 @@ public class ReportController extends BaseController
             notDealWith.setRefuseReason(report.getDiagnosisConclusion());
             notDealWithService.insertNotDealWith(notDealWith);
 
-            if (sysUser==null){
-                WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
+            if (StringUtils.isNotEmpty(report2.getLoginUserPhone())){
+
+                SysUser sysUser2 = sysUserMapper.selectUserByPhone(report2.getLoginUserPhone());
+                if (sysUser2!=null){
+                    try {
+                        wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser2.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+                }
+
             }else {
-                try {
-                    wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断被拒");
-                }catch (Exception e){
-                    System.out.println(e);
+                if (sysUser==null){
+                    WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
+                }else {
+                    try {
+                        wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
                 }
             }
             return toAjax(reportService.updateReportNull(report));
@@ -473,15 +488,29 @@ public class ReportController extends BaseController
                 }
             }
             reportService.updateReport(report);
-            if (sysUser==null){
-                WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
+            if (StringUtils.isNotEmpty(report2.getLoginUserPhone())){
+
+                SysUser sysUser2 = sysUserMapper.selectUserByPhone(report2.getLoginUserPhone());
+                if (sysUser2!=null){
+                    try {
+                        wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser2.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+                }
+
             }else {
-                try {
-                    wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
-                }catch (Exception e){
-                    System.out.println(e);
+                if (sysUser==null){
+                    WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
+                }else {
+                    try {
+                        wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
                 }
             }
+
         }
         return toAjax(1);
     }
@@ -783,6 +812,96 @@ public class ReportController extends BaseController
         WxUtil.send(aesUtils.decrypt(report.getdPhone()));
         int i = reportService.updateReport(report);
         return AjaxResult.success();
+    }
+
+
+    /**
+     * 社区版提交报告，不需要减少次数
+     */
+    @Log(title = "报告", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateReport")
+    public AjaxResult updateReport(@RequestBody Report report, HttpServletRequest request) throws Exception {
+
+
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        String s = report.getpId();
+
+        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
+            report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+        }
+        if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
+            report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+        }
+        if (StringUtils.isNotEmpty(report.getLoginUserPhone())){
+            report.setLoginUserPhone(aesUtils.encrypt(report.getLoginUserPhone()));
+
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(report.getLoginUserPhone());
+            if (doctor==null){
+                return AjaxResult.error("非医生账号");
+            }
+
+        }
+        if (StringUtils.isEmpty(report.getLoginUserPhone())){
+            return AjaxResult.error("上传异常，请联系管理员");
+        }
+
+        if (StringUtils.isNotEmpty(report.getDiagnosisDoctor())){
+            report.setDiagnosisDoctor(aesUtils.encrypt(report.getDiagnosisDoctor()));
+            Doctor doctor = new Doctor();
+            doctor.setDoctorName(report.getDiagnosisDoctor());
+            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            if (doctors==null||doctors.size()==0){
+                return AjaxResult.error("当前医生不存在");
+            }
+            report.setdPhone(doctors.get(0).getDoctorPhone());
+        }
+        List<Doctor> doctors = null;
+        //当前报告信息
+        Report report1 = reportService.selectReportByPId(s);
+        if (!SysUser.isAdmin(loginUser.getUser().getUserId())){
+            if (report1.getDiagnosisStatus()==1){
+                return AjaxResult.error("该数据已被诊断");
+            }
+        }
+        report.setReportId(report1.getReportId());
+        Date date = new Date();
+        report.setReportTime(date);
+        //患者请求医生
+        Report report2 = reportService.selectReportByPId(report.getpId());
+        StringBuilder stringBuilder = new StringBuilder();
+        String phone = aesUtils.decrypt(report2.getPPhone());
+        if (phone.length()>11){
+            stringBuilder.append(aesUtils.encrypt(phone.substring(0,11)));
+        }else {
+            stringBuilder.append(report2.getPPhone());
+        }
+        Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
+        if (patient.getPatientName()!=null&&!"".equals(patient.getPatientName())){
+            patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+        }
+        if(report.getDiagnosisStatus()==2){
+            //选择医院加入公共抢单
+            if(report.getHospital()!=null){
+                Doctor doctor = new Doctor();
+                doctor.getHospitalNameList().add(report.getHospital());
+                doctors = doctorService.selectDoctorList(doctor);
+                if(doctors!=null && doctors.size()!=0){
+
+                    if (report.getpId()!=null&&!"".equals(report.getpId())){
+                        wxMsgRunConfig.redisAdd(report.getpId(),doctors);
+                    }
+                } else{
+                    return AjaxResult.error("当前医院平台无医生");
+                }
+            }else {
+                return AjaxResult.error("请先选择医院医院");
+            }
+            report.setStartTime(new Date());
+            int i = reportService.updateReport(report);
+            return toAjax(i);
+
+        }
+        return toAjax(1);
     }
 
 

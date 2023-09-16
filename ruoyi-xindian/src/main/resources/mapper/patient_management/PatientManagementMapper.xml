@@ -40,6 +40,7 @@
         <result property="timeDuration"    column="time_duration"    />
         <result property="reportState"    column="report_state"    />
         <result property="patientSymptom"    column="patient_symptom"    />
+        <result property="dPhone"    column="d_phone_aes"    />
 
 
     </resultMap>
