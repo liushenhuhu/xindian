@@ -562,7 +562,7 @@ export default {
     border-radius: 8px;
     background-color: rgb(8 19 64);
     color: white;
-    font-size: 25px;
+    font-size: 14px;
     //margin-left: 0.3vw
   }
 }
