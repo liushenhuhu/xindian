@@ -89,6 +89,13 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                     System.out.println(e);
                 }
             }
+            if (split1[0].equals("getEquipmentCodeSF")){
+                try {
+                    equipmentHeadingCodeService.getCodeStatus(split1[1]);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+            }
             if (split1[0].equals("getEquipmentCodeT15")){
                 try {
                     equipmentHeadingCodeService.selectCodeState15(split1[1]);
