@@ -98,7 +98,7 @@ public class PatientManagementController extends BaseController {
     /**
      * 查询患者管理列表
      */
-    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
+//    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/list")
     public TableDataInfo list(PatientManagement patientManagement,HttpServletRequest request) throws Exception {
 //        startPage();
@@ -155,7 +155,7 @@ public class PatientManagementController extends BaseController {
         } else if(sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 104) {
             //医生
             String phonenumber = sysUser.getPhonenumber();
-            patientManagement.setDoctorPhone(phonenumber);
+            patientManagement.setDoctorPhone(aesUtils.decrypt(phonenumber));
             if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
                 patientManagement.setDiagnosisStatus(2L);
         }
@@ -251,7 +251,7 @@ public class PatientManagementController extends BaseController {
     /**
      * 查询患者管理列表
      */
-    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
+//    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/listP")
     public TableDataInfo listP(PatientManagement patientManagement,HttpServletRequest request) throws Exception {
 
@@ -410,7 +410,7 @@ public class PatientManagementController extends BaseController {
         return getTable(resList,total);
     }
 
-    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
+//    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/listPatientTimeList")
     public TableDataInfo listPatientTimeList(PatientManagement patientManagement,HttpServletRequest request) throws Exception {
 

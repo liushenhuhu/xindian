@@ -49,7 +49,7 @@
             <if test="firstEcgTime != null "> and first_ecg_time like concat('%', #{firstEcgTime}, '%')</if>
             <if test="ifStatistics != null  and ifStatistics != ''"> and if_statistics like concat('%', #{ifStatistics}, '%')</if>
             <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
-                and  hospital_code in
+                and  h.hospital_code in
                 <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
