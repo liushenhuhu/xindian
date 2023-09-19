@@ -75,8 +75,15 @@
     <select id="selectALl" resultType="com.ruoyi.xindian.equipment.domain.Equipment">
         select * from equipment limit #{start},#{end}
     </select>
-    <select id="selectEquipmentOnlineNum" resultType="java.lang.Integer">
+    <select id="selectEquipmentOnlineNum" resultType="java.lang.Integer" parameterType="java.util.List">
         select count(equipment_id) from equipment where equipment_status='True'
+        <if test="hospitalIds!=null and hospitalIds.size()!=0">
+            and equipment.hospital_code in
+            <foreach collection="hospitalIds" item="item" separator="," open="(" close=")" index="">
+                #{item}
+            </foreach>
+
+        </if>
     </select>
 
 

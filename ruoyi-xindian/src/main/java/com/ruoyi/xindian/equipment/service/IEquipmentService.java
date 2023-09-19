@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.equipment.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.ruoyi.xindian.equipment.domain.Equipment;
 
@@ -69,5 +70,5 @@ public interface IEquipmentService
     void batchInsert(String path) throws Exception;
     List<String> batchSelect(String path,Integer sum) throws Exception;
 
-    int selectEquipmentOnlineNum();
+    int selectEquipmentOnlineNum(List<String> hospitalIds);
 }
