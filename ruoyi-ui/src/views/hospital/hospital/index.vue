@@ -17,14 +17,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院代号" prop="hospitalCode"  label-width="100px">
-        <el-input
-          v-model="queryParams.hospitalCode"
-          placeholder="请输入医院代号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="医院代号" prop="hospitalCode"  label-width="100px">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.hospitalCode"-->
+<!--          placeholder="请输入医院代号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
 <!--      <el-form-item label="医院账号" prop="hospitalAccount">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.hospitalAccount"-->

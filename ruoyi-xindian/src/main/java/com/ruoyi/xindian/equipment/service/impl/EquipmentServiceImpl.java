@@ -177,8 +177,8 @@ public class EquipmentServiceImpl implements IEquipmentService {
     }
 
     @Override
-    public int selectEquipmentOnlineNum() {
-        return equipmentMapper.selectEquipmentOnlineNum();
+    public int selectEquipmentOnlineNum(List<String> hospitalIds) {
+        return equipmentMapper.selectEquipmentOnlineNum(hospitalIds);
     }
 
 

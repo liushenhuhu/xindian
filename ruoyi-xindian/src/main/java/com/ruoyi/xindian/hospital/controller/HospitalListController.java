@@ -118,7 +118,7 @@ public class HospitalListController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<Hospital> list = null;
         //判断是否为管理员
-        if (SecurityUtils.isAdmin(loginUser.getUser().getUserId()))
+        if (loginUser.getDeptId()!=null&&loginUser.getDeptId()==200)
         {
             list = hospitalService.selectHospitalList(hospital);
         }
@@ -130,17 +130,20 @@ public class HospitalListController extends BaseController
             }
 
             Hospital hospital2 = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital2.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    hospital.getHospitalCodeList().add(hospital1.getHospitalCode());
+            if (hospital2!=null){
+                AssociatedHospital associatedHospital = new AssociatedHospital();
+                associatedHospital.setHospitalId(hospital2.getHospitalId());
+                List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+                if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                    for (AssociatedHospital c:associatedHospitals){
+                        Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                        hospital.getHospitalCodeList().add(hospital1.getHospitalCode());
+                    }
                 }
+
+                list = hospitalService.selectUserId(hospital);
             }
 
-            list = hospitalService.selectUserId(hospital);
         }
         return getDataTable(list);
     }

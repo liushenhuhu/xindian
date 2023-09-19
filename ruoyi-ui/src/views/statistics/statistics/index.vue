@@ -336,6 +336,7 @@ export default {
         startTime:null,
         endTime:null,
       }
+      this.daterangeConnectionTime= [],
       this.queryParams.pageNum = 1;
       this.getList();
     },

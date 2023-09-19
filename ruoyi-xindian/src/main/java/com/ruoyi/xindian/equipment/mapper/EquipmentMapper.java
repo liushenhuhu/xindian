@@ -1,8 +1,10 @@
 package com.ruoyi.xindian.equipment.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.patient_management.vo.Limit;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 设备Mapper接口
@@ -69,5 +71,5 @@ public interface EquipmentMapper
 
     List<Equipment> selectALl(Limit limit);
 
-    int selectEquipmentOnlineNum();
+    int selectEquipmentOnlineNum(@Param("hospitalIds")List<String> hospitalIds);
 }

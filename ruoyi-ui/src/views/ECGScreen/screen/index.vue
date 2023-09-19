@@ -374,7 +374,6 @@ import screenfull from 'screenfull'
 import {getUserInfo,getInfoId} from "@/api/patient_management/patient_management";
 let hospName='所有'
 export default {
-  name: "Index",
   data() {
     return {
       test:1,
@@ -454,6 +453,7 @@ export default {
   },
   async created() {
     this.openLoading();
+
     let hospitalId =this.$route.query.hospitalId
     // console.log(hospitalId)
     if(hospitalId&&hospitalId!==1){
@@ -461,6 +461,7 @@ export default {
         hospName=user.data.hospitalName
       })
     }
+    this.clearList()
     this.get_device(hospName);
   },
   mounted() {
@@ -476,12 +477,13 @@ export default {
   },
   async activated() {
     let hospitalId =this.$route.query.hospitalId
-    // console.log(hospitalId)
+    console.log('activated')
     if(hospitalId&&hospitalId!==1){
       await getInfoId(hospitalId).then(user => {
         hospName=user.data.hospitalName
       })
     }
+    this.clearList()
     this.get_device(hospName);
   },
   // beforeRouteLeave(to,from,next){
@@ -489,15 +491,17 @@ export default {
   //   next()
   // },
   deactivated(){//keep-alive的隐藏的钩子函数
-   // console.log("deactivated")
+   console.log("deactivated")
     this.index=0
     this.clearList();
     this.clearIntervallist()
   },
-  // beforeDestroy(){
-  //   // console.log(this.timer0)
-  //   this.clearIntervallist()
-  // },
+  beforeDestroy(){
+    console.log('beforeDestroy')
+    this.index=0
+    this.clearList();
+    this.clearIntervallist()
+  },
   // beforeRouteEnter (to, from, next) {
   //   next(vm => {
   //     vm.get_device(hospName);
@@ -546,7 +550,6 @@ export default {
            },
          }
        ).then(res=>{
-        this.clearList();
          this.arr=res.data.result.dev_list;
          // console.log(this.arr)
          let length =  res.data.result.dev_list.length;//总设备个数
@@ -571,6 +574,7 @@ export default {
           })
         }).catch(err=>{
          // console.log("请求错误"+err)
+        this.closeFullScreen()
        })
 
       if(this.pagenum>=this.pages){
@@ -882,7 +886,7 @@ export default {
                 chart.clear();
                 chart.setOption(this.chart(this.data2, 1250, this.p2Iy, this.p2V1y))
               }
-            console.log(this.p2Iy)
+            //console.log(this.p2Iy)
             }, 5000)
         }).catch(err=>{
           // console.log("请求错误"+err)
@@ -1717,18 +1721,7 @@ export default {
       // this.timer11=null;
     },
     clearList(){
-        echarts.init(document.getElementById('child_0')).dispose()
-        echarts.init(document.getElementById('child_1')).dispose()
-        echarts.init(document.getElementById('child_2')).dispose()
-        echarts.init(document.getElementById('child_3')).dispose()
-        echarts.init(document.getElementById('child_4')).dispose()
-        echarts.init(document.getElementById('child_5')).dispose()
-        echarts.init(document.getElementById('child_6')).dispose()
-        echarts.init(document.getElementById('child_7')).dispose()
-        echarts.init(document.getElementById('child_8')).dispose()
-        // echarts.init(document.getElementById('child_9')).dispose()
-        // echarts.init(document.getElementById('child_10')).dispose()
-        // echarts.init(document.getElementById('child_11')).dispose()
+
       this.data0={}
       this.data1={}
       this.data2={}
@@ -1778,6 +1771,18 @@ export default {
       // this.p11Iy=[]
       // this.p11V1y=[]
       this.ts=0
+      echarts.init(document.getElementById('child_0')).dispose()
+      echarts.init(document.getElementById('child_1')).dispose()
+      echarts.init(document.getElementById('child_2')).dispose()
+      echarts.init(document.getElementById('child_3')).dispose()
+      echarts.init(document.getElementById('child_4')).dispose()
+      echarts.init(document.getElementById('child_5')).dispose()
+      echarts.init(document.getElementById('child_6')).dispose()
+      echarts.init(document.getElementById('child_7')).dispose()
+      echarts.init(document.getElementById('child_8')).dispose()
+      // echarts.init(document.getElementById('child_9')).dispose()
+      // echarts.init(document.getElementById('child_10')).dispose()
+      // echarts.init(document.getElementById('child_11')).dispose()
     },
     handleCurrentChange(pages){
       this.clearIntervallist()

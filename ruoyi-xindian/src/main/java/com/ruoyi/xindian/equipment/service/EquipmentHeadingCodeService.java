@@ -34,5 +34,7 @@ public interface EquipmentHeadingCodeService extends IService<EquipmentHeadingCo
 
     void selectCodeStateAgain(String code) throws Exception;
 
+    void getCodeStatus(String code) throws Exception;
+
 
 }

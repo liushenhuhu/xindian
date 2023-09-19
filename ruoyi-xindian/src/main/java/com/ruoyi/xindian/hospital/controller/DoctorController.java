@@ -81,34 +81,36 @@ public class DoctorController extends BaseController
         if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
 
             Hospital hospital = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+            if (hospital!=null){
+                doctor.getHospitalNameList().add(hospital.getHospitalName());
+                AssociatedHospital associatedHospital = new AssociatedHospital();
+                associatedHospital.setHospitalId(hospital.getHospitalId());
+                List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+                if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                    for (AssociatedHospital c:associatedHospitals){
+                        Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                        doctor.getHospitalNameList().add(hospital1.getHospitalName());
+                    }
+                }
+                startPage();
+                List<Doctor> doctors = doctorService.selectUserDoc(doctor);
+                for (Doctor value : doctors) {
+                    department.setDepartmentCode(value.getDepartmentCode());
+                    List<Department> departments = departmentService.selectDepartmentList(department);
+                    value.setDepartmentName(departments.get(0).getDepartmentName());
+                    //解密
+                    if(!StringUtils.isEmpty(value.getDoctorName())){
+                        value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
+                    }
+                    if(!StringUtils.isEmpty(value.getDoctorPhone())){
+                        value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
+                    }
+                }
+                return getDataTable(doctors);
+            }
+            return getDataTable(null);
 
-            doctor.getHospitalNameList().add(hospital.getHospitalName());
-            AssociatedHospital associatedHospital = new AssociatedHospital();
-            associatedHospital.setHospitalId(hospital.getHospitalId());
-            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
-                    Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                    doctor.getHospitalNameList().add(hospital1.getHospitalName());
-                }
-            }
-            startPage();
-            List<Doctor> doctors = doctorService.selectUserDoc(doctor);
-            for (Doctor value : doctors) {
-                department.setDepartmentCode(value.getDepartmentCode());
-                List<Department> departments = departmentService.selectDepartmentList(department);
-                value.setDepartmentName(departments.get(0).getDepartmentName());
-                //解密
-                if(!StringUtils.isEmpty(value.getDoctorName())){
-                    value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
-                }
-                if(!StringUtils.isEmpty(value.getDoctorPhone())){
-                    value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
-                }
-            }
-            return getDataTable(doctors);
         }
-
             startPage();
             List<Doctor> list = doctorService.selectDoctorList(doctor);
             for (Doctor value : list) {

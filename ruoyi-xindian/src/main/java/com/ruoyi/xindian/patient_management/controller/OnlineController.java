@@ -103,13 +103,14 @@ public class OnlineController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(request1);
         SysUser userInfo = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         System.out.println("用户信息:"+userInfo);
-        OnlineParam onlineParam = new OnlineParam("所有");
-        if (userInfo!=null && userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
-            if (userInfo.getHospitalName()==null){
-                Hospital hospital = iHospitalService.selectHospitalByHospitalCode(userInfo.getHospitalCode());
-                onlineParam.setHospName(hospital.getHospitalName());
-            }
-        }
+        OnlineParam onlineParam = new OnlineParam();
+        onlineParam.setHospName("所有");
+//        if (userInfo!=null && userInfo.getDeptId() != null && userInfo.getDeptId() == 200) {
+//            if (userInfo.getHospitalName()==null){
+//                Hospital hospital = iHospitalService.selectHospitalByHospitalCode(userInfo.getHospitalCode());
+//                onlineParam.setHospName(hospital.getHospitalName());
+//            }
+//        }
 
         String url = "https://server.mindyard.cn:84/get_device";
 //        String url = "http://202.102.249.124:84/get_device";
