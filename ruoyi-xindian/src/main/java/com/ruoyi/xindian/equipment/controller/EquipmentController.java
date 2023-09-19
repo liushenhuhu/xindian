@@ -98,15 +98,18 @@ public class EquipmentController extends BaseController {
             equipment.getHospitalCodeList().add(hospitalCode);
             if (equipment.getHospitalCode()!=null){
                 Hospital hospital = hospitalService.selectHospitalByHospitalCode(hospitalCode);
-                AssociatedHospital associatedHospital = new AssociatedHospital();
-                associatedHospital.setHospitalId(hospital.getHospitalId());
-                List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-                if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                    for (AssociatedHospital c:associatedHospitals){
-                        Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                        equipment.getHospitalCodeList().add(hospital1.getHospitalCode());
+                if (hospital!=null){
+                    AssociatedHospital associatedHospital = new AssociatedHospital();
+                    associatedHospital.setHospitalId(hospital.getHospitalId());
+                    List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+                    if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                        for (AssociatedHospital c:associatedHospitals){
+                            Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                            equipment.getHospitalCodeList().add(hospital1.getHospitalCode());
+                        }
                     }
                 }
+
             }
             if (equipment.getHospitalCode()!=null&&!"".equals(equipment.getHospitalCode())){
                 List<String> equipmentList = equipment.getHospitalCodeList();

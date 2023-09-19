@@ -125,7 +125,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['patient_management:patient_management:remove']"
+          v-hasPermi="['patient_management:patient_management:export']"
         >删除
         </el-button>
       </el-col>
@@ -271,7 +271,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['patient_management:patient_management:edit']"
+            v-hasPermi="['patient_management:patient_management:export']"
           >修改
           </el-button>
           <el-button
@@ -279,7 +279,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['patient_management:patient_management:remove']"
+            v-hasPermi="['patient_management:patient_management:export']"
           >删除
           </el-button>
         </template>
