@@ -223,92 +223,87 @@ export default {
 
 <template>
   <div class="login">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" id="mainContainer">
-      <div class="form-content" >
-      <span style="font-size: 2.5vw;color: #F2F2F2">Login</span>
-      <span style="color: #adadad; font-size: 1vw; display: block;margin-top: 6%">欢迎来到心电<span style="color: red;font-weight: 700">AI</span>服务平台</span>
-<!--      <h2 style="margin: 0px auto 0px auto;text-align: center;color: #707070">心电<span style="color: red;font-weight: 700">AI</span>服务平台</h2>-->
-      <!--      <h4 style="text-align: center;color: #707070">ECGMS-100</h4>-->
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+      <span style="font-size: 45px;color: #F2F2F2">Login</span>
+      <span style="color: #adadad; font-size: 20px; display: block;margin-top: 6%">欢迎来到心电<span style="color: red;font-weight: 700">AI</span>服务平台</span>
       <h4 style="text-align: center;color: #707070">&nbsp;</h4>
 
+      <el-tabs v-model="activeName" @tab-click="loginMethod" class="tabs">
+        <el-tab-pane class="tabPane" label="账号密码登录" name="first" >
+          <!--   账号密码登录    -->
+          <div class="content1">
+            <el-form-item prop="username">
+              <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="请输入您的账号">
+                <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                v-model="loginForm.password"
+                type="password"
+                auto-complete="off"
+                placeholder="请输入您的密码"
+                @keyup.enter.native="handleLogin">
+                <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
+              </el-input>
+            </el-form-item>
+          </div>
+        </el-tab-pane>
 
-        <el-tabs v-model="activeName" @tab-click="loginMethod" class="tabs">
-          <el-tab-pane class="tabPane" label="账号密码登录" name="first" >
-            <!--   账号密码登录    -->
-            <div class="content1">
-              <el-form-item prop="username">
-                <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="请输入您的账号">
-                  <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
-                </el-input>
-              </el-form-item>
-              <el-form-item prop="password">
-                <el-input
-                  v-model="loginForm.password"
-                  type="password"
-                  auto-complete="off"
-                  placeholder="请输入您的密码"
-                  @keyup.enter.native="handleLogin">
-                  <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
-                </el-input>
-              </el-form-item>
-            </div>
-          </el-tab-pane>
+        <el-tab-pane class="tabPane" label="验证码登录" name="second">
+          <!--   验证码登录    -->
+          <div class="content2">
+            <el-form-item prop="code" v-if="captchaOnOff">
+              <el-input
+                v-model="loginForm.code"
+                auto-complete="off"
+                placeholder="请输入验证码"
+                style="width: 63%"
+                @keyup.enter.native="handleLogin"
+              >
+                <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+              </el-input>
+              <div class="login-code">
+                <img :src="codeUrl" @click="getCode" class="login-code-img"/>
+              </div>
+            </el-form-item>
 
-          <el-tab-pane class="tabPane" label="验证码登录" name="second">
-            <!--   验证码登录    -->
-            <div class="content2">
-              <el-form-item prop="code" v-if="captchaOnOff">
-                <el-input
-                  v-model="loginForm.code"
-                  auto-complete="off"
-                  placeholder="请输入验证码"
-                  style="width: 63%"
-                  @keyup.enter.native="handleLogin"
-                >
-                  <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
-                </el-input>
-                <div class="login-code">
-                  <img :src="codeUrl" @click="getCode" class="login-code-img"/>
-                </div>
-              </el-form-item>
-
-              <el-form-item prop="mobile">
-                <el-input v-model="loginForm.mobile" type="text" auto-complete="off" placeholder="请输入您的手机号">
-                  <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
-                </el-input>
-              </el-form-item>
-              <el-form-item prop="smsCode">
-                <el-input
-                  v-model="loginForm.smsCode"
-                  auto-complete="off"
-                  placeholder="请输入验证码"
-                  style="width: 63%"
-                  @keyup.enter.native="handleLogin"
-                >
-                  <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
-                </el-input>
-                <div class="login-code">
-                  <el-button round @click.native.prevent="getSmsCode">{{ computeTime > 0 ? `(${computeTime}s)已发送` : '获取验证码' }}
-                  </el-button>
-                </div>
-              </el-form-item>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
+            <el-form-item prop="mobile">
+              <el-input v-model="loginForm.mobile" type="text" auto-complete="off" placeholder="请输入您的手机号">
+                <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="smsCode">
+              <el-input
+                v-model="loginForm.smsCode"
+                auto-complete="off"
+                placeholder="请输入验证码"
+                style="width: 63%"
+                @keyup.enter.native="handleLogin"
+              >
+                <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+              </el-input>
+              <div class="login-code">
+                <el-button round @click.native.prevent="getSmsCode">{{ computeTime > 0 ? `(${computeTime}s)已发送` : '获取验证码' }}
+                </el-button>
+              </div>
+            </el-form-item>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
 
       <el-row>
         <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
-        <!-- <div class="sms-login">
-           <el-button
-             size="mini"
-             type="text"
-             @click.native.prevent="loginMethod"
-           >
-             <span v-if="isSmsLogin">账号密码登录</span>
-             <span v-else>短信登录</span>
-           </el-button>
-         </div>
-         -->
+<!--        <div class="sms-login">
+          <el-button
+            size="mini"
+            type="text"
+            @click.native.prevent="loginMethod"
+          >
+            <span v-if="isSmsLogin">账号密码登录</span>
+            <span v-else>短信登录</span>
+          </el-button>
+        </div>-->
       </el-row>
 
       <el-form-item style="width:100%;">
@@ -316,16 +311,16 @@ export default {
           :loading="loading"
           size="medium"
           type="primary"
-          style="width:92%;"
+          style="width:100%;"
           @click.native.prevent="handleLogin"
         >
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
       </el-form-item>
-      </div>
     </el-form>
-    </div>
+
+  </div>
 </template>
 
 <script>
@@ -333,7 +328,6 @@ import {getCodeImg, getSmsCode, smsLogin} from "@/api/login";
 import Cookies from "js-cookie";
 import {encrypt, decrypt} from '@/utils/jsencrypt';
 import Stomp from 'stompjs';
-
 
 export default {
   name: "Login",
@@ -383,8 +377,6 @@ export default {
       immediate: true
     }
   },
-  computed:{
-  },
   created() {
     this.getCode();
     this.getCookie();
@@ -394,7 +386,6 @@ export default {
       //this.isSmsLogin = !this.isSmsLogin;
       if(this.activeName == "first"){
         this.loginRules.mobile[0].required = false;
-
       }
       if(this.activeName == "second"){
         this.loginRules.mobile[0].required = true;
@@ -481,9 +472,7 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        console.log(valid)
         if (valid) {
-          //console.log(this.isSmsLogin)
           if (this.isSmsLogin) {
             this.loading = true;
             if (this.loginForm.rememberMe) {
@@ -528,33 +517,31 @@ export default {
 };
 </script>
 
-<style rel="stylesheet/scss" scoped lang="scss">
+<style rel="stylesheet/scss" lang="scss">
 /* 导航条下方边框阴影*/
-.login ::v-deep .el-tabs__nav-wrap {
-  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.15) ;
-}
-.login ::v-deep .el-tabs__nav-wrap::after {
+.tabs .el-tabs__nav-wrap.is-top::after {
   content: "";
   left: 0;
-  bottom: 0;
+  //bottom: 0;
   height: 2px;
   background-color: rgba(0,0,0,0) !important;
   z-index: 1;
 }
-.login ::v-deep .el-tabs__item.is-active{    //切换活动项的文字颜色
-  color: #2e7dc9 !important;
-}
-/*.login ::v-deep .el-tabs__active-bar{
-  background-color: #229922 !important;   //切换活动项的长条颜色
-}*/
-::v-deep #tab-first,
-::v-deep #tab-second{
+
+#tab-second.el-tabs__item.is-top {
   color: white;
-  opacity: 1;
-  box-shadow: 0 0 0 0;
 }
-::v-deep .el-input{
-  input{
+#tab-second.el-tabs__item.is-active {
+  color: #2e7dc9;
+}
+#tab-first.el-tabs__item.is-top {
+  color: white;
+}
+#tab-first.el-tabs__item.is-active {
+  color: #2e7dc9;
+}
+
+.tabs .el-input__inner {
     width: 92%;
     height: 100%;
     //border: 0px;
@@ -564,37 +551,12 @@ export default {
     color: white;
     font-size: 14px;
     //margin-left: 0.3vw
-  }
 }
-
-::v-deep .el-tabs__nav-wrap{
-  margin-left: 2.6vw;
-}
-
-.bounce-enter-active {
-  animation: bounce-in .5s;
-}
-.bounce-leave-active {
-  animation: bounce-in .5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.5);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-
 
 
 .login {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   height: 100%;
   background-image: url("../assets/images/backg1.png");
@@ -608,31 +570,29 @@ export default {
 }
 
 .login-form {
+  opacity: 1;
+  background: rgba(3, 11, 43, 1);
+  box-shadow:inset 0px 0px 20px  rgba(67, 118, 176, 1);
+
   border-radius: 6px;
-  background-image: url("../assets/images/backg2.png");
-  background-size: cover;
-  width: 20.4vw;
-  height: 52%;
+  //background: #ffffff;
+  width: 400px;
   padding: 25px 25px 5px 25px;
-  position: absolute;
-  left: 66vw;
+  height: 530px;
+  margin-right: 12%;
   .el-input {
     height: 38px;
+
+    input {
+      height: 38px;
+    }
   }
 
   .input-icon {
-    height: 55%;
-    //width: 2%;
-    vertical-align: -20%;
-    //margin: auto;
-    //line-height: 1.6vh;
-    //margin-left: -80%;
+    height: 39px;
+    width: 14px;
+    margin-left: 2px;
   }
-}
-
-.form-content {
-  margin-top: 10%;
-  margin-left: 5%;
 }
 
 .login-tip {
@@ -645,10 +605,7 @@ export default {
   width: 33%;
   height: 38px;
   float: right;
-  ::v-deep .el-button--medium.is-round {
-    padding: 12px 10px;
-    margin-left: -20px;
-  }
+
   img {
     cursor: pointer;
     vertical-align: middle;
