@@ -51,7 +51,7 @@ public class DoctorTermController extends BaseController {
     /**
      * 导出医生术语列表
      */
-    @PreAuthorize("@ss.hasPermi('system:term:export')")
+    @PreAuthorize("@ss.hasPermi('term:term:export')")
     @Log(title = "医生术语", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, DoctorTerm doctorTerm)
@@ -64,7 +64,7 @@ public class DoctorTermController extends BaseController {
     /**
      * 获取医生术语详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:term:query')")
+    @PreAuthorize("@ss.hasPermi('term:term:query')")
     @GetMapping(value = "/{ termId}")
     public AjaxResult getInfo(@PathVariable(" termId") Long  termId)
     {
@@ -74,7 +74,7 @@ public class DoctorTermController extends BaseController {
     /**
      * 新增医生术语
      */
-    @PreAuthorize("@ss.hasPermi('system:term:add')")
+    @PreAuthorize("@ss.hasPermi('term:term:add')")
     @Log(title = "医生术语", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DoctorTerm doctorTerm)
@@ -85,7 +85,7 @@ public class DoctorTermController extends BaseController {
     /**
      * 修改医生术语
      */
-    @PreAuthorize("@ss.hasPermi('system:term:edit')")
+    @PreAuthorize("@ss.hasPermi('term:term:edit')")
     @Log(title = "医生术语", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DoctorTerm doctorTerm,HttpServletRequest request)
@@ -98,7 +98,7 @@ public class DoctorTermController extends BaseController {
     /**
      * 删除医生术语
      */
-    @PreAuthorize("@ss.hasPermi('system:term:remove')")
+    @PreAuthorize("@ss.hasPermi('term:term:remove')")
     @Log(title = "医生术语", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ termIds}")
     public AjaxResult remove(@PathVariable Long[]  termIds)
