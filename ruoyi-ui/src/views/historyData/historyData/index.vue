@@ -723,7 +723,14 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/staticECG", query: {pId: row.pId,}});
+      if (this.$route.query.ecgType && this.$route.query.ecgType==='JECG12'){
+        this.$router.push({path: "/restingECG", query: {pId: row.pId}});
+      }else if (this.$route.query.ecgType && this.$route.query.ecgType==='JECGsingle'){
+        this.$router.push({path: "/staticECG", query: {pId: row.pId,}});
+      }else {
+        this.$modal.msgError("类型不匹配，请稍后再试");
+      }
+
     },
     /** 生成报告*/
     handleInform(row) {

@@ -310,6 +310,7 @@ export default {
   },
   created() {
     var pId = this.$route.query.pId;
+    console.log()
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {

@@ -118,7 +118,7 @@ public class HospitalListController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<Hospital> list = null;
         //判断是否为管理员
-        if (loginUser.getDeptId()!=null&&loginUser.getDeptId()==200)
+        if (!(loginUser.getDeptId()!=null&&loginUser.getDeptId()==200))
         {
             list = hospitalService.selectHospitalList(hospital);
         }
