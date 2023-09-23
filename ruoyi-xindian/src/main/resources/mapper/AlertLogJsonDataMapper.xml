@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.alert_log.mapper.AlertLogJsonDataMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.alert_log.domain.AlertLogJsonData">
+            <id property="alertLogId" column="alert_log_id" jdbcType="INTEGER"/>
+            <result property="logId" column="log_id" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="jsonData" column="json_data" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        alert_log_id,log_id,user_id,
+        json_data,create_time,update_time
+    </sql>
+</mapper>
