@@ -621,13 +621,13 @@ export default {
           if (_th.message.devicesn != null) {
             (function () {
               var i;
-              for (var k = 0; k <jsonResult.result.II.length; k++) {
+              for (var k = 0; k <1000; k++) {
                 timex.push(k / 100+"秒")
               }
               _th.timex=timex
               //console.log(timex)
               //console.log(jsonResult.result.I.length)
-              for (i = 0; i < jsonResult.result.II.length; i++) {
+              for (i = 0; i < 1000; i++) {
                 Iy.push(jsonResult.result.I[i]);
                 IIy.push(jsonResult.result.II[i]);
                 IIIy.push(jsonResult.result.III[i]);
@@ -642,7 +642,7 @@ export default {
                 V6y.push(jsonResult.result.V6[i]);
               }
               var seriesdata=_th.seriesdata
-              if (jsonResult.result.I.length === 1000) seriesdata = _th.seriesdata1
+              if (jsonResult.result.II.length === 1000) seriesdata = _th.seriesdata1
               chartI.clear()
               chartI.setOption({
                 animation: false,
