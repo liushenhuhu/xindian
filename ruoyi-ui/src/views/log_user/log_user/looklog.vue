@@ -9,8 +9,22 @@
         <el-button :class="{btn3:true,istap:tap,nottap:!tap.T}" @click="labelSelectionT()">T</el-button>
         <el-button :class="{btn3:true,istap:tap,nottap:!tap.noise}" @click="labelSelectionnoise()">选框</el-button>
 <!--        <el-button class="btn3" @click="labelSelectionAllNoise()">AllNoise</el-button>-->
-        <el-button class="btn3" @click="clearData()">清除</el-button>
+        <el-button class="btn3" @click="clearData()">清空</el-button>
         <el-button class="btn3" @click="submitData()">提交</el-button>
+        <el-popover
+          style="margin:auto;"
+          placement="bottom-start"
+          title="提示"
+          width="220"
+          trigger="hover">
+          <p class="tipck">1. 首先选框</p>
+          <!--          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>-->
+          <p class="tipck">2. 再选择标点类型：P、Q、R、S、T，在框内单击左键标点</p>
+          <p class="tipck">3. 右键单击点可以进行删除</p>
+          <p class="tipck">4. 标点完成后点击提交</p>
+          <p class="tipck">也可选择清空所有数据</p>
+          <div slot="reference" ><i class="el-icon-info icon"></i></div>
+        </el-popover>
       </div>
 <!--      {#    <div id="toolbox" style="background-color: rgba(2,27,173,0.1);height: 5vw"></div>#}-->
 <!--      {#    <div class="textarea">#}-->
@@ -31,63 +45,63 @@
         <div class="xinDian">心电图</div>
         <div class="echarts">
           <div class="container">
-            <div class="chart" id="I"></div>
-            <button class="btn" id="I导联" @click="showchart('I',data.I)">展开</button>
+            <div class="chart" id="I" @dblclick="showchart('I',data.I)"></div>
+<!--            <button class="btn" id="I导联" @click="showchart('I',data.I)">展开</button>-->
             <span class="light" id="Ilight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="II"></div>
-            <button class="btn" id="II导联" @click="showchart('II',data.II)">展开</button>
+            <div class="chart" id="II" @dblclick="showchart('II',data.II)"></div>
+<!--            <button class="btn" id="II导联" @click="showchart('II',data.II)">展开</button>-->
             <span class="light" id="IIlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="III"></div>
-            <button class="btn" id="III导联" @click="showchart('III',data.III)">展开</button>
+            <div class="chart" id="III" @dblclick="showchart('III',data.III)"></div>
+<!--            <button class="btn" id="III导联" @click="showchart('III',data.III)">展开</button>-->
             <span class="light" id="IIIlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="aVR"></div>
-            <button class="btn" id="aVR导联" @click="showchart('aVR',data.aVR)">展开</button>
+            <div class="chart" id="aVR" @dblclick="showchart('aVR',data.aVR)"></div>
+<!--            <button class="btn" id="aVR导联" @click="showchart('aVR',data.aVR)">展开</button>-->
             <span class="light" id="aVRlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="aVL"></div>
-            <button class="btn" id="aVL导联" @click="showchart('aVL',data.aVL)">展开</button>
+            <div class="chart" id="aVL" @dblclick="showchart('aVL',data.aVL)"></div>
+<!--            <button class="btn" id="aVL导联" @click="showchart('aVL',data.aVL)">展开</button>-->
             <span class="light" id="aVLlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="aVF"></div>
-            <button class="btn" id="aVF导联" @click="showchart('aVF',data.aVF)">展开</button>
+            <div class="chart" id="aVF" @dblclick="showchart('aVF',data.aVF)"></div>
+<!--            <button class="btn" id="aVF导联" @click="showchart('aVF',data.aVF)">展开</button>-->
             <span class="light" id="aVFlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="V1"></div>
-            <button class="btn" id="V1导联" @click="showchart('V1',data.V1)">展开</button>
+            <div class="chart" id="V1" @dblclick="showchart('V1',data.V1)"></div>
+<!--            <button class="btn" id="V1导联" @click="showchart('V1',data.V1)">展开</button>-->
             <span class="light" id="V1light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="V2"></div>
-            <button class="btn" id="V2导联" @click="showchart('V2',data.V2)">展开</button>
+            <div class="chart" id="V2" @dblclick="showchart('V2',data.V2)"></div>
+<!--            <button class="btn" id="V2导联" @click="showchart('V2',data.V2)">展开</button>-->
             <span class="light" id="V2light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="V3"></div>
-            <button class="btn" id="V3导联" @click="showchart('V3',data.V3)">展开</button>
+            <div class="chart" id="V3" @dblclick="showchart('V3',data.V3)"></div>
+<!--            <button class="btn" id="V3导联" @click="showchart('V3',data.V3)">展开</button>-->
             <span class="light" id="V3light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="V4"></div>
-            <button class="btn" id="V4导联" @click="showchart('V4',data.V4)">展开</button>
+            <div class="chart" id="V4" @dblclick="showchart('V4',data.V4)"></div>
+<!--            <button class="btn" id="V4导联" @click="showchart('V4',data.V4)">展开</button>-->
             <span class="light" id="V4light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="V5"></div>
-            <button class="btn" id="V5导联" @click="showchart('V5',data.V5)">展开</button>
+            <div class="chart" id="V5" @dblclick="showchart('V5',data.V5)"></div>
+<!--            <button class="btn" id="V5导联" @click="showchart('V5',data.V5)">展开</button>-->
             <span class="light" id="V5light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
-            <div class="chart" id="V6"></div>
-            <button class="btn" id="V6导联" @click="showchart('V6',data.V6)">展开</button>
+            <div class="chart" id="V6" @dblclick="showchart('V6',data.V6)"></div>
+<!--            <button class="btn" id="V6导联" @click="showchart('V6',data.V6)">展开</button>-->
             <span class="light" id="V6light" @click="changeColor($event)"></span>
           </div>
         </div>
@@ -2292,7 +2306,9 @@ export default {
             type: 'cross'
           }
         },
-
+        toolbox:{
+          show:false
+        },
         dataZoom: [
           {
             type: 'inside',   // 鼠标滚轮缩放
@@ -2790,6 +2806,13 @@ body,html{
   transform: translate(-50%, -50%);
   z-index: 2000;
   background-color: rgb(255, 255, 255);
+  span{
+    display: inline-block;
+    height: 100%;
+  }
+}
+.icon{
+  font-size: 2vw;
 }
 .menu{
   /*这个样式不写，右键弹框会一直显示在画布的左下角*/
