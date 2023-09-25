@@ -646,6 +646,7 @@
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type like concat(#{ecgType},'%')</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone_aes like concat(#{PatPhone},'%') </if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone_aes = #{patientPhone}</if>

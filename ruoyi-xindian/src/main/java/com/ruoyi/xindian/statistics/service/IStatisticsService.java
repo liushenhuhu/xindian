@@ -26,6 +26,10 @@ public interface IStatisticsService {
 
     List<Statistics> selectCountList(Statistics statistics);
 
+
+    List<Statistics> selectDocDiagnose(Statistics statistics);
+
+
     List<AgeStatistics> getmonth(Reportstic str);
 
     List<AgeStatistics> getday(Reportstic str);

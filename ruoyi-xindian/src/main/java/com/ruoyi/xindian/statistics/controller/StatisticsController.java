@@ -73,7 +73,19 @@ public class StatisticsController extends BaseController {
     public TableDataInfo countList(Statistics statistics) throws Exception {
         startPage();
         List<Statistics> statistics1 = statisticsService.selectCountList(statistics);
+        List<Statistics> statistics2 = statisticsService.selectDocDiagnose(statistics);
         for (Statistics c : statistics1){
+
+            for (Statistics b:statistics2){
+
+                if (c.getDoctorPhone().equals(b.getDoctorPhone())){
+
+                    c.setDiagnoseTypeZhuSUM(b.getDiagnoseTypeZhuSUM());
+                    c.setDiagnoseStatusWEISUM(b.getDiagnoseStatusWEISUM());
+                    c.setDiagnoseTypeBIESUM(b.getDiagnoseTypeBIESUM());
+                    break;
+                }
+            }
 
             if (c.getDoctorName()!=null&&!"".equals(c.getDoctorName())){
                 c.setDoctorName(aesUtils.decrypt(c.getDoctorName()));

@@ -126,8 +126,7 @@
     <select id="selectAlertLogList12" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         <where>
-            <if test="ecgType != null  and ecgType != ''">and (ecg_type = "JECG12YTJ" or ecg_type = "JECG12YXD" or
-                ecg_type = "DECG12YXD" or ecg_type = "DECG12SX")
+            <if test="ecgType != null  and ecgType != ''">and (ecg_type like "JECG12%" or ecg_type like "DECG12%")
             </if>
             <if test="logId != null ">and log_id = #{logId}</if>
             <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
@@ -158,8 +157,7 @@
     <select id="selectAlertLogListSingle" parameterType="AlertLog" resultMap="AlertLogResult">
         <include refid="selectAlertLogVo"/>
         <where>
-            <if test="ecgType != null  and ecgType != ''">and (ecg_type = "JECGsingleGZ" or ecg_type = "DECGsingleZZ" or
-                ecg_type = "DECGsingleGZ")
+            <if test="ecgType != null  and ecgType != ''">and (ecg_type like "JECGsingle%" or ecg_type like "DECGsingle%")
             </if>
             <if test="logId != null ">and log_id = #{logId}</if>
             <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">

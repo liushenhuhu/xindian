@@ -423,6 +423,9 @@ public class PatientManagementController extends BaseController {
         if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
             patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
         }
+        if (StringUtils.isNotEmpty(patientManagement.getDoctorPhone())){
+            patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
+        }
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
         startPage();
         List<PatientManagement> list  = patientManagementService.selectPatientManagementList12(patientManagement);

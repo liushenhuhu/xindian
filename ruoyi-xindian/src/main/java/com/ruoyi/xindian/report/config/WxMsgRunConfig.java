@@ -7,6 +7,8 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.report.service.IReportService;
+import com.ruoyi.xindian.statistics.domain.DiagnoseDoc;
+import com.ruoyi.xindian.statistics.service.DiagnoseDocService;
 import com.ruoyi.xindian.util.ReportUtil;
 import com.ruoyi.xindian.util.StrUtil;
 import com.ruoyi.xindian.util.WxUtil;
@@ -46,6 +48,8 @@ public class WxMsgRunConfig {
     @Autowired
     private IReportService reportService;
 
+    @Resource
+    private DiagnoseDocService diagnoseDocService;
 
     @Autowired
     private AesUtils aesUtils;
@@ -95,6 +99,10 @@ public class WxMsgRunConfig {
         }else {
             if (now.isAfter(start) && now.isBefore(end)) {
 
+                DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
+                diagnoseDoc.setReportId(report2.getReportId());
+
+
                 if (!Boolean.TRUE.equals(redisTemplate.hasKey("DocList"+pId))){
                     List<Doctor> doctors = doctorService.selectIsDoc();
                     int rand = StrUtil.randomInt(doctors.size());
@@ -103,6 +111,7 @@ public class WxMsgRunConfig {
                     report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
                     report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                     report2.setdPhone(dPhone);
+                    diagnoseDoc.setDoctorPhone(dPhone);
                     report2.setReportTime(new Date());
                     report2.setStartTime(new Date());
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
@@ -119,6 +128,7 @@ public class WxMsgRunConfig {
                         Doctor doctor =doctorList.get(rand);
                         String dPhone= doctor.getDoctorPhone();
                         report2.setdPhone(dPhone);
+                        diagnoseDoc.setDoctorPhone(dPhone);
                         report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
                         report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                         report2.setReportTime(new Date());
@@ -127,6 +137,9 @@ public class WxMsgRunConfig {
                         WxUtil.send(aesUtils.decrypt(dPhone));
                     }
                 }
+
+                diagnoseDoc.setDiagnoseType("2");
+                diagnoseDocService.insertDiagnose(diagnoseDoc);
 
                 reportService.updateReport(report2);
                 redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
@@ -152,6 +165,14 @@ public class WxMsgRunConfig {
             report2.setStartTime(new Date());
             if (now.isAfter(start) && now.isBefore(end)) {
 
+                DiagnoseDoc diagnoseDoc1 = new DiagnoseDoc();
+                diagnoseDoc1.setReportId(report2.getReportId());
+                diagnoseDoc1.setDoctorPhone(report2.getdPhone());
+                diagnoseDoc1.setDiagnoseStatus("2");
+                diagnoseDocService.updateDiagnose(diagnoseDoc1);
+
+                DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
+                diagnoseDoc.setReportId(report2.getReportId());
                 if (!Boolean.TRUE.equals(redisTemplate.hasKey("DocList"+pId))){
                     Doctor doctor2 = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
                     Doctor doctor1 = new Doctor();
@@ -161,6 +182,8 @@ public class WxMsgRunConfig {
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();
                     WxUtil.send(aesUtils.decrypt(dPhone));
+                    report2.setdPhone(dPhone);
+                    diagnoseDoc.setDoctorPhone(dPhone);
                     report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
                     report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                     report2.setDiagnosisDoctor(doctor.getDoctorName());
@@ -176,12 +199,15 @@ public class WxMsgRunConfig {
                         Doctor doctor =doctorList.get(rand);
                         String dPhone= doctor.getDoctorPhone();
                         report2.setdPhone(dPhone);
+                        diagnoseDoc.setDoctorPhone(dPhone);
                         report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
                         report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
                         WxUtil.send(aesUtils.decrypt(dPhone));
                     }
                 }
+                diagnoseDoc.setDiagnoseType("2");
+                diagnoseDocService.insertDiagnose(diagnoseDoc);
 
             }
             reportService.updateReport(report2);
