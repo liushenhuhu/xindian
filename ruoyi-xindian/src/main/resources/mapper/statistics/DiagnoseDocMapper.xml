@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.statistics.mapper.DiagnoseDocMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.statistics.domain.DiagnoseDoc">
+            <id property="diagnoseId" column="diagnose_id" jdbcType="INTEGER"/>
+            <result property="reportId" column="report_id" jdbcType="INTEGER"/>
+            <result property="doctorPhone" column="doctor_phone" jdbcType="VARCHAR"/>
+            <result property="diagnoseType" column="diagnose_type" jdbcType="VARCHAR"/>
+            <result property="diagnoseStatus" column="diagnose_status" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        diagnose_id,report_id,doctor_phone,
+        diagnose_type,diagnose_status,create_time,
+        update_time
+    </sql>
+</mapper>

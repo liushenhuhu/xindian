@@ -25,6 +25,8 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.report.service.IReportService;
+import com.ruoyi.xindian.statistics.domain.DiagnoseDoc;
+import com.ruoyi.xindian.statistics.service.DiagnoseDocService;
 import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.ThreadUtil;
 import com.ruoyi.xindian.util.WxUtil;
@@ -71,6 +73,9 @@ public class dataLabbyController extends BaseController
     private TokenService tokenService;
     @Resource
     private WxMsgRunConfig wxMsgRunConfig;
+
+    @Resource
+    private DiagnoseDocService diagnoseDocService;
 
     @Resource
     private AesUtils aesUtils;
@@ -213,6 +218,12 @@ public class dataLabbyController extends BaseController
             report.setDiagnosisStatus(2L);
             report.setReportTime(new Date());
             report.setStartTime(new Date());
+
+            DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
+            diagnoseDoc.setReportId(report.getReportId());
+            diagnoseDoc.setDoctorPhone(phonenumber);
+            diagnoseDoc.setDiagnoseType("1");
+            diagnoseDocService.insertDiagnose(diagnoseDoc);
             reportService.updateReport(report);
             Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(phonenumber);
             Doctor doctor2 = new Doctor();

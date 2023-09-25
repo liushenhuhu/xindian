@@ -18,13 +18,14 @@
 
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="上传时间" align="center" prop="connectionTime" width="180">
+      <el-table-column label="上传时间" align="center" prop="connectionTime" width="95">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
 
       <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
+      <el-table-column label="患者姓名" align="center" prop="patientName" />
       <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
@@ -33,7 +34,7 @@
       <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
       <el-table-column label="诊断时间（分钟）" align="center" prop="avgTime"/>
-      <el-table-column label="报告时间" align="center" prop="reportTime" width="180" show-overflow-tooltip>
+      <el-table-column label="报告时间" align="center" prop="reportTime" width="95" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
@@ -44,9 +45,11 @@
         </template>
       </el-table-column>
       <!--      <el-table-column label="心电类型" align="center" prop="ecgType"/>-->
-      <el-table-column label="心电种类" align="center" prop="ecgType">
+      <el-table-column label="心电种类" align="center" prop="ecgType" width="120">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+          <el-tag >
+            {{scope.row.ecgType}}
+          </el-tag>
         </template>
       </el-table-column>
       <!--  隐藏的患者的个人信息    -->
@@ -175,7 +178,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'JECGsingle',
+        ecgType: null,
         patientPhone: null,
         intelligentDiagnosis: null,
         diagnosisStatus: 1,
@@ -219,6 +222,7 @@ export default {
 
     this.queryParams.countTime=this.$route.query.countTime
     this.queryParams.doctorPhone=this.$route.query.doctorPhone
+    this.queryParams.ecgType = this.$route.query.ecgtype
     this.getList();
   },
   methods: {
@@ -284,7 +288,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'ECG',
+        ecgType: null,
         patientPhone: null,
         diagnosisStatus: null,
         diagnosisConclusion: null,
@@ -366,7 +370,14 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/staticECG", query: {pId: row.pId}});
+      let a = row.ecgType.substring(0,6)
+      if (a==='JECG12'){
+        this.$router.push({path: "/restingECG", query: {pId: row.pId}});
+      }else if (a==='JECGsi'){
+        this.$router.push({path: "/staticECG", query: {pId: row.pId,}});
+      }else {
+        this.$modal.msgError("类型不匹配，请稍后再试");
+      }
     },
     /** 生成报告*/
     handleInform(row) {

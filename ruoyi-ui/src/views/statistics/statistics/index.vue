@@ -81,6 +81,9 @@
           <el-table-column label="诊断次数" align="center" prop="count" />
           <el-table-column label="诊断总时长" align="center" prop="countTime" />
           <el-table-column label="平均诊断时长" align="center" prop="averageTime" />
+          <el-table-column label="主动接诊次数" align="center" prop="diagnoseTypeZhuSUM" />
+          <el-table-column label="被动分配次数" align="center" prop="diagnoseTypeBIESUM" />
+          <el-table-column label="分配未诊断次数" align="center" prop="diagnoseStatusWEISUM" />
         </el-table>
         <pagination
           :total="total"
@@ -219,7 +222,7 @@ export default {
         console.log(status.queryParams.year+'-'+status.queryParams.month)
 
 
-        status.$router.push({path:'/Diagnostic_statistics',query:{countTime:status.queryParams.year+'-'+status.queryParams.month,doctorPhone:status.queryParams.doctorPhone}})
+        status.$router.push({path:'/Diagnostic_statistics',query:{countTime:status.queryParams.year+'-'+status.queryParams.month,doctorPhone:status.queryParams.doctorPhone,ecgtype:status.queryParams.reportType}})
       })
     },
 

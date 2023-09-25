@@ -195,9 +195,11 @@
           <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
         </template>
       </el-table-column>
-      <el-table-column label="心电种类" align="center" prop="ecgType">
+      <el-table-column label="心电种类" align="center" prop="ecgType" width="120">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+          <el-tag >
+            {{scope.row.ecgType}}
+          </el-tag>
         </template>
       </el-table-column>
       <!--  隐藏的患者的个人信息    -->

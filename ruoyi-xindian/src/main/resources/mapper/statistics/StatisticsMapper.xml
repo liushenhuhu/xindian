@@ -94,16 +94,28 @@
     </select>
     <select id="selectCountList" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
 
-        select c.doctorName as doctorName,sum(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as countTime ,count(c.doctorName) as count ,avg(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as averageTime
+<!--        select c.doctorName as doctorName,sum(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as countTime ,count(c.doctorName) as count ,avg(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as averageTime-->
+<!--        from (-->
+<!--                 select r.diagnosis_doctor_aes as doctorName, r.start_time as b_time,r.report_time as f_time  from report r-->
+<!--                                                                                                                   INNER JOIN doctor d ON r.diagnosis_doctor_aes =  d.doctor_name_aes-->
+<!--                 where  r.diagnosis_doctor_aes is not null and r.diagnosis_status = 1  and start_time is not null-->
+<!--                        <if test="startTime!=null&amp;&amp;startTime!=''&amp;&amp;endTime!=null&amp;&amp;endTime!=''">-->
+<!--                            and  r.report_time BETWEEN #{startTime}  and #{endTime}-->
+<!--                        </if>-->
+<!--                     and report_type like concat('JECG','%')-->
+<!--             ) as c GROUP BY c.doctorName ORDER BY averageTime asc-->
+
+        select c.doctorName as doctorName, c.doctorPhone as doctorPhone,sum(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as countTime ,count(c.doctorName) as count ,avg(TIMESTAMPDIFF(SECOND,c.b_time,c.f_time)) as averageTime
         from (
-                 select r.diagnosis_doctor_aes as doctorName, r.start_time as b_time,r.report_time as f_time  from report r
-                                                                                                                   INNER JOIN doctor d ON r.diagnosis_doctor_aes =  d.doctor_name_aes
-                 where  r.diagnosis_doctor_aes is not null and r.diagnosis_status = 1  and start_time is not null
-                        <if test="startTime!=null&amp;&amp;startTime!=''&amp;&amp;endTime!=null&amp;&amp;endTime!=''">
-                            and  r.report_time BETWEEN #{startTime}  and #{endTime}
-                        </if>
-                     and report_type like concat('JECG','%')
-             ) as c GROUP BY c.doctorName ORDER BY averageTime asc
+        select r.diagnosis_doctor_aes as doctorName,r.d_phone_aes as doctorPhone ,r.start_time as b_time,r.report_time as f_time  from report r
+        INNER JOIN doctor d ON r.diagnosis_doctor_aes =  d.doctor_name_aes
+        where  r.diagnosis_doctor_aes is not null and r.diagnosis_status = 1  and start_time is not null
+        <if test="startTime!=null&amp;&amp;startTime!=''&amp;&amp;endTime!=null&amp;&amp;endTime!=''">
+            and  r.report_time BETWEEN #{startTime}  and #{endTime}
+        </if>
+        and report_type like concat('JECG','%')
+        ) as c GROUP BY c.doctorName,c.doctorPhone ORDER BY averageTime asc
+
     </select>
 
 
@@ -131,6 +143,29 @@
 <!--        </if>-->
         GROUP BY name
         ORDER BY name asc
+    </select>
+    <select id="selectDocDiagnose" resultType="com.ruoyi.xindian.statistics.domain.Statistics">
+        SELECT
+            diagnose_doc.doctor_phone as doctorPhone,
+            sum(case when diagnose_doc.diagnose_type= '1' then 1 else 0 end) AS diagnoseTypeZhuSUM,
+            sum(case when diagnose_doc.diagnose_type= '2' then 1 else 0 end) AS diagnoseTypeBIESUM,
+            sum(case when diagnose_doc.diagnose_status= '2' then 1 else 0 end) AS diagnoseStatusWEISUM
+        FROM
+            report
+                INNER JOIN
+            diagnose_doc
+            ON
+                report.report_id = diagnose_doc.report_id
+        where  report.diagnosis_doctor_aes is not null and report.diagnosis_status = 1  and report.start_time is not null
+        <if test="startTime!=null&amp;&amp;startTime!=''&amp;&amp;endTime!=null&amp;&amp;endTime!=''">
+            and  report.report_time BETWEEN #{startTime}  and #{endTime}
+        </if>
+        and report.report_type like concat('JECG','%')
+
+        GROUP BY diagnose_doc.doctor_phone
+
+
+
     </select>
 
 

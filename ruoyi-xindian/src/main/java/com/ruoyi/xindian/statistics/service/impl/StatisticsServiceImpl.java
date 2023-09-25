@@ -57,6 +57,11 @@ public class StatisticsServiceImpl implements IStatisticsService {
     }
 
     @Override
+    public List<Statistics> selectDocDiagnose(Statistics statistics) {
+        return statisticsMapper.selectDocDiagnose(statistics);
+    }
+
+    @Override
     public List<AgeStatistics> getmonth(Reportstic str) {
         return statisticsMapper.getmonth(str);
     }

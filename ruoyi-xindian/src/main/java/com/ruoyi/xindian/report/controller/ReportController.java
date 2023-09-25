@@ -51,6 +51,8 @@ import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.report.domain.NotDealWith;
 import com.ruoyi.xindian.report.domain.ReportM;
 import com.ruoyi.xindian.report.service.INotDealWithService;
+import com.ruoyi.xindian.statistics.domain.DiagnoseDoc;
+import com.ruoyi.xindian.statistics.service.DiagnoseDocService;
 import com.ruoyi.xindian.util.*;
 import com.ruoyi.xindian.vipPatient.controller.VipPatientController;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
@@ -146,6 +148,9 @@ public class ReportController extends BaseController
     @Resource
     private WxMsgRunConfig wxMsgRunConfig;
 
+
+    @Resource
+    private DiagnoseDocService diagnoseDocService;
 
     @Resource
     private FwLogMapper fwLogMapper;
@@ -486,7 +491,31 @@ public class ReportController extends BaseController
                 if (time-time1>dateTime){
                     report.setStartTime(parse);
                 }
+                if (report1.getdPhone()!=null&&report1.getdPhone().equals(report.getdPhone())){
+                    DiagnoseDoc diagnoseDoc1 = new DiagnoseDoc();
+                    diagnoseDoc1.setReportId(report1.getReportId());
+                    diagnoseDoc1.setDoctorPhone(report.getdPhone());
+                    diagnoseDoc1.setDiagnoseStatus("1");
+                    diagnoseDocService.updateDiagnose(diagnoseDoc1);
+                }else {
+                    DiagnoseDoc diagnoseDoc1 = new DiagnoseDoc();
+                    diagnoseDoc1.setReportId(report1.getReportId());
+                    diagnoseDoc1.setDoctorPhone(report.getdPhone());
+                    diagnoseDoc1.setDiagnoseType("1");
+                    diagnoseDoc1.setDiagnoseStatus("1");
+                    diagnoseDocService.insertDiagnose(diagnoseDoc1);
+                }
+
             }
+            else {
+                DiagnoseDoc diagnoseDoc1 = new DiagnoseDoc();
+                diagnoseDoc1.setReportId(report1.getReportId());
+                diagnoseDoc1.setDoctorPhone(report1.getdPhone());
+                diagnoseDoc1.setDiagnoseStatus("1");
+                diagnoseDocService.updateDiagnose(diagnoseDoc1);
+
+            }
+
             reportService.updateReport(report);
             if (StringUtils.isNotEmpty(report2.getLoginUserPhone())){
 
@@ -810,6 +839,11 @@ public class ReportController extends BaseController
         //定时器, 30分钟无医生诊断, 换医生诊断.
         wxMsgRunConfig.redisDTStart(report.getpId(),doctors);
         WxUtil.send(aesUtils.decrypt(report.getdPhone()));
+        DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
+        diagnoseDoc.setReportId(report.getReportId());
+        diagnoseDoc.setDoctorPhone(report.getdPhone());
+        diagnoseDoc.setDiagnoseType("2");
+        diagnoseDocService.insertDiagnose(diagnoseDoc);
         int i = reportService.updateReport(report);
         return AjaxResult.success();
     }

@@ -9,28 +9,93 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class Statistics extends BaseEntity {
 
+    /**
+     * 医生名称
+     */
     private String doctorName;
+
+    /**
+     * 医生电话
+     */
     private String doctorPhone;
 
+    /**
+     * 月份
+     */
     private String month;
 
+    /**
+     * 总诊断次数
+     */
     private String count;
 
 
+    /**
+     * 总诊断时间
+     */
     private String countTime;
 
     private String doctorMonth;
 
     private String reportType;
 
+    /**
+     * 年份
+     */
     private String year;
 
+    /**
+     * 平均诊断时间
+     */
     private String averageTime;
 
 
     private String startTime;
 
     private String endTime;
+
+
+    /**
+     * 主动接诊次数
+     */
+    private int diagnoseTypeZhuSUM;
+
+
+    /**
+     * 被动分配次数
+     */
+    private int diagnoseTypeBIESUM;
+
+
+    /**
+     * 分配但未诊断次数
+     */
+    private int diagnoseStatusWEISUM;
+
+
+    public int getDiagnoseTypeZhuSUM() {
+        return diagnoseTypeZhuSUM;
+    }
+
+    public void setDiagnoseTypeZhuSUM(int diagnoseTypeZhuSUM) {
+        this.diagnoseTypeZhuSUM = diagnoseTypeZhuSUM;
+    }
+
+    public int getDiagnoseTypeBIESUM() {
+        return diagnoseTypeBIESUM;
+    }
+
+    public void setDiagnoseTypeBIESUM(int diagnoseTypeBIESUM) {
+        this.diagnoseTypeBIESUM = diagnoseTypeBIESUM;
+    }
+
+    public int getDiagnoseStatusWEISUM() {
+        return diagnoseStatusWEISUM;
+    }
+
+    public void setDiagnoseStatusWEISUM(int diagnoseStatusWEISUM) {
+        this.diagnoseStatusWEISUM = diagnoseStatusWEISUM;
+    }
 
     public String getStartTime() {
         return startTime;
