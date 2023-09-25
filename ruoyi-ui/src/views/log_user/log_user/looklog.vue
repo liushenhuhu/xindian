@@ -1,67 +1,93 @@
 <template>
   <div class="main">
+    <div class="showbox" id="jump" v-show="show" @contextmenu.prevent>
+      <div class="noName">
+        <el-button :class="{btn3:true,istap:tap,nottap:!tap.P}" @click="labelSelectionP()">P</el-button>
+        <el-button :class="{btn3:true,istap:tap,nottap:!tap.Q}" @click="labelSelectionQ()">Q</el-button>
+        <el-button :class="{btn3:true,istap:tap,nottap:!tap.R}" @click="labelSelectionR()">R</el-button>
+        <el-button :class="{btn3:true,istap:tap,nottap:!tap.S}" @click="labelSelectionS()">S</el-button>
+        <el-button :class="{btn3:true,istap:tap,nottap:!tap.T}" @click="labelSelectionT()">T</el-button>
+        <el-button :class="{btn3:true,istap:tap,nottap:!tap.noise}" @click="labelSelectionnoise()">选框</el-button>
+<!--        <el-button class="btn3" @click="labelSelectionAllNoise()">AllNoise</el-button>-->
+        <el-button class="btn3" @click="clearData()">清除</el-button>
+        <el-button class="btn3" @click="submitData()">提交</el-button>
+      </div>
+<!--      {#    <div id="toolbox" style="background-color: rgba(2,27,173,0.1);height: 5vw"></div>#}-->
+<!--      {#    <div class="textarea">#}-->
+<!--      {#        <div><label class="textareaClass" for="quality">质量评估：</label>#}-->
+<!--        {#            <textarea id="quality" name="myText" rows="4" cols="50">A</textarea></div>#}-->
+<!--      {#        <div><label class="textareaClass" for="label">标注信息：</label>#}-->
+<!--        {#            <textarea id="label" name="myText" rows="4" cols="50">ABCD</textarea>#}-->
+<!--        {#        </div>#}-->
+<!--      {#    </div>#}-->
+      <div id="chartjump"></div>
+      <div id="rightMenu" class="menu" style="display: none;">
+        <el-button class="button" @click="del">删除</el-button>
+      </div>
+      <button class="btn btnfullscreen" style="right: 0;top: 0;" @click="Off">关闭</button>
+    </div>
     <div class="bottom">
       <div class="bottomLeft">
         <div class="xinDian">心电图</div>
         <div class="echarts">
           <div class="container">
             <div class="chart" id="I"></div>
-            <button class="btn" id="I导联" onclick="showchart(this,Iy,timex)">展开</button>
+            <button class="btn" id="I导联" @click="showchart('I',data.I)">展开</button>
             <span class="light" id="Ilight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="II"></div>
-            <button class="btn" id="II导联" onclick="showchart(this,IIy,timex)">展开</button>
+            <button class="btn" id="II导联" @click="showchart('II',data.II)">展开</button>
             <span class="light" id="IIlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="III"></div>
-            <button class="btn" id="III导联" onclick="showchart(this,IIIy,timex)">展开</button>
+            <button class="btn" id="III导联" @click="showchart('III',data.III)">展开</button>
             <span class="light" id="IIIlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVR"></div>
-            <button class="btn" id="aVR导联" onclick="showchart(this,aVRy,timex)">展开</button>
+            <button class="btn" id="aVR导联" @click="showchart('aVR',data.aVR)">展开</button>
             <span class="light" id="aVRlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVL"></div>
-            <button class="btn" id="aVL导联" onclick="showchart(this,aVLy,timex)">展开</button>
+            <button class="btn" id="aVL导联" @click="showchart('aVL',data.aVL)">展开</button>
             <span class="light" id="aVLlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVF"></div>
-            <button class="btn" id="aVF导联" onclick="showchart(this,aVFy,timex)">展开</button>
+            <button class="btn" id="aVF导联" @click="showchart('aVF',data.aVF)">展开</button>
             <span class="light" id="aVFlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V1"></div>
-            <button class="btn" id="V1导联" onclick="showchart(this,V1y,timex)">展开</button>
+            <button class="btn" id="V1导联" @click="showchart('V1',data.V1)">展开</button>
             <span class="light" id="V1light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V2"></div>
-            <button class="btn" id="V2导联" onclick="showchart(this,V2y,timex)">展开</button>
+            <button class="btn" id="V2导联" @click="showchart('V2',data.V2)">展开</button>
             <span class="light" id="V2light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V3"></div>
-            <button class="btn" id="V3导联" onclick="showchart(this,V3y,timex)">展开</button>
+            <button class="btn" id="V3导联" @click="showchart('V3',data.V3)">展开</button>
             <span class="light" id="V3light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V4"></div>
-            <button class="btn" id="V4导联" onclick="showchart(this,V4y,timex)">展开</button>
+            <button class="btn" id="V4导联" @click="showchart('V4',data.V4)">展开</button>
             <span class="light" id="V4light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V5"></div>
-            <button class="btn" id="V5导联" onclick="showchart(this,V5y,timex)">展开</button>
+            <button class="btn" id="V5导联" @click="showchart('V5',data.V5)">展开</button>
             <span class="light" id="V5light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V6"></div>
-            <button class="btn" id="V6导联" onclick="showchart(this,V6y,timex)">展开</button>
+            <button class="btn" id="V6导联" @click="showchart('V6',data.V6)">展开</button>
             <span class="light" id="V6light" @click="changeColor($event)"></span>
           </div>
         </div>
@@ -71,81 +97,111 @@
         <div class="quality">
           <div class="lights">
             <div class="abcd">
-              <el-radio-group v-model="noise_level.Ilevel" style="display: flex;" @change="changeRadios">
-                <el-radio id="Ilevel" label="A" border size="mini" class="radios">A</el-radio>
-                <el-radio id="Ilevel" label="B" border size="mini" class="radios">B</el-radio>
-                <el-radio id="Ilevel" label="C" border size="mini" class="radios">C</el-radio>
-                <el-radio id="Ilevel" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.Ilevel" @change="changeRadios(noise_level.Ilevel,'Ilevel')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
               </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio-group v-model="noise_level.IIlevel" style="display: flex;" @change="changeRadios">
-                <el-radio id="IIlevel" label="A" border size="mini" class="radios">A</el-radio>
-                <el-radio id="IIlevel" label="B" border size="mini" class="radios">B</el-radio>
-                <el-radio id="IIlevel" label="C" border size="mini" class="radios">C</el-radio>
-                <el-radio id="IIlevel" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.IIlevel" @change="changeRadios(noise_level.IIlevel,'IIlevel')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
               </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.IIIlevel" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.IIIlevel" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.IIIlevel" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.IIIlevel" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.IIIlevel" @change="changeRadios(noise_level.IIIlevel,'IIIlevel')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.aVRlevel" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.aVRlevel" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.aVRlevel" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.aVRlevel" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.aVRlevel" @change="changeRadios(noise_level.aVRlevel,'aVRlevel')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.aVLlevel" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.aVLlevel" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.aVLlevel" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.aVLlevel" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.aVLlevel" @change="changeRadios(noise_level.aVLlevel,'aVLlevel')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.aVFlevel" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.aVFlevel" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.aVFlevel" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.aVFlevel" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.aVFlevel" @change="changeRadios(noise_level.aVFlevel,'Ilevel')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V1level" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.V1level" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.V1level" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.V1level" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.V1level" @change="changeRadios(noise_level.V1level,'V1level')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V2level" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.V2level" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.V2level" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.V2level" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.V2level" @change="changeRadios(noise_level.V2level,'V2level')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V3level" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.V3level" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.V3level" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.V3level" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.V3level" @change="changeRadios(noise_level.V3level,'V3level')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V4level" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.V4level" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.V4level" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.V4level" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.V4level" @change="changeRadios(noise_level.V4level,'V4level')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V5level" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.V5level" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.V5level" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.V5level" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.V5level" @change="changeRadios(noise_level.V5level,'V5level')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio v-model="noise_level.V6level" label="A" border size="mini" class="radios">A</el-radio>
-              <el-radio v-model="noise_level.V6level" label="B" border size="mini" class="radios">B</el-radio>
-              <el-radio v-model="noise_level.V6level" label="C" border size="mini" class="radios">C</el-radio>
-              <el-radio v-model="noise_level.V6level" label="D" border size="mini" class="radios">D</el-radio>
+              <el-radio-group v-model="noise_level.V6level" @change="changeRadios(noise_level.V6level,'V6level')">
+                <el-radio label="A" border size="mini" class="radios">A</el-radio>
+                <el-radio label="B" border size="mini" class="radios">B</el-radio>
+                <el-radio label="C" border size="mini" class="radios">C</el-radio>
+                <el-radio label="D" border size="mini" class="radios">D</el-radio>
+              </el-radio-group>
             </div>
+          </div>
+          <div class="allin">
+            <button class="green" @click="allA">全A
+            </button>
+            <button class="red" @click="allB">全B
+            </button>
+            <button class="red" @click="allC">全C
+            </button>
+            <button class="red" @click="allD">全D
+            </button>
           </div>
         </div>
       </div>
@@ -153,9 +209,9 @@
         <div class="topMiddle">
           <div class="warning">预警类型</div>
           <div class="warningDetail">
-            <form id="loginForm" name="loginForm" style="padding:3vw">
+            <form id="loginForm" name="loginForm" style="padding:3vw;display: flex;justify-content: space-between;width: 100%">
               <template>
-                <el-select v-model="value" placeholder="请选择" style="width: 15vw">
+                <el-select v-model="value" placeholder="请选择" style="width: 14vw">
                   <el-option-group
                     v-for="group in options"
                     :key="group.label"
@@ -169,25 +225,15 @@
                   </el-option-group>
                 </el-select>
               </template>
-              <el-button type="success" id="btn1" plain style="margin-left: 1vw" @click="uploadSelect()">提交</el-button>
+              <el-button type="success" id="btn1" class="btn1" @click="submit()">提交</el-button>
             </form>
           </div>
-          <div class="allin">
-              <el-button type="success" style="width: 4vw;height: 3vw;font-size: 1vw" @click="allA">全A
-              </el-button>
-              <el-button type="danger" style="width: 4vw;height: 3vw;font-size: 1vw" @click="allB">全B
-              </el-button>
-              <el-button type="danger" style="width: 4vw;height: 3vw;font-size: 1vw" @click="allC">全C
-              </el-button>
-              <el-button type="danger" style="width: 4vw;height: 3vw;font-size: 1vw" @click="allD">全D
-              </el-button>
-            </div>
         </div>
         <div class="topMiddle">
           <div class="warning">患者信息</div>
           <div class="messageDetail">
             <span id="pID">患者ID：{{ message.pid }}</span>
-            <span id="logID">日志ID：{{ message.lid }}</span>
+            <span id="logID">日志ID：{{ message.logid }}</span>
             <span id="psex">性别：{{ message.sex }}</span>
             <span id="pAge">年龄：{{ message.age }}</span>
             <span id="clock">时间：{{ message.time }}</span>
@@ -202,13 +248,27 @@
 import {getReportByPId} from "@/api/report/report";
 import {PatientInformation} from "@/api/log_user/log_user";
 import $ from "jquery";
-import * as echarts from "echarts";
-
+import * as echarts from "@/views/ECGScreen/detail/echarts.min";
+import {selectList,getLabel,addLabel} from "@/api/log_user/log_user"
+import {param} from "@/utils";
+import de from "element-ui/src/locale/lang/de";
 export default {
-  name: "Index",
+  name: "lookLog1",
+  computed: {
+    de() {
+      return de
+    }
+  },
   data() {
     return {
-
+      tap:{
+        P:false,
+        Q:false,
+        R:false,
+        S:false,
+        T:false,
+        noise:false
+      },
       //通过字典将radio和light一一对应
       levellight : {
         'V1level': 'V1light',
@@ -223,7 +283,8 @@ export default {
         'Ilevel': 'Ilight',
         'IIlevel': 'IIlight',
         'IIIlevel': 'IIIlight',
-      },lightlevel: {
+      },
+      lightlevel: {
         'V1light': 'V1level',
         'V2light': 'V2level',
         'V3light': 'V3level',
@@ -237,23 +298,20 @@ export default {
         'IIlight': 'IIlevel',
         'IIIlight': 'IIIlevel',
       },
-      noise: {
+      noise_list: {
         //判断红绿颜色
-        list: {
-          IIIlight: "",
-          IIlight: "",
-          Ilight: "",
-          V1light: "",
-          V2light: "",
-          V3light: "",
-          V4light: "",
-          V5light: "",
-          V6light: "",
-          aVFlight: "",
-          aVLlight: "",
-          aVRlight: "",
-        },
-        lists: [],//12导联质量评估数据
+        Ilight: "",
+        IIlight: "",
+        IIIlight: "",
+        aVLlight: "",
+        aVFlight: "",
+        aVRlight: "",
+        V1light: "",
+        V2light: "",
+        V3light: "",
+        V4light: "",
+        V5light: "",
+        V6light: "",
       },
       //ABCD等级的判断
       noise_level: {
@@ -271,284 +329,250 @@ export default {
         V6level: "",
       },
       message: {
-        devicesn: "type-2",
-        user_id: "146",
+        devicesn: "",
+        user_id: "",
         pid: "",
-        logid: "4d71efb8-441c-58e4-ae17-2bcfe89771c9",
+        logid: "",
         sex: "",
         age: "",
         time: "",
+        logType:'',
       },
-      options: [
-        {
-          label: '正常心电图',
-          options: [{
-            value: '正常心电图',
-            label: '正常心电图'
-          },]
-        }, {
-          label: '心动过速',
-          options: [{
-            value: '室性心动过速',
-            label: '室性心动过速'
-          }, {
-            value: '室上性心动过速',
-            label: '室上性心动过速'
-          }, {
-            value: '交界性心动过速',
-            label: '交界性心动过速'
-          }, {
-            value: '房性心动过速',
-            label: '房性心动过速'
-          },]
-        },
-        {
-          label: '心律',
-          options: [{
-            value: '窦性心律',
-            label: '窦性心律'
-          }, {
-            value: '异位心律',
-            label: '异位心律'
-          }, {
-            value: '房性心律',
-            label: '房性心律'
-          }, {
-            value: '室性心律',
-            label: '室性心律'
-          }, {
-            value: '交界性心律',
-            label: '交界性心律'
-          }, {
-            value: '起搏心律',
-            label: '起搏心律'
-          }]
-        }, {
-          label: '早搏/逸搏',
-          options: [{
-            value: '房性逸搏',
-            label: '房性逸搏'
-          }, {
-            value: '房性早搏',
-            label: '房性早搏'
-          }, {
-            value: '房性停搏',
-            label: '房性停搏'
-          }, {
-            value: '室性逸搏',
-            label: '室性逸搏'
-          }, {
-            value: '室性早搏',
-            label: '室性早搏'
-          }, {
-            value: '交界性逸搏',
-            label: '交界性逸搏'
-          },
-            {
-              value: '交界性早搏',
-              label: '交界性早搏'
-            }, {
-              value: '交界性停搏',
-              label: '交界性停搏'
-            }, {
-              value: '窦性停搏',
-              label: '窦性停搏'
-            }, {
-              value: '心室停搏',
-              label: '心室停搏'
-            }, {
-              value: '全心停搏',
-              label: '全心停搏'
-            }]
-        }, {
-          label: '房室肥大',
-          options: [{
-            value: '左心室肥大',
-            label: '左心室肥大'
-          }, {
-            value: '左心房肥大',
-            label: '左心房肥大'
-          }, {
-            value: '右心室肥大',
-            label: '右心室肥大'
-          }, {
-            value: '右心房肥大',
-            label: '右心房肥大'
-          },]
-        },
-        {
-          label: '颤动/扑动',
-          options: [{
-            value: '心房颤动',
-            label: '心房颤动'
-          }, {
-            value: '心房扑动',
-            label: '心房扑动'
-          }, {
-            value: '心室颤动',
-            label: '心室颤动'
-          }, {
-            value: '心室扑动',
-            label: '心室扑动'
-          }],
-        }, {
-          label: '其他',
-          options: [{
-            value: '室内差异性传导',
-            label: '室内差异性传导'
-          }, {
-            value: '心室预激波',
-            label: '心室预激波'
-          }, {
-            value: '早期复极',
-            label: '早期复极'
-          }, {
-            value: '亚急性',
-            label: '亚急性'
-          }, {
-            value: '急性',
-            label: '急性'
-          }, {
-            value: '陈旧性',
-            label: '陈旧性'
-          }, {
-            value: '心电图危急值',
-            label: '心电图危急值'
-          }],
-        }, {
-          label: '预测猝死',
-          options: [{
-            value: '预激综合症',
-            label: '预激综合症'
-          }, {
-            value: 'ST改变',
-            label: 'ST改变'
-          }, {
-            value: 'ST-T改变',
-            label: 'ST-T改变'
-          }, {
-            value: 'T波异常',
-            label: 'T波异常'
-          }, {
-            value: 'QT间期延长',
-            label: 'QT间期延长'
-          }, {
-            value: 'QTc间期延长',
-            label: 'QTc间期延长'
-          }, {
-            value: '可见U波',
-            label: '可见U波'
-          }],
-        }, {
-          label: '心肌梗死',
-          options: [{
-            value: '前间壁心肌梗死',
-            label: '前间壁心肌梗死'
-          }, {
-            value: '前侧壁心肌梗死',
-            label: '前侧壁心肌梗死'
-          }, {
-            value: '广泛前壁心肌梗死',
-            label: '广泛前壁心肌梗死'
-          }, {
-            value: '前壁心肌梗死',
-            label: '前壁心肌梗死'
-          }, {
-            value: '下壁心肌梗死',
-            label: '下壁心肌梗死'
-          }, {
-            value: '下后壁心肌梗死',
-            label: '下后壁心肌梗死'
-          }, {
-            value: '后壁心肌梗死',
-            label: '后壁心肌梗死'
-          }, {
-            value: '下侧壁心肌梗死',
-            label: '下侧壁心肌梗死'
-          }, {
-            value: '高侧壁心肌梗死',
-            label: '高侧壁心肌梗死'
-          }, {
-            value: '侧壁心肌梗死',
-            label: '侧壁心肌梗死'
-          }, {
-            value: '心内膜下心肌梗死',
-            label: '心内膜下心肌梗死'
-          }, {
-            value: '右室心肌梗死',
-            label: '右室心肌梗死'
-          }, {
-            value: '非ST抬高型心肌梗死',
-            label: '非ST抬高型心肌梗死'
-          }, {
-            value: '心尖部心肌梗死',
-            label: '心尖部心肌梗死'
-          }, {
-            value: '间壁心肌梗死',
-            label: '间壁心肌梗死'
-          }],
-        }, {
-          label: '传导阻滞',
-          options: [{
-            value: 'I度房室传导阻滞',
-            label: 'I度房室传导阻滞'
-          }, {
-            value: 'II度房室传导阻滞',
-            label: 'II度房室传导阻滞'
-          }, {
-            value: 'II度I型房室传导阻滞',
-            label: 'II度I型房室传导阻滞'
-          }, {
-            value: 'II度II型房室传导阻滞',
-            label: 'II度II型房室传导阻滞'
-          }, {
-            value: 'III度房室传导阻滞',
-            label: 'III度房室传导阻滞'
-          }, {
-            value: '高度房室传导阻滞',
-            label: '高度房室传导阻滞'
-          }, {
-            value: '左前分支传导阻滞',
-            label: '左前分支传导阻滞'
-          }, {
-            value: '下侧壁心肌梗死',
-            label: '下侧壁心肌梗死'
-          }, {
-            value: '左后分支传导阻滞',
-            label: '左后分支传导阻滞'
-          }, {
-            value: '完全性左束支传导阻滞',
-            label: '完全性左束支传导阻滞'
-          }, {
-            value: '不完全性左束支传导阻滞',
-            label: '不完全性左束支传导阻滞'
-          }, {
-            value: '完全性右束支传导阻滞',
-            label: '完全性右束支传导阻滞'
-          }, {
-            value: '不完全性右束支传导阻滞',
-            label: '不完全性右束支传导阻滞'
-          }, {
-            value: '非特异性室内传导阻滞',
-            label: '非特异性室内传导阻滞'
-          },],
-        }
-      ],
-      value: '不正常',
+      query:{
+        userId:'',
+        logId: '',
+        type:'',
+        jsonData:''
+      },
+      value: '正常心电图',
+      options:[],
+      timex:[],
+      show:false,
+      seriesdata:[
+        {xAxis: 0},
+        {xAxis: 25},
+        {xAxis: 50},
+        {xAxis: 75},
+        {xAxis: 100},
+        {xAxis: 125},
+        {xAxis: 150},
+        {xAxis: 175},
+        {xAxis: 200},
+        {xAxis: 225},
+        {xAxis: 250},
+        {xAxis: 275},
+        {xAxis: 300},
+        {xAxis: 325},
+        {xAxis: 350},
+        {xAxis: 375},
+        {xAxis: 400},
+        {xAxis: 425},
+        {xAxis: 450},
+        {xAxis: 475},
+        {xAxis: 500},
+        {xAxis: 525},
+        {xAxis: 550},
+        {xAxis: 575},
+        {xAxis: 600},
+        {xAxis: 625},
+        {xAxis: 650},
+        {xAxis: 675},
+        {xAxis: 700},
+        {xAxis: 725},
+        {xAxis: 750},
+        {xAxis: 775},
+        {xAxis: 800},
+        {xAxis: 825},
+        {xAxis: 850},
+        {xAxis: 875},
+        {xAxis: 900},
+        {xAxis: 925},
+        {xAxis: 950},
+        {xAxis: 975},
+        {xAxis: 1000},
+        {xAxis: 1025},
+        {xAxis: 1050},
+        {xAxis: 1075},
+        {xAxis: 1100},
+        {xAxis: 1125},
+        {xAxis: 1150},
+        {xAxis: 1175},
+        {xAxis: 1200},
+        {xAxis: 1225},
+        {xAxis: 1250},
+        {xAxis: 1275},
+        {xAxis: 1300},
+        {xAxis: 1325},
+        {xAxis: 1350},
+        {xAxis: 1375},
+        {xAxis: 1400},
+        {xAxis: 1425},
+        {xAxis: 1450},
+        {xAxis: 1475},
+        {xAxis: 1500},
+        {xAxis: 1525},
+        {xAxis: 1550},
+        {xAxis: 1575},
+        {xAxis: 1600},
+        {xAxis: 1625},
+        {xAxis: 1650},
+        {xAxis: 1675},
+        {xAxis: 1700},
+        {xAxis: 1725},
+        {xAxis: 1750},
+        {xAxis: 1775},
+        {xAxis: 1800},
+        {xAxis: 1825},
+        {xAxis: 1850},
+        {xAxis: 1875},
+        {xAxis: 1900},
+        {xAxis: 1925},
+        {xAxis: 1950},
+        {xAxis: 1975},
+        {xAxis: 2000}, {xAxis: 2025}, {xAxis: 2050}, {xAxis: 2100}, {xAxis: 2125}, {xAxis: 2150}, {xAxis: 2175}, {xAxis: 2200}, {xAxis: 2225}, {xAxis: 2250}, {xAxis: 2275}, {xAxis: 2300}, {xAxis: 2325}, {xAxis: 2350},
+        {xAxis: 2375}, {xAxis: 2400}, {xAxis: 2425}, {xAxis: 2450}, {xAxis: 2475}, {xAxis: 2500},
+
+        {yAxis: -3}, {yAxis: -2.5}, {yAxis: -2}, {yAxis: -1.5}, {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1}, {yAxis: 1.5}, {yAxis: 2}, {yAxis: 2.5}, {yAxis: 3},],
+      seriesdata1:[{xAxis: 0},
+        {xAxis: 25},
+        {xAxis: 50},
+        {xAxis: 75},
+        {xAxis: 100},
+        {xAxis: 125},
+        {xAxis: 150},
+        {xAxis: 175},
+        {xAxis: 200},
+        {xAxis: 225},
+        {xAxis: 250},
+        {xAxis: 275},
+        {xAxis: 300},
+        {xAxis: 325},
+        {xAxis: 350},
+        {xAxis: 375},
+        {xAxis: 400},
+        {xAxis: 425},
+        {xAxis: 450},
+        {xAxis: 475},
+        {xAxis: 500},
+        {xAxis: 525},
+        {xAxis: 550},
+        {xAxis: 575},
+        {xAxis: 600},
+        {xAxis: 625},
+        {xAxis: 650},
+        {xAxis: 675},
+        {xAxis: 700},
+        {xAxis: 725},
+        {xAxis: 750},
+        {xAxis: 775},
+        {xAxis: 800},
+        {xAxis: 825},
+        {xAxis: 850},
+        {xAxis: 875},
+        {xAxis: 900},
+        {xAxis: 925},
+        {xAxis: 950},
+        {xAxis: 975},
+        {xAxis: 1000},
+        {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},],
+      data:{},
+      chartjump:null,
+      xIndex:null,
+      delX:{key:'',value:null},
+      markArea:[],
+      title:'',
+      subData:{
+        I:[],
+        II:[],
+        III:[],
+        V1:[],
+        V2:[],
+        V3:[],
+        V4:[],
+        V5:[],
+        V6:[],
+        aVF:[],
+        aVL:[],
+        aVR:[],
+      },//提交标注信息
+      pointdata:[],//画点的option
+      point:[[],{P:[], Q:[], R:[], S:[], T:[]}],
+      arr:[]//要删除的点所在的区间
     };
   },
 
   created() {
-
+    console.log('created')
+    if (this.$route.query.logId) {
+      this.message.logid = this.$route.query.logId;
+      this.message.logType = this.$route.query.logType;
+      this.message.user_id = this.$route.query.userId;
+      this.value=this.$route.query.logType;
+      this.query.logId=this.$route.query.logId;
+      this.query.userId=this.$route.query.userId;
+      this.subData={
+        I:[],
+          II:[],
+          III:[],
+          V1:[],
+          V2:[],
+          V3:[],
+          V4:[],
+          V5:[],
+          V6:[],
+          aVF:[],
+          aVL:[],
+          aVR:[],
+      }
+      this.getSelectList()
+      this.getLabel()
+    }
   },
   mounted() {
     this.getMessage()
+    this.chartjump = echarts.init(document.getElementById('chartjump'));
+  },
+  watch:{
+    'tap.noise':{
+      handler(new_value,old_value){
+          if(new_value){
+            this.chartjump.dispatchAction({
+              type: 'takeGlobalCursor',
+              // 如果想变为“可刷选状态”，必须设置。不设置则会关闭“可刷选状态”。
+              key: 'brush',
+              brushOption: {
+                // 参见 brush 组件的 brushType。如果设置为 false 则关闭“可刷选状态”。
+                brushType: 'lineX',
+                // 参见 brush 组件的 brushMode。如果不设置，则取 brush 组件的 brushMode 设置。
+                brushMode: 'multiple',
+              }
+            });
+          }else {
+            this.chartjump.dispatchAction({
+              type: 'takeGlobalCursor',
+            });
+            this.chartjump.dispatchAction({
+              type: 'brush',
+              areas: []
+            });
+          }
+      },
+      deep: true
+    }
   },
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
     },
+    getSelectList(){
+      selectList().then(res=>{
+        console.log(res)
+        this.options=res.data
+      })
+    },
+    //获取心电数据
     getMessage() {
+
       var Iy = [];
       var IIy = [];
       var IIIy = [];
@@ -561,9 +585,7 @@ export default {
       var V4y = [];
       var V5y = [];
       var V6y = [];
-      var timex = [];
-      var seriesdata = []
-      var seriesdata1 = []
+      var timex=[];
       var chartI = echarts.init(document.getElementById('I'));
       var chartII = echarts.init(document.getElementById('II'));
       var chartIII = echarts.init(document.getElementById('III'));
@@ -588,6 +610,7 @@ export default {
             "user_id": this.message.user_id,
           }),
         success: function (jsonResult) {
+          _th.data=jsonResult.result
           console.log(jsonResult);
           _th.message.pid = jsonResult.result.patientid;
           _th.message.age = Number(jsonResult.result.age).toFixed(0);
@@ -598,11 +621,13 @@ export default {
           if (_th.message.devicesn != null) {
             (function () {
               var i;
-              for (var k = 0; k <= jsonResult.result.I.length; k++) {
-                timex.push(k / 100 + '秒')
+              for (var k = 0; k <jsonResult.result.II.length; k++) {
+                timex.push(k / 100+"秒")
               }
-              console.log(jsonResult.result.I.length)
-              for (i = 0; i < jsonResult.result.I.length; i++) {
+              _th.timex=timex
+              //console.log(timex)
+              //console.log(jsonResult.result.I.length)
+              for (i = 0; i < jsonResult.result.II.length; i++) {
                 Iy.push(jsonResult.result.I[i]);
                 IIy.push(jsonResult.result.II[i]);
                 IIIy.push(jsonResult.result.III[i]);
@@ -616,135 +641,8 @@ export default {
                 V5y.push(jsonResult.result.V5[i]);
                 V6y.push(jsonResult.result.V6[i]);
               }
-
-              seriesdata = [
-                {xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-                {xAxis: 1025},
-                {xAxis: 1050},
-                {xAxis: 1075},
-                {xAxis: 1100},
-                {xAxis: 1125},
-                {xAxis: 1150},
-                {xAxis: 1175},
-                {xAxis: 1200},
-                {xAxis: 1225},
-                {xAxis: 1250},
-                {xAxis: 1275},
-                {xAxis: 1300},
-                {xAxis: 1325},
-                {xAxis: 1350},
-                {xAxis: 1375},
-                {xAxis: 1400},
-                {xAxis: 1425},
-                {xAxis: 1450},
-                {xAxis: 1475},
-                {xAxis: 1500},
-                {xAxis: 1525},
-                {xAxis: 1550},
-                {xAxis: 1575},
-                {xAxis: 1600},
-                {xAxis: 1625},
-                {xAxis: 1650},
-                {xAxis: 1675},
-                {xAxis: 1700},
-                {xAxis: 1725},
-                {xAxis: 1750},
-                {xAxis: 1775},
-                {xAxis: 1800},
-                {xAxis: 1825},
-                {xAxis: 1850},
-                {xAxis: 1875},
-                {xAxis: 1900},
-                {xAxis: 1925},
-                {xAxis: 1950},
-                {xAxis: 1975},
-                {xAxis: 2000}, {xAxis: 2025}, {xAxis: 2050}, {xAxis: 2100}, {xAxis: 2125}, {xAxis: 2150}, {xAxis: 2175}, {xAxis: 2200}, {xAxis: 2225}, {xAxis: 2250}, {xAxis: 2275}, {xAxis: 2300}, {xAxis: 2325}, {xAxis: 2350},
-                {xAxis: 2375}, {xAxis: 2400}, {xAxis: 2425}, {xAxis: 2450}, {xAxis: 2475}, {xAxis: 2500},
-
-                {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},]
-              seriesdata1 = [{xAxis: 0},
-                {xAxis: 25},
-                {xAxis: 50},
-                {xAxis: 75},
-                {xAxis: 100},
-                {xAxis: 125},
-                {xAxis: 150},
-                {xAxis: 175},
-                {xAxis: 200},
-                {xAxis: 225},
-                {xAxis: 250},
-                {xAxis: 275},
-                {xAxis: 300},
-                {xAxis: 325},
-                {xAxis: 350},
-                {xAxis: 375},
-                {xAxis: 400},
-                {xAxis: 425},
-                {xAxis: 450},
-                {xAxis: 475},
-                {xAxis: 500},
-                {xAxis: 525},
-                {xAxis: 550},
-                {xAxis: 575},
-                {xAxis: 600},
-                {xAxis: 625},
-                {xAxis: 650},
-                {xAxis: 675},
-                {xAxis: 700},
-                {xAxis: 725},
-                {xAxis: 750},
-                {xAxis: 775},
-                {xAxis: 800},
-                {xAxis: 825},
-                {xAxis: 850},
-                {xAxis: 875},
-                {xAxis: 900},
-                {xAxis: 925},
-                {xAxis: 950},
-                {xAxis: 975},
-                {xAxis: 1000},
-                {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},]
-              if (jsonResult.result.I.length === 1000) seriesdata = seriesdata1
+              var seriesdata=_th.seriesdata
+              if (jsonResult.result.I.length === 1000) seriesdata = _th.seriesdata1
               chartI.clear()
               chartI.setOption({
                 animation: false,
@@ -793,14 +691,14 @@ export default {
 
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   // splitNumber: 20,
@@ -905,14 +803,14 @@ export default {
 
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   axisLabel: { //修改坐标系字体颜色
@@ -1014,14 +912,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   // splitNumber: 20,
@@ -1124,14 +1022,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   axisLabel: { //修改坐标系字体颜色
@@ -1233,14 +1131,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   axisLabel: { //修改坐标系字体颜色
@@ -1342,14 +1240,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   // splitNumber: 20,
@@ -1451,14 +1349,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   axisLabel: { //修改坐标系字体颜色
@@ -1561,14 +1459,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   axisLabel: { //修改坐标系字体颜色
@@ -1670,14 +1568,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   // splitNumber: 20,
@@ -1779,14 +1677,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   axisLabel: { //修改坐标系字体颜色
@@ -1888,14 +1786,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   axisLabel: { //修改坐标系字体颜色
@@ -1997,14 +1895,14 @@ export default {
                     show: true,
                     lineStyle: {
                       color: 'pink',
-                      width: 1, //网格的宽度
+                      width: 0.5, //网格的宽度
                       type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                     },
                   } /*网格线*/
                 },
                 yAxis: {
-                  min: 1,
-                  max: -1,
+                  min: -1,
+                  max: 1,
                   boundaryGap: true,
                   interval: 0.1,
                   // splitNumber: 20,
@@ -2061,21 +1959,32 @@ export default {
               });
             })();
           } else {
-            this.$message.error("设备未连接");
+            _th.$modal.msgError("设备未连接")
           }
           console.log(jsonResult.result)
         },
         error: function (data) {
-          this.$message.error("数据获取失败");
+          _th.$modal.msgError("数据获取失败")
         }
       });
     },
+    //获取标注数据
+    getLabel(){
+      getLabel(this.query).then(res=>{
+        console.log(res)
+        if(res.data!=null){
+          this.subData=JSON.parse(res.data.jsonData)
+        }
+      }).catch(err=>{
+
+      })
+    },
     //判断红绿颜色
     light(data) {
-      this.noise.list = data.result.noise
-      console.log(this.noise.list)
-      for (var key in this.noise.list) {
-        if (this.noise.list[key] === 1) {
+      this.noise_list = data.result.noise
+      console.log(this.noise_list)
+      for (var key in this.noise_list) {
+        if (this.noise_list[key] === 1) {
           let temp = document.getElementById(key)
           temp.style.backgroundColor = "red"
         } else {
@@ -2095,99 +2004,751 @@ export default {
       var b = tid.target.id;
       console.log("点击获取到的导联id：",b)
       let temp = document.getElementById(b)
-      if (this.noise.list[b] === 0) {
-        this.noise.list[b] = 1;
+      if (this.noise_list[b] === 0) {
+        this.noise_list[b] = 1;
         temp.style.backgroundColor = "red";
         this.noise_level[this.lightlevel[b]]="B"
-        console.log("点击修改之后的噪声数据：",this.noise.list)
+        console.log("点击修改之后的噪声数据：",this.noise_list)
       } else {
-        this.noise.list[b] = 0;
+        this.noise_list[b] = 0;
         temp.style.backgroundColor = "greenyellow";
         this.noise_level[this.lightlevel[b]]="A"
-        console.log("点击修改之后的噪声数据：",this.noise.list)
+        console.log("点击修改之后的噪声数据：",this.noise_list)
       }
     },
     //全为A
     allA() {
       for (var k in this.noise_level) {
+        console.log(this.noise_level[k])
         this.noise_level[k] = "A"
+        this.noise_list[this.levellight[k]]=0
         let temp = document.getElementById(this.levellight[k])
         temp.style.backgroundColor = "greenyellow"
       }
-      console.log("全为A之后的：", this.noise.list)
+
     },
     //全为B
     allB() {
       for (var k in this.noise_level) {
         this.noise_level[k] = "B"
+        this.noise_list[this.levellight[k]]=1
         let temp = document.getElementById(this.levellight[k])
         temp.style.backgroundColor = "red"
       }
-      console.log("全为B之后的：", this.noise.list)
+
     },
     //全为C
     allC() {
       for (var k in this.noise_level) {
         this.noise_level[k] = "C"
+        this.noise_list[this.levellight[k]]=1
         let temp = document.getElementById(this.levellight[k])
         temp.style.backgroundColor = "red"
       }
-      console.log("全为C之后的：", this.noise.list)
+
     },
     //全为D
     allD() {
       for (var k in this.noise_level) {
         this.noise_level[k] = "D"
+        this.noise_list[this.levellight[k]]=1
         let temp = document.getElementById(this.levellight[k])
         temp.style.backgroundColor = "red"
       }
-      console.log("全为D之后的：", this.noise.list)
-    },
-    //修改等级的程度
-    changeRadios(value) {
-      console.log(value)
-      // var vue=this
-      // $("input:radio:checked").each(function () {
-      //   console.log($(this))
-      //   console.log($(this)[0].id);
-      //   console.log($(this).val());
-      //   vue.noise.lists[$(this)[0].id] = $(this).val();
-      //   if ($(this).val() === 'A') {
-      //     console.log(vue.levellight[$(this)[0].id])
-      //     vue.noise.lists[vue.levellight[$(this)[0].id]] = 0
-      //     let temp = document.getElementById(vue.levellight[$(this)[0].id])
-      //     temp.style.backgroundColor = "greenyellow"
-      //   } else if ($(this).val() === 'B') {
-      //     console.log(vue.levellight[$(this)[0].id])
-      //     vue.noise.lists[vue.levellight[$(this)[0].id]] = 1
-      //     let temp = document.getElementById(vue.levellight[$(this)[0].id])
-      //     temp.style.backgroundColor = "red"
-      //   } else if ($(this).val() === 'C') {
-      //     console.log(vue.levellight[$(this)[0].id])
-      //     vue.noise.lists[vue.levellight[$(this)[0].id]] = 1
-      //     let temp = document.getElementById(vue.levellight[$(this)[0].id])
-      //     temp.style.backgroundColor = "red"
-      //   } else if ($(this).val() === 'D') {
-      //     console.log(vue.levellight[$(this)[0].id])
-      //     vue.noise.lists[vue.levellight[$(this)[0].id]] = 1
-      //     let temp = document.getElementById(vue.levellight[$(this)[0].id])
-      //     temp.style.backgroundColor = "red"
-      //   }
-      // })
-      console.log("修改之后的等级：",this.noise_level);
-    },
-    uploadSelect() {
 
     },
+    //修改等级的程度
+    changeRadios(value,lab) {
+      // console.log(value)
+      // console.log(lab)
+      let dom = document.getElementById(this.levellight[lab])
+      if(value==='A'){
+        dom.style.backgroundColor = "greenyellow"
+        this.noise_list[this.levellight[lab]]=0
+      }else {
+        dom.style.backgroundColor = "red"
+        this.noise_list[this.levellight[lab]]=1
+      }
+
+      console.log("修改之后的等级：",this.noise_level);
+      console.log("修改之后的等级：", this.noise_list)
+    },
+    //重置按钮
+    cleartap(){
+      for (let tapKey in this.tap) {
+        this.tap[tapKey]=false
+      }
+    },
+    //合并重复框选区域
+    drawMarkArea(newitem,a){
+      if(this.markArea.length!==0){
+        var result= this.markArea.findIndex((v) => {
+          return (v[0].xAxis <= newitem[0] && v[1].xAxis >= newitem[0])
+            || (v[0].xAxis <=newitem[1] && v[1].xAxis >= newitem[1])
+            ||(v[0].xAxis >=newitem[0] && v[1].xAxis <= newitem[1]);
+        });
+        console.log("是否有交叉",result)
+        if(result==-1){
+          this.markArea.push(a)
+        }else {
+          var max=Math.max(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
+          var min=Math.min(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
+          a[0].xAxis=min
+          a[1].xAxis=max
+          this.markArea.splice(result,1,a)
+        }
+      }else {
+        this.markArea.push(a)
+      }
+      this.chartjump.setOption({
+        series: [{
+          id: 'series1',
+          markArea: {
+            label: {
+              show: true,
+              position: 'inside'
+            },
+            data: this.markArea
+          },
+        }]
+      });
+    },
+    labelSelectionP(){
+      this.cleartap()
+      this.tap.P=true
+    },
+    labelSelectionQ(){
+      this.cleartap()
+      this.tap.Q=true
+    },
+    labelSelectionR(){
+      this.cleartap()
+      this.tap.R=true
+    },
+    labelSelectionS(){
+      this.cleartap()
+      this.tap.S=true
+    },
+    labelSelectionT(){
+      this.cleartap()
+      this.tap.T=true
+    },
+    labelSelectionnoise(){
+      this.cleartap()
+      this.tap.noise=true
+      let noise=[]
+      this.chartjump.off('brushEnd')
+      this.chartjump.on('brushEnd', (params)=>{
+        $('#rightMenu').css({
+          'display': 'none',
+        });
+        noise.length=0
+        params.areas.forEach(item=>{
+          let arr=[]
+          item.coordRange.forEach(x=>{
+            arr.push(x)
+          })
+          noise.push(arr)
+        })
+        noise=this.getMerge(noise)
+        this.chartjump.dispatchAction({
+          type: 'brush',
+          areas: [],//areas
+        });
+        let newitem=params.areas[params.areas.length-1].coordRange
+        let a = [{
+          xAxis: newitem[0],
+          itemStyle: {
+            color: 'rgb(235,124,254)',
+          }
+        }, {
+          xAxis: newitem[1]
+        }];
+        if(this.markArea.length!==0){
+          var result= this.markArea.findIndex((v) => {
+            return (v[0].xAxis <= newitem[0] && v[1].xAxis >= newitem[0])
+              || (v[0].xAxis <=newitem[1] && v[1].xAxis >= newitem[1])
+              ||(v[0].xAxis >=newitem[0] && v[1].xAxis <= newitem[1]);
+          });
+          console.log("是否有交叉",result)
+          if(result==-1){
+            this.markArea.push(a)
+          }else {
+            var max=Math.max(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
+            var min=Math.min(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
+            a[0].xAxis=min
+            a[1].xAxis=max
+            this.markArea.splice(result,1,a)
+          }
+        }else {
+          this.markArea.push(a)
+        }
+        console.log(this.markArea)
+
+        this.chartjump.setOption({
+          series: [{
+            id: 'series1',
+            markArea: {
+              label: {
+                show: true,
+                position: 'inside'
+              },
+              emphasis:{
+                disabled:true
+              },
+              data: this.markArea
+            },
+          }]
+        });
+      });
+    },
+    clearData(){
+      this.subData[this.title]=[]
+      this.markArea=[]
+      this.chartjump.dispatchAction({
+        type: 'brush',
+        areas: []
+      });
+      this.pointdata=[]
+      this.chartjump.setOption({
+        series: [{
+          id: 'series1',
+          markArea: {
+            label: {
+              show: true,
+              position: 'inside'
+            },
+            data: []
+          },
+        }]
+      });
+      this.chartjump.setOption({
+        series:{
+          markPoint:{
+            symbol: "pin",
+            symbolSize: 40,
+            animation:false,
+            data: [],
+          }
+        }
+      });
+    },
+    submit() {
+      // console.log(this.message.logid)
+      // console.log(this.value)
+      // console.log(this.noise_list)
+      // console.log(this.noise_level)
+      // console.log(this.message.user_id)
+      var that=this
+      $.ajax({
+        cache: true,
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        url: "https://screen.mindyard.cn:84/write_logType",
+        data: JSON.stringify(
+          {
+            "id": this.message.logid,
+            "Type": this.value,
+            "list": this.noise_list,
+            "lists": this.noise_level,
+            "user_id": this.message.user_id,
+          }),
+        async: false,
+        success: function (data) {
+          console.log("success:", data);
+          that.$modal.msgSuccess("数据提交成功");
+        },
+        error: function (data) {
+          console.log("error:", data);
+//            cocoMessage.error("提交失败", 3000);
+        }
+      });
+    },
+    submitData(){
+      this.query.jsonData=JSON.stringify(this.subData)
+      this.query.type=this.title
+      console.log(this.query)
+      addLabel(this.query).then(res=>{
+        this.$modal.msgSuccess("标注提交成功");
+      }).catch(err=>{})
+    },
+    showchart(title, data) {
+      this.title=title
+      //回显
+      let detailoption = {
+        animation: true,
+        backgroundColor: "#ffffff",
+        title: {
+          text: title+'导联',
+          textStyle: {
+            fontSize: 13,
+            color: "#000000"
+          },
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+
+        dataZoom: [
+          {
+            type: 'inside',   // 鼠标滚轮缩放
+            start: 0,
+            end: 100
+          },
+          {
+            show: true,       // 滑动条组件
+            type: 'slider',
+            y: '90%',
+            start: 0,
+            end: 100
+          }
+        ],
+        grid: {
+          left: '3%',
+          right: '3%',
+          top: '5%',
+          bottom: '10%'
+        },
+        legend: {
+          show: false,
+          data: ['当前电位'],
+          textStyle: {color: "#000000"} /*图例(legend)说明文字的颜色*/,
+          left: "right",
+        },
+        brush: {
+          toolbox: ['lineX'],
+          xAxisIndex: 0,//表示这个 index 所对应的坐标系
+          throttleType: 'debounce',//开启选中延迟后调用回调延迟
+          throttleDelay: 600,//选中延迟后调用回调延迟时间
+          // brushStyle: {
+          //     borderWidth: 1,
+          //     color: 'rgba(255,36,36,0.2)',
+          //     borderColor: '#ff2424'
+          // }
+        },
+        xAxis: {
+          boundaryGap: true,
+          data: this.timex,
+          axisTick: {
+            show: false
+          },
+          axisLabel: { //修改坐标系字体颜色
+            interval: 4,
+            show: false,
+            textStyle: {
+              color: "#000000"
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: 'pink',
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            },
+
+          } /*网格线*/
+        },
+        yAxis: {
+          min: 3,
+          max: -3,
+          boundaryGap: true,
+          interval: 0.1,
+          axisLabel: { //修改坐标系字体颜色
+            show: false,
+            textStyle: {
+              color: "#000000"
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: "pink",
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            },
+          } /*网格线*/
+        },
+        series: {
+          id: 'series1',
+          markLine: {
+            animation: false,
+            symbol: "none",
+            silent: true,
+            lineStyle: {
+              type: "solid",
+              color: '#b33939',
+              width: 0.5,
+
+            },
+            label: {
+              show: true,
+              position: 'start', // 表现内容展示的位置
+              color: '#b33939'  // 展示内容颜色
+            },
+            data: this.seriesdata,
+          },
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                color: '#000000',/*折线的颜色*/
+              },
+              color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
+            }
+          },
+          symbol: "none",
+          name: '当前电位',
+          type: 'line',
+          data: data,
+          smooth: 0 //显示为平滑的曲线*/
+        },
+      };
+      this.chartjump.clear()
+      this.chartjump.setOption(detailoption)
+      setTimeout(()=>{
+        this.chartjump.resize()
+      })
+      console.log(this.subData)
+      this.markArea.length=0
+      this.pointdata.length=0
+      var colorList= {
+        P:'#fe0101',Q:'#11ff00',R:'#02ffc5',S:'#ffe100',
+        T:'#8800ff'
+      }
+      if(this.subData[title].length!==0){
+        console.log("有数据")
+        this.subData[title].forEach(i=>{
+          for (const key in i[1]) {
+            if (key === 'P' || key === 'T') {
+              for (let j = 0; j < i[1][key].length; j++) {
+                let pointdata={
+                  name: key,
+                  xAxis:i[1][key][j][0],
+                  yAxis: i[1][key][j][1],
+                  itemStyle: {
+                    color:colorList[key]
+                  },
+                  label: {
+                    color: '#ffffff',
+                    show: true,
+                    formatter: key,
+                    fontSize:20
+                  },
+                }
+                this.pointdata.push(pointdata)
+              }
+            }else {
+              let pointdata={
+                name: key,
+                xAxis:i[1][key][0],
+                yAxis: i[1][key][1],
+                itemStyle: {
+                  color:colorList[key]
+                },
+                label: {
+                  color: '#ffffff',
+                  show: true,
+                  formatter: key,
+                  fontSize:20
+                },
+              }
+              this.pointdata.push(pointdata)
+            }
+
+          }
+          let a = [{
+            xAxis: i[0][0],
+            itemStyle: {
+              color: 'rgb(235,124,254)',
+            }
+          }, {
+            xAxis: i[0][1]
+          }];
+          this.markArea.push(a)
+        })
+        this.chartjump.setOption({
+          series: [{
+            id: 'series1',
+            markArea: {
+              label: {
+                show: true,
+                position: 'inside'
+              },
+              emphasis:{
+                disabled:true
+              },
+              data: this.markArea
+            },
+          }]
+        });
+        this.chartjump.setOption({
+          series:{
+            markPoint:{
+              symbol: "pin",
+              symbolSize: 40,
+              animation:false,
+              data: this.pointdata,
+            }
+          }
+        })
+      }
+      var width=window.screen.width
+      var height=window.screen.height
+      this.chartjump.off('contextmenu')
+      this.chartjump.on('contextmenu',(params)=>{
+        console.log(params)
+        $('#rightMenu').css({
+          'display': 'block',
+          'left': params.event.offsetX/width*100 + 'vw',
+          'top' : params.event.offsetY/height*100+11 +'vh'
+        });
+        this.delX.value=params.data.xAxis
+        this.delX.key=params.data.name
+        // for (let i = 0; i < this.markArea.length; i++) {
+        //   if(this.xIndex>=this.markArea[i][0].xAxis && this.xIndex<=this.markArea[i][1].xAxis){
+        //     this.arr=[this.markArea[i][0].xAxis,this.markArea[i][1].xAxis]
+        //     break
+        //   }
+        // }
+        console.log(this.delX)
+      });
+      this.chartjump.getZr().off('click')
+      this.chartjump.getZr().on('click',params=>{
+        $('#rightMenu').css({
+          'display': 'none',
+        });
+        const pointInPixel= [params.offsetX, params.offsetY];
+        // console.log(pointInPixel)
+        if (this.chartjump.containPixel('grid',pointInPixel)) {
+          this.xIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[0];
+          this.yIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[1];
+          /*事件处理代码书写位置*/
+          console.log(this.xIndex)
+          let mark=false
+          let arr=[]
+          for (let i = 0; i < this.markArea.length; i++) {
+            if(this.xIndex>=this.markArea[i][0].xAxis && this.xIndex<=this.markArea[i][1].xAxis){
+              mark=true
+              arr=[this.markArea[i][0].xAxis,this.markArea[i][1].xAxis]
+              break
+            }
+          }
+          //console.log(this.markArea)
+          console.log(arr)
+          if(mark){
+            for(var key in this.tap){
+              if(this.tap[key] && key!=='noise'){
+                //console.log(key,this.tap[key])
+                var colorList= {
+                  P:'#fe0101',Q:'#11ff00',R:'#02ffc5',S:'#ffe100',
+                  T:'#8800ff'
+                }
+                let pointdata={
+                  name: key,
+                  xAxis:this.xIndex,
+                  yAxis: this.data[this.title][this.xIndex],
+                  itemStyle: {
+                    color:colorList[key]
+                  },
+                  label: {
+                    color: '#ffffff',
+                    show: true,
+                    formatter: key,
+                    fontSize:20
+                  },
+                }
+                this.pointdata.push(pointdata)
+                this.chartjump.setOption({
+                  series:{
+                    markPoint:{
+                      symbol: "pin",
+                      symbolSize: 40,
+                      animation:false,
+                      data: this.pointdata,
+                    }
+                  }
+                })
+                let p=[this.xIndex,this.data[this.title][this.xIndex]]
+                //添加新区间
+                if(this.subData[this.title].length!==this.markArea.length){
+                  this.markArea.forEach(item=>{
+                    let point=[[item[0].xAxis,item[1].xAxis],{P:[], Q:[], R:[], S:[], T:[]}]
+                    let temp=false//是否已存在区间
+                    if(this.subData[this.title].length!==0){
+                      this.subData[this.title].forEach(prop=>{
+                        if(item[0].xAxis===prop[0][0] && item[1].xAxis===prop[0][1]){
+                          temp=true
+                          console.log("添加新区间")
+                          return
+                        }
+                      })
+                    }
+                    if(!temp){
+                      this.subData[this.title].push(point)
+                    }
+                  })
+                  console.log(this.subData[this.title])
+                }
+                var length=this.subData[this.title].length
+                //在某个区间添加点
+                for (let i = 0; i < length; i++) {
+                  if (this.subData[this.title][i][0][0] === arr[0] && this.subData[this.title][i][0][1] === arr[1]) {
+                    console.log('存在区间 i',i)
+                    console.log("P坐标",p)
+                    if (key === 'P' || key === 'T') {
+                      if(this.subData[this.title][i][1][key].length===3){
+                        this.pointdata=this.pointdata.filter(r=>{
+                          return r.xAxis!==this.subData[this.title][i][1][key][0][0]
+                        })
+                        this.chartjump.setOption({
+                          series:{
+                            markPoint:{
+                              symbol: "pin",
+                              symbolSize: 40,
+                              animation:false,
+                              data: this.pointdata,
+                            }
+                          }
+                        })
+                        this.subData[this.title][i][1][key].shift()
+                      }
+                      this.subData[this.title][i][1][key].push(p)
+                    } else {
+                      if(this.subData[this.title][i][1][key].length!==0){
+                        this.pointdata=this.pointdata.filter(r=>{
+                          return r.xAxis!==this.subData[this.title][i][1][key][0]
+                        })
+                        this.chartjump.setOption({
+                          series:{
+                            markPoint:{
+                              symbol: "pin",
+                              symbolSize: 40,
+                              animation:false,
+                              data: this.pointdata,
+                            }
+                          }
+                        })
+                      }
+                      this.subData[this.title][i][1][key] = p
+                    }
+                    break
+                  }
+                }
+                break
+              }
+            }
+          }else {
+            console.log("不在框选区域")
+          }
+        }
+      });
+      this.show=true
+    },
+    //区间合并
+    getMerge(arr) {
+      arr.sort((a, b) => {
+        if(a[0] !== b[0]){
+          return a[0] - b[0]
+        }
+        return a[1] - b[1]
+      })
+      let len = arr.length, ans = [],start, end; // 遍历当前区间的最小值与最大值
+      for(let i = 0; i < len; i++){
+        let s = arr[i][0];
+        let e = arr[i][1];
+        if(start === undefined){
+          start = s;
+          end = e;
+        }
+        else if(s <= end){
+          end = Math.max(e, end)
+        }
+        else{
+          let part = [start, end];
+          ans.push(part);
+          start = s;
+          end = e;
+        }
+      }
+
+      if (start !== undefined) {
+        let part = [start, end];
+        ans.push(part);
+      }
+      return ans;
+    },
+    Off(){
+      for (let tapKey in this.tap) {
+        this.tap[tapKey]=false
+      }
+      this.show=false
+    },
+    del(){
+      console.log(this.delX.key,this.delX.value)
+      if(!this.delX.value){
+        return
+      }
+      console.log(this.pointdata)
+      var length=this.pointdata.length
+      //删除点data
+      for (let i = 0; i < length; i++) {
+        if(this.pointdata[i].xAxis===this.delX.value){
+          this.pointdata.splice(i,1)
+          break
+        }
+      }
+      //删除提交数据点
+      //console.log(this.subData[this.title])
+      for (let i = 0; i < this.subData[this.title].length; i++) {
+        if(this.delX.value>=this.subData[this.title][i][0][0] &&this.delX.value<=this.subData[this.title][i][0][1]) {
+          if(this.delX.key==="P"||this.delX.key==="T"){
+            this.subData[this.title][i][1][this.delX.key].forEach((item,index)=>{
+              if(item[0]===this.delX.value){
+                this.subData[this.title][i][1][this.delX.key].splice(index,1)
+                return
+              }
+            })
+          }else {
+            this.subData[this.title][i][1][this.delX.key]=[]
+          }
+          break
+        }
+    }
+      this.chartjump.setOption({
+        series:{
+          markPoint:{
+            symbol: "pin",
+            symbolSize: 40,
+            animation:false,
+            data: this.pointdata,
+          }
+        }
+      })
+      console.log(this.markArea)
+      $('#rightMenu').css({
+        'display': 'none',
+      });
+
+    }
   },
 };
 </script>
 
 <style scoped lang="scss">
 
+body,html{
+  color: #00afff;
+  box-sizing: border-box;
+}
 .main {
   width: 100%;
-  //background: #03044A;
+  background: #f1faff;
+
+
 }
 
 .top {
@@ -2202,8 +2763,8 @@ export default {
 
 .topLeft {
   width: 30%;
-  height: 100%;
-  border: 1px solid rgb(0, 0, 0);
+  //height: 100%;
+  border-left: 1px solid #136d87;
   display: flex;
   flex-direction: column;
 }
@@ -2218,13 +2779,56 @@ export default {
   width: 100%;
   height: 100%;
 }
+.showbox {
+  //display: none;
+  position: absolute;
+  width: 100%;
+  height:50%;
+  border: 1px solid #6EDDF1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  background-color: rgb(255, 255, 255);
+}
+.menu{
+  /*这个样式不写，右键弹框会一直显示在画布的左下角*/
+  position: absolute;
+  background: rgba(255, 255, 255);
+  border-radius: 5px;
+  left: -99999px;
+  top: -999999px;
+  padding: 0.1vw;
+  border-radius: 0.5vw;
+  .button{
+    height: 0.5vh;
+    width: 0.5vw;
+    display: inline-flex;
+    text-align: center;
+    border: none;
+    font-size: 0.5vw;
+    font-weight: 700;
+    justify-content: center;
+    align-items: center;
+  }
+}
 
+#chartjump {
+  /*position: absolute;*/
+  width: 100%;
+  height: 80%;
+  //top: 50%;
+  //left: 50%;
+  //transform: translate(-50%, -50%);
+  border: 1px solid #000000;
+  /*background-color: #06732b;*/
+}
 .message {
   width: 100%;
   height: 20%;
   font-size: 1vw;
   font-weight: 700;
-  color: #000000;
+  color: #136d87;
   text-align: center;
   padding: 0.8vw 0;
 }
@@ -2234,7 +2838,8 @@ export default {
   width: 100%;
   height: 75%;
   font-size: 1vw;
-  color: #000000;
+  font-weight: 700;
+  color: #136d87;
   //text-align: center;
   display: flex;
   flex-direction: column;
@@ -2251,7 +2856,7 @@ export default {
   height: 18%;
   font-size: 1vw;
   font-weight: 700;
-  color: #000000;
+  color: #136d87;
   text-align: center;
   padding: 0.8vw 0;
   //border-bottom: 1px solid #000000;
@@ -2267,10 +2872,17 @@ export default {
   width: 100%;
   height: 35%;
   font-size: 1vw;
-  color: #000000;
+  color: #136d87;
 
 }
-
+.btn1{
+  color: #136d87;
+  background-color: rgba(255, 255, 255, 0);
+}
+.btn1:hover{
+  color: white;
+  background-color: #4cc9f0;
+}
 form input {
   width: 3vw;
   height: 2vw;
@@ -2279,19 +2891,21 @@ form input {
 
 
 .bottom {
-  height: 70vw;
-  width: 100%;
-  //border-top: 1px solid #000000;
+  height: 100%;
+  width: 98%;
+  border: 1px solid #136d87;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  margin: 1vw;
+  //padding: 1vw;
   justify-content: flex-start;
 }
 
 .bottomLeft {
   width: 50%;
   height: 100%;
-  border: 1px solid #000000;
+  border-top: none;
 }
 
 .xinDian {
@@ -2299,34 +2913,43 @@ form input {
   height: 5%;
   font-size: 1vw;
   font-weight: 700;
-  color: #000000;
+  color: #136d87;
   text-align: center;
   padding: 0.8vw 0;
-  //border-right: 1px solid #000000;
+  //border-top: 1px solid #136d87;
 }
-
+.xinDian:first-child{
+  border-right: 1px solid #136d87;
+}
 .echarts {
   width: 100%;
   height: 95%;
-  //border-right: 1px solid #000000;
+  border-top: 1px solid #136d87;
+  border-right: 1px solid #136d87;
 }
 
 .bottomLeft .echarts .container {
   width: 100%;
-  height: 8%;
+  height: 100%;
   //border: 1px solid rgba(25, 186, 139, 0.17);
   position: relative;
+  .btn{
+    background-color: #91dff8;
+  }
+  .btn:hover{
+    background-color: #3ec9f7;
+  }
 }
 
 .bottomLeft .echarts .container .chart {
-  height: 95%;
+  height: 10vh;
   width: 98%;
   //background-color: #ffffff;
 }
 
 .btn {
-  color: #4cc9f0;
-  border: 1px solid;
+  color: #136d87;
+  border: 1px solid #136d87;
   background-color: transparent;
   text-transform: uppercase;
   font-weight: 500;
@@ -2334,18 +2957,43 @@ form input {
   top: 0;
   right: 2%;
 }
-
+.btn3 {
+  color: #b33939;
+  border: 1px solid #b33939;
+  border-radius: .5em;
+  background-color: transparent;
+  text-transform: uppercase;
+  font-weight: 500;
+  flex: 1;
+  height: 3.8vw;
+  font-size: 0.9vw;
+  text-align: center;
+  padding: 0;
+  margin: 0.5vw;
+  width: 7vw;
+}
+.btn3:hover {
+  cursor: pointer;
+  /*color: white;*/
+  /*border: 0;*/
+  //background-color: #4cc9f0;
+}
 .btn:hover {
   cursor: pointer;
-  color: #000000;
-  border: 0;
+  color: #136d87;
+  //border: 0 ;
   background-color: #4cc9f0;
 }
-
+.istap{
+  background-color: #4cc9f0;
+}
+.nottap{
+  background-color: transparent;
+}
 .light {
   display: inline-block;
   width: 1.8%;
-  height: 5vw;
+  height: 95%;
   position: absolute;
   top: 0;
   right: 0;
@@ -2354,13 +3002,13 @@ form input {
 
 .light:hover {
   cursor: pointer;
-  border: 1px solid #000000;
+  border: 1px solid #136d87;
 }
 
 .bottomRight {
   width: 20%;
   height: 100%;
-  border: 1px solid #000000;
+  //border: 1px solid #000000;
 }
 
 .quality {
@@ -2384,23 +3032,46 @@ form input {
 }
 
 .radios{
-  border: 0.5px solid rgb(0, 0, 0);
+  //border: 0.5px solid rgb(0, 0, 0);
   box-sizing: border-box;
   color: rgb(96, 98, 102);
   cursor: pointer;
   display: block;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
-  font-size: 1vw;
+  //font-size: 1.5vw;
   font-weight: 500;
-  height: 2vw;
+  height: 9.95vh;
   width: 3vw;
-  line-height: 1vw;
-  margin: 1.5vw 0;
-  padding: 0.3vw 0.3vw 0 0.2vw;
+  line-height: 9.95vh;
+  margin: 0;
+  padding: 0;
   position: relative;
   text-rendering: optimizelegibility;
   user-select: none;
-  white-space: nowrap
+  white-space: nowrap;
+  border: none;
+}
+::v-deep .el-radio--medium.is-bordered .el-radio__inner{
+  height: 1vw;
+  width: 1vw ;
+}
+::v-deep .el-radio__inner::after{
+  height: 0.3vw;
+  width: 0.3vw;
+}
+::v-deep .el-radio--medium.is-bordered .el-radio__label{
+  font-size: 1vw;
+  padding: 5px;
+}
+::v-deep .el-input--medium .el-input__inner{
+  color: #136d87;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: .8vw;
+  border-color: #136d87;
+}
+::v-deep .el-select-dropdown__list{
+  color: #136d87;
+  background-color: rgba(255, 255, 255, 0);
 }
 .abcd {
   display: flex;
@@ -2409,18 +3080,20 @@ form input {
   width: 100%;
   //padding: 1.5vw;
   //margin-top: 0.3vw;
-  border-top: 0.5px solid #000000;
-  border-bottom: 0.5px solid #000000;
-  border-right: 0.5px solid #000000;
+  border-left: 1px solid #136d87;
+  border-top: 0.5px solid #136d87;
+  //border-bottom: 0.5px solid #000000;
+  //border-right: 0.5px solid #000000;
 }
 
 .allin {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  height: 40%;
-  width: 100%;
+  width: 20%;
+
   //background-color: #62be38;
 }
 
@@ -2429,12 +3102,12 @@ form input {
   outline: none;
   text-align: center;
   text-decoration: none;
-  border-radius: .5em;
-  width: 4vw;
-  height: 4vw;
+  width: 100%;
+  flex: 1;
+  margin: 0;
   font-size: 1.5vw;
   background-color: red;
-  margin: 0.5vw;
+  border: 1px solid #136d87;
 }
 
 .allin .green {
@@ -2442,12 +3115,25 @@ form input {
   outline: none;
   text-align: center;
   text-decoration: none;
-  border-radius: .5em;
-  width: 4vw;
-  height: 4vw;
+  width: 100%;
+  flex: 1;
   font-size: 1.5vw;
-  margin: 0.5vw;
+  margin: 0;
   background-color: greenyellow;
+  border: 1px solid #136d87;
+}
+.allin .red:hover{
+  cursor:pointer;
+  background-color: rgba(231, 34, 34, 0.63);
+}
+.allin .green:hover{
+  cursor:pointer;
+  background-color: #c6ff78;;
+}
+.el-radio-group{
+  display: flex;
+  justify-content: space-around;
+  width: 98%;
 }
 </style>
 

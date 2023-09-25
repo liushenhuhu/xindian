@@ -14,7 +14,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        alert_log_id,log_id,user_id,
+        select alert_log_id,log_id,user_id,
         json_data,create_time,update_time
     </sql>
 </mapper>

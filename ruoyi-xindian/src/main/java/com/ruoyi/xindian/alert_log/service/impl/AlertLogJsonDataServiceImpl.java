@@ -9,6 +9,7 @@ import com.ruoyi.xindian.alert_log.mapper.AlertLogJsonDataMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
 * @author 13401
@@ -30,10 +31,13 @@ public class AlertLogJsonDataServiceImpl extends ServiceImpl<AlertLogJsonDataMap
 
     @Override
     public Boolean updateOrInsertAlertLogJsonData(AlertLogJsonData alertLogJsonData) {
-
+        Date date = new Date();
         AlertLogJsonData alertLogJsonData1 = selectJsonData(alertLogJsonData);
         //判断是否已经存在相同的数据，如果有，则修改，没有则添加
         if (alertLogJsonData1==null){
+
+            alertLogJsonData.setCreateTime(date);
+            alertLogJsonData.setUpdateTime(date);
             return alertLogJsonDataMapper.insert(alertLogJsonData)>0;
         }
         JSONObject parse =(JSONObject) JSONObject.parse(alertLogJsonData.getJsonData());
@@ -42,6 +46,7 @@ public class AlertLogJsonDataServiceImpl extends ServiceImpl<AlertLogJsonDataMap
         jsonData.remove(alertLogJsonData.getType());
         jsonData.put(alertLogJsonData.getType(),o);
         alertLogJsonData1.setJsonData(JSONObject.toJSONString(jsonData));
+        alertLogJsonData1.setUpdateTime(date);
         return alertLogJsonDataMapper.update(alertLogJsonData1, new QueryWrapper<AlertLogJsonData>().eq("alert_log_id", alertLogJsonData1.getAlertLogId()))>0;
     }
 }

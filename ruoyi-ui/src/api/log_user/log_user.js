@@ -7,6 +7,22 @@ export function selectList() {
     method: 'get'
   })
 }
+// 查询标注信息
+export function getLabel(query) {
+  return request({
+    url: '/alertLog_jsonData/alertLog_jsonData/getJsonData',
+    method: 'get',
+    params: query,
+  })
+}
+// 添加或修改标注信息
+export function addLabel(query) {
+  return request({
+    url: '/alertLog_jsonData/alertLog_jsonData/add',
+    method: 'post',
+    data: query,
+  })
+}
 // 查询标注分配列表
 export function listLog_user(query) {
   return request({

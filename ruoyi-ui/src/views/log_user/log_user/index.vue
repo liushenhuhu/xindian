@@ -400,8 +400,8 @@ export default {
     handleLook(row) {
       console.log(row.logId);
       this.$router.push({
-        name: "lookLog",
-        params: {logId: row.logId, logType: row.logType, userId: row.userId}
+        path: "/lookLog1",// name: "lookLog"
+        query: {logId: row.logId, logType: row.logType, userId: row.userId}
       });
     }
   }

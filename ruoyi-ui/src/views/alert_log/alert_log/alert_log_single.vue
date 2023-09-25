@@ -463,9 +463,13 @@ export default {
     /** 查看日志*/
     handleLook(row) {
       console.log(row.logId);
+      // this.$router.push({
+      //   name: "lookLog",
+      //   params: {logId: row.logId, logType: row.logType, userId: 0}
+      // });
       this.$router.push({
-        name: "lookLog",
-        params: {logId: row.logId, logType: row.logType, userId: 0}
+        path: "/lookLog1",// name: "lookLog"
+        query: {logId: row.logId, logType: row.logType, userId: 0}
       });
     },
   }

@@ -259,9 +259,13 @@ export default {
       // console.log(row.logId);
       // console.log(message.messageId)
       this.closeNotification(id)
+      // this.$router.push({
+      //   name: "lookLog",
+      //   params: {logId: logId, logType: logType}
+      // });
       this.$router.push({
-        name: "lookLog",
-        params: {logId: logId, logType: logType}
+        path: "/lookLog1",// name: "lookLog"
+        query: {logId: logId, logType: logType}
       });
     },
     onConnected(frame) {
