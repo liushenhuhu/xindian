@@ -190,7 +190,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import $ from 'jquery';
 import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/report/report";
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
@@ -554,6 +554,7 @@ export default {
             },
             xAxis: {
               type: 'category',
+              boundaryGap: true,
               data: _th.x,
               axisLabel: {
                 show: false,
@@ -577,6 +578,7 @@ export default {
             },
             yAxis: {
               type: 'value',
+              boundaryGap: true,
               axisLabel: {
                 show: false,
               },
@@ -600,38 +602,40 @@ export default {
               max: 1,
               min: -1
             },
-            series: [
+            series:
               {
                 type: 'line',
                 smooth: true,
                 showSymbol: true,
                 data: _th.nArr[0],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                     // //opacity: 1,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     ////opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
               }
-            ],
+
           });
-          $(window).resize(function () {
+          $(window).resize(function (){
             chart1.resize();
           });
           var chart2 = echarts.init(document.getElementById("2"));
@@ -703,24 +707,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[1],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1.5
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     ////opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -801,24 +807,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[2],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1.5
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -897,24 +905,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[3],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1.5
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -993,24 +1003,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[4],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1.5
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1089,24 +1101,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[5],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1185,24 +1199,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[6],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1281,24 +1297,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[7],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1377,24 +1395,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[8],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1476,25 +1496,27 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[0],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                     // //opacity: 1,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1573,24 +1595,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[1],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1.5
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1671,24 +1695,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[2],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1.5
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1767,24 +1793,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[3],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1.5
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1863,24 +1891,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[4],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1
+                    width: 1.5
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -1959,24 +1989,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[5],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -2055,24 +2087,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[6],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -2151,24 +2185,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[7],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }
@@ -2247,24 +2283,26 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.nArr[8],
+                z: 5,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1,
+                    width: 1.5,
                   }
                 },
                 markLine: {
+                  z: 1,
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#b33939',
+                    color: '#d77a7a',
                     width: 1,
                     //opacity: 0.5,
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#d77a7a'  // 展示内容颜色
                   },
                   data: _th.markdata
                 }

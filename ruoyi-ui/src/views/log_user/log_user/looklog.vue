@@ -492,7 +492,8 @@ export default {
       data:{},
       chartjump:null,
       xIndex:null,
-      delX:{key:'',value:null},
+      delX:{key:null,value:null},//想要删除的点
+      area:[],//想要删除的区间
       markArea:[],
       title:'',
       subData:{
@@ -683,12 +684,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -752,6 +754,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -794,13 +797,14 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
 
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -863,6 +867,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -905,12 +910,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -973,6 +979,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1015,12 +1022,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1082,6 +1090,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1124,12 +1133,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1190,6 +1200,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1232,13 +1243,14 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
 
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1300,6 +1312,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1342,12 +1355,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1409,6 +1423,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1452,12 +1467,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1518,6 +1534,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1560,13 +1577,14 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
 
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1628,6 +1646,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1670,12 +1689,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1737,6 +1757,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1779,12 +1800,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1846,6 +1868,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -1888,12 +1911,13 @@ export default {
                 },
                 grid: {
                   left: 20,
-                  right: 2,
+                  right: 0,
                   top: 2,
                   bottom: 2
                 },
                 xAxis: {
-                  boundaryGap: true,
+                  type:'category',
+                  boundaryGap: false,
                   data: timex,
                   axisTick: {
                     show: false
@@ -1955,6 +1979,7 @@ export default {
                   itemStyle: {
                     normal: {
                       lineStyle: {
+                        width:1.5,
                         color: '#000000' /*折线的颜色*/
                       },
                       color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -2173,7 +2198,7 @@ export default {
         let a = [{
           xAxis: newitem[0],
           itemStyle: {
-            color: 'rgb(235,124,254)',
+            color: 'rgb(242,201,248)',
           }
         }, {
           xAxis: newitem[1]
@@ -2282,6 +2307,7 @@ export default {
     submitData(){
       this.query.jsonData=JSON.stringify(this.subData)
       this.query.type=this.title
+      console.log(this.subData)
       console.log(this.query)
       addLabel(this.query).then(res=>{
         this.$modal.msgSuccess("标注提交成功");
@@ -2347,7 +2373,8 @@ export default {
           // }
         },
         xAxis: {
-          boundaryGap: true,
+          type:'category',
+          boundaryGap: false,
           data: this.timex,
           axisTick: {
             show: false
@@ -2366,7 +2393,6 @@ export default {
               width: 1, //网格的宽度
               type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
             },
-
           } /*网格线*/
         },
         yAxis: {
@@ -2411,6 +2437,7 @@ export default {
           itemStyle: {
             normal: {
               lineStyle: {
+                width:1.5,
                 color: '#000000',/*折线的颜色*/
               },
               color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
@@ -2432,7 +2459,7 @@ export default {
       this.markArea.length=0
       this.pointdata.length=0
       var colorList= {
-        P:'#fe0101',Q:'#11ff00',R:'#02ffc5',S:'#ffe100',
+        P:'#fe0101',Q:'#ff7000',R:'#ff00cf',S:'#0021da',
         T:'#8800ff'
       }
       if(this.subData[title].length!==0){
@@ -2452,7 +2479,7 @@ export default {
                     color: '#ffffff',
                     show: true,
                     formatter: key,
-                    fontSize:20
+                    fontSize:13
                   },
                 }
                 this.pointdata.push(pointdata)
@@ -2469,7 +2496,7 @@ export default {
                   color: '#ffffff',
                   show: true,
                   formatter: key,
-                  fontSize:20
+                  fontSize:13
                 },
               }
               this.pointdata.push(pointdata)
@@ -2479,7 +2506,7 @@ export default {
           let a = [{
             xAxis: i[0][0],
             itemStyle: {
-              color: 'rgb(235,124,254)',
+              color: 'rgb(242,201,248)',
             }
           }, {
             xAxis: i[0][1]
@@ -2505,7 +2532,7 @@ export default {
           series:{
             markPoint:{
               symbol: "pin",
-              symbolSize: 40,
+              symbolSize: 25,
               animation:false,
               data: this.pointdata,
             }
@@ -2522,14 +2549,13 @@ export default {
           'left': params.event.offsetX/width*100 + 'vw',
           'top' : params.event.offsetY/height*100+11 +'vh'
         });
-        this.delX.value=params.data.xAxis
-        this.delX.key=params.data.name
-        // for (let i = 0; i < this.markArea.length; i++) {
-        //   if(this.xIndex>=this.markArea[i][0].xAxis && this.xIndex<=this.markArea[i][1].xAxis){
-        //     this.arr=[this.markArea[i][0].xAxis,this.markArea[i][1].xAxis]
-        //     break
-        //   }
-        // }
+        if(params.componentType==="markPoint"){
+          this.delX.value=params.data.xAxis
+          this.delX.key=params.data.name
+        }
+        if(params.componentType==="markArea"){
+          this.area=[params.data.coord[0][0],params.data.coord[1][0]]
+        }
         console.log(this.delX)
       });
       this.chartjump.getZr().off('click')
@@ -2560,7 +2586,7 @@ export default {
               if(this.tap[key] && key!=='noise'){
                 //console.log(key,this.tap[key])
                 var colorList= {
-                  P:'#fe0101',Q:'#11ff00',R:'#02ffc5',S:'#ffe100',
+                  P:'#fe0101',Q:'#ff7000',R:'#ff00cf',S:'#0021da',
                   T:'#8800ff'
                 }
                 let pointdata={
@@ -2574,7 +2600,7 @@ export default {
                     color: '#ffffff',
                     show: true,
                     formatter: key,
-                    fontSize:20
+                    fontSize:13
                   },
                 }
                 this.pointdata.push(pointdata)
@@ -2582,7 +2608,7 @@ export default {
                   series:{
                     markPoint:{
                       symbol: "pin",
-                      symbolSize: 40,
+                      symbolSize: 25,
                       animation:false,
                       data: this.pointdata,
                     }
@@ -2624,7 +2650,7 @@ export default {
                           series:{
                             markPoint:{
                               symbol: "pin",
-                              symbolSize: 40,
+                              symbolSize: 25,
                               animation:false,
                               data: this.pointdata,
                             }
@@ -2642,7 +2668,7 @@ export default {
                           series:{
                             markPoint:{
                               symbol: "pin",
-                              symbolSize: 40,
+                              symbolSize: 25,
                               animation:false,
                               data: this.pointdata,
                             }
@@ -2705,51 +2731,129 @@ export default {
     },
     del(){
       console.log(this.delX.key,this.delX.value)
-      if(!this.delX.value){
-        return
-      }
-      console.log(this.pointdata)
-      var length=this.pointdata.length
-      //删除点data
-      for (let i = 0; i < length; i++) {
-        if(this.pointdata[i].xAxis===this.delX.value){
-          this.pointdata.splice(i,1)
-          break
-        }
-      }
-      //删除提交数据点
-      //console.log(this.subData[this.title])
-      for (let i = 0; i < this.subData[this.title].length; i++) {
-        if(this.delX.value>=this.subData[this.title][i][0][0] &&this.delX.value<=this.subData[this.title][i][0][1]) {
-          if(this.delX.key==="P"||this.delX.key==="T"){
-            this.subData[this.title][i][1][this.delX.key].forEach((item,index)=>{
-              if(item[0]===this.delX.value){
-                this.subData[this.title][i][1][this.delX.key].splice(index,1)
-                return
+      if(this.area.length!==0){
+        this.openDelConfirm().then(() => {
+          //删除框和框内所有点
+          for (let i = 0; i < this.subData[this.title].length; i++) {
+            if(this.subData[this.title][i][0][0]==this.area[0] && this.subData[this.title][i][0][1]==this.area[1]){
+              for (const key in this.subData[this.title][i][1]) {
+                if(this.isArray(this.subData[this.title][i][1][key])==2){//二维数组
+                  this.subData[this.title][i][1][key].forEach(s=>{
+                    this.pointdata.forEach((p,index)=>{
+                      if(s[0]==p.xAxis){
+                        this.pointdata.splice(index,1)
+                        return
+                      }
+                    })
+                  })
+                }else {//一维
+                  this.pointdata.forEach((p,index)=>{
+                    if(this.subData[this.title][i][1][key][0]==p.xAxis){
+                      this.pointdata.splice(index,1)
+                      return
+                    }
+                  })
+                }
               }
-            })
-          }else {
-            this.subData[this.title][i][1][this.delX.key]=[]
+              this.subData[this.title].splice(i,1)
+            }
           }
-          break
-        }
-    }
-      this.chartjump.setOption({
-        series:{
-          markPoint:{
-            symbol: "pin",
-            symbolSize: 40,
-            animation:false,
-            data: this.pointdata,
+          //删除显示区域
+          this.markArea.forEach((item,index)=>{
+            if(this.area[0]==item[0].xAxis && this.area[1]==item[1].xAxis){
+              this.markArea.splice(index,1)
+              r
+            }
+          })
+          this.chartjump.setOption({
+            series: [{
+              id: 'series1',
+              markArea: {
+                label: {
+                  show: true,
+                  position: 'inside'
+                },
+                emphasis:{
+                  disabled:true
+                },
+                data: this.markArea
+              },
+            }]
+          });
+          this.area=[]
+          this.chartjump.setOption({
+            series:{
+              markPoint:{
+                symbol: "pin",
+                symbolSize: 25,
+                animation:false,
+                data: this.pointdata,
+              }
+            }
+          })
+        }).catch(() => {
+        })
+      }else {
+        //删除某个点
+        console.log(this.pointdata)
+        var length=this.pointdata.length
+        //删除点data
+        for (let i = 0; i < length; i++) {
+          if(this.pointdata[i].xAxis===this.delX.value){
+            this.pointdata.splice(i,1)
+            break
           }
         }
-      })
-      console.log(this.markArea)
+        //删除提交数据点
+        //console.log(this.subData[this.title])
+        for (let i = 0; i < this.subData[this.title].length; i++) {
+          if(this.delX.value>=this.subData[this.title][i][0][0] &&this.delX.value<=this.subData[this.title][i][0][1]) {
+            if(this.delX.key==="P"||this.delX.key==="T"){
+              this.subData[this.title][i][1][this.delX.key].forEach((item,index)=>{
+                if(item[0]===this.delX.value){
+                  this.subData[this.title][i][1][this.delX.key].splice(index,1)
+                  return
+                }
+              })
+            }else {
+              this.subData[this.title][i][1][this.delX.key]=[]
+            }
+            break
+          }
+        }
+        this.delX={key:null,value:null}
+        this.chartjump.setOption({
+          series:{
+            markPoint:{
+              symbol: "pin",
+              symbolSize: 25,
+              animation:false,
+              data: this.pointdata,
+            }
+          }
+        })
+      }
+
       $('#rightMenu').css({
         'display': 'none',
       });
 
-    }
+    },
+    openDelConfirm() {
+      return this.$confirm(`是否删除选框和框内所有的点`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+    },
+    //判断是一维数组还是二维
+    isArray(a) {
+      for (let i of a) {
+        if (Array.isArray(i))
+          return 2
+        }
+        return 1
+      }
   },
 };
 </script>
@@ -2915,7 +3019,7 @@ form input {
 
 .bottom {
   height: 100%;
-  width: 98%;
+  width: 98.5%;
   border: 1px solid #136d87;
   display: flex;
   flex-direction: row;
@@ -2926,7 +3030,7 @@ form input {
 }
 
 .bottomLeft {
-  width: 50%;
+  width: 50.5%;
   height: 100%;
   border-top: none;
 }
@@ -2966,7 +3070,7 @@ form input {
 
 .bottomLeft .echarts .container .chart {
   height: 10vh;
-  width: 98%;
+  width: 98.2%;
   //background-color: #ffffff;
 }
 

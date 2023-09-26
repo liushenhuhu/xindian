@@ -6485,7 +6485,7 @@ export default {
           left: "right",
         },
         xAxis: {
-          boundaryGap: true,
+          boundaryGap: false,
           data: time,
           axisLabel: { //修改坐标系字体颜色
             interval: 299,
