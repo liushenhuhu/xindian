@@ -25,6 +25,17 @@
         />
       </el-form-item>
 
+      <el-form-item label="设备类型" prop="patientCode">
+        <el-select v-model="queryParams.ecgType" placeholder="请选择设备类型" >
+          <el-option
+            v-for="item in ecgList"
+            :key="item.label"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
 <!--      <el-form-item label="患者身份证号" prop="patientCode">
         <el-input
           v-model="queryParams.patientCode"
@@ -453,7 +464,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listDoc, docUpdate
+  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listDoc, docUpdate, getEcgType
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -498,6 +509,8 @@ export default {
       open: false,
       // 时间范围
       daterangeConnectionTime: [],
+      ecgList:[],
+      ecgType:'JECG12',
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -508,7 +521,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'JECG12',
+        ecgType: null,
         PatPhone: null,
         intelligentDiagnosis: null,
         diagnosisStatus: 2,
@@ -549,6 +562,9 @@ export default {
   },
 
   created() {
+    getEcgType(this.ecgType).then(r=>{
+      this.ecgList = r.data
+    })
     listHospitalId(null).then(r=>{
       this.options=r.rows
     })
@@ -627,10 +643,16 @@ export default {
         this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
         this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
       }
+      if (this.queryParams.ecgType==null){
+        this.queryParams.ecgType = this.ecgType
+      }
       listPatient_management(this.queryParams).then(response => {
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
+        if ( this.queryParams.ecgType==='JECG12'){
+          this.queryParams.ecgType=null
+        }
       });
     },
     // 取消按钮
@@ -647,7 +669,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'ECG',
+        ecgType: null,
         patientPhone: null,
         diagnosisStatus: null,
         diagnosisConclusion: null,
@@ -673,7 +695,7 @@ export default {
           equipmentCode: null,
           connectionTime: null,
           patientName: null,
-          ecgType: 'JECG12',
+          ecgType: null,
           PatPhone: null,
           intelligentDiagnosis: null,
           diagnosisStatus: 2,

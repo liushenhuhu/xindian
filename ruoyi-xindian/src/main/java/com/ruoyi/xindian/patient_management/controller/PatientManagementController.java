@@ -184,8 +184,6 @@ public class PatientManagementController extends BaseController {
             list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("JECG12")) {
             list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-        } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-            list = patientManagementService.selectPatientManagementJECGList(patientManagement);
         }else if (patientManagement.getEcgType().equals("JECGsingle")) {
             list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("DECG12")) {
@@ -273,8 +271,8 @@ public class PatientManagementController extends BaseController {
             list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("JECG12")) {
             list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-        } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-            list = patientManagementService.selectPatientManagementJECGList(patientManagement);
+//        } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
+//            list = patientManagementService.selectPatientManagementJECGList(patientManagement);
         }else if (patientManagement.getEcgType().equals("JECGsingle")) {
             list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("DECG12")) {
@@ -830,6 +828,12 @@ public class PatientManagementController extends BaseController {
         RolePhone a2 = new RolePhone("家人", "");
         list.add(a2);
         return AjaxResult.success(list);
+    }
+
+
+    @GetMapping("/getEcgType")
+    public AjaxResult getEcgType(String ecgType){
+        return AjaxResult.success(patientManagementService.selectEcgType(ecgType));
     }
 
 }

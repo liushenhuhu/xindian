@@ -4,6 +4,7 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
 import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.patient_management.vo.PInfoVO;
 import com.ruoyi.xindian.report.domain.Report;
@@ -121,4 +122,8 @@ public interface PatientManagementMapper
 
     List<PatientManagement> selectAll(Limit limit);
     PhoneList selectpatientByEquipmentCode(String deviceSn);
+
+
+
+    List<DocVO> selectEcgTypeList(@Param("ecgType") String ecgType);
 }

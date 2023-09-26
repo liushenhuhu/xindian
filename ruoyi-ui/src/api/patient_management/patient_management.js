@@ -102,6 +102,12 @@ export function listPatient_TimeList(query) {
   })
 }
 
+export function getEcgType(query) {
+  return request({
+    url: '/patient_management/patient_management/getEcgType?ecgType='+query,
+    method: 'get',
+  })
+}
 
 
 
