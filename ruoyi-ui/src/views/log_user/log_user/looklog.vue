@@ -2731,8 +2731,11 @@ export default {
     },
     del(){
       console.log(this.delX.key,this.delX.value)
+      console.log(this.area)
+      var that=this
       if(this.area.length!==0){
         this.openDelConfirm().then(() => {
+          console.log(this.area)
           //删除框和框内所有点
           for (let i = 0; i < this.subData[this.title].length; i++) {
             if(this.subData[this.title][i][0][0]==this.area[0] && this.subData[this.title][i][0][1]==this.area[1]){
@@ -2762,9 +2765,11 @@ export default {
           this.markArea.forEach((item,index)=>{
             if(this.area[0]==item[0].xAxis && this.area[1]==item[1].xAxis){
               this.markArea.splice(index,1)
-              r
+              return
             }
           })
+          this.area=[]
+          console.log(this.markArea)
           this.chartjump.setOption({
             series: [{
               id: 'series1',
@@ -2780,7 +2785,6 @@ export default {
               },
             }]
           });
-          this.area=[]
           this.chartjump.setOption({
             series:{
               markPoint:{
@@ -2792,6 +2796,7 @@ export default {
             }
           })
         }).catch(() => {
+          this.area=[]
         })
       }else {
         //删除某个点
@@ -2833,6 +2838,7 @@ export default {
           }
         })
       }
+      console.log("删除成功")
 
       $('#rightMenu').css({
         'display': 'none',
