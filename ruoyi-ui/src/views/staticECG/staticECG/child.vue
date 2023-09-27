@@ -422,6 +422,10 @@ export default {
     },
     //添加标点
     addpoint(){
+      let i=this.pointdata.findIndex(it=>it.x==this.xIndex)
+      if(i!=-1){
+        return
+      }
       var colorList= {N:'#fe0101',S:'#ff7000',V:'#ff00cf',X:'#0021da',}
       let pointdata={
         name: this.radio1,
@@ -471,6 +475,10 @@ export default {
     //按x从小到大插入值
     addValue(params) {
       params.x=params.x+600*(this.level-1)
+      let i=this[`${'arrList' + this.level}`].findIndex(it=>it.x==params.x)
+      if(i!=-1){
+        return
+      }
       let idx =  this[`${'arrList' + this.level}`].findIndex(it=>it.x>params.x)
       this[`${'arrList' + this.level}`].splice(idx===-1?this[`${'arrList' + this.level}`].length:idx,0,params)
     },
@@ -559,7 +567,7 @@ export default {
         pId: this.pId,
         data:JSON.stringify([...this.arrList1,...this.arrList2,...this.arrList3,...this.arrList4,...this.arrList5,...this.arrList6,...this.arrList7])
       }
-      console.log(this.arrList)
+      //console.log(this.arrList)
       this.isLoading = true;
       if(this.arrList.data.length > 0){
         addXArr(this.arrList).then(response => {
@@ -567,7 +575,7 @@ export default {
           //this.recoverysize();
           this.isLoading = false;
         })
-        //console.log(JSON.parse(this.arrList.data))
+        console.log(JSON.parse(this.arrList.data))
         // this.isLoading = false;
       }else {
         this.$modal.msgWarning("请标记后提交！");
