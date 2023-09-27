@@ -136,9 +136,9 @@ public class WXPublicRequest {
     public  void sendEquipmentMsgFail(
                                   String userOpenid,
                                   String name,
-                                  String phone) throws ParseException {
+                                  String phone,String sn) throws ParseException {
 
-        String OrderMsgTemplateId = "Dqi5udHKuCur46kwIhRqx-36RqvNN8w662V5spRxc6Q";
+        String OrderMsgTemplateId = "bgRpBJAcSZ6Aq-eepXZl1FgnFnWwaqktUBNDn_QqVJU";
 
         // 卡片详情跳转页，设置此值，当点击消息时会打开指定的页面
 //        String detailUrl = "https://baidu.com";
@@ -156,9 +156,9 @@ public class WXPublicRequest {
         wxMpService.setWxMpConfigStorage(wxStorage);
         // 此处的 key/value 需和模板消息对应
         List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
-                new WxMpTemplateData("phrase2", name),
-                new WxMpTemplateData("thing5", phone),
-                new WxMpTemplateData("remark", "点击查看详情")
+                new WxMpTemplateData("thing1", name),
+                new WxMpTemplateData("phone_number2", phone),
+                new WxMpTemplateData("character_string3", sn)
         );
         WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
                 .toUser(userOpenid)

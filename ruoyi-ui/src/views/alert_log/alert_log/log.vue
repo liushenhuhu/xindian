@@ -443,7 +443,7 @@ export default {
       // });
       this.$router.push({
         path: "/lookLog1",// name: "lookLog"
-        query: {logId: row.logId, logType: row.logType}
+        query: {logId: row.logId, logType: row.logType,userId:0}
       });
     },
   }
