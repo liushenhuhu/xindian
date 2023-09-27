@@ -23,10 +23,12 @@
           title="提示"
           width="220"
           trigger="hover">
-          <p class="tipck">1. 左上角按钮可以选择类型;</p>
+          <p class="tipck">1. 左上角按钮可以选择类型</p>
 <!--          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>-->
-          <p class="tipck">3. 左键单击点，可以删除点;</p>
-          <p class="tipck">4. 右键单击可以描点。</p>
+          <p class="tipck">2. 左键单击，进行标点</p>
+          <p class="tipck">3. 右键单击，进行删除</p>
+          <p class="tipck">4. 也可点击右上角清空所有点</p>
+          <p class="tipck">5. 标点完成后，点击右上角提交</p>
           <el-button slot="reference"><i class="el-icon-info icon"></i></el-button>
         </el-popover>
       </div>
