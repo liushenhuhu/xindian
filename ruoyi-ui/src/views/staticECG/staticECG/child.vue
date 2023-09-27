@@ -408,7 +408,10 @@ export default {
             // console.log(this.xIndex)
             // console.log(this.radio1)
             // console.log(this.data[this.xIndex])
-            this.addValue({x: this.xIndex,y: this.data[this.xIndex], type: this.radio1})
+            let i=this.addValue({x: this.xIndex,y: this.data[this.xIndex], type: this.radio1})
+            if(i==1){
+              return
+            }
             //添加点
             this.addpoint()
             //添加文本
@@ -423,9 +426,6 @@ export default {
     //添加标点
     addpoint(){
       let i=this.pointdata.findIndex(it=>it.x==this.xIndex)
-      if(i!=-1){
-        return
-      }
       var colorList= {N:'#fe0101',S:'#ff7000',V:'#ff00cf',X:'#0021da',}
       let pointdata={
         name: this.radio1,
@@ -477,7 +477,8 @@ export default {
       params.x=params.x+600*(this.level-1)
       let i=this[`${'arrList' + this.level}`].findIndex(it=>it.x==params.x)
       if(i!=-1){
-        return
+        console.log("存在该点")
+        return 1
       }
       let idx =  this[`${'arrList' + this.level}`].findIndex(it=>it.x>params.x)
       this[`${'arrList' + this.level}`].splice(idx===-1?this[`${'arrList' + this.level}`].length:idx,0,params)
