@@ -110,7 +110,12 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                             wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，请登迈雅云小程序查看","绑定成功");
                         }
                     }
-
+                    //给管理员发消息
+                    List<AccountsMsg> accountsMsgs = accountsMsgService.selectByList();
+                    Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(split[1]));
+                    for (AccountsMsg c : accountsMsgs){
+                        wxPublicRequest.sendEquipmentMsgFailTrue(c.getOpenId(),aesUtils.decrypt(patient.getPatientName()));
+                    }
                 }else {
                     if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeT15!"+split[0]+"="+split[1]))){
                         redisTemplate.opsForValue().set("getEquipmentCodeTwo!"+split[0]+"="+split[1],split[1],5, TimeUnit.SECONDS);
@@ -150,7 +155,7 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                     decrypt = decrypt.substring(0,3);
                 }
                 for (AccountsMsg c : accountsMsgs){
-                    wxPublicRequest.sendEquipmentMsgFail(c.getOpenId(),"绑定失败",decrypt+"/"+split[1]);
+                    wxPublicRequest.sendEquipmentMsgFail(c.getOpenId(),decrypt,split[1],split[0]);
                 }
                 redisTemplate.opsForValue().set("getEquipmentCodeAgainTwo!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),5, TimeUnit.SECONDS);
                 redisTemplate.opsForValue().set("getEquipmentCodeAgainT15!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),30,TimeUnit.MINUTES);

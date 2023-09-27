@@ -136,9 +136,9 @@ public class WXPublicRequest {
     public  void sendEquipmentMsgFail(
                                   String userOpenid,
                                   String name,
-                                  String phone) throws ParseException {
+                                  String phone,String sn) throws ParseException {
 
-        String OrderMsgTemplateId = "Dqi5udHKuCur46kwIhRqx-36RqvNN8w662V5spRxc6Q";
+        String OrderMsgTemplateId = "bgRpBJAcSZ6Aq-eepXZl1FgnFnWwaqktUBNDn_QqVJU";
 
         // 卡片详情跳转页，设置此值，当点击消息时会打开指定的页面
 //        String detailUrl = "https://baidu.com";
@@ -156,9 +156,57 @@ public class WXPublicRequest {
         wxMpService.setWxMpConfigStorage(wxStorage);
         // 此处的 key/value 需和模板消息对应
         List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
-                new WxMpTemplateData("phrase2", name),
-                new WxMpTemplateData("thing5", phone),
-                new WxMpTemplateData("remark", "点击查看详情")
+                new WxMpTemplateData("thing1", name),
+                new WxMpTemplateData("phone_number2", phone),
+                new WxMpTemplateData("character_string3", sn)
+        );
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(userOpenid)
+                .templateId(OrderMsgTemplateId)
+                .data(wxMpTemplateDataList)
+//                .url(detailUrl)
+                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+                .build();
+        try {
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        } catch (Exception e) {
+            System.out.println("推送失败：" + e.getMessage());
+        }
+
+    }
+    /**
+     * 微信公众号消息推送（设备绑定失败）
+     * @param userOpenid
+     * @param name
+     */
+    public  void sendEquipmentMsgFailTrue(
+            String userOpenid,
+            String name
+           ) throws ParseException {
+
+        String OrderMsgTemplateId = "tBruQChu7Vtuf_TXRCj18wuZoeK6gSYbHUKEuCVj0Rs";
+
+        // 卡片详情跳转页，设置此值，当点击消息时会打开指定的页面
+//        String detailUrl = "https://baidu.com";
+
+
+//        详细内容
+//
+//                绑定状态 {{phrase2.DATA}}
+//                失败原因 {{thing5.DATA}}
+
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy-MM-dd HH:mm");
+        String timeNow = sdf.format(new Date());
+        WxMpInMemoryConfigStorage wxStorage = new WxMpInMemoryConfigStorage();
+        wxStorage.setAppId(WXPayConstants.WX_PUBLIC_ID);
+        wxStorage.setSecret(WXPayConstants.WX_PUBLIC_SECRET);
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(wxStorage);
+        // 此处的 key/value 需和模板消息对应
+        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+                new WxMpTemplateData("thing1", name),
+                new WxMpTemplateData("time2", timeNow)
         );
         WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
                 .toUser(userOpenid)

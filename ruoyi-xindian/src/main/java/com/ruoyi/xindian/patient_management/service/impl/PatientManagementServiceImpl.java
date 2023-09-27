@@ -14,6 +14,7 @@ import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.DateListVO;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
 import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.patient_management.vo.PInfoVO;
 import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
@@ -278,6 +279,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     @Override
     public PhoneList selectpatientByEquipmentCode(String deviceSn) {
         return patientManagementMapper.selectpatientByEquipmentCode(deviceSn);
+    }
+
+    @Override
+    public List<DocVO> selectEcgType(String ecgType) {
+        return patientManagementMapper.selectEcgTypeList(ecgType);
     }
 
 }

@@ -692,6 +692,9 @@
         --         order by m.connection_time desc
 --         limit 1
     </select>
+    <select id="selectEcgTypeList" resultType="com.ruoyi.xindian.patient_management.vo.DocVO">
+        SELECT ecg_type as value , ecg_type as label FROM patient_management WHERE ecg_type like concat(#{ecgType},'%') GROUP BY ecg_type
+    </select>
 
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">
