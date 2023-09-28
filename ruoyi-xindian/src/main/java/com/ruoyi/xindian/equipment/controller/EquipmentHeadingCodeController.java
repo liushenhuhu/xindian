@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.equipment.controller;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.equipment.domain.AccountsMsg;
 import com.ruoyi.xindian.equipment.domain.Equipment;
@@ -13,14 +14,23 @@ import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.controller.OnlineController;
+import com.ruoyi.xindian.patient_management.domain.OnlineParam;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -59,6 +69,9 @@ public class EquipmentHeadingCodeController {
     private IMedicalHistoryService medicalHistoryService;
 
     @Resource
+    private OnlineController onlineController;
+
+    @Resource
     private RedisTemplate<String,String> redisTemplate;
 
     /**
@@ -69,7 +82,13 @@ public class EquipmentHeadingCodeController {
      * @throws Exception
      */
     @GetMapping("/getEquipmentCode")
-    public AjaxResult getEquipmentCode(String code,String phone) throws Exception {
+    public AjaxResult getEquipmentCode(String code, String phone, HttpServletRequest request) throws Exception {
+
+        if (code.length()>17){
+            code=code.substring(0,17);
+        }
+
+        System.out.println(code);
 
         String encrypt = aesUtils.encrypt(phone);
         EquipmentHeadingCode equipmentHeadingCode = new EquipmentHeadingCode();
@@ -81,7 +100,8 @@ public class EquipmentHeadingCodeController {
                return AjaxResult.error("识别码不存在");
            }
         }
-        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentHeadingCode.getEquipmentCode());
+        getCodeStatus(equipmentHeadingCode.getHeadingCode());
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentHeadingCode.getHeadingCode());
         if (equipment==null){
             return AjaxResult.error("SN码不存在");
         }
@@ -127,6 +147,55 @@ public class EquipmentHeadingCodeController {
 
 
 
+    public void getCodeStatus(String code){
+        OnlineParam onlineParam = new OnlineParam("所有");
+        String url = "https://server.mindyard.cn:84/get_device";
+//        String url = "http://202.102.249.124:84/get_device";
+        //请求
+        RestTemplate restTemplate = new RestTemplate();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("user", "zzu");
+        headers.set("password", "zzu123");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<OnlineParam> request = new HttpEntity<OnlineParam>(onlineParam, headers);
+        ResponseEntity<String> responseEntity = null;
+        try {
+            responseEntity = restTemplate.postForEntity(url, request, String.class);
+        } catch (RestClientException e) {
+            System.out.println(e);
+        }
+        String responseEntityBody = responseEntity.getBody();
+        System.out.println("responseEntity.getBody() = " + responseEntity.getBody());
+        String splitData = splitData(responseEntityBody, "[", "]");
+        String s = removeDoubleQuotes(splitData);
+        String[] devList = s.split(",");
+        String Sn = "";
+
+        for (String c :devList){
+            if (c.equals(code)){
+                Sn = c;
+            }
+        }
+        if (StringUtils.isEmpty(Sn)){
+            Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(code);
+            if (equipment!=null&&equipment.getEquipmentStatus().equals("True")){
+                equipment.setEquipmentStatus("False");
+                equipmentService.updateEquipment(equipment);
+            }
+        }
+
+    }
+
+    public String splitData(String str, String strStart, String strEnd) {
+        String tempStr;
+        tempStr = str.substring(str.indexOf(strStart) + 1, str.lastIndexOf(strEnd));
+        return tempStr;
+    }
+
+    public static String removeDoubleQuotes(String result) {
+        //去掉" "号
+        return result.replace("\"", "");
+    }
 
 }
