@@ -93,7 +93,7 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
         Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(split[0]);
         if (equipment!=null){
 
-                if (equipment.getEquipmentStatus().equals("True")){
+                if (equipment.getEquipmentStatus().equals("True")&&equipment.getPatientPhone().equals(aesUtils.encrypt(split[1]))){
                     SysUser sysUser = new SysUser();
 
                     sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));

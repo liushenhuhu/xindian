@@ -93,7 +93,7 @@ export default {
         this.opName = '单人单导预警'
       }
       list12Alert_log(this.query).then(r=>{
-        console.log(r)
+        this.form=r.data
         if(r.data.alertLogList.length === 0){
           // 无数据时：展示暂无数据
           const dom = document.getElementById('main');
@@ -106,7 +106,6 @@ export default {
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 50%';
           dom.removeAttribute('_echarts_instance_');
         }else {
-          this.form=r.data
           this.countArr=r.data.alertLogList
           this.drawLine();
         }
@@ -118,7 +117,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .el-row {
   margin: 2vw;
 }

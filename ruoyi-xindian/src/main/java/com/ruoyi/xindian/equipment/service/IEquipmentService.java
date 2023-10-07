@@ -44,6 +44,13 @@ public interface IEquipmentService
      */
     public int updateEquipment(Equipment equipment);
 
+
+    /**
+     * 修改设备的状态，并且将设备的患者姓名清空
+     */
+    int updateStatusAndPatientPhoneNull(Equipment equipment);
+
+
     /**
      * 批量删除设备
      *

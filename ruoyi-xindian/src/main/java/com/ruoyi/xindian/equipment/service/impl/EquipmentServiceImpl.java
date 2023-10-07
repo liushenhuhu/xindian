@@ -84,6 +84,11 @@ public class EquipmentServiceImpl implements IEquipmentService {
         return equipmentMapper.updateEquipment(equipment);
     }
 
+    @Override
+    public int updateStatusAndPatientPhoneNull(Equipment equipment) {
+        return equipmentMapper.updateStatusAndPatientPhoneNull(equipment);
+    }
+
     /**
      * 批量删除设备
      *

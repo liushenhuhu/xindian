@@ -138,6 +138,9 @@
             #{equipmentCode}
         </foreach>
     </update>
+    <update id="updateStatusAndPatientPhoneNull">
+        update equipment set equipment_status = #{equipmentStatus} ,patient_phone_aes = null where equipment_id = #{equipmentId}
+    </update>
 
     <delete id="deleteEquipmentByEquipmentId" parameterType="Long">
         delete from equipment where equipment_id = #{equipmentId}

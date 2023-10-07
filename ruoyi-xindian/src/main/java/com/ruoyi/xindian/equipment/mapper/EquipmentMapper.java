@@ -46,6 +46,10 @@ public interface EquipmentMapper
      */
     public int updateEquipment(Equipment equipment);
 
+
+
+    int updateStatusAndPatientPhoneNull(Equipment equipment);
+
     /**
      * 删除设备
      *

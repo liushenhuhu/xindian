@@ -225,6 +225,53 @@ public class WXPublicRequest {
 
     /**
      * 微信公众号消息推送（患者请求管理员绑定设备绑定设备）
+     * @param userOpenid
+     * @param name
+     */
+    public  void sendEquipmentMsgGiveBack(
+                                  String userOpenid,
+                                  String name,
+                                  String sn) throws ParseException {
+
+        String OrderMsgTemplateId = "aOIfnxvihFkiZXcGMycZhzf9l6vKsegar4TPkY_5NaE";
+
+        // 卡片详情跳转页，设置此值，当点击消息时会打开指定的页面
+//        String detailUrl = "https://baidu.com";
+
+
+//        详细内容
+//                客户名称 {{thing1.DATA}}
+//                客户电话 {{phone_number2.DATA}}
+//                详细地址 {{thing3.DATA}}
+//                接收时间 {{time6.DATA}}
+
+        WxMpInMemoryConfigStorage wxStorage = new WxMpInMemoryConfigStorage();
+        wxStorage.setAppId(WXPayConstants.WX_PUBLIC_ID);
+        wxStorage.setSecret(WXPayConstants.WX_PUBLIC_SECRET);
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(wxStorage);
+        // 此处的 key/value 需和模板消息对应
+        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+                new WxMpTemplateData("character_string1", sn),
+                new WxMpTemplateData("thing2", name)
+        );
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(userOpenid)
+                .templateId(OrderMsgTemplateId)
+                .data(wxMpTemplateDataList)
+//                .url(detailUrl)
+                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+                .build();
+        try {
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        } catch (Exception e) {
+            System.out.println("推送失败：" + e.getMessage());
+        }
+
+    }
+
+    /**
+     * 微信公众号消息推送（患者请求管理员绑定设备绑定设备）
      * @param first
      * @param userOpenid
      * @param name

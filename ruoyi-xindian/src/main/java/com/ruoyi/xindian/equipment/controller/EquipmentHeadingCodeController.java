@@ -87,9 +87,6 @@ public class EquipmentHeadingCodeController {
         if (code.length()>17){
             code=code.substring(0,17);
         }
-
-        System.out.println(code);
-
         String encrypt = aesUtils.encrypt(phone);
         EquipmentHeadingCode equipmentHeadingCode = new EquipmentHeadingCode();
 
@@ -110,7 +107,7 @@ public class EquipmentHeadingCodeController {
             return AjaxResult.error("患者信息不存在");
         }
         if (equipment.getEquipmentStatus().equals("True")){
-            return AjaxResult.error("当前设备已被使用，请更换设备后重试");
+            return AjaxResult.error(207,"当前设备已被使用，请更换设备后重试");
         }
 
 
@@ -143,6 +140,69 @@ public class EquipmentHeadingCodeController {
         redisTemplate.opsForValue().set("getEquipmentCodeSF!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),12,TimeUnit.SECONDS);
         return AjaxResult.success();
 
+    }
+
+
+    /**
+     * 患者解除绑定
+     * @param code
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getGiveBackCode")
+    public AjaxResult getGiveBackCode(String code,String phone) throws Exception {
+        if (code.length()>17){
+            code=code.substring(0,17);
+        }
+        String encrypt = aesUtils.encrypt(phone);
+        EquipmentHeadingCode equipmentHeadingCode = new EquipmentHeadingCode();
+
+        equipmentHeadingCode = equipmentHeadingCodeService.selectByCode(code);
+        if (equipmentHeadingCode==null){
+            equipmentHeadingCode = equipmentHeadingCodeService.selectEquipmentCode(code);
+            if (equipmentHeadingCode==null){
+                return AjaxResult.error("识别码不存在");
+            }
+        }
+        getCodeStatus(equipmentHeadingCode.getHeadingCode());
+        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentHeadingCode.getHeadingCode());
+        if (equipment==null){
+            return AjaxResult.error("SN码不存在");
+        }
+        Patient patient = patientService.selectPatientByPatientPhone(encrypt);
+        if (patient==null){
+            return AjaxResult.error("患者信息不存在");
+        }
+
+        MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(encrypt);
+        EquipmentHeadingCode finalEquipmentHeadingCode = equipmentHeadingCode;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeAgainTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone))){
+            redisTemplate.delete("getEquipmentCodeAgainTwo");
+        }
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeAgainT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone))){
+            redisTemplate.delete("getEquipmentCodeAgainT15");
+        }
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() ->{
+            System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
+            try{
+                List<AccountsMsg> accountsMsgs = accountsMsgService.selectByList();
+                for (AccountsMsg c : accountsMsgs){
+                    wxPublicRequest.sendEquipmentMsg(finalEquipmentHeadingCode.getEquipmentCode(), c.getOpenId(),"换设备："+
+                            aesUtils.decrypt(patient.getPatientName()),aesUtils.decrypt(patient.getPatientPhone()),patient.getPatientSex()+"/高:"+medicalHistory.getHeight()+"/重"+medicalHistory.getWeight(),patient.getBirthDay());
+                }
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
+        },executorService);
+        executorService.shutdown(); // 回收线程池
+
+        redisTemplate.opsForValue().set("getEquipmentCodeTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),5, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set("getEquipmentCodeT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),30,TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("getEquipmentCodeSF!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),12,TimeUnit.SECONDS);
+        return AjaxResult.success();
     }
 
 
@@ -181,7 +241,7 @@ public class EquipmentHeadingCodeController {
             Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(code);
             if (equipment!=null&&equipment.getEquipmentStatus().equals("True")){
                 equipment.setEquipmentStatus("False");
-                equipmentService.updateEquipment(equipment);
+                equipmentService.updateStatusAndPatientPhoneNull(equipment);
             }
         }
 
