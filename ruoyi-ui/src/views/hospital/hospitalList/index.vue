@@ -40,8 +40,8 @@
     </el-row>
     <el-table v-loading="loading" :data="hospitalList" @selection-change="handleSelectionChange">
       <el-table-column label="省份" align="center" prop="province" />
-      <el-table-column label="医院名称" align="center" prop="hospitalName" />
-      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+<!--      <el-table-column label="医院名称" align="center" prop="hospitalName" />-->
+<!--      <el-table-column label="医院代号" align="center" prop="hospitalCode" />-->
       <el-table-column label="在线设备数量" align="center" prop="deviceOnlineNum" />
       <el-table-column label="是否开通数据统计" align="center" prop="ifStatistics">
         <template slot-scope="scope">

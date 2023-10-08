@@ -69,6 +69,12 @@ public class StatisticsController extends BaseController {
         return getDataTable(list);
     }
 
+    /**
+     * 统计医生的诊断时长和平均诊断时间
+     * @param statistics
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/countList")
     public TableDataInfo countList(Statistics statistics) throws Exception {
         startPage();

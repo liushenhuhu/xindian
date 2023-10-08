@@ -46,14 +46,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="患者id" prop="pId">
+      <el-form-item label="患者id" prop="pId">
         <el-input
           v-model="queryParams.pId"
           placeholder="请输入患者id"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
       <el-form-item label="患者姓名" prop="patientName">
         <el-input
           v-model="queryParams.patientName"

@@ -256,8 +256,8 @@
         </template>
       </el-table-column>
       <el-table-column label="患者名称" align="center" prop="patientName" show-overflow-tooltip/>
-      <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
-      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+<!--      <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
+<!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
       <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -285,6 +285,9 @@
             <el-divider content-position="left">其他信息</el-divider>
             <el-form-item label="医院代号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalCode }}</span>
+            </el-form-item>
+            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.hospitalName }}</span>
             </el-form-item>
             <el-form-item label="患者管理id" width="200" style="padding-left: 40px">
               <span>{{ scope.row.pId }}</span>

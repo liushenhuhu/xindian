@@ -6,7 +6,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.hospital.domain.DoctorTerm;
 import com.ruoyi.xindian.hospital.service.DoctorTermService;
@@ -34,17 +36,23 @@ public class DoctorTermController extends BaseController {
     private DoctorTermService doctorTermService;
 
 
+    @Resource
+    private AesUtils aesUtils;
 
     /**
      * 查询医生术语列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(DoctorTerm doctorTerm, HttpServletRequest request)
-    {
+    public TableDataInfo list(DoctorTerm doctorTerm, HttpServletRequest request) throws Exception {
         LoginUser loginUser = tokenService.getLoginUser(request);
         doctorTerm.setDoctorPhone(loginUser.getUser().getUserName());
         startPage();
         List<DoctorTerm> list = doctorTermService.selectDoctorTermList(doctorTerm);
+        for(DoctorTerm term : list){
+            if (StringUtils.isNotEmpty(term.getDoctorPhone())){
+                term.setDoctorPhone(aesUtils.decrypt(term.getDoctorPhone()));
+            }
+        }
         return getDataTable(list);
     }
 

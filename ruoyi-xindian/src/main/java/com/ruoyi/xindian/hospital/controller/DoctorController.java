@@ -132,6 +132,7 @@ public class DoctorController extends BaseController
     }
 
 
+    @Aes
     @GetMapping("/getDocList")
     public TableDataInfo getDocList(Doctor doctor) throws Exception {
         Department department = new Department();

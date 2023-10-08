@@ -180,7 +180,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
-      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+<!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
       <el-table-column label="设备号" align="center" prop="equipmentCode"/>
       <el-table-column label="在线状态" align="center" prop="onlineStatus">
         <template slot-scope="scope">
@@ -200,6 +200,10 @@
             <el-divider content-position="left">其他信息</el-divider>
             <el-form-item label="医院代号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalCode }}</span>
+            </el-form-item>
+
+            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.hospitalName }}</span>
             </el-form-item>
             <el-form-item label="患者管理Id" width="200" style="padding-left: 40px">
               <span>{{ scope.row.pId }}</span>

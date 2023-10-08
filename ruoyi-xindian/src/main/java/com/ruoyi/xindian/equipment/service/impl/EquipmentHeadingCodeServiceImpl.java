@@ -95,9 +95,10 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
 
                 if (equipment.getEquipmentStatus().equals("True")&&equipment.getPatientPhone().equals(aesUtils.encrypt(split[1]))){
                     SysUser sysUser = new SysUser();
-
+                    redisTemplate.delete("getEquipmentCodeT15!"+split[0]+"="+split[1]);
+                    redisTemplate.delete("getEquipmentCodeAgainTwo!"+split[0]+"="+split[1]);
+                    redisTemplate.delete("getEquipmentCodeAgainT15!"+split[0]+"="+split[1]);
                     sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));
-
                     if (sysUser!=null){
 
                         wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，请登迈雅云小程序查看","绑定成功");

@@ -418,9 +418,9 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
-      addDict().then(res =>{
-        console.log(res)
-      })
+      // addDict().then(res =>{
+      //   console.log(res)
+      // })
     },
     // 取消按钮
     cancel() {

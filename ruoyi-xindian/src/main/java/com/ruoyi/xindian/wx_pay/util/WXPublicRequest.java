@@ -165,7 +165,7 @@ public class WXPublicRequest {
                 .templateId(OrderMsgTemplateId)
                 .data(wxMpTemplateDataList)
 //                .url(detailUrl)
-                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+//                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
                 .build();
         try {
             wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
@@ -213,7 +213,7 @@ public class WXPublicRequest {
                 .templateId(OrderMsgTemplateId)
                 .data(wxMpTemplateDataList)
 //                .url(detailUrl)
-                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+//                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
                 .build();
         try {
             wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
@@ -260,7 +260,7 @@ public class WXPublicRequest {
                 .templateId(OrderMsgTemplateId)
                 .data(wxMpTemplateDataList)
 //                .url(detailUrl)
-                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+//                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
                 .build();
         try {
             wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
@@ -315,7 +315,7 @@ public class WXPublicRequest {
                 .templateId(OrderMsgTemplateId)
                 .data(wxMpTemplateDataList)
 //                .url(detailUrl)
-                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+//                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
                 .build();
         try {
             wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);

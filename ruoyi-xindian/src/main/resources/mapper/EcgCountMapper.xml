@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.ecgCount.mapper.EcgCountMapper">
+
+    <resultMap id="EcgCountResult" type="com.ruoyi.xindian.ecgCount.domain.EcgCount">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="recordDate" column="record_date" jdbcType="TIMESTAMP"/>
+            <result property="age" column="age" jdbcType="INTEGER"/>
+            <result property="gender" column="gender" jdbcType="VARCHAR"/>
+            <result property="leadCount" column="lead_count" jdbcType="VARCHAR"/>
+            <result property="zcxdtEcg" column="zcxdt_ecg" jdbcType="INTEGER"/>
+            <result property="dxxlEcg" column="dxxl_ecg" jdbcType="INTEGER"/>
+            <result property="ywxlEcg" column="ywxl_ecg" jdbcType="INTEGER"/>
+            <result property="fxxlEcg" column="fxxl_ecg" jdbcType="INTEGER"/>
+            <result property="sxxlEcg" column="sxxl_ecg" jdbcType="INTEGER"/>
+            <result property="jjxxlEcg" column="jjxxl_ecg" jdbcType="INTEGER"/>
+            <result property="qbxlEcg" column="qbxl_ecg" jdbcType="INTEGER"/>
+            <result property="sxxdgsEcg" column="sxxdgs_ecg" jdbcType="INTEGER"/>
+            <result property="ssxxdgsEcg" column="ssxxdgs_ecg" jdbcType="INTEGER"/>
+            <result property="jjxxdgsEcg" column="jjxxdgs_ecg" jdbcType="INTEGER"/>
+            <result property="fxxdgsEcg" column="fxxdgs_ecg" jdbcType="INTEGER"/>
+            <result property="fxybEcg" column="fxyb_ecg" jdbcType="INTEGER"/>
+            <result property="fxzbEcg" column="fxzb_ecg" jdbcType="INTEGER"/>
+            <result property="fxtbEcg" column="fxtb_ecg" jdbcType="INTEGER"/>
+            <result property="sxybEcg" column="sxyb_ecg" jdbcType="INTEGER"/>
+            <result property="sxzbEcg" column="sxzb_ecg" jdbcType="INTEGER"/>
+            <result property="jjxybEcg" column="jjxyb_ecg" jdbcType="INTEGER"/>
+            <result property="jjxzbEcg" column="jjxzb_ecg" jdbcType="INTEGER"/>
+            <result property="jjxtbEcg" column="jjxtb_ecg" jdbcType="INTEGER"/>
+            <result property="dxtbEcg" column="dxtb_ecg" jdbcType="INTEGER"/>
+            <result property="xstbEcg" column="xstb_ecg" jdbcType="INTEGER"/>
+            <result property="qxtbEcg" column="qxtb_ecg" jdbcType="INTEGER"/>
+            <result property="xfcdEcg" column="xfcd_ecg" jdbcType="INTEGER"/>
+            <result property="xfpdEcg" column="xfpd_ecg" jdbcType="INTEGER"/>
+            <result property="xscdEcg" column="xscd_ecg" jdbcType="INTEGER"/>
+            <result property="xspdEcg" column="xspd_ecg" jdbcType="INTEGER"/>
+            <result property="ydfszdEcg" column="ydfszd_ecg" jdbcType="INTEGER"/>
+            <result property="edfszdEcg" column="edfszd_ecg" jdbcType="INTEGER"/>
+            <result property="edixfszdEcg" column="edIxfszd_ecg" jdbcType="INTEGER"/>
+            <result property="ediixfszdEcg" column="edIIxfszd_ecg" jdbcType="INTEGER"/>
+            <result property="sdfszdEcg" column="sdfszd_ecg" jdbcType="INTEGER"/>
+            <result property="dfzdEcg" column="dfzd_ecg" jdbcType="INTEGER"/>
+            <result property="gdfszdEcg" column="gdfszd_ecg" jdbcType="INTEGER"/>
+            <result property="zqfzzdEcg" column="zqfzzd_ecg" jdbcType="INTEGER"/>
+            <result property="zhfzzdEcg" column="zhfzzd_ecg" jdbcType="INTEGER"/>
+            <result property="wqxzszzdEcg" column="wqxzszzd_ecg" jdbcType="INTEGER"/>
+            <result property="bwqxzszzdEcg" column="bwqxzszzd_ecg" jdbcType="INTEGER"/>
+            <result property="wqxyszzdEcg" column="wqxyszzd_ecg" jdbcType="INTEGER"/>
+            <result property="bwqxyszzdEcg" column="bwqxyszzd_ecg" jdbcType="INTEGER"/>
+            <result property="ftyxsnzdEcg" column="ftyxsnzd_ecg" jdbcType="INTEGER"/>
+            <result property="sncyxcdEcg" column="sncyxcd_ecg" jdbcType="INTEGER"/>
+            <result property="xsyjbEcg" column="xsyjb_ecg" jdbcType="INTEGER"/>
+            <result property="yjzhzEcg" column="yjzhz_ecg" jdbcType="INTEGER"/>
+            <result property="zxffdEcg" column="zxffd_ecg" jdbcType="INTEGER"/>
+            <result property="zxsfdEcg" column="zxsfd_ecg" jdbcType="INTEGER"/>
+            <result property="yxffdEcg" column="yxffd_ecg" jdbcType="INTEGER"/>
+            <result property="yxsfdEcg" column="yxsfd_ecg" jdbcType="INTEGER"/>
+            <result property="stgbEcg" column="stgb_ecg" jdbcType="INTEGER"/>
+            <result property="stTgbEcg" column="st_tgb_ecg" jdbcType="INTEGER"/>
+            <result property="tbycEcg" column="tbyc_ecg" jdbcType="INTEGER"/>
+            <result property="qtjqycEcg" column="qtjqyc_ecg" jdbcType="INTEGER"/>
+            <result property="qtcjqycEcg" column="qtcjqyc_ecg" jdbcType="INTEGER"/>
+            <result property="kjubEcg" column="kjub_ecg" jdbcType="INTEGER"/>
+            <result property="zqfjEcg" column="zqfj_ecg" jdbcType="INTEGER"/>
+            <result property="qjbxjgsEcg" column="qjbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="qcbxjgsEcg" column="qcbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="qgfbxjgsEcg" column="qgfbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="qbxjgsEcg" column="qbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="xbxjgsEcg" column="xbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="xhbxjgsEcg" column="xhbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="hbxjgsEcg" column="hbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="xcbbxjgsEcg" column="xcbbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="gcbbxjgsEcg" column="gcbbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="cbbxjgsEcg" column="cbbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="xnmxxjgsEcg" column="xnmxxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="ysxjgsEcg" column="ysxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="fsttgxxjgsEcg" column="fsttgxxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="xjbxjgsEcg" column="xjbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="jbxjgsEcg" column="jbxjgs_ecg" jdbcType="INTEGER"/>
+            <result property="yjxEcg" column="yjx_ecg" jdbcType="INTEGER"/>
+            <result property="jxEcg" column="jx_ecg" jdbcType="INTEGER"/>
+            <result property="cjxEcg" column="cjx_ecg" jdbcType="INTEGER"/>
+            <result property="xdtwjzEcg" column="xdtwjz_ecg" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="selectEcgCountVo">
+        select id, record_date, age, gender, lead_count, zcxdt_ecg, dxxl_ecg, ywxl_ecg, fxxl_ecg, sxxl_ecg, jjxxl_ecg, qbxl_ecg, sxxdgs_ecg, ssxxdgs_ecg, jjxxdgs_ecg, fxxdgs_ecg, fxyb_ecg, fxzb_ecg, fxtb_ecg, sxyb_ecg, sxzb_ecg, jjxyb_ecg, jjxzb_ecg, jjxtb_ecg, dxtb_ecg, xstb_ecg, qxtb_ecg, xfcd_ecg, xfpd_ecg, xscd_ecg, xspd_ecg, ydfszd_ecg, edfszd_ecg, edIxfszd_ecg, edIIxfszd_ecg, sdfszd_ecg, dfzd_ecg, gdfszd_ecg, zqfzzd_ecg, zhfzzd_ecg, wqxzszzd_ecg, bwqxzszzd_ecg, wqxyszzd_ecg, bwqxyszzd_ecg, ftyxsnzd_ecg, sncyxcd_ecg, xsyjb_ecg, yjzhz_ecg, zxffd_ecg, zxsfd_ecg, yxffd_ecg, yxsfd_ecg, stgb_ecg, st_tgb_ecg, tbyc_ecg, qtjqyc_ecg, qtcjqyc_ecg, kjub_ecg, zqfj_ecg, qjbxjgs_ecg, qcbxjgs_ecg, qgfbxjgs_ecg, qbxjgs_ecg, xbxjgs_ecg, xhbxjgs_ecg, hbxjgs_ecg, xcbbxjgs_ecg, gcbbxjgs_ecg, cbbxjgs_ecg, xnmxxjgs_ecg, ysxjgs_ecg, fsttgxxjgs_ecg, xjbxjgs_ecg, jbxjgs_ecg, yjx_ecg, jx_ecg, cjx_ecg, xdtwjz_ecg from ecg_count
+    </sql>
+
+    <select id="selectEcgCountList" parameterType="EcgCount" resultMap="EcgCountResult">
+        <include refid="selectEcgCountVo"/>
+        <where>
+            <if test="recordDate != null "> and record_date BETWEEN #{recordDate} and  DATE_ADD(#{recordDate} ,INTERVAL 1 DAY)</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="leadCount != null  and leadCount != ''"> and lead_count = #{leadCount}</if>
+            <if test="zcxdtEcg != null "> and zcxdt_ecg = #{zcxdtEcg}</if>
+            <if test="dxxlEcg != null "> and dxxl_ecg = #{dxxlEcg}</if>
+            <if test="ywxlEcg != null "> and ywxl_ecg = #{ywxlEcg}</if>
+            <if test="fxxlEcg != null "> and fxxl_ecg = #{fxxlEcg}</if>
+            <if test="sxxlEcg != null "> and sxxl_ecg = #{sxxlEcg}</if>
+            <if test="jjxxlEcg != null "> and jjxxl_ecg = #{jjxxlEcg}</if>
+            <if test="qbxlEcg != null "> and qbxl_ecg = #{qbxlEcg}</if>
+            <if test="sxxdgsEcg != null "> and sxxdgs_ecg = #{sxxdgsEcg}</if>
+            <if test="ssxxdgsEcg != null "> and ssxxdgs_ecg = #{ssxxdgsEcg}</if>
+            <if test="jjxxdgsEcg != null "> and jjxxdgs_ecg = #{jjxxdgsEcg}</if>
+            <if test="fxxdgsEcg != null "> and fxxdgs_ecg = #{fxxdgsEcg}</if>
+            <if test="fxybEcg != null "> and fxyb_ecg = #{fxybEcg}</if>
+            <if test="fxzbEcg != null "> and fxzb_ecg = #{fxzbEcg}</if>
+            <if test="fxtbEcg != null "> and fxtb_ecg = #{fxtbEcg}</if>
+            <if test="sxybEcg != null "> and sxyb_ecg = #{sxybEcg}</if>
+            <if test="sxzbEcg != null "> and sxzb_ecg = #{sxzbEcg}</if>
+            <if test="jjxybEcg != null "> and jjxyb_ecg = #{jjxybEcg}</if>
+            <if test="jjxzbEcg != null "> and jjxzb_ecg = #{jjxzbEcg}</if>
+            <if test="jjxtbEcg != null "> and jjxtb_ecg = #{jjxtbEcg}</if>
+            <if test="dxtbEcg != null "> and dxtb_ecg = #{dxtbEcg}</if>
+            <if test="xstbEcg != null "> and xstb_ecg = #{xstbEcg}</if>
+            <if test="qxtbEcg != null "> and qxtb_ecg = #{qxtbEcg}</if>
+            <if test="xfcdEcg != null "> and xfcd_ecg = #{xfcdEcg}</if>
+            <if test="xfpdEcg != null "> and xfpd_ecg = #{xfpdEcg}</if>
+            <if test="xscdEcg != null "> and xscd_ecg = #{xscdEcg}</if>
+            <if test="xspdEcg != null "> and xspd_ecg = #{xspdEcg}</if>
+            <if test="ydfszdEcg != null "> and ydfszd_ecg = #{ydfszdEcg}</if>
+            <if test="edfszdEcg != null "> and edfszd_ecg = #{edfszdEcg}</if>
+            <if test="edixfszdEcg != null "> and edIxfszd_ecg = #{edixfszdEcg}</if>
+            <if test="ediixfszdEcg != null "> and edIIxfszd_ecg = #{ediixfszdEcg}</if>
+            <if test="sdfszdEcg != null "> and sdfszd_ecg = #{sdfszdEcg}</if>
+            <if test="dfzdEcg != null "> and dfzd_ecg = #{dfzdEcg}</if>
+            <if test="gdfszdEcg != null "> and gdfszd_ecg = #{gdfszdEcg}</if>
+            <if test="zqfzzdEcg != null "> and zqfzzd_ecg = #{zqfzzdEcg}</if>
+            <if test="zhfzzdEcg != null "> and zhfzzd_ecg = #{zhfzzdEcg}</if>
+            <if test="wqxzszzdEcg != null "> and wqxzszzd_ecg = #{wqxzszzdEcg}</if>
+            <if test="bwqxzszzdEcg != null "> and bwqxzszzd_ecg = #{bwqxzszzdEcg}</if>
+            <if test="wqxyszzdEcg != null "> and wqxyszzd_ecg = #{wqxyszzdEcg}</if>
+            <if test="bwqxyszzdEcg != null "> and bwqxyszzd_ecg = #{bwqxyszzdEcg}</if>
+            <if test="ftyxsnzdEcg != null "> and ftyxsnzd_ecg = #{ftyxsnzdEcg}</if>
+            <if test="sncyxcdEcg != null "> and sncyxcd_ecg = #{sncyxcdEcg}</if>
+            <if test="xsyjbEcg != null "> and xsyjb_ecg = #{xsyjbEcg}</if>
+            <if test="yjzhzEcg != null "> and yjzhz_ecg = #{yjzhzEcg}</if>
+            <if test="zxffdEcg != null "> and zxffd_ecg = #{zxffdEcg}</if>
+            <if test="zxsfdEcg != null "> and zxsfd_ecg = #{zxsfdEcg}</if>
+            <if test="yxffdEcg != null "> and yxffd_ecg = #{yxffdEcg}</if>
+            <if test="yxsfdEcg != null "> and yxsfd_ecg = #{yxsfdEcg}</if>
+            <if test="stgbEcg != null "> and stgb_ecg = #{stgbEcg}</if>
+            <if test="stTgbEcg != null "> and st_tgb_ecg = #{stTgbEcg}</if>
+            <if test="tbycEcg != null "> and tbyc_ecg = #{tbycEcg}</if>
+            <if test="qtjqycEcg != null "> and qtjqyc_ecg = #{qtjqycEcg}</if>
+            <if test="qtcjqycEcg != null "> and qtcjqyc_ecg = #{qtcjqycEcg}</if>
+            <if test="kjubEcg != null "> and kjub_ecg = #{kjubEcg}</if>
+            <if test="zqfjEcg != null "> and zqfj_ecg = #{zqfjEcg}</if>
+            <if test="qjbxjgsEcg != null "> and qjbxjgs_ecg = #{qjbxjgsEcg}</if>
+            <if test="qcbxjgsEcg != null "> and qcbxjgs_ecg = #{qcbxjgsEcg}</if>
+            <if test="qgfbxjgsEcg != null "> and qgfbxjgs_ecg = #{qgfbxjgsEcg}</if>
+            <if test="qbxjgsEcg != null "> and qbxjgs_ecg = #{qbxjgsEcg}</if>
+            <if test="xbxjgsEcg != null "> and xbxjgs_ecg = #{xbxjgsEcg}</if>
+            <if test="xhbxjgsEcg != null "> and xhbxjgs_ecg = #{xhbxjgsEcg}</if>
+            <if test="hbxjgsEcg != null "> and hbxjgs_ecg = #{hbxjgsEcg}</if>
+            <if test="xcbbxjgsEcg != null "> and xcbbxjgs_ecg = #{xcbbxjgsEcg}</if>
+            <if test="gcbbxjgsEcg != null "> and gcbbxjgs_ecg = #{gcbbxjgsEcg}</if>
+            <if test="cbbxjgsEcg != null "> and cbbxjgs_ecg = #{cbbxjgsEcg}</if>
+            <if test="xnmxxjgsEcg != null "> and xnmxxjgs_ecg = #{xnmxxjgsEcg}</if>
+            <if test="ysxjgsEcg != null "> and ysxjgs_ecg = #{ysxjgsEcg}</if>
+            <if test="fsttgxxjgsEcg != null "> and fsttgxxjgs_ecg = #{fsttgxxjgsEcg}</if>
+            <if test="xjbxjgsEcg != null "> and xjbxjgs_ecg = #{xjbxjgsEcg}</if>
+            <if test="jbxjgsEcg != null "> and jbxjgs_ecg = #{jbxjgsEcg}</if>
+            <if test="yjxEcg != null "> and yjx_ecg = #{yjxEcg}</if>
+            <if test="jxEcg != null "> and jx_ecg = #{jxEcg}</if>
+            <if test="cjxEcg != null "> and cjx_ecg = #{cjxEcg}</if>
+            <if test="xdtwjzEcg != null "> and xdtwjz_ecg = #{xdtwjzEcg}</if>
+
+        </where>
+        order by record_date desc
+    </select>
+
+    <select id="selectEcgCountById" parameterType="Long" resultMap="EcgCountResult">
+        <include refid="selectEcgCountVo"/>
+        where id = #{id}
+    </select>
+    <select id="getLogType" resultType="com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO">
+        SELECT `value` ,label  FROM ecg_count_type
+    </select>
+
+    <insert id="insertEcgCount" parameterType="EcgCount">
+        insert into ecg_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="recordDate != null">record_date,</if>
+            <if test="age != null">age,</if>
+            <if test="gender != null">gender,</if>
+            <if test="leadCount != null">lead_count,</if>
+            <if test="zcxdtEcg != null">zcxdt_ecg,</if>
+            <if test="dxxlEcg != null">dxxl_ecg,</if>
+            <if test="ywxlEcg != null">ywxl_ecg,</if>
+            <if test="fxxlEcg != null">fxxl_ecg,</if>
+            <if test="sxxlEcg != null">sxxl_ecg,</if>
+            <if test="jjxxlEcg != null">jjxxl_ecg,</if>
+            <if test="qbxlEcg != null">qbxl_ecg,</if>
+            <if test="sxxdgsEcg != null">sxxdgs_ecg,</if>
+            <if test="ssxxdgsEcg != null">ssxxdgs_ecg,</if>
+            <if test="jjxxdgsEcg != null">jjxxdgs_ecg,</if>
+            <if test="fxxdgsEcg != null">fxxdgs_ecg,</if>
+            <if test="fxybEcg != null">fxyb_ecg,</if>
+            <if test="fxzbEcg != null">fxzb_ecg,</if>
+            <if test="fxtbEcg != null">fxtb_ecg,</if>
+            <if test="sxybEcg != null">sxyb_ecg,</if>
+            <if test="sxzbEcg != null">sxzb_ecg,</if>
+            <if test="jjxybEcg != null">jjxyb_ecg,</if>
+            <if test="jjxzbEcg != null">jjxzb_ecg,</if>
+            <if test="jjxtbEcg != null">jjxtb_ecg,</if>
+            <if test="dxtbEcg != null">dxtb_ecg,</if>
+            <if test="xstbEcg != null">xstb_ecg,</if>
+            <if test="qxtbEcg != null">qxtb_ecg,</if>
+            <if test="xfcdEcg != null">xfcd_ecg,</if>
+            <if test="xfpdEcg != null">xfpd_ecg,</if>
+            <if test="xscdEcg != null">xscd_ecg,</if>
+            <if test="xspdEcg != null">xspd_ecg,</if>
+            <if test="ydfszdEcg != null">ydfszd_ecg,</if>
+            <if test="edfszdEcg != null">edfszd_ecg,</if>
+            <if test="edixfszdEcg != null">edIxfszd_ecg,</if>
+            <if test="ediixfszdEcg != null">edIIxfszd_ecg,</if>
+            <if test="sdfszdEcg != null">sdfszd_ecg,</if>
+            <if test="dfzdEcg != null">dfzd_ecg,</if>
+            <if test="gdfszdEcg != null">gdfszd_ecg,</if>
+            <if test="zqfzzdEcg != null">zqfzzd_ecg,</if>
+            <if test="zhfzzdEcg != null">zhfzzd_ecg,</if>
+            <if test="wqxzszzdEcg != null">wqxzszzd_ecg,</if>
+            <if test="bwqxzszzdEcg != null">bwqxzszzd_ecg,</if>
+            <if test="wqxyszzdEcg != null">wqxyszzd_ecg,</if>
+            <if test="bwqxyszzdEcg != null">bwqxyszzd_ecg,</if>
+            <if test="ftyxsnzdEcg != null">ftyxsnzd_ecg,</if>
+            <if test="sncyxcdEcg != null">sncyxcd_ecg,</if>
+            <if test="xsyjbEcg != null">xsyjb_ecg,</if>
+            <if test="yjzhzEcg != null">yjzhz_ecg,</if>
+            <if test="zxffdEcg != null">zxffd_ecg,</if>
+            <if test="zxsfdEcg != null">zxsfd_ecg,</if>
+            <if test="yxffdEcg != null">yxffd_ecg,</if>
+            <if test="yxsfdEcg != null">yxsfd_ecg,</if>
+            <if test="stgbEcg != null">stgb_ecg,</if>
+            <if test="stTgbEcg != null">st_tgb_ecg,</if>
+            <if test="tbycEcg != null">tbyc_ecg,</if>
+            <if test="qtjqycEcg != null">qtjqyc_ecg,</if>
+            <if test="qtcjqycEcg != null">qtcjqyc_ecg,</if>
+            <if test="kjubEcg != null">kjub_ecg,</if>
+            <if test="zqfjEcg != null">zqfj_ecg,</if>
+            <if test="qjbxjgsEcg != null">qjbxjgs_ecg,</if>
+            <if test="qcbxjgsEcg != null">qcbxjgs_ecg,</if>
+            <if test="qgfbxjgsEcg != null">qgfbxjgs_ecg,</if>
+            <if test="qbxjgsEcg != null">qbxjgs_ecg,</if>
+            <if test="xbxjgsEcg != null">xbxjgs_ecg,</if>
+            <if test="xhbxjgsEcg != null">xhbxjgs_ecg,</if>
+            <if test="hbxjgsEcg != null">hbxjgs_ecg,</if>
+            <if test="xcbbxjgsEcg != null">xcbbxjgs_ecg,</if>
+            <if test="gcbbxjgsEcg != null">gcbbxjgs_ecg,</if>
+            <if test="cbbxjgsEcg != null">cbbxjgs_ecg,</if>
+            <if test="xnmxxjgsEcg != null">xnmxxjgs_ecg,</if>
+            <if test="ysxjgsEcg != null">ysxjgs_ecg,</if>
+            <if test="fsttgxxjgsEcg != null">fsttgxxjgs_ecg,</if>
+            <if test="xjbxjgsEcg != null">xjbxjgs_ecg,</if>
+            <if test="jbxjgsEcg != null">jbxjgs_ecg,</if>
+            <if test="yjxEcg != null">yjx_ecg,</if>
+            <if test="jxEcg != null">jx_ecg,</if>
+            <if test="cjxEcg != null">cjx_ecg,</if>
+            <if test="xdtwjzEcg != null">xdtwjz_ecg,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="recordDate != null">#{recordDate},</if>
+            <if test="age != null">#{age},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="leadCount != null">#{leadCount},</if>
+            <if test="zcxdtEcg != null">#{zcxdtEcg},</if>
+            <if test="dxxlEcg != null">#{dxxlEcg},</if>
+            <if test="ywxlEcg != null">#{ywxlEcg},</if>
+            <if test="fxxlEcg != null">#{fxxlEcg},</if>
+            <if test="sxxlEcg != null">#{sxxlEcg},</if>
+            <if test="jjxxlEcg != null">#{jjxxlEcg},</if>
+            <if test="qbxlEcg != null">#{qbxlEcg},</if>
+            <if test="sxxdgsEcg != null">#{sxxdgsEcg},</if>
+            <if test="ssxxdgsEcg != null">#{ssxxdgsEcg},</if>
+            <if test="jjxxdgsEcg != null">#{jjxxdgsEcg},</if>
+            <if test="fxxdgsEcg != null">#{fxxdgsEcg},</if>
+            <if test="fxybEcg != null">#{fxybEcg},</if>
+            <if test="fxzbEcg != null">#{fxzbEcg},</if>
+            <if test="fxtbEcg != null">#{fxtbEcg},</if>
+            <if test="sxybEcg != null">#{sxybEcg},</if>
+            <if test="sxzbEcg != null">#{sxzbEcg},</if>
+            <if test="jjxybEcg != null">#{jjxybEcg},</if>
+            <if test="jjxzbEcg != null">#{jjxzbEcg},</if>
+            <if test="jjxtbEcg != null">#{jjxtbEcg},</if>
+            <if test="dxtbEcg != null">#{dxtbEcg},</if>
+            <if test="xstbEcg != null">#{xstbEcg},</if>
+            <if test="qxtbEcg != null">#{qxtbEcg},</if>
+            <if test="xfcdEcg != null">#{xfcdEcg},</if>
+            <if test="xfpdEcg != null">#{xfpdEcg},</if>
+            <if test="xscdEcg != null">#{xscdEcg},</if>
+            <if test="xspdEcg != null">#{xspdEcg},</if>
+            <if test="ydfszdEcg != null">#{ydfszdEcg},</if>
+            <if test="edfszdEcg != null">#{edfszdEcg},</if>
+            <if test="edixfszdEcg != null">#{edixfszdEcg},</if>
+            <if test="ediixfszdEcg != null">#{ediixfszdEcg},</if>
+            <if test="sdfszdEcg != null">#{sdfszdEcg},</if>
+            <if test="dfzdEcg != null">#{dfzdEcg},</if>
+            <if test="gdfszdEcg != null">#{gdfszdEcg},</if>
+            <if test="zqfzzdEcg != null">#{zqfzzdEcg},</if>
+            <if test="zhfzzdEcg != null">#{zhfzzdEcg},</if>
+            <if test="wqxzszzdEcg != null">#{wqxzszzdEcg},</if>
+            <if test="bwqxzszzdEcg != null">#{bwqxzszzdEcg},</if>
+            <if test="wqxyszzdEcg != null">#{wqxyszzdEcg},</if>
+            <if test="bwqxyszzdEcg != null">#{bwqxyszzdEcg},</if>
+            <if test="ftyxsnzdEcg != null">#{ftyxsnzdEcg},</if>
+            <if test="sncyxcdEcg != null">#{sncyxcdEcg},</if>
+            <if test="xsyjbEcg != null">#{xsyjbEcg},</if>
+            <if test="yjzhzEcg != null">#{yjzhzEcg},</if>
+            <if test="zxffdEcg != null">#{zxffdEcg},</if>
+            <if test="zxsfdEcg != null">#{zxsfdEcg},</if>
+            <if test="yxffdEcg != null">#{yxffdEcg},</if>
+            <if test="yxsfdEcg != null">#{yxsfdEcg},</if>
+            <if test="stgbEcg != null">#{stgbEcg},</if>
+            <if test="stTgbEcg != null">#{stTgbEcg},</if>
+            <if test="tbycEcg != null">#{tbycEcg},</if>
+            <if test="qtjqycEcg != null">#{qtjqycEcg},</if>
+            <if test="qtcjqycEcg != null">#{qtcjqycEcg},</if>
+            <if test="kjubEcg != null">#{kjubEcg},</if>
+            <if test="zqfjEcg != null">#{zqfjEcg},</if>
+            <if test="qjbxjgsEcg != null">#{qjbxjgsEcg},</if>
+            <if test="qcbxjgsEcg != null">#{qcbxjgsEcg},</if>
+            <if test="qgfbxjgsEcg != null">#{qgfbxjgsEcg},</if>
+            <if test="qbxjgsEcg != null">#{qbxjgsEcg},</if>
+            <if test="xbxjgsEcg != null">#{xbxjgsEcg},</if>
+            <if test="xhbxjgsEcg != null">#{xhbxjgsEcg},</if>
+            <if test="hbxjgsEcg != null">#{hbxjgsEcg},</if>
+            <if test="xcbbxjgsEcg != null">#{xcbbxjgsEcg},</if>
+            <if test="gcbbxjgsEcg != null">#{gcbbxjgsEcg},</if>
+            <if test="cbbxjgsEcg != null">#{cbbxjgsEcg},</if>
+            <if test="xnmxxjgsEcg != null">#{xnmxxjgsEcg},</if>
+            <if test="ysxjgsEcg != null">#{ysxjgsEcg},</if>
+            <if test="fsttgxxjgsEcg != null">#{fsttgxxjgsEcg},</if>
+            <if test="xjbxjgsEcg != null">#{xjbxjgsEcg},</if>
+            <if test="jbxjgsEcg != null">#{jbxjgsEcg},</if>
+            <if test="yjxEcg != null">#{yjxEcg},</if>
+            <if test="jxEcg != null">#{jxEcg},</if>
+            <if test="cjxEcg != null">#{cjxEcg},</if>
+            <if test="xdtwjzEcg != null">#{xdtwjzEcg},</if>
+        </trim>
+    </insert>
+    <insert id="insertEcgCounts">
+        insert into ecg_count(id, record_date, age, gender, lead_count, zcxdt_ecg, dxxl_ecg, ywxl_ecg, fxxl_ecg, sxxl_ecg, jjxxl_ecg, qbxl_ecg, sxxdgs_ecg, ssxxdgs_ecg, jjxxdgs_ecg, fxxdgs_ecg, fxyb_ecg, fxzb_ecg, fxtb_ecg, sxyb_ecg, sxzb_ecg, jjxyb_ecg, jjxzb_ecg, jjxtb_ecg, dxtb_ecg, xstb_ecg, qxtb_ecg, xfcd_ecg, xfpd_ecg, xscd_ecg, xspd_ecg, ydfszd_ecg, edfszd_ecg, edIxfszd_ecg, edIIxfszd_ecg, sdfszd_ecg, dfzd_ecg, gdfszd_ecg, zqfzzd_ecg, zhfzzd_ecg, wqxzszzd_ecg, bwqxzszzd_ecg, wqxyszzd_ecg, bwqxyszzd_ecg, ftyxsnzd_ecg, sncyxcd_ecg, xsyjb_ecg, yjzhz_ecg, zxffd_ecg, zxsfd_ecg, yxffd_ecg, yxsfd_ecg, stgb_ecg, st_tgb_ecg, tbyc_ecg, qtjqyc_ecg, qtcjqyc_ecg, kjub_ecg, zqfj_ecg, qjbxjgs_ecg, qcbxjgs_ecg, qgfbxjgs_ecg, qbxjgs_ecg, xbxjgs_ecg, xhbxjgs_ecg, hbxjgs_ecg, xcbbxjgs_ecg, gcbbxjgs_ecg, cbbxjgs_ecg, xnmxxjgs_ecg, ysxjgs_ecg, fsttgxxjgs_ecg, xjbxjgs_ecg, jbxjgs_ecg, yjx_ecg, jx_ecg, cjx_ecg, xdtwjz_ecg)
+        values
+        <foreach collection ="list" item="ecg" separator =",">
+            (#{ecg.id}, #{ecg.recordDate}, #{ecg.age}, #{ecg.gender}, #{ecg.leadCount}, #{ecg.zcxdtEcg}, #{ecg.dxxlEcg},#{ecg.ywxlEcg} ,#{ecg.fxxlEcg}, #{ecg.sxxlEcg}, #{ecg.jjxxlEcg}, #{ecg.qbxlEcg}, #{ecg.sxxdgsEcg}, #{ecg.ssxxdgsEcg}, #{ecg.jjxxdgsEcg}, #{ecg.fxxdgsEcg},
+            #{ecg.fxybEcg}, #{ecg.fxzbEcg},#{ecg.fxtbEcg} ,#{ecg.sxybEcg} , #{ecg.sxzbEcg},#{ecg.jjxybEcg} , #{ecg.jjxzbEcg} ,#{ecg.jjxtbEcg} , #{ecg.dxtbEcg} , #{ecg.xstbEcg} , #{ecg.qxtbEcg},#{ecg.xfcdEcg} ,#{ecg.xfpdEcg} ,#{ecg.xscdEcg} , #{ecg.xspdEcg}, #{ecg.ydfszdEcg},
+            #{ecg.edfszdEcg}, #{ecg.edixfszdEcg} , #{ecg.ediixfszdEcg},#{ecg.sdfszdEcg} ,#{ecg.dfzdEcg} , #{ecg.gdfszdEcg} , #{ecg.zqfzzdEcg},#{ecg.zhfzzdEcg} ,#{ecg.wqxzszzdEcg} ,#{ecg.bwqxzszzdEcg} ,#{ecg.wqxyszzdEcg}, #{ecg.bwqxyszzdEcg}, #{ecg.ftyxsnzdEcg}, #{ecg.sncyxcdEcg},
+            #{ecg.xsyjbEcg}, #{ecg.yjzhzEcg} ,#{ecg.zxffdEcg} , #{ecg.zxsfdEcg}, #{ecg.yxffdEcg}, #{ecg.yxsfdEcg},  #{ecg.stgbEcg},#{ecg.stTgbEcg} , #{ecg.tbycEcg}, #{ecg.qtjqycEcg},#{ecg.qtcjqycEcg} , #{ecg.kjubEcg}, #{ecg.zqfjEcg},#{ecg.qjbxjgsEcg} ,  #{ecg.qcbxjgsEcg},
+            #{ecg.qgfbxjgsEcg}, #{ecg.qbxjgsEcg}, #{ecg.xbxjgsEcg}, #{ecg.xhbxjgsEcg},  #{ecg.hbxjgsEcg}, #{ecg.xcbbxjgsEcg}, #{ecg.gcbbxjgsEcg}, #{ecg.cbbxjgsEcg}, #{ecg.xnmxxjgsEcg},#{ecg.ysxjgsEcg} ,#{ecg.fsttgxxjgsEcg} , #{ecg.xjbxjgsEcg}, #{ecg.qjbxjgsEcg}, #{ecg.yjxEcg}, #{ecg.jxEcg},#{ecg.cjxEcg} ,#{ecg.xdtwjzEcg} )
+        </foreach>
+    </insert>
+
+    <update id="updateEcgCount" parameterType="EcgCount">
+        update ecg_count
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="leadCount != null">lead_count = #{leadCount},</if>
+            <if test="zcxdtEcg != null">zcxdt_ecg = #{zcxdtEcg},</if>
+            <if test="dxxlEcg != null">dxxl_ecg = #{dxxlEcg},</if>
+            <if test="ywxlEcg != null">ywxl_ecg = #{ywxlEcg},</if>
+            <if test="fxxlEcg != null">fxxl_ecg = #{fxxlEcg},</if>
+            <if test="sxxlEcg != null">sxxl_ecg = #{sxxlEcg},</if>
+            <if test="jjxxlEcg != null">jjxxl_ecg = #{jjxxlEcg},</if>
+            <if test="qbxlEcg != null">qbxl_ecg = #{qbxlEcg},</if>
+            <if test="sxxdgsEcg != null">sxxdgs_ecg = #{sxxdgsEcg},</if>
+            <if test="ssxxdgsEcg != null">ssxxdgs_ecg = #{ssxxdgsEcg},</if>
+            <if test="jjxxdgsEcg != null">jjxxdgs_ecg = #{jjxxdgsEcg},</if>
+            <if test="fxxdgsEcg != null">fxxdgs_ecg = #{fxxdgsEcg},</if>
+            <if test="fxybEcg != null">fxyb_ecg = #{fxybEcg},</if>
+            <if test="fxzbEcg != null">fxzb_ecg = #{fxzbEcg},</if>
+            <if test="fxtbEcg != null">fxtb_ecg = #{fxtbEcg},</if>
+            <if test="sxybEcg != null">sxyb_ecg = #{sxybEcg},</if>
+            <if test="sxzbEcg != null">sxzb_ecg = #{sxzbEcg},</if>
+            <if test="jjxybEcg != null">jjxyb_ecg = #{jjxybEcg},</if>
+            <if test="jjxzbEcg != null">jjxzb_ecg = #{jjxzbEcg},</if>
+            <if test="jjxtbEcg != null">jjxtb_ecg = #{jjxtbEcg},</if>
+            <if test="dxtbEcg != null">dxtb_ecg = #{dxtbEcg},</if>
+            <if test="xstbEcg != null">xstb_ecg = #{xstbEcg},</if>
+            <if test="qxtbEcg != null">qxtb_ecg = #{qxtbEcg},</if>
+            <if test="xfcdEcg != null">xfcd_ecg = #{xfcdEcg},</if>
+            <if test="xfpdEcg != null">xfpd_ecg = #{xfpdEcg},</if>
+            <if test="xscdEcg != null">xscd_ecg = #{xscdEcg},</if>
+            <if test="xspdEcg != null">xspd_ecg = #{xspdEcg},</if>
+            <if test="ydfszdEcg != null">ydfszd_ecg = #{ydfszdEcg},</if>
+            <if test="edfszdEcg != null">edfszd_ecg = #{edfszdEcg},</if>
+            <if test="edixfszdEcg != null">edIxfszd_ecg = #{edixfszdEcg},</if>
+            <if test="ediixfszdEcg != null">edIIxfszd_ecg = #{ediixfszdEcg},</if>
+            <if test="sdfszdEcg != null">sdfszd_ecg = #{sdfszdEcg},</if>
+            <if test="dfzdEcg != null">dfzd_ecg = #{dfzdEcg},</if>
+            <if test="gdfszdEcg != null">gdfszd_ecg = #{gdfszdEcg},</if>
+            <if test="zqfzzdEcg != null">zqfzzd_ecg = #{zqfzzdEcg},</if>
+            <if test="zhfzzdEcg != null">zhfzzd_ecg = #{zhfzzdEcg},</if>
+            <if test="wqxzszzdEcg != null">wqxzszzd_ecg = #{wqxzszzdEcg},</if>
+            <if test="bwqxzszzdEcg != null">bwqxzszzd_ecg = #{bwqxzszzdEcg},</if>
+            <if test="wqxyszzdEcg != null">wqxyszzd_ecg = #{wqxyszzdEcg},</if>
+            <if test="bwqxyszzdEcg != null">bwqxyszzd_ecg = #{bwqxyszzdEcg},</if>
+            <if test="ftyxsnzdEcg != null">ftyxsnzd_ecg = #{ftyxsnzdEcg},</if>
+            <if test="sncyxcdEcg != null">sncyxcd_ecg = #{sncyxcdEcg},</if>
+            <if test="xsyjbEcg != null">xsyjb_ecg = #{xsyjbEcg},</if>
+            <if test="yjzhzEcg != null">yjzhz_ecg = #{yjzhzEcg},</if>
+            <if test="zxffdEcg != null">zxffd_ecg = #{zxffdEcg},</if>
+            <if test="zxsfdEcg != null">zxsfd_ecg = #{zxsfdEcg},</if>
+            <if test="yxffdEcg != null">yxffd_ecg = #{yxffdEcg},</if>
+            <if test="yxsfdEcg != null">yxsfd_ecg = #{yxsfdEcg},</if>
+            <if test="stgbEcg != null">stgb_ecg = #{stgbEcg},</if>
+            <if test="stTgbEcg != null">st_tgb_ecg = #{stTgbEcg},</if>
+            <if test="tbycEcg != null">tbyc_ecg = #{tbycEcg},</if>
+            <if test="qtjqycEcg != null">qtjqyc_ecg = #{qtjqycEcg},</if>
+            <if test="qtcjqycEcg != null">qtcjqyc_ecg = #{qtcjqycEcg},</if>
+            <if test="kjubEcg != null">kjub_ecg = #{kjubEcg},</if>
+            <if test="zqfjEcg != null">zqfj_ecg = #{zqfjEcg},</if>
+            <if test="qjbxjgsEcg != null">qjbxjgs_ecg = #{qjbxjgsEcg},</if>
+            <if test="qcbxjgsEcg != null">qcbxjgs_ecg = #{qcbxjgsEcg},</if>
+            <if test="qgfbxjgsEcg != null">qgfbxjgs_ecg = #{qgfbxjgsEcg},</if>
+            <if test="qbxjgsEcg != null">qbxjgs_ecg = #{qbxjgsEcg},</if>
+            <if test="xbxjgsEcg != null">xbxjgs_ecg = #{xbxjgsEcg},</if>
+            <if test="xhbxjgsEcg != null">xhbxjgs_ecg = #{xhbxjgsEcg},</if>
+            <if test="hbxjgsEcg != null">hbxjgs_ecg = #{hbxjgsEcg},</if>
+            <if test="xcbbxjgsEcg != null">xcbbxjgs_ecg = #{xcbbxjgsEcg},</if>
+            <if test="gcbbxjgsEcg != null">gcbbxjgs_ecg = #{gcbbxjgsEcg},</if>
+            <if test="cbbxjgsEcg != null">cbbxjgs_ecg = #{cbbxjgsEcg},</if>
+            <if test="xnmxxjgsEcg != null">xnmxxjgs_ecg = #{xnmxxjgsEcg},</if>
+            <if test="ysxjgsEcg != null">ysxjgs_ecg = #{ysxjgsEcg},</if>
+            <if test="fsttgxxjgsEcg != null">fsttgxxjgs_ecg = #{fsttgxxjgsEcg},</if>
+            <if test="xjbxjgsEcg != null">xjbxjgs_ecg = #{xjbxjgsEcg},</if>
+            <if test="jbxjgsEcg != null">jbxjgs_ecg = #{jbxjgsEcg},</if>
+            <if test="yjxEcg != null">yjx_ecg = #{yjxEcg},</if>
+            <if test="jxEcg != null">jx_ecg = #{jxEcg},</if>
+            <if test="cjxEcg != null">cjx_ecg = #{cjxEcg},</if>
+            <if test="xdtwjzEcg != null">xdtwjz_ecg = #{xdtwjzEcg},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEcgCountById" parameterType="Long">
+        delete from ecg_count where id = #{id}
+    </delete>
+
+    <delete id="deleteEcgCountByIds" parameterType="String">
+        delete from ecg_count where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="ageListByMan" parameterType="com.ruoyi.xindian.statistics.domain.AgeStatistics" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
+        SELECT name,COUNT(*) AS value FROM (
+                                               SELECT age,
+                                                      CASE
+                                                          WHEN age BETWEEN 0 AND 10 THEN '0-10岁'
+                                                          WHEN age BETWEEN 11 AND 20 THEN '11-20岁'
+                                                          WHEN age BETWEEN 21 AND 25 THEN '21-25岁'
+                                                          WHEN age BETWEEN 26 AND 30 THEN '26-30岁'
+                                                          WHEN age BETWEEN 31 AND 35 THEN '31-35岁'
+                                                          WHEN age BETWEEN 36 AND 40 THEN '36-40岁'
+                                                          WHEN age BETWEEN 41 AND 45 THEN '41-45岁'
+                                                          WHEN age BETWEEN 46 AND 50 THEN '46-50岁'
+                                                          WHEN age BETWEEN 51 AND 55 THEN '51-55岁'
+                                                          WHEN age BETWEEN 56 AND 60 THEN '56-60岁'
+                                                          WHEN age BETWEEN 61 AND 65 THEN '61-65岁'
+                                                          WHEN age BETWEEN 66 AND 70 THEN '66-70岁'
+                                                          WHEN age BETWEEN 71 AND 75 THEN '71-75岁'
+                                                          WHEN age BETWEEN 76 AND 80 THEN '76-80岁'
+                                                          WHEN age BETWEEN 81 AND 85 THEN '81-85岁'
+                                                          WHEN age > 85 THEN '85岁以上'
+                                                          END AS name
+                                               FROM ecg_count where gender = '男'
+                                           )AS u WHERE u.name is not null GROUP BY name ORDER BY name
+    </select>
+
+    <select id="ageListByWoman" parameterType="com.ruoyi.xindian.statistics.domain.AgeStatistics" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
+        SELECT name,COUNT(*) AS value FROM (
+                                               SELECT age,
+                                                      CASE
+                                                          WHEN age BETWEEN 0 AND 10 THEN '0-10岁'
+                                                          WHEN age BETWEEN 11 AND 20 THEN '11-20岁'
+                                                          WHEN age BETWEEN 21 AND 25 THEN '21-25岁'
+                                                          WHEN age BETWEEN 26 AND 30 THEN '26-30岁'
+                                                          WHEN age BETWEEN 31 AND 35 THEN '31-35岁'
+                                                          WHEN age BETWEEN 36 AND 40 THEN '36-40岁'
+                                                          WHEN age BETWEEN 41 AND 45 THEN '41-45岁'
+                                                          WHEN age BETWEEN 46 AND 50 THEN '46-50岁'
+                                                          WHEN age BETWEEN 51 AND 55 THEN '51-55岁'
+                                                          WHEN age BETWEEN 56 AND 60 THEN '56-60岁'
+                                                          WHEN age BETWEEN 61 AND 65 THEN '61-65岁'
+                                                          WHEN age BETWEEN 66 AND 70 THEN '66-70岁'
+                                                          WHEN age BETWEEN 71 AND 75 THEN '71-75岁'
+                                                          WHEN age BETWEEN 76 AND 80 THEN '76-80岁'
+                                                          WHEN age BETWEEN 81 AND 85 THEN '81-85岁'
+                                                          WHEN age > 85 THEN '85岁以上'
+                                                          END AS name
+                                               FROM ecg_count where gender = '女'
+                                           )AS u WHERE u.name is not null GROUP BY name ORDER BY name
+
+    </select>
+    <select id="getTypeList" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
+        SELECT #{type} as label , count(#{type}) as value FROM ecg_count WHERE #{type} = 1  GROUP BY #{type}
+    </select>
+    <select id="getEcgTypeList" resultType="com.ruoyi.xindian.ecgCount.domain.EcgCount">
+        SELECT
+            count(if(fxxl_ecg=1,true,null)) as fxxlEcg,
+            count(if(dxxl_ecg=1,true,null)) as dxxlEcg,
+            count(if(ywxl_ecg=1,true,null)) as ywxlEcg,
+            count(if(sxxl_ecg=1,true,null)) as sxxlEcg,
+            count(if(jjxxl_ecg=1,true,null)) as jjxxlEcg,
+            count(if(qbxl_ecg=1,true,null)) as qbxlEcg,
+            count(if(sxxdgs_ecg=1,true,null)) as sxxdgsEcg,
+            count(if(xdtwjz_ecg=1,true,null)) as xdtwjzEcg,
+            count(if(ssxxdgs_ecg=1,true,null)) as ssxxdgsEcg,
+            count(if(jjxxdgs_ecg=1,true,null)) as jjxxdgsEcg,
+            count(if(fxxdgs_ecg=1,true,null)) as fxxdgsEcg,
+            count(if(jjxyb_ecg=1,true,null)) as jjxybEcg,
+            count(if(fxzb_ecg=1,true,null)) as fxzbEcg,
+            count(if(sxyb_ecg=1,true,null)) as sxybEcg,
+            count(if(sxzb_ecg=1,true,null)) as sxzbEcg,
+            count(if(fxtb_ecg=1,true,null)) as fxtbEcg,
+            count(if(fxyb_ecg=1,true,null)) as fxybEcg,
+            count(if(jjxzb_ecg=1,true,null)) as jjxzbEcg,
+            count(if(jjxtb_ecg=1,true,null)) as jjxtbEcg,
+            count(if(dxtb_ecg=1,true,null)) as dxtbEcg,
+            count(if(xstb_ecg=1,true,null)) as xstbEcg,
+            count(if(qxtb_ecg=1,true,null)) as qxtbEcg,
+            count(if(xfcd_ecg=1,true,null)) as xfcdEcg,
+            count(if(xfpd_ecg=1,true,null)) as xfpdEcg,
+            count(if(xscd_ecg=1,true,null)) as xscdEcg,
+            count(if(ydfszd_ecg=1,true,null)) as ydfszdEcg,
+            count(if(xspd_ecg=1,true,null)) as xspdEcg,
+            count(if(edfszd_ecg=1,true,null)) as edfszdEcg,
+            count(if(edIxfszd_ecg=1,true,null)) as edIxfszdEcg,
+            count(if(edIIxfszd_ecg=1,true,null)) as edIIxfszdEcg,
+            count(if(sdfszd_ecg=1,true,null)) as sdfszdEcg,
+            count(if(dfzd_ecg=1,true,null)) as dfzdEcg,
+            count(if(gdfszd_ecg=1,true,null)) as gdfszdEcg,
+            count(if(zqfzzd_ecg=1,true,null)) as zqfzzdEcg,
+            count(if(zhfzzd_ecg=1,true,null)) as zhfzzdEcg,
+            count(if(bwqxzszzd_ecg=1,true,null)) as bwqxzszzdEcg,
+            count(if(wqxzszzd_ecg=1,true,null)) as wqxzszzdEcg,
+            count(if(wqxyszzd_ecg=1,true,null)) as wqxyszzdEcg,
+            count(if(bwqxyszzd_ecg=1,true,null)) as bwqxyszzdEcg,
+            count(if(ftyxsnzd_ecg=1,true,null)) as ftyxsnzdEcg,
+            count(if(sncyxcd_ecg=1,true,null)) as sncyxcdEcg,
+            count(if(xsyjb_ecg=1,true,null)) as xsyjbEcg,
+            count(if(yjzhz_ecg=1,true,null)) as yjzhzEcg,
+            count(if(zxffd_ecg=1,true,null)) as zxffdEcg,
+            count(if(yxffd_ecg=1,true,null)) as yxffdEcg,
+            count(if(zxsfd_ecg=1,true,null)) as zxsfdEcg,
+            count(if(yxsfd_ecg=1,true,null)) as yxsfdEcg,
+            count(if(stgb_ecg=1,true,null)) as stgbEcg,
+            count(if(st_tgb_ecg=1,true,null)) as stTgbEcg,
+            count(if(tbyc_ecg=1,true,null)) as tbycEcg,
+            count(if(qtjqyc_ecg=1,true,null)) as qtjqycEcg,
+            count(if(qtcjqyc_ecg=1,true,null)) as qtcjqycEcg,
+            count(if(kjub_ecg=1,true,null)) as kjubEcg,
+            count(if(zqfj_ecg=1,true,null)) as zqfjEcg,
+            count(if(qjbxjgs_ecg=1,true,null)) as qjbxjgsEcg,
+            count(if(qcbxjgs_ecg=1,true,null)) as qcbxjgsEcg,
+            count(if(qgfbxjgs_ecg=1,true,null)) as qgfbxjgsEcg,
+            count(if(qbxjgs_ecg=1,true,null)) as qbxjgsEcg,
+            count(if(xbxjgs_ecg=1,true,null)) as xbxjgsEcg,
+            count(if(xhbxjgs_ecg=1,true,null)) as xhbxjgsEcg,
+            count(if(hbxjgs_ecg=1,true,null)) as hbxjgsEcg,
+            count(if(xcbbxjgs_ecg=1,true,null)) as xcbbxjgsEcg,
+            count(if(gcbbxjgs_ecg=1,true,null)) as gcbbxjgsEcg,
+            count(if(cbbxjgs_ecg=1,true,null)) as cbbxjgsEcg,
+            count(if(xnmxxjgs_ecg=1,true,null)) as xnmxxjgsEcg,
+            count(if(ysxjgs_ecg=1,true,null)) as ysxjgsEcg,
+            count(if(fsttgxxjgs_ecg=1,true,null)) as fsttgxxjgsEcg,
+            count(if(xjbxjgs_ecg=1,true,null)) as xjbxjgsEcg,
+            count(if(jbxjgs_ecg=1,true,null)) as jbxjgsEcg,
+            count(if(yjx_ecg=1,true,null)) as yjxEcg,
+            count(if(jx_ecg=1,true,null)) as jxEcg,
+            count(if(cjx_ecg=1,true,null)) as cjxEcg
+        FROM ecg_count
+
+    </select>
+    <select id="getEcgValue" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
+        SELECT `value` ,label  FROM ecg_count_type where value =#{value}
+    </select>
+</mapper>

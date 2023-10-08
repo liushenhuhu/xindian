@@ -114,10 +114,10 @@ public class EquipmentHeadingCodeController {
         MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(encrypt);
         EquipmentHeadingCode finalEquipmentHeadingCode = equipmentHeadingCode;
         if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeAgainTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone))){
-            redisTemplate.delete("getEquipmentCodeAgainTwo");
+            redisTemplate.delete("getEquipmentCodeAgainTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone);
         }
         if (Boolean.TRUE.equals(redisTemplate.hasKey("getEquipmentCodeAgainT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone))){
-            redisTemplate.delete("getEquipmentCodeAgainT15");
+            redisTemplate.delete("getEquipmentCodeAgainT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone);
         }
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() ->{
