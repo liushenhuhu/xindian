@@ -167,12 +167,20 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
 //        ecgCountMapper.insertEcgCounts(result);insertEcgCounts
 
 
-        for (int i = 0; i < result.size(); i++) {
-            ecgCountMapper.insert(result.get(i));
-        }
+//        for (int i = 1048577; i < result.size(); i++) {
+//            ecgCountMapper.insert(result.get(i));
+//        }
     }
 
-    public EcgCount propertiesAssignment(String[] item) throws Exception{
+    public EcgCount propertiesAssignment(String[] item1) throws Exception{
+        List<String> strings = new ArrayList<>();
+
+        for (int i = 0; i < item1.length; i++) {
+            if (i!=0&&i!=3&&i!=4){
+                strings.add(item1[i]);
+            }
+        }
+        String[] item = strings.toArray(new String[strings.size()]);
         // 获取目标类class
         Class<EcgCount> clazz = EcgCount.class;
         // 实例化
@@ -180,7 +188,7 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
 
         // 获取对象全部属性
         Field[] fields = clazz.getDeclaredFields();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/M/d HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // 循环遍历 当前行数据的列数
         for (int i = 0; i < item.length; i++) {
             // 获取方法名
