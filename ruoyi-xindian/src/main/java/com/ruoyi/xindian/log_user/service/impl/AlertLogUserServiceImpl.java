@@ -28,9 +28,9 @@ public class AlertLogUserServiceImpl implements IAlertLogUserService
      * @return 标注分配
      */
     @Override
-    public AlertLogUser selectAlertLogUserByLogId(String logId)
+    public AlertLogUser selectAlertLogUserByLogId(String logId,String userId)
     {
-        return alertLogUserMapper.selectAlertLogUserByLogId(logId);
+        return alertLogUserMapper.selectAlertLogUserByLogId(logId,userId);
     }
 
     /**

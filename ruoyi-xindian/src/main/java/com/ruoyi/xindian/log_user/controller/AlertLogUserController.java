@@ -68,10 +68,10 @@ public class AlertLogUserController extends BaseController
      * 获取标注分配详细信息
      */
     @PreAuthorize("@ss.hasPermi('log_user:log_user:query')")
-    @GetMapping(value = "/{logId}")
-    public AjaxResult getInfo(@PathVariable("logId") String logId)
+    @GetMapping(value = "/edit")
+    public AjaxResult getInfo(@RequestParam("logId") String logId,@RequestParam("userId") String userId)
     {
-        return AjaxResult.success(alertLogUserService.selectAlertLogUserByLogId(logId));
+        return AjaxResult.success(alertLogUserService.selectAlertLogUserByLogId(logId,userId));
     }
 
     /**

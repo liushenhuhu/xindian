@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectAlertLogUserByLogId" parameterType="String" resultMap="AlertLogUserResult">
         <include refid="selectAlertLogUserVo"/>
-        where log_id = #{logId}
+        where log_id = #{logId} and user_id=#{userId}
     </select>
     
     <select id="selectList" resultType="com.ruoyi.xindian.log_user.domain.SelectVO" resultMap="SelectResult">
@@ -122,7 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="eventDescription != null">event_description = #{eventDescription},</if>
             <if test="anoStatus != null">ano_status = #{anoStatus},</if>
         </trim>
-        where log_id = #{logId}
+        where log_id = #{logId} and user_id=#{userId}
     </update>
 
     <delete id="deleteAlertLogUserByLogId" parameterType="String">

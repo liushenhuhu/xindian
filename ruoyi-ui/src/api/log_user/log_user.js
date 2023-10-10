@@ -34,9 +34,9 @@ export function listLog_user(query) {
 }
 
 // 查询标注分配详细
-export function getLog_user(logId) {
+export function getLog_user(logId,userId) {
   return request({
-    url: '/log_user/log_user/' + logId,
+    url: '/log_user/log_user/edit?logId=' + logId+'&userId='+userId,
     method: 'get'
   })
 }

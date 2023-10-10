@@ -18,7 +18,7 @@ public interface IAlertLogUserService
      * @param logId 标注分配主键
      * @return 标注分配
      */
-    public AlertLogUser selectAlertLogUserByLogId(String logId);
+    public AlertLogUser selectAlertLogUserByLogId(String logId,String userId);
 
     /**
      * 查询标注分配列表

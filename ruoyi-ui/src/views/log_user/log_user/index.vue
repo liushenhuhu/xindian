@@ -205,16 +205,16 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="日志id" prop="logId">
-          <el-input v-model="form.logId" placeholder="请输入日志id"/>
+          <el-input v-model="form.logId" disabled placeholder="请输入日志id"/>
         </el-form-item>
-        <el-form-item label="噪声" prop="logNoise">
-          <el-input v-model="form.logNoise" placeholder="请输入噪声"/>
-        </el-form-item>
-        <el-form-item label="噪声等级" prop="logNoiseLevel">
-          <el-input v-model="form.logNoiseLevel" placeholder="请输入噪声等级"/>
-        </el-form-item>
-        <el-form-item label="账号id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入账号id"/>
+<!--        <el-form-item label="噪声" prop="logNoise">-->
+<!--          <el-input v-model="form.logNoise" placeholder="请输入噪声"/>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="噪声等级" prop="logNoiseLevel">-->
+<!--          <el-input v-model="form.logNoiseLevel" placeholder="请输入噪声等级"/>-->
+<!--        </el-form-item>-->
+        <el-form-item label="账号id" prop="userId" >
+          <el-input v-model="form.userId" disabled placeholder="请输入账号id"/>
         </el-form-item>
         <el-form-item label="事件名称" prop="eventName">
           <el-input v-model="form.eventName" placeholder="请输入事件名称"/>
@@ -353,7 +353,9 @@ export default {
     handleUpdate(row) {
       this.reset();
       const logId = row.logId || this.ids
-      getLog_user(logId).then(response => {
+      var userId=row.userId
+      getLog_user(logId,userId).then(response => {
+        console.log(response)
         this.form = response.data;
         this.open = true;
         this.title = "修改标注分配";

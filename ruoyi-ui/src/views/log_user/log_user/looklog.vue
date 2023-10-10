@@ -2318,9 +2318,26 @@ export default {
         },
         dataZoom: [
           {
-            type: 'inside',   // 鼠标滚轮缩放
-            start: 0,
-            end: 100
+            show: true,       // 滑动条组件
+            type: 'slider',
+            brushSelect:false,
+            // y: '90%',
+            startValue: 0,
+            endValue:252,
+            // minSpan: 52.5,
+            // maxSpan: 52.6,
+            minValueSpan:252,
+            maxValueSpan:724
+          },
+          {
+            show: true,       // 滑动条组件
+            type: 'slider',
+            orient: 'vertical',
+            brushSelect:false,
+            startValue: -1,
+            endValue:1,
+            minValueSpan:2.13,
+            maxValueSpan:6
           },
           {
             type: 'inside',
@@ -2329,12 +2346,10 @@ export default {
             end: 100
           },
           {
-            show: true,       // 滑动条组件
-            type: 'slider',
-            y: '90%',
+            type: 'inside',   // 鼠标滚轮缩放
             start: 0,
             end: 100
-          }
+          },
         ],
         grid: {
           left: '3%',
@@ -2372,12 +2387,12 @@ export default {
           } /*网格线*/
         },
         yAxis: {
-          min: -2,
-          max: 2,
+          min: -3,
+          max: 3,
           //type:'value',
           boundaryGap: false,
           //interval: 0.1,
-          splitNumber: 33,
+          splitNumber: 41,
           minInterval:0.1,
           //data:y,
           axisLabel: { //修改坐标系字体颜色
@@ -2427,7 +2442,7 @@ export default {
           name: '当前电位',
           type: 'line',
           data: data,
-          smooth: 0 //显示为平滑的曲线*/
+          smooth: true //显示为平滑的曲线*/
         },
       };
       this.chartjump.clear()
@@ -2517,6 +2532,17 @@ export default {
           this.xIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[0];
           //this.yIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[1];
           console.log(this.xIndex)
+          let temp=false
+          this.pointdata.forEach(i=>{
+            if(this.xIndex==i.xAxis){
+              console.log("已存在")
+              temp=true
+              return
+            }
+          })
+          if(temp){
+            return
+          }
           this.subData[this.radio].push(this.xIndex)
           //console.log(this.subData)
           let pointdata={
@@ -2683,9 +2709,9 @@ body,html{
   //display: none;
   position: absolute;
   width: 100%;
-  height:40%;
+  height:80%;
   border: 1px solid #6EDDF1;
-  top: 40%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2000;

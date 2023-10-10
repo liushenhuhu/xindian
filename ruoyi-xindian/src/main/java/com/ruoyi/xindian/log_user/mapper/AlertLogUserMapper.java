@@ -3,6 +3,7 @@ package com.ruoyi.xindian.log_user.mapper;
 import java.util.List;
 import com.ruoyi.xindian.log_user.domain.AlertLogUser;
 import com.ruoyi.xindian.log_user.domain.SelectVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 标注分配Mapper接口
@@ -18,7 +19,7 @@ public interface AlertLogUserMapper
      * @param logId 标注分配主键
      * @return 标注分配
      */
-    public AlertLogUser selectAlertLogUserByLogId(String logId);
+    public AlertLogUser selectAlertLogUserByLogId(@Param("logId") String logId, @Param("userId")String userId);
 
     /**
      * 查询标注分配列表
