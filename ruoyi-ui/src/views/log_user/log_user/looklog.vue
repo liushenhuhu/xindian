@@ -3,15 +3,15 @@
     <div class="showbox" id="jump" v-show="show" @contextmenu.prevent>
       <div class="noName" v-show="lead">
         <el-radio-group  v-model="radio">
-          <el-radio-button label="P1">P1</el-radio-button>
-          <el-radio-button label="P2">P2</el-radio-button>
-          <el-radio-button label="P3">P3</el-radio-button>
-          <el-radio-button label="R1">R1</el-radio-button>
-          <el-radio-button label="R2">R2</el-radio-button>
-          <el-radio-button label="R3">R3</el-radio-button>
-          <el-radio-button label="T1">T1</el-radio-button>
-          <el-radio-button label="T2">T2</el-radio-button>
-          <el-radio-button label="T3">T3</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('P1')" label="P1">P1</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('P2')" label="P2">P2</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('P3')" label="P3">P3</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('R1')" label="R1">R1</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('R2')" label="R2">R2</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('R3')" label="R3">R3</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('T1')" label="T1">T1</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('T2')" label="T2">T2</el-radio-button>
+          <el-radio-button @click.native.prevent="clickitem('T3')" label="T3">T3</el-radio-button>
         </el-radio-group>
 <!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.P}" @click="labelSelectionP()">P</el-button>-->
 <!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.Q}" @click="labelSelectionQ()">Q</el-button>-->
@@ -304,7 +304,7 @@ export default {
         // T:false,
         // noise:false
       },
-      radio:'P1',
+      radio:'',
       //通过字典将radio和light一一对应
       levellight : {
         'V1level': 'V1light',
@@ -2662,7 +2662,10 @@ export default {
           return 2
         }
         return 1
-      }
+      },
+    clickitem(e){
+      e === this.radio ? this.radio = '' : this.radio = e
+    }
   },
 };
 </script>
@@ -2710,6 +2713,7 @@ body,html{
 }
 .showbox {
   //display: none;
+  user-select:none;
   position: absolute;
   width: 100%;
   height:80%;
@@ -3097,6 +3101,10 @@ form input {
 .el-radio-group{
   display: flex;
   justify-content: space-around;
+}
+.el-radio-button:focus:not(.is-focus):not(:active):not(.is-disabled) {
+  -webkit-box-shadow: 0 0px 0px #ccc;
+  box-shadow: 0 0px 0px #ccc;
 }
 </style>
 
