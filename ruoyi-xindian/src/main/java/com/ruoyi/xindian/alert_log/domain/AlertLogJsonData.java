@@ -14,7 +14,7 @@ import lombok.Data;
  * 
  * @TableName alert_log_json_data
  */
-@TableName(value ="alert_log_user")
+@TableName(value ="alert_log")
 @Data
 public class AlertLogJsonData implements Serializable {
 
@@ -47,12 +47,12 @@ public class AlertLogJsonData implements Serializable {
     /**
      * json标注数据
      */
-    private String dataLabel;
+    private String waveLabel;
 
-//    /**
-//     * 修改时间
-//     */
-//    private Date updateTime;
+    /**
+     * 修改时间
+     */
+    private Date updateTime;
 
 //    @TableField(exist = false)
 //    private String type;

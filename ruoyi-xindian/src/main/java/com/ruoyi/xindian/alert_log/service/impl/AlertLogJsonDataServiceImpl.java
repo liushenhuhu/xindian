@@ -28,13 +28,13 @@ public class AlertLogJsonDataServiceImpl extends ServiceImpl<AlertLogJsonDataMap
 
     @Override
     public AlertLogJsonData selectJsonData(AlertLogJsonData alertLogJsonData) {
-        Long userId = SecurityUtils.getUserId();
+//        Long userId = SecurityUtils.getUserId();
 
-        List<AlertLogJsonData> alertLogJsonData1 = alertLogJsonDataMapper.selectList(new QueryWrapper<AlertLogJsonData>().eq("log_id", alertLogJsonData.getLogId()).eq(userId != 1, "user_id", userId));
-        if(alertLogJsonData1!=null&&alertLogJsonData1.size()>0){
-            return alertLogJsonData1.get(0);
-        }
-        return null;
+//        List<AlertLogJsonData> alertLogJsonData1 = alertLogJsonDataMapper.selectList(new QueryWrapper<AlertLogJsonData>().eq("log_id", alertLogJsonData.getLogId()).eq(userId != 1, "user_id", userId));
+//        if(alertLogJsonData1!=null&&alertLogJsonData1.size()>0){
+//            return alertLogJsonData1.get(0);
+//        }
+        return alertLogJsonDataMapper.selectOne(new QueryWrapper<AlertLogJsonData>().eq("log_id", alertLogJsonData.getLogId()));
     }
     @Override
     public Boolean updateOrInsertAlertLogJsonData(AlertLogJsonData alertLogJsonData) {
@@ -46,9 +46,9 @@ public class AlertLogJsonDataServiceImpl extends ServiceImpl<AlertLogJsonDataMap
             return false;
         }
         alertLogJsonData1.setAnoStatus(1);
-        alertLogJsonData1.setDataLabel(alertLogJsonData.getDataLabel());
-
-        return alertLogJsonDataMapper.update(alertLogJsonData1, new QueryWrapper<AlertLogJsonData>().eq("log_id", alertLogJsonData1.getLogId()).eq(userId != 1,"user_id", userId))>0;
+        alertLogJsonData1.setWaveLabel(alertLogJsonData.getWaveLabel());
+        alertLogJsonData1.setUpdateTime(new Date());
+        return alertLogJsonDataMapper.update(alertLogJsonData1, new QueryWrapper<AlertLogJsonData>().eq("log_id", alertLogJsonData1.getLogId()))>0;
     }
 //    @Override
 //    public Boolean updateOrInsertAlertLogJsonData(AlertLogJsonData alertLogJsonData) {

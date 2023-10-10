@@ -26,6 +26,7 @@
           placement="bottom-start"
           title="提示"
           width="220"
+          class="popo"
           trigger="hover">
           <p class="tipck">1. 首先选框</p>
           <!--          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>-->
@@ -376,7 +377,7 @@ export default {
       query:{
         userId:'',
         logId: '',
-        jsonData:''
+        waveLabel:''
       },
       value: '正常心电图',
       options:[],
@@ -634,7 +635,7 @@ export default {
           if (_th.message.devicesn != null) {
             (function () {
               var i;
-              for (var k = 0; k <1000; k++) {
+              for (var k = 0; k <1001; k++) {
                 timex.push(k / 100+"秒")
               }
               _th.timex=timex
@@ -2009,17 +2010,7 @@ export default {
     getLabel(){
       getLabel(this.query).then(res=>{
         console.log(res)
-        let ble=false//格式不正确
-        for (const key in JSON.parse(res.data.dataLabel)) {
-          console.log(key)
-          if(key=='P1'){
-            ble=true
-            break
-          }
-        }
-        if(ble){//格式正确
-          this.subData=JSON.parse(res.data.dataLabel)
-        }
+        this.subData=JSON.parse(res.data.waveLabel)
       }).catch(err=>{
       })
     },
@@ -2257,7 +2248,7 @@ export default {
         series:{
           markPoint:{
             symbol: "pin",
-            symbolSize: 29,
+            symbolSize: 24,
             animation:false,
             data: [],
           }
@@ -2297,7 +2288,7 @@ export default {
       });
     },
     submitData(){
-      this.query.dataLabel=JSON.stringify(this.subData)
+      this.query.waveLabel=JSON.stringify(this.subData)
       console.log(this.subData)
       addLabel(this.query).then(res=>{
         this.$modal.msgSuccess("标注提交成功");
@@ -2308,16 +2299,14 @@ export default {
       if(title=='II'){
         this.lead=true
       }
+      let y=[]
+      for (let i = -2; i < 2.1; i+=0.1) {
+        y.push(i)
+      }
+      //console.log(y)
       let detailoption = {
-        animation: true,
+        animation: false,
         backgroundColor: "#ffffff",
-        title: {
-          text: title+'导联',
-          textStyle: {
-            fontSize: 13,
-            color: "#000000"
-          },
-        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -2330,6 +2319,12 @@ export default {
         dataZoom: [
           {
             type: 'inside',   // 鼠标滚轮缩放
+            start: 0,
+            end: 100
+          },
+          {
+            type: 'inside',
+            orient: 'vertical',// 鼠标滚轮缩放
             start: 0,
             end: 100
           },
@@ -2352,17 +2347,6 @@ export default {
           data: ['当前电位'],
           textStyle: {color: "#000000"} /*图例(legend)说明文字的颜色*/,
           left: "right",
-        },
-        brush: {
-          toolbox: ['lineX'],
-          xAxisIndex: 0,//表示这个 index 所对应的坐标系
-          throttleType: 'debounce',//开启选中延迟后调用回调延迟
-          throttleDelay: 600,//选中延迟后调用回调延迟时间
-          // brushStyle: {
-          //     borderWidth: 1,
-          //     color: 'rgba(255,36,36,0.2)',
-          //     borderColor: '#ff2424'
-          // }
         },
         xAxis: {
           type:'category',
@@ -2388,10 +2372,14 @@ export default {
           } /*网格线*/
         },
         yAxis: {
-          min: 3,
-          max: -3,
-          boundaryGap: true,
-          interval: 0.1,
+          min: -2,
+          max: 2,
+          //type:'value',
+          boundaryGap: false,
+          //interval: 0.1,
+          splitNumber: 33,
+          minInterval:0.1,
+          //data:y,
           axisLabel: { //修改坐标系字体颜色
             show: false,
             textStyle: {
@@ -2472,7 +2460,7 @@ export default {
                 color: '#ffffff',
                 show: true,
                 formatter: key,
-                fontSize:13
+                fontSize:9
               },
             }
             this.pointdata.push(pointdata)
@@ -2483,7 +2471,7 @@ export default {
           series:{
             markPoint:{
               symbol: "pin",
-              symbolSize: 29,
+              symbolSize: 24,
               animation:false,
               data: this.pointdata,
             }
@@ -2495,7 +2483,7 @@ export default {
           series:{
             markPoint:{
               symbol: "pin",
-              symbolSize: 29,
+              symbolSize: 24,
               animation:false,
               data: this.pointdata,
             }
@@ -2542,7 +2530,7 @@ export default {
               color: '#ffffff',
               show: true,
               formatter: this.radio,
-              fontSize:13
+              fontSize:9
             },
           }
           this.pointdata.push(pointdata)
@@ -2550,7 +2538,7 @@ export default {
               series:{
                 markPoint:{
                   symbol: "pin",
-                  symbolSize: 29,
+                  symbolSize: 24,
                   animation:false,
                   data: this.pointdata,
                 }
@@ -2620,7 +2608,7 @@ export default {
           series:{
             markPoint:{
               symbol: "pin",
-              symbolSize: 29,
+              symbolSize: 24,
               animation:false,
               data: this.pointdata,
             }
@@ -2695,9 +2683,9 @@ body,html{
   //display: none;
   position: absolute;
   width: 100%;
-  height:50%;
+  height:40%;
   border: 1px solid #6EDDF1;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2000;
@@ -2734,7 +2722,7 @@ body,html{
 #chartjump {
   /*position: absolute;*/
   width: 100%;
-  height: 80%;
+  height: 78%;
   //top: 50%;
   //left: 50%;
   //transform: translate(-50%, -50%);
@@ -2882,7 +2870,7 @@ form input {
   background-color: transparent;
   text-transform: uppercase;
   font-weight: 500;
-  flex: 1;
+  //flex: 1;
   height: 4vh;
   font-size: 1vw;
   text-align: center;
@@ -2892,14 +2880,19 @@ form input {
 }
 .noName{
   //display: inline-flex;
-  //justify-content: center;
-  //align-items: center;
+
   //width: 100%;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 ::v-deep .noName .el-radio-group{
-  display: inline;
-
+  display: block;
+  //width: 98%;
+}
+.popo{
+  height: 100%;
 }
 ::v-deep .el-radio-button .el-radio-button__inner{
   display:inline-block;
@@ -3075,7 +3068,6 @@ form input {
 .el-radio-group{
   display: flex;
   justify-content: space-around;
-  width: 98%;
 }
 </style>
 
