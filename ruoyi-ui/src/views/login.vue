@@ -225,7 +225,7 @@ export default {
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
       <span style="font-size: 45px;color: #F2F2F2">Login</span>
-      <span style="color: #adadad; font-size: 20px; display: block;margin-top: 6%">欢迎来到心电<span style="color: red;font-weight: 700">AI</span>服务平台</span>
+      <span style="color: #adadad; font-size: 20px; display: block;margin-top: 6%">欢迎来到郑州大学心电<span style="color: red;font-weight: 700">AI</span>服务平台</span>
       <h4 style="text-align: center;color: #707070">&nbsp;</h4>
 
       <el-tabs v-model="activeName" @tab-click="loginMethod" class="tabs">

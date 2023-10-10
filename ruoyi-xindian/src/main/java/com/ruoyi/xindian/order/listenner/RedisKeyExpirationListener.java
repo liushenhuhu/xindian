@@ -150,6 +150,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             if (expiredKey.equals("ecgAgeYoung")){
                 ecgCountService.getAgeYoung();
             }
+            if (expiredKey.equals("ecgZCXDTCountType")){
+                ecgCountService.getZCXDTCount();
+            }
             if (expiredKey.equals("earlyLogTest01")){
                 AlertLog alertLog = new AlertLog();
                 alertLog.setEcgType("J12");

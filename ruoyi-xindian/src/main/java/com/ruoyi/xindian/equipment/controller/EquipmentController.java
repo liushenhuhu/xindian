@@ -227,6 +227,13 @@ public class EquipmentController extends BaseController {
         if (equipment.getPatientPhone()!=null&&!"".equals(equipment.getPatientPhone())){
             equipment.setPatientPhone(aesUtils.encrypt(equipment.getPatientPhone()));
         }
+        Equipment equipment1 = equipmentService.selectEquipmentByEquipmentId(equipment.getEquipmentId());
+        if (!equipment1.getEquipmentCode().equals(equipment.getEquipmentCode())){
+            Equipment equipment3 = equipmentService.selectEquipmentByEquipmentCode(equipment.getEquipmentCode());
+            if (equipment3 != null) {
+                return AjaxResult.error("设备号已存在");
+            }
+        }
         return toAjax(equipmentService.updateEquipment(equipment));
     }
 

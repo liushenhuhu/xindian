@@ -11,6 +11,9 @@ import java.util.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.ecgCount.domain.EcgCount;
+import com.ruoyi.xindian.ecgCount.domain.EcgCountFatherType;
+import com.ruoyi.xindian.ecgCount.domain.EcgCountType;
+import com.ruoyi.xindian.ecgCount.mapper.EcgCountFatherTypeMapper;
 import com.ruoyi.xindian.ecgCount.service.EcgCountService;
 import com.ruoyi.xindian.ecgCount.mapper.EcgCountMapper;
 import com.ruoyi.xindian.ecgCount.vo.TypeListVo;
@@ -47,6 +50,9 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
 
     @Resource
     private RedisTemplate<String , TypeListVo> redisTemplate;
+
+    @Resource
+    private EcgCountFatherTypeMapper ecgCountFatherTypeMapper;
 
     /**
      * 查询数据库统计
@@ -261,8 +267,8 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
             List<TypeListVo> typeListVoList = new ArrayList<>();
             //存放颤动/扑动类型
             List<TypeListVo> typeListVoList1 = new ArrayList<>();
-            //存放其他类型
-            List<TypeListVo> typeListVoList2 = new ArrayList<>();
+//            //存放其他类型
+//            List<TypeListVo> typeListVoList2 = new ArrayList<>();
             //存放心肌梗死类型
             List<TypeListVo> typeListVoList3 = new ArrayList<>();
             //存放传导阻滞类型
@@ -275,76 +281,88 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
             List<TypeListVo> typeListVoList8 = new ArrayList<>();
             //存放预测猝死类型
             List<TypeListVo> typeListVoList9 = new ArrayList<>();
+            //心梗分期
+            List<TypeListVo> typeListVoList10 = new ArrayList<>();
+            //危机心电
+            List<TypeListVo> typeListVoList11 = new ArrayList<>();
 
             EcgCount ecgTypeList = ecgCountMapper.getEcgTypeList();
-            List<TypeListVo> logType = ecgCountMapper.getLogTypeAndValue();
+//            List<TypeListVo> logType = ecgCountMapper.getLogTypeAndValue();
 
             Class<? extends EcgCount> aClass = ecgTypeList.getClass();
 
             Field[] fields = aClass.getDeclaredFields();
             Map<String , List<TypeListVo>> stringListMap = new HashMap<>();
+
+        List<EcgCountFatherType> ecgTypeOrderBy = ecgCountFatherTypeMapper.getEcgTypeOrderBy();
+
+
             // 遍历字段并获取值
             for (Field field : fields) {
                 field.setAccessible(true); // 设置字段可访问，即使是私有字段
                 Object fieldValue = field.get(ecgTypeList);
                 if (field.getName().contains("Ecg")&&fieldValue!=null){
                     String text = field.getName().substring(0,field.getName().length()-3);
-                    for (TypeListVo typeListVo : logType){
-
-                        if (text.equals(typeListVo.getValue())){
-                            if (typeListVo.getType().equals("心动过速")){
+                    for (EcgCountFatherType ecgCountFatherType : ecgTypeOrderBy){
+                        TypeListVo typeListVo = new TypeListVo();
+                        if (text.equals(ecgCountFatherType.getEcgCountType().getValue())){
+                            if (ecgCountFatherType.getFatherType().equals("心动过速")){
                                 typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
                                 typeListVoList.add(typeListVo);
-                                break;
                             }
-                            if (typeListVo.getType().equals("早搏/逸搏")){
+                            if (ecgCountFatherType.getFatherType().equals("早搏/逸搏")){
                                 typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
                                 typeListVoList1.add(typeListVo);
-                                break;
+
                             }
-                            if (typeListVo.getType().equals("其他")){
+//                            if (ecgCountFatherType.getFatherType().equals("其他")){
+//                                typeListVo.setValue(fieldValue.toString());
+//                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
+//                                typeListVoList2.add(typeListVo);
+//                                break;
+//                            }
+                            if (ecgCountFatherType.getFatherType().equals("预测猝死")){
                                 typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
-                                typeListVoList2.add(typeListVo);
-                                break;
-                            }
-                            if (typeListVo.getType().equals("预测猝死")){
-                                typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
                                 typeListVoList9.add(typeListVo);
-                                break;
                             }
-                            if (typeListVo.getType().equals("心肌梗死")){
+                            if (ecgCountFatherType.getFatherType().equals("心肌梗死")){
                                 typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
                                 typeListVoList3.add(typeListVo);
-                                break;
                             }
-                            if (typeListVo.getType().equals("传导阻滞")){
+                            if (ecgCountFatherType.getFatherType().equals("传导阻滞")){
                                 typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
                                 typeListVoList4.add(typeListVo);
-                                break;
                             }
-                            if (typeListVo.getType().equals("心律")){
+                            if (ecgCountFatherType.getFatherType().equals("心律")){
                                 typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
                                 typeListVoList6.add(typeListVo);
-                                break;
                             }
-                            if (typeListVo.getType().equals("房室肥大")){
+                            if (ecgCountFatherType.getFatherType().equals("房室肥大")){
                                 typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
                                 typeListVoList7.add(typeListVo);
-                                break;
                             }
-                            if (typeListVo.getType().equals("颤动/扑动")){
+                            if (ecgCountFatherType.getFatherType().equals("颤动/扑动")){
                                 typeListVo.setValue(fieldValue.toString());
-                                typeListVo.setName(typeListVo.getLabel());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
                                 typeListVoList8.add(typeListVo);
-                                break;
+                            }
+                            if (ecgCountFatherType.getFatherType().equals("心梗分期")){
+                                typeListVo.setValue(fieldValue.toString());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
+                                typeListVoList10.add(typeListVo);
+                            }
+                            if (ecgCountFatherType.getFatherType().equals("危机心电")){
+                                typeListVo.setValue(fieldValue.toString());
+                                typeListVo.setName(ecgCountFatherType.getEcgCountType().getLabel());
+                                typeListVoList11.add(typeListVo);
+
                             }
 
                         }
@@ -355,13 +373,15 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
 
         stringListMap.put("XDGS",typeListVoList);
         stringListMap.put("ZBTB",typeListVoList1);
-        stringListMap.put("QT",typeListVoList2);
+//        stringListMap.put("QT",typeListVoList2);
         stringListMap.put("XJGS",typeListVoList3);
         stringListMap.put("CDZD",typeListVoList4);
         stringListMap.put("XL",typeListVoList6);
         stringListMap.put("FSFD",typeListVoList7);
         stringListMap.put("CDPD",typeListVoList8);
         stringListMap.put("YCCS",typeListVoList9);
+        stringListMap.put("XGFQ",typeListVoList10);
+        stringListMap.put("WGXD",typeListVoList11);
 
 //            if (typeListVoList.size()>0){
 //                if (Boolean.TRUE.equals(redisTemplate.hasKey("ecgCountType"))){

@@ -4,16 +4,28 @@
       <div id="main1" class="chart2">正常心电图 统计</div>
     </el-card>
     <el-card class="card2">
+      <div id="main3" class="chart2">危机心电 统计</div>
+    </el-card>
+    <el-card class="card2">
       <div id="main0" class="chart2">心动过速 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main8" class="chart2">心律类型 统计</div>
     </el-card>
     <el-card class="card2">
       <div id="main2" class="chart2">早搏/逸搏 统计</div>
     </el-card>
     <el-card class="card2">
+      <div id="main9" class="chart2">颤动/扑动 统计</div>
+    </el-card>
+    <el-card class="card2">
       <div id="main4" class="chart2">心肌梗死 统计</div>
     </el-card>
     <el-card class="card2">
-      <div id="main6" class="chart2">预测猝死 统计</div>
+      <div id="main10" class="chart2">心梗分期 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main6" class="chart2">ST-T异常 统计</div>
     </el-card>
     <el-card class="card2">
       <div id="main7" class="chart2">房室肥大 统计</div>
@@ -22,22 +34,7 @@
       <div id="main5" class="chart2">传导阻滞类型 统计</div>
     </el-card>
 
-    <el-card class="card2">
-      <div id="main8" class="chart2">心律类型 统计</div>
-    </el-card>
-    <el-card class="card2">
-      <div id="main9" class="chart2">颤动/扑动 统计</div>
-    </el-card>
-    <el-card class="card2">
-      <div id="main3" class="chart2">其他 统计</div>
-    </el-card>
-    <el-card class="card2">
-      <div id="main10" class="chart2">其他 统计</div>
-    </el-card>
-    <el-card class="card2">
-      <div id="main11" class="chart2">其他 统计</div>
-    </el-card>
-<!--    <el-divider content-position="left"><span class="title-left"></span>预警分类统计图</el-divider>-->
+
 
 
   </div>
@@ -63,13 +60,14 @@ export default {
       countArr: [],
       DCountArr: [],
       XJGSDCountArr:[],
-      QTDCountArr:[],
+      WJXDDCountArr:[],
       XLDCountArr:[],
       CDZDCountArr:[],
       ZBDCountArr:[],
       YCCSDCountArr:[],
       FSFDDCountArr:[],
       CDPDDCountArr:[],
+      XGFQDCountArr:[],
       query:{
         ecgType:null,
       },
@@ -168,7 +166,7 @@ export default {
           {
 
             type: 'pie',
-            radius: '70%',
+            radius: '60%',
             roseType: 'radius',
             left:'23%',
             right:'23%',
@@ -413,13 +411,13 @@ export default {
       //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       // });
     },
-    QTDrawLine() {
+    WJXDDrawLine() {
       // 基于准备好的dom，初始化echarts实例
       let main1 = this.$echarts.init(document.getElementById('main3'))
       let th = this
       var option = {
         title: {
-          text: "其他 统计",
+          text: "危急心电 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -437,7 +435,7 @@ export default {
             roseType: 'radius',
             left:'23%',
             right:'23%',
-            data: this.QTDCountArr,
+            data: this.WJXDDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
               fontSize:18,
@@ -626,13 +624,13 @@ export default {
       //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       // });
     },
-    CDPDDrawLine() {
+    XGFQPDDrawLine() {
       // 基于准备好的dom，初始化echarts实例
-      let main1 = this.$echarts.init(document.getElementById('main9'))
+      let main1 = this.$echarts.init(document.getElementById('main10'))
       let th = this
       var option = {
         title: {
-          text: "颤动/扑动 统计",
+          text: "心梗分期 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -650,7 +648,7 @@ export default {
             roseType: 'radius',
             left:'23%',
             right:'23%',
-            data: this.CDPDDCountArr,
+            data: this.XGFQDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
               fontSize:18,
@@ -675,7 +673,11 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
     },
+
 
 
     /** 查询 */
@@ -724,7 +726,7 @@ export default {
         //心律
         if(r.data.XL.length === 0){
           // 无数据时：展示暂无数据
-          const dom = document.getElementById('main4');
+          const dom = document.getElementById('main8');
           dom.innerHTML = '-心律暂无相关数据-';
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
           dom.removeAttribute('_echarts_instance_');
@@ -736,7 +738,7 @@ export default {
         //传导阻滞
         if(r.data.CDZD.length === 0){
           // 无数据时：展示暂无数据
-          const dom = document.getElementById('main4');
+          const dom = document.getElementById('main5');
           dom.innerHTML = '-传导阻滞暂无相关数据-';
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
           dom.removeAttribute('_echarts_instance_');
@@ -745,34 +747,34 @@ export default {
           this.opName = '数据库传导阻滞统计'
           this.CDZDDrawLine();
         }
-        //其他
-        if(r.data.QT.length === 0){
+        //危机心电
+        if(r.data.WGXD.length === 0){
           // 无数据时：展示暂无数据
-          const dom = document.getElementById('main4');
-          dom.innerHTML = '-其他暂无相关数据-';
+          const dom = document.getElementById('main3');
+          dom.innerHTML = '-危机心电暂无相关数据-';
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
           dom.removeAttribute('_echarts_instance_');
         }else {
-          this.QTDCountArr=r.data.QT
-          this.opName = '数据库其他统计'
-          this.QTDrawLine();
+          this.WJXDDCountArr=r.data.WGXD
+          this.opName = '数据库危机心电统计'
+          this.WJXDDrawLine();
         }
-        //预测猝死
+        //ST-T异常
         if(r.data.YCCS.length === 0){
           // 无数据时：展示暂无数据
-          const dom = document.getElementById('main4');
-          dom.innerHTML = '-预测猝死暂无相关数据-';
+          const dom = document.getElementById('main6');
+          dom.innerHTML = '-ST-T异常暂无相关数据-';
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
           dom.removeAttribute('_echarts_instance_');
         }else {
           this.YCCSDCountArr=r.data.YCCS
-          this.opName = '数据库预测猝死统计'
+          this.opName = '数据库ST-T异常统计'
           this.YCCSDrawLine();
         }
         //房室肥大
         if(r.data.FSFD.length === 0){
           // 无数据时：展示暂无数据
-          const dom = document.getElementById('main4');
+          const dom = document.getElementById('main7');
           dom.innerHTML = '-房室肥大暂无相关数据-';
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
           dom.removeAttribute('_echarts_instance_');
@@ -784,7 +786,7 @@ export default {
         //颤动/扑动
         if(r.data.CDPD.length === 0){
           // 无数据时：展示暂无数据
-          const dom = document.getElementById('main4');
+          const dom = document.getElementById('main9');
           dom.innerHTML = '-颤动/扑动暂无相关数据-';
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
           dom.removeAttribute('_echarts_instance_');
@@ -792,6 +794,18 @@ export default {
           this.CDPDDCountArr=r.data.CDPD
           this.opName = '数据库颤动/扑动统计'
           this.CDPDDrawLine();
+        }
+        //心梗分期
+        if(r.data.XGFQ.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main9');
+          dom.innerHTML = '-心梗分期暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.XGFQDCountArr=r.data.XGFQ
+          this.opName = '数据库心梗分期统计'
+          this.XGFQPDDrawLine();
         }
       })
       getZCXDTCount().then(r=>{
@@ -808,6 +822,7 @@ export default {
         }
 
       })
+
 
     },
     /** 搜索按钮操作 */

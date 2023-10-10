@@ -604,8 +604,8 @@ export default {
     /** 跳转到预警日志*/
     handleAlert(row) {
       this.$router.push({
-        name: "log",
-        params: {pId: row.pId,type:null}});
+        path: "log",
+        query: {pId: row.pId,type:null}});
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {

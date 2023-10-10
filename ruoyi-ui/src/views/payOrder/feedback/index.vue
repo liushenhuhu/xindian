@@ -114,13 +114,13 @@
         <el-col :span="8"><div class="grid-content bg-purple-dark">订单地址</div></el-col>
       </el-row>
       <el-row>
-        <el-col :span="12"><div class="grid-content bg-purple-dark"> 收货人姓名：{{from.shipAddress.patientName}}</div></el-col>
-        <el-col :span="12"><div class="grid-content bg-purple-dark"> 联系电话：{{from.shipAddress.patientPhone}}</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple-dark"> 收货人姓名：{{from.patientName}}</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple-dark"> 联系电话：{{from.patientPhone}}</div></el-col>
       </el-row>
       <el-row>
-        <el-col :span="8"><div class="grid-content bg-purple-dark"> 省市县街地址：{{from.shipAddress.state+' / '+from.shipAddress.city+' / '+from.shipAddress.country+' / '+from.shipAddress.street}}</div></el-col>
-        <el-col :span="8"><div class="grid-content bg-purple-dark"> 详情地址：{{from.shipAddress.streetAddress}}</div></el-col>
-        <el-col :span="8"><div class="grid-content bg-purple-dark"> 邮政编码：{{from.shipAddress.postalCode}}</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple-dark"> 省市县街地址：{{from.state+' / '+from.city+' / '+from.country+' / '+from.street}}</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple-dark"> 详情地址：{{from.streetAddress}}</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple-dark"> 邮政编码：{{from.postalCode}}</div></el-col>
       </el-row>
       <el-row>
         <el-col :span="8"><div class="grid-content bg-purple-dark">订单商品详情</div></el-col>
@@ -308,11 +308,13 @@ export default {
       console.log(row)
       const feedbackiId = row.feedbackiId || this.feedbackiId
       getFeedback(feedbackiId).then(r=>{
+        console.log(111)
         console.log(r)
         this.feedbackId = r.data
       })
 
       listOrder(orderId).then(r=>{
+        console.log(22)
         console.log(r)
         this.from = r.data
         this.infoList = r.data.suborderOrderInfos
