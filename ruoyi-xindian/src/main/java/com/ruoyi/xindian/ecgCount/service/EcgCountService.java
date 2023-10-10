@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author 13401
@@ -78,7 +79,11 @@ public interface EcgCountService extends IService<EcgCount> {
     List<AgeStatistics> ageListByWoman(AgeStatistics str);
 
 
-    List<TypeListVo> getTypeList() throws InstantiationException, IllegalAccessException;
+    Map<String , List<TypeListVo>> getTypeList() throws InstantiationException, IllegalAccessException;
 
+
+    List<TypeListVo> getZCXDTCount();
+
+    List<TypeListVo> getAgeYoung();
 
 }

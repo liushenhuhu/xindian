@@ -179,7 +179,10 @@
         where id = #{id}
     </select>
     <select id="getLogType" resultType="com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO">
-        SELECT `value` ,label  FROM ecg_count_type
+        SELECT `value` ,label,type  FROM ecg_count_type
+    </select>
+    <select id="getLogTypeAndValue" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
+        SELECT `value` ,label,type  FROM ecg_count_type
     </select>
 
     <insert id="insertEcgCount" parameterType="EcgCount">
@@ -584,5 +587,11 @@
     </select>
     <select id="getEcgValue" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
         SELECT `value` ,label  FROM ecg_count_type where value =#{value}
+    </select>
+    <select id="getZCXDTCount" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
+        SELECT zcxdt_ecg as name, COUNT(zcxdt_ecg) as value FROM ecg_count GROUP BY zcxdt_ecg ORDER BY zcxdt_ecg
+    </select>
+    <select id="getAgeYoung" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
+        SELECT age as name, COUNT(age) as value FROM ecg_count WHERE age BETWEEN 0 AND  17 GROUP BY age
     </select>
 </mapper>

@@ -1,20 +1,27 @@
 <template>
-  <div id="cf-double-column" class="age" :style="{ width: '100%', height: '100%' }">
-    <p class="title"><span class="title-left"></span>数据库统计男女比例图</p>
-    <div id="chart" :style="{ width: '90%', height: '500px',margin:'0 auto'}"></div>
-    <div class="footer-name">
-      <p>{{menCount}}</p>
-      <p>{{womenCount}}</p>
+  <div>
+    <div id="cf-double-column" class="age" :style="{ width: '100%', height: '100%' }">
+      <p class="title"><span class="title-left"></span>数据库统计男女比例图</p>
+      <div id="chart" :style="{ width: '100%', height: '550px',margin:'0 auto'}"></div>
+      <div class="footer-name">
+        <p>{{menCount}}</p>
+        <p>{{womenCount}}</p>
+      </div>
     </div>
+    <el-card class="box-card">
+      <div id="myChart" class="myChart" > </div>
+    </el-card>
   </div>
+
 </template>
 
 <script>
-import echarts from "echarts";
 import elementResizeDetectorMaker from "element-resize-detector";
-import {ageList} from "@/api/ecgCount/ecgCount";
+import {ageList, getAgeYoung} from "@/api/ecgCount/ecgCount";
+import * as echarts from 'echarts';
+
+
 export default {
-  name: "CFDoubleColumn",
   data(){
     return {
       columndata1: [],
@@ -27,6 +34,7 @@ export default {
     this.getList();
   },
   mounted() {
+    // this.ageYoung()
     this.getDoubleCloumn();
   },
   methods: {
@@ -61,7 +69,7 @@ export default {
       let colorRight = ["#FB857D", "#F6504A"];
       let option = {
         title: {
-          text: "男                         女",
+          text: "男                                女",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -362,8 +370,84 @@ export default {
         //this.loading = false;
       });
 
+      getAgeYoung().then(r=>{
+        console.log(r)
+        let data = r.data
+        let countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0];
+        for (let j = 0; j < data.length; j++) {
+          countArr[data[j].name] = parseInt(data[j].value);
+        }
+        this.countArr = countArr;
+        this.ageYoung();
+      })
 
     },
+
+    ageYoung(){
+      let myChart = this.$echarts.init(document.getElementById('myChart'))
+      // 绘制图表
+      let status = this;
+      myChart.off('click');
+      let option = {
+        title: {
+          text: '儿童心电图分布图'
+        },
+        tooltip: {},
+        xAxis: {
+          data: ["零岁","一岁", "二岁", "三岁", "四岁", "五岁",
+            "六岁", "七岁", "八岁", "九岁", "十岁", "十一岁", "十二岁", "十三岁", "十四岁", "十五岁", "十六岁", "十七岁"],
+          axisLabel:{
+            interval: 0,
+            rotate : 40,
+          }
+        },
+        yAxis: {
+          type:'value',
+          axisLabel: {
+            show:true
+          }
+        },
+        series: [{
+          //name: '诊断次数',
+          type: 'bar',
+          data: this.countArr,
+          label: {//饼图文字的显示
+            show: true, //默认  显示文字
+            distance: 5.5,
+            position: 'top',
+            //verticalAlign: 'middle',
+            color: '#009ac7',
+            fontSize: 18
+          },
+        }],
+        grid: {
+          bottom: '30%',
+          top: '20%',
+          right: 0,
+          left: '0%',
+        },
+      }
+      myChart.setOption(option);
+      const erd = elementResizeDetectorMaker();
+      //myChart.clear();
+      // 绘制图表配置
+      // 窗口大小自适应方案
+      myChart.setOption(option,true);
+      setTimeout(function () {
+        erd.listenTo(document.getElementById('myChart'), element => {
+          myChart.resize()
+        });
+      }, 200);
+      // myChart.on('click', function (params) {
+      //   console.log(params)
+      //   status.queryParams.month = params.name;
+      //   status.show = false;
+      //   document.getElementById("myChart").style.display='none';
+      //   document.getElementById("table1").style.display='';
+      //   status.getListData();
+      // })
+
+    }
   }
 }
 </script>
@@ -401,10 +485,26 @@ export default {
       display: inline-block;
       padding: 0 2rem;
     }
+    p:nth-of-type(1) {
+      margin-left:35%
+    }
     p:nth-of-type(2) {
       margin-left:10%
     }
   }
 
+
+}
+.box-card {
+  width: 90%;
+  height: 45vh;
+  margin:0 auto;
+  margin-bottom: 10px;
+}
+.myChart{
+  height: 50vh;
+  width: 90%;
+  margin-top: 20px;
+  margin:0 auto;
 }
 </style>

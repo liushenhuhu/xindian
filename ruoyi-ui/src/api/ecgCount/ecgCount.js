@@ -57,9 +57,22 @@ export function ageList() {
   })
 }
 
+export function getAgeYoung() {
+  return request({
+    url: '/ecgCount/ecgCount/getAgeYoung',
+    method: 'get'
+  })
+}
+
 export function getTypeList() {
   return request({
     url: '/ecgCount/ecgCount/getTypeList',
+    method: 'get'
+  })
+}
+export function getZCXDTCount() {
+  return request({
+    url: '/ecgCount/ecgCount/getZCXDTCount',
     method: 'get'
   })
 }

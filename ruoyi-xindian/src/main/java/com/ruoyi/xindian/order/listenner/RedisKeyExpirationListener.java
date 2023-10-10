@@ -2,8 +2,11 @@ package com.ruoyi.xindian.order.listenner;
 
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.alert_log.service.IAlertLogService;
+import com.ruoyi.xindian.ecgCount.controller.EcgCountController;
+import com.ruoyi.xindian.ecgCount.service.EcgCountService;
 import com.ruoyi.xindian.equipment.service.EquipmentHeadingCodeService;
 import com.ruoyi.xindian.report.config.WxMsgRunConfig;
+import com.ruoyi.xindian.statistics.domain.AgeStatistics;
 import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
@@ -46,6 +49,13 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
 
     @Resource
     private EquipmentHeadingCodeService equipmentHeadingCodeService;
+
+
+    @Resource
+    private EcgCountService ecgCountService;
+
+    @Resource
+    private EcgCountController ecgCountController;
 
     private final Lock lock = new ReentrantLock();
 
@@ -131,7 +141,15 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 }
                 return;
             }
-
+            if (expiredKey.equals("ecgCountType")){
+                ecgCountController.getTypeList();
+            }
+            if (expiredKey.equals("ecgCountTypeAge")){
+                ecgCountController.ageList(new AgeStatistics());
+            }
+            if (expiredKey.equals("ecgAgeYoung")){
+                ecgCountService.getAgeYoung();
+            }
             if (expiredKey.equals("earlyLogTest01")){
                 AlertLog alertLog = new AlertLog();
                 alertLog.setEcgType("J12");

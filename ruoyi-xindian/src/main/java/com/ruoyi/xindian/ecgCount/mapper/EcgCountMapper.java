@@ -74,6 +74,7 @@ public interface EcgCountMapper extends BaseMapper<EcgCount> {
 
 
     List<ListValueAndLabelVO> getLogType();
+    List<TypeListVo> getLogTypeAndValue();
 
 
     List<AgeStatistics> ageListByMan(AgeStatistics str);
@@ -88,6 +89,10 @@ public interface EcgCountMapper extends BaseMapper<EcgCount> {
 
 
     TypeListVo getEcgValue(@Param("value") String value);
+
+
+    List<TypeListVo> getZCXDTCount();
+    List<TypeListVo> getAgeYoung();
 
 }
 

@@ -1,37 +1,68 @@
 <template>
   <div class="mains">
+    <div class="circle">
+      <div class="containerCard">
+        <el-card class="card2">
+          <div id="main0" class="chart2">心动过速统计</div>
+        </el-card>
+        <el-card class="card2">
+          <div id="main2" class="chart2">早博/逸搏类型统计</div>
+        </el-card>
+      </div>
+      <div class="containerCard">
+        <el-card class="card2">
+          <div id="main3" class="chart2">其他类型统计</div>
+        </el-card>
+        <el-card class="card2">
+          <div id="main4" class="chart2">心肌梗死类型统计</div>
+        </el-card>
+      </div>
+      <div class="containerCard">
+        <el-card class="card2">
+          <div id="main6" class="chart2">预测猝死类型统计</div>
+        </el-card>
+        <el-card class="card2">
+          <div id="main7" class="chart2">房室肥大类型统计</div>
+        </el-card>
+      </div>
+
+  </div>
 
     <div class="top">
 <!--      <el-card class="card1" >-->
 <!--&lt;!&ndash;        <p class="title"><span class="title-left"></span></p>&ndash;&gt;-->
 <!--&lt;!&ndash;        <typeChild></typeChild>&ndash;&gt;-->
 <!--      </el-card>-->
-      <el-card class="card1">
-        <ageChild></ageChild>
-      </el-card>
-    </div>
-    <el-divider content-position="left"><span class="title-left"></span>预警分类统计图</el-divider>
-    <div class="circle">
-      <el-card class="card2">
-        <div id="main0" class="chart2">静态12导预警</div>
-      </el-card>
-      <el-card class="card2">
-        <div id="main1" class="chart2">静态单导预警</div>
-      </el-card>
-<!--      <el-card class="card2">-->
-<!--        <div id="main2" class="chart2">动态12导预警</div>-->
+<!--      <el-card class="card1">-->
+<!--        <ageChild></ageChild>-->
 <!--      </el-card>-->
-<!--      <el-card class="card2">-->
-<!--        <div id="main3" class="chart2">动态单导预警</div>-->
-<!--      </el-card>-->
+      <div class="containerLeftAndRight">
+        <el-card class="card2">
+          <div id="main5" class="chart2">传导阻滞类型统计</div>
+        </el-card>
+        <el-card class="card2">
+          <div id="main1" class="chart2">正常心电图统计</div>
+        </el-card>
+      </div>
+      <div class="containerLeftAndRight">
+        <el-card class="card2">
+          <div id="main8" class="chart2">心律类型统计</div>
+        </el-card>
+        <el-card class="card2">
+          <div id="main9" class="chart2">颤动/扑动类型</div>
+        </el-card>
+      </div>
+
     </div>
+<!--    <el-divider content-position="left"><span class="title-left"></span>预警分类统计图</el-divider>-->
+
 
   </div>
 </template>
 <script>
 import {listAlert_log} from "@/api/DRearly/DRearly";
 import ageChild from '../ecgAgeAndType/index.vue'
-import {getTypeList} from "@/api/ecgCount/ecgCount";
+import {getTypeList, getZCXDTCount} from "@/api/ecgCount/ecgCount";
 
 export default {
   components:{
@@ -48,6 +79,14 @@ export default {
       DOptions: [],
       countArr: [],
       DCountArr: [],
+      XJGSDCountArr:[],
+      QTDCountArr:[],
+      XLDCountArr:[],
+      CDZDCountArr:[],
+      ZBDCountArr:[],
+      YCCSDCountArr:[],
+      FSFDDCountArr:[],
+      CDPDDCountArr:[],
       query:{
         ecgType:null,
       },
@@ -73,7 +112,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "静态12导预警",
+          text: "心电过速统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -95,9 +134,10 @@ export default {
             type: 'pie',
             radius: '50%',
             roseType: 'radius',
-            left:'35%',
-            right:'23%',
-            top:'30px',
+            left:'10%',
+            right:'13%',
+            top:'5px',
+            bottom:'5%',
             data: this.countArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
@@ -107,7 +147,7 @@ export default {
               // edgeDistance: "34%",
               formatter: function (arg) {
                 //console.log(arg);
-                return arg.name + '(' + arg.value + ")"
+                return  arg.name + '(' + arg.value + ")"
               }
             },
           }
@@ -126,94 +166,598 @@ export default {
       //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
       // });
     },
-
-    // DDrawLine() {
-    //   // 基于准备好的dom，初始化echarts实例
-    //   let main1 = this.$echarts.init(document.getElementById('main1'))
-    //   let th = this
-    //   var option = {
-    //     title: {
-    //       text: "静态单导预警",
-    //       top: "bottom",
-    //       left: "center",
-    //       textStyle: {
-    //         color: "black ", //标签文字颜色改为白色
-    //       },
-    //     },
-    //     tooltip: {
-    //       trigger: 'item'
-    //     },
-    //     series : [
-    //       {
-    //         name: this.DOpName,
-    //         type: 'pie',
-    //         radius: '70%',
-    //         roseType: 'radius',
-    //         left:'23%',
-    //         right:'23%',
-    //         data: this.DCountArr,
-    //         label: {//饼图文字的显示
-    //           show: true, //默认  显示文字
-    //           // position:'outer',
-    //           // alignTo:'edge',
-    //           // margin:10,
-    //           formatter: function (arg) {
-    //             //console.log(arg);
-    //             return arg.name + '(' + arg.value + ")"
-    //           }
-    //         },
-    //       }
-    //     ]
-    //   };
-    //   main1.off('click')
-    //   // 绘制图表
-    //   main1.setOption(option);
-    //   window.addEventListener("resize", function () {
-    //     main1.resize();
-    //   });
-    //   setTimeout(function (){
-    //     main1.resize();
-    //   })
-    //   main1.on('click', function(params) {
-    //     th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-    //   });
-    // },
+    DDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main1'))
+      let th = this
+      var option = {
+        title: {
+          text: "正常心电图统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '80%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.DCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
+    ZBDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main2'))
+      let th = this
+      var option = {
+        title: {
+          text: "早博/逸搏统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.ZBDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
+    XJGSDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main4'))
+      let th = this
+      var option = {
+        title: {
+          text: "心肌梗死统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.XJGSDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
+    XLDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main8'))
+      let th = this
+      var option = {
+        title: {
+          text: "心律统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.XLDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
+    CDZDDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main5'))
+      let th = this
+      var option = {
+        title: {
+          text: "传导阻滞统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.CDZDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
+    QTDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main3'))
+      let th = this
+      var option = {
+        title: {
+          text: "其他类型统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.QTDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
+    YCCSDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main6'))
+      let th = this
+      var option = {
+        title: {
+          text: "预测猝死类型统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.YCCSDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
+    FSFDDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main7'))
+      let th = this
+      var option = {
+        title: {
+          text: "房室肥大类型统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.FSFDDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
+    CDPDDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main9'))
+      let th = this
+      var option = {
+        title: {
+          text: "颤动/扑动类型统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
+            name: this.DOpName,
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.CDPDDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+      // main1.on('click', function(params) {
+      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
+      // });
+    },
 
 
 
     /** 查询 */
     getList() {
 
-      //静态
+
       getTypeList().then(r=>{
-        if(r.data.length === 0){
+        console.log(r)
+        //心电过速
+        if(r.data.XDGS.length === 0){
           // 无数据时：展示暂无数据
           const dom = document.getElementById('main0');
-          dom.innerHTML = '-数据库统计预警暂无相关数据-';
+          dom.innerHTML = '-心电过速暂无相关数据-';
           dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
           dom.removeAttribute('_echarts_instance_');
         }else {
-          this.countArr=r.data
-          this.opName = '数据库异常预警统计'
+          this.countArr=r.data.XDGS
+          this.opName = '数据库心动过速统计'
           this.drawLine();
+        }
+        //早搏逸博
+        if(r.data.ZBTB.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main2');
+          dom.innerHTML = '-早搏逸博暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.ZBDCountArr=r.data.ZBTB
+          this.opName = '数据库早搏逸博统计'
+          this.ZBDrawLine();
+        }
+
+        //心肌梗死
+        if(r.data.XJGS.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main4');
+          dom.innerHTML = '-心肌梗死暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.XJGSDCountArr=r.data.XJGS
+          this.opName = '数据库心肌梗死统计'
+          this.XJGSDrawLine();
+        }
+        //心律
+        if(r.data.XL.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main4');
+          dom.innerHTML = '-心律暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.XLDCountArr=r.data.XL
+          this.opName = '数据库心律统计'
+          this.XLDrawLine();
+        }
+        //传导阻滞
+        if(r.data.CDZD.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main4');
+          dom.innerHTML = '-传导阻滞暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.CDZDCountArr=r.data.CDZD
+          this.opName = '数据库传导阻滞统计'
+          this.CDZDDrawLine();
+        }
+        //其他
+        if(r.data.QT.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main4');
+          dom.innerHTML = '-其他暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.QTDCountArr=r.data.QT
+          this.opName = '数据库其他统计'
+          this.QTDrawLine();
+        }
+        //预测猝死
+        if(r.data.YCCS.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main4');
+          dom.innerHTML = '-预测猝死暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.YCCSDCountArr=r.data.YCCS
+          this.opName = '数据库预测猝死统计'
+          this.YCCSDrawLine();
+        }
+        //房室肥大
+        if(r.data.FSFD.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main4');
+          dom.innerHTML = '-房室肥大暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.FSFDDCountArr=r.data.FSFD
+          this.opName = '数据库房室肥大统计'
+          this.FSFDDrawLine();
+        }
+        //颤动/扑动
+        if(r.data.CDPD.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main4');
+          dom.innerHTML = '-颤动/扑动暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: right;margin-top: 5%;margin-right: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else {
+          this.CDPDDCountArr=r.data.CDPD
+          this.opName = '数据库颤动/扑动统计'
+          this.CDPDDrawLine();
+        }
+      })
+      getZCXDTCount().then(r=>{
+        if(r.data.length === 0){
+          // 无数据时：展示暂无数据
+          const dom = document.getElementById('main1');
+          dom.innerHTML = '-正常心电图统计暂无相关数据-';
+          dom.style.cssText = 'color: #999; border: none;float: left;margin-top: 5%;margin-left: 10%';
+          dom.removeAttribute('_echarts_instance_');
+        }else{
+          this.DCountArr=r.data
+          this.DOpName = '正常心电图统计'
+          this.DDrawLine();
         }
 
       })
-      // this.query1.ecgType='Jsingle'
-      // listAlert_log(this.query1).then(r=>{
-      //   if(r.data.length === 0){
-      //     // 无数据时：展示暂无数据
-      //     const dom = document.getElementById('main1');
-      //     dom.innerHTML = '-静态单导预警暂无相关数据-';
-      //     dom.style.cssText = 'color: #999; border: none;float: left;margin-top: 5%;margin-left: 10%';
-      //     dom.removeAttribute('_echarts_instance_');
-      //   }else{
-      //     this.DCountArr=r.data
-      //     this.DOpName = '单导预警'
-      //     this.DDrawLine();
-      //   }
-      //
-      // })
 
     },
     /** 搜索按钮操作 */
@@ -230,7 +774,7 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   .title-left{
     display: inline-block;
     width: 0.25rem;
@@ -240,13 +784,17 @@ export default {
     margin-right: 1rem;
   }
   .top{
-    width: 100%;
+    width: 50%;
     height: 40%;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     text-align: center;
+    margin-right: 5px;
+    margin-left: 5px;
+
+
     .card1{
-      width: 90%;
+      width: 100%;
       margin-top: 5px;
       .title {
         text-align: left;
@@ -256,29 +804,68 @@ export default {
         .title-left {
           display: inline-block;
           width: 0.25rem;
-          height: 1rem;
+          height: 2rem;
           background: linear-gradient(180deg, #3ea2ff 0%, #2746fc 100%);
           border-radius: 0.13rem;
           margin-right: 1rem;
         }
       }
     }
-  }
-  .circle {
-    margin-top: 5px;
-    align-items: center;
-    display: flex;
-    justify-content: space-around;
     .card2{
-      min-height: 40vh;
-      width: 40%;
+      margin-top: 10px;
+      min-height: 42vh;
+      width: 49%;
       .chart2{
         width: 100%;
         height: 40vh;
       }
     }
   }
+  .circle {
+    width: 50%;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    justify-content: space-between;
+    .card2{
+      text-align: center;
+      min-height: 42vh;
+      width: 49%;
+      margin-bottom: 10px;
+      .chart2{
+        width: 100%;
+        height: 40vh;
+      }
+    }
+  }
+  .containerCard {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 100%;
+    height:100%;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+
+  }
+  .containerLeftAndRight{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-around; /* 左右分布 */
+  }
+
+  //.box {
+
+  //}
+
 }
+
+
 
 .el-divider {
   ::v-deep .el-divider__text {
