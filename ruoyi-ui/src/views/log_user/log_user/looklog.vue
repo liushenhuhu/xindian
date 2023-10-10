@@ -1,18 +1,28 @@
 <template>
   <div class="main">
     <div class="showbox" id="jump" v-show="show" @contextmenu.prevent>
-      <div class="noName">
-        <el-button :class="{btn3:true,istap:tap,nottap:!tap.P}" @click="labelSelectionP()">P</el-button>
-        <el-button :class="{btn3:true,istap:tap,nottap:!tap.Q}" @click="labelSelectionQ()">Q</el-button>
-        <el-button :class="{btn3:true,istap:tap,nottap:!tap.R}" @click="labelSelectionR()">R</el-button>
-        <el-button :class="{btn3:true,istap:tap,nottap:!tap.S}" @click="labelSelectionS()">S</el-button>
-        <el-button :class="{btn3:true,istap:tap,nottap:!tap.T}" @click="labelSelectionT()">T</el-button>
-        <el-button :class="{btn3:true,istap:tap,nottap:!tap.noise}" @click="labelSelectionnoise()">选框</el-button>
+      <div class="noName" v-show="lead">
+        <el-radio-group  v-model="radio">
+          <el-radio-button label="P1">P1</el-radio-button>
+          <el-radio-button label="P2">P2</el-radio-button>
+          <el-radio-button label="P3">P3</el-radio-button>
+          <el-radio-button label="R1">R1</el-radio-button>
+          <el-radio-button label="R2">R2</el-radio-button>
+          <el-radio-button label="R3">R3</el-radio-button>
+          <el-radio-button label="T1">T1</el-radio-button>
+          <el-radio-button label="T2">T2</el-radio-button>
+          <el-radio-button label="T3">T3</el-radio-button>
+        </el-radio-group>
+<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.P}" @click="labelSelectionP()">P</el-button>-->
+<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.Q}" @click="labelSelectionQ()">Q</el-button>-->
+<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.R}" @click="labelSelectionR()">R</el-button>-->
+<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.S}" @click="labelSelectionS()">S</el-button>-->
+<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.T}" @click="labelSelectionT()">T</el-button>-->
+<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.noise}" @click="labelSelectionnoise()">选框</el-button>-->
 <!--        <el-button class="btn3" @click="labelSelectionAllNoise()">AllNoise</el-button>-->
         <el-button class="btn3" @click="clearData()">清空</el-button>
         <el-button class="btn3" @click="submitData()">提交</el-button>
         <el-popover
-          style="margin:auto;"
           placement="bottom-start"
           title="提示"
           width="220"
@@ -275,14 +285,25 @@ export default {
   },
   data() {
     return {
+      lead:false,
       tap:{
-        P:false,
-        Q:false,
-        R:false,
-        S:false,
-        T:false,
-        noise:false
+        P1:false,
+        P2:false,
+        P3:false,
+        R1:false,
+        R2:false,
+        R3:false,
+        T1:false,
+        T2:false,
+        T3:false,
+        //P:false,
+        // Q:false,
+        // R:false,
+        // S:false,
+        // T:false,
+        // noise:false
       },
+      radio:'P1',
       //通过字典将radio和light一一对应
       levellight : {
         'V1level': 'V1light',
@@ -355,7 +376,6 @@ export default {
       query:{
         userId:'',
         logId: '',
-        type:'',
         jsonData:''
       },
       value: '正常心电图',
@@ -497,19 +517,11 @@ export default {
       markArea:[],
       title:'',
       subData:{
-        I:[],
-        II:[],
-        III:[],
-        V1:[],
-        V2:[],
-        V3:[],
-        V4:[],
-        V5:[],
-        V6:[],
-        aVF:[],
-        aVL:[],
-        aVR:[],
+          P1:[],P2:[],P3:[],
+          R1:[],R2:[],R3:[],
+          T1:[],T2:[],T3:[],
       },//提交标注信息
+
       pointdata:[],//画点的option
       point:[[],{P:[], Q:[], R:[], S:[], T:[]}],
       arr:[]//要删除的点所在的区间
@@ -525,20 +537,6 @@ export default {
       this.value=this.$route.query.logType;
       this.query.logId=this.$route.query.logId;
       this.query.userId=this.$route.query.userId;
-      this.subData={
-        I:[],
-          II:[],
-          III:[],
-          V1:[],
-          V2:[],
-          V3:[],
-          V4:[],
-          V5:[],
-          V6:[],
-          aVF:[],
-          aVL:[],
-          aVR:[],
-      }
       this.getSelectList()
       this.getLabel()
     }
@@ -547,34 +545,34 @@ export default {
     this.getMessage()
     this.chartjump = echarts.init(document.getElementById('chartjump'));
   },
-  watch:{
-    'tap.noise':{
-      handler(new_value,old_value){
-          if(new_value){
-            this.chartjump.dispatchAction({
-              type: 'takeGlobalCursor',
-              // 如果想变为“可刷选状态”，必须设置。不设置则会关闭“可刷选状态”。
-              key: 'brush',
-              brushOption: {
-                // 参见 brush 组件的 brushType。如果设置为 false 则关闭“可刷选状态”。
-                brushType: 'lineX',
-                // 参见 brush 组件的 brushMode。如果不设置，则取 brush 组件的 brushMode 设置。
-                brushMode: 'multiple',
-              }
-            });
-          }else {
-            this.chartjump.dispatchAction({
-              type: 'takeGlobalCursor',
-            });
-            this.chartjump.dispatchAction({
-              type: 'brush',
-              areas: []
-            });
-          }
-      },
-      deep: true
-    }
-  },
+  // watch:{
+  //   'tap.noise':{
+  //     handler(new_value,old_value){
+  //         if(new_value){
+  //           this.chartjump.dispatchAction({
+  //             type: 'takeGlobalCursor',
+  //             // 如果想变为“可刷选状态”，必须设置。不设置则会关闭“可刷选状态”。
+  //             key: 'brush',
+  //             brushOption: {
+  //               // 参见 brush 组件的 brushType。如果设置为 false 则关闭“可刷选状态”。
+  //               brushType: 'lineX',
+  //               // 参见 brush 组件的 brushMode。如果不设置，则取 brush 组件的 brushMode 设置。
+  //               brushMode: 'multiple',
+  //             }
+  //           });
+  //         }else {
+  //           this.chartjump.dispatchAction({
+  //             type: 'takeGlobalCursor',
+  //           });
+  //           this.chartjump.dispatchAction({
+  //             type: 'brush',
+  //             areas: []
+  //           });
+  //         }
+  //     },
+  //     deep: true
+  //   }
+  // },
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
@@ -2011,11 +2009,18 @@ export default {
     getLabel(){
       getLabel(this.query).then(res=>{
         console.log(res)
-        if(res.data!=null){
-          this.subData=JSON.parse(res.data.jsonData)
+        let ble=false//格式不正确
+        for (const key in JSON.parse(res.data.dataLabel)) {
+          console.log(key)
+          if(key=='P1'){
+            ble=true
+            break
+          }
+        }
+        if(ble){//格式正确
+          this.subData=JSON.parse(res.data.dataLabel)
         }
       }).catch(err=>{
-
       })
     },
     //判断红绿颜色
@@ -2152,120 +2157,107 @@ export default {
         }]
       });
     },
-    labelSelectionP(){
-      this.cleartap()
-      this.tap.P=true
-    },
-    labelSelectionQ(){
-      this.cleartap()
-      this.tap.Q=true
-    },
-    labelSelectionR(){
-      this.cleartap()
-      this.tap.R=true
-    },
-    labelSelectionS(){
-      this.cleartap()
-      this.tap.S=true
-    },
-    labelSelectionT(){
-      this.cleartap()
-      this.tap.T=true
-    },
-    labelSelectionnoise(){
-      this.cleartap()
-      this.tap.noise=true
-      let noise=[]
-      this.chartjump.off('brushEnd')
-      this.chartjump.on('brushEnd', (params)=>{
-        $('#rightMenu').css({
-          'display': 'none',
-        });
-        noise.length=0
-        params.areas.forEach(item=>{
-          let arr=[]
-          item.coordRange.forEach(x=>{
-            arr.push(x)
-          })
-          noise.push(arr)
-        })
-        noise=this.getMerge(noise)
-        this.chartjump.dispatchAction({
-          type: 'brush',
-          areas: [],//areas
-        });
-        let newitem=params.areas[params.areas.length-1].coordRange
-        let a = [{
-          xAxis: newitem[0],
-          itemStyle: {
-            color: 'rgb(242,201,248)',
-          }
-        }, {
-          xAxis: newitem[1]
-        }];
-        if(this.markArea.length!==0){
-          var result= this.markArea.findIndex((v) => {
-            return (v[0].xAxis <= newitem[0] && v[1].xAxis >= newitem[0])
-              || (v[0].xAxis <=newitem[1] && v[1].xAxis >= newitem[1])
-              ||(v[0].xAxis >=newitem[0] && v[1].xAxis <= newitem[1]);
-          });
-          console.log("是否有交叉",result)
-          if(result==-1){
-            this.markArea.push(a)
-          }else {
-            var max=Math.max(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
-            var min=Math.min(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
-            a[0].xAxis=min
-            a[1].xAxis=max
-            this.markArea.splice(result,1,a)
-          }
-        }else {
-          this.markArea.push(a)
-        }
-        console.log(this.markArea)
-
-        this.chartjump.setOption({
-          series: [{
-            id: 'series1',
-            markArea: {
-              label: {
-                show: true,
-                position: 'inside'
-              },
-              emphasis:{
-                disabled:true
-              },
-              data: this.markArea
-            },
-          }]
-        });
-      });
-    },
+    // labelSelectionP(){
+    //   this.cleartap()
+    //   this.tap.P=true
+    // },
+    // labelSelectionQ(){
+    //   this.cleartap()
+    //   this.tap.Q=true
+    // },
+    // labelSelectionR(){
+    //   this.cleartap()
+    //   this.tap.R=true
+    // },
+    // labelSelectionS(){
+    //   this.cleartap()
+    //   this.tap.S=true
+    // },
+    // labelSelectionT(){
+    //   this.cleartap()
+    //   this.tap.T=true
+    // },
+    // labelSelectionnoise(){
+    //   this.cleartap()
+    //   this.tap.noise=true
+    //   let noise=[]
+    //   this.chartjump.off('brushEnd')
+    //   this.chartjump.on('brushEnd', (params)=>{
+    //     $('#rightMenu').css({
+    //       'display': 'none',
+    //     });
+    //     noise.length=0
+    //     params.areas.forEach(item=>{
+    //       let arr=[]
+    //       item.coordRange.forEach(x=>{
+    //         arr.push(x)
+    //       })
+    //       noise.push(arr)
+    //     })
+    //     noise=this.getMerge(noise)
+    //     this.chartjump.dispatchAction({
+    //       type: 'brush',
+    //       areas: [],//areas
+    //     });
+    //     let newitem=params.areas[params.areas.length-1].coordRange
+    //     let a = [{
+    //       xAxis: newitem[0],
+    //       itemStyle: {
+    //         color: 'rgb(242,201,248)',
+    //       }
+    //     }, {
+    //       xAxis: newitem[1]
+    //     }];
+    //     if(this.markArea.length!==0){
+    //       var result= this.markArea.findIndex((v) => {
+    //         return (v[0].xAxis <= newitem[0] && v[1].xAxis >= newitem[0])
+    //           || (v[0].xAxis <=newitem[1] && v[1].xAxis >= newitem[1])
+    //           ||(v[0].xAxis >=newitem[0] && v[1].xAxis <= newitem[1]);
+    //       });
+    //       console.log("是否有交叉",result)
+    //       if(result==-1){
+    //         this.markArea.push(a)
+    //       }else {
+    //         var max=Math.max(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
+    //         var min=Math.min(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
+    //         a[0].xAxis=min
+    //         a[1].xAxis=max
+    //         this.markArea.splice(result,1,a)
+    //       }
+    //     }else {
+    //       this.markArea.push(a)
+    //     }
+    //     console.log(this.markArea)
+    //
+    //     this.chartjump.setOption({
+    //       series: [{
+    //         id: 'series1',
+    //         markArea: {
+    //           label: {
+    //             show: true,
+    //             position: 'inside'
+    //           },
+    //           emphasis:{
+    //             disabled:true
+    //           },
+    //           data: this.markArea
+    //         },
+    //       }]
+    //     });
+    //   });
+    // },
     clearData(){
-      this.subData[this.title]=[]
-      this.markArea=[]
-      this.chartjump.dispatchAction({
-        type: 'brush',
-        areas: []
-      });
       this.pointdata=[]
-      this.chartjump.setOption({
-        series: [{
-          id: 'series1',
-          markArea: {
-            label: {
-              show: true,
-              position: 'inside'
-            },
-            data: []
-          },
-        }]
-      });
+      this.subData={
+        P1:[],P2:[],P3:[],
+        R1:[],R2:[],R3:[],
+        T1:[],T2:[],T3:[],
+      }
       this.chartjump.setOption({
         series:{
           markPoint:{
             symbol: "pin",
-            symbolSize: 40,
+            symbolSize: 29,
             animation:false,
             data: [],
           }
@@ -2305,17 +2297,17 @@ export default {
       });
     },
     submitData(){
-      this.query.jsonData=JSON.stringify(this.subData)
-      this.query.type=this.title
+      this.query.dataLabel=JSON.stringify(this.subData)
       console.log(this.subData)
-      console.log(this.query)
       addLabel(this.query).then(res=>{
         this.$modal.msgSuccess("标注提交成功");
       }).catch(err=>{})
     },
     showchart(title, data) {
       this.title=title
-      //回显
+      if(title=='II'){
+        this.lead=true
+      }
       let detailoption = {
         animation: true,
         backgroundColor: "#ffffff",
@@ -2455,84 +2447,55 @@ export default {
       setTimeout(()=>{
         this.chartjump.resize()
       })
-      console.log(this.subData)
+      //console.log(this.subData)
       this.markArea.length=0
       this.pointdata.length=0
       var colorList= {
-        P:'#fe0101',Q:'#ff7000',R:'#ff00cf',S:'#0021da',
-        T:'#8800ff'
+        P1:'#fe0101',P2:'#fe0101',P3:'#fe0101',
+        R1:'#ff00cf',R2:'#ff00cf',R3:'#ff00cf',
+        T1:'#0021da',T2:'#0021da',T3:'#0021da',
       }
-      if(this.subData[title].length!==0){
+      //回显
+      if(this.lead){
         console.log("有数据")
-        this.subData[title].forEach(i=>{
-          for (const key in i[1]) {
-            if (key === 'P' || key === 'T') {
-              for (let j = 0; j < i[1][key].length; j++) {
-                let pointdata={
-                  name: key,
-                  xAxis:i[1][key][j][0],
-                  yAxis: i[1][key][j][1],
-                  itemStyle: {
-                    color:colorList[key]
-                  },
-                  label: {
-                    color: '#ffffff',
-                    show: true,
-                    formatter: key,
-                    fontSize:13
-                  },
-                }
-                this.pointdata.push(pointdata)
-              }
-            }else {
-              let pointdata={
-                name: key,
-                xAxis:i[1][key][0],
-                yAxis: i[1][key][1],
-                itemStyle: {
-                  color:colorList[key]
-                },
-                label: {
-                  color: '#ffffff',
-                  show: true,
-                  formatter: key,
-                  fontSize:13
-                },
-              }
-              this.pointdata.push(pointdata)
-            }
-
-          }
-          let a = [{
-            xAxis: i[0][0],
-            itemStyle: {
-              color: 'rgb(242,201,248)',
-            }
-          }, {
-            xAxis: i[0][1]
-          }];
-          this.markArea.push(a)
-        })
-        this.chartjump.setOption({
-          series: [{
-            id: 'series1',
-            markArea: {
+        console.log(this.subData)
+        for (const key in this.subData) {
+          for (let j = 0; j < this.subData[key].length; j++) {
+            let pointdata={
+              name: key,
+              xAxis:this.subData[key][j],
+              yAxis: data[this.subData[key][j]],
+              itemStyle: {
+                color:colorList[key]
+              },
               label: {
+                color: '#ffffff',
                 show: true,
-                position: 'inside'
+                formatter: key,
+                fontSize:13
               },
-              emphasis:{
-                disabled:true
-              },
-              data: this.markArea
-            },
-          }]
-        });
+            }
+            this.pointdata.push(pointdata)
+          }
+        }
+        //console.log(this.pointdata)
         this.chartjump.setOption({
           series:{
             markPoint:{
               symbol: "pin",
-              symbolSize: 25,
+              symbolSize: 29,
+              animation:false,
+              data: this.pointdata,
+            }
+          }
+        })
+      }else {
+        this.pointdata=[]
+        this.chartjump.setOption({
+          series:{
+            markPoint:{
+              symbol: "pin",
+              symbolSize: 29,
               animation:false,
               data: this.pointdata,
             }
@@ -2553,9 +2516,6 @@ export default {
           this.delX.value=params.data.xAxis
           this.delX.key=params.data.name
         }
-        if(params.componentType==="markArea"){
-          this.area=[params.data.coord[0][0],params.data.coord[1][0]]
-        }
         console.log(this.delX)
       });
       this.chartjump.getZr().off('click')
@@ -2567,125 +2527,35 @@ export default {
         // console.log(pointInPixel)
         if (this.chartjump.containPixel('grid',pointInPixel)) {
           this.xIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[0];
-          this.yIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[1];
-          /*事件处理代码书写位置*/
+          //this.yIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[1];
           console.log(this.xIndex)
-          let mark=false
-          let arr=[]
-          for (let i = 0; i < this.markArea.length; i++) {
-            if(this.xIndex>=this.markArea[i][0].xAxis && this.xIndex<=this.markArea[i][1].xAxis){
-              mark=true
-              arr=[this.markArea[i][0].xAxis,this.markArea[i][1].xAxis]
-              break
-            }
+          this.subData[this.radio].push(this.xIndex)
+          //console.log(this.subData)
+          let pointdata={
+            name: this.radio,
+            xAxis:this.xIndex,
+            yAxis: data[this.xIndex],
+            itemStyle: {
+              color:colorList[this.radio]
+            },
+            label: {
+              color: '#ffffff',
+              show: true,
+              formatter: this.radio,
+              fontSize:13
+            },
           }
-          //console.log(this.markArea)
-          console.log(arr)
-          if(mark){
-            for(var key in this.tap){
-              if(this.tap[key] && key!=='noise'){
-                //console.log(key,this.tap[key])
-                var colorList= {
-                  P:'#fe0101',Q:'#ff7000',R:'#ff00cf',S:'#0021da',
-                  T:'#8800ff'
+          this.pointdata.push(pointdata)
+          this.chartjump.setOption({
+              series:{
+                markPoint:{
+                  symbol: "pin",
+                  symbolSize: 29,
+                  animation:false,
+                  data: this.pointdata,
                 }
-                let pointdata={
-                  name: key,
-                  xAxis:this.xIndex,
-                  yAxis: this.data[this.title][this.xIndex],
-                  itemStyle: {
-                    color:colorList[key]
-                  },
-                  label: {
-                    color: '#ffffff',
-                    show: true,
-                    formatter: key,
-                    fontSize:13
-                  },
-                }
-                this.pointdata.push(pointdata)
-                this.chartjump.setOption({
-                  series:{
-                    markPoint:{
-                      symbol: "pin",
-                      symbolSize: 25,
-                      animation:false,
-                      data: this.pointdata,
-                    }
-                  }
-                })
-                let p=[this.xIndex,this.data[this.title][this.xIndex]]
-                //添加新区间
-                if(this.subData[this.title].length!==this.markArea.length){
-                  this.markArea.forEach(item=>{
-                    let point=[[item[0].xAxis,item[1].xAxis],{P:[], Q:[], R:[], S:[], T:[]}]
-                    let temp=false//是否已存在区间
-                    if(this.subData[this.title].length!==0){
-                      this.subData[this.title].forEach(prop=>{
-                        if(item[0].xAxis===prop[0][0] && item[1].xAxis===prop[0][1]){
-                          temp=true
-                          console.log("添加新区间")
-                          return
-                        }
-                      })
-                    }
-                    if(!temp){
-                      this.subData[this.title].push(point)
-                    }
-                  })
-                  console.log(this.subData[this.title])
-                }
-                var length=this.subData[this.title].length
-                //在某个区间添加点
-                for (let i = 0; i < length; i++) {
-                  if (this.subData[this.title][i][0][0] === arr[0] && this.subData[this.title][i][0][1] === arr[1]) {
-                    console.log('存在区间 i',i)
-                    console.log("P坐标",p)
-                    if (key === 'P' || key === 'T') {
-                      if(this.subData[this.title][i][1][key].length===3){
-                        this.pointdata=this.pointdata.filter(r=>{
-                          return r.xAxis!==this.subData[this.title][i][1][key][0][0]
-                        })
-                        this.chartjump.setOption({
-                          series:{
-                            markPoint:{
-                              symbol: "pin",
-                              symbolSize: 25,
-                              animation:false,
-                              data: this.pointdata,
-                            }
-                          }
-                        })
-                        this.subData[this.title][i][1][key].shift()
-                      }
-                      this.subData[this.title][i][1][key].push(p)
-                    } else {
-                      if(this.subData[this.title][i][1][key].length!==0){
-                        this.pointdata=this.pointdata.filter(r=>{
-                          return r.xAxis!==this.subData[this.title][i][1][key][0]
-                        })
-                        this.chartjump.setOption({
-                          series:{
-                            markPoint:{
-                              symbol: "pin",
-                              symbolSize: 25,
-                              animation:false,
-                              data: this.pointdata,
-                            }
-                          }
-                        })
-                      }
-                      this.subData[this.title][i][1][key] = p
-                    }
-                    break
-                  }
-                }
-                break
               }
-            }
-          }else {
-            console.log("不在框选区域")
-          }
+            })
         }
       });
       this.show=true
@@ -2727,119 +2597,35 @@ export default {
       for (let tapKey in this.tap) {
         this.tap[tapKey]=false
       }
+      this.lead=false
       this.show=false
     },
     del(){
       console.log(this.delX.key,this.delX.value)
-      console.log(this.area)
-      var that=this
-      if(this.area.length!==0){
-        this.openDelConfirm().then(() => {
-          console.log(this.area)
-          //删除框和框内所有点
-          for (let i = 0; i < this.subData[this.title].length; i++) {
-            if(this.subData[this.title][i][0][0]==this.area[0] && this.subData[this.title][i][0][1]==this.area[1]){
-              for (const key in this.subData[this.title][i][1]) {
-                if(this.isArray(this.subData[this.title][i][1][key])==2){//二维数组
-                  this.subData[this.title][i][1][key].forEach(s=>{
-                    this.pointdata.forEach((p,index)=>{
-                      if(s[0]==p.xAxis){
-                        this.pointdata.splice(index,1)
-                        return
-                      }
-                    })
-                  })
-                }else {//一维
-                  this.pointdata.forEach((p,index)=>{
-                    if(this.subData[this.title][i][1][key][0]==p.xAxis){
-                      this.pointdata.splice(index,1)
-                      return
-                    }
-                  })
-                }
-              }
-              this.subData[this.title].splice(i,1)
-            }
-          }
-          //删除显示区域
-          this.markArea.forEach((item,index)=>{
-            if(this.area[0]==item[0].xAxis && this.area[1]==item[1].xAxis){
-              this.markArea.splice(index,1)
-              return
-            }
-          })
-          this.area=[]
-          console.log(this.markArea)
-          this.chartjump.setOption({
-            series: [{
-              id: 'series1',
-              markArea: {
-                label: {
-                  show: true,
-                  position: 'inside'
-                },
-                emphasis:{
-                  disabled:true
-                },
-                data: this.markArea
-              },
-            }]
-          });
-          this.chartjump.setOption({
-            series:{
-              markPoint:{
-                symbol: "pin",
-                symbolSize: 25,
-                animation:false,
-                data: this.pointdata,
-              }
-            }
-          })
-        }).catch(() => {
-          this.area=[]
-        })
-      }else {
-        //删除某个点
-        console.log(this.pointdata)
-        var length=this.pointdata.length
-        //删除点data
-        for (let i = 0; i < length; i++) {
-          if(this.pointdata[i].xAxis===this.delX.value){
-            this.pointdata.splice(i,1)
-            break
-          }
+      this.pointdata.some((item,index)=>{
+        if(item.xAxis==this.delX.value){
+          this.pointdata.splice(index,1)
+          return true
         }
-        //删除提交数据点
-        //console.log(this.subData[this.title])
-        for (let i = 0; i < this.subData[this.title].length; i++) {
-          if(this.delX.value>=this.subData[this.title][i][0][0] &&this.delX.value<=this.subData[this.title][i][0][1]) {
-            if(this.delX.key==="P"||this.delX.key==="T"){
-              this.subData[this.title][i][1][this.delX.key].forEach((item,index)=>{
-                if(item[0]===this.delX.value){
-                  this.subData[this.title][i][1][this.delX.key].splice(index,1)
-                  return
-                }
-              })
-            }else {
-              this.subData[this.title][i][1][this.delX.key]=[]
-            }
-            break
-          }
+      })
+      this.subData[this.delX.key].some((item,index)=>{
+        if(item==this.delX.value){
+          this.subData[this.delX.key].splice(index,1)
+          console.log("删除成功")
+          return true
         }
-        this.delX={key:null,value:null}
-        this.chartjump.setOption({
+      })
+      this.delX={key:null,value:null}
+      this.chartjump.setOption({
           series:{
             markPoint:{
               symbol: "pin",
-              symbolSize: 25,
+              symbolSize: 29,
               animation:false,
               data: this.pointdata,
             }
           }
         })
-      }
-      console.log("删除成功")
-
       $('#rightMenu').css({
         'display': 'none',
       });
@@ -2918,7 +2704,6 @@ body,html{
   background-color: rgb(255, 255, 255);
   span{
     display: inline-block;
-    height: 100%;
   }
 }
 .icon{
@@ -3098,12 +2883,36 @@ form input {
   text-transform: uppercase;
   font-weight: 500;
   flex: 1;
-  height: 3.8vw;
-  font-size: 0.9vw;
+  height: 4vh;
+  font-size: 1vw;
   text-align: center;
   padding: 0;
   margin: 0.5vw;
-  width: 7vw;
+  width: 4vw;
+}
+.noName{
+  //display: inline-flex;
+  //justify-content: center;
+  //align-items: center;
+  //width: 100%;
+  text-align: center;
+}
+::v-deep .noName .el-radio-group{
+  display: inline;
+
+}
+::v-deep .el-radio-button .el-radio-button__inner{
+  display:inline-block;
+  width: 4vw;
+  height: 4vh;
+  padding: 0;
+  line-height: 4vh;
+  font-size: 1vw;
+  text-align: center;
+  color: #b33939;
+  border: 1px solid #b33939;
+  border-radius: .5em;
+  margin: 0.5vw;
 }
 .btn3:hover {
   cursor: pointer;
