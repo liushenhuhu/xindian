@@ -2010,7 +2010,9 @@ export default {
     getLabel(){
       getLabel(this.query).then(res=>{
         console.log(res)
-        this.subData=JSON.parse(res.data.waveLabel)
+        if(res!=null){
+          this.subData=JSON.parse(res.data.waveLabel)
+        }
       }).catch(err=>{
       })
     },
@@ -2543,6 +2545,7 @@ export default {
           if(temp){
             return
           }
+          console.log(this.subData)
           this.subData[this.radio].push(this.xIndex)
           //console.log(this.subData)
           let pointdata={
