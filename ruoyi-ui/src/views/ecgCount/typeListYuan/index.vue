@@ -1,59 +1,42 @@
 <template>
   <div class="mains">
-    <div class="circle">
-      <div class="containerCard">
-        <el-card class="card2">
-          <div id="main0" class="chart2">心动过速统计</div>
-        </el-card>
-        <el-card class="card2">
-          <div id="main2" class="chart2">早博/逸搏类型统计</div>
-        </el-card>
-      </div>
-      <div class="containerCard">
-        <el-card class="card2">
-          <div id="main3" class="chart2">其他类型统计</div>
-        </el-card>
-        <el-card class="card2">
-          <div id="main4" class="chart2">心肌梗死类型统计</div>
-        </el-card>
-      </div>
-      <div class="containerCard">
-        <el-card class="card2">
-          <div id="main6" class="chart2">预测猝死类型统计</div>
-        </el-card>
-        <el-card class="card2">
-          <div id="main7" class="chart2">房室肥大类型统计</div>
-        </el-card>
-      </div>
+    <el-card class="card2">
+      <div id="main1" class="chart2">正常心电图 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main0" class="chart2">心动过速 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main2" class="chart2">早搏/逸搏 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main4" class="chart2">心肌梗死 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main6" class="chart2">预测猝死 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main7" class="chart2">房室肥大 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main5" class="chart2">传导阻滞类型 统计</div>
+    </el-card>
 
-  </div>
-
-    <div class="top">
-<!--      <el-card class="card1" >-->
-<!--&lt;!&ndash;        <p class="title"><span class="title-left"></span></p>&ndash;&gt;-->
-<!--&lt;!&ndash;        <typeChild></typeChild>&ndash;&gt;-->
-<!--      </el-card>-->
-<!--      <el-card class="card1">-->
-<!--        <ageChild></ageChild>-->
-<!--      </el-card>-->
-      <div class="containerLeftAndRight">
-        <el-card class="card2">
-          <div id="main5" class="chart2">传导阻滞类型统计</div>
-        </el-card>
-        <el-card class="card2">
-          <div id="main1" class="chart2">正常心电图统计</div>
-        </el-card>
-      </div>
-      <div class="containerLeftAndRight">
-        <el-card class="card2">
-          <div id="main8" class="chart2">心律类型统计</div>
-        </el-card>
-        <el-card class="card2">
-          <div id="main9" class="chart2">颤动/扑动类型</div>
-        </el-card>
-      </div>
-
-    </div>
+    <el-card class="card2">
+      <div id="main8" class="chart2">心律类型 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main9" class="chart2">颤动/扑动 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main3" class="chart2">其他 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main10" class="chart2">其他 统计</div>
+    </el-card>
+    <el-card class="card2">
+      <div id="main11" class="chart2">其他 统计</div>
+    </el-card>
 <!--    <el-divider content-position="left"><span class="title-left"></span>预警分类统计图</el-divider>-->
 
 
@@ -112,7 +95,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "心电过速统计",
+          text: "心动过速 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -130,17 +113,16 @@ export default {
         },
         series : [
           {
-            name: this.opName,
             type: 'pie',
-            radius: '50%',
+            radius: '70%',
             roseType: 'radius',
-            left:'10%',
-            right:'13%',
-            top:'5px',
-            bottom:'5%',
+            left:'23%',
+            right:'23%',
             data: this.countArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -172,7 +154,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "正常心电图统计",
+          text: "正常异常心电图 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -184,15 +166,17 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
-            radius: '80%',
+            radius: '70%',
             roseType: 'radius',
             left:'23%',
             right:'23%',
             data: this.DCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -223,7 +207,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "早博/逸搏统计",
+          text: "早搏/逸搏 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -235,7 +219,7 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
@@ -244,6 +228,8 @@ export default {
             data: this.ZBDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -274,7 +260,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "心肌梗死统计",
+          text: "心梗位置 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -286,7 +272,7 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
@@ -295,6 +281,8 @@ export default {
             data: this.XJGSDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -325,7 +313,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "心律统计",
+          text: "心律 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -337,7 +325,7 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
@@ -346,6 +334,8 @@ export default {
             data: this.XLDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -376,7 +366,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "传导阻滞统计",
+          text: "传导阻滞 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -388,7 +378,7 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
@@ -397,6 +387,8 @@ export default {
             data: this.CDZDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -427,7 +419,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "其他类型统计",
+          text: "其他 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -439,7 +431,7 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
@@ -448,6 +440,8 @@ export default {
             data: this.QTDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -472,13 +466,14 @@ export default {
       //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       // });
     },
+
     YCCSDrawLine() {
       // 基于准备好的dom，初始化echarts实例
       let main1 = this.$echarts.init(document.getElementById('main6'))
       let th = this
       var option = {
         title: {
-          text: "预测猝死类型统计",
+          text: "ST-T异常 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -490,7 +485,7 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
@@ -499,6 +494,8 @@ export default {
             data: this.YCCSDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -529,7 +526,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "房室肥大类型统计",
+          text: "房室肥大 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -541,7 +538,7 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
@@ -550,6 +547,8 @@ export default {
             data: this.FSFDDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -580,7 +579,7 @@ export default {
       let th = this
       var option = {
         title: {
-          text: "颤动/扑动类型统计",
+          text: "颤动/扑动 统计",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -592,7 +591,7 @@ export default {
         },
         series : [
           {
-            name: this.DOpName,
+
             type: 'pie',
             radius: '70%',
             roseType: 'radius',
@@ -601,6 +600,8 @@ export default {
             data: this.CDPDDCountArr,
             label: {//饼图文字的显示
               show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
               // position:'outer',
               // alignTo:'edge',
               // margin:10,
@@ -625,7 +626,56 @@ export default {
       //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
       // });
     },
+    CDPDDrawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let main1 = this.$echarts.init(document.getElementById('main9'))
+      let th = this
+      var option = {
+        title: {
+          text: "颤动/扑动 统计",
+          top: "bottom",
+          left: "center",
+          textStyle: {
+            color: "black ", //标签文字颜色改为白色
+          },
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        series : [
+          {
 
+            type: 'pie',
+            radius: '70%',
+            roseType: 'radius',
+            left:'23%',
+            right:'23%',
+            data: this.CDPDDCountArr,
+            label: {//饼图文字的显示
+              show: true, //默认  显示文字
+              fontSize:18,
+              fontWeight: "bold",
+              // position:'outer',
+              // alignTo:'edge',
+              // margin:10,
+              formatter: function (arg) {
+                //console.log(arg);
+                return arg.name + '(' + arg.value + ")"
+              }
+            },
+          }
+        ]
+      };
+      main1.off('click')
+      // 绘制图表
+      main1.setOption(option);
+      window.addEventListener("resize", function () {
+        main1.resize();
+      });
+      setTimeout(function (){
+        main1.resize();
+      })
+    },
 
 
     /** 查询 */
@@ -774,96 +824,20 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
-  .title-left{
-    display: inline-block;
-    width: 0.25rem;
-    height: 1rem;
-    background: linear-gradient(180deg, #3ea2ff 0%, #2746fc 100%);
-    border-radius: 0.13rem;
-    margin-right: 1rem;
-  }
-  .top{
-    width: 50%;
-    height: 40%;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    margin-right: 5px;
-    margin-left: 5px;
-
-
-    .card1{
-      width: 100%;
-      margin-top: 5px;
-      .title {
-        text-align: left;
-        font-size: 1.13rem;
-        font-weight: bold;
-        color: #333333;
-        .title-left {
-          display: inline-block;
-          width: 0.25rem;
-          height: 2rem;
-          background: linear-gradient(180deg, #3ea2ff 0%, #2746fc 100%);
-          border-radius: 0.13rem;
-          margin-right: 1rem;
-        }
-      }
-    }
+  justify-content: space-around;
+  flex-wrap: wrap;
     .card2{
       margin-top: 10px;
-      min-height: 42vh;
+      //min-height: 42vh;
       width: 49%;
       .chart2{
         width: 100%;
-        height: 40vh;
+        height: 48vh;
       }
     }
-  }
-  .circle {
-    width: 50%;
-    height:100%;
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
-    justify-content: space-between;
-    .card2{
-      text-align: center;
-      min-height: 42vh;
-      width: 49%;
-      margin-bottom: 10px;
-      .chart2{
-        width: 100%;
-        height: 40vh;
-      }
-    }
-  }
-  .containerCard {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    width: 100%;
-    height:100%;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-
-  }
-  .containerLeftAndRight{
-    margin-top: 5px;
-    display: flex;
-    justify-content: space-around; /* 左右分布 */
-  }
-
-  //.box {
-
-  //}
-
 }
+
+
 
 
 
