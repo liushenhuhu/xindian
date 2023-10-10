@@ -2010,7 +2010,7 @@ export default {
     getLabel(){
       getLabel(this.query).then(res=>{
         console.log(res)
-        if(res!=null){
+        if(res.data.waveLabel!=null){
           this.subData=JSON.parse(res.data.waveLabel)
         }
       }).catch(err=>{
