@@ -408,7 +408,13 @@ public class PatientManagementController extends BaseController {
         return getTable(resList,total);
     }
 
-//    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
+    /**
+     * web端查询指定医生诊断的相关报告
+     * @param patientManagement
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/listPatientTimeList")
     public TableDataInfo listPatientTimeList(PatientManagement patientManagement,HttpServletRequest request) throws Exception {
 
@@ -636,7 +642,7 @@ public class PatientManagementController extends BaseController {
     }
 
     /**
-     * 心电大屏数据医院查找
+     * 心电大屏数据查找医院
      * @param hospitalId
      * @param request
      * @return

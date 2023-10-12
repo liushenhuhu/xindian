@@ -325,6 +325,7 @@ public class ReportController extends BaseController
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
 
+        //相关数据加密
         if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
             report.setPPhone(aesUtils.encrypt(report.getPPhone()));
         }
@@ -335,6 +336,7 @@ public class ReportController extends BaseController
             report.setLoginUserPhone(aesUtils.encrypt(report.getLoginUserPhone()));
         }
 
+        //web端判断填写医生是否在该平台，没有则直接返回
         if (StringUtils.isNotEmpty(report.getDiagnosisDoctor())){
             report.setDiagnosisDoctor(aesUtils.encrypt(report.getDiagnosisDoctor()));
             Doctor doctor = new Doctor();
@@ -346,7 +348,7 @@ public class ReportController extends BaseController
             report.setdPhone(doctors.get(0).getDoctorPhone());
         }
         List<Doctor> doctors = null;
-        //当前报告信息
+        //当前报告信息，判断报告状态
         Report report1 = reportService.selectReportByPId(s);
         if (!SysUser.isAdmin(loginUser.getUser().getUserId())){
             if (report1.getDiagnosisStatus()==1){
@@ -367,13 +369,19 @@ public class ReportController extends BaseController
             stringBuilder.append(report2.getPPhone());
         }
         SysUser sysUser = sysUserMapper.selectUserByPhone(String.valueOf(stringBuilder));
+        //获取医生信息
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
+        //获取患者信息
         Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
+
         if (patient.getPatientName()!=null&&!"".equals(patient.getPatientName())){
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
 
+
         SysUser sysUser1 = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
+
+        //报告状态判断  2 提交判断 ， 3拒接判断 ， 1，医生诊断完成
         if(report.getDiagnosisStatus()==2){
 
             //判断用户是否存在服务次数
@@ -395,7 +403,7 @@ public class ReportController extends BaseController
                 doctor.getHospitalNameList().add(report.getHospital());
                 doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && doctors.size()!=0){
-
+                    //患者提交报告，通过微信公众号推送提醒消息
                     if (report.getpId()!=null&&!"".equals(report.getpId())){
                         wxMsgRunConfig.redisAdd(report.getpId(),doctors);
                     }
@@ -411,7 +419,7 @@ public class ReportController extends BaseController
                 report.setStartTime(new Date());
                 int i = reportService.updateReport(report);
 
-
+                //记录患者的报告服务次数使用
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             CompletableFuture.runAsync(() ->{
                 System.out.println("异步线程 =====> 开始记录服务使用日志 =====> " + new Date());
@@ -438,10 +446,12 @@ public class ReportController extends BaseController
                 System.out.println("异步线程 =====> 结束记录服务使用日志 =====> " + new Date());
             },executorService);
             executorService.shutdown(); // 回收线程池
-                return toAjax(i);
+           return toAjax(i);
 
 
         } else if(report.getDiagnosisStatus()==3){ //拒绝逻辑
+
+            //记录医生拒绝判断的原因
             Detection detection = new Detection();
             detection.setDetectionPid(report1.getpId());
             List<Detection> detections = detectionService.selectDetectionList(detection);
@@ -458,6 +468,8 @@ public class ReportController extends BaseController
             notDealWith.setRefuseReason(report.getDiagnosisConclusion());
             notDealWithService.insertNotDealWith(notDealWith);
 
+            //医生拒绝判断小程序消息推送通知用户通知
+            //如果报告属于患者家人，则通过发送短信的方式去
             if (StringUtils.isNotEmpty(report2.getLoginUserPhone())){
 
                 SysUser sysUser2 = sysUserMapper.selectUserByPhone(report2.getLoginUserPhone());
@@ -482,6 +494,8 @@ public class ReportController extends BaseController
             }
             return toAjax(reportService.updateReportNull(report));
         }else if(report.getDiagnosisStatus()==1){//医生诊断
+
+            //记录报告的的状态
             if (StringUtils.isNotEmpty(report.getStartDateTime())){
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date parse = simpleDateFormat.parse(report.getStartDateTime());
@@ -516,6 +530,8 @@ public class ReportController extends BaseController
 
             }
 
+            //医生提交诊断报告小程序消息推送通知用户通知
+            //如果报告属于患者家人，则通过发送短信的方式去
             reportService.updateReport(report);
             if (StringUtils.isNotEmpty(report2.getLoginUserPhone())){
 

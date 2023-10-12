@@ -78,8 +78,8 @@ export default {
       main.setOption(option);
       main.on('click', function(params) {
         th.$router.push({
-          name: "log",
-          params: {pId: th.form.pId,type:params.name,ecgType:th.$route.query.type}});
+          path: "log",
+          query: {pId: th.form.pId,type:params.name,ecgType:th.$route.query.type}});
       });
     },
     /** 查询 */
