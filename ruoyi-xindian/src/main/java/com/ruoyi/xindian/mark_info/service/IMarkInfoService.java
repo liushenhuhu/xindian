@@ -9,7 +9,7 @@ import java.util.List;
 public interface IMarkInfoService {
 
     //获取用户标注信息
-    public List<MarkInfo> selectMarkInfoByLogId();
+    public List<MarkInfo> selectMarkInfoByLogId(MarkInfo markInfo);
 
     //获取用户
     public List<User> getUsers();

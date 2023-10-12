@@ -251,11 +251,11 @@
             <el-form-item label="医院代号" prop="hospitalCode">
               <el-select v-model="form.hospitalCode" placeholder="请选择医院代号">
                 <el-option
-                  v-for="dict in dict.type.hospital_name_list"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
+                  v-for="item in options"
+                  :key="item.hospitalId"
+                  :label="item.hospitalName"
+                  :value="item.hospitalCode">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -387,6 +387,7 @@ import {getToken} from "@/utils/auth";
 import {treeselect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "User",
@@ -404,6 +405,7 @@ export default {
       multiple: true,
       // 显示搜索条件
       showSearch: true,
+      options:[],
       // 总条数
       total: 0,
       // 用户表格数据
@@ -505,6 +507,9 @@ export default {
     }
   },
   created() {
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
     this.getList();
     this.getTreeselect();
     this.getConfigKey("sys.user.initPassword").then(response => {

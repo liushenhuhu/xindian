@@ -38,11 +38,11 @@
       <el-form-item label="医院" prop="patientSource">
         <el-select v-model="queryParams.patientSource" placeholder="请选择医院" clearable>
           <el-option
-            v-for="dict in dict.type.hospital_name_name_list"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalName">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="患者电话" prop="patientPhone">
@@ -264,11 +264,11 @@
         <el-form-item label="医院" prop="patientSource">
           <el-select v-model="form.patientSource" placeholder="请选择医院">
             <el-option
-              v-for="dict in dict.type.hospital_name_name_list"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
+              v-for="item in options"
+              :key="item.hospitalId"
+              :label="item.hospitalName"
+              :value="item.hospitalName">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="患者身份证号" prop="patientCode">
@@ -325,6 +325,7 @@ import $ from "jquery";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
+import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "Patient",
@@ -335,6 +336,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      options: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -398,6 +400,9 @@ export default {
   },
 
   created() {
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
     this.getList();
   },
 

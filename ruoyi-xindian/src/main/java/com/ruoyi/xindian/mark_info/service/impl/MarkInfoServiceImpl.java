@@ -16,8 +16,8 @@ public class MarkInfoServiceImpl implements IMarkInfoService {
     private MarkInfoMapper markInfoMapper;
 
     @Override
-    public List<MarkInfo> selectMarkInfoByLogId() {
-        return markInfoMapper.selectMarkInfoByLogId();
+    public List<MarkInfo> selectMarkInfoByLogId(MarkInfo markInfo) {
+        return markInfoMapper.selectMarkInfoByLogId(markInfo);
     }
 
     @Override

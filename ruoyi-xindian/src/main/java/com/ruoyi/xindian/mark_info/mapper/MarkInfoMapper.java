@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MarkInfoMapper {
 
-    public List<MarkInfo> selectMarkInfoByLogId();
+    public List<MarkInfo> selectMarkInfoByLogId(MarkInfo markInfo);
 
     public List<User> getUsers();
 
