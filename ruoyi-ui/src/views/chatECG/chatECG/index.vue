@@ -1,81 +1,92 @@
 <template>
-  <div class="container">
     <div class="mainbox">
       <div class="box">
-        <div class="title">
-          <img src="@/assets/images/chatECG-logo1.png" width="" height="84%">
-          <img src="@/assets/images/chatECG-logo-font.png" width="" height="84%">
-          <img src="@/assets/images/chatECG-logo3.png" width="" height="40%">
-        </div>
-
         <div id="content" class="content">
         <!--    left      -->
           <div class="left">
-            <div class="left-child">
-              <textarea
-                placeholder="请输入您的问题..."
-                style="height: 100%;width: 100%;resize:none;outline: none;border-color:#ccc;border-radius:5px;font-size: 24px"
-                id="text"
-                v-model="customerText"
-                @keyup.enter="sentMsg()"
-              ></textarea>
+            <div class="new">
+              <div class="img_box">
+                <img class="zhengda" src="@/assets/images/zhengda.png"/>
+              </div>
+              <div class="new_his">+&emsp;&emsp;新建对话框</div>
             </div>
-            <div class="left-btn">
-              <button @click="sentMsg()" style="width: 60%;height: 60%;background-color: rgba(68,114,196);">
-                <span style="vertical-align: 3px;font-size: 1vw; color: white">发 送</span>
-              </button>
+            <div class="his">
+              <div class="his_item">
+                <img class="mesimg2" src="@/assets/images/messge2.png"/>
+                <div class="his_title">
+                  <div class="tit">新建会话1</div>
+                  <div class="time">2023-10-13 10:09:36</div>
+                </div>
+                <img class="delimg" src="@/assets/images/delimg.png"/>
+              </div>
+              <div class="his_item">
+                <img class="mesimg2" src="@/assets/images/messge2.png"/>
+                <div class="his_title">
+                  <div class="tit">新建会话1</div>
+                  <div class="time">2023-10-13 10:09:36</div>
+                </div>
+                <img class="delimg" src="@/assets/images/delimg.png"/>
+              </div>
             </div>
           </div>
         <!--    right      -->
-          <div class="right" id="right">
-            <div v-for="(item,index) in info" :key="index">
-              <div class="info_r info_default" v-if="item.type == 'leftinfo'">
-              <span class="circle circle_r">
-                <img src="@/assets/images/robot.gif" width="40px" height="40px" style="margin-left: 3px" alt/>
-              </span>
-                <div class="con_r con_text">
-                  <div>{{item.content}}</div>
-                  <div v-for="(item2,index) in item.question" :key="index">
-                    <div class="con_que" @click="clickRobot(item2.content,item2.id)">
-                      <div class="czkj-question-msg">
-                        {{item2.index}}
-                        {{item2.content}}
+          <div class="right" >
+            <div class="right-title">
+              <img class="xietong" src="@/assets/images/xietong.png"/>
+            </div>
+            <div class="message" id="right">
+              <div v-for="(item,index) in info" :key="index">
+                <div class="info_r" v-if="item.type == 'leftinfo'">
+                  <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
+                  <div class="con_r">
+                    <div class="time_r">{{item.time}}</div>
+                    <div class="con_text">{{item.content}}</div>
+                    <div v-for="(item2,index) in item.question" :key="index">
+                      <div class="con_que" @click="clickRobot(item2.content,item2.id)">
+                        <div class="czkj-question-msg">
+                          {{item2.index}}
+                          {{item2.content}}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="time_r">{{item.time}}</div>
+                <div class="info_l" v-if="item.type == 'rightinfo'">
+                  <div class="con_l">
+                    <div class="time_l">{{item.time}}</div>
+                    <span class="con_text">{{item.content}}</span>
+                  </div>
+                  <img src="@/assets/images/userimg.png" class="pic_l" />
+                </div>
               </div>
-              <div class="info_l" v-if="item.type == 'rightinfo'">
+              <div class="info_r" v-if="isLoading">
+                <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
                 <div class="con_r con_text">
-                  <span class="con_l">{{item.content}}</span>
-                  <span class="circle circle_l">
-                  <img src="@/assets/images/logo1.png" class="pic_l" />
-                </span>
-                </div>
-                <div class="time_l">{{item.time}}</div>
-              </div>
-            </div>
-
-
-            <div class="info_r info_default" v-if="isLoading">
-              <span class="circle circle_r">
-                <img src="@/assets/images/robot.gif" width="40px" height="40px" style="margin-left: 3px" alt/>
-              </span>
-              <div class="con_r con_text">
-                <div style="display:flex;height: 35px;align-items: center">
-                  <loading/>
+                  <div style="display:flex;height: 35px;align-items: center">
+                    <loading/>
+                  </div>
                 </div>
               </div>
             </div>
-
+            <div class="text-area">
+              <div class="left-child">
+                <img class="mesimg1" src="@/assets/images/messge1.png"/>
+                <textarea
+                  placeholder="请输入您的问题..."
+                  style="height: 100%;width: 85%;resize:none;outline: none;border:0;font-size: 1.3vw;padding: 1vh"
+                  id="text"
+                  v-model="customerText"
+                  @keyup.enter="sentMsg()"
+                ></textarea>
+                <img class="mesimg3" src="@/assets/images/messge3.png" @click="sentMsg()"/>
+              </div>
+            </div>
 
           </div>
 
         </div>
       </div>
     </div>
-  </div>
 </template>
 <script>
 import {proxyRequest} from "@/api/chatECG/chatECG";
@@ -294,36 +305,32 @@ export default {
     height: calc( 100vh - 84px);
     background-color: #ffffff;
     position: relative;
-    background-image: url("../../../assets/images/body.png");
-    background-repeat:no-repeat;
-    background-size:100% 110%;
-    background-position: center;
+    //background-image: url("../../../assets/images/body.png");
+    //background-repeat:no-repeat;
+    //background-size:100% 110%;
+    //background-position: center;
+    background-color: #000000;
     z-index: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     #content {
-      height: calc(100% - 16vh);
+      height: 95%;
       //overflow-y: scroll;
       font-size: 20px;
-      width: 98%;
+      width: 80%;
       display: flex;
       justify-content: flex-start;
-      .circle {
-        display: inline-block;
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        background-color: #eff1f3;
-        margin-left: 56px;
-        margin-top: 6px;
-      }
       .con_text {
+        width: fit-content;
         color: #333;
         margin-bottom: 5px;
         display: flex;
         justify-content: flex-end;
+        background-color: #e2e2e2;
+        border-radius: 6px;
+        padding: 10px;
       }
       .con_que {
         color: #1c88ff;
@@ -332,60 +339,68 @@ export default {
         cursor: pointer;
       }
       .info_r {
-        position: relative;
-        margin-top: 2%;
-        .circle_r {
-          position: absolute;
-          left: -1%;
-          top: 5%;
+        display: flex;
+        align-items: center;
+        margin-top: 1vh;
+        .pic_ro{
+          width: 3vw;
+          height: 6vh;
+          margin-left: 6vw;
         }
         .con_r {
           display: inline-block;
-          max-width: 39%;
+          max-width: 60%;
           //width: 55%;
           min-height: 55px;
+
           /* min-height: 20px; */
-          background-color: #e2e2e2;
-          border-radius: 6px;
-          padding: 10px;
-          margin-left: 100px;
         }
         .time_r {
-          margin-left: 100px;
-          color: #999999;
-          font-size: 24px;
+          text-align: right;
+          //margin-left: 5vw;
+          color: #5B5B5B;
+          font-size: 18px;
         }
       }
       .info_l {
-        text-align: right;
-        margin-right: 35px;
+        margin-right: 5vw;
+        margin-top: 1vh;
+        display: flex;
+        align-items: center;
+        justify-content: right;
         color: #ffffff;
-        color: #3163C5;
         .pic_l {
-          width: 40px;
-          height: 40px;
-          margin-top: 6px;
-          margin-right: 3px;
+          width: 3vw;
+          height: 6vh;
+          margin-top: 2vh;
         }
         .time_l {
-          margin-right: 72px;
-          color: #999999;
-          font-size: 24px;
-          margin-top: 5px;
+          text-align: left;
+          color: #5B5B5B;
+          font-size: 18px;
         }
         .con_l {
           display: inline-block;
-          max-width: 30%;
-          min-height: 55px;
-          background-color: #3163C5;
+          max-width: 60%;
+          min-height: 20%;
           border-radius: 6px;
-          padding: 10px;
           text-align: left;
           color: #fff;
           margin-right: 5px;
           word-wrap:break-word;
           word-break:break-all;
           //overflow: hidden;/*这个参数根据需求来决定要不要*/
+          .con_text {
+            width: fit-content;
+            color: #333;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: flex-end;
+            background-color: #e2e2e2;
+            border-radius: 6px;
+            padding: 10px;
+            float: right;
+          }
         }
         .circle_l {
           margin-left: 10px;
@@ -473,24 +488,120 @@ export default {
 }
 .left {
   width: 30%;
-  border: 3px rgba(47,82,143) solid;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  font-size: 1.3vw;
+  color: #FFFFFF;
+  .new{
+    height: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    .img_box{
+      width: 4.5vw;
+      height: 9vh;
+      background-color: #FFFFFF;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 1vw;
+      .zhengda{
+        width: 3.5vw;
+        height: 7vh;
+      }
+    }
+    .new_his{
+      flex: 1;
+      height: 100%;
+      margin-left: 1vw;
+      margin-right: 1vw;
+      border: 2px solid #9A9999;
+      border-radius: 1vw;
+      padding: 2.3vh 1vw;
+    }
+  }
+  .his{
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .his_item{
+      display: flex;
+      align-items: center;
+      height: 18%;
+      width: 90%;
+      border: 2px solid #9A9999;
+      border-radius: 1vw;
+      margin-top: 2vh;
+      .mesimg2{
+        margin-left: 1vw;
+        width: 2.5vw;
+        height: 2.2vw;
+      }
+      .his_title{
+        flex: 1;
+        margin: 0 1vw 0 1vw;
+        .tit{
+          margin: 1vh 0 2vh 0;
+        }
+        .time{
+          font-size: 0.9vw;
+          color: #ABABAB;
+        }
+      }
+      .delimg{
+        margin-right: 1vw;
+        width: 2vw;
+        height: 2vw;
+      }
+    }
+  }
 }
 .left-child {
-  width: 90%;
-  height: 80%;
-  border: 2px rgba(47,82,143) solid;
-  margin-top: 5%;
+  display: flex;
+  width: 83%;
+  height: 85%;
+  border: 2px #DFDFDF solid;
+  margin:auto;
+  position: relative;
+  border-radius: 1vw;
+}
+.left-child .mesimg1{
+  width: 2.5vw;
+  height: 2.2vw;
+  margin: 0.8vh 1vw 0 0.5vw;
+}
+.left-child .mesimg3{
+  width: 2.5vw;
+  height: 2.2vw;
+  position: absolute;
+  bottom: 0.5vh;
+  right: 0.5vw;
 }
 .right {
   width: 70%;
-  border: 3px rgba(47,82,143) solid;
+  background-color: #FFFFFF;
+  border-radius: 1.5vw;
+  overflow: hidden;
+}
+.right .right-title{
+  height: 12%;
+}
+.right .right-title .xietong{
+  height: 8vh;
+  width: 20vw;
+  margin: 2vh 0 0 1vw;
+}
+.right .message{
+  height: 65%;
+  background-color: #FFFFFF;
   overflow-y: scroll;
 }
-
+.right .text-area{
+  height: 23%;
+  width: 100%;
+}
 .left-btn {
   width: 100%;
   height: 10%;
