@@ -319,24 +319,29 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params.pId)
-    this.queryParams.pId = this.$route.params.pId?this.$route.params.pId:sessionStorage.getItem('pId')
-    this.queryParams.logType = this.$route.params.type?this.$route.params.type:sessionStorage.getItem('logType')
-    this.queryParams.ecgType = this.$route.params.ecgType?this.$route.params.ecgType:sessionStorage.getItem('ecgType')
-    sessionStorage.setItem('pId',this.queryParams.pId);
-    sessionStorage.setItem('logType',this.queryParams.logType);
-    sessionStorage.setItem('ecgType',this.queryParams.ecgType);
+    this.getList();
+  },
+  activated() {
     this.getList();
   },
   methods: {
     /** 查询预警日志列表 */
     getList() {
+      this.queryParams.pId = this.$route.query.pId
+      this.queryParams.logType = this.$route.query.type
+      this.queryParams.ecgType = this.$route.query.ecgType
       console.log(this.queryParams)
       this.loading = true;
       this.queryParams.params = {};
       if (null != this.daterangeLogTime && '' != this.daterangeLogTime) {
         this.queryParams.params["beginLogTime"] = this.daterangeLogTime[0];
         this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
+      }
+      if (this.queryParams.logType==='null'){
+        this.queryParams.logType=null;
+      }
+      if (this.queryParams.ecgType==='null'){
+        this.queryParams.ecgType=null;
       }
       listAlert_log(this.queryParams).then(response => {
         this.alert_logList = response.rows;

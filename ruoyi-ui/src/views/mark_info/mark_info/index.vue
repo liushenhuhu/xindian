@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="标注用户" prop="province">
+      <el-form-item label="日志id" prop="province">
         <el-input
-          v-model="queryParams.province"
-          placeholder="请输入用户"
+          v-model="queryParams.logId"
+          placeholder="请输入日志id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
 
-      <el-form-item label="标注差异" prop="ifStatistics">
-        <el-select v-model="queryParams.ifStatistics" placeholder="请选择是否查看标注差异" clearable>
+      <el-form-item label="标注差异" prop="isLabel">
+        <el-select v-model="queryParams.isLabel" placeholder="请选择是否查看标注差异" clearable>
           <el-option
             v-for="dict in dict.type.if"
             :key="dict.value"
@@ -21,8 +21,8 @@
         </el-select>
       </el-form-item>
 
-<!--      <el-form-item label="标注标签差异" prop="ifStatistics">-->
-<!--        <el-select v-model="queryParams.ifStatistics" placeholder="请选择查看某个便签差异" clearable>-->
+<!--      <el-form-item label="标注标签差异" prop="isLabel">-->
+<!--        <el-select v-model="queryParams.isLabel" placeholder="请选择查看某个便签差异" clearable>-->
 <!--          <el-option-->
 <!--            v-for="dict in dict.type.if"-->
 <!--            :key="dict.value"-->
@@ -111,7 +111,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="是否开通数据统计">
-          <el-radio-group v-model="form.ifStatistics">
+          <el-radio-group v-model="form.isLabel">
             <el-radio
               v-for="dict in dict.type.if"
               :key="dict.value"
@@ -161,6 +161,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         province: null,
+        logId:null,
         hospitalName: null,
         hospitalCode: null,
         hospitalAccount: null,
@@ -170,7 +171,7 @@ export default {
         monitoringPatientNumber: null,
         accountNumber: null,
         firstEcgTime: null,
-        ifStatistics: null,
+        isLabel: null,
       },
       // 表单参数
       form: {},
@@ -194,11 +195,6 @@ export default {
   methods: {
     /** 查询医院列表 */
     getList() {
-      if (this.queryParams.province === null || this.queryParams.province === ""){
-        if(this.queryParams.ifStatistics === "True"){
-          this.getNotSame();
-        }
-        else{
           this.loading = true;
           var _this=this;
           getUsers().then(response => {
@@ -209,8 +205,10 @@ export default {
             }
           });
           getLists(this.queryParams).then(response => {
+            console.log(response)
             this.hospitalList = response.rows;
             this.total = response.total;
+
             _this.hospitalList=[]
             // console.log(response)
             for(var k=0;k<response.rows.length;k++){
@@ -238,11 +236,7 @@ export default {
             }
           });
           this.loading = false;
-        }
-      }
-      else{
-        this.getUserList();
-      }
+
     },
     /** 刷新 */
     refresh() {
@@ -258,6 +252,7 @@ export default {
       this.form = {
         hospitalId: null,
         province: null,
+        logId:null,
         hospitalName: null,
         hospitalCode: null,
         hospitalAccount: null,
@@ -267,7 +262,7 @@ export default {
         monitoringPatientNumber: null,
         accountNumber: null,
         firstEcgTime: null,
-        ifStatistics: "0"
+        isLabel: "0"
       };
       this.resetForm("form");
     },
@@ -282,6 +277,7 @@ export default {
         }
       });
       getUserLists(this.queryParams).then(response => {
+        console.log(response)
         this.hospitalList = response.rows;
         this.total = response.total;
         _this.hospitalList=[]
@@ -336,14 +332,14 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       console.log(this.queryParams.province)
-      console.log(this.queryParams.ifStatistics)
+      console.log(this.queryParams.isLabel)
       if (this.queryParams.province === null || this.queryParams.province === ""){
-        if(this.queryParams.ifStatistics === "True"){
-          this.getNotSame();
-        }
-        else{
+        // if(this.queryParams.isLabel === "True"){
+        //   this.getNotSame();
+        // }
+        // else{
           this.getList();
-        }
+        // }
       }
       else{
         this.getUserList();
@@ -351,6 +347,20 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.queryParams= {
+          province: null,
+          logId:null,
+          hospitalName: null,
+          hospitalCode: null,
+          hospitalAccount: null,
+          hospitalPassword: null,
+          equipmentNumber: null,
+          patientNumber: null,
+          monitoringPatientNumber: null,
+          accountNumber: null,
+          firstEcgTime: null,
+          isLabel: null,
+      }
       this.resetForm("queryForm");
       this.handleQuery();
     },

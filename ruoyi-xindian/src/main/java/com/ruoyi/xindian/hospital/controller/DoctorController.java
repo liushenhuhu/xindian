@@ -246,8 +246,10 @@ public class DoctorController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestParam("doctor")String doctor3,@RequestParam(value = "imgFile",required = false) MultipartFile imgFile) throws Exception {
         Doctor doctor = JSONObject.parseObject(doctor3, Doctor.class);
+        doctor.setDoctorPhone(aesUtils.encrypt(doctor.getDoctorPhone()));
+        doctor.setDoctorName(aesUtils.encrypt(doctor.getDoctorName()));
         Doctor doctor1 = doctorService.selectDoctorByDoctorId(doctor.getDoctorId());
-        if (!aesUtils.decrypt(doctor1.getDoctorPhone()).equals(doctor.getDoctorPhone())){
+        if (!doctor1.getDoctorPhone().equals(doctor.getDoctorPhone())){
             Doctor doctor2 = doctorService.selectDoctorByDoctorPhone(doctor.getDoctorPhone());
             if (doctor2!=null){
                 return AjaxResult.error("手机号已存在");
@@ -259,8 +261,7 @@ public class DoctorController extends BaseController
         }
         Hospital hospital = hospitalService.selectHospitalByHospitalCode(doctor.getHospital());
         doctor.setHospital(hospital.getHospitalName());
-        doctor.setDoctorPhone(aesUtils.encrypt(doctor.getDoctorPhone()));
-        doctor.setDoctorName(aesUtils.encrypt(doctor.getDoctorName()));
+
         return toAjax(doctorService.updateDoctor(doctor));
     }
 

@@ -175,6 +175,17 @@ public class DepartmentController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Department department)
     {
+        Department department2 = departmentService.selectDepartmentByDepartmentId(department.getDepartmentId());
+
+        if (department2.getDepartmentCode().equals(department.getDepartmentCode())){
+            return toAjax(departmentService.updateDepartment(department));
+        }
+        Department department1 = new Department();
+        department1.setDepartmentCode(department.getDepartmentCode());
+        List<Department> departments = departmentService.selectDepartmentList(department1);
+        if (departments!=null&&departments.size()>0){
+            return AjaxResult.error("科室代号已存在");
+        }
         return toAjax(departmentService.updateDepartment(department));
     }
 

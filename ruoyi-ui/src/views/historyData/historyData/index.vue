@@ -480,6 +480,7 @@ export default {
     // updateOnlineAll();
   },
   activated() {
+    this.getList();
     document.documentElement.scrollTop=this.currentScrollPos || 0
   },
 

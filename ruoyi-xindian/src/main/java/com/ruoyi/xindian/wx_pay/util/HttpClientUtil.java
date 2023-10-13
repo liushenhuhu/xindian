@@ -194,7 +194,8 @@ public class HttpClientUtil {
     * https双向签名认证，用于支付申请退款
     * 
     * */
-   public static String SSLCERT_PATH="C:\\Users\\13401\\Desktop\\zs\\apiclient_cert.p12";//证书的路径
+   public static String SSLCERT_PATH="C:\\Users\\13401\\Desktop\\zs\\apiclient_cert.p12";//证书的路径(本地)
+//   public static String SSLCERT_PATH="/home/chenpeng/workspace/system/xindian/cert/apiclient_cert.p12";//证书的路径（服务器）
    public static String SSLCERT_PASSWORD="1645541073";//证书的密籍   自己的商户号
    @SuppressWarnings("deprecation")
    public static String doRefund(String url,String data) throws Exception {

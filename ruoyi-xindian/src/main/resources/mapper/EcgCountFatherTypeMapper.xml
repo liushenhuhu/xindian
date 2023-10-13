@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.ecgCount.mapper.EcgCountFatherTypeMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.ecgCount.domain.EcgCountFatherType">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="fatherType" column="father_type" jdbcType="VARCHAR"/>
+            <result property="childValue" column="child_value" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ResultMap" type="com.ruoyi.xindian.ecgCount.domain.EcgCountFatherType" extends="BaseResultMap">
+        <association property="ecgCountType" javaType="ecgCountType" resultMap="com.ruoyi.xindian.ecgCount.mapper.EcgCountTypeMapper.BaseResultMap"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,father_type,child_value
+    </sql>
+    <select id="getEcgTypeOrderBy" resultType="com.ruoyi.xindian.ecgCount.domain.EcgCountFatherType" resultMap="ResultMap">
+        SELECT
+            ecg_count_father_type.father_type,
+            ecg_count_father_type.id,
+            ecg_count_type.label,
+            ecg_count_type.`value`
+        FROM
+            ecg_count_father_type
+                INNER JOIN
+            ecg_count_type
+            ON
+                ecg_count_father_type.child_value = ecg_count_type.id
+            order by ecg_count_father_type.father_type
+    </select>
+
+
+</mapper>

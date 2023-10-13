@@ -26,9 +26,9 @@ public class MarkInfoController extends BaseController {
     private IMarkInfoService iMarkInfoService;
 
     @GetMapping("/list")
-    public TableDataInfo list() {
+    public TableDataInfo list(MarkInfo markInfo1) {
         startPage();
-        List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
+        List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId(markInfo1);
         Map<String,String> map;
         List<Map<String,String>> listMap;
         for (MarkInfo markInfo : list) {
@@ -43,6 +43,7 @@ public class MarkInfoController extends BaseController {
             markInfo.setLabelList(listMap);
         }
         return getDataTable(list);
+
     }
     @GetMapping("/users")
     public List<User> users() {
@@ -56,7 +57,8 @@ public class MarkInfoController extends BaseController {
         Integer pageNum = pageDomain.getPageNum();
         Integer pageSize = pageDomain.getPageSize();
         int index=(pageNum-1)*pageSize;
-        List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
+
+        List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId(new MarkInfo());
         List<MarkInfo> resList = new ArrayList<>();
         List<MarkInfo> reList = new ArrayList<>();
         Map<String,String> map = null;
@@ -106,7 +108,7 @@ public class MarkInfoController extends BaseController {
 //        double threshold = user.getThreshold();
         String flag = "noise";
         double threshold = 0.8;
-        List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId();
+        List<MarkInfo> list = iMarkInfoService.selectMarkInfoByLogId(new MarkInfo());
         List<MarkInfo> resList = new ArrayList<>();
         List<MarkInfo> reList = new ArrayList<>();
         Map<String,String> map;

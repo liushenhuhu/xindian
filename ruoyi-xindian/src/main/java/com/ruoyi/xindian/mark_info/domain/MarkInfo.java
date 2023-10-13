@@ -16,9 +16,19 @@ public class MarkInfo extends BaseEntity {
 
     private String allDataLabel;
 
+    private String isLabel;
+
 
     private List<Map<String,String>> labelList;
 
+
+    public String getIsLabel() {
+        return isLabel;
+    }
+
+    public void setIsLabel(String isLabel) {
+        this.isLabel = isLabel;
+    }
 
     public MarkInfo() {
     }

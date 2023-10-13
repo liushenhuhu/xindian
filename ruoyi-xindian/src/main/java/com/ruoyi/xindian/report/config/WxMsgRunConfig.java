@@ -158,7 +158,7 @@ public class WxMsgRunConfig {
         Report report2 = reportService.selectReportByPId(pId);
         LocalTime now = LocalTime.now();
 
-        if (report2.getDiagnosisStatus()==1){
+        if (report2.getDiagnosisStatus()!=2){
             redisTemplate.delete("DocList"+pId);
         }else {
             report2.setReportTime(new Date());

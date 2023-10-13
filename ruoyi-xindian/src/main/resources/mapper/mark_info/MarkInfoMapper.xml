@@ -21,12 +21,31 @@
     </sql>
 
     <select id="selectMarkInfoByLogId" parameterType="Patient" resultMap="PatientResult">
-        select log_id,
-               GROUP_CONCAT(log_noise_level order by user_id) as allLabel,
-               GROUP_CONCAT(user_id order by user_id) as allUsers,
-               GROUP_CONCAT(data_label order by user_id SEPARATOR ';') as allDataLabel
-        from alert_log_user
-        group by log_id
+        SELECT a.log_id,a.allLabel,a.allUsers,a.allDataLabel FROM (
+
+
+                                                                      select log_id,
+                                                                             GROUP_CONCAT(log_noise_level order by user_id) as allLabel,
+                                                                             GROUP_CONCAT(user_id order by user_id) as allUsers,
+                                                                             GROUP_CONCAT(data_label order by user_id SEPARATOR ';') as allDataLabel
+                                                                      from alert_log_user
+                                                                      <where>
+                                                                          <if test="logId!=null and logId!=''">
+                                                                              log_id = #{logId}
+                                                                          </if>
+                                                                      </where>
+                                                                      group by log_id) as a
+                                                             <where>
+                                                                 <if test="isLabel=='True'">
+                                                                     SUBSTRING_INDEX(a.allLabel, ',', 1) != SUBSTRING_INDEX(a.allLabel, ',', -1) AND a.allLabel LIKE '%,%'
+                                                                 </if>
+                                                                 <if test="isLabel=='False'">
+                                                                     SUBSTRING_INDEX(a.allLabel, ',', 1) = SUBSTRING_INDEX(a.allLabel, ',', -1) AND a.allLabel LIKE '%,%'
+                                                                 </if>
+
+
+                                                             </where>
+
     </select>
 
     <select id="getUsers" parameterType="String" resultMap="UserResult">

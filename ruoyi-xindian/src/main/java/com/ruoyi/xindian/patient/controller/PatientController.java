@@ -273,6 +273,14 @@ public class PatientController extends BaseController
         if (StringUtils.isNotEmpty(patient.getFamilyPhone())){
             patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
         }
+        Patient patient2 = patientService.selectPatientByPatientId(patient.getPatientId());
+        if (!patient2.getPatientPhone().equals(patient.getPatientPhone())){
+            Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+            if (patient1!=null){
+                return AjaxResult.error("手机号已重复");
+            }
+        }
+
         if (patient.getBirthDay()!=null){
             patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
         }

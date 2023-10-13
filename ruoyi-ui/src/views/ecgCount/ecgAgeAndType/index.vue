@@ -4,8 +4,8 @@
       <p class="title"><span class="title-left"></span>数据库统计男女比例图</p>
       <div id="chart" :style="{ width: '100%', height: '550px',margin:'0 auto'}"></div>
       <div class="footer-name">
-        <p>{{menCount}}</p>
-        <p>{{womenCount}}</p>
+        <p>男：{{menCount}}人</p>
+        <p>女：{{womenCount}}人</p>
       </div>
     </div>
     <el-card class="box-card">
@@ -28,6 +28,8 @@ export default {
       columndata2: [],
       menCount: 0,
       womenCount: 0,
+      ageYoungName: "",
+      ageCount:0,
     }
   },
   created() {
@@ -65,11 +67,10 @@ export default {
         return res;
       };
       // [起始最深颜色,结束的浅颜色]
-      let colorLeft = ["#3DA1FF", "#2749FC"];
-      let colorRight = ["#FB857D", "#F6504A"];
+      let colorLeft = ["#51647a", "#364f6b"];
+      let colorRight = ["#ea85a4", "#fc5185"];
       let option = {
         title: {
-          text: "男                                女",
           top: "bottom",
           left: "center",
           textStyle: {
@@ -235,6 +236,10 @@ export default {
             showBackground: true,
             backgroundStyle: {
               barBorderRadius: 30,
+              color:'#f5f0f0',
+              borderColor: "#7F0E0F",
+              borderWidth: 1,
+              borderType: "dotted"
             },
             xAxisIndex: 0,
             yAxisIndex: 0,
@@ -247,11 +252,7 @@ export default {
                 // 线性渐变，前四个参数分别是 x0, y0, x2, y2, 范围从 0 - 1，分别表示右,下,左,上。例如（0，0，0，1）表示从正上开始向下渐变；如果是（1，0，0，0），则是从正右开始向左渐变。
                 // 相当于在图形包围盒中的百分比，如果最后一个参数传 true，则该四个值是绝对的像素位置
                 color: new echarts.graphic.LinearGradient(
-                  0,
-                  0,
-                  1,
-                  0,
-                  [
+                  0, 0, 1, 0, [
                     {
                       offset: 0,
                       color: colorLeft[1], //指0%处的颜色
@@ -287,6 +288,10 @@ export default {
             showBackground: true,
             backgroundStyle: {
               barBorderRadius: 30,
+              color:'#e5f0f4',
+              borderColor: "#105270",
+              borderWidth: 1,
+              borderType: "dotted"
             },
             data: data2,
             barWidth: 20,
@@ -297,10 +302,7 @@ export default {
                 // 线性渐变，前四个参数分别是 x0, y0, x2, y2, 范围从 0 - 1，分别表示右,下,左,上。例如（0，0，0，1）表示从正上开始向下渐变；如果是（1，0，0，0），则是从正右开始向左渐变。
                 // 相当于在图形包围盒中的百分比，如果最后一个参数传 true，则该四个值是绝对的像素位置
                 color: new echarts.graphic.LinearGradient(
-                  0,
-                  0,
-                  1,
-                  0,
+                  0, 0, 1, 0,
                   [
                     {
                       offset: 0,
@@ -373,11 +375,15 @@ export default {
       getAgeYoung().then(r=>{
         console.log(r)
         let data = r.data
+
+
         let countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0];
         for (let j = 0; j < data.length; j++) {
+          this.ageCount += parseInt(data[j].value)
           countArr[data[j].name] = parseInt(data[j].value);
         }
         this.countArr = countArr;
+        this.ageYoungName = '儿童心电统计  总人数：'+this.ageCount
         this.ageYoung();
       })
 
@@ -390,7 +396,7 @@ export default {
       myChart.off('click');
       let option = {
         title: {
-          text: '儿童心电图分布图'
+          text: this.ageYoungName
         },
         tooltip: {},
         xAxis: {
@@ -403,8 +409,8 @@ export default {
         },
         yAxis: {
           type:'value',
-          axisLabel: {
-            show:true
+          axisLine:{
+            show:false
           }
         },
         series: [{
@@ -419,6 +425,16 @@ export default {
             color: '#009ac7',
             fontSize: 18
           },
+          itemStyle:{
+            normal:{
+              color:'#73C0DE',
+              barBorderRadius: [10, 10, 10, 10],
+              shadowBlur: 8,
+              shadowOffsetX: 3,
+              shadowOffsetY: -2,
+              shadowColor: "#73C0DE"
+            }
+          }
         }],
         grid: {
           bottom: '30%',
@@ -479,14 +495,18 @@ export default {
     position: relative;
     bottom: 0;
     color: #333333;
-    font-size: 0.88rem;
+    font-size: 0.92rem;
     width: 100%;
     p {
       display: inline-block;
-      padding: 0 2rem;
+      width: 26%;
+      padding: 0 3.5rem;
+      margin: 0;
+      color: #1e1e1e;
+      font-weight: 700;
     }
     p:nth-of-type(1) {
-      margin-left:35%
+      margin-left:25%
     }
     p:nth-of-type(2) {
       margin-left:10%
@@ -499,11 +519,12 @@ export default {
   width: 90%;
   height: 45vh;
   margin:0 auto;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 .myChart{
   height: 50vh;
-  width: 90%;
+  width: 100%;
   margin-top: 20px;
   margin:0 auto;
 }
