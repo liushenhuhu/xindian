@@ -9,3 +9,25 @@ export function proxyRequest(data) {
     data: data,
   })
 }
+export function getConversation() {
+  //console.log(query)
+  return request({
+    url: '/proxyRequest/getConversation',
+    method: 'get',
+  })
+}
+
+export function deleteConversation(data) {
+  //console.log(query)
+  return request({
+    url: '/proxyRequest/deleteConversation?conversationId='+data,
+    method: 'delete',
+  })
+}
+export function getChatQuizList(data) {
+  //console.log(query)
+  return request({
+    url: '/proxyRequest/getChatQuizList?conversationId='+data,
+    method: 'get',
+  })
+}

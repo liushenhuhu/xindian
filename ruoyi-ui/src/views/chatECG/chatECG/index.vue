@@ -8,25 +8,25 @@
               <div class="img_box">
                 <img class="zhengda" src="@/assets/images/zhengda.png"/>
               </div>
-              <div class="new_his">+&emsp;&emsp;新建对话框</div>
+              <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">+&emsp;&emsp;新建对话框</div>
             </div>
             <div class="his">
-              <div class="his_item">
+              <div class="his_item" style="cursor: pointer" v-for="item in conversation" :key="item.conversationId" @click="conversationClickCut(item.conversationId)">
                 <img class="mesimg2" src="@/assets/images/messge2.png"/>
                 <div class="his_title">
-                  <div class="tit">新建会话1</div>
-                  <div class="time">2023-10-13 10:09:36</div>
+                  <div class="tit">{{item.title}}</div>
+                  <div class="time">{{item.createTime}}</div>
                 </div>
-                <img class="delimg" src="@/assets/images/delimg.png"/>
+                <img class="delimg" src="@/assets/images/delimg.png" style="cursor: pointer" @click.stop="conversationClickDel(item.conversationId)"/>
               </div>
-              <div class="his_item">
-                <img class="mesimg2" src="@/assets/images/messge2.png"/>
-                <div class="his_title">
-                  <div class="tit">新建会话1</div>
-                  <div class="time">2023-10-13 10:09:36</div>
-                </div>
-                <img class="delimg" src="@/assets/images/delimg.png"/>
-              </div>
+<!--              <div class="his_item">-->
+<!--                <img class="mesimg2" src="@/assets/images/messge2.png"/>-->
+<!--                <div class="his_title">-->
+<!--                  <div class="tit">新建会话1</div>-->
+<!--                  <div class="time">2023-10-13 10:09:36</div>-->
+<!--                </div>-->
+<!--                <img class="delimg" src="@/assets/images/delimg.png"/>-->
+<!--              </div>-->
             </div>
           </div>
         <!--    right      -->
@@ -89,8 +89,9 @@
     </div>
 </template>
 <script>
-import {proxyRequest} from "@/api/chatECG/chatECG";
+import {deleteConversation, getChatQuizList, getConversation, proxyRequest} from "@/api/chatECG/chatECG";
 import loading from "./loading"
+import {delDoctor} from "@/api/doctor/doctor";
 export default {
   components: {
     loading
@@ -116,15 +117,31 @@ export default {
       queryParams: {
         text: "",
         history: "",
+        conversationId:1,
+        createTime:null,
+        title:null,
       },
+      conversation:[],
+
 
     };
   },
   created() {
+    this.getConversation(1)
     this.showTimer();
   },
   watch: {},
   methods: {
+    formatDateToCustomFormat(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
     // 用户发送消息
     sentMsg() {
       //console.log("queryParams: ====="+this.queryParams.history);
@@ -132,49 +149,91 @@ export default {
       this.showTimer();
       let text = this.customerText.trim();
       this.queryParams.text = text;
-      if (text !== "") {
-        var obj = {
-          type: "rightinfo",
-          time: this.getTodayTime(),
-          content: text,
-        };
-        this.info.push(obj);
-        this.customerText = "";
-        this.isLoading=true;
-        proxyRequest(this.queryParams).then(response => {
-          //console.log(response);
-          /*if(this.queryParams.history !== "" && this.queryParams.history !== null){
-
-          }*/
-          //console.log("history:  ===="+JSON.stringify(response.history));
-          this.queryParams.history = JSON.stringify(response.history);
+      this.queryParams.createTime = this.formatDateToCustomFormat(new Date())
+      if (this.info.length===1){
+        this.queryParams.conversationId = this.conversation.length+1
+        this.queryParams.title = text
+        if (text !== "") {
+          var obj = {
+            type: "rightinfo",
+            time: this.getTodayTime(),
+            content: text,
+          };
+          this.info.push(obj);
           this.customerText = "";
-          let obj = {
-            id: 1,
-            content: response.response,
-            index: 1
-          }
-          this.robotAnswer.push(obj)
-          this.appendRobotMsg(response.response);
-          this.isLoading=false;
-        })
-        this.$nextTick(() => {
-          var contentHeight = document.getElementById("right");
-          contentHeight.scrollTop = contentHeight.scrollHeight;
-        });
+          this.isLoading=true;
+          proxyRequest(this.queryParams).then(response => {
+            this.queryParams.history = JSON.stringify(response.history);
+            this.customerText = "";
+            let obj = {
+              id: 1,
+              content: response.response,
+              index: 1
+            }
+            this.robotAnswer.push(obj)
+            this.appendRobotMsg(response);
+            this.isLoading=false;
+          })
+          this.$nextTick(() => {
+            var contentHeight = document.getElementById("right");
+            contentHeight.scrollTop = contentHeight.scrollHeight;
+          });
+        }
+        console.log("开始调用")
+        let chat = {
+        conversationId:this.queryParams.conversationId,
+        createTime:this.queryParams.createTime,
+        title: this.queryParams.title
+        }
+        this.queryParams.title = null
+        this.conversation.unshift(chat)
+        setTimeout(()=>{this.getConversation(2)}, 5000)
+      }else {
+        if (text !== "") {
+          var obj = {
+            type: "rightinfo",
+            time: this.getTodayTime(),
+            content: text,
+          };
+          this.info.push(obj);
+          this.customerText = "";
+          this.isLoading=true;
+          proxyRequest(this.queryParams).then(response => {
+            //console.log(response);
+            /*if(this.queryParams.history !== "" && this.queryParams.history !== null){
+
+            }*/
+            //console.log("history:  ===="+JSON.stringify(response.history));
+            console.log(response)
+            this.queryParams.history = JSON.stringify(response.history);
+            this.customerText = "";
+            let obj = {
+              id: 1,
+              content: response.response,
+              index: 1
+            }
+            this.robotAnswer.push(obj)
+            this.appendRobotMsg(response);
+            this.isLoading=false;
+          })
+          this.$nextTick(() => {
+            var contentHeight = document.getElementById("right");
+            contentHeight.scrollTop = contentHeight.scrollHeight;
+          });
+        }
       }
+
     },
     // 机器人回答消息
     appendRobotMsg(text) {
-      //console.log(text)
       clearTimeout(this.timer);
       this.showTimer();
-      text = text.trim();
+      text.response = text.response.trim();
       let answerText = "";
       let flag;
       for (let i = 0; i < this.robotAnswer.length; i++) {
         //console.log(this.robotAnswer[i].content)
-        if (this.robotAnswer[i].content.indexOf(text) != -1) {
+        if (this.robotAnswer[i].content.indexOf(text.response) != -1) {
           flag = true;
           answerText = this.robotAnswer[i].content;
           break;
@@ -183,7 +242,7 @@ export default {
       if (flag) {
         let obj = {
           type: "leftinfo",
-          time: this.getTodayTime(),
+          time: text.responseTime,
           name: "robot",
           content: answerText,
           question: [],
@@ -226,6 +285,8 @@ export default {
         content: val,
         question: [],
       };
+      console.log(obj_r)
+      console.log(obj_l)
       this.info.push(obj_r);
       this.info.push(obj_l);
       this.$nextTick(() => {
@@ -291,6 +352,104 @@ export default {
       }
 
     }*/
+
+
+    getConversation(v){
+      getConversation().then(r=>{
+        console.log(r)
+        this.conversation = r.data
+        console.log(v)
+        if (v===1){
+          if (r.data.length>0){
+            this.conversationClickCut(r.data[0].conversationId)
+          }
+          if (r.data.length===0){
+            this.info=[
+              {
+                type: "leftinfo",
+                time: this.getTodayTime(),
+                name: "robot",
+                content:
+                  "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
+                question: [],
+              },
+            ]
+            this.robotAnswer=[]
+          }
+        }
+      })
+    },
+
+    /**
+     * 删除用户的会话窗口
+     * @param val
+     */
+    conversationClickDel(val){
+      this.$modal.confirm('是否确认删除会话窗口编号为"' + val + '"的数据项？').then(function() {
+        return deleteConversation(val);
+      }).then(() => {
+        this.getConversation(1)
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {});
+
+    },
+
+    /**
+     * 查询用户指定的会话窗口的历史数据
+     * @param val
+     */
+    conversationClickCut(val){
+      this.queryParams.conversationId=val
+
+      getChatQuizList(val).then(r=>{
+        this.info=[]
+        for (let i = 0; i < r.data.length; i++) {
+
+          let label = JSON.parse(r.data[i].messageContent).label
+          let value = JSON.parse(r.data[i].messageContent).value
+
+          let obj_l = {
+            type: "leftinfo",
+            time: r.data[i].responseTime,
+            name: "robot",
+            content: value,
+          };
+          let obj_r = {
+            type: "rightinfo",
+            time: r.data[i].createTime,
+            name: "robot",
+            content: label,
+          };
+          this.info.push(obj_r);
+          this.info.push(obj_l);
+        }
+
+      })
+    },
+
+    /**
+     * 新增窗口
+     */
+    conversationClickAdd(){
+      this.getConversation(2)
+      this.info=[
+        {
+          type: "leftinfo",
+          time: this.getTodayTime(),
+          name: "robot",
+          content:
+            "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
+          question: [],
+        },
+        ]
+      this.robotAnswer=[]
+
+    }
+
+
+
+
+
   },
   mounted() {},
   props: {},
@@ -316,12 +475,11 @@ export default {
     justify-content: center;
     align-items: center;
     #content {
-      height: 95%;
+      height: 90%;
       //overflow-y: scroll;
       font-size: 20px;
-      width: 80%;
+      width: 95%;
       display: flex;
-      justify-content: flex-start;
       .con_text {
         width: fit-content;
         color: #333;
@@ -492,14 +650,14 @@ export default {
   flex-direction: column;
   font-size: 1.3vw;
   color: #FFFFFF;
+  border: 2px solid #9A9999;
+  margin-right: 3vw;
   .new{
-    height: 10%;
+    height: 9%;
     width: 100%;
     display: flex;
     align-items: center;
     .img_box{
-      width: 4.5vw;
-      height: 9vh;
       background-color: #FFFFFF;
       border-radius: 50%;
       display: flex;
@@ -529,7 +687,7 @@ export default {
     .his_item{
       display: flex;
       align-items: center;
-      height: 18%;
+      height: 12%;
       width: 90%;
       border: 2px solid #9A9999;
       border-radius: 1vw;
@@ -540,10 +698,11 @@ export default {
         height: 2.2vw;
       }
       .his_title{
-        flex: 1;
-        margin: 0 1vw 0 1vw;
+        width: 14vw;
+        margin: 0 1vw 0 0.5vw;
         .tit{
-          margin: 1vh 0 2vh 0;
+          margin: 1vh 0 0.5vh 0;
+          overflow: hidden;
         }
         .time{
           font-size: 0.9vw;

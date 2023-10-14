@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.chatECG.mapper.ChatQuizMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.chatECG.domain.ChatQuiz">
+            <id property="chatId" column="chat_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="conversationId" column="conversation_id" jdbcType="INTEGER"/>
+            <result property="messageContent" column="message_content" jdbcType="VARCHAR"/>
+            <result property="messageType" column="message_type" jdbcType="VARCHAR"/>
+            <result property="responseTime" column="response_time" jdbcType="TIMESTAMP"/>
+            <result property="title" column="message_type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        chat_id,user_id,create_time,
+        conversation_id,message_content,message_type,title,response_time
+    </sql>
+</mapper>
