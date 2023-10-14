@@ -13,10 +13,12 @@
             <div class="his">
               <div class="his_item" style="cursor: pointer" v-for="item in conversation" :key="item.conversationId" @click="conversationClickCut(item.conversationId)">
                 <img class="mesimg2" src="@/assets/images/messge2.png"/>
-                <div class="his_title">
-                  <div class="tit">{{item.title}}</div>
+                <div class="his_title"  >
+                  <div class="tit" v-show="!item.show">{{item.title}}</div>
+                  <el-input :ref="'input'+item.conversationId" :focus="focusStatus" v-show="item.show" type="text" v-model="item.title" @blur="blurId(item.conversationId)"></el-input>
                   <div class="time">{{item.createTime}}</div>
                 </div>
+                <img class="upimg" src="@/assets/images/updat.png" style="cursor: pointer" @click="updatatit(item.conversationId)"/>
                 <img class="delimg" src="@/assets/images/delimg.png" style="cursor: pointer" @click.stop="conversationClickDel(item.conversationId)"/>
               </div>
 <!--              <div class="his_item">-->
@@ -34,7 +36,7 @@
             <div class="right-title">
               <img class="xietong" src="@/assets/images/xietong.png"/>
             </div>
-            <div class="message" id="right">
+            <div class="message" id="right" ref="message">
               <div v-for="(item,index) in info" :key="index">
                 <div class="info_r" v-if="item.type == 'leftinfo'">
                   <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
@@ -122,8 +124,9 @@ export default {
         title:null,
       },
       conversation:[],
-
-
+      titleUpdata:false,
+      title:'',
+      focusStatus:false
     };
   },
   created() {
@@ -187,7 +190,7 @@ export default {
         }
         this.queryParams.title = null
         this.conversation.unshift(chat)
-        setTimeout(()=>{this.getConversation(2)}, 5000)
+        // setTimeout(()=>{this.getConversation(2)}, 5000)
       }else {
         if (text !== "") {
           var obj = {
@@ -358,6 +361,9 @@ export default {
       getConversation().then(r=>{
         console.log(r)
         this.conversation = r.data
+        this.conversation.forEach(item=>{
+          Object.assign(item,{show:false})
+        })
         console.log(v)
         if (v===1){
           if (r.data.length>0){
@@ -423,7 +429,9 @@ export default {
           this.info.push(obj_r);
           this.info.push(obj_l);
         }
-
+        this.$nextTick(() => {
+          this.$refs.message.scrollTop = this.$refs.message.scrollHeight;
+        })
       })
     },
 
@@ -444,12 +452,33 @@ export default {
         ]
       this.robotAnswer=[]
 
+    },
+    //点击修改图标显示input
+    updatatit(id){
+      this.conversation.forEach((i,index)=>{
+        if(i.conversationId==id){
+          i.show=true
+          this.title=i.title
+        }
+      })
+      console.log(this.conversation)
+      this.$nextTick(()=>{
+        this.focusStatus=true
+        this.$refs[`input${id}`][0].focus()
+      })
+      console.log(this)
+
+    },
+    //input失去焦点
+    blurId(id){
+      console.log(11111111111111)
+      this.conversation.forEach(i=>{
+        if(i.conversationId==id){
+          i.show=false
+          this.title=''
+        }
+      })
     }
-
-
-
-
-
   },
   mounted() {},
   props: {},
@@ -648,6 +677,7 @@ export default {
   width: 30%;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   font-size: 1.3vw;
   color: #FFFFFF;
   border: 2px solid #9A9999;
@@ -680,14 +710,18 @@ export default {
     }
   }
   .his{
-    height: 70%;
+    height: 85%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
+    overflow-y: scroll;
+    user-select:none;
     .his_item{
+      box-sizing:border-box;
       display: flex;
       align-items: center;
-      height: 12%;
+      height: 20%;
       width: 90%;
       border: 2px solid #9A9999;
       border-radius: 1vw;
@@ -708,14 +742,25 @@ export default {
           font-size: 0.9vw;
           color: #ABABAB;
         }
+        ::v-deep .el-input--medium .el-input__inner{
+          font-size: 1.3vw;
+          height: auto;
+          line-height: 0;
+          padding: 2px 0 2px 0;
+        }
       }
       .delimg{
         margin-right: 1vw;
-        width: 2vw;
-        height: 2vw;
+        width: 1.8vw;
+        height: 1.8vw;
+      }
+      .upimg{
+        width: 1.8vw;
+        height: 1.8vw;
       }
     }
   }
+
 }
 .left-child {
   display: flex;
@@ -768,5 +813,23 @@ export default {
   display: flex;
   justify-content: space-around;
 }
+//滑动条
+*::-webkit-scrollbar {
+  width: 0.7vw;
+  height: 4px;
+  background: transparent;
+}
 
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: hsla(0, 1%, 53%, 0.4);
+}
+
+*:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
 </style>
