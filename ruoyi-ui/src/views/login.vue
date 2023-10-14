@@ -250,23 +250,23 @@ export default {
           </div>
         </el-tab-pane>
 
-        <el-tab-pane class="tabPane" label="验证码登录" name="second">
+        <el-tab-pane class="tabPane" label="验证码登录" name="second" >
           <!--   验证码登录    -->
           <div class="content2">
-            <el-form-item prop="code" v-if="captchaOnOff">
-              <el-input
-                v-model="loginForm.code"
-                auto-complete="off"
-                placeholder="请输入验证码"
-                style="width: 63%"
-                @keyup.enter.native="handleLogin"
-              >
-                <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
-              </el-input>
-              <div class="login-code">
-                <img :src="codeUrl" @click="getCode" class="login-code-img"/>
-              </div>
-            </el-form-item>
+<!--            <el-form-item prop="code" >-->
+<!--              <el-input-->
+<!--                v-model="loginForm.code"-->
+<!--                auto-complete="off"-->
+<!--                placeholder="请输入验证码"-->
+<!--                style="width: 63%"-->
+<!--                @keyup.enter.native="handleLogin"-->
+<!--              >-->
+<!--                <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>-->
+<!--              </el-input>-->
+<!--              <div class="login-code">-->
+<!--                <img :src="codeUrl" @click="getCode" class="login-code-img"/>-->
+<!--              </div>-->
+<!--            </el-form-item>-->
 
             <el-form-item prop="mobile">
               <el-input v-model="loginForm.mobile" type="text" auto-complete="off" placeholder="请输入您的手机号">
@@ -383,12 +383,13 @@ export default {
   },
   methods: {
     loginMethod(tab) {
-      //this.isSmsLogin = !this.isSmsLogin;
-      if(this.activeName == "first"){
+      if(tab.index==="0"){
         this.loginRules.mobile[0].required = false;
+        this.captchaOnOff = false
       }
-      if(this.activeName == "second"){
+      if(tab.index==="1"){
         this.loginRules.mobile[0].required = true;
+        this.captchaOnOff = true
       }
     },
     getSmsCode() {
@@ -473,7 +474,8 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          if (this.isSmsLogin) {
+          console.log("captchaOnOff"+this.captchaOnOff)
+          if (this.captchaOnOff) {
             this.loading = true;
             if (this.loginForm.rememberMe) {
               Cookies.set("mobile", this.loginForm.mobile, {expires: 30});
