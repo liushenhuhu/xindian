@@ -26,9 +26,9 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
     @Override
     public int updateBeatLabel(JecgSingle jecgSingle) {
         JecgSingle jecgSingle1 = new JecgSingle();
-        jecgSingle1.setPId(jecgSingle.getPId());
+        jecgSingle1.setpId(jecgSingle.getpId());
         jecgSingle1.setBeatLabel(jecgSingle.getBeatLabel());
-        return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getPId()));
+        return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
     }
 
     @Override
@@ -39,19 +39,17 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
     @Override
     public int updateWaveLabel(JecgSingle jecgSingle) {
 
-        JecgSingle jecgSingle1 = selectById(jecgSingle.getPId());
+        JecgSingle jecgSingle1 = selectById(jecgSingle.getpId());
 
         JSONObject parse = (JSONObject) JSONObject.parse(jecgSingle1.getWaveLabel());
 
-        JSONObject textData = (JSONObject) JSONObject.parse(jecgSingle.getWaveLabel());
 
-        Object field = textData.get(jecgSingle.getField());
         parse.remove(jecgSingle.getField());
-        parse.put(jecgSingle.getField(),field);
+        parse.put(jecgSingle.getField(),JSONObject.parse(jecgSingle.getWaveLabel()));
 
         jecgSingle1.setWaveLabel(JSONObject.toJSONString(parse));
 
-        return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getPId()));
+        return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
     }
 }
 

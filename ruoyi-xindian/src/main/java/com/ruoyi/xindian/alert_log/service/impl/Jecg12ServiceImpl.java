@@ -32,14 +32,14 @@ public class Jecg12ServiceImpl extends ServiceImpl<Jecg12Mapper, Jecg12>
     @Override
     public int updateWaveLabel(Jecg12 jecg12) {
         UpdateWrapper<Jecg12> update = Wrappers.update();
-        update.eq("p_id",jecg12.getPId()).set("wave_label",jecg12.getWaveLabel());
+        update.eq("p_id",jecg12.getpId()).set("wave_label",jecg12.getWaveLabel());
         return jecg12Mapper.update(null,update);
     }
 
     @Override
     public int updateBeatLabel(Jecg12 jecg12) {
         UpdateWrapper<Jecg12> update = Wrappers.update();
-        update.eq("p_id",jecg12.getPId()).set("beat_labe",jecg12.getBeatLabe());
+        update.eq("p_id",jecg12.getpId()).set("beat_label",jecg12.getBeatLabel());
         return jecg12Mapper.update(null,update);
     }
 }

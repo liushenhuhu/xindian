@@ -12,7 +12,6 @@ import lombok.Data;
  * @TableName jecg_12
  */
 @TableName(value ="jecg_12")
-@Data
 public class Jecg12 implements Serializable {
     /**
      * p_id
@@ -27,9 +26,33 @@ public class Jecg12 implements Serializable {
     /**
      * 
      */
-    private String beatLabe;
+    private String beatLabel;
 
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public String getpId() {
+        return pId;
+    }
+
+    public void setpId(String pId) {
+        this.pId = pId;
+    }
+
+    public String getWaveLabel() {
+        return waveLabel;
+    }
+
+    public void setWaveLabel(String waveLabel) {
+        this.waveLabel = waveLabel;
+    }
+
+    public String getBeatLabel() {
+        return beatLabel;
+    }
+
+    public void setBeatLabel(String beatLabel) {
+        this.beatLabel = beatLabel;
+    }
 }

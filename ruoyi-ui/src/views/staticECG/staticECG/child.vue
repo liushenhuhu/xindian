@@ -1,99 +1,198 @@
 <!--图片标记-->
 <template>
-  <div
-    class="container"
-    v-loading="isLoading"
-    element-loading-text="数据加载中..."
-    element-loading-background="rgba(0, 0, 0, 0.8)"
-    v-show="drawShow" @contextmenu.prevent
-  >
-    <!--顶部工具栏-->
-    <div class="top-tool">
-      <!--左上角盒子-->
-      <div class="top-left-div">
-        <el-radio-group style="margin:auto;" v-model="radio1">
-          <el-radio-button label="N">正常</el-radio-button>
-          <el-radio-button label="S">房早</el-radio-button>
-          <el-radio-button label="V">室早</el-radio-button>
-          <el-radio-button label="X">干扰</el-radio-button>
-        </el-radio-group>
-        <el-popover
-          style="margin:auto;"
-          placement="bottom-start"
-          title="提示"
-          width="220"
-          trigger="hover">
-          <p class="tipck">1. 左上角按钮可以选择类型</p>
-<!--          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>-->
-          <p class="tipck">2. 左键单击，进行标点</p>
-          <p class="tipck">3. 右键单击，进行删除</p>
-          <p class="tipck">4. 也可点击右上角清空所有点</p>
-          <p class="tipck">5. 标点完成后，点击右上角提交</p>
-          <el-button slot="reference"><i class="el-icon-info icon"></i></el-button>
-        </el-popover>
-      </div>
-      <!--右上角盒子-->
-      <div class="top-right-div">
-        <!--清空画布-->
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="清空标记"
-          placement="bottom"
-        >
-          <el-button type="primary" class="clear-btn" @click="clickClear">
-            <i class="el-icon-delete"></i>
-          </el-button>
-        </el-tooltip>
+  <div>
+  <el-tabs v-model="activeName" class="container" type="border-card" @tab-click="handleClick" v-show="drawShow">
+    <el-tab-pane label="标注1" name="first">
+      <div
+      style="height: 80vh"
+      v-loading="isLoading"
+      element-loading-text="数据加载中..."
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+       @contextmenu.prevent
+    >
+      <!--顶部工具栏-->
+      <div class="top-tool" >
+        <!--左上角盒子-->
+          <div class="top-left-div" v-show="lead1">
+            <el-radio-group style="margin:auto;" v-model="radio1" >
+              <el-radio-button label="N">正常</el-radio-button>
+              <el-radio-button label="S">房早</el-radio-button>
+              <el-radio-button label="V">室早</el-radio-button>
+              <el-radio-button label="X">干扰</el-radio-button>
+            </el-radio-group>
+            <el-popover
+              style="margin:auto;"
+              placement="bottom-start"
+              title="提示"
+              width="220"
+              trigger="hover">
+              <p class="tipck">1. 左上角按钮可以选择类型</p>
+              <!--          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>-->
+              <p class="tipck">2. 左键单击，进行标点</p>
+              <p class="tipck">3. 右键单击，进行删除</p>
+              <p class="tipck">4. 也可点击右上角清空所有点</p>
+              <p class="tipck">5. 标点完成后，点击右上角提交</p>
+              <el-button slot="reference"><i class="el-icon-info icon"></i></el-button>
+            </el-popover>
+          </div>
+          <!--右上角盒子-->
+          <div class="top-right-div">
+            <!--清空画布-->
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="清空标记"
+              placement="bottom" v-show="lead1"
+            >
+              <el-button type="primary" class="clear-btn" @click="clickClear">
+                <i class="el-icon-delete"></i>
+              </el-button>
+            </el-tooltip>
 
-        <!-- 提交数据 -->
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="提交标记信息"
-          placement="bottom"
-        >
-          <el-button type="primary" class="download-btn" @click="clickSubmit">
-            <i class="el-icon-finished"></i>
-          </el-button>
-        </el-tooltip>
-        <!--关闭标注窗口-->
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="关闭窗口"
-          placement="bottom"
-        >
-          <el-button type="primary" class="clear-btn" @click="clickClose">
-            <i class="el-icon-close"></i>
-          </el-button>
-        </el-tooltip>
+            <!-- 提交数据 -->
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="提交标记信息"
+              placement="bottom" v-show="lead1"
+            >
+              <el-button type="primary" class="download-btn" @click="clickSubmit">
+                <i class="el-icon-finished"></i>
+              </el-button>
+            </el-tooltip>
+            <!--关闭标注窗口-->
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="关闭窗口"
+              placement="bottom"
+            >
+              <el-button type="primary" class="clear-btn" :style="closeStyle" @click="clickClose">
+                <i class="el-icon-close"></i>
+              </el-button>
+            </el-tooltip>
+          </div>
+
       </div>
+      <!--画布盒子-->
+      <div class="middle-div">
+        <div class="canvas-div" id="chart"></div>
+        <div id="rightMenu" class="menu" style="display: none;">
+          <el-button class="button" @click="del">删除</el-button>
+        </div>
+      </div>
+
     </div>
+    </el-tab-pane>
+    <el-tab-pane label="标注2" name="second">
+      <div
+        style="height: 80vh"
+        v-loading="isLoading"
+        element-loading-text="数据加载中..."
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        @contextmenu.prevent
+      >
+        <!--顶部工具栏-->
+        <div class="top-tool" >
+          <!--左上角盒子-->
+          <div class="top-left-div" v-show="lead2">
+            <el-radio-group style="margin:auto;" v-model="radio2">
+              <el-radio-button @click.native.prevent="clickitem('P1')" label="P1">P1</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem('P2')" label="P2">P2</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem('P3')" label="P3">P3</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem('R1')" label="R1">R1</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem('R2')" label="R2">R2</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem('R3')" label="R3">R3</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem('T1')" label="T1">T1</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem('T2')" label="T2">T2</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem('T3')" label="T3">T3</el-radio-button>
+            </el-radio-group>
+            <el-popover
+              style="margin:auto;"
+              placement="bottom-start"
+              title="提示"
+              width="220"
+              trigger="hover">
+              <p class="tipck">1. 左上角按钮可以选择类型</p>
+              <p class="tipck">2. 左键单击，进行标点</p>
+              <p class="tipck">3. 右键单击，进行删除</p>
+              <p class="tipck">4. 也可点击右上角清空所有点</p>
+              <p class="tipck">5. 标点完成后，点击右上角提交</p>
+              <el-button slot="reference"><i class="el-icon-info icon"></i></el-button>
+            </el-popover>
+          </div>
+          <!--右上角盒子-->
+          <div class="top-right-div">
+            <!--清空画布-->
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="清空标记"
+              placement="bottom" v-show="lead2"
+            >
+              <el-button type="primary" class="clear-btn"  @click="clearData()">
+                <i class="el-icon-delete"></i>
+              </el-button>
+            </el-tooltip>
 
-    <!--画布盒子-->
-    <div class="middle-div">
-      <div class="canvas-div" id="chart"></div>
-      <div id="rightMenu" class="menu" style="display: none;">
-        <el-button class="button" @click="del">删除</el-button>
+            <!-- 提交数据 -->
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="提交标记信息"
+              placement="bottom" v-show="lead2"
+            >
+              <el-button type="primary" class="download-btn" @click="submitData()">
+                <i class="el-icon-finished"></i>
+              </el-button>
+            </el-tooltip>
+            <!--关闭标注窗口-->
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="关闭窗口"
+              placement="bottom"
+            >
+              <el-button type="primary" class="clear-btn" :style="closeStyle" @click="clickClose">
+                <i class="el-icon-close"></i>
+              </el-button>
+            </el-tooltip>
+          </div>
+        </div>
+        <!--画布盒子-->
+        <div class="middle-div">
+          <div class="canvas-div" id="chart2"></div>
+          <div id="rightMenu2" class="menu" style="display: none;">
+            <el-button class="button" @click="del2">删除</el-button>
+          </div>
+        </div>
+
       </div>
-    </div>
-
-
+    </el-tab-pane>
+  </el-tabs>
+<!--    <div class="container" v-show="!drawShow">-->
+<!--      <div class="middle-div">-->
+<!--        <div class="canvas-div" id="chart3"></div>-->
+<!--        <button class="btn" style="right: 0;top: 0;" @click="Off">关闭</button>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 <script>
 import markImg from "@/assets/images/lableBackImg.jpg"; //初始背景
-import {checkByTagId, addXArr} from "@/api/staticECG/staticECG";
+import {ecgBeatLabelAdd,ecgWaveLabelPut,put12BeatLabel,put12WaveLabel} from "@/api/staticECG/staticECG";
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import $ from "jquery";
-import {enableTopologicalTravel} from "echarts/lib/util/component";
+import Mark from  "./mark.vue"
 let ctx = ""; //画布上下文
 export default {
   props: {},
-  components: {},
+  components: {
+    Mark
+  },
   data() {
     return {
+      activeName:'first',
       drawShow:false,
       isLoading: false, //加载状态
       //模式列表
@@ -112,6 +211,7 @@ export default {
         }*/
       ],
       radio1:'N',
+      radio2:'',
       colorList: [
         { color: "#000000" },
       ],
@@ -124,10 +224,11 @@ export default {
       arrList7:[],
       arrList:{
         pId: null,
-        data:null},
+        beatLabel:null},
       pId:null,
       level:null,
       chart:null,
+      chart2:null,
       delX:{key:null,value:null},//想要删除的点
       seriesdata:[{xAxis: 0},
         {xAxis: 25},
@@ -171,38 +272,96 @@ export default {
         {xAxis: 975},
         {xAxis: 1000},
         {yAxis: -2},{yAxis: -1.5},{yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},{yAxis: 1.5},{yAxis: 2},
-
+        {yAxis: -3},{yAxis: -2.5},{yAxis: 3},{yAxis: 2.5}
       ],//标线
       x:[],//x轴值
+      y:[],
       pointdata:[],//点
       graphic:[],//文本
       data:[],//导联数据
       queryParam:{
         pId: '',
         level: '',
-      }
+      },
+      subData:{
+        P1:[],P2:[],P3:[],
+        R1:[],R2:[],R3:[],
+        T1:[],T2:[],T3:[],
+      },//提交标注信息
+      lead1:false,
+      lead2:false,
+      flag:null,//1：静态单导  12.静态12导
+      closeStyle:{position:'absolute',right:'1px',top:'20px'},
+      message: {
+        devicesn: "",
+        user_id: "",
+        pid: "",
+        logid: "",
+        sex: "",
+        age: "",
+        time: "",
+        logType:'',
+      },
+      query:{
+        pId:"",
+        beatLabel:'',
+        waveLabel:'',
+        field:"",
+      },
+      datalabel:{
+        waveLabel:"",
+        beatLabel:""
+      },
+      title:''
     };
   },
-  // computed: {
-  //   //排序
-  //   arrList(){
-  //     return {
-  //       pId: this.pId,
-  //       data:JSON.stringify([...this.arrList1,...this.arrList2,...this.arrList3,...this.arrList4,...this.arrList5,...this.arrList6,...this.arrList7])
-  //     }
-  //   }
-  // },
+  watch:{
+    lead1:{
+      handler(item1,item2){
+        // item1为新值，item2为旧值
+        if(!item1){
+          this.closeStyle={position:'absolute',right:'1px',top:'20px'}
+        }else {
+          this.closeStyle={position:'static',right:'1px',top:'20px'}
+        }
+      }
+    },
+    lead2:{
+      handler(item1,item2){
+        // item1为新值，item2为旧值
+        if(!item1){
+          this.closeStyle={position:'absolute',right:'1px',top:'20px'}
+        }else {
+          this.closeStyle={position:'static',right:'1px',top:'20px'}
+        }
+      }
+    }
+  },
   created() {
   },
   mounted() {
     this.chart = echarts.init(document.getElementById('chart'));
+    this.chart2 = echarts.init(document.getElementById('chart2'));
   },
   methods: {
-
-    async getchart(data,pIds,level) {
+    async getchart(data,pIds,level,title,flag,datalabel) {
       console.log("第几个",level)
-      this.data=data
+      this.title=title
+      console.log(title)
+      if(title=="II"){
+        this.lead1=true
+      }else {
+        this.pointdata=[]
+      }
+      if(flag!=null){
+        this.flag=flag
+      }
+      if(datalabel!=null){
+        console.log(datalabel)
+        this.datalabel=datalabel
+      }
       this.drawShow=true
+      this.data=data
       this.pId = pIds;
       this.level = level;
       this.x.length=0
@@ -210,7 +369,7 @@ export default {
       this.arrList.pId=pIds
       this.queryParam.pId = pIds;
       this.queryParam.level = level;
-      for (var i = 0; i <= 600; i++) {
+      for (var i = 0; i <= 1000; i++) {
         this.x.push(i);
       }
       let detailoption = {
@@ -227,9 +386,16 @@ export default {
         },
         dataZoom: [
           {
-            type: 'inside',   // 鼠标滚轮缩放
+            type: 'inside',
+            orient: 'vertical',// 鼠标滚轮缩放
             start: 0,
-            end: 100
+            end: 100,
+          },
+          {
+            type: 'inside', // 鼠标滚轮缩放
+            startValue: 0,
+            endValue:727,
+            maxValueSpan:727,
           },
           {
             show: true,       // 滑动条组件
@@ -275,10 +441,11 @@ export default {
           } /*网格线*/
         },
         yAxis: {
-          min: -2,
-          max: 2,
-          boundaryGap: true,
-          interval: 0.1,
+          min: -3,
+          max: 3,
+          boundaryGap: false,
+          splitNumber: 41,
+          minInterval: 0.1,
           axisLabel: { //修改坐标系字体颜色
             show: false,
             textStyle: {
@@ -326,20 +493,22 @@ export default {
           name: '当前电位',
           type: 'line',
           data: data,
-          smooth: 0 //显示为平滑的曲线*/
+          smooth: true //显示为平滑的曲线*/
         },
       };
       this.chart.clear()
       this.chart.setOption(detailoption,true)
-      checkByTagId(this.queryParam).then(res=>{
-        if(res.length>0){
-          this.arrList.data=res[0].data
+      setTimeout(()=>{
+        this.chart.resize();
+      })
+      if(this.datalabel.beatLabel&&title=="II"){
+          this.arrList.beatLabel=JSON.parse(this.datalabel.beatLabel)
           //回显
-          console.log(JSON.parse(this.arrList.data))
+          //分段
           if(this[`${'arrList' + this.level}`].length==0){
-            this[`${'arrList' + this.level}`]=JSON.parse(this.arrList.data).filter(i=>{
-              let a=i.x-600*(level-1)
-              return a>=0 && a<600
+            this[`${'arrList' + this.level}`]=this.arrList.beatLabel.filter(i=>{
+              let a=i.x-1000*(level-1)
+              return a>=0 && a<1000
             })
           }
 
@@ -351,7 +520,7 @@ export default {
             var colorList= {N:'#fe0101',S:'#ff7000',V:'#ff00cf',X:'#0021da',}
             let pointdata={
               name: this[`${'arrList' + this.level}`][i].type,
-              xAxis:this[`${'arrList' + this.level}`][i].x-600*(level-1),
+              xAxis:this[`${'arrList' + this.level}`][i].x-1000*(level-1),
               yAxis: this[`${'arrList' + this.level}`][i].y,
               itemStyle: {
                 color:colorList[this[`${'arrList' + this.level}`][i].type]
@@ -366,15 +535,15 @@ export default {
             this.pointdata.push(pointdata)
           }
           console.log(this.pointdata)
-          //添加文本
-          this.addtext()
-          //重绘
-          this.redraw()
+          setTimeout(()=>{
+            //添加文本
+            this.addtext()
+            //重绘
+            this.redraw()
+          })
+
         }
-      })
-      setTimeout(()=>{
-        this.chart.resize();
-      })
+
       $(window).resize(()=>{
         this.chart.resize();
       });
@@ -449,12 +618,13 @@ export default {
       var length=this[`${'arrList' + this.level}`].length
       //console.log(length)
       for (let i = 0; i < length-1; i++) {
-        var x1=this[`${'arrList' + this.level}`][i].x-600*(this.level-1)
-        var x2=this[`${'arrList' + this.level}`][i+1].x-600*(this.level-1)
-        //console.log(x1,x2)
+        var x1=this[`${'arrList' + this.level}`][i].x-1000*(this.level-1)
+        var x2=this[`${'arrList' + this.level}`][i+1].x-1000*(this.level-1)
+        console.log(x1,x2)
         var time=((x2-x1)/25*0.2).toFixed(2); //时间 s
         var heart=(60/time).toFixed(1) //心率
         var x=this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 0.75])
+        console.log(x)
         //console.log(this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 0.5]))
         let text={
           type:'text',
@@ -470,11 +640,11 @@ export default {
         }
         this.graphic.push(text)
       }
-      //console.log(this.graphic)
+      console.log("绘制文本============",this.graphic)
     },
     //按x从小到大插入值
     addValue(params) {
-      params.x=params.x+600*(this.level-1)
+      params.x=params.x+1000*(this.level-1)
       let i=this[`${'arrList' + this.level}`].findIndex(it=>it.x==params.x)
       if(i!=-1){
         console.log("存在该点")
@@ -514,16 +684,24 @@ export default {
     },
     //关闭窗口
     clickClose(){
+      this.lead1=false
+      this.lead2=false
+      this.activeName="first"
       this.drawShow = false;
       this.currentBgImg = "";
     },
     //重绘
     redraw(){
       var chartOption = this.chart.getOption();
-      chartOption.graphic = [];
+      chartOption.graphic = this.graphic;
 
-      this.chart.setOption(chartOption, true);
-        this.chart.setOption({
+      this.chart.setOption(chartOption,true);
+      this.chart.setOption({});
+      // console.log(this.graphic)
+      // this.chart.setOption({
+      //   graphic:this.graphic
+      // })
+      this.chart.setOption({
           series:{
             markPoint:{
               symbol: "pin",
@@ -532,7 +710,6 @@ export default {
               data: this.pointdata,
             }
           },
-          graphic:this.graphic
         })
       //console.log(this.graphic)
     },
@@ -548,7 +725,7 @@ export default {
 
       var length2=this[`${'arrList' + this.level}`].length
       for (let i = 0; i < length2; i++) {
-        let x=this[`${'arrList' + this.level}`][i].x-600*(this.level-1)
+        let x=this[`${'arrList' + this.level}`][i].x-1000*(this.level-1)
         if(x===this.delX.value){
           this[`${'arrList' + this.level}`].splice(i,1)
           break
@@ -566,17 +743,23 @@ export default {
     clickSubmit(){
       this.arrList={
         pId: this.pId,
-        data:JSON.stringify([...this.arrList1,...this.arrList2,...this.arrList3,...this.arrList4,...this.arrList5,...this.arrList6,...this.arrList7])
+        beatLabel:JSON.stringify([...this.arrList1,...this.arrList2,...this.arrList3,...this.arrList4])
       }
-      //console.log(this.arrList)
+      console.log(this.arrList)
       this.isLoading = true;
-      if(this.arrList.data.length > 0){
-        addXArr(this.arrList).then(response => {
-          this.$modal.msgSuccess("坐标提交成功!");
-          //this.recoverysize();
-          this.isLoading = false;
-        })
-        console.log(JSON.parse(this.arrList.data))
+      if(this.arrList.beatLabel!=null){
+        if(this.flag==1){
+          ecgBeatLabelAdd(this.arrList).then(response => {
+            this.$modal.msgSuccess("坐标提交成功!");
+            this.isLoading = false;
+          })
+        }else {
+          put12BeatLabel(this.arrList).then(response => {
+            this.$modal.msgSuccess("坐标提交成功!");
+            this.isLoading = false;
+          })
+        }
+        console.log(JSON.parse(this.arrList.beatLabel))
         // this.isLoading = false;
       }else {
         this.$modal.msgWarning("请标记后提交！");
@@ -584,21 +767,391 @@ export default {
       }
     },
 
+    handleClick(tab, event) {
+      //console.log(tab, event);
+      console.log(this.lead1,this.lead2)
+      if(tab.index=='0'){
+        this.getchart(this.data,this.pId,this.level,this.title,null,null)
+      }
+      console.log(tab.index,this.chart2)
+      if(tab.index=='1'){
+        this.showchart(this.title,this.data,this.level)
+        console.log("绘制图2")
+      }
+    },
+
+    clearData(){
+      this.pointdata=[]
+      this.subData={
+        P1:[],P2:[],P3:[],
+        R1:[],R2:[],R3:[],
+        T1:[],T2:[],T3:[],
+      }
+      this.chart2.setOption({
+        series:{
+          markPoint:{
+            symbol: "pin",
+            symbolSize: 24,
+            animation:false,
+            data: [],
+          }
+        }
+      });
+    },
+    submitData(){
+      this.query.pId=this.pId
+      this.query.field=this.level-1
+      this.query.waveLabel=JSON.stringify(this.subData)
+      console.log(this.subData)
+      console.log(this.query)
+      if(this.flag==1){
+        ecgWaveLabelPut(this.query).then(res=>{
+          this.$modal.msgSuccess("标注提交成功");
+        }).catch(err=>{})
+      }else {
+        put12WaveLabel(this.query).then(res=>{
+          this.$modal.msgSuccess("标注提交成功");
+        }).catch(err=>{})
+      }
+
+    },
+    showchart(title, data) {
+      if(title=='II'){
+        this.lead2=true
+      }
+      let detailoption = {
+        animation: false,
+        backgroundColor: "#ffffff",
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        toolbox:{
+          show:false
+        },
+        dataZoom: [
+          {
+            show: true,       // 滑动条组件
+            type: 'slider',
+            brushSelect:false,
+            // y: '90%',
+            startValue: 0,
+            endValue:252,
+            // minSpan: 52.5,
+            // maxSpan: 52.6,
+            minValueSpan:252,
+            maxValueSpan:727
+          },
+          {
+            show: true,       // 滑动条组件
+            type: 'slider',
+            orient: 'vertical',
+            brushSelect:false,
+            startValue: -1,
+            endValue:1,
+            minValueSpan:2.13,
+            maxValueSpan:6
+          },
+          {
+            type: 'inside',
+            orient: 'vertical',// 鼠标滚轮缩放
+            start: 0,
+            end: 100
+          },
+          {
+            type: 'inside',   // 鼠标滚轮缩放
+            start: 0,
+            end: 100
+          },
+        ],
+        grid: {
+          left: '3%',
+          right: '3%',
+          top: '2%',
+          bottom: '13%'
+        },
+        legend: {
+          show: false,
+          data: ['当前电位'],
+          textStyle: {color: "#000000"} /*图例(legend)说明文字的颜色*/,
+          left: "right",
+        },
+        xAxis: {
+          type:'category',
+          boundaryGap: false,
+          data: this.x,
+          axisTick: {
+            show: false
+          },
+          axisLabel: { //修改坐标系字体颜色
+            interval: 4,
+            show: false,
+            textStyle: {
+              color: "#000000"
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: 'pink',
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            },
+          } /*网格线*/
+        },
+        yAxis: {
+          min: -3,
+          max: 3,
+          boundaryGap: false,
+          interval: 0.1,
+          axisLabel: { //修改坐标系字体颜色
+            show: false,
+            textStyle: {
+              color: "#000000"
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: "pink",
+              width: 1, //网格的宽度
+              type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
+            },
+          } /*网格线*/
+        },
+        series: {
+          id: 'series1',
+          markLine: {
+            animation: false,
+            symbol: "none",
+            silent: true,
+            lineStyle: {
+              type: "solid",
+              color: '#b33939',
+              width: 0.5,
+
+            },
+            label: {
+              show: true,
+              position: 'start', // 表现内容展示的位置
+              color: '#b33939'  // 展示内容颜色
+            },
+            data: this.seriesdata,
+          },
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                width:1.5,
+                color: '#000000',/*折线的颜色*/
+              },
+              color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/
+            }
+          },
+          symbol: "none",
+          name: '当前电位',
+          type: 'line',
+          data: data,
+          smooth: true //显示为平滑的曲线*/
+        },
+      };
+      this.chart2.clear()
+      this.chart2.setOption(detailoption)
+      setTimeout(()=>{
+        this.chart2.resize()
+      })
+      //console.log(this.subData)
+      this.pointdata.length=0
+      var colorList= {
+        P1:'#fe0101',P2:'#fe0101',P3:'#fe0101',
+        R1:'#ff00cf',R2:'#ff00cf',R3:'#ff00cf',
+        T1:'#0021da',T2:'#0021da',T3:'#0021da',
+      }
+      console.log(JSON.parse(this.datalabel.waveLabel))
+      //回显
+      if(this.lead2){
+        if(this.flag==1){
+          this.subData=JSON.parse(this.datalabel.waveLabel)[this.level-1]
+        }else {
+          this.subData=JSON.parse(this.datalabel.waveLabel)
+        }
+        console.log("有数据")
+        console.log(this.subData)
+        for (const key in this.subData) {
+          for (let j = 0; j < this.subData[key].length; j++) {
+            let pointdata={
+              name: key,
+              xAxis:this.subData[key][j],
+              yAxis: data[this.subData[key][j]],
+              itemStyle: {
+                color:colorList[key]
+              },
+              label: {
+                color: '#ffffff',
+                show: true,
+                formatter: key,
+                fontSize:9
+              },
+            }
+            this.pointdata.push(pointdata)
+          }
+        }
+        //console.log(this.pointdata)
+        this.chart2.setOption({
+          series:{
+            markPoint:{
+              symbol: "pin",
+              symbolSize: 24,
+              animation:false,
+              data: this.pointdata,
+            }
+          }
+        })
+      }else {
+        this.pointdata=[]
+        this.chart2.setOption({
+          series:{
+            markPoint:{
+              symbol: "pin",
+              symbolSize: 24,
+              animation:false,
+              data: this.pointdata,
+            }
+          }
+        })
+      }
+      var width=window.screen.width
+      var height=window.screen.height
+      this.chart2.off('contextmenu')
+      this.chart2.on('contextmenu',(params)=>{
+        //console.log(params)
+        $('#rightMenu2').css({
+          'display': 'block',
+          'left': params.event.offsetX/width*100 + 'vw',
+          'top' : params.event.offsetY/height*100+11 +'vh'
+        });
+        if(params.componentType==="markPoint"){
+          this.delX.value=params.data.xAxis
+          this.delX.key=params.data.name
+        }
+        console.log(this.delX)
+      });
+      this.chart2.getZr().off('click')
+      this.chart2.getZr().on('click',params=>{
+        $('#rightMenu2').css({
+          'display': 'none',
+        });
+        const pointInPixel= [params.offsetX, params.offsetY];
+        // console.log(pointInPixel)
+        if (this.chart2.containPixel('grid',pointInPixel)) {
+          this.xIndex=this.chart2.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[0];
+          //this.yIndex=this.chart2.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[1];
+          console.log(this.xIndex)
+          let temp=false
+          this.pointdata.forEach(i=>{
+            if(this.xIndex==i.xAxis){
+              console.log("已存在")
+              temp=true
+              return
+            }
+          })
+          if(this.radio2==''||temp){
+            return
+          }
+
+          console.log(this.subData)
+          this.subData[this.radio2].push(this.xIndex)
+          //console.log(this.subData)
+          let pointdata={
+            name: this.radio2,
+            xAxis:this.xIndex,
+            yAxis: data[this.xIndex],
+            itemStyle: {
+              color:colorList[this.radio2]
+            },
+            label: {
+              color: '#ffffff',
+              show: true,
+              formatter: this.radio2,
+              fontSize:9
+            },
+          }
+          this.pointdata.push(pointdata)
+          this.chart2.setOption({
+            series:{
+              markPoint:{
+                symbol: "pin",
+                symbolSize: 24,
+                animation:false,
+                data: this.pointdata,
+              }
+            }
+          })
+        }
+      });
+      this.show=true
+    },
+    Off(){
+      this.lead1=false
+      this.lead2=false
+      this.activeName="first"
+      this.lead2=false
+      this.show=false
+    },
+    del2(){
+      console.log(this.delX.key,this.delX.value)
+      this.pointdata.some((item,index)=>{
+        if(item.xAxis==this.delX.value){
+          this.pointdata.splice(index,1)
+          return true
+        }
+      })
+      this.subData[this.delX.key].some((item,index)=>{
+        if(item==this.delX.value){
+          this.subData[this.delX.key].splice(index,1)
+          console.log("删除成功")
+          return true
+        }
+      })
+      this.delX={key:null,value:null}
+      this.chart2.setOption({
+        series:{
+          markPoint:{
+            symbol: "pin",
+            symbolSize: 24,
+            animation:false,
+            data: this.pointdata,
+          }
+        }
+      })
+      $('#rightMenu2').css({
+        'display': 'none',
+      });
+
+    },
+    clickitem(e){
+      e === this.radio2 ? this.radio2 = '' : this.radio2 = e
+    }
   },
 
 };
 </script>
 <style scoped lang="scss">
+::v-deep .el-tabs__header{
+  margin: 0;
+}
 .container {
   user-select: none;
-  height: 50%;
-  width: 100%;
-  position: absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-80%);
+  width: 88vw;
+  position: fixed;
+  top:11%;
+  left: 12%;
+  //margin-left: 50%;
+  //transform: translate(-50%,-80%);
   background: #ffffff;
   z-index:1;
+
   .top-tool {
     height: 50px;
     display: flex;
@@ -718,23 +1271,31 @@ export default {
     /*这个样式不写，右键弹框会一直显示在画布的左下角*/
     position: absolute;
     background: rgba(255, 255, 255);
-    border-radius: 5px;
     left: -99999px;
     top: -999999px;
     padding: 0.1vw;
     border-radius: 0.5vw;
     .button{
-      height: 0.5vh;
-      width: 0.5vw;
+      height: 3vh;
+      width: 2.5vw;
       display: inline-flex;
       text-align: center;
-      border: none;
+      border-radius: 0.5vw;
+      border: 1px solid #000000;
       font-size: 0.5vw;
       font-weight: 700;
       justify-content: center;
       align-items: center;
     }
+    .button:hover{
+      color: #FFFFFF;
+      background-color: #df0202;
+    }
   }
 
+}
+.el-radio-button:focus:not(.is-focus):not(:active):not(.is-disabled) {
+  -webkit-box-shadow: 0 0px 0px #ccc;
+  box-shadow: 0 0px 0px #ccc;
 }
 </style>

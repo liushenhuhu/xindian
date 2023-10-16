@@ -7,11 +7,11 @@
     <resultMap id="BaseResultMap" type="com.ruoyi.xindian.alert_log.domain.Jecg12">
             <result property="pId" column="p_id" jdbcType="VARCHAR"/>
             <result property="waveLabel" column="wave_label" jdbcType="VARCHAR"/>
-            <result property="beatLabe" column="beat_labe" jdbcType="VARCHAR"/>
+            <result property="beatLabel" column="beat_label" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        p_id,wave_label,beat_labe,
+        p_id,wave_label,beat_label,
         ecg_data
     </sql>
 </mapper>

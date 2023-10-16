@@ -1,18 +1,34 @@
 import request from '@/utils/request'
 
 // 新增
-export function addXArr(data) {
+export function ecgBeatLabelAdd(data) {
   return request({
-    url: '/mark/addStatic',
+    url: '/ecgData/ecgBeatLabelAdd',
     method: 'post',
     data: data
   })
 }
 
 
-export function checkByTagId(data) {
+export function ecgWaveLabelPut(data) {
   return request({
-    url: '/mark/checkMarkByTagId',
+    url: '/ecgData/ecgWaveLabelPut',
+    method: 'post',
+    data: data
+  })
+}
+export function put12BeatLabel(data) {
+  return request({
+    url: '/ecgData/put12BeatLabel',
+    method: 'post',
+    data: data
+  })
+}
+
+
+export function put12WaveLabel(data) {
+  return request({
+    url: '/ecgData/put12WaveLabel',
     method: 'post',
     data: data
   })

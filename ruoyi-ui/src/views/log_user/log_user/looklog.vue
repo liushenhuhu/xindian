@@ -28,28 +28,18 @@
           width="220"
           class="popo"
           trigger="hover">
-          <p class="tipck">1. 首先选框</p>
-          <!--          <p class="tipck">2. 左键按下,可以拖拽心电图;</p>-->
-          <p class="tipck">2. 再选择标点类型：P、Q、R、S、T，在框内单击左键标点</p>
-          <p class="tipck">3. 右键单击点可以进行删除</p>
-          <p class="tipck">4. 标点完成后点击提交</p>
+          <p class="tipck">1. 选择标点类型，在框内单击左键标点</p>
+          <p class="tipck">2. 右键单击点可以进行删除</p>
+          <p class="tipck">3. 标点完成后点击提交</p>
           <p class="tipck">也可选择清空所有数据</p>
           <div slot="reference" ><i class="el-icon-info icon"></i></div>
         </el-popover>
       </div>
-<!--      {#    <div id="toolbox" style="background-color: rgba(2,27,173,0.1);height: 5vw"></div>#}-->
-<!--      {#    <div class="textarea">#}-->
-<!--      {#        <div><label class="textareaClass" for="quality">质量评估：</label>#}-->
-<!--        {#            <textarea id="quality" name="myText" rows="4" cols="50">A</textarea></div>#}-->
-<!--      {#        <div><label class="textareaClass" for="label">标注信息：</label>#}-->
-<!--        {#            <textarea id="label" name="myText" rows="4" cols="50">ABCD</textarea>#}-->
-<!--        {#        </div>#}-->
-<!--      {#    </div>#}-->
       <div id="chartjump"></div>
       <div id="rightMenu" class="menu" style="display: none;">
         <el-button class="button" @click="del">删除</el-button>
       </div>
-      <button class="btn btnfullscreen" style="right: 0;top: 0;" @click="Off">关闭</button>
+      <button class="btn" style="right: 0;top: 0;" @click="Off">关闭</button>
     </div>
     <div class="bottom">
       <div class="bottomLeft">
@@ -2150,95 +2140,7 @@ export default {
         }]
       });
     },
-    // labelSelectionP(){
-    //   this.cleartap()
-    //   this.tap.P=true
-    // },
-    // labelSelectionQ(){
-    //   this.cleartap()
-    //   this.tap.Q=true
-    // },
-    // labelSelectionR(){
-    //   this.cleartap()
-    //   this.tap.R=true
-    // },
-    // labelSelectionS(){
-    //   this.cleartap()
-    //   this.tap.S=true
-    // },
-    // labelSelectionT(){
-    //   this.cleartap()
-    //   this.tap.T=true
-    // },
-    // labelSelectionnoise(){
-    //   this.cleartap()
-    //   this.tap.noise=true
-    //   let noise=[]
-    //   this.chartjump.off('brushEnd')
-    //   this.chartjump.on('brushEnd', (params)=>{
-    //     $('#rightMenu').css({
-    //       'display': 'none',
-    //     });
-    //     noise.length=0
-    //     params.areas.forEach(item=>{
-    //       let arr=[]
-    //       item.coordRange.forEach(x=>{
-    //         arr.push(x)
-    //       })
-    //       noise.push(arr)
-    //     })
-    //     noise=this.getMerge(noise)
-    //     this.chartjump.dispatchAction({
-    //       type: 'brush',
-    //       areas: [],//areas
-    //     });
-    //     let newitem=params.areas[params.areas.length-1].coordRange
-    //     let a = [{
-    //       xAxis: newitem[0],
-    //       itemStyle: {
-    //         color: 'rgb(242,201,248)',
-    //       }
-    //     }, {
-    //       xAxis: newitem[1]
-    //     }];
-    //     if(this.markArea.length!==0){
-    //       var result= this.markArea.findIndex((v) => {
-    //         return (v[0].xAxis <= newitem[0] && v[1].xAxis >= newitem[0])
-    //           || (v[0].xAxis <=newitem[1] && v[1].xAxis >= newitem[1])
-    //           ||(v[0].xAxis >=newitem[0] && v[1].xAxis <= newitem[1]);
-    //       });
-    //       console.log("是否有交叉",result)
-    //       if(result==-1){
-    //         this.markArea.push(a)
-    //       }else {
-    //         var max=Math.max(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
-    //         var min=Math.min(this.markArea[result][0].xAxis,this.markArea[result][1].xAxis,newitem[0],newitem[1])
-    //         a[0].xAxis=min
-    //         a[1].xAxis=max
-    //         this.markArea.splice(result,1,a)
-    //       }
-    //     }else {
-    //       this.markArea.push(a)
-    //     }
-    //     console.log(this.markArea)
-    //
-    //     this.chartjump.setOption({
-    //       series: [{
-    //         id: 'series1',
-    //         markArea: {
-    //           label: {
-    //             show: true,
-    //             position: 'inside'
-    //           },
-    //           emphasis:{
-    //             disabled:true
-    //           },
-    //           data: this.markArea
-    //         },
-    //       }]
-    //     });
-    //   });
-    // },
+
     clearData(){
       this.pointdata=[]
       this.subData={
@@ -2545,7 +2447,9 @@ export default {
           if(temp){
             return
           }
-          console.log(this.subData)
+          if(this.radio==''){
+            return
+          }
           this.subData[this.radio].push(this.xIndex)
           //console.log(this.subData)
           let pointdata={
@@ -2648,13 +2552,6 @@ export default {
       });
 
     },
-    openDelConfirm() {
-      return this.$confirm(`是否删除选框和框内所有的点`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-    },
     //判断是一维数组还是二维
     isArray(a) {
       for (let i of a) {
@@ -2734,11 +2631,11 @@ body,html{
   /*这个样式不写，右键弹框会一直显示在画布的左下角*/
   position: absolute;
   background: rgba(255, 255, 255);
-  border-radius: 5px;
   left: -99999px;
   top: -999999px;
   padding: 0.1vw;
   border-radius: 0.5vw;
+  border: 1px solid #000000;
   .button{
     height: 0.5vh;
     width: 0.5vw;
@@ -2749,6 +2646,10 @@ body,html{
     font-weight: 700;
     justify-content: center;
     align-items: center;
+  }
+  .button:hover{
+    color: #FFFFFF;
+    background-color: #df0202;
   }
 }
 
@@ -2887,8 +2788,11 @@ form input {
 }
 
 .btn {
+  height: 4vh;
+  width: 4vw;
   color: #136d87;
   border: 1px solid #136d87;
+  border-radius: 1vw;
   background-color: transparent;
   text-transform: uppercase;
   font-weight: 500;

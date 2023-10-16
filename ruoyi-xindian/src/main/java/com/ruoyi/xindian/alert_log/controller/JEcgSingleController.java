@@ -27,7 +27,7 @@ public class JEcgSingleController {
      * 再原有的数据上替换关键点数据
      */
     @PostMapping("/ecgBeatLabelAdd")
-    public AjaxResult ecgBeatLabelAdd(JecgSingle jecgSingle){
+    public AjaxResult ecgBeatLabelAdd(@RequestBody JecgSingle jecgSingle){
         return AjaxResult.success(jecgSingleService.updateBeatLabel(jecgSingle)>0);
     }
 
@@ -46,7 +46,7 @@ public class JEcgSingleController {
      * @return
      */
     @PostMapping("/ecgWaveLabelPut")
-    public AjaxResult ecgWaveLabelPut(JecgSingle jecgSingle){
+    public AjaxResult ecgWaveLabelPut(@RequestBody JecgSingle jecgSingle){
         return AjaxResult.success(jecgSingleService.updateWaveLabel(jecgSingle)>0);
     }
 
@@ -58,11 +58,11 @@ public class JEcgSingleController {
     }
 
     @PostMapping("/put12BeatLabel")
-    public AjaxResult put12BeatLabel(Jecg12 jecg12){
+    public AjaxResult put12BeatLabel(@RequestBody Jecg12 jecg12){
         return AjaxResult.success(jecg12Service.updateBeatLabel(jecg12)>0);
     }
     @PostMapping("/put12WaveLabel")
-    public AjaxResult put12WaveLabel(Jecg12 jecg12){
+    public AjaxResult put12WaveLabel(@RequestBody Jecg12 jecg12){
         return AjaxResult.success(jecg12Service.updateWaveLabel(jecg12)>0);
     }
 
