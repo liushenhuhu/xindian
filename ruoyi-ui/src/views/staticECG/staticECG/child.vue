@@ -183,13 +183,9 @@ import markImg from "@/assets/images/lableBackImg.jpg"; //初始背景
 import {ecgBeatLabelAdd,ecgWaveLabelPut,put12BeatLabel,put12WaveLabel} from "@/api/staticECG/staticECG";
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import $ from "jquery";
-import Mark from  "./mark.vue"
 let ctx = ""; //画布上下文
 export default {
   props: {},
-  components: {
-    Mark
-  },
   data() {
     return {
       activeName:'first',
