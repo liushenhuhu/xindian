@@ -488,7 +488,6 @@ export default {
     if (show) {
       this.get();
     }
-    this.chartjump= echarts.init(document.getElementById("charts"));
   },
   methods: {
 

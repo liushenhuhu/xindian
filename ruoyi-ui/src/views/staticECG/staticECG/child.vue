@@ -348,8 +348,6 @@ export default {
       console.log(title)
       if(title=="II"){
         this.lead1=true
-      }else {
-        this.pointdata=[]
       }
       if(flag!=null){
         this.flag=flag
@@ -363,7 +361,6 @@ export default {
       this.pId = pIds;
       this.level = level;
       this.x.length=0
-      this.pointdata.length=0
       this.arrList.pId=pIds
       this.queryParam.pId = pIds;
       this.queryParam.level = level;
@@ -500,7 +497,9 @@ export default {
         this.chart.resize();
       })
       if(this.datalabel.beatLabel&&title=="II"){
+
           this.arrList.beatLabel=JSON.parse(this.datalabel.beatLabel)
+        console.log("重新赋值",this.arrList1)
           //回显
           //分段
           if(this[`${'arrList' + this.level}`].length==0){
@@ -686,6 +685,8 @@ export default {
     clickClose(){
       this.lead1=false
       this.lead2=false
+      this.radio1=''
+      this.radio2=''
       this.activeName="first"
       this.drawShow = false;
       this.currentBgImg = "";
@@ -970,11 +971,20 @@ export default {
       }
       console.log(JSON.parse(this.datalabel.waveLabel))
       //回显
+      var obj=false
+      for (const key in this.subData) {
+        if (this.subData[key].length > 0) {
+          obj=true // 只要有一个属性对应的数组不为空，就返回 false
+        }
+      }
+      //回显
       if(this.lead2){
-        if(this.flag==1){
-          this.subData=JSON.parse(this.datalabel.waveLabel)[this.level-1]
-        }else {
-          this.subData=JSON.parse(this.datalabel.waveLabel)
+        if(!obj) {
+          if (this.flag == 1) {
+            this.subData = JSON.parse(this.datalabel.waveLabel)[this.level - 1]
+          } else {
+            this.subData = JSON.parse(this.datalabel.waveLabel)
+          }
         }
         console.log("有数据")
         console.log(this.subData)
@@ -1095,8 +1105,9 @@ export default {
     Off(){
       this.lead1=false
       this.lead2=false
+      this.radio1=''
+      this.radio2=''
       this.activeName="first"
-      this.lead2=false
       this.show=false
     },
     del2(){
