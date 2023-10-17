@@ -2,8 +2,8 @@
 <template>
   <div>
   <el-tabs v-model="activeName" class="container" type="border-card" @tab-click="handleClick" v-show="drawShow">
-    <el-tab-pane label="标注1" name="first">
-      <span slot="label" class="tab_label">标注1</span>
+    <el-tab-pane label="心搏标注" name="first">
+      <span slot="label" class="tab_label">心搏标注</span>
       <div
       style="height: 80vh"
       v-loading="isLoading"
@@ -85,8 +85,8 @@
 
     </div>
     </el-tab-pane>
-    <el-tab-pane label="标注2" name="second">
-      <span slot="label" class="tab_label">标注2</span>
+    <el-tab-pane label="波段标注" name="second">
+      <span slot="label" class="tab_label">波段标注</span>
       <div
         style="height: 80vh"
         v-loading="isLoading"
