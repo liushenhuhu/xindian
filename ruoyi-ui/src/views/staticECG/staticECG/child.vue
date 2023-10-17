@@ -3,6 +3,7 @@
   <div>
   <el-tabs v-model="activeName" class="container" type="border-card" @tab-click="handleClick" v-show="drawShow">
     <el-tab-pane label="标注1" name="first">
+      <span slot="label" class="tab_label">标注1</span>
       <div
       style="height: 80vh"
       v-loading="isLoading"
@@ -15,10 +16,10 @@
         <!--左上角盒子-->
           <div class="top-left-div" v-show="lead1">
             <el-radio-group style="margin:auto;" v-model="radio1" >
-              <el-radio-button label="N">正常</el-radio-button>
-              <el-radio-button label="S">房早</el-radio-button>
-              <el-radio-button label="V">室早</el-radio-button>
-              <el-radio-button label="X">干扰</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('N')" label="N">正常</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('S')" label="S">房早</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('V')" label="V">室早</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('X')" label="X">干扰</el-radio-button>
             </el-radio-group>
             <el-popover
               style="margin:auto;"
@@ -85,6 +86,7 @@
     </div>
     </el-tab-pane>
     <el-tab-pane label="标注2" name="second">
+      <span slot="label" class="tab_label">标注2</span>
       <div
         style="height: 80vh"
         v-loading="isLoading"
@@ -206,7 +208,7 @@ export default {
           msg: "右键点击绘制，左键双击自动闭合",
         }*/
       ],
-      radio1:'N',
+      radio1:'',
       radio2:'',
       colorList: [
         { color: "#000000" },
@@ -507,8 +509,7 @@ export default {
               return a>=0 && a<1000
             })
           }
-
-          console.log(this[`${'arrList' + this.level}`])
+          //console.log(this[`${'arrList' + this.level}`])
           //添加所有点
           this.pointdata.length=0
           var length=this[`${'arrList' + this.level}`].length
@@ -530,7 +531,7 @@ export default {
             }
             this.pointdata.push(pointdata)
           }
-          console.log(this.pointdata)
+          //console.log(this.pointdata)
           setTimeout(()=>{
             //添加文本
             this.addtext()
@@ -571,8 +572,11 @@ export default {
             this.yIndex = this.chart.convertFromPixel({seriesIndex: 0}, [params.offsetX, params.offsetY])[1];
             /*事件处理代码书写位置*/
             // console.log(this.xIndex)
-            // console.log(this.radio1)
+            //console.log(this.radio1)
             // console.log(this.data[this.xIndex])
+            if(this.radio1==''){
+              return;
+            }
             let i=this.addValue({x: this.xIndex,y: this.data[this.xIndex], type: this.radio1})
             if(i==1){
               return
@@ -616,11 +620,11 @@ export default {
       for (let i = 0; i < length-1; i++) {
         var x1=this[`${'arrList' + this.level}`][i].x-1000*(this.level-1)
         var x2=this[`${'arrList' + this.level}`][i+1].x-1000*(this.level-1)
-        console.log(x1,x2)
+        //console.log(x1,x2)
         var time=((x2-x1)/25*0.2).toFixed(2); //时间 s
         var heart=(60/time).toFixed(1) //心率
         var x=this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 0.75])
-        console.log(x)
+        //console.log(x)
         //console.log(this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 0.5]))
         let text={
           type:'text',
@@ -1128,6 +1132,9 @@ export default {
     },
     clickitem(e){
       e === this.radio2 ? this.radio2 = '' : this.radio2 = e
+    },
+    clickitem1(e){
+      e === this.radio1 ? this.radio1 = '' : this.radio1 = e
     }
   },
 
@@ -1147,7 +1154,9 @@ export default {
   //transform: translate(-50%,-80%);
   background: #ffffff;
   z-index:1;
-
+  .tab_label{
+    color: black;
+  }
   .top-tool {
     height: 50px;
     display: flex;

@@ -1988,7 +1988,6 @@ export default {
   //opacity: 0.6;
   .patientMessage {
     display: flex;
-    justify-content:space-between;
     flex-direction: column;
     flex-wrap: wrap;
     //background-color: #e01806;
@@ -2000,7 +1999,8 @@ export default {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      margin-left: 1.6vw;
+      margin-left: 1.8vw;
+      margin-top: 3vh;
       .textbox{
         width:45%;
         margin-bottom: 2vh;
@@ -2045,7 +2045,7 @@ export default {
     //height: 12vh;
     .text{
       height: 16vh;
-      border: 1px darkgray solid;
+      //border: 1px darkgray solid;
     }
   }
   .selected {
@@ -2081,10 +2081,15 @@ export default {
   margin:6vh 0 4vh 0 ;
   display: flex;
   width: 100%;
-  justify-content: center;
+  flex-direction: column;
   .input{
     display: flex;
     flex-direction: row;
+    margin-top: 1vh;
+    margin-left: 2vw;
+    ::v-deep .el-input--medium .el-input__inner{
+      width: 60%;
+    }
     //margin-left: 1vw;
     strong{
       white-space: nowrap;
