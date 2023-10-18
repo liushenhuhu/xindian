@@ -321,7 +321,6 @@ public class ReportController extends BaseController
     @Log(title = "报告", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Report report, HttpServletRequest request) throws Exception {
-//        User currentUser = ShiroUtils.getSysUser();
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
 

@@ -1,104 +1,109 @@
 <template>
-    <div class="mainbox">
-      <div class="box">
-        <div id="content" class="content">
+  <div class="mainbox">
+    <div class="box">
+      <div id="content" class="content">
         <!--    left      -->
-          <div class="left">
-            <div class="new">
-              <div class="img_box">
-                <img class="zhengda" src="@/assets/images/zhengda.png"/>
-              </div>
-              <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">+&emsp;&emsp;新建对话框</div>
+        <div class="left">
+          <div class="new">
+            <div class="img_box">
+              <img class="zhengda" src="@/assets/images/zhengda.png"/>
             </div>
-            <div class="his">
-              <div class="his_item" style="cursor: pointer" v-for="item in conversation" :key="item.conversationId" @click="conversationClickCut(item.conversationId)">
-                <img class="mesimg2" src="@/assets/images/messge2.png"/>
-                <div class="his_title"  >
-                  <div class="tit" v-show="!item.show">{{item.title}}</div>
-                  <el-input :ref="'input'+item.conversationId" :focus="focusStatus" v-show="item.show" type="text" v-model="item.title" @blur="blurId(item.conversationId)"></el-input>
-                  <div class="time">{{item.createTime}}</div>
-                </div>
-                <img class="upimg" src="@/assets/images/updat.png" style="cursor: pointer" @click="updatatit(item.conversationId)"/>
-                <img class="delimg" src="@/assets/images/delimg.png" style="cursor: pointer" @click.stop="conversationClickDel(item.conversationId)"/>
-              </div>
-<!--              <div class="his_item">-->
-<!--                <img class="mesimg2" src="@/assets/images/messge2.png"/>-->
-<!--                <div class="his_title">-->
-<!--                  <div class="tit">新建会话1</div>-->
-<!--                  <div class="time">2023-10-13 10:09:36</div>-->
-<!--                </div>-->
-<!--                <img class="delimg" src="@/assets/images/delimg.png"/>-->
-<!--              </div>-->
-            </div>
+            <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">+&emsp;&emsp;新建对话框</div>
           </div>
-        <!--    right      -->
-          <div class="right" >
-            <div class="right-title">
-              <img class="xietong" src="@/assets/images/xietong.png"/>
+          <div class="his">
+            <div class="his_item" style="cursor: pointer"  v-for="(item,i) in conversation" :ref="'div-'+item.conversationId" :class="{bgc: i === 0}" :key="item.conversationId"  @click="conversationClickCut(item.conversationId,2)">
+              <img class="mesimg2" src="@/assets/images/messge2.png"/>
+              <div class="his_title"  >
+                <div  class="tit" v-show="item.isCustom">{{item.title}}</div>
+                <input :class="{ 'titUp': item.isHighlighted, 'tit': item.isCustom }"  :ref="'input'+item.conversationId" type="hidden" :value="item.title" @blur="blurId(item.conversationId)"></input>
+                <div class="time">{{item.createTime}}</div>
+              </div>
+              <img class="upimg" src="@/assets/images/updat.png" style="cursor: pointer" @click.stop="updatatit(item.conversationId,i)"/>
+              <img class="delimg" src="@/assets/images/delimg.png" style="cursor: pointer" @click.stop="conversationClickDel(item.conversationId)"/>
             </div>
-            <div class="message" id="right" ref="message">
-              <div v-for="(item,index) in info" :key="index">
-                <div class="info_r" v-if="item.type == 'leftinfo'">
-                  <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
-                  <div class="con_r">
-                    <div class="time_r">{{item.time}}</div>
-                    <div class="con_text">{{item.content}}</div>
-                    <div v-for="(item2,index) in item.question" :key="index">
-                      <div class="con_que" @click="clickRobot(item2.content,item2.id)">
-                        <div class="czkj-question-msg">
-                          {{item2.index}}
-                          {{item2.content}}
-                        </div>
+            <!--              <div class="his_item">-->
+            <!--                <img class="mesimg2" src="@/assets/images/messge2.png"/>-->
+            <!--                <div class="his_title">-->
+            <!--                  <div class="tit">新建会话1</div>-->
+            <!--                  <div class="time">2023-10-13 10:09:36</div>-->
+            <!--                </div>-->
+            <!--                <img class="delimg" src="@/assets/images/delimg.png"/>-->
+            <!--              </div>-->
+          </div>
+        </div>
+        <!--    right      -->
+        <div class="right" >
+          <div class="right-title">
+            <img class="xietong" src="@/assets/images/xietong.png"/>
+          </div>
+          <div class="message" id="right" ref="message">
+            <div v-for="(item,index) in info" :key="index">
+              <div class="info_r" v-if="item.type == 'leftinfo'">
+                <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
+                <div class="con_r">
+                  <div class="time_r">{{item.time}}</div>
+                  <div class="con_text">{{item.content}}</div>
+                  <div v-for="(item2,index) in item.question" :key="index">
+                    <div class="con_que" @click="clickRobot(item2.content,item2.id)">
+                      <div class="czkj-question-msg">
+                        {{item2.index}}
+                        {{item2.content}}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="info_l" v-if="item.type == 'rightinfo'">
-                  <div class="con_l">
-                    <div class="time_l">{{item.time}}</div>
-                    <span class="con_text">{{item.content}}</span>
-                  </div>
-                  <img src="@/assets/images/userimg.png" class="pic_l" />
-                </div>
               </div>
-              <div class="info_r" v-if="isLoading">
-                <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
-                <div class="con_r con_text">
-                  <div style="display:flex;height: 35px;align-items: center">
-                    <loading/>
-                  </div>
+              <div class="info_l" v-if="item.type == 'rightinfo'">
+                <div class="con_l">
+                  <div class="time_l">{{item.time}}</div>
+                  <span class="con_text">{{item.content}}</span>
+                </div>
+                <img src="@/assets/images/userimg.png" class="pic_l" />
+              </div>
+            </div>
+            <div class="info_r" v-if="isLoading">
+              <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
+              <div class="con_r con_text">
+                <div style="display:flex;height: 35px;align-items: center">
+                  <loading/>
                 </div>
               </div>
             </div>
-            <div class="text-area">
-              <div class="left-child">
-                <img class="mesimg1" src="@/assets/images/messge1.png"/>
-                <textarea
-                  placeholder="请输入您的问题..."
-                  style="height: 100%;width: 85%;resize:none;outline: none;border:0;font-size: 1.3vw;padding: 1vh"
-                  id="text"
-                  v-model="customerText"
-                  @keyup.enter="sentMsg()"
-                ></textarea>
-                <img class="mesimg3" src="@/assets/images/messge3.png" @click="sentMsg()"/>
-              </div>
+          </div>
+          <div class="text-area">
+            <div class="left-child">
+              <img class="mesimg1" src="@/assets/images/messge1.png"/>
+              <textarea
+                placeholder="请输入您的问题..."
+                style="height: 100%;width: 85%;resize:none;outline: none;border:0;font-size: 1.3vw;padding: 1vh"
+                id="text"
+                v-model="customerText"
+                @keyup.enter="sentMsg()"
+              ></textarea>
+              <img class="mesimg3" src="@/assets/images/messge3.png" @click="sentMsg()"/>
             </div>
-
           </div>
 
         </div>
+
       </div>
     </div>
+  </div>
 </template>
 <script>
-import {deleteConversation, getChatQuizList, getConversation, proxyRequest} from "@/api/chatECG/chatECG";
+import {
+  deleteConversation,
+  getChatQuizList,
+  getConversation,
+  proxyRequest,
+  updateConversation
+} from "@/api/chatECG/chatECG";
 import loading from "./loading"
 import {delDoctor} from "@/api/doctor/doctor";
 export default {
   components: {
     loading
   },
-  computed: {},
   data() {
     return {
       isLoading:false,
@@ -126,14 +131,27 @@ export default {
       conversation:[],
       titleUpdata:false,
       title:'',
-      focusStatus:false
+      focusStatus:false,
+      hasBorderlessClass:true,
+      isAddNewWin : false,
     };
+  },
+  computed:{
+    inputClasses() {
+      // 使用计算属性动态生成类列表
+      return {
+        'tit': this.hasBorderlessClass,
+        'titUp': !this.hasBorderlessClass, // 新添加的类
+      };
+    },
   },
   created() {
     this.getConversation(1)
     this.showTimer();
+
   },
   watch: {},
+
   methods: {
     formatDateToCustomFormat(date) {
       const year = date.getFullYear();
@@ -145,6 +163,20 @@ export default {
 
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
+    findMaxIdObject(array) {
+      if (array.length === 0) {
+        return null; // 空数组，没有对象可返回
+      }
+      let maxIdObject = array[0]; // 假设第一个对象具有最大的 id 值
+
+      for (let i = 1; i < array.length; i++) {
+        if (array[i].id > maxIdObject.id) {
+          maxIdObject = array[i]; // 找到更大的 id 值，更新 maxIdObject
+        }
+      }
+
+      return maxIdObject;
+    },
     // 用户发送消息
     sentMsg() {
       //console.log("queryParams: ====="+this.queryParams.history);
@@ -153,8 +185,15 @@ export default {
       let text = this.customerText.trim();
       this.queryParams.text = text;
       this.queryParams.createTime = this.formatDateToCustomFormat(new Date())
-      if (this.info.length===1){
-        this.queryParams.conversationId = this.conversation.length+1
+      if (this.isAddNewWin||this.conversation.length===0){
+        let is = this.findMaxIdObject(this.conversation)
+        console.log(is)
+        if (is!==null){
+          this.queryParams.conversationId = is.conversationId+1
+        }else {
+          this.queryParams.conversationId =1
+        }
+
         this.queryParams.title = text
         if (text !== "") {
           var obj = {
@@ -182,14 +221,30 @@ export default {
             contentHeight.scrollTop = contentHeight.scrollHeight;
           });
         }
-        console.log("开始调用")
-        let chat = {
-        conversationId:this.queryParams.conversationId,
-        createTime:this.queryParams.createTime,
-        title: this.queryParams.title
+        if (this.conversation.length>0){
+          this.$refs['div-'+this.conversation[0].conversationId][0].classList.remove("bgc")
+          this.conversation.forEach((i,index)=>{
+            if (this.$refs['div-'+i.conversationId]){
+              this.$refs['div-'+i.conversationId][0].style.backgroundColor = ''
+            }
+
+          })
         }
+        console.log("开始调用")
+        //创建窗口标签
+        let chat = {
+          conversationId:this.queryParams.conversationId,
+          createTime:this.queryParams.createTime,
+          title: this.queryParams.title,
+          isHighlighted: false,
+          isCustom : true,
+        }
+
         this.queryParams.title = null
         this.conversation.unshift(chat)
+        this.isAddNewWin = false
+
+
         // setTimeout(()=>{this.getConversation(2)}, 5000)
       }else {
         if (text !== "") {
@@ -223,8 +278,10 @@ export default {
             var contentHeight = document.getElementById("right");
             contentHeight.scrollTop = contentHeight.scrollHeight;
           });
+          this.queryParams.title = null
         }
       }
+
 
     },
     // 机器人回答消息
@@ -280,6 +337,7 @@ export default {
         name: "robot",
         content: robotById[0].content,
         question: [],
+        text:"2"
       };
       let obj_r = {
         type: "rightinfo",
@@ -287,6 +345,7 @@ export default {
         name: "robot",
         content: val,
         question: [],
+        text:"2"
       };
       console.log(obj_r)
       console.log(obj_l)
@@ -361,13 +420,14 @@ export default {
       getConversation().then(r=>{
         console.log(r)
         this.conversation = r.data
+
         this.conversation.forEach(item=>{
           Object.assign(item,{show:false})
         })
-        console.log(v)
         if (v===1){
           if (r.data.length>0){
-            this.conversationClickCut(r.data[0].conversationId)
+            this.conversationClickCut(r.data[0].conversationId,1)
+
           }
           if (r.data.length===0){
             this.info=[
@@ -376,10 +436,21 @@ export default {
                 time: this.getTodayTime(),
                 name: "robot",
                 content:
-                  "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
+                  "",
                 question: [],
+                text:"1"
               },
             ]
+            let text = '您好，我是智能AI医生小郑，请问有什么问题可以帮助您？'
+            let index = 0;
+            const interval = setInterval(() => {
+              if (index < text.length&&this.info[0].text==='1') {
+                this.info[0].content+= text[index];
+                index++;
+              } else {
+                clearInterval(interval);
+              }
+            }, 100); // 控制逐字显示速度，你可以根据需要调整
             this.robotAnswer=[]
           }
         }
@@ -403,8 +474,35 @@ export default {
     /**
      * 查询用户指定的会话窗口的历史数据
      * @param val
+     * @param id
+     * @param event
      */
-    conversationClickCut(val){
+    conversationClickCut(val,id){
+
+
+      // console.log(event.target)
+      // // console.log(this.$refs['div-'+val][0])
+      // if (event.target === this.$refs['div-'+val][0] && this.isDisabled) {
+      //   // 在这里执行你想要的操作
+      //   console.log("点击了禁用的输入框");
+      // }
+
+      this.isAddNewWin = false
+      if (id===2){
+        this.$refs['div-'+this.conversation[0].conversationId][0].classList.remove("bgc")
+      }
+
+      this.conversation.forEach((i,index)=>{
+        if (this.$refs['div-'+val]){
+          if(i.conversationId===val){
+            this.$refs['div-'+val][0].style.backgroundColor = '#343541'
+          }else {
+            this.$refs['div-'+i.conversationId][0].style.backgroundColor = ''
+          }
+        }
+
+      })
+
       this.queryParams.conversationId=val
 
       getChatQuizList(val).then(r=>{
@@ -419,12 +517,14 @@ export default {
             time: r.data[i].responseTime,
             name: "robot",
             content: value,
+            text:"2"
           };
           let obj_r = {
             type: "rightinfo",
             time: r.data[i].createTime,
             name: "robot",
             content: label,
+            text:"2"
           };
           this.info.push(obj_r);
           this.info.push(obj_l);
@@ -445,47 +545,66 @@ export default {
           type: "leftinfo",
           time: this.getTodayTime(),
           name: "robot",
-          content:
-            "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
+          content: "",
           question: [],
+          text:"1"
         },
-        ]
+      ]
+      let text = '您好，我是智能AI医生小郑，请问有什么问题可以帮助您？'
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < text.length&&this.info[0].text==='1') {
+          this.info[0].content+= text[index];
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 100); // 控制逐字显示速度，你可以根据需要调整
       this.robotAnswer=[]
-
+      this.isAddNewWin = true
+      this.$refs['div-'+this.conversation[0].conversationId][0].classList.remove("bgc")
+      this.conversation.forEach((i,index)=>{
+        this.$refs['div-'+i.conversationId][0].style.backgroundColor = ''
+      })
     },
     //点击修改图标显示input
-    updatatit(id){
+    updatatit(id,ins){
       this.conversation.forEach((i,index)=>{
-        if(i.conversationId==id){
-          i.show=true
-          this.title=i.title
+        if(i.conversationId===id){
+          i.isCustom=false;
+          i.isHighlighted = true
+          this.$refs['input'+id][0].type = 'text'
+          this.$refs['input'+id][0].focus()
         }
       })
-      console.log(this.conversation)
-      this.$nextTick(()=>{
-        this.focusStatus=true
-        this.$refs[`input${id}`][0].focus()
-      })
-      console.log(this)
 
     },
     //input失去焦点
     blurId(id){
-      console.log(11111111111111)
-      this.conversation.forEach(i=>{
-        if(i.conversationId==id){
-          i.show=false
-          this.title=''
+      this.conversation.forEach((i,index)=>{
+        this.$refs['input'+id][0].type = 'hidden'
+        if(i.conversationId===id){
+          i.isCustom=true;
+          i.isHighlighted = false
+          if (i.title!==this.$refs['input'+id][0].value){
+            i.title = this.$refs['input'+id][0].value
+            updateConversation(i).then(r=>{
+              console.log(r)
+            })
+          }
+
         }
       })
     }
   },
-  mounted() {},
   props: {},
   destroyed() {},
 };
 </script>
 <style lang="scss" scoped>
+.bgc {
+  background-color: #343541;
+}
 .mainbox {
   width: 100%;
   .box {
@@ -504,10 +623,10 @@ export default {
     justify-content: center;
     align-items: center;
     #content {
-      height: 90%;
+      height: 97%;
       //overflow-y: scroll;
       font-size: 20px;
-      width: 95%;
+      width: 98%;
       display: flex;
       .con_text {
         width: fit-content;
@@ -664,7 +783,7 @@ export default {
   display: flex;
   align-items: center;
   img {
-  margin: 0 30px;
+    margin: 0 30px;
   }
 }
 .title-hn {
@@ -681,7 +800,8 @@ export default {
   font-size: 1.3vw;
   color: #FFFFFF;
   border: 2px solid #9A9999;
-  margin-right: 3vw;
+  border-radius: 15px;
+  margin-right: 1vw;
   .new{
     height: 9%;
     width: 100%;
@@ -695,7 +815,6 @@ export default {
       align-items: center;
       margin-left: 1vw;
       .zhengda{
-        width: 3.5vw;
         height: 7vh;
       }
     }
@@ -706,7 +825,10 @@ export default {
       margin-right: 1vw;
       border: 2px solid #9A9999;
       border-radius: 1vw;
-      padding: 2.3vh 1vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 23px;
     }
   }
   .his{
@@ -721,23 +843,40 @@ export default {
       box-sizing:border-box;
       display: flex;
       align-items: center;
-      height: 20%;
-      width: 90%;
+      height: 11%;
+      min-height: 15%;
+      width: 96%;
       border: 2px solid #9A9999;
       border-radius: 1vw;
-      margin-top: 2vh;
+      margin-top: 1.5vh;
+      margin-left: 1vh;
       .mesimg2{
         margin-left: 1vw;
         width: 2.5vw;
         height: 2.2vw;
       }
       .his_title{
-        width: 14vw;
+        width: 60%;
         margin: 0 1vw 0 0.5vw;
         .tit{
+          width: 98%;
+          margin: 1vh 0 0.5vh 0;
+          overflow: hidden;
+          border: none;
+          background: transparent;
+          outline: none;
+          color: white;
+          font-size: 16px;
+          min-font-size: 16px;
+          pointer-events: auto;
+          cursor: pointer;
+        }
+        .titUp{
+          width: 100%;
           margin: 1vh 0 0.5vh 0;
           overflow: hidden;
         }
+
         .time{
           font-size: 0.9vw;
           color: #ABABAB;
@@ -750,7 +889,7 @@ export default {
         }
       }
       .delimg{
-        margin-right: 1vw;
+        margin-right: 0.5vw;
         width: 1.8vw;
         height: 1.8vw;
       }
@@ -794,7 +933,6 @@ export default {
 }
 .right .right-title .xietong{
   height: 8vh;
-  width: 20vw;
   margin: 2vh 0 0 1vw;
 }
 .right .message{
@@ -803,8 +941,10 @@ export default {
   overflow-y: scroll;
 }
 .right .text-area{
-  height: 23%;
+
+  height: 22%;
   width: 100%;
+  margin-top: 2vh;
 }
 .left-btn {
   width: 100%;
@@ -832,4 +972,5 @@ export default {
 *:hover::-webkit-scrollbar-track {
   background: transparent;
 }
+
 </style>

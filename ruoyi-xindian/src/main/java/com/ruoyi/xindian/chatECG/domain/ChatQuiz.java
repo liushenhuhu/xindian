@@ -62,6 +62,13 @@ public class ChatQuiz implements Serializable {
      */
     private String title;
 
+
+    @TableField(exist = false)
+    private Boolean isCustom = true;
+
+    @TableField(exist = false)
+    private Boolean isHighlighted = false;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

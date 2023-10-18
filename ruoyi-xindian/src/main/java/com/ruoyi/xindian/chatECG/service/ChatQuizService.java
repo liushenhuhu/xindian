@@ -30,6 +30,14 @@ public interface ChatQuizService extends IService<ChatQuiz> {
     List<ChatQuiz> getChatQuizList(ChatQuiz chatQuiz);
 
 
+
+    /**
+     * 获取指定窗口的所有问题
+     * @param chatQuiz
+     * @return
+     */
+    List<ChatQuiz> getChatQuizListIsNotTet(ChatQuiz chatQuiz);
+
     /**
      * 获取用户存在的窗口信息
      * @param userId
