@@ -353,7 +353,7 @@ export default {
         this.flag=flag
       }
       if(datalabel!=null){
-        console.log(datalabel)
+        //console.log(datalabel)
         this.datalabel=datalabel
       }
       this.drawShow=true
@@ -496,13 +496,14 @@ export default {
       setTimeout(()=>{
         this.chart.resize();
       })
-      if(this.datalabel.beatLabel&&title=="II"){
-
+      if(this.lead1){
+        // if(!obj){
           this.arrList.beatLabel=JSON.parse(this.datalabel.beatLabel)
-        console.log("重新赋值",this.arrList1)
+        // }
+        //console.log("重新赋值",this.arrList)
           //回显
           //分段
-          if(this[`${'arrList' + this.level}`].length==0){
+          if(this[`${'arrList' + this.level}`].length==0&&this.arrList.beatLabel){
             this[`${'arrList' + this.level}`]=this.arrList.beatLabel.filter(i=>{
               let a=i.x-1000*(level-1)
               return a>=0 && a<1000
