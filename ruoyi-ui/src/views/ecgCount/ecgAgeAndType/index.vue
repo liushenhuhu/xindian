@@ -1,5 +1,15 @@
 <template>
   <div>
+    <el-select class="el-select" v-model="value1" multiple placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+    <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" style="margin-left: 1vw">搜索</el-button>
+    <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
     <div id="cf-double-column" class="age" :style="{ width: '100%', height: '100%' }">
       <p class="title"><span class="title-left"></span>数据库统计男女比例图</p>
       <div id="chart" :style="{ width: '100%', height: '550px',margin:'0 auto'}"></div>
@@ -17,7 +27,7 @@
 
 <script>
 import elementResizeDetectorMaker from "element-resize-detector";
-import {ageList, getAgeYoung} from "@/api/ecgCount/ecgCount";
+import {ageList, getAgeYoung,getLogType} from "@/api/ecgCount/ecgCount";
 import * as echarts from 'echarts';
 
 
@@ -30,6 +40,8 @@ export default {
       womenCount: 0,
       ageYoungName: "",
       ageCount:0,
+      options:[],
+      value1:[]
     }
   },
   created() {
@@ -338,12 +350,12 @@ export default {
 
     getList() {
       //this.loading = true;
-      ageList().then(response => {
+      ageList(this.value1).then(response => {
         //console.log(Object.values(response)[1]);
-        this.columndata1 = Object.values(response)[0];
-        this.columndata2 = Object.values(response)[1];
+        this.columndata1 = response.men;
+        this.columndata2 = response.women;
         this.getDoubleCloumn();
-        console.log(this.columndata1);
+        console.log(response);
 
         let getArrByKey = (data, k) => {
           let key = k || "value";
@@ -371,20 +383,23 @@ export default {
         //console.log(this.menCount)
         //this.loading = false;
       });
-
-      getAgeYoung().then(r=>{
+      getAgeYoung(this.value1).then(r=>{
         console.log(r)
         let data = r.data
 
-
         let countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0];
+        this.ageCount=0
         for (let j = 0; j < data.length; j++) {
           this.ageCount += parseInt(data[j].value)
           countArr[data[j].name] = parseInt(data[j].value);
         }
         this.countArr = countArr;
         this.ageYoungName = '儿童心电统计  总人数：'+this.ageCount
+        console.log(this.ageYoungName)
         this.ageYoung();
+      })
+      getLogType().then(res=>{
+        this.options=res.data
       })
 
     },
@@ -443,6 +458,7 @@ export default {
           left: '0%',
         },
       }
+      myChart.clear()
       myChart.setOption(option);
       const erd = elementResizeDetectorMaker();
       //myChart.clear();
@@ -463,12 +479,25 @@ export default {
       //   status.getListData();
       // })
 
-    }
+    },
+    handleQuery() {
+      console.log(this.value1)
+      this.getList();
+    },
+    resetQuery() {
+      this.value1=[]
+      this.handleQuery();
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.el-select{
+  width: 20vw;
+  margin-top: 2vh;
+  margin-left: 5vw;
+}
 #cf-double-column {
   position: relative;
   width: 100%;

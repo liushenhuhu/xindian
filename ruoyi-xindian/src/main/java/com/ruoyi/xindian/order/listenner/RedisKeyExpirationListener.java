@@ -16,6 +16,8 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -145,10 +147,10 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 ecgCountController.getTypeList();
             }
             if (expiredKey.equals("ecgCountTypeAge")){
-                ecgCountController.ageList(new AgeStatistics());
+                ecgCountController.ageList(new ArrayList<>());
             }
             if (expiredKey.equals("ecgAgeYoung")){
-                ecgCountService.getAgeYoung();
+                ecgCountService.getAgeYoung(new HashMap<>());
             }
             if (expiredKey.equals("ecgZCXDTCountType")){
                 ecgCountService.getZCXDTCount();

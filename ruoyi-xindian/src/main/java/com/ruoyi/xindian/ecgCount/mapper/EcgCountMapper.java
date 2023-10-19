@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author 13401
@@ -77,9 +78,9 @@ public interface EcgCountMapper extends BaseMapper<EcgCount> {
     List<TypeListVo> getLogTypeAndValue();
 
 
-    List<AgeStatistics> ageListByMan(AgeStatistics str);
+    List<AgeStatistics> ageListByMan(Map<String,Object> type);
 
-    List<AgeStatistics> ageListByWoman(AgeStatistics str);
+    List<AgeStatistics> ageListByWoman(Map<String,Object> type);
 
 
 
@@ -92,7 +93,7 @@ public interface EcgCountMapper extends BaseMapper<EcgCount> {
 
 
     List<TypeListVo> getZCXDTCount();
-    List<TypeListVo> getAgeYoung();
+    List<TypeListVo> getAgeYoung(Map<String,Object> type);
 
 }
 

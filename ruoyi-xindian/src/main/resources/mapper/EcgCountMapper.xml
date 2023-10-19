@@ -476,11 +476,86 @@
                                                           WHEN age BETWEEN 81 AND 85 THEN '81-85岁'
                                                           WHEN age > 85 THEN '85岁以上'
                                                           END AS name
-                                               FROM ecg_count where gender = '男'
+                                               FROM ecg_count <where>
+        gender = '男'
+        <if test="zcxdt_ecg != null">and zcxdt_ecg = 1</if>
+        <if test="dxxl_ecg != null">and dxxl_ecg = 1</if>
+        <if test="ywxl_ecg != null">and ywxl_ecg = 1</if>
+        <if test="fxxl_ecg != null">and fxxl_ecg = 1</if>
+        <if test="sxxl_ecg != null">and sxxl_ecg = 1</if>
+        <if test="jjxxl_ecg != null">and jjxxl_ecg = 1</if>
+        <if test="qbxl_ecg != null">and qbxl_ecg = 1</if>
+        <if test="sxxdgs_ecg != null">and sxxdgs_ecg = 1</if>
+        <if test="ssxxdgs_ecg != null">and ssxxdgs_ecg = 1</if>
+        <if test="jjxxdgs_ecg != null">and jjxxdgs_ecg = 1</if>
+        <if test="fxxdgs_ecg != null">and fxxdgs_ecg = 1</if>
+        <if test="fxyb_ecg != null">and fxyb_ecg = 1</if>
+        <if test="fxzb_ecg != null">and fxzb_ecg = 1</if>
+        <if test="fxtb_ecg != null">and fxtb_ecg = 1</if>
+        <if test="sxyb_ecg != null">and sxyb_ecg = 1</if>
+        <if test="sxzb_ecg != null">and sxzb_ecg = 1</if>
+        <if test="jjxyb_ecg != null">and jjxyb_ecg = 1</if>
+        <if test="jjxzb_ecg != null">and jjxzb_ecg = 1</if>
+        <if test="jjxtb_ecg != null">and jjxtb_ecg = 1</if>
+        <if test="dxtb_ecg != null">and dxtb_ecg = 1</if>
+        <if test="xstb_ecg != null">and xstb_ecg = 1</if>
+        <if test="qxtb_ecg != null">and qxtb_ecg = 1</if>
+        <if test="xfcd_ecg != null">and xfcd_ecg = 1</if>
+        <if test="xfpd_ecg != null">and xfpd_ecg = 1</if>
+        <if test="xscd_ecg != null">and xscd_ecg = 1</if>
+        <if test="xspd_ecg != null">and xspd_ecg = 1</if>
+        <if test="ydfszd_ecg != null">and ydfszd_ecg = 1</if>
+        <if test="edfszd_ecg != null">and edfszd_ecg = 1</if>
+        <if test="edixfszd_ecg != null">and edIxfszd_ecg = 1</if>
+        <if test="ediixfszd_ecg != null">and edIIxfszd_ecg = 1</if>
+        <if test="sdfszd_ecg != null">and sdfszd_ecg = 1</if>
+        <if test="dfzd_ecg != null">and dfzd_ecg = 1</if>
+        <if test="gdfszd_ecg != null">and gdfszd_ecg = 1</if>
+        <if test="zqfzzd_ecg != null">and zqfzzd_ecg = 1</if>
+        <if test="zhfzzd_ecg != null">and zhfzzd_ecg = 1</if>
+        <if test="wqxzszzd_ecg != null">and wqxzszzd_ecg = 1</if>
+        <if test="bwqxzszzd_ecg != null">and bwqxzszzd_ecg = 1</if>
+        <if test="wqxyszzd_ecg != null">and wqxyszzd_ecg = 1</if>
+        <if test="bwqxyszzd_ecg != null">and bwqxyszzd_ecg = 1</if>
+        <if test="ftyxsnzd_ecg != null">and ftyxsnzd_ecg = 1</if>
+        <if test="sncyxcd_ecg != null">and sncyxcd_ecg = 1</if>
+        <if test="xsyjb_ecg != null">and xsyjb_ecg = 1</if>
+        <if test="yjzhz_ecg != null">and yjzhz_ecg = 1</if>
+        <if test="zxffd_ecg != null">and zxffd_ecg = 1</if>
+        <if test="zxsfd_ecg != null">and zxsfd_ecg = 1</if>
+        <if test="yxffd_ecg != null">and yxffd_ecg = 1</if>
+        <if test="yxsfd_ecg != null">and yxsfd_ecg = 1</if>
+        <if test="stgb_ecg != null">and stgb_ecg = 1</if>
+        <if test="stTgb_ecg != null">and st_tgb_ecg = 1</if>
+        <if test="tbyc_ecg != null">and tbyc_ecg = 1</if>
+        <if test="qtjqyc_ecg != null">and qtjqyc_ecg = 1</if>
+        <if test="qtcjqyc_ecg != null">and qtcjqyc_ecg = 1</if>
+        <if test="kjub_ecg != null">and kjub_ecg = 1</if>
+        <if test="zqfj_ecg != null">and zqfj_ecg = 1</if>
+        <if test="qjbxjgs_ecg != null">and qjbxjgs_ecg = 1</if>
+        <if test="qcbxjgs_ecg != null">and qcbxjgs_ecg = 1</if>
+        <if test="qgfbxjgs_ecg != null">and qgfbxjgs_ecg = 1</if>
+        <if test="qbxjgs_ecg != null">and qbxjgs_ecg = 1</if>
+        <if test="xbxjgs_ecg != null">and xbxjgs_ecg = 1</if>
+        <if test="xhbxjgs_ecg != null">and xhbxjgs_ecg = 1</if>
+        <if test="hbxjgs_ecg != null">and hbxjgs_ecg = 1</if>
+        <if test="xcbbxjgs_ecg != null">and xcbbxjgs_ecg = 1</if>
+        <if test="gcbbxjgs_ecg != null">and gcbbxjgs_ecg = 1</if>
+        <if test="cbbxjgs_ecg != null">and cbbxjgs_ecg = 1</if>
+        <if test="xnmxxjgs_ecg != null">and xnmxxjgs_ecg = 1</if>
+        <if test="ysxjgs_ecg != null">and ysxjgs_ecg = 1</if>
+        <if test="fsttgxxjgs_ecg != null">and fsttgxxjgs_ecg = 1</if>
+        <if test="xjbxjgs_ecg != null">and xjbxjgs_ecg = 1</if>
+        <if test="jbxjgs_ecg != null">and jbxjgs_ecg =1</if>
+        <if test="yjx_ecg != null">and yjx_ecg = 1</if>
+        <if test="jx_ecg != null">and jx_ecg = 1</if>
+        <if test="cjx_ecg != null">and cjx_ecg = 1</if>
+        <if test="xdtwjz_ecg != null">and xdtwjz_ecg = 1</if>
+    </where>
                                            )AS u WHERE u.name is not null GROUP BY name ORDER BY name
     </select>
 
-    <select id="ageListByWoman" parameterType="com.ruoyi.xindian.statistics.domain.AgeStatistics" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
+    <select id="ageListByWoman" parameterType="map" resultType="com.ruoyi.xindian.statistics.domain.AgeStatistics">
         SELECT name,COUNT(*) AS value FROM (
                                                SELECT age,
                                                       CASE
@@ -501,8 +576,85 @@
                                                           WHEN age BETWEEN 81 AND 85 THEN '81-85岁'
                                                           WHEN age > 85 THEN '85岁以上'
                                                           END AS name
-                                               FROM ecg_count where gender = '女'
-                                           )AS u WHERE u.name is not null GROUP BY name ORDER BY name
+                                               FROM ecg_count
+                                               <where>
+                                                   gender = '女'
+                                                   <if test="zcxdt_ecg != null">and zcxdt_ecg = 1</if>
+                                                   <if test="dxxl_ecg != null">and dxxl_ecg = 1</if>
+                                                   <if test="ywxl_ecg != null">and ywxl_ecg = 1</if>
+                                                   <if test="fxxl_ecg != null">and fxxl_ecg = 1</if>
+                                                   <if test="sxxl_ecg != null">and sxxl_ecg = 1</if>
+                                                   <if test="jjxxl_ecg != null">and jjxxl_ecg = 1</if>
+                                                   <if test="qbxl_ecg != null">and qbxl_ecg = 1</if>
+                                                   <if test="sxxdgs_ecg != null">and sxxdgs_ecg = 1</if>
+                                                   <if test="ssxxdgs_ecg != null">and ssxxdgs_ecg = 1</if>
+                                                   <if test="jjxxdgs_ecg != null">and jjxxdgs_ecg = 1</if>
+                                                   <if test="fxxdgs_ecg != null">and fxxdgs_ecg = 1</if>
+                                                   <if test="fxyb_ecg != null">and fxyb_ecg = 1</if>
+                                                   <if test="fxzb_ecg != null">and fxzb_ecg = 1</if>
+                                                   <if test="fxtb_ecg != null">and fxtb_ecg = 1</if>
+                                                   <if test="sxyb_ecg != null">and sxyb_ecg = 1</if>
+                                                   <if test="sxzb_ecg != null">and sxzb_ecg = 1</if>
+                                                   <if test="jjxyb_ecg != null">and jjxyb_ecg = 1</if>
+                                                   <if test="jjxzb_ecg != null">and jjxzb_ecg = 1</if>
+                                                   <if test="jjxtb_ecg != null">and jjxtb_ecg = 1</if>
+                                                   <if test="dxtb_ecg != null">and dxtb_ecg = 1</if>
+                                                   <if test="xstb_ecg != null">and xstb_ecg = 1</if>
+                                                   <if test="qxtb_ecg != null">and qxtb_ecg = 1</if>
+                                                   <if test="xfcd_ecg != null">and xfcd_ecg = 1</if>
+                                                   <if test="xfpd_ecg != null">and xfpd_ecg = 1</if>
+                                                   <if test="xscd_ecg != null">and xscd_ecg = 1</if>
+                                                   <if test="xspd_ecg != null">and xspd_ecg = 1</if>
+                                                   <if test="ydfszd_ecg != null">and ydfszd_ecg = 1</if>
+                                                   <if test="edfszd_ecg != null">and edfszd_ecg = 1</if>
+                                                   <if test="edixfszd_ecg != null">and edIxfszd_ecg = 1</if>
+                                                   <if test="ediixfszd_ecg != null">and edIIxfszd_ecg = 1</if>
+                                                   <if test="sdfszd_ecg != null">and sdfszd_ecg = 1</if>
+                                                   <if test="dfzd_ecg != null">and dfzd_ecg = 1</if>
+                                                   <if test="gdfszd_ecg != null">and gdfszd_ecg = 1</if>
+                                                   <if test="zqfzzd_ecg != null">and zqfzzd_ecg = 1</if>
+                                                   <if test="zhfzzd_ecg != null">and zhfzzd_ecg = 1</if>
+                                                   <if test="wqxzszzd_ecg != null">and wqxzszzd_ecg = 1</if>
+                                                   <if test="bwqxzszzd_ecg != null">and bwqxzszzd_ecg = 1</if>
+                                                   <if test="wqxyszzd_ecg != null">and wqxyszzd_ecg = 1</if>
+                                                   <if test="bwqxyszzd_ecg != null">and bwqxyszzd_ecg = 1</if>
+                                                   <if test="ftyxsnzd_ecg != null">and ftyxsnzd_ecg = 1</if>
+                                                   <if test="sncyxcd_ecg != null">and sncyxcd_ecg = 1</if>
+                                                   <if test="xsyjb_ecg != null">and xsyjb_ecg = 1</if>
+                                                   <if test="yjzhz_ecg != null">and yjzhz_ecg = 1</if>
+                                                   <if test="zxffd_ecg != null">and zxffd_ecg = 1</if>
+                                                   <if test="zxsfd_ecg != null">and zxsfd_ecg = 1</if>
+                                                   <if test="yxffd_ecg != null">and yxffd_ecg = 1</if>
+                                                   <if test="yxsfd_ecg != null">and yxsfd_ecg = 1</if>
+                                                   <if test="stgb_ecg != null">and stgb_ecg = 1</if>
+                                                   <if test="stTgb_ecg != null">and st_tgb_ecg = 1</if>
+                                                   <if test="tbyc_ecg != null">and tbyc_ecg = 1</if>
+                                                   <if test="qtjqyc_ecg != null">and qtjqyc_ecg = 1</if>
+                                                   <if test="qtcjqyc_ecg != null">and qtcjqyc_ecg = 1</if>
+                                                   <if test="kjub_ecg != null">and kjub_ecg = 1</if>
+                                                   <if test="zqfj_ecg != null">and zqfj_ecg = 1</if>
+                                                   <if test="qjbxjgs_ecg != null">and qjbxjgs_ecg = 1</if>
+                                                   <if test="qcbxjgs_ecg != null">and qcbxjgs_ecg = 1</if>
+                                                   <if test="qgfbxjgs_ecg != null">and qgfbxjgs_ecg = 1</if>
+                                                   <if test="qbxjgs_ecg != null">and qbxjgs_ecg = 1</if>
+                                                   <if test="xbxjgs_ecg != null">and xbxjgs_ecg = 1</if>
+                                                   <if test="xhbxjgs_ecg != null">and xhbxjgs_ecg = 1</if>
+                                                   <if test="hbxjgs_ecg != null">and hbxjgs_ecg = 1</if>
+                                                   <if test="xcbbxjgs_ecg != null">and xcbbxjgs_ecg = 1</if>
+                                                   <if test="gcbbxjgs_ecg != null">and gcbbxjgs_ecg = 1</if>
+                                                   <if test="cbbxjgs_ecg != null">and cbbxjgs_ecg = 1</if>
+                                                   <if test="xnmxxjgs_ecg != null">and xnmxxjgs_ecg = 1</if>
+                                                   <if test="ysxjgs_ecg != null">and ysxjgs_ecg = 1</if>
+                                                   <if test="fsttgxxjgs_ecg != null">and fsttgxxjgs_ecg = 1</if>
+                                                   <if test="xjbxjgs_ecg != null">and xjbxjgs_ecg = 1</if>
+                                                   <if test="jbxjgs_ecg != null">and jbxjgs_ecg =1</if>
+                                                   <if test="yjx_ecg != null">and yjx_ecg = 1</if>
+                                                   <if test="jx_ecg != null">and jx_ecg = 1</if>
+                                                   <if test="cjx_ecg != null">and cjx_ecg = 1</if>
+                                                   <if test="xdtwjz_ecg != null">and xdtwjz_ecg = 1</if>
+                                               </where>
+    )AS u WHERE u.name is not null GROUP BY name ORDER BY name
+
 
     </select>
     <select id="getTypeList" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
@@ -591,7 +743,84 @@
     <select id="getZCXDTCount" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
         SELECT zcxdt_ecg as name, COUNT(zcxdt_ecg) as value FROM ecg_count GROUP BY zcxdt_ecg ORDER BY zcxdt_ecg
     </select>
-    <select id="getAgeYoung" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo">
-        SELECT age as name, COUNT(age) as value FROM ecg_count WHERE age BETWEEN 0 AND  17 GROUP BY age
+    <select id="getAgeYoung" resultType="com.ruoyi.xindian.ecgCount.vo.TypeListVo" parameterType="map">
+        SELECT age as name, COUNT(age) as value FROM ecg_count
+                                                <where>
+                                                    age BETWEEN 0 AND  17
+                                                    <if test="zcxdt_ecg != null">and zcxdt_ecg = 1</if>
+                                                    <if test="dxxl_ecg != null">and dxxl_ecg = 1</if>
+                                                    <if test="ywxl_ecg != null">and ywxl_ecg = 1</if>
+                                                    <if test="fxxl_ecg != null">and fxxl_ecg = 1</if>
+                                                    <if test="sxxl_ecg != null">and sxxl_ecg = 1</if>
+                                                    <if test="jjxxl_ecg != null">and jjxxl_ecg = 1</if>
+                                                    <if test="qbxl_ecg != null">and qbxl_ecg = 1</if>
+                                                    <if test="sxxdgs_ecg != null">and sxxdgs_ecg = 1</if>
+                                                    <if test="ssxxdgs_ecg != null">and ssxxdgs_ecg = 1</if>
+                                                    <if test="jjxxdgs_ecg != null">and jjxxdgs_ecg = 1</if>
+                                                    <if test="fxxdgs_ecg != null">and fxxdgs_ecg = 1</if>
+                                                    <if test="fxyb_ecg != null">and fxyb_ecg = 1</if>
+                                                    <if test="fxzb_ecg != null">and fxzb_ecg = 1</if>
+                                                    <if test="fxtb_ecg != null">and fxtb_ecg = 1</if>
+                                                    <if test="sxyb_ecg != null">and sxyb_ecg = 1</if>
+                                                    <if test="sxzb_ecg != null">and sxzb_ecg = 1</if>
+                                                    <if test="jjxyb_ecg != null">and jjxyb_ecg = 1</if>
+                                                    <if test="jjxzb_ecg != null">and jjxzb_ecg = 1</if>
+                                                    <if test="jjxtb_ecg != null">and jjxtb_ecg = 1</if>
+                                                    <if test="dxtb_ecg != null">and dxtb_ecg = 1</if>
+                                                    <if test="xstb_ecg != null">and xstb_ecg = 1</if>
+                                                    <if test="qxtb_ecg != null">and qxtb_ecg = 1</if>
+                                                    <if test="xfcd_ecg != null">and xfcd_ecg = 1</if>
+                                                    <if test="xfpd_ecg != null">and xfpd_ecg = 1</if>
+                                                    <if test="xscd_ecg != null">and xscd_ecg = 1</if>
+                                                    <if test="xspd_ecg != null">and xspd_ecg = 1</if>
+                                                    <if test="ydfszd_ecg != null">and ydfszd_ecg = 1</if>
+                                                    <if test="edfszd_ecg != null">and edfszd_ecg = 1</if>
+                                                    <if test="edixfszd_ecg != null">and edIxfszd_ecg = 1</if>
+                                                    <if test="ediixfszd_ecg != null">and edIIxfszd_ecg = 1</if>
+                                                    <if test="sdfszd_ecg != null">and sdfszd_ecg = 1</if>
+                                                    <if test="dfzd_ecg != null">and dfzd_ecg = 1</if>
+                                                    <if test="gdfszd_ecg != null">and gdfszd_ecg = 1</if>
+                                                    <if test="zqfzzd_ecg != null">and zqfzzd_ecg = 1</if>
+                                                    <if test="zhfzzd_ecg != null">and zhfzzd_ecg = 1</if>
+                                                    <if test="wqxzszzd_ecg != null">and wqxzszzd_ecg = 1</if>
+                                                    <if test="bwqxzszzd_ecg != null">and bwqxzszzd_ecg = 1</if>
+                                                    <if test="wqxyszzd_ecg != null">and wqxyszzd_ecg = 1</if>
+                                                    <if test="bwqxyszzd_ecg != null">and bwqxyszzd_ecg = 1</if>
+                                                    <if test="ftyxsnzd_ecg != null">and ftyxsnzd_ecg = 1</if>
+                                                    <if test="sncyxcd_ecg != null">and sncyxcd_ecg = 1</if>
+                                                    <if test="xsyjb_ecg != null">and xsyjb_ecg = 1</if>
+                                                    <if test="yjzhz_ecg != null">and yjzhz_ecg = 1</if>
+                                                    <if test="zxffd_ecg != null">and zxffd_ecg = 1</if>
+                                                    <if test="zxsfd_ecg != null">and zxsfd_ecg = 1</if>
+                                                    <if test="yxffd_ecg != null">and yxffd_ecg = 1</if>
+                                                    <if test="yxsfd_ecg != null">and yxsfd_ecg = 1</if>
+                                                    <if test="stgb_ecg != null">and stgb_ecg = 1</if>
+                                                    <if test="stTgb_ecg != null">and st_tgb_ecg = 1</if>
+                                                    <if test="tbyc_ecg != null">and tbyc_ecg = 1</if>
+                                                    <if test="qtjqyc_ecg != null">and qtjqyc_ecg = 1</if>
+                                                    <if test="qtcjqyc_ecg != null">and qtcjqyc_ecg = 1</if>
+                                                    <if test="kjub_ecg != null">and kjub_ecg = 1</if>
+                                                    <if test="zqfj_ecg != null">and zqfj_ecg = 1</if>
+                                                    <if test="qjbxjgs_ecg != null">and qjbxjgs_ecg = 1</if>
+                                                    <if test="qcbxjgs_ecg != null">and qcbxjgs_ecg = 1</if>
+                                                    <if test="qgfbxjgs_ecg != null">and qgfbxjgs_ecg = 1</if>
+                                                    <if test="qbxjgs_ecg != null">and qbxjgs_ecg = 1</if>
+                                                    <if test="xbxjgs_ecg != null">and xbxjgs_ecg = 1</if>
+                                                    <if test="xhbxjgs_ecg != null">and xhbxjgs_ecg = 1</if>
+                                                    <if test="hbxjgs_ecg != null">and hbxjgs_ecg = 1</if>
+                                                    <if test="xcbbxjgs_ecg != null">and xcbbxjgs_ecg = 1</if>
+                                                    <if test="gcbbxjgs_ecg != null">and gcbbxjgs_ecg = 1</if>
+                                                    <if test="cbbxjgs_ecg != null">and cbbxjgs_ecg = 1</if>
+                                                    <if test="xnmxxjgs_ecg != null">and xnmxxjgs_ecg = 1</if>
+                                                    <if test="ysxjgs_ecg != null">and ysxjgs_ecg = 1</if>
+                                                    <if test="fsttgxxjgs_ecg != null">and fsttgxxjgs_ecg = 1</if>
+                                                    <if test="xjbxjgs_ecg != null">and xjbxjgs_ecg = 1</if>
+                                                    <if test="jbxjgs_ecg != null">and jbxjgs_ecg =1</if>
+                                                    <if test="yjx_ecg != null">and yjx_ecg = 1</if>
+                                                    <if test="jx_ecg != null">and jx_ecg = 1</if>
+                                                    <if test="cjx_ecg != null">and cjx_ecg = 1</if>
+                                                    <if test="xdtwjz_ecg != null">and xdtwjz_ecg = 1</if>
+                                                </where>
+                                                GROUP BY age
     </select>
 </mapper>

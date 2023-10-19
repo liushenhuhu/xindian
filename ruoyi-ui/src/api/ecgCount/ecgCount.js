@@ -50,16 +50,16 @@ export function delCount(id) {
   })
 }
 
-export function ageList() {
+export function ageList(type) {
   return request({
-    url: '/ecgCount/ecgCount/ageList',
-    method: 'get'
+    url: '/ecgCount/ecgCount/ageList?type='+type,
+    method: 'get',
   })
 }
 
-export function getAgeYoung() {
+export function getAgeYoung(type) {
   return request({
-    url: '/ecgCount/ecgCount/getAgeYoung',
+    url: '/ecgCount/ecgCount/getAgeYoung?type='+type,
     method: 'get'
   })
 }

@@ -74,9 +74,9 @@ public interface EcgCountService extends IService<EcgCount> {
 
     List<ListValueAndLabelVO> getLogType();
 
-    List<AgeStatistics> ageListByMan(AgeStatistics str);
+    List<AgeStatistics> ageListByMan(Map<String,Object> type);
 
-    List<AgeStatistics> ageListByWoman(AgeStatistics str);
+    List<AgeStatistics> ageListByWoman(Map<String,Object> type);
 
 
     Map<String , List<TypeListVo>> getTypeList() throws InstantiationException, IllegalAccessException;
@@ -84,6 +84,6 @@ public interface EcgCountService extends IService<EcgCount> {
 
     List<TypeListVo> getZCXDTCount();
 
-    List<TypeListVo> getAgeYoung();
+    List<TypeListVo> getAgeYoung(Map<String,Object> type);
 
 }

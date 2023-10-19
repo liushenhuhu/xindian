@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.SimpleFormatter;
+import java.util.stream.Collectors;
 
 /**
 * @author 13401
@@ -242,15 +243,15 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
     }
 
     @Override
-    public List<AgeStatistics> ageListByMan(AgeStatistics str) {
+    public List<AgeStatistics> ageListByMan(Map<String,Object> type) {
 
-        return ecgCountMapper.ageListByMan(str);
+        return ecgCountMapper.ageListByMan(type);
     }
 
     @Override
-    public List<AgeStatistics> ageListByWoman(AgeStatistics str) {
+    public List<AgeStatistics> ageListByWoman(Map<String,Object> type) {
 
-        return ecgCountMapper.ageListByWoman(str);
+        return ecgCountMapper.ageListByWoman(type);
     }
 
     @Override
@@ -439,14 +440,18 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
     }
 
     @Override
-    public List<TypeListVo> getAgeYoung() {
+    public List<TypeListVo> getAgeYoung(Map<String,Object> type) {
+        if(type!=null&&type.size()>0){
+            List<TypeListVo> youngList = ecgCountMapper.getAgeYoung(type);
+            return youngList;
+        }
         if(Boolean.TRUE.equals(redisTemplate.hasKey("ecgAgeYoung"))) {
             //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）
             //返回这个集合
             return redisTemplate.opsForList().range("ecgAgeYoung", 0, -1);
         }else {
 
-            List<TypeListVo> typeListVoList = ecgCountMapper.getAgeYoung();
+            List<TypeListVo> typeListVoList = ecgCountMapper.getAgeYoung(type);
 
             if (typeListVoList!=null&&typeListVoList.size()>0){
                 if (Boolean.TRUE.equals(redisTemplate.hasKey("ecgAgeYoung"))){

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 数据库统计
@@ -131,8 +132,21 @@ public class EcgCountController extends BaseController {
      * 数据库统计表进行男女人数分布
      */
     @GetMapping ("/ageList")
-    public Map<Object,Object> ageList(AgeStatistics str){
-
+    public Map<Object,Object> ageList(@RequestParam("type") List<String> type){
+        if(type!=null&&type.size()>0){
+            List<String> collect = type.stream().map(i -> i + "_ecg").collect(Collectors.toList());
+            Map<String, Object> typeMap = new HashMap<>();
+            for (String s : collect) {
+                typeMap.put(s, s);
+            }
+            List<AgeStatistics> manList = ecgCountService.ageListByMan(typeMap);
+            /* 查询性别女 */
+            List<AgeStatistics> womanList = ecgCountService.ageListByWoman(typeMap);
+            Map<Object,Object> map = new HashMap<Object,Object>();
+            map.put("men",manList);
+            map.put("women",womanList);
+            return map;
+        }
         if(Boolean.TRUE.equals(redisTemplate.hasKey("ecgCountTypeAge"))) {
             //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）
             //返回这个集合
@@ -140,9 +154,9 @@ public class EcgCountController extends BaseController {
             return ecgCountTypeAge;
         }else {
             /* 查询性别男 */
-            List<AgeStatistics> manList = ecgCountService.ageListByMan(str);
+            List<AgeStatistics> manList = ecgCountService.ageListByMan(null);
             /* 查询性别女 */
-            List<AgeStatistics> womanList = ecgCountService.ageListByWoman(str);
+            List<AgeStatistics> womanList = ecgCountService.ageListByWoman(null);
             Map<Object,Object> map = new HashMap<Object,Object>();
             map.put("men",manList);
             map.put("women",womanList);
@@ -188,8 +202,13 @@ public class EcgCountController extends BaseController {
     }
 
     @GetMapping("/getAgeYoung")
-    public AjaxResult getAgeYoung(){
-        return AjaxResult.success(ecgCountService.getAgeYoung());
+    public AjaxResult getAgeYoung(@RequestParam("type") List<String> type){
+        List<String> collect = type.stream().map(i -> i + "_ecg").collect(Collectors.toList());
+        Map<String, Object> typeMap = new HashMap<>();
+        for (String s : collect) {
+            typeMap.put(s, s);
+        }
+        return AjaxResult.success(ecgCountService.getAgeYoung(typeMap));
     }
 
 }
