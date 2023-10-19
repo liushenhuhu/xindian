@@ -500,10 +500,11 @@ export default {
         // if(!obj){
           this.arrList.beatLabel=JSON.parse(this.datalabel.beatLabel)
         // }
-        //console.log("重新赋值",this.arrList)
+        console.log("重新赋值",this.arrList)
           //回显
           //分段
-          if(this[`${'arrList' + this.level}`].length==0&&this.arrList.beatLabel){
+          this[`${'arrList' + this.level}`]=[]
+          if(this.arrList.beatLabel){
             this[`${'arrList' + this.level}`]=this.arrList.beatLabel.filter(i=>{
               let a=i.x-1000*(level-1)
               return a>=0 && a<1000
@@ -748,6 +749,7 @@ export default {
         beatLabel:JSON.stringify([...this.arrList1,...this.arrList2,...this.arrList3,...this.arrList4])
       }
       console.log(this.arrList)
+      this.datalabel.beatLabel=this.arrList.beatLabel
       this.isLoading = true;
       if(this.arrList.beatLabel!=null){
         if(this.flag==1){
@@ -761,7 +763,7 @@ export default {
             this.isLoading = false;
           })
         }
-        console.log(JSON.parse(this.arrList.beatLabel))
+        //console.log(JSON.parse(this.arrList.beatLabel))
         // this.isLoading = false;
       }else {
         this.$modal.msgWarning("请标记后提交！");
@@ -804,6 +806,18 @@ export default {
       this.query.pId=this.pId
       this.query.field=this.level-1
       this.query.waveLabel=JSON.stringify(this.subData)
+      if(this.datalabel.waveLabel!=null&&this.datalabel.waveLabel!=''){
+        var waveLabel=JSON.parse(this.datalabel.waveLabel)
+        if(this.flag==1){
+          waveLabel[this.level-1]=this.subData
+        }else {
+          waveLabel=this.subData
+        }
+        this.datalabel.waveLabel=JSON.stringify(waveLabel)
+      }else {
+        this.datalabel.waveLabel=JSON.stringify(this.subData)
+      }
+
       console.log(this.subData)
       console.log(this.query)
       if(this.flag==1){
@@ -972,21 +986,15 @@ export default {
       }
       console.log(JSON.parse(this.datalabel.waveLabel))
       //回显
-      var obj=false
-      for (const key in this.subData) {
-        if (this.subData[key].length > 0) {
-          obj=true // 只要有一个属性对应的数组不为空，就返回 false
-        }
-      }
-      //回显
       if(this.lead2){
-        if(!obj) {
           if (this.flag == 1) {
             this.subData = JSON.parse(this.datalabel.waveLabel)[this.level - 1]
           } else {
             this.subData = JSON.parse(this.datalabel.waveLabel)
           }
-        }
+          if(this.subData==null||this.subData.length==0){
+            this.subData= {P1:[],P2:[],P3:[], R1:[],R2:[],R3:[], T1:[],T2:[],T3:[]}
+          }
         console.log("有数据")
         console.log(this.subData)
         for (const key in this.subData) {
