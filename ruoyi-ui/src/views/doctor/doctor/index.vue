@@ -207,8 +207,9 @@
 
         <el-form-item label="医生类型" prop="isDoc">
           <el-radio-group v-model="form.isDoc">
-            <el-radio  label="0">测试用的医生账号</el-radio>
-            <el-radio label="1">正规用的医生账号</el-radio>
+            <el-radio  label="0">测试医生账号</el-radio>
+            <el-radio label="1">心电医生账号</el-radio>
+            <el-radio label="2">门诊医生账号</el-radio>
           </el-radio-group>
           <span style="color: red">  (测试用的医生账号,不会作为专业的医生去随机推送患者诊断请求)</span>
         </el-form-item>

@@ -70,7 +70,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDoctorVo"/>
         where is_doc = '1'
     </select>
-
+    <select id="selectVisitDoc" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
+        <include refid="selectDoctorVo"/> where hospital = #{hospitalName} and  is_doc = '2'
+    </select>
 
 
     <insert id="insertDoctor" parameterType="Doctor" useGeneratedKeys="true" keyProperty="doctorId">

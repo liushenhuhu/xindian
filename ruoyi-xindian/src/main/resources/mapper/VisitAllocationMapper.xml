@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.VisitAllocationMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.hospital.domain.VisitAllocation">
+            <id property="slotId" column="slot_id" jdbcType="INTEGER"/>
+            <result property="startTime" column="start_time" jdbcType="VARCHAR"/>
+            <result property="endTime" column="end_time" jdbcType="VARCHAR"/>
+            <result property="category" column="category" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        slot_id,start_time,end_time,
+        category
+    </sql>
+    <insert id="insertTimeSlot">
+        insert into visit_allocation (start_time,end_time,category) values(#{startTime},#{endTime},#{category})
+    </insert>
+</mapper>

@@ -3,47 +3,76 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.hospital.mapper.HospitalClinicMapper">
-    
+
     <resultMap type="HospitalClinic" id="HospitalClinicResult">
         <result property="id"    column="id"    />
         <result property="outpatientId"    column="outpatient_id"    />
         <result property="address"    column="address"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModified"    column="gmt_modified"    />
+    </resultMap>
+
+    <resultMap id="HospitalClinicAndOutpatient" type="HospitalClinic" extends="HospitalClinicResult">
+        <association property="hospitalOutpatient" javaType="hospitalOutpatient" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalOutpatientMapper.HospitalOutpatientResult"/>
     </resultMap>
 
     <sql id="selectHospitalClinicVo">
-        select id, outpatient_id, address from hospital_clinic
+        select id, outpatient_id, address, gmt_create, gmt_modified from hospital_clinic
     </sql>
 
-    <select id="selectHospitalClinicList" parameterType="HospitalClinic" resultMap="HospitalClinicResult">
-        <include refid="selectHospitalClinicVo"/>
-        <where>  
-            <if test="outpatientId != null "> and outpatient_id = #{outpatientId}</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
+    <select id="selectHospitalClinicList" parameterType="HospitalClinic" resultMap="HospitalClinicAndOutpatient">
+        SELECT
+        hospital_clinic.id,
+        hospital_clinic.outpatient_id,
+        hospital_clinic.address,
+        hospital_clinic.gmt_create,
+        hospital_clinic.gmt_modified,
+        hospital_outpatient.outpatient_name,
+        hospital_outpatient.special_id,
+        hospital_outpatient.gmt_create
+        FROM
+        hospital_clinic
+        INNER JOIN
+        hospital_outpatient
+        ON
+        hospital_clinic.outpatient_id = hospital_outpatient.outpatient_id
+        <where>
+            <if test="outpatientId != null "> and hospital_clinic.outpatient_id = #{outpatientId}</if>
+            <if test="address != null  and address != ''"> and hospital_clinic.address = #{address}</if>
+            <if test="gmtCreate != null "> and hospital_clinic.gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null "> and hospital_clinic.gmt_modified = #{gmtModified}</if>
         </where>
+        order by hospital_clinic.gmt_create desc
     </select>
-    
+
     <select id="selectHospitalClinicById" parameterType="Long" resultMap="HospitalClinicResult">
         <include refid="selectHospitalClinicVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertHospitalClinic" parameterType="HospitalClinic" useGeneratedKeys="true" keyProperty="id">
         insert into hospital_clinic
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="outpatientId != null">outpatient_id,</if>
-            <if test="address != null">address,</if>
-         </trim>
+            <if test="address != null and address != ''">address,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModified != null">gmt_modified,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="outpatientId != null">#{outpatientId},</if>
-            <if test="address != null">#{address},</if>
-         </trim>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+        </trim>
     </insert>
 
     <update id="updateHospitalClinic" parameterType="HospitalClinic">
         update hospital_clinic
         <trim prefix="SET" suffixOverrides=",">
             <if test="outpatientId != null">outpatient_id = #{outpatientId},</if>
-            <if test="address != null">address = #{address},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModified != null">gmt_modified = #{gmtModified},</if>
         </trim>
         where id = #{id}
     </update>
@@ -53,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteHospitalClinicByIds" parameterType="String">
-        delete from hospital_clinic where id in 
+        delete from hospital_clinic where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

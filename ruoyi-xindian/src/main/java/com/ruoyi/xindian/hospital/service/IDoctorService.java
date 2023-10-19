@@ -77,4 +77,8 @@ public interface IDoctorService
 
     List<Doctor> selectIsDoc();
 
+
+
+    List<Doctor> selectVisitDoc(String hospitalName);
+
 }

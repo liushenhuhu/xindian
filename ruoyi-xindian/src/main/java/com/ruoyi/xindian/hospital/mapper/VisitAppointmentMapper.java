@@ -2,6 +2,7 @@ package com.ruoyi.xindian.hospital.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.VisitAppointment;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 出诊预约表Mapper接口
@@ -58,4 +59,7 @@ public interface VisitAppointmentMapper
      * @return 结果
      */
     public int deleteVisitAppointmentByIds(Long[] ids);
+
+
+    List<VisitAppointment> selectByPlanIdVisitAppointments(@Param("planId") Integer planId);
 }

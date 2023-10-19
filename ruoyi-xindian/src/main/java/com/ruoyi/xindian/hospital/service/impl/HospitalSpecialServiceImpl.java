@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.hospital.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,9 @@ public class HospitalSpecialServiceImpl implements IHospitalSpecialService
     @Override
     public int insertHospitalSpecial(HospitalSpecial hospitalSpecial)
     {
+        Date date = new Date();
+        hospitalSpecial.setGmtCreate(date);
+        hospitalSpecial.setGmtModified(date);
         return hospitalSpecialMapper.insertHospitalSpecial(hospitalSpecial);
     }
 
@@ -64,6 +68,8 @@ public class HospitalSpecialServiceImpl implements IHospitalSpecialService
     @Override
     public int updateHospitalSpecial(HospitalSpecial hospitalSpecial)
     {
+        Date date = new Date();
+        hospitalSpecial.setGmtModified(date);
         return hospitalSpecialMapper.updateHospitalSpecial(hospitalSpecial);
     }
 

@@ -101,4 +101,14 @@ public class HospitalSpecialController extends BaseController
     {
         return toAjax(hospitalSpecialService.deleteHospitalSpecialByIds(ids));
     }
+
+
+    /**
+     * 获取所有的专科列表
+     * @return
+     */
+    @GetMapping("/getSpecialList")
+    public AjaxResult getSpecialList(){
+        return AjaxResult.success(hospitalSpecialService.selectHospitalSpecialList(new HospitalSpecial()));
+    }
 }

@@ -52,13 +52,21 @@
         />
       </el-form-item>
       <el-form-item label="医院名称" prop="hospitalName">
+<!--        <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>-->
+<!--          <el-option-->
+<!--            v-for="dict in dict.type.hospital_name_name_list"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
         <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>
           <el-option
-            v-for="dict in dict.type.hospital_name_name_list"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalName">
+          </el-option>
         </el-select>
       </el-form-item>
 <!--      <el-form-item label="设备号" prop="equipmentCode">
@@ -375,6 +383,7 @@ import {updateMonitoringStatus} from "@/api/patient/patient";
 import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 import pdf from "vue-pdf"
+import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "DECGsingle",
@@ -395,6 +404,7 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
+      options: [],
       // 患者管理表格数据
       patient_managementList: [],
       // 弹出层标题
@@ -457,6 +467,9 @@ export default {
   created() {
     getEcgType(this.ecgType).then(r=>{
       this.ecgList = r.data
+    })
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
     })
     if (this.$route.params.patientName) {
       this.queryParams.patientName = this.$route.params.patientName;

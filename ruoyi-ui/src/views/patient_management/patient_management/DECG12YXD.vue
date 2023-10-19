@@ -44,11 +44,11 @@
       <el-form-item label="医院名称" prop="hospitalName">
         <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>
           <el-option
-            v-for="dict in dict.type.hospital_name_name_list"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalName">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="设备类型" prop="patientCode">
@@ -375,6 +375,7 @@ import {getToken} from "@/utils/auth";
 import {updateMonitoringStatus} from "@/api/patient/patient";
 import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
+import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "DECG12YXD",
@@ -398,6 +399,7 @@ export default {
       patient_managementList: [],
       // 弹出层标题
       title: "",
+      options: [],
       // 是否显示弹出层
       open: false,
       // 时间范围
@@ -452,6 +454,9 @@ export default {
     // updateOnlineAll();
   },
   created() {
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
     getEcgType(this.ecgType).then(r=>{
       this.ecgList = r.data
     })

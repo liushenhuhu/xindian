@@ -68,6 +68,17 @@ public class Hospital extends BaseEntity
     @Excel(name = "是否开通数据统计")
     private String ifStatistics;
 
+    /**
+     * 医院电话
+     */
+    private String hospitalPhone;
+
+
+    /**
+     * 医院地址
+     */
+    private String hospitalSite;
+
     private String price;
 
     private String hospitalInfo;
@@ -76,6 +87,23 @@ public class Hospital extends BaseEntity
 
     public Integer getDeviceOnlineNum() {
         return deviceOnlineNum;
+    }
+
+
+    public String getHospitalPhone() {
+        return hospitalPhone;
+    }
+
+    public void setHospitalPhone(String hospitalPhone) {
+        this.hospitalPhone = hospitalPhone;
+    }
+
+    public String getHospitalSite() {
+        return hospitalSite;
+    }
+
+    public void setHospitalSite(String hospitalSite) {
+        this.hospitalSite = hospitalSite;
     }
 
     public void setDeviceOnlineNum(Integer deviceOnlineNum) {

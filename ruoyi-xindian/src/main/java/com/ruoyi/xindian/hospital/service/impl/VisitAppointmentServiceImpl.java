@@ -90,4 +90,9 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
     {
         return visitAppointmentMapper.deleteVisitAppointmentById(id);
     }
+
+    @Override
+    public List<VisitAppointment> selectByPlanId(Integer planId) {
+        return visitAppointmentMapper.selectByPlanIdVisitAppointments(planId);
+    }
 }
