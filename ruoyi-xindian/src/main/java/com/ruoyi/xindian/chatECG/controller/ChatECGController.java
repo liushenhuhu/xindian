@@ -109,7 +109,14 @@ public class ChatECGController extends BaseController {
                 if (StringUtils.isNotEmpty(chat.getTitle())){
                     chatQuiz.setTitle(chat.getTitle());
                 }
-               chatQuizService.insertChatQuiz(chatQuiz);
+                List<ChatQuiz> chatQuizListIsNotTet = chatQuizService.getChatQuizListIsNotTet(chatQuiz);
+                if (chatQuizListIsNotTet==null||chatQuizListIsNotTet.size()==0){
+                    chatQuizService.insertChatQuiz(chatQuiz);
+                }else {
+                    chatQuiz.setTitle(null);
+                    chatQuizService.insertChatQuiz(chatQuiz);
+                }
+
 
             }catch (Exception e){
                 System.out.println(e);
@@ -159,7 +166,7 @@ public class ChatECGController extends BaseController {
     }
 
     @PutMapping("/updateConversation")
-    public AjaxResult updateConversation(ChatQuiz chatQuiz){
+    public AjaxResult updateConversation(@RequestBody ChatQuiz chatQuiz){
         LoginUser loginUser = SecurityUtils.getLoginUser();
         chatQuiz.setUserId(loginUser.getUserId());
         return AjaxResult.success(chatQuizService.updateConversation(chatQuiz)>0);

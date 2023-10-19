@@ -36,6 +36,11 @@ public class ChatQuizServiceImpl extends ServiceImpl<ChatQuizMapper, ChatQuiz>
     }
 
     @Override
+    public List<ChatQuiz> getChatQuizListIsNotTet(ChatQuiz chatQuiz) {
+        return chatQuizMapper.selectList(new QueryWrapper<ChatQuiz>().eq("conversation_id",chatQuiz.getConversationId()).eq("user_id",chatQuiz.getUserId()).isNotNull("title"));
+    }
+
+    @Override
     public List<ChatQuiz> getConversation(Long userId) {
         return chatQuizMapper.selectList(new QueryWrapper<ChatQuiz>().eq("user_id",userId).isNotNull("title").orderByDesc("create_time"));
     }

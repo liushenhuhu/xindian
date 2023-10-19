@@ -24,6 +24,17 @@ export function deleteConversation(data) {
     method: 'delete',
   })
 }
+
+
+export function updateConversation(data) {
+  return request({
+    url: '/proxyRequest/updateConversation',
+    method: 'put',
+    data: data
+  })
+}
+
+
 export function getChatQuizList(data) {
   //console.log(query)
   return request({
