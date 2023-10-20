@@ -41,15 +41,17 @@ export default {
       ageYoungName: "",
       ageCount:0,
       options:[],
-      value1:[]
+      value1:[],
+      requestStatus:true
     }
   },
   created() {
-    this.getList();
+
   },
   mounted() {
+    this.getList();
     // this.ageYoung()
-    this.getDoubleCloumn();
+    //this.getDoubleCloumn();
   },
   methods: {
     drawLine(option) {
@@ -66,8 +68,28 @@ export default {
       }, 200);
     },
     getDoubleCloumn() {
-      var data1 = this.columndata1;
-      var data2 = this.columndata2;
+      var data1 = []
+      var data2 = []
+      var arr=["0-10岁","11-20岁","21-25岁","26-30岁","31-35岁","36-40岁","41-45岁","46-50岁",
+        "51-55岁","56-60岁","61-65岁","66-70岁","71-75岁","76-80岁","81-85岁","85岁以上"]
+
+      arr.forEach(item=>{
+        var index1=this.columndata1.findIndex((i) => i.name === item)
+        var index2=this.columndata2.findIndex((i) => i.name === item)
+        if(index1==-1){
+          data1.push(0)
+        }else {
+          data1.push(this.columndata1[index1].value)
+        }
+        if(index2==-1){
+          data2.push(0)
+        }else {
+          data2.push(this.columndata2[index2].value)
+        }
+      })
+      console.log(data1)
+      console.log(data2)
+      console.log(arr)
       let getArrByKey = (data, k) => {
         let key = k || "value";
         let res = [];
@@ -78,6 +100,7 @@ export default {
         }
         return res;
       };
+
       // [起始最深颜色,结束的浅颜色]
       let colorLeft = ["#51647a", "#364f6b"];
       let colorRight = ["#ea85a4", "#fc5185"];
@@ -101,26 +124,22 @@ export default {
             color: "#ffffff",
             fontSize: 20,
           },
-          // data: ['规模猪场', '中小猪场']
         },
         grid: [
           {
-            show: false,
             left: "2%",
             top: "10%",
             bottom: "8%",
             width: "40%",
           },
           {
-            show: false,
             left: "50%",
             top: "10%",
             bottom: "8%",
             width: "0%",
           },
           {
-            show: false,
-            right: "4%",
+            right: "2%",
             top: "10%",
             bottom: "8%",
             width: "40%",
@@ -133,7 +152,7 @@ export default {
         },
         xAxis: [
           {
-            type: "log",
+            type: "value",
             inverse: true,
             axisLine: {
               show: false,
@@ -156,7 +175,7 @@ export default {
           {
             gridIndex: 2,
             show: true,
-            type: "log",
+            type: "value",
             inverse: false,
             axisLine: {
               show: false,
@@ -178,11 +197,12 @@ export default {
         ],
         yAxis: [
           {
+            type: "category",
             gridIndex: 0,
             triggerEvent: true,
             show: true,
             inverse: true,
-            data: getArrByKey(data1, "name"),
+            data: arr,
             axisLine: {
               show: false,
             },
@@ -218,14 +238,15 @@ export default {
                 align: "center",
               },
             },
-            data: getArrByKey(data1, "name"),
+            data: arr,
           },
           {
             gridIndex: 2,
             triggerEvent: true,
+            type: "category",
             show: true,
             inverse: true,
-            data: getArrByKey(data2, "name"),
+            data: arr,
             axisLine: {
               show: false,
             },
@@ -276,18 +297,16 @@ export default {
                   ],
                   false
                 ),
-                barBorderRadius: [10, 0, 0, 10],
+                barBorderRadius: [10, 10, 10, 10],
+
               },
             },
-
             label: {
-              normal: {
-                show: true,
-                position: "insideRight",
-                textStyle: {
-                  color: "#ffffff",
-                  fontSize: "12",
-                },
+              show: true,
+              position: "left",
+              textStyle: {
+                color: "#000000",
+                fontSize: "12",
               },
             },
           },
@@ -327,17 +346,16 @@ export default {
                   ],
                   false
                 ),
-                barBorderRadius: [0, 10, 10, 0],
+                barBorderRadius: [10, 10, 10, 10],
+
               },
             },
             label: {
-              normal: {
-                show: true,
-                position: "insideLeft",
-                textStyle: {
-                  color: "#ffffff",
-                  fontSize: "12",
-                },
+              show: true,
+              position: "right",
+              textStyle: {
+                color: "#000000",
+                fontSize: "12",
               },
             },
           },
@@ -350,43 +368,57 @@ export default {
 
     getList() {
       //this.loading = true;
-      ageList(this.value1).then(response => {
-        //console.log(Object.values(response)[1]);
-        this.columndata1 = response.men;
-        this.columndata2 = response.women;
-        this.getDoubleCloumn();
-        console.log(response);
-
-        let getArrByKey = (data, k) => {
-          let key = k || "value";
-          let res = [];
-          if (data) {
-            data.forEach(function (t) {
-              res.push(t[key]);
-            });
-          }
-          return res;
-        };
-        let arr1 = getArrByKey(this.columndata1,'value');
-        let arr2 = getArrByKey(this.columndata2,'value');
-
-        Array.prototype.sum = function () {
-          var sum = 0;
-          for (var i = 0; i < this.length; i++) {
-            sum += this[i];
-          }
-          return sum;
-        };
-
-        this.menCount = arr1.sum();
-        this.womenCount = arr2.sum();
-        //console.log(this.menCount)
-        //this.loading = false;
+      let myChart = this.$echarts.init(document.getElementById('chart'));
+      myChart.clear()
+      myChart.showLoading({
+        text: 'loading',
+        color: '#c23531',
+        textColor: '#000',
+        maskColor: 'rgba(255, 255, 255, 0.2)',
+        zlevel: 0,
       });
+      if(this.requestStatus){
+        ageList(this.value1).then(response => {
+          this.requestStatus=true
+          myChart.hideLoading()
+          //console.log(Object.values(response)[1]);
+          console.log(response);
+          this.columndata1 = response.men;
+          this.columndata2 = response.women;
+          this.getDoubleCloumn();
+          let getArrByKey = (data, k) => {
+            let key = k || "value";
+            let res = [];
+            if (data) {
+              data.forEach(function (t) {
+                res.push(t[key]);
+              });
+            }
+            return res;
+          };
+          let arr1 = getArrByKey(this.columndata1,'value');
+          let arr2 = getArrByKey(this.columndata2,'value');
+
+          Array.prototype.sum = function () {
+            var sum = 0;
+            for (var i = 0; i < this.length; i++) {
+              sum += this[i];
+            }
+            return sum;
+          };
+
+          this.menCount = arr1.sum();
+          this.womenCount = arr2.sum();
+          //console.log(this.menCount)
+          //this.loading = false;
+        });
+      }else {
+        console.log("请勿重复提交")
+      }
+
       getAgeYoung(this.value1).then(r=>{
         console.log(r)
         let data = r.data
-
         let countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0];
         this.ageCount=0
         for (let j = 0; j < data.length; j++) {
@@ -483,6 +515,7 @@ export default {
     handleQuery() {
       console.log(this.value1)
       this.getList();
+      this.requestStatus=false
     },
     resetQuery() {
       this.value1=[]
