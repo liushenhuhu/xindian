@@ -101,4 +101,10 @@ public class HospitalOutpatientController extends BaseController
     {
         return toAjax(hospitalOutpatientService.deleteHospitalOutpatientByIds(ids));
     }
+
+
+    @GetMapping("/getOutpatientList")
+    public AjaxResult getOutpatientList(){
+        return AjaxResult.success(hospitalOutpatientService.selectHospitalOutpatientList(new HospitalOutpatient()));
+    }
 }

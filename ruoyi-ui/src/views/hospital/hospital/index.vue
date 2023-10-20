@@ -240,6 +240,12 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="医院电话" >
+          <el-input v-model="form.hospitalPhone" placeholder="请输入医院电话" />
+        </el-form-item>
+        <el-form-item label="医院地址">
+          <el-input type="textarea" v-model="form.hospitalSite"></el-input>
+        </el-form-item>
         <el-form-item label="医院介绍">
           <el-input type="textarea" v-model="form.hospitalInfo"></el-input>
         </el-form-item>
@@ -294,6 +300,8 @@ export default {
         firstEcgTime: null,
         ifStatistics: null,
         hospitalInfo:null,
+        hospitalSite:null,
+        hospitalPhone:null,
       },
       // 表单参数
       form: {},
@@ -351,7 +359,10 @@ export default {
         monitoringPatientNumber: null,
         accountNumber: null,
         firstEcgTime: null,
-        ifStatistics: "0"
+        ifStatistics: "0",
+        hospitalSite:null,
+        hospitalPhone:null,
+
       };
       this.resetForm("form");
     },

@@ -19,12 +19,14 @@
         <result property="ifStatistics"    column="if_statistics"    />
         <result property="hospitalInfo"    column="hospital_info"    />
         <result property="deviceOnlineNum" column="num"/>
+        <result property="hospitalPhone" column="hospital_phone"/>
+        <result property="hospitalSite" column="hospital_site"/>
     </resultMap>
 
     <sql id="selectHospitalVo">
         select hospital_id, province, hospital_name, hospital_code, hospital_account,
                hospital_password, equipment_number, patient_number, monitoring_patient_number,
-               account_number, first_ecg_time, if_statistics, img,hospital_info
+               account_number, first_ecg_time, if_statistics, img,hospital_info,hospital_site,hospital_phone
         from hospital
     </sql>
     <sql id="selectHospitalVo2">
@@ -107,6 +109,8 @@
             <if test="firstEcgTime != null">first_ecg_time,</if>
             <if test="ifStatistics != null">if_statistics,</if>
             <if test="hospitalInfo != null">hospital_info,</if>
+            <if test="hospitalPhone!= null">hospital_phone,</if>
+            <if test="hospitalSite != null">hospital_site,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="hospitalId != null">#{hospitalId},</if>
@@ -122,6 +126,8 @@
             <if test="firstEcgTime != null">#{firstEcgTime},</if>
             <if test="ifStatistics != null">#{ifStatistics},</if>
             <if test="hospitalInfo != null">#{hospitalInfo},</if>
+            <if test="hospitalSite != null">#{hospitalSite},</if>
+            <if test="hospitalPhone != null">#{hospitalPhone},</if>
         </trim>
     </insert>
 
@@ -140,6 +146,8 @@
             <if test="firstEcgTime != null">first_ecg_time = #{firstEcgTime},</if>
             <if test="ifStatistics != null">if_statistics = #{ifStatistics},</if>
             <if test="hospitalInfo != null">hospital_info = #{hospitalInfo},</if>
+            <if test="hospitalSite != null">hospital_site = #{hospitalSite},</if>
+            <if test="hospitalPhone != null">hospital_phone = #{hospitalPhone},</if>
         </trim>
         where hospital_id = #{hospitalId}
     </update>

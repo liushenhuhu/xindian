@@ -1,124 +1,193 @@
 package com.ruoyi.xindian.hospital.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
 
 /**
- * 出诊信息表对象 visit_plan
- * 
- * @author chenpeng
- * @date 2023-06-12
+ *
+ * @TableName visit_plan
  */
-public class VisitPlan extends BaseEntity
-{
-    private static final long serialVersionUID = 1L;
+@TableName(value ="visit_plan")
+public class VisitPlan implements Serializable {
+    /**
+     * 出诊编号
+     */
+    @TableId(type = IdType.AUTO)
+    private Integer planId;
 
-    /** 出诊编号 */
-    private Long id;
-
-    /** 医院编号 */
-    @Excel(name = "医院编号")
+    /**
+     * 医院编号
+     */
     private Long hospitalId;
 
-    /** 专科编号 */
-    @Excel(name = "专科编号")
+    /**
+     * 医院code
+     */
+    @TableField(exist = false)
+    private String hospitalCode;
+
+    /**
+     * 专科编号
+     */
     private Long specialId;
 
-    /** 门诊编号 */
-    @Excel(name = "门诊编号")
+    /**
+     * 门诊编号
+     */
     private Long outpatientId;
 
-    /** 诊室编号 */
-    @Excel(name = "诊室编号")
+    /**
+     * 诊室编号
+     */
     private Long clinicId;
 
-    /** 医生编号 */
-    @Excel(name = "医生编号")
-    private Long doctorId;
+    /**
+     * 医生手机号
+     */
+    private String doctorPhone;
 
-    /** 时间 */
+    /**
+     * 时间段 1：上午，2：下午
+     */
+    private Integer time;
+
+    /**
+     * 出诊日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date time;
+    private Date day;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date gmtCreate;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date gmtModified;
+
+
+    @TableField(exist = false)
+    private Doctor doctor;
+
+    @TableField(exist = false)
+    private HashMap<Object ,Object> visitTimeMap = new HashMap<>();
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+
+    public Integer getPlanId() {
+        return planId;
     }
 
-    public Long getId() 
-    {
-        return id;
+    public void setPlanId(Integer planId) {
+        this.planId = planId;
     }
-    public void setHospitalId(Long hospitalId) 
-    {
+
+    public Long getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Long hospitalId) {
         this.hospitalId = hospitalId;
     }
 
-    public Long getHospitalId() 
-    {
-        return hospitalId;
+    public String getHospitalCode() {
+        return hospitalCode;
     }
-    public void setSpecialId(Long specialId) 
-    {
+
+    public void setHospitalCode(String hospitalCode) {
+        this.hospitalCode = hospitalCode;
+    }
+
+    public Long getSpecialId() {
+        return specialId;
+    }
+
+    public void setSpecialId(Long specialId) {
         this.specialId = specialId;
     }
 
-    public Long getSpecialId() 
-    {
-        return specialId;
+    public Long getOutpatientId() {
+        return outpatientId;
     }
-    public void setOutpatientId(Long outpatientId) 
-    {
+
+    public void setOutpatientId(Long outpatientId) {
         this.outpatientId = outpatientId;
     }
 
-    public Long getOutpatientId() 
-    {
-        return outpatientId;
+    public Long getClinicId() {
+        return clinicId;
     }
-    public void setClinicId(Long clinicId) 
-    {
+
+    public void setClinicId(Long clinicId) {
         this.clinicId = clinicId;
     }
 
-    public Long getClinicId() 
-    {
-        return clinicId;
-    }
-    public void setDoctorId(Long doctorId) 
-    {
-        this.doctorId = doctorId;
+    public String getDoctorPhone() {
+        return doctorPhone;
     }
 
-    public Long getDoctorId() 
-    {
-        return doctorId;
-    }
-    public void setTime(Date time) 
-    {
-        this.time = time;
+    public void setDoctorPhone(String doctorPhone) {
+        this.doctorPhone = doctorPhone;
     }
 
-    public Date getTime() 
-    {
+    public Integer getTime() {
         return time;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("hospitalId", getHospitalId())
-            .append("specialId", getSpecialId())
-            .append("outpatientId", getOutpatientId())
-            .append("clinicId", getClinicId())
-            .append("doctorId", getDoctorId())
-            .append("time", getTime())
-            .toString();
+    public void setTime(Integer time) {
+        this.time = time;
+    }
+
+    public Date getDay() {
+        return day;
+    }
+
+    public void setDay(Date day) {
+        this.day = day;
+    }
+
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Date getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public HashMap<Object, Object> getVisitTimeMap() {
+        return visitTimeMap;
+    }
+
+    public void setVisitTimeMap(HashMap<Object, Object> visitTimeMap) {
+        this.visitTimeMap = visitTimeMap;
     }
 }

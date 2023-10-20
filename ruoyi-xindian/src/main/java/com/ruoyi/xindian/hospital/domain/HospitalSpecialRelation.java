@@ -1,15 +1,17 @@
 package com.ruoyi.xindian.hospital.domain;
 
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 关系表对象 hospital_special_relation
- * 
- * @author chenpeng
- * @date 2023-06-12
+ * 【请填写功能名称】对象 hospital_special_relation
+ *
+ * @author ruoyi
+ * @date 2023-10-19
  */
 public class HospitalSpecialRelation extends BaseEntity
 {
@@ -26,40 +28,70 @@ public class HospitalSpecialRelation extends BaseEntity
     @Excel(name = "专科编号")
     private Long specialId;
 
-    public void setId(Long id) 
+    /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date gmtCreate;
+
+    /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date gmtModified;
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setHospitalId(Long hospitalId) 
+    public void setHospitalId(Long hospitalId)
     {
         this.hospitalId = hospitalId;
     }
 
-    public Long getHospitalId() 
+    public Long getHospitalId()
     {
         return hospitalId;
     }
-    public void setSpecialId(Long specialId) 
+    public void setSpecialId(Long specialId)
     {
         this.specialId = specialId;
     }
 
-    public Long getSpecialId() 
+    public Long getSpecialId()
     {
         return specialId;
+    }
+    public void setGmtCreate(Date gmtCreate)
+    {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Date getGmtCreate()
+    {
+        return gmtCreate;
+    }
+    public void setGmtModified(Date gmtModified)
+    {
+        this.gmtModified = gmtModified;
+    }
+
+    public Date getGmtModified()
+    {
+        return gmtModified;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("hospitalId", getHospitalId())
-            .append("specialId", getSpecialId())
-            .toString();
+                .append("id", getId())
+                .append("hospitalId", getHospitalId())
+                .append("specialId", getSpecialId())
+                .append("gmtCreate", getGmtCreate())
+                .append("gmtModified", getGmtModified())
+                .toString();
     }
 }

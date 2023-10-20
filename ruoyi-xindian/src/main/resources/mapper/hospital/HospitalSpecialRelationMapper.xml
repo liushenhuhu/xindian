@@ -3,40 +3,48 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.hospital.mapper.HospitalSpecialRelationMapper">
-    
+
     <resultMap type="HospitalSpecialRelation" id="HospitalSpecialRelationResult">
         <result property="id"    column="id"    />
         <result property="hospitalId"    column="hospital_id"    />
         <result property="specialId"    column="special_id"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModified"    column="gmt_modified"    />
     </resultMap>
 
     <sql id="selectHospitalSpecialRelationVo">
-        select id, hospital_id, special_id from hospital_special_relation
+        select id, hospital_id, special_id, gmt_create, gmt_modified from hospital_special_relation
     </sql>
 
     <select id="selectHospitalSpecialRelationList" parameterType="HospitalSpecialRelation" resultMap="HospitalSpecialRelationResult">
         <include refid="selectHospitalSpecialRelationVo"/>
-        <where>  
+        <where>
             <if test="hospitalId != null "> and hospital_id = #{hospitalId}</if>
             <if test="specialId != null "> and special_id = #{specialId}</if>
+            <if test="gmtCreate != null "> and gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null "> and gmt_modified = #{gmtModified}</if>
         </where>
     </select>
-    
+
     <select id="selectHospitalSpecialRelationById" parameterType="Long" resultMap="HospitalSpecialRelationResult">
         <include refid="selectHospitalSpecialRelationVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertHospitalSpecialRelation" parameterType="HospitalSpecialRelation" useGeneratedKeys="true" keyProperty="id">
         insert into hospital_special_relation
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="hospitalId != null">hospital_id,</if>
             <if test="specialId != null">special_id,</if>
-         </trim>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModified != null">gmt_modified,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="hospitalId != null">#{hospitalId},</if>
             <if test="specialId != null">#{specialId},</if>
-         </trim>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+        </trim>
     </insert>
 
     <update id="updateHospitalSpecialRelation" parameterType="HospitalSpecialRelation">
@@ -44,6 +52,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="hospitalId != null">hospital_id = #{hospitalId},</if>
             <if test="specialId != null">special_id = #{specialId},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModified != null">gmt_modified = #{gmtModified},</if>
         </trim>
         where id = #{id}
     </update>
@@ -53,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteHospitalSpecialRelationByIds" parameterType="String">
-        delete from hospital_special_relation where id in 
+        delete from hospital_special_relation where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

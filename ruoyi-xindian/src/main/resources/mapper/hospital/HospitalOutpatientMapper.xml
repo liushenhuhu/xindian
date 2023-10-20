@@ -3,57 +3,86 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.hospital.mapper.HospitalOutpatientMapper">
-    
+
     <resultMap type="HospitalOutpatient" id="HospitalOutpatientResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
+        <result property="outpatientId"    column="outpatient_id"    />
+        <result property="outpatientName"    column="outpatient_name"    />
         <result property="specialId"    column="special_id"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModified"    column="gmt_modified"    />
+    </resultMap>
+    <resultMap id="HospitalOutpatientAndSpecial" type="HospitalOutpatient" extends="HospitalOutpatientResult">
+        <association property="hospitalSpecial" javaType="hospitalSpecial" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalSpecialMapper.HospitalSpecialResult"/>
     </resultMap>
 
     <sql id="selectHospitalOutpatientVo">
-        select id, name, special_id from hospital_outpatient
+        select outpatient_id, outpatient_name, special_id, gmt_create, gmt_modified from hospital_outpatient
     </sql>
 
-    <select id="selectHospitalOutpatientList" parameterType="HospitalOutpatient" resultMap="HospitalOutpatientResult">
-        <include refid="selectHospitalOutpatientVo"/>
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="specialId != null "> and special_id = #{specialId}</if>
+    <select id="selectHospitalOutpatientList" parameterType="HospitalOutpatient" resultMap="HospitalOutpatientAndSpecial">
+        SELECT
+        hospital_outpatient.outpatient_name,
+        hospital_outpatient.gmt_create,
+        hospital_outpatient.gmt_modified,
+        hospital_special.special_name,
+        hospital_special.description,
+        hospital_special.gmt_create,
+        hospital_outpatient.special_id,
+        hospital_outpatient.outpatient_id
+        FROM
+        hospital_outpatient
+        INNER JOIN
+        hospital_special
+        ON
+        hospital_outpatient.special_id = hospital_special.special_id
+        <where>
+            <if test="outpatientName != null  and outpatientName != ''"> and hospital_outpatient.outpatient_name like concat('%', #{outpatientName}, '%')</if>
+            <if test="specialId != null "> and hospital_outpatient.special_id = #{specialId}</if>
+            <if test="gmtCreate != null "> and hospital_outpatient.gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null "> and hospital_outpatient.gmt_modified = #{gmtModified}</if>
+
         </where>
+        order by hospital_outpatient.gmt_create desc
     </select>
-    
+
     <select id="selectHospitalOutpatientById" parameterType="Long" resultMap="HospitalOutpatientResult">
         <include refid="selectHospitalOutpatientVo"/>
-        where id = #{id}
+        where outpatient_id = #{outpatientId}
     </select>
-        
-    <insert id="insertHospitalOutpatient" parameterType="HospitalOutpatient" useGeneratedKeys="true" keyProperty="id">
+
+    <insert id="insertHospitalOutpatient" parameterType="HospitalOutpatient" useGeneratedKeys="true" keyProperty="outpatientId">
         insert into hospital_outpatient
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null">name,</if>
+            <if test="outpatientName != null and outpatientName != ''">outpatient_name,</if>
             <if test="specialId != null">special_id,</if>
-         </trim>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModified != null">gmt_modified,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="name != null">#{name},</if>
+            <if test="outpatientName != null and outpatientName != ''">#{outpatientName},</if>
             <if test="specialId != null">#{specialId},</if>
-         </trim>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+        </trim>
     </insert>
 
     <update id="updateHospitalOutpatient" parameterType="HospitalOutpatient">
         update hospital_outpatient
         <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null">name = #{name},</if>
+            <if test="outpatientName != null and outpatientName != ''">outpatient_name = #{outpatientName},</if>
             <if test="specialId != null">special_id = #{specialId},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModified != null">gmt_modified = #{gmtModified},</if>
         </trim>
-        where id = #{id}
+        where outpatient_id = #{outpatientId}
     </update>
 
     <delete id="deleteHospitalOutpatientById" parameterType="Long">
-        delete from hospital_outpatient where id = #{id}
+        delete from hospital_outpatient where outpatient_id = #{outpatientId}
     </delete>
 
     <delete id="deleteHospitalOutpatientByIds" parameterType="String">
-        delete from hospital_outpatient where id in 
+        delete from hospital_outpatient where outpatient_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -1,7 +1,17 @@
 package com.ruoyi.xindian.hospital.controller;
 
-import java.util.List;
+import java.util.*;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.hospital.domain.*;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.hospital.service.IVisitAppointmentService;
+import com.ruoyi.xindian.hospital.service.VisitAllocationService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +26,6 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.xindian.hospital.domain.VisitPlan;
 import com.ruoyi.xindian.hospital.service.IVisitPlanService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -34,17 +43,101 @@ public class VisitPlanController extends BaseController
     @Autowired
     private IVisitPlanService visitPlanService;
 
+
+    @Autowired
+    private IHospitalService hospitalService;
+
+    @Resource
+    private RedisTemplate<String ,Object> redisTemplate;
+
+
+    @Autowired
+    private AesUtils aesUtils;
+
+    @Resource
+    private VisitAllocationService visitAllocationService;
+
+
+    @Resource
+    private IVisitAppointmentService visitAppointmentService;
+
     /**
      * 查询出诊信息表列表
      */
     @PreAuthorize("@ss.hasPermi('hospital:visitPlan:list')")
-    @GetMapping("/list")
+    @GetMapping("/WebList")
     public TableDataInfo list(VisitPlan visitPlan)
     {
         startPage();
         List<VisitPlan> list = visitPlanService.selectVisitPlanList(visitPlan);
         return getDataTable(list);
     }
+
+
+    @GetMapping("/getDateDocPlanList")
+    public AjaxResult appList(VisitPlan visitPlan) throws Exception {
+
+        Hospital hospital = hospitalService.selectHospitalByHospitalCode(visitPlan.getHospitalCode());
+
+        if (hospital==null){
+            return AjaxResult.error("请先选择医院");
+        }
+        visitPlan.setHospitalId(hospital.getHospitalId());
+        List<VisitPlan> list = visitPlanService.selectVisitPlanList(visitPlan);
+        for (VisitPlan value:list){
+
+            if(!StringUtils.isEmpty(value.getDoctor().getDoctorName())){
+                value.getDoctor().setDoctorName(aesUtils.decrypt(value.getDoctor().getDoctorName()));
+            }
+            if(!StringUtils.isEmpty(value.getDoctor().getDoctorPhone())){
+                value.getDoctor().setDoctorPhone(aesUtils.decrypt(value.getDoctor().getDoctorPhone()));
+            }
+            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+                value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
+            }
+            Map<Object, Object> visitTime;
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("visitTime"))){
+              visitTime = redisTemplate.opsForHash().entries("visitTime");
+            }else {
+                visitTime = visitAllocationService.addRedis();
+                redisTemplate.opsForHash().putAll("visitTime",visitTime);
+            }
+            if (value.getTime()==1){
+                value.getVisitTimeMap().put("am",visitTime.get("am"));
+            }else if (value.getTime()==2){
+                value.getVisitTimeMap().put("pm",visitTime.get("pm"));
+            }else if (value.getTime()==3){
+                value.getVisitTimeMap().putAll(visitTime);
+            }
+            List<VisitAppointment> visitAppointments = visitAppointmentService.selectByPlanId(value.getPlanId());
+
+            for (VisitAppointment visitAppointment : visitAppointments){
+                Iterator<Map.Entry<Object, Object>> iterator = value.getVisitTimeMap().entrySet().iterator();
+                while (iterator.hasNext()){
+
+                    Map.Entry<Object, Object> next = iterator.next();
+                    List<VisitAllocation> value1 =(List<VisitAllocation>) next.getValue();
+
+                    for (VisitAllocation visitAllocation:value1){
+
+                        if (Objects.equals(visitAppointment.getTimePeriod(), visitAllocation.getSlotId())){
+                            visitAllocation.setStatus(1);
+                            break;
+                        }
+                    }
+
+                }
+
+            }
+
+
+        }
+        return AjaxResult.success(list);
+    }
+
+
+
+
 
     /**
      * 导出出诊信息表列表

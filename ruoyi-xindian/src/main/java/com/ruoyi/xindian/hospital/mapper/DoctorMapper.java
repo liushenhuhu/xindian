@@ -3,6 +3,7 @@ package com.ruoyi.xindian.hospital.mapper;
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 医生Mapper接口
@@ -67,4 +68,12 @@ public interface DoctorMapper
     public int deleteDoctorByDoctorIds(Long[] doctorIds);
 
     List<ListValueAndLabelVO> selectDoc();
+
+
+    /**
+     * 通过医院名称查询属于门诊的所有医生
+     * @param hospitalName
+     * @return
+     */
+    List<Doctor> selectVisitDoc(@Param("hospitalName") String hospitalName);
 }

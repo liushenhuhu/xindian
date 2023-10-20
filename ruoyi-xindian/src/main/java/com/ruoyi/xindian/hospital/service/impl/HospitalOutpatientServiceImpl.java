@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.hospital.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,9 @@ public class HospitalOutpatientServiceImpl implements IHospitalOutpatientService
     @Override
     public int insertHospitalOutpatient(HospitalOutpatient hospitalOutpatient)
     {
+        Date date = new Date();
+        hospitalOutpatient.setGmtCreate(date);
+        hospitalOutpatient.setGmtModified(date);
         return hospitalOutpatientMapper.insertHospitalOutpatient(hospitalOutpatient);
     }
 
@@ -64,6 +68,8 @@ public class HospitalOutpatientServiceImpl implements IHospitalOutpatientService
     @Override
     public int updateHospitalOutpatient(HospitalOutpatient hospitalOutpatient)
     {
+        Date date = new Date();
+        hospitalOutpatient.setGmtModified(date);
         return hospitalOutpatientMapper.updateHospitalOutpatient(hospitalOutpatient);
     }
 

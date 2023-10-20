@@ -1,7 +1,11 @@
 package com.ruoyi.xindian.hospital.controller;
 
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +37,10 @@ public class VisitAppointmentController extends BaseController
 {
     @Autowired
     private IVisitAppointmentService visitAppointmentService;
+
+
+    @Resource
+    private AesUtils aesUtils;
 
     /**
      * 查询出诊预约表列表
@@ -100,5 +108,26 @@ public class VisitAppointmentController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(visitAppointmentService.deleteVisitAppointmentByIds(ids));
+    }
+
+
+    /**
+     * app获取出诊预约人
+     * @param planId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getAppointmentByPlanId")
+    public AjaxResult getAppointmentByPlanId(Integer planId) throws Exception {
+        List<VisitAppointment> visitAppointments = visitAppointmentService.selectByPlanId(planId);
+        for (VisitAppointment visitAppointment : visitAppointments){
+            if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){
+                visitAppointment.setAccompanyPhone(aesUtils.decrypt(visitAppointment.getAccompanyPhone()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment.getPatientPhone())){
+                visitAppointment.setPatientPhone(aesUtils.decrypt(visitAppointment.getPatientPhone()));
+            }
+        }
+        return AjaxResult.success(visitAppointments);
     }
 }

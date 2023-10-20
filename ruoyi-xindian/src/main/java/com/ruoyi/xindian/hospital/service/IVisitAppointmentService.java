@@ -58,4 +58,12 @@ public interface IVisitAppointmentService
      * @return 结果
      */
     public int deleteVisitAppointmentById(Long id);
+
+
+    /**
+     * 通过出诊Id去查找当前预约的人数
+     * @param planId
+     * @return
+     */
+    List<VisitAppointment> selectByPlanId(Integer planId);
 }
