@@ -213,6 +213,29 @@
           </el-radio-group>
           <span style="color: red">  (测试用的医生账号,不会作为专业的医生去随机推送患者诊断请求)</span>
         </el-form-item>
+
+       <div v-if="form.isDoc==='2'">
+         <el-form-item label="所属专科" prop="specialId">
+           <el-select v-model="form.specialId" placeholder="请输入专科名称" clearable @change="getSpecialList(form.specialId,form.hospital,1)" >
+             <el-option
+               v-for="item in specialList"
+               :key="item.hospitalSpecial.specialId"
+               :label="item.hospitalSpecial.specialName"
+               :value="item.hospitalSpecial.specialId">
+             </el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="所属门诊" prop="outpatientId">
+           <el-select v-model="form.outpatientId" placeholder="请输入门诊名称" clearable >
+             <el-option
+               v-for="item in outpatientList"
+               :key="item.hospitalOutpatient.outpatientId"
+               :label="item.hospitalOutpatient.outpatientName"
+               :value="item.hospitalOutpatient.outpatientId">
+             </el-option>
+           </el-select>
+         </el-form-item>
+       </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -227,6 +250,8 @@ import { listDoctor, getDoctor, delDoctor, addDoctor, updateDoctor ,hospitalCode
 import { listDepartment } from "@/api/department/department";
 import item from "@/layout/components/Sidebar/Item";
 import {listHospital, listHospitalId} from "@/api/hospital/hospital";
+import {getHospitalSpecialList} from "@/api/visit/hospitalRelation";
+import {getHospitalOutpatientList} from "@/api/visit/hospitalOutpatient";
 
 export default {
   name: "Doctor",
@@ -246,6 +271,8 @@ export default {
       // 选中数组
       ids: [],
       imgFileList:[],
+      outpatientList:[],
+      specialList:[],
       uploadFile:{
 
       },
@@ -303,6 +330,13 @@ export default {
         isDoc: [
           { required: true, message: "请选择医生类型", trigger: "change" }
         ],
+        outpatientId: [
+          { required: true, message: "专科不能为空", trigger: "blur" }
+        ],
+        specialId: [
+          { required: true, message: "门诊不能为空", trigger: "blur" }
+        ],
+
       }
     };
   },
@@ -381,8 +415,40 @@ export default {
         hospitalCodeFind(val).then(r=>{
          this.options1=r.data
         })
+        let _th = this
+        _th.options.forEach(function(value) {
+          if (value.hospitalCode===val){
+            let obj = {
+              hospitalId:value.hospitalId
+            }
+            getHospitalSpecialList(obj).then(r=>{
+              _th.specialList = r.data
+            })
+            return;
+          }
+        })
       }
+    },
+    getSpecialList(val,hospital,id){
+      if (id===1){
+        this.form.outpatientId=null
+      }
+      if (val!==""){
+        let _th = this
+        _th.options.forEach(function(value) {
+          if (value.hospitalCode===hospital){
+            let obj = {
+              hospitalId:value.hospitalId,
+              specialId:val
+            }
+            getHospitalOutpatientList(obj).then(r=>{
+              _th.outpatientList = r.data
+            })
+            return;
+          }
+        })
 
+      }
     },
     // 取消按钮
     cancel() {
@@ -407,6 +473,9 @@ export default {
         hospital: null,
         img: null,
         professional:null,
+        outpatientId:null,
+        specialId:null,
+
         // equipmentList:null
       };
       this.resetForm("form");
@@ -447,10 +516,10 @@ export default {
       this.reset();
       const doctorId = row.doctorId || this.ids
       getDoctor(doctorId).then(response => {
-        hospitalCodeFind(response.data.hospitalCode).then(r=>{
-          console.log(r)
-          this.options1=r.data
-        })
+        this.historyId(response.data.hospitalCode)
+        if (response.data.specialId&&response.data.hospitalCode){
+          this.getSpecialList(response.data.specialId,response.data.hospitalCode,2)
+        }
         this.form = response.data;
 
         this.form.hospital = response.data.hospitalCode

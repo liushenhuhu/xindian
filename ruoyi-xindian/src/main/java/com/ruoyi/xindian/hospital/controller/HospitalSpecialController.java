@@ -108,7 +108,7 @@ public class HospitalSpecialController extends BaseController
      * @return
      */
     @GetMapping("/getSpecialList")
-    public AjaxResult getSpecialList(){
-        return AjaxResult.success(hospitalSpecialService.selectHospitalSpecialList(new HospitalSpecial()));
+    public AjaxResult getSpecialList(HospitalSpecial hospitalSpecial){
+        return AjaxResult.success(hospitalSpecialService.selectHospitalSpecialList(hospitalSpecial));
     }
 }

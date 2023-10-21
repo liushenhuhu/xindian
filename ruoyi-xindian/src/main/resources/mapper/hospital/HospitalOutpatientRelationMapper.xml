@@ -12,17 +12,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="gmtModified"    column="gmt_modified"    />
     </resultMap>
 
+    <resultMap id="OutpatientAndHospital" type="HospitalOutpatientRelation" extends="HospitalOutpatientRelationResult">
+        <association property="hospital" javaType="hospital" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalMapper.HospitalResult"/>
+        <association property="hospitalOutpatient" javaType="hospitalOutpatient" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalOutpatientMapper.HospitalOutpatientAndSpecial"/>
+    </resultMap>
     <sql id="selectHospitalOutpatientRelationVo">
         select id, hospital_id, outpatient_id, gmt_create, gmt_modified from hospital_outpatient_relation
     </sql>
 
-    <select id="selectHospitalOutpatientRelationList" parameterType="HospitalOutpatientRelation" resultMap="HospitalOutpatientRelationResult">
-        <include refid="selectHospitalOutpatientRelationVo"/>
+    <select id="selectHospitalOutpatientRelationList" parameterType="HospitalOutpatientRelation" resultMap="OutpatientAndHospital">
+        SELECT
+        hospital.hospital_id,
+        hospital.hospital_name,
+        hospital_outpatient_relation.id,
+        hospital_outpatient_relation.gmt_create,
+        hospital_outpatient.special_id,
+        hospital_outpatient.outpatient_name,
+        hospital_outpatient.outpatient_id,
+        hospital_outpatient.gmt_create,
+        hospital_special.special_name
+        FROM
+        hospital_outpatient_relation
+        INNER JOIN
+        hospital_outpatient
+        ON
+        hospital_outpatient_relation.outpatient_id = hospital_outpatient.outpatient_id
+        INNER JOIN
+        hospital
+        ON
+        hospital_outpatient_relation.hospital_id = hospital.hospital_id
+        INNER JOIN
+        hospital_special
+        on hospital_outpatient.special_id = hospital_special.special_id
         <where>
-            <if test="hospitalId != null "> and hospital_id = #{hospitalId}</if>
-            <if test="outpatientId != null "> and outpatient_id = #{outpatientId}</if>
-            <if test="gmtCreate != null "> and gmt_create = #{gmtCreate}</if>
-            <if test="gmtModified != null "> and gmt_modified = #{gmtModified}</if>
+            <if test="hospitalId != null "> and hospital_outpatient_relation.hospital_id = #{hospitalId}</if>
+            <if test="specialId != null "> and hospital_outpatient.special_id = #{specialId}</if>
+            <if test="outpatientId != null "> and hospital_outpatient_relation.outpatient_id = #{outpatientId}</if>
+            <if test="gmtCreate != null "> and hospital_outpatient_relation.gmt_create like concat(#{gmtCreate},'%')</if>
         </where>
     </select>
 

@@ -104,7 +104,7 @@ public class HospitalOutpatientController extends BaseController
 
 
     @GetMapping("/getOutpatientList")
-    public AjaxResult getOutpatientList(){
-        return AjaxResult.success(hospitalOutpatientService.selectHospitalOutpatientList(new HospitalOutpatient()));
+    public AjaxResult getOutpatientList(HospitalOutpatient hospitalOutpatient){
+        return AjaxResult.success(hospitalOutpatientService.selectHospitalOutpatientList(hospitalOutpatient));
     }
 }

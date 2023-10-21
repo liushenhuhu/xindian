@@ -12,17 +12,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="gmtModified"    column="gmt_modified"    />
     </resultMap>
 
+    <resultMap id="HospitalAndSpecial" type="HospitalSpecialRelation" extends="HospitalSpecialRelationResult" >
+        <association property="hospital" javaType="hospital" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalMapper.HospitalResult"/>
+        <association property="hospitalSpecial" javaType="hospitalSpecial" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalSpecialMapper.HospitalSpecialResult"/>
+    </resultMap>
+
     <sql id="selectHospitalSpecialRelationVo">
         select id, hospital_id, special_id, gmt_create, gmt_modified from hospital_special_relation
     </sql>
 
-    <select id="selectHospitalSpecialRelationList" parameterType="HospitalSpecialRelation" resultMap="HospitalSpecialRelationResult">
-        <include refid="selectHospitalSpecialRelationVo"/>
+    <select id="selectHospitalSpecialRelationList" parameterType="HospitalSpecialRelation" resultMap="HospitalAndSpecial">
+        SELECT
+        hospital_special_relation.id,
+        hospital_special_relation.gmt_create,
+        hospital_special.special_id,
+        hospital_special.special_name,
+        hospital_special.description,
+        hospital_special.gmt_create,
+        hospital.hospital_id,
+        hospital.hospital_name,
+        hospital.hospital_code
+        FROM
+        hospital_special_relation
+        INNER JOIN
+        hospital_special
+        ON
+        hospital_special_relation.special_id = hospital_special.special_id
+        INNER JOIN
+        hospital
+        ON
+        hospital_special_relation.hospital_id = hospital.hospital_id
         <where>
-            <if test="hospitalId != null "> and hospital_id = #{hospitalId}</if>
-            <if test="specialId != null "> and special_id = #{specialId}</if>
-            <if test="gmtCreate != null "> and gmt_create = #{gmtCreate}</if>
-            <if test="gmtModified != null "> and gmt_modified = #{gmtModified}</if>
+            <if test="hospitalId != null "> and hospital_special_relation.hospital_id = #{hospitalId}</if>
+            <if test="specialId != null "> and hospital_special_relation.special_id = #{specialId}</if>
+            <if test="gmtCreate != null "> and hospital_special_relation.gmt_create like concat(#{gmtCreate},'%') </if>
         </where>
     </select>
 

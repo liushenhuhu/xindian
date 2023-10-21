@@ -20,13 +20,15 @@ public class HospitalOutpatient extends BaseEntity
     /** 门诊编号 */
     private Long outpatientId;
 
+    /** 所属专科 */
+    @Excel(name = "所属专科")
+    private Long specialId;
+
+
     /** 门诊名称 */
     @Excel(name = "门诊名称")
     private String outpatientName;
 
-    /** 所属专科 */
-    @Excel(name = "所属专科")
-    private Long specialId;
 
     /**
      * 专科类
@@ -34,12 +36,12 @@ public class HospitalOutpatient extends BaseEntity
     private HospitalSpecial hospitalSpecial;
 
     /** 创建时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gmtCreate;
 
     /** 更新时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gmtModified;
 

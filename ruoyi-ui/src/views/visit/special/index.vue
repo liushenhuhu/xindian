@@ -9,14 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建时间" prop="gmtCreate">
-        <el-date-picker clearable
-                        v-model="queryParams.gmtCreate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择创建时间">
-        </el-date-picker>
-      </el-form-item>
+<!--      <el-form-item label="创建时间" prop="gmtCreate">-->
+<!--        <el-date-picker clearable-->
+<!--                        v-model="queryParams.gmtCreate"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择创建时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
 <!--      <el-form-item label="更新时间" prop="gmtModified">-->
 <!--        <el-date-picker clearable-->
 <!--                        v-model="queryParams.gmtModified"-->
@@ -94,6 +94,12 @@
 <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="findOutpatient(scope.row)"
+          >查看门诊</el-button>
           <el-button
             size="mini"
             type="text"
@@ -207,6 +213,9 @@ export default {
       }
     };
   },
+  activated() {
+    this.getList();
+  },
   created() {
     this.getList();
   },
@@ -224,6 +233,9 @@ export default {
     cancel() {
       this.open = false;
       this.reset();
+    },
+    findOutpatient(row){
+      this.$router.push({path: "/visit/outpatient" , query: {specialId: row.specialId,}});
     },
     // 表单重置
     reset() {

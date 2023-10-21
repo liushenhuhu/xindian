@@ -6,8 +6,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="HospitalOutpatient" id="HospitalOutpatientResult">
         <result property="outpatientId"    column="outpatient_id"    />
-        <result property="outpatientName"    column="outpatient_name"    />
         <result property="specialId"    column="special_id"    />
+        <result property="outpatientName"    column="outpatient_name"    />
+
         <result property="gmtCreate"    column="gmt_create"    />
         <result property="gmtModified"    column="gmt_modified"    />
     </resultMap>
@@ -38,8 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="outpatientName != null  and outpatientName != ''"> and hospital_outpatient.outpatient_name like concat('%', #{outpatientName}, '%')</if>
             <if test="specialId != null "> and hospital_outpatient.special_id = #{specialId}</if>
-            <if test="gmtCreate != null "> and hospital_outpatient.gmt_create = #{gmtCreate}</if>
-            <if test="gmtModified != null "> and hospital_outpatient.gmt_modified = #{gmtModified}</if>
+            <if test="gmtCreate != null "> and hospital_outpatient.gmt_create like concat(#{gmtCreate},'%')</if>
 
         </where>
         order by hospital_outpatient.gmt_create desc

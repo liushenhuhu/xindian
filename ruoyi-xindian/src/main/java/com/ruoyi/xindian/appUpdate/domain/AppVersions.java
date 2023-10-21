@@ -1,4 +1,4 @@
-package com.ruoyi.xindian.hospital.domain;
+package com.ruoyi.xindian.appUpdate.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -6,41 +6,40 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
- * 门诊预约医院
- * @TableName hospital_subscribe
+ * 
+ * @TableName app_versions
  */
-@TableName(value ="hospital_subscribe")
+@TableName(value ="app_versions")
 @Data
-public class HospitalSubscribe implements Serializable {
+public class AppVersions implements Serializable {
     /**
-     * 
+     * 版本id
      */
-    private Integer subscribeId;
+    @TableId
+    private Integer versionsId;
 
     /**
-     * 医院id
+     * 版本号
      */
-    private Integer hospitalId;
+    private String versionsNumber;
+
+    /**
+     * 更新地址
+     */
+    private String url;
 
     /**
      * 创建时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
-
-    @TableField(exist = false)
-    private Hospital hospital;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

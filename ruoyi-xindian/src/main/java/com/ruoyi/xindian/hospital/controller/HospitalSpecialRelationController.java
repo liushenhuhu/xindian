@@ -2,6 +2,8 @@ package com.ruoyi.xindian.hospital.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.xindian.hospital.domain.HospitalOutpatientRelation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,5 +102,11 @@ public class HospitalSpecialRelationController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(hospitalSpecialRelationService.deleteHospitalSpecialRelationByIds(ids));
+    }
+
+    @GetMapping("/getHospitalSpecialList")
+    public AjaxResult getHospitalOutpatientList(HospitalSpecialRelation hospitalSpecialRelation){
+        List<HospitalSpecialRelation> list = hospitalSpecialRelationService.selectHospitalSpecialRelationList(hospitalSpecialRelation);
+        return AjaxResult.success(list);
     }
 }

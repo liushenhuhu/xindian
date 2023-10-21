@@ -21,7 +21,7 @@ public class VisitPlan implements Serializable {
      * 出诊编号
      */
     @TableId(type = IdType.AUTO)
-    private Integer planId;
+    private Long planId;
 
     /**
      * 医院编号
@@ -76,10 +76,22 @@ public class VisitPlan implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date gmtModified;
+    @TableField(exist = false)
+    private String specialName;
+    @TableField(exist = false)
+    private String outpatientName;
 
 
     @TableField(exist = false)
     private Doctor doctor;
+    @TableField(exist = false)
+    private Hospital hospital;
+    @TableField(exist = false)
+    private HospitalSpecial hospitalSpecial;
+    @TableField(exist = false)
+    private HospitalOutpatient hospitalOutpatient;
+    @TableField(exist = false)
+    private HospitalClinic hospitalClinic;
 
     @TableField(exist = false)
     private HashMap<Object ,Object> visitTimeMap = new HashMap<>();
@@ -87,11 +99,60 @@ public class VisitPlan implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public Integer getPlanId() {
+
+    public String getSpecialName() {
+        return specialName;
+    }
+
+    public void setSpecialName(String specialName) {
+        this.specialName = specialName;
+    }
+
+    public String getOutpatientName() {
+        return outpatientName;
+    }
+
+    public void setOutpatientName(String outpatientName) {
+        this.outpatientName = outpatientName;
+    }
+
+    public Hospital getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+    }
+
+    public HospitalSpecial getHospitalSpecial() {
+        return hospitalSpecial;
+    }
+
+    public void setHospitalSpecial(HospitalSpecial hospitalSpecial) {
+        this.hospitalSpecial = hospitalSpecial;
+    }
+
+    public HospitalOutpatient getHospitalOutpatient() {
+        return hospitalOutpatient;
+    }
+
+    public void setHospitalOutpatient(HospitalOutpatient hospitalOutpatient) {
+        this.hospitalOutpatient = hospitalOutpatient;
+    }
+
+    public HospitalClinic getHospitalClinic() {
+        return hospitalClinic;
+    }
+
+    public void setHospitalClinic(HospitalClinic hospitalClinic) {
+        this.hospitalClinic = hospitalClinic;
+    }
+
+    public Long getPlanId() {
         return planId;
     }
 
-    public void setPlanId(Integer planId) {
+    public void setPlanId(Long planId) {
         this.planId = planId;
     }
 

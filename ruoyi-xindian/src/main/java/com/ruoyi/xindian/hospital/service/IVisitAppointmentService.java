@@ -65,5 +65,5 @@ public interface IVisitAppointmentService
      * @param planId
      * @return
      */
-    List<VisitAppointment> selectByPlanId(Integer planId);
+    List<VisitAppointment> selectByPlanId(Long planId);
 }

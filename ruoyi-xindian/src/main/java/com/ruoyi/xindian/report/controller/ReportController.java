@@ -353,6 +353,9 @@ public class ReportController extends BaseController
             if (report1.getDiagnosisStatus()==1){
                 return AjaxResult.error("该数据已被诊断");
             }
+            if (!report.getdPhone().equals(report1.getdPhone())){
+                return AjaxResult.error("该数据已换人诊断");
+            }
         }
 
         report.setReportId(report1.getReportId());
@@ -493,10 +496,10 @@ public class ReportController extends BaseController
             }
             return toAjax(reportService.updateReportNull(report));
         }else if(report.getDiagnosisStatus()==1){//医生诊断
-
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             //记录报告的的状态
             if (StringUtils.isNotEmpty(report.getStartDateTime())){
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
                 Date parse = simpleDateFormat.parse(report.getStartDateTime());
                 long time = parse.getTime();
                 long time1 = report1.getStartTime().getTime();
@@ -521,6 +524,13 @@ public class ReportController extends BaseController
 
             }
             else {
+                Date date1 = new Date();
+                long time = date1.getTime();
+                long time1 = report1.getStartTime().getTime();
+                long dateTime = 2400000;
+                if (time-time1>dateTime){
+                    report.setStartTime(date1);
+                }
                 DiagnoseDoc diagnoseDoc1 = new DiagnoseDoc();
                 diagnoseDoc1.setReportId(report1.getReportId());
                 diagnoseDoc1.setDoctorPhone(report1.getdPhone());

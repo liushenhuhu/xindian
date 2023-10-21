@@ -321,4 +321,28 @@ public class DoctorController extends BaseController
         }
         return AjaxResult.success(doctors);
     }
+
+    /**
+     * 门诊预约通过医院code查询当前医院的医生
+     */
+    @GetMapping("/getHospitalVisitDoc")
+    public AjaxResult getHospitalVisitDoc(Long hospitalId) throws Exception {
+
+        Hospital hospital = hospitalService.selectHospitalByHospitalId(hospitalId);
+
+        if (hospital==null){
+            return AjaxResult.success(null);
+        }
+        List<Doctor> doctors = doctorService.selectVisitDoc(hospital.getHospitalName());
+        for (Doctor value:doctors){
+            if(!StringUtils.isEmpty(value.getDoctorName())){
+                value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
+            }
+            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+                value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
+            }
+        }
+        return AjaxResult.success(doctors);
+    }
+
 }

@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="所属门诊" prop="outpatientId">
-        <el-select v-model="queryParams.outpatientId" placeholder="请输入门诊名称" clearable  >
-          <el-option
-            v-for="item in outpatientList"
-            :key="item.outpatientId"
-            :label="item.outpatientName"
-            :value="item.outpatientId">
-          </el-option>
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="所属门诊" prop="outpatientId">-->
+<!--        <el-select v-model="queryParams.outpatientId" placeholder="请输入门诊名称" clearable  >-->
+<!--          <el-option-->
+<!--            v-for="item in outpatientList"-->
+<!--            :key="item.outpatientId"-->
+<!--            :label="item.outpatientName"-->
+<!--            :value="item.outpatientId">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item label="诊室地址" prop="address">
         <el-input
           v-model="queryParams.address"
@@ -19,14 +19,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建时间" prop="gmtCreate">
-        <el-date-picker clearable
-                        v-model="queryParams.gmtCreate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择创建时间">
-        </el-date-picker>
-      </el-form-item>
+<!--      <el-form-item label="创建时间" prop="gmtCreate">-->
+<!--        <el-date-picker clearable-->
+<!--                        v-model="queryParams.gmtCreate"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择创建时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
 <!--      <el-form-item label="更新时间" prop="gmtModified">-->
 <!--        <el-date-picker clearable-->
 <!--                        v-model="queryParams.gmtModified"-->
@@ -133,16 +133,16 @@
     <!-- 添加或修改诊室信息 对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="所属门诊" prop="outpatientId">
-          <el-select v-model="form.outpatientId" placeholder="请输入门诊名称" clearable  >
-            <el-option
-              v-for="item in outpatientList"
-              :key="item.outpatientId"
-              :label="item.outpatientName"
-              :value="item.outpatientId">
-            </el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="所属门诊" prop="outpatientId">-->
+<!--          <el-select v-model="form.outpatientId" placeholder="请输入门诊名称" clearable  >-->
+<!--            <el-option-->
+<!--              v-for="item in outpatientList"-->
+<!--              :key="item.outpatientId"-->
+<!--              :label="item.outpatientName"-->
+<!--              :value="item.outpatientId">-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item label="诊室地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入诊室地址" />
         </el-form-item>
@@ -173,7 +173,6 @@
 
 <script>
 import { listClinic, getClinic, delClinic, addClinic, updateClinic } from "@/api/visit/clinic";
-import {getOutpatientList} from "@/api/visit/outpatient";
 
 export default {
   name: "Clinic",
@@ -226,16 +225,22 @@ export default {
       }
     };
   },
+  activated() {
+    this.getList();
+  },
   created() {
-    getOutpatientList().then(r=>{
-      this.outpatientList = r.data
-    })
+    // getOutpatientList().then(r=>{
+    //   this.outpatientList = r.data
+    // })
     this.getList();
   },
   methods: {
     /** 查询诊室信息 列表 */
     getList() {
       this.loading = true;
+      if (this.$route.query.outpatientId){
+        this.queryParams.outpatientId=this.$route.query.outpatientId
+      }
       listClinic(this.queryParams).then(response => {
         console.log(response)
         this.clinicList = response.rows;
@@ -295,6 +300,9 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          if (this.$route.query.outpatientId){
+            this.form.outpatientId=this.$route.query.outpatientId
+          }
           if (this.form.id != null) {
             updateClinic(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");

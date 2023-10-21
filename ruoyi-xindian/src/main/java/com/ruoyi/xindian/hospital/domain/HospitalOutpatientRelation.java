@@ -29,14 +29,47 @@ public class HospitalOutpatientRelation extends BaseEntity
     private Long outpatientId;
 
     /** 创建时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gmtCreate;
 
     /** 更新时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gmtModified;
+
+
+    private Long specialId;
+
+
+    private Hospital hospital;
+
+
+    private HospitalOutpatient hospitalOutpatient;
+
+    public Long getSpecialId() {
+        return specialId;
+    }
+
+    public void setSpecialId(Long specialId) {
+        this.specialId = specialId;
+    }
+
+    public Hospital getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+    }
+
+    public HospitalOutpatient getHospitalOutpatient() {
+        return hospitalOutpatient;
+    }
+
+    public void setHospitalOutpatient(HospitalOutpatient hospitalOutpatient) {
+        this.hospitalOutpatient = hospitalOutpatient;
+    }
 
     public void setId(Long id)
     {

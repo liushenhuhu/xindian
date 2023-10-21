@@ -21,6 +21,14 @@ public interface IVisitPlanService
 
     /**
      * 查询出诊信息表列表
+     *
+     * @param visitPlan 出诊信息表
+     * @return 出诊信息表集合
+     */
+    public List<VisitPlan> selectVisitPlanWebList(VisitPlan visitPlan);
+
+    /**
+     * 查询出诊信息表列表
      * 
      * @param visitPlan 出诊信息表
      * @return 出诊信息表集合
