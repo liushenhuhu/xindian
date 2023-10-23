@@ -353,9 +353,12 @@ public class ReportController extends BaseController
             if (report1.getDiagnosisStatus()==1){
                 return AjaxResult.error("该数据已被诊断");
             }
-            if (!report.getdPhone().equals(report1.getdPhone())){
-                return AjaxResult.error("该数据已换人诊断");
-            }
+//            if (report.getDiagnosisStatus()==1){
+//                if (!report.getdPhone().equals(report1.getdPhone())){
+//                    return AjaxResult.error("该数据已换人诊断");
+//                }
+//            }
+
         }
 
         report.setReportId(report1.getReportId());

@@ -276,7 +276,7 @@ public class VisitPlanController extends BaseController
         for (Long id : ids){
             List<VisitAppointment> visitAppointments = visitAppointmentService.selectByPlanId(id);
             if (visitAppointments!=null&&visitAppointments.size()>0){
-                return AjaxResult.error("当前排班已有患者挂号，不能修改");
+                return AjaxResult.error("当前排班已有患者挂号，不能删除");
             }
         }
         return toAjax(visitPlanService.deleteVisitPlanByIds(ids));

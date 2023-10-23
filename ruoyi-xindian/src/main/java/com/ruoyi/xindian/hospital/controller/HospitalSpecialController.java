@@ -1,7 +1,12 @@
 package com.ruoyi.xindian.hospital.controller;
 
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.xindian.hospital.domain.HospitalOutpatient;
+import com.ruoyi.xindian.hospital.service.IHospitalOutpatientService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +38,10 @@ public class HospitalSpecialController extends BaseController
 {
     @Autowired
     private IHospitalSpecialService hospitalSpecialService;
+
+
+    @Resource
+    private IHospitalOutpatientService hospitalOutpatientService;
 
     /**
      * 查询医院专科表列表
@@ -77,6 +86,13 @@ public class HospitalSpecialController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody HospitalSpecial hospitalSpecial)
     {
+        if (StringUtils.isEmpty(hospitalSpecial.getSpecialName())){
+            return AjaxResult.error("请填写专科名称");
+        }
+        HospitalSpecial hospitalSpecialName = hospitalSpecialService.getHospitalSpecialName(hospitalSpecial.getSpecialName());
+        if (hospitalSpecialName!=null){
+            return AjaxResult.error("专科名称已存在");
+        }
         return toAjax(hospitalSpecialService.insertHospitalSpecial(hospitalSpecial));
     }
 
@@ -87,7 +103,19 @@ public class HospitalSpecialController extends BaseController
     @Log(title = "医院专科表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HospitalSpecial hospitalSpecial)
-    {
+    {  if (StringUtils.isEmpty(hospitalSpecial.getSpecialName())){
+            return AjaxResult.error("请填写专科名称");
+        }
+        HospitalSpecial hospitalSpecial1 = hospitalSpecialService.selectHospitalSpecialById(hospitalSpecial.getSpecialId());
+        if (hospitalSpecial1==null){
+            return AjaxResult.error("专科不存在");
+        }
+        if (!hospitalSpecial1.getSpecialName().equals(hospitalSpecial.getSpecialName())){
+            HospitalSpecial hospitalSpecialName = hospitalSpecialService.getHospitalSpecialName(hospitalSpecial.getSpecialName());
+            if (hospitalSpecialName!=null){
+                return AjaxResult.error("专科名称已存在");
+            }
+        }
         return toAjax(hospitalSpecialService.updateHospitalSpecial(hospitalSpecial));
     }
 
@@ -99,6 +127,14 @@ public class HospitalSpecialController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
+        for (Long id : ids){
+            HospitalOutpatient hospitalOutpatient = new HospitalOutpatient();
+            hospitalOutpatient.setSpecialId(id);
+            List<HospitalOutpatient> hospitalOutpatients = hospitalOutpatientService.selectHospitalOutpatientList(hospitalOutpatient);
+            if (hospitalOutpatients!=null&&hospitalOutpatients.size()>0){
+                return AjaxResult.error("当前专科已有门诊，不能删除");
+            }
+        }
         return toAjax(hospitalSpecialService.deleteHospitalSpecialByIds(ids));
     }
 

@@ -30,6 +30,9 @@
         <include refid="selectHospitalSpecialVo"/>
         where special_id = #{specialId}
     </select>
+    <select id="getHospitalSpecialName" resultType="com.ruoyi.xindian.hospital.domain.HospitalSpecial">
+        <include refid="selectHospitalSpecialVo"/> where special_name = #{specialName}
+    </select>
 
     <insert id="insertHospitalSpecial" parameterType="HospitalSpecial" useGeneratedKeys="true" keyProperty="specialId">
         insert into hospital_special

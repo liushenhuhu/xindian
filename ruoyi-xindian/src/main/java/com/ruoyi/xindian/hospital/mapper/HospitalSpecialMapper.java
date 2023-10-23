@@ -2,6 +2,7 @@ package com.ruoyi.xindian.hospital.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.HospitalSpecial;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 医院专科表Mapper接口
@@ -58,4 +59,7 @@ public interface HospitalSpecialMapper
      * @return 结果
      */
     public int deleteHospitalSpecialByIds(Long[] ids);
+
+
+    HospitalSpecial getHospitalSpecialName(@Param("specialName") String specialName);
 }

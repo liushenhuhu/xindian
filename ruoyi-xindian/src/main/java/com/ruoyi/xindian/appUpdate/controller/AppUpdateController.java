@@ -34,7 +34,7 @@ public class AppUpdateController {
         if (appVersionsCompare==null){
             return AjaxResult.success("您的版本为最新版");
         }
-        return AjaxResult.success(appVersionsCompare.getUrl());
+        return new AjaxResult(201, appVersionsCompare.getUrl());
     }
 
 

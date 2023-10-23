@@ -96,4 +96,9 @@ public class HospitalOutpatientServiceImpl implements IHospitalOutpatientService
     {
         return hospitalOutpatientMapper.deleteHospitalOutpatientById(id);
     }
+
+    @Override
+    public HospitalOutpatient getOutNameAndSpec(HospitalOutpatient hospitalOutpatient) {
+        return hospitalOutpatientMapper.getOutNameAndSpec(hospitalOutpatient);
+    }
 }

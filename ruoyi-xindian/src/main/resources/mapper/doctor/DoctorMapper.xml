@@ -34,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDoctorVo"/>
         <where>
             <if test="doctorName != null  and doctorName != ''"> and doctor_name_aes like concat('%', #{doctorName}, '%')</if>
+            <if test="outpatientId != null  and outpatientId != ''"> and outpatient_id =  #{outpatientId} </if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes like concat('%', #{doctorPhone}, '%')</if>
             <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
             <if test="skill != null  and skill != ''"> and skill = #{skill}</if>
@@ -137,6 +138,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isDoc != null">is_doc = #{isDoc},</if>
             <if test="specialId != null">special_id = #{specialId},</if>
             <if test="outpatientId != null">outpatient_id = #{outpatientId},</if>
+            <if test="isDoc!=null and isDoc!='2'">
+              special_id = null,
+              outpatient_id = null,
+            </if>
         </trim>
         where doctor_id = #{doctorId}
     </update>

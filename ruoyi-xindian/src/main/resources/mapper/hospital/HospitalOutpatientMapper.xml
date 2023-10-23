@@ -49,6 +49,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectHospitalOutpatientVo"/>
         where outpatient_id = #{outpatientId}
     </select>
+    <select id="getOutNameAndSpec" resultType="com.ruoyi.xindian.hospital.domain.HospitalOutpatient">
+        <include refid="selectHospitalOutpatientVo"/> where outpatient_name = #{outpatientName} and special_id = #{specialId}
+    </select>
 
     <insert id="insertHospitalOutpatient" parameterType="HospitalOutpatient" useGeneratedKeys="true" keyProperty="outpatientId">
         insert into hospital_outpatient
