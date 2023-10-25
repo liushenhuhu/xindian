@@ -152,7 +152,7 @@
               </el-radio-group>
             </div>
             <div class="abcd">
-              <el-radio-group v-model="noise_level.aVFlevel" @change="changeRadios(noise_level.aVFlevel,'Ilevel')">
+              <el-radio-group v-model="noise_level.aVFlevel" @change="changeRadios(noise_level.aVFlevel,'aVFlevel')">
                 <el-radio label="A" border size="mini" class="radios">A</el-radio>
                 <el-radio label="B" border size="mini" class="radios">B</el-radio>
                 <el-radio label="C" border size="mini" class="radios">C</el-radio>
@@ -2947,7 +2947,7 @@ form input {
 }
 .abcd {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-grow: 1;
   width: 100%;
   //padding: 1.5vw;

@@ -9,6 +9,9 @@ import com.ruoyi.xindian.alert_log.mapper.JecgSingleMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
 * @author 13401
@@ -25,9 +28,28 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
 
     @Override
     public int updateBeatLabel(JecgSingle jecgSingle) {
-        JecgSingle jecgSingle1 = new JecgSingle();
-        jecgSingle1.setpId(jecgSingle.getpId());
-        jecgSingle1.setBeatLabel(jecgSingle.getBeatLabel());
+        JecgSingle jecgSingle1 = selectById(jecgSingle.getpId());
+        JSONObject parse = (JSONObject) JSONObject.parse(jecgSingle1.getBeatLabel());
+        JSONObject webText = (JSONObject) JSONObject.parse(jecgSingle.getBeatLabel());
+        Iterator<String> iterator = webText.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = iterator.next();
+            JSONObject value = (JSONObject)webText.get(key);
+            if(value.size()!=0){
+                parse.remove(key);
+                parse.put(key,value);
+            }
+        }
+//        Iterator<Map.Entry<String, Object>> iterator = webText.entrySet().iterator();
+//        while (iterator.hasNext()){
+//            Map.Entry<String, Object> next = iterator.next();
+//            JSONObject value =(JSONObject) next.getValue();
+//            if(value.size()!=0){
+//                parse.remove(next.getKey());
+//                parse.put(next.getKey(),value);
+//            }
+//        }
+        jecgSingle1.setBeatLabel(JSONObject.toJSONString(parse));
         return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
     }
 
@@ -38,7 +60,6 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
 
     @Override
     public int updateWaveLabel(JecgSingle jecgSingle) {
-
         JecgSingle jecgSingle1 = selectById(jecgSingle.getpId());
 
         JSONObject parse = (JSONObject) JSONObject.parse(jecgSingle1.getWaveLabel());
@@ -48,7 +69,6 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
         parse.put(jecgSingle.getField(),JSONObject.parse(jecgSingle.getWaveLabel()));
 
         jecgSingle1.setWaveLabel(JSONObject.toJSONString(parse));
-
         return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
     }
 }

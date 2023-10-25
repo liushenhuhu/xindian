@@ -16,10 +16,11 @@
         <!--左上角盒子-->
           <div class="top-left-div" v-show="lead1">
             <el-radio-group style="margin:auto;" v-model="radio1" >
-              <el-radio-button @click.native.prevent="clickitem1('N')" label="N">正常</el-radio-button>
-              <el-radio-button @click.native.prevent="clickitem1('S')" label="S">房早</el-radio-button>
-              <el-radio-button @click.native.prevent="clickitem1('V')" label="V">室早</el-radio-button>
-              <el-radio-button @click.native.prevent="clickitem1('X')" label="X">干扰</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('Normal')" label="Normal">正常</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('FangZao')" label="FangZao">房早</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('ShiZao')" label="ShiZao">室早</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('FangYi')" label="FangYi">房逸</el-radio-button>
+              <el-radio-button @click.native.prevent="clickitem1('GanRao')" label="GanRao">干扰</el-radio-button>
             </el-radio-group>
             <el-popover
               style="margin:auto;"
@@ -364,8 +365,16 @@ export default {
       this.arrList.pId=pIds
       this.queryParam.pId = pIds;
       this.queryParam.level = level;
-      for (var i = 0; i <= 1000; i++) {
+      for (var i = 0; i <= data.length; i++) {
         this.x.push(i);
+      }
+      var seriesdata=this.seriesdata
+      if(data.length>1500){
+        seriesdata=[{yAxis: -2},{yAxis: -1.5},{yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},{yAxis: 1.5},{yAxis: 2},
+        {yAxis: -3},{yAxis: -2.5},{yAxis: 3},{yAxis: 2.5}]
+        for (let i = 0; i < data.length; i+=25) {
+          seriesdata.push({xAxis:i})
+        }
       }
       let detailoption = {
         animation: false,
@@ -473,7 +482,7 @@ export default {
               position: 'start', // 表现内容展示的位置
               color: '#b33939'  // 展示内容颜色
             },
-            data: this.seriesdata,
+            data: seriesdata,
           },
           itemStyle: {
             normal: {
@@ -503,43 +512,71 @@ export default {
         console.log("重新赋值",this.arrList)
           //回显
           //分段
-          this[`${'arrList' + this.level}`]=[]
+          this[`${'arrList' + level}`]=[]
           if(this.arrList.beatLabel){
-            this[`${'arrList' + this.level}`]=this.arrList.beatLabel.filter(i=>{
-              let a=i.x-1000*(level-1)
-              return a>=0 && a<1000
-            })
+            if(flag==1){
+              //单导
+              this[`${'arrList' + level}`]=this.arrList.beatLabel[level-1]
+            }else {
+              //12导
+              var each={Normal:[], FangZao:[], ShiZao:[], FangYi:[], GanRao:[]}
+              for (let key1 in this.arrList.beatLabel) {
+                for (let key2 in this.arrList.beatLabel[key1]) {
+                  var arr=this.arrList.beatLabel[key1][key2].map(item=>item+key1*1000)
+                  each[key2]=each[key2].concat(arr)
+                }
+              }
+              this[`${'arrList' + level}`]=each
+            }
           }
-          //console.log(this[`${'arrList' + this.level}`])
+          console.log(this[`${'arrList' + this.level}`])
           //添加所有点
           this.pointdata.length=0
-          var length=this[`${'arrList' + this.level}`].length
-          for (let i = 0; i < length; i++) {
-            var colorList= {N:'#fe0101',S:'#ff7000',V:'#ff00cf',X:'#0021da',}
-            let pointdata={
-              name: this[`${'arrList' + this.level}`][i].type,
-              xAxis:this[`${'arrList' + this.level}`][i].x-1000*(level-1),
-              yAxis: this[`${'arrList' + this.level}`][i].y,
+        var colorList= {Normal:'#fe0101',FangZao:'#ff7000',ShiZao:'#17b09a',FangYi:'#070000',GanRao:'#0021da'}
+        for (const key in this[`${'arrList' + level}`]) {
+          this[`${'arrList' + level}`][key].forEach(i=>{
+            var formatter=key
+            switch (formatter) {
+              case 'Normal':
+                formatter='N'
+                break;
+              case 'FangZao':
+                formatter='S'
+                break;
+              case 'ShiZao':
+                formatter='V'
+                break;
+              case 'FangYi':
+                formatter='A'
+                break;
+              case 'GanRao':
+                formatter='X'
+                break;
+            }
+            var pointdata={
+              name: key,
+              xAxis:i,
+              yAxis: data[i],
               itemStyle: {
-                color:colorList[this[`${'arrList' + this.level}`][i].type]
+                color:colorList[key]
               },
               label: {
                 color: '#ffffff',
                 show: true,
-                formatter: this[`${'arrList' + this.level}`][i].type,
+                formatter: formatter,
                 fontSize:13
               },
             }
             this.pointdata.push(pointdata)
-          }
-          //console.log(this.pointdata)
+          })
+        }
+          console.log(this.pointdata)
           setTimeout(()=>{
             //添加文本
             this.addtext()
             //重绘
             this.redraw()
           })
-
         }
 
       $(window).resize(()=>{
@@ -578,14 +615,17 @@ export default {
             if(this.radio1==''){
               return;
             }
-            let i=this.addValue({x: this.xIndex,y: this.data[this.xIndex], type: this.radio1})
+            let i=this.addValue({x: this.xIndex, type: this.radio1})
             if(i==1){
               return
             }
             //添加点
             this.addpoint()
             //添加文本
+            this.graphic=[]
+            console.log(this.graphic)
             this.addtext()
+
             setTimeout(()=>{
               //重绘
               this.redraw()
@@ -595,8 +635,26 @@ export default {
     },
     //添加标点
     addpoint(){
-      let i=this.pointdata.findIndex(it=>it.x==this.xIndex)
-      var colorList= {N:'#fe0101',S:'#ff7000',V:'#ff00cf',X:'#0021da',}
+      // let i=this.pointdata.findIndex(it=>it.x==this.xIndex)
+      var colorList= {Normal:'#fe0101',FangZao:'#ff7000',ShiZao:'#17b09a',FangYi:'#070000',GanRao:'#0021da'}
+      var formatter=this.radio1
+      switch (formatter) {
+        case 'Normal':
+          formatter='N'
+          break;
+        case 'FangZao':
+          formatter='S'
+          break;
+        case 'ShiZao':
+          formatter='V'
+          break;
+        case 'FangYi':
+          formatter='A'
+          break;
+        case 'GanRao':
+          formatter='X'
+          break;
+      }
       let pointdata={
         name: this.radio1,
         xAxis:this.xIndex,
@@ -607,7 +665,7 @@ export default {
         label: {
           color: '#ffffff',
           show: true,
-          formatter: this.radio1,
+          formatter: formatter,
           fontSize:13
         },
       }
@@ -616,43 +674,55 @@ export default {
     //重绘所有点之间的文本
     addtext(){
       this.graphic.length=0
-      var length=this[`${'arrList' + this.level}`].length
-      //console.log(length)
-      for (let i = 0; i < length-1; i++) {
-        var x1=this[`${'arrList' + this.level}`][i].x-1000*(this.level-1)
-        var x2=this[`${'arrList' + this.level}`][i+1].x-1000*(this.level-1)
-        //console.log(x1,x2)
-        var time=((x2-x1)/25*0.2).toFixed(2); //时间 s
-        var heart=(60/time).toFixed(1) //心率
-        var x=this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 0.75])
-        //console.log(x)
-        //console.log(this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 0.5]))
-        let text={
-          type:'text',
-          x: x[0]-15,
-          y:x[1],
-          z: 999,
-          style:{
-            text: time+`\n(${heart})`,
-            fill: '#000000',
-            fontWeight: 400,
-            fontSize: 15
-          }
+      let graphic=[]
+      console.log(this[`${'arrList' + this.level}`])
+      for (let key in this[`${'arrList' + this.level}`]) {
+        var length=this[`${'arrList' + this.level}`][key].length
+        for (let i = 0; i <length; i++) {
+          graphic.push(this[`${'arrList' + this.level}`][key][i])
         }
-        this.graphic.push(text)
       }
+
+      graphic.sort(function(a,b){
+        return a - b;
+      })
+        var length=graphic.length
+        for (let i = 0; i <length-1; i++) {
+          var x1,x2
+          x1=graphic[i]
+          x2=graphic[i+1]
+          // console.log(x1,x2)
+          var time=((x2-x1)/25*0.2).toFixed(2); //时间 s
+          var heart=(60/time).toFixed(1) //心率
+          var x=this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 0.75])
+          //console.log(x)
+          let text={
+            type:'text',
+            x: x[0]-15,
+            y:x[1],
+            z: 999,
+            style:{
+              text: time+`\n(${heart})`,
+              fill: '#000000',
+              fontWeight: 400,
+              fontSize: 15
+            },
+
+          }
+          this.graphic.push(text)
+        }
       console.log("绘制文本============",this.graphic)
     },
     //按x从小到大插入值
     addValue(params) {
-      params.x=params.x+1000*(this.level-1)
-      let i=this[`${'arrList' + this.level}`].findIndex(it=>it.x==params.x)
+      let i=this[`${'arrList' + this.level}`][params.type].findIndex(it=>it==params.x)
       if(i!=-1){
         console.log("存在该点")
         return 1
       }
-      let idx =  this[`${'arrList' + this.level}`].findIndex(it=>it.x>params.x)
-      this[`${'arrList' + this.level}`].splice(idx===-1?this[`${'arrList' + this.level}`].length:idx,0,params)
+      let idx =  this[`${'arrList' + this.level}`][params.type].findIndex(it=>it>params.x)
+      this[`${'arrList' + this.level}`][params.type].splice(idx===-1?this[`${'arrList' + this.level}`][params.type].length:idx,0,params.x)
+      console.log(this[`${'arrList' + this.level}`])
     },
     //点击清空
     clickClear() {
@@ -677,8 +747,10 @@ export default {
     },
     clearCanvas(){
       this.pointdata.length=0
-      this[`${'arrList' + this.level}`].length=0
+      this[`${'arrList' + this.level}`]={Normal:[], FangZao:[], ShiZao:[], FangYi:[], GanRao:[]}
       this.graphic.length=0
+      this.graphic=[]
+      console.log(this.graphic)
       setTimeout(()=>{
         this.redraw()
       });
@@ -692,12 +764,15 @@ export default {
       this.activeName="first"
       this.drawShow = false;
       this.currentBgImg = "";
+      this.arrList1=[]
+      this.arrList2=[]
+      this.arrList3=[]
+      this.arrList4=[]
     },
     //重绘
     redraw(){
       var chartOption = this.chart.getOption();
       chartOption.graphic = this.graphic;
-
       this.chart.setOption(chartOption,true);
       this.chart.setOption({});
       // console.log(this.graphic)
@@ -725,17 +800,18 @@ export default {
           break
         }
       }
-
-      var length2=this[`${'arrList' + this.level}`].length
-      for (let i = 0; i < length2; i++) {
-        let x=this[`${'arrList' + this.level}`][i].x-1000*(this.level-1)
-        if(x===this.delX.value){
-          this[`${'arrList' + this.level}`].splice(i,1)
-          break
+      for (let key in this[`${'arrList' + this.level}`]) {
+        if(key==this.delX.key){
+          this[`${'arrList' + this.level}`][key].forEach((i,index)=>{
+            if(i===this.delX.value){
+              this[`${'arrList' + this.level}`][key].splice(index,1)
+              return
+            }
+          })
         }
       }
-      this.addtext()
       setTimeout(()=>{
+        this.addtext()
         this.redraw()
       });
       $('#rightMenu').css({
@@ -744,12 +820,47 @@ export default {
     },
     //提交坐标数据
     clickSubmit(){
-      this.arrList={
-        pId: this.pId,
-        beatLabel:JSON.stringify([...this.arrList1,...this.arrList2,...this.arrList3,...this.arrList4])
+      console.log(this.arrList1)
+      if(this.flag==1){
+        var obj={0:{...this.arrList1},1:{...this.arrList2},2:{...this.arrList3},3:{...this.arrList4}}
+        for (let key in obj) {
+          console.log(obj[key])
+          if (Object.keys(obj[key]).length === 0) {
+            delete obj[key];
+          }
+        }
+        this.arrList={
+          pId: this.pId,
+          beatLabel:JSON.stringify(obj)
+        }
+      }else {
+        var obj={...this.arrList1}
+        var newObj1 = {};
+        var newObj2 = {};
+        for (var key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            // 对每个属性的数组进行分类
+            newObj1[key] = obj[key].filter(num => num < 1000); // 1000是分类的阈值
+            newObj2[key] = obj[key].filter(num => num >= 1000).map(num => num - 1000);
+          }
+        }
+        var bool=false
+        for (let key in newObj2) {
+          if(newObj2[key].length!=0){
+            bool=true
+          }
+        }
+        this.arrList={
+          pId: this.pId,
+          beatLabel:JSON.stringify(bool?{0:newObj1,1:newObj2}:{0:newObj1})
+        }
       }
-      console.log(this.arrList)
-      this.datalabel.beatLabel=this.arrList.beatLabel
+      var beatLabel=JSON.parse(this.datalabel.beatLabel)
+      var beatLabel2=JSON.parse(this.arrList.beatLabel)
+      for (let key in beatLabel2) {
+        beatLabel[key]=beatLabel2[key]
+      }
+      this.datalabel.beatLabel=JSON.stringify(beatLabel)
       this.isLoading = true;
       if(this.arrList.beatLabel!=null){
         if(this.flag==1){
@@ -763,8 +874,8 @@ export default {
             this.isLoading = false;
           })
         }
-        //console.log(JSON.parse(this.arrList.beatLabel))
-        // this.isLoading = false;
+        console.log(JSON.parse(this.arrList.beatLabel))
+        this.isLoading = false;
       }else {
         this.$modal.msgWarning("请标记后提交！");
         this.isLoading = false;
@@ -811,15 +922,35 @@ export default {
         if(this.flag==1){
           waveLabel[this.level-1]=this.subData
         }else {
-          waveLabel=this.subData
+          var obj={...this.subData}
+          var newObj1 = {};
+          var newObj2 = {};
+          for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+              // 对每个属性的数组进行分类
+              newObj1[key] = obj[key].filter(num => num < 1000); // 1000是分类的阈值
+              newObj2[key] = obj[key].filter(num => num >= 1000).map(num => num - 1000);
+            }
+          }
+          var bool=false
+          for (let key in newObj2) {
+            if(newObj2[key].length!=0){
+              bool=true
+            }
+          }
+          this.query={
+            pId: this.pId,
+            waveLabel:JSON.stringify(bool?{0:newObj1,1:newObj2}:{0:newObj1})
+          }
+          waveLabel=bool?{0:newObj1,1:newObj2}:{0:newObj1}
         }
         this.datalabel.waveLabel=JSON.stringify(waveLabel)
       }else {
         this.datalabel.waveLabel=JSON.stringify(this.subData)
       }
-
       console.log(this.subData)
-      console.log(this.query)
+      console.log(JSON.parse(this.query.waveLabel))
+
       if(this.flag==1){
         ecgWaveLabelPut(this.query).then(res=>{
           this.$modal.msgSuccess("标注提交成功");
@@ -834,6 +965,14 @@ export default {
     showchart(title, data) {
       if(title=='II'){
         this.lead2=true
+      }
+      var seriesdata=this.seriesdata
+      if(data.length>1500){
+        seriesdata=[{yAxis: -2},{yAxis: -1.5},{yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},{yAxis: 1.5},{yAxis: 2},
+          {yAxis: -3},{yAxis: -2.5},{yAxis: 3},{yAxis: 2.5}]
+        for (let i = 0; i < data.length; i+=25) {
+          seriesdata.push({xAxis:i})
+        }
       }
       let detailoption = {
         animation: false,
@@ -954,7 +1093,7 @@ export default {
               position: 'start', // 表现内容展示的位置
               color: '#b33939'  // 展示内容颜色
             },
-            data: this.seriesdata,
+            data: seriesdata,
           },
           itemStyle: {
             normal: {
@@ -987,10 +1126,18 @@ export default {
       console.log(JSON.parse(this.datalabel.waveLabel))
       //回显
       if(this.lead2){
+        this.subData={P1:[],P2:[],P3:[], R1:[],R2:[],R3:[], T1:[],T2:[],T3:[]}
           if (this.flag == 1) {
             this.subData = JSON.parse(this.datalabel.waveLabel)[this.level - 1]
           } else {
-            this.subData = JSON.parse(this.datalabel.waveLabel)
+            var wave=JSON.parse(this.datalabel.waveLabel)
+            console.log(wave)
+            for (let key1 in wave) {
+              for (let key2 in wave[key1]) {
+                var arr=wave[key1][key2].map(item=>item+key1*1000)
+                this.subData[key2]=this.subData[key2].concat(arr)
+              }
+            }
           }
           if(this.subData==null||this.subData.length==0){
             this.subData= {P1:[],P2:[],P3:[], R1:[],R2:[],R3:[], T1:[],T2:[],T3:[]}
@@ -1127,6 +1274,7 @@ export default {
           return true
         }
       })
+      console.log(this.subData)
       this.subData[this.delX.key].some((item,index)=>{
         if(item==this.delX.value){
           this.subData[this.delX.key].splice(index,1)

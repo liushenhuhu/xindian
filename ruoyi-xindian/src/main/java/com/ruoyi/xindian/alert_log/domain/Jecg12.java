@@ -27,7 +27,8 @@ public class Jecg12 implements Serializable {
      * 
      */
     private String beatLabel;
-
+    @TableField(exist = false)
+    private String field;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -54,5 +55,12 @@ public class Jecg12 implements Serializable {
 
     public void setBeatLabel(String beatLabel) {
         this.beatLabel = beatLabel;
+    }
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
     }
 }
