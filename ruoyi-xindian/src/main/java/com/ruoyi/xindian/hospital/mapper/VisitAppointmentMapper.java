@@ -61,5 +61,5 @@ public interface VisitAppointmentMapper
     public int deleteVisitAppointmentByIds(Long[] ids);
 
 
-    List<VisitAppointment> selectByPlanIdVisitAppointments(@Param("planId") Integer planId);
+    List<VisitAppointment> selectByPlanIdVisitAppointments(@Param("planId") Long planId);
 }

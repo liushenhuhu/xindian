@@ -92,7 +92,7 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
     }
 
     @Override
-    public List<VisitAppointment> selectByPlanId(Integer planId) {
+    public List<VisitAppointment> selectByPlanId(Long planId) {
         return visitAppointmentMapper.selectByPlanIdVisitAppointments(planId);
     }
 }

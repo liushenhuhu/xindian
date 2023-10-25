@@ -78,3 +78,10 @@ export function docList() {
     params: null
   })
 }
+
+export function getHospitalVisitDoc(id) {
+  return request({
+    url: '/doctor/doctor/getHospitalVisitDoc?hospitalId='+id,
+    method: 'get',
+  })
+}

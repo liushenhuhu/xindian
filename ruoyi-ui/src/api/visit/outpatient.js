@@ -43,9 +43,10 @@ export function delOutpatient(id) {
   })
 }
 // 查询医院门诊列表
-export function getOutpatientList() {
+export function getOutpatientList(query) {
   return request({
     url: '/hospital/hospitalOutpatient/getOutpatientList' ,
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }

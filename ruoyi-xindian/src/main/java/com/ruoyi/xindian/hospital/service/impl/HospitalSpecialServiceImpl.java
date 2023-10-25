@@ -96,4 +96,9 @@ public class HospitalSpecialServiceImpl implements IHospitalSpecialService
     {
         return hospitalSpecialMapper.deleteHospitalSpecialById(id);
     }
+
+    @Override
+    public HospitalSpecial getHospitalSpecialName(String specialName) {
+        return hospitalSpecialMapper.getHospitalSpecialName(specialName);
+    }
 }

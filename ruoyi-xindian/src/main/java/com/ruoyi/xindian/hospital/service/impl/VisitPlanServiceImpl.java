@@ -31,6 +31,11 @@ public class VisitPlanServiceImpl implements IVisitPlanService
         return visitPlanMapper.selectVisitPlanById(id);
     }
 
+    @Override
+    public List<VisitPlan> selectVisitPlanWebList(VisitPlan visitPlan) {
+        return visitPlanMapper.selectVisitPlanWebList(visitPlan);
+    }
+
     /**
      * 查询出诊信息表列表
      * 

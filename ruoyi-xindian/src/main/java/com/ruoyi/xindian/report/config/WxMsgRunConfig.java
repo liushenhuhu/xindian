@@ -18,10 +18,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -67,9 +70,9 @@ public class WxMsgRunConfig {
         LocalTime now = LocalTime.now();
 
         redisTemplate.opsForList().leftPushAll("DocList"+pid,doctorList);
-        redisTemplate.opsForValue().set("reportPT:"+pid,pid,10, TimeUnit.MINUTES);
         if (now.isAfter(start) && now.isBefore(end)) {
 
+            redisTemplate.opsForValue().set("reportPT:"+pid,pid,10, TimeUnit.MINUTES);
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             CompletableFuture.runAsync(() ->{
                 System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
@@ -81,6 +84,13 @@ public class WxMsgRunConfig {
                 System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
             },executorService);
             executorService.shutdown(); // 回收线程池
+        }else {
+            LocalDateTime nowTime = LocalDateTime.now();
+            LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
+            long minutes = nowTime.until(tomorrow8AM, ChronoUnit.MINUTES);
+            Random random = new Random();
+            int randomNumber = random.nextInt(31);
+            redisTemplate.opsForValue().set("reportPT:"+pid,pid,minutes+randomNumber, TimeUnit.MINUTES);
         }
 
     }
@@ -144,7 +154,12 @@ public class WxMsgRunConfig {
                 reportService.updateReport(report2);
                 redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
             }else {
-                redisTemplate.opsForValue().set("reportPT:"+pId,pId,10, TimeUnit.MINUTES);
+                LocalDateTime nowTime = LocalDateTime.now();
+                LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
+                long minutes = nowTime.until(tomorrow8AM, ChronoUnit.MINUTES);
+                Random random = new Random();
+                int randomNumber = random.nextInt(31);
+                redisTemplate.opsForValue().set("reportPT:"+pId,pId,minutes+randomNumber, TimeUnit.MINUTES);
 //                redisTemplate.opsForValue().set("reportPT:"+pId,pId,1, TimeUnit.MINUTES);
             }
         }
@@ -211,7 +226,13 @@ public class WxMsgRunConfig {
 
             }
             reportService.updateReport(report2);
-            redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
+            //如果半夜提交报告，则直接延迟到第二天
+            LocalDateTime nowTime = LocalDateTime.now();
+            LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
+            long minutes = nowTime.until(tomorrow8AM, ChronoUnit.MINUTES);
+            Random random = new Random();
+            int randomNumber = random.nextInt(31);
+            redisTemplate.opsForValue().set("reportDT:"+pId,pId,minutes+randomNumber, TimeUnit.MINUTES);
         }
 
     }

@@ -9,24 +9,24 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所属专科" prop="specialId">
-        <el-select v-model="queryParams.specialId" placeholder="请输入专科名称" >
-          <el-option
-            v-for="item in specialList"
-            :key="item.hospitalId"
-            :label="item.specialName"
-            :value="item.specialId">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间" prop="gmtCreate">
-        <el-date-picker clearable
-                        v-model="queryParams.gmtCreate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择创建时间">
-        </el-date-picker>
-      </el-form-item>
+<!--      <el-form-item label="所属专科" prop="specialId">-->
+<!--        <el-select v-model="queryParams.specialId" placeholder="请输入专科名称" >-->
+<!--          <el-option-->
+<!--            v-for="item in specialList"-->
+<!--            :key="item.hospitalId"-->
+<!--            :label="item.specialName"-->
+<!--            :value="item.specialId">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="创建时间" prop="gmtCreate">-->
+<!--        <el-date-picker clearable-->
+<!--                        v-model="queryParams.gmtCreate"-->
+<!--                        type="date"-->
+<!--                        value-format="yyyy-MM-dd"-->
+<!--                        placeholder="请选择创建时间">-->
+<!--        </el-date-picker>-->
+<!--      </el-form-item>-->
 <!--      <el-form-item label="更新时间" prop="gmtModified">-->
 <!--        <el-date-picker clearable-->
 <!--                        v-model="queryParams.gmtModified"-->
@@ -108,6 +108,13 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            @click="findClinic(scope.row)"
+            v-hasPermi="['hospital:hospitalOutpatient:edit']"
+          >查看诊室</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['hospital:hospitalOutpatient:edit']"
           >修改</el-button>
@@ -136,16 +143,16 @@
         <el-form-item label="门诊名称" prop="outpatientName">
           <el-input v-model="form.outpatientName" placeholder="请输入门诊名称" />
         </el-form-item>
-        <el-form-item label="所属专科" prop="specialId">
-          <el-select v-model="form.specialId" placeholder="请输入专科名称" clearable  >
-            <el-option
-              v-for="item in specialList"
-              :key="item.hospitalId"
-              :label="item.specialName"
-              :value="item.specialId">
-            </el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="所属专科" prop="specialId">-->
+<!--          <el-select v-model="form.specialId" placeholder="请输入专科名称" clearable  >-->
+<!--            <el-option-->
+<!--              v-for="item in specialList"-->
+<!--              :key="item.hospitalId"-->
+<!--              :label="item.specialName"-->
+<!--              :value="item.specialId">-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
 <!--        <el-form-item label="创建时间" prop="gmtCreate">-->
 <!--          <el-date-picker clearable-->
 <!--                          v-model="form.gmtCreate"-->
@@ -226,9 +233,12 @@ export default {
       }
     };
   },
+  activated() {
+    this.getList();
+  },
   created() {
+
     getSpecialList().then(r=>{
-      console.log(r)
       this.specialList = r.data
     })
     this.getList();
@@ -237,12 +247,17 @@ export default {
     /** 查询医院门诊 列表 */
     getList() {
       this.loading = true;
+      if (this.$route.query.specialId){
+        this.queryParams.specialId=this.$route.query.specialId
+      }
       listOutpatient(this.queryParams).then(response => {
-        console.log(response)
         this.outpatientList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
+    },
+    findClinic(row){
+      this.$router.push({path: "/visit/clinic" , query: {outpatientId: row.outpatientId,}});
     },
     // 取消按钮
     cancel() {
@@ -296,6 +311,9 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          if (this.$route.query.specialId){
+            this.form.specialId=this.$route.query.specialId
+          }
           if (this.form.outpatientId != null) {
             updateOutpatient(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");

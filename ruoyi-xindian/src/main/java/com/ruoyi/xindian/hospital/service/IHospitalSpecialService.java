@@ -58,4 +58,7 @@ public interface IHospitalSpecialService
      * @return 结果
      */
     public int deleteHospitalSpecialById(Long id);
+
+
+    HospitalSpecial getHospitalSpecialName(String specialName);
 }

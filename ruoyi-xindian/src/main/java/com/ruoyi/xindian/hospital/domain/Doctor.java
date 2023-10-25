@@ -83,6 +83,29 @@ public class Doctor extends BaseEntity
      */
     private String isDoc;
 
+    /** 门诊编号 */
+    private Long outpatientId;
+
+    /** 所属专科 */
+    @Excel(name = "所属专科")
+    private Long specialId;
+
+    public Long getOutpatientId() {
+        return outpatientId;
+    }
+
+    public void setOutpatientId(Long outpatientId) {
+        this.outpatientId = outpatientId;
+    }
+
+    public Long getSpecialId() {
+        return specialId;
+    }
+
+    public void setSpecialId(Long specialId) {
+        this.specialId = specialId;
+    }
+
     public String getHospitalCode() {
         return hospitalCode;
     }

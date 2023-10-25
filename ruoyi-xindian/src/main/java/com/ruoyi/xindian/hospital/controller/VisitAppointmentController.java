@@ -118,7 +118,7 @@ public class VisitAppointmentController extends BaseController
      * @throws Exception
      */
     @GetMapping("/getAppointmentByPlanId")
-    public AjaxResult getAppointmentByPlanId(Integer planId) throws Exception {
+    public AjaxResult getAppointmentByPlanId(Long planId) throws Exception {
         List<VisitAppointment> visitAppointments = visitAppointmentService.selectByPlanId(planId);
         for (VisitAppointment visitAppointment : visitAppointments){
             if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){

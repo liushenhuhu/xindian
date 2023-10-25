@@ -18,10 +18,11 @@ export function getSpecial(id) {
 }
 
 // 查询医院专科列表
-export function getSpecialList() {
+export function getSpecialList(query) {
   return request({
     url: '/hospital/hospitalSpecial/getSpecialList' ,
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 // 新增医院专科

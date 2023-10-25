@@ -1,7 +1,12 @@
 package com.ruoyi.xindian.hospital.controller;
 
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +38,10 @@ public class HospitalOutpatientController extends BaseController
 {
     @Autowired
     private IHospitalOutpatientService hospitalOutpatientService;
+
+
+    @Resource
+    private IDoctorService doctorService;
 
     /**
      * 查询医院门诊表列表
@@ -77,6 +86,16 @@ public class HospitalOutpatientController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody HospitalOutpatient hospitalOutpatient)
     {
+
+        if (StringUtils.isEmpty(hospitalOutpatient.getOutpatientName())||hospitalOutpatient.getSpecialId()==null){
+            return AjaxResult.error("参数错误，请重新提交");
+        }
+
+        HospitalOutpatient outNameAndSpec = hospitalOutpatientService.getOutNameAndSpec(hospitalOutpatient);
+        if (outNameAndSpec!=null){
+            return AjaxResult.error("门诊已存在");
+        }
+
         return toAjax(hospitalOutpatientService.insertHospitalOutpatient(hospitalOutpatient));
     }
 
@@ -88,6 +107,21 @@ public class HospitalOutpatientController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody HospitalOutpatient hospitalOutpatient)
     {
+        if (StringUtils.isEmpty(hospitalOutpatient.getOutpatientName())||hospitalOutpatient.getSpecialId()==null){
+            return AjaxResult.error("参数错误，请稍后提交");
+        }
+
+        HospitalOutpatient hospitalOutpatient1 = hospitalOutpatientService.selectHospitalOutpatientById(hospitalOutpatient.getOutpatientId());
+        if (hospitalOutpatient1==null){
+            return AjaxResult.error("参数错误，请稍后提交");
+        }
+        if (!hospitalOutpatient1.getOutpatientName().equals(hospitalOutpatient.getOutpatientName())&&!hospitalOutpatient1.getSpecialId().equals(hospitalOutpatient.getSpecialId())){
+            HospitalOutpatient outNameAndSpec = hospitalOutpatientService.getOutNameAndSpec(hospitalOutpatient);
+            if (outNameAndSpec!=null){
+                return AjaxResult.error("门诊已存在");
+            }
+        }
+
         return toAjax(hospitalOutpatientService.updateHospitalOutpatient(hospitalOutpatient));
     }
 
@@ -99,12 +133,23 @@ public class HospitalOutpatientController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
+        for (Long id : ids){
+            Doctor doctor = new Doctor();
+            doctor.setOutpatientId(id);
+            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            if (doctors!=null&&doctors.size()>0){
+                return AjaxResult.error("该门诊下绑定有医生，无法删除");
+            }
+
+        }
+
+
         return toAjax(hospitalOutpatientService.deleteHospitalOutpatientByIds(ids));
     }
 
 
     @GetMapping("/getOutpatientList")
-    public AjaxResult getOutpatientList(){
-        return AjaxResult.success(hospitalOutpatientService.selectHospitalOutpatientList(new HospitalOutpatient()));
+    public AjaxResult getOutpatientList(HospitalOutpatient hospitalOutpatient){
+        return AjaxResult.success(hospitalOutpatientService.selectHospitalOutpatientList(hospitalOutpatient));
     }
 }

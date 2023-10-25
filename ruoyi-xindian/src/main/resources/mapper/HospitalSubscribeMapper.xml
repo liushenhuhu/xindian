@@ -4,15 +4,80 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.hospital.mapper.HospitalSubscribeMapper">
 
-    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.hospital.domain.HospitalSubscribe">
-            <id property="subscribeId" column="subscribe_id" jdbcType="INTEGER"/>
-            <result property="hospitalId" column="hospital_id" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+
+    <resultMap type="HospitalSubscribe" id="HospitalSubscribeResult">
+        <result property="subscribeId"    column="subscribe_id"    />
+        <result property="hospitalId"    column="hospital_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        subscribe_id,hospital_id,create_time,
-        update_time
+    <resultMap id="subscribeAndHospital" type="HospitalSubscribe" extends="HospitalSubscribeResult" >
+        <association property="hospital" javaType="hospital" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalMapper.HospitalResult"/>
+    </resultMap>
+
+    <sql id="selectHospitalSubscribeVo">
+        select subscribe_id, hospital_id, create_time, update_time from hospital_subscribe
     </sql>
+
+    <select id="selectHospitalSubscribeList" parameterType="HospitalSubscribe" resultMap="subscribeAndHospital">
+        SELECT
+        hospital_subscribe.subscribe_id,
+        hospital_subscribe.create_time,
+        hospital.hospital_id,
+        hospital.hospital_name,
+        hospital.hospital_code,
+        hospital.hospital_phone,
+        hospital.hospital_site,
+        hospital.img
+        FROM
+        hospital_subscribe
+        INNER JOIN
+        hospital
+        ON
+        hospital_subscribe.hospital_id = hospital.hospital_id
+        <where>
+            <if test="hospitalId != null "> and hospital_subscribe.hospital_id = #{hospitalId}</if>
+        </where>
+    </select>
+
+    <select id="selectHospitalSubscribeBySubscribeId" parameterType="Long" resultMap="HospitalSubscribeResult">
+        <include refid="selectHospitalSubscribeVo"/>
+        where subscribe_id = #{subscribeId}
+    </select>
+
+    <insert id="insertHospitalSubscribe" parameterType="HospitalSubscribe" useGeneratedKeys="true" keyProperty="subscribeId">
+        insert into hospital_subscribe
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hospitalId != null">hospital_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hospitalId != null">#{hospitalId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHospitalSubscribe" parameterType="HospitalSubscribe">
+        update hospital_subscribe
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hospitalId != null">hospital_id = #{hospitalId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where subscribe_id = #{subscribeId}
+    </update>
+
+    <delete id="deleteHospitalSubscribeBySubscribeId" parameterType="Long">
+        delete from hospital_subscribe where subscribe_id = #{subscribeId}
+    </delete>
+
+    <delete id="deleteHospitalSubscribeBySubscribeIds" parameterType="String">
+        delete from hospital_subscribe where subscribe_id in
+        <foreach item="subscribeId" collection="array" open="(" separator="," close=")">
+            #{subscribeId}
+        </foreach>
+    </delete>
 </mapper>

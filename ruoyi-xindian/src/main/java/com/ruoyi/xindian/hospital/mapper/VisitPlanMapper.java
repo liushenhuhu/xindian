@@ -26,6 +26,7 @@ public interface VisitPlanMapper
      * @return 出诊信息表集合
      */
     public List<VisitPlan> selectVisitPlanList(VisitPlan visitPlan);
+    public List<VisitPlan> selectVisitPlanWebList(VisitPlan visitPlan);
 
     /**
      * 新增出诊信息表

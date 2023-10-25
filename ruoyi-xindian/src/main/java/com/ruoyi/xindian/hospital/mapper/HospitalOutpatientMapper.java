@@ -58,4 +58,7 @@ public interface HospitalOutpatientMapper
      * @return 结果
      */
     public int deleteHospitalOutpatientByIds(Long[] ids);
+
+
+    HospitalOutpatient getOutNameAndSpec(HospitalOutpatient hospitalOutpatient);
 }

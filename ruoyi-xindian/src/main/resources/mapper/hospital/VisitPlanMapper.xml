@@ -20,6 +20,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap id="DocAndVisitPlan" type="VisitPlan" extends="VisitPlanResult">
         <association property="doctor" javaType="doctor" resultMap="com.ruoyi.xindian.hospital.mapper.DoctorMapper.DoctorResult"/>
+        <association property="hospital" javaType="hospital" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalMapper.HospitalResult"/>
+        <association property="hospitalSpecial" javaType="hospitalSpecial" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalSpecialMapper.HospitalSpecialResult"/>
+        <association property="hospitalOutpatient" javaType="hospitalOutpatient" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalOutpatientMapper.HospitalOutpatientResult"/>
+        <association property="hospitalClinic" javaType="hospitalClinic" resultMap="com.ruoyi.xindian.hospital.mapper.HospitalClinicMapper.HospitalClinicResult"/>
     </resultMap>
 
     <sql id="selectVisitPlanVo">
@@ -68,9 +72,62 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectVisitPlanByPlanId" parameterType="Long" resultMap="VisitPlanResult">
+    <select id="selectVisitPlanById" parameterType="Long" resultMap="VisitPlanResult">
         <include refid="selectVisitPlanVo"/>
         where plan_id = #{planId}
+    </select>
+    <select id="selectVisitPlanWebList" resultType="com.ruoyi.xindian.hospital.domain.VisitPlan" resultMap="DocAndVisitPlan">
+        SELECT
+            hospital.hospital_id,
+            hospital.hospital_name,
+            visit_plan.time,
+            visit_plan.`day`,
+            visit_plan.gmt_create,
+            visit_plan.plan_id,
+            hospital_outpatient.outpatient_id,
+            hospital_outpatient.outpatient_name,
+            hospital_special.special_id,
+            hospital_special.special_name,
+            hospital_special.description,
+            hospital_clinic.id,
+            hospital_clinic.address,
+            doctor.doctor_phone_aes as doctor_phone,
+            doctor.doctor_name_aes as doctor_name,
+            doctor.special_id,
+            doctor.outpatient_id
+        FROM
+            visit_plan
+                INNER JOIN
+            hospital
+            ON
+                visit_plan.hospital_id = hospital.hospital_id
+                INNER JOIN
+            hospital_special
+            ON
+                visit_plan.special_id = hospital_special.special_id
+                INNER JOIN
+            hospital_outpatient
+            ON
+                visit_plan.outpatient_id = hospital_outpatient.outpatient_id
+                INNER JOIN
+            hospital_clinic
+            ON
+                visit_plan.clinic_id = hospital_clinic.id
+                INNER JOIN
+            doctor
+            ON
+                visit_plan.doctor_phone=doctor.doctor_phone_aes
+        <where>
+            <if test="hospitalId != null  and hospitalId != ''"> and visit_plan.hospital_id = #{hospitalId}</if>
+            <if test="specialId != null  and specialId != ''"> and visit_plan.special_id = #{specialId}</if>
+            <if test="outpatientId != null  and outpatientId != ''"> and visit_plan.outpatient_id = #{outpatientId}</if>
+            <if test="clinicId != null  and clinicId != ''"> and visit_plan.clinic_id = #{clinicId}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and visit_plan.doctor_phone = #{doctorPhone}</if>
+            <if test="time != null "> and visit_plan.time = #{time}</if>
+            <if test="day != null "> and visit_plan.day = #{day}</if>
+            <if test="gmtCreate != null "> and visit_plan.gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null "> and visit_plan.gmt_modified = #{gmtModified}</if>
+        </where>
     </select>
 
     <insert id="insertVisitPlan" parameterType="VisitPlan" useGeneratedKeys="true" keyProperty="planId">
@@ -115,11 +172,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where plan_id = #{planId}
     </update>
 
-    <delete id="deleteVisitPlanByPlanId" parameterType="Long">
+    <delete id="deleteVisitPlanById" parameterType="Long">
         delete from visit_plan where plan_id = #{planId}
     </delete>
 
-    <delete id="deleteVisitPlanByPlanIds" parameterType="String">
+    <delete id="deleteVisitPlanByIds" parameterType="String">
         delete from visit_plan where plan_id in
         <foreach item="planId" collection="array" open="(" separator="," close=")">
             #{planId}

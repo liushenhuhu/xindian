@@ -21,8 +21,7 @@
         <where>
             <if test="specialName != null  and specialName != ''"> and special_name like concat('%', #{specialName}, '%')</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
-            <if test="gmtCreate != null "> and gmt_create = #{gmtCreate}</if>
-            <if test="gmtModified != null "> and gmt_modified = #{gmtModified}</if>
+            <if test="gmtCreate != null "> and gmt_create like concat(#{gmtCreate},'%')</if>
         </where>
         order by gmt_create desc
     </select>
@@ -30,6 +29,9 @@
     <select id="selectHospitalSpecialById" parameterType="Long" resultMap="HospitalSpecialResult">
         <include refid="selectHospitalSpecialVo"/>
         where special_id = #{specialId}
+    </select>
+    <select id="getHospitalSpecialName" resultType="com.ruoyi.xindian.hospital.domain.HospitalSpecial">
+        <include refid="selectHospitalSpecialVo"/> where special_name = #{specialName}
     </select>
 
     <insert id="insertHospitalSpecial" parameterType="HospitalSpecial" useGeneratedKeys="true" keyProperty="specialId">

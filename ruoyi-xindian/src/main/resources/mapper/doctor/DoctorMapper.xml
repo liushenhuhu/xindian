@@ -22,16 +22,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="unionId"    column="union_id"    />
         <result property="equipmentList"    column="equipment_list"    />
         <result property="isDoc"    column="is_doc"    />
+        <result property="outpatientId"    column="outpatient_id"    />
+        <result property="specialId"    column="special_id"    />
     </resultMap>
 
     <sql id="selectDoctorVo">
-        select doctor_id, doctor_name_aes as doctor_name, doctor_phone_aes as doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id, equipment_list,is_doc from doctor
+        select doctor_id, doctor_name_aes as doctor_name, doctor_phone_aes as doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id, equipment_list,is_doc,special_id,outpatient_id from doctor
     </sql>
 
     <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
         <include refid="selectDoctorVo"/>
         <where>
             <if test="doctorName != null  and doctorName != ''"> and doctor_name_aes like concat('%', #{doctorName}, '%')</if>
+            <if test="outpatientId != null  and outpatientId != ''"> and outpatient_id =  #{outpatientId} </if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes like concat('%', #{doctorPhone}, '%')</if>
             <if test="departmentCode != null  and departmentCode != ''"> and department_code like concat('%', #{departmentCode}, '%')</if>
             <if test="skill != null  and skill != ''"> and skill = #{skill}</if>
@@ -92,6 +95,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="professional != null">professional,</if>
             <if test="equipmentList != null">equipment_list,</if>
             <if test="isDoc != null">is_doc,</if>
+            <if test="outpatientId != null">outpatient_id,</if>
+            <if test="specialId != null">special_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doctorName != null">#{doctorName},</if>
@@ -108,6 +113,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="professional != null">#{professional},</if>
             <if test="equipmentList != null">#{equipmentList},</if>
             <if test="isDoc != null">#{isDoc},</if>
+            <if test="outpatientId != null">#{outpatientId},</if>
+            <if test="specialId != null">#{specialId},</if>
          </trim>
     </insert>
 
@@ -129,6 +136,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="openId != null">open_id = #{openId},</if>
             <if test="equipmentList != null">equipment_list = #{equipmentList},</if>
             <if test="isDoc != null">is_doc = #{isDoc},</if>
+            <if test="specialId != null">special_id = #{specialId},</if>
+            <if test="outpatientId != null">outpatient_id = #{outpatientId},</if>
+            <if test="isDoc!=null and isDoc!='2'">
+              special_id = null,
+              outpatient_id = null,
+            </if>
         </trim>
         where doctor_id = #{doctorId}
     </update>
