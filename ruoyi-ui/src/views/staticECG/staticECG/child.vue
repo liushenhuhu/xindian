@@ -214,13 +214,13 @@ export default {
       colorList: [
         { color: "#000000" },
       ],
-      arrList1:[],
-      arrList2:[],
-      arrList3:[],
-      arrList4:[],
-      arrList5:[],
-      arrList6:[],
-      arrList7:[],
+      arrList1:{},
+      arrList2:{},
+      arrList3:{},
+      arrList4:{},
+      arrList5:{},
+      arrList6:{},
+      arrList7:{},
       arrList:{
         pId: null,
         beatLabel:null},
@@ -305,7 +305,6 @@ export default {
         pId:"",
         beatLabel:'',
         waveLabel:'',
-        field:"",
       },
       datalabel:{
         waveLabel:"",
@@ -512,7 +511,7 @@ export default {
         console.log("重新赋值",this.arrList)
           //回显
           //分段
-          this[`${'arrList' + level}`]=[]
+          this[`${'arrList' + level}`]={Normal:[], FangZao:[], ShiZao:[], FangYi:[], GanRao:[]}
           if(this.arrList.beatLabel){
             if(flag==1){
               //单导
@@ -529,6 +528,9 @@ export default {
               this[`${'arrList' + level}`]=each
             }
           }
+        if(this[`${'arrList' + level}`]==null||this[`${'arrList' + level}`]=={}){
+          this[`${'arrList' + level}`]={Normal:[], FangZao:[], ShiZao:[], FangYi:[], GanRao:[]}
+        }
           console.log(this[`${'arrList' + this.level}`])
           //添加所有点
           this.pointdata.length=0
@@ -715,6 +717,7 @@ export default {
     },
     //按x从小到大插入值
     addValue(params) {
+      console.log(this[`${'arrList' + this.level}`])
       let i=this[`${'arrList' + this.level}`][params.type].findIndex(it=>it==params.x)
       if(i!=-1){
         console.log("存在该点")
@@ -763,11 +766,15 @@ export default {
       this.radio2=''
       this.activeName="first"
       this.drawShow = false;
-      this.currentBgImg = "";
       this.arrList1=[]
       this.arrList2=[]
       this.arrList3=[]
       this.arrList4=[]
+      this.subData=this.subData={
+        P1:[],P2:[],P3:[],
+        R1:[],R2:[],R3:[],
+        T1:[],T2:[],T3:[],
+      }
     },
     //重绘
     redraw(){
@@ -844,19 +851,17 @@ export default {
             newObj2[key] = obj[key].filter(num => num >= 1000).map(num => num - 1000);
           }
         }
-        var bool=false
-        for (let key in newObj2) {
-          if(newObj2[key].length!=0){
-            bool=true
-          }
-        }
+        console.log(obj,newObj1,newObj2)
         this.arrList={
           pId: this.pId,
-          beatLabel:JSON.stringify(bool?{0:newObj1,1:newObj2}:{0:newObj1})
+          beatLabel:JSON.stringify({0:newObj1,1:newObj2})
         }
       }
       var beatLabel=JSON.parse(this.datalabel.beatLabel)
       var beatLabel2=JSON.parse(this.arrList.beatLabel)
+      if(beatLabel==null){
+        beatLabel={}
+      }
       for (let key in beatLabel2) {
         beatLabel[key]=beatLabel2[key]
       }
@@ -915,12 +920,12 @@ export default {
     },
     submitData(){
       this.query.pId=this.pId
-      this.query.field=this.level-1
-      this.query.waveLabel=JSON.stringify(this.subData)
       if(this.datalabel.waveLabel!=null&&this.datalabel.waveLabel!=''){
         var waveLabel=JSON.parse(this.datalabel.waveLabel)
+        console.log(waveLabel)
         if(this.flag==1){
           waveLabel[this.level-1]=this.subData
+          this.query.waveLabel=JSON.stringify(waveLabel)
         }else {
           var obj={...this.subData}
           var newObj1 = {};
@@ -932,17 +937,13 @@ export default {
               newObj2[key] = obj[key].filter(num => num >= 1000).map(num => num - 1000);
             }
           }
-          var bool=false
-          for (let key in newObj2) {
-            if(newObj2[key].length!=0){
-              bool=true
-            }
-          }
+
           this.query={
             pId: this.pId,
-            waveLabel:JSON.stringify(bool?{0:newObj1,1:newObj2}:{0:newObj1})
+            waveLabel:JSON.stringify({0:newObj1,1:newObj2})
           }
-          waveLabel=bool?{0:newObj1,1:newObj2}:{0:newObj1}
+          waveLabel={0:newObj1,1:newObj2}
+          console.log(obj,newObj1,newObj2,waveLabel)
         }
         this.datalabel.waveLabel=JSON.stringify(waveLabel)
       }else {
@@ -1123,15 +1124,16 @@ export default {
         R1:'#ff00cf',R2:'#ff00cf',R3:'#ff00cf',
         T1:'#0021da',T2:'#0021da',T3:'#0021da',
       }
-      console.log(JSON.parse(this.datalabel.waveLabel))
+      if(this.datalabel.waveLabel==null||this.datalabel.waveLabel==''){
+        this.datalabel.waveLabel=JSON.stringify({0:{P1:[],P2:[],P3:[], R1:[],R2:[],R3:[], T1:[],T2:[],T3:[]}})
+      }
       //回显
       if(this.lead2){
         this.subData={P1:[],P2:[],P3:[], R1:[],R2:[],R3:[], T1:[],T2:[],T3:[]}
           if (this.flag == 1) {
             this.subData = JSON.parse(this.datalabel.waveLabel)[this.level - 1]
           } else {
-            var wave=JSON.parse(this.datalabel.waveLabel)
-            console.log(wave)
+            let wave=JSON.parse(this.datalabel.waveLabel)
             for (let key1 in wave) {
               for (let key2 in wave[key1]) {
                 var arr=wave[key1][key2].map(item=>item+key1*1000)

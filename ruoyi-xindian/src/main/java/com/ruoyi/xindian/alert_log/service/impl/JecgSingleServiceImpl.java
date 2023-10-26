@@ -29,6 +29,10 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
     @Override
     public int updateBeatLabel(JecgSingle jecgSingle) {
         JecgSingle jecgSingle1 = selectById(jecgSingle.getpId());
+        if(jecgSingle1.getBeatLabel()==null||"".equals(jecgSingle1.getBeatLabel())){
+            jecgSingle1.setBeatLabel(jecgSingle.getBeatLabel());
+            return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
+        }
         JSONObject parse = (JSONObject) JSONObject.parse(jecgSingle1.getBeatLabel());
         JSONObject webText = (JSONObject) JSONObject.parse(jecgSingle.getBeatLabel());
         Iterator<String> iterator = webText.keySet().iterator();
@@ -62,11 +66,22 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
     public int updateWaveLabel(JecgSingle jecgSingle) {
         JecgSingle jecgSingle1 = selectById(jecgSingle.getpId());
 
+        if(jecgSingle1.getWaveLabel()==null||"".equals(jecgSingle1.getWaveLabel())){
+            jecgSingle1.setWaveLabel(jecgSingle.getWaveLabel());
+            return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
+        }
+
         JSONObject parse = (JSONObject) JSONObject.parse(jecgSingle1.getWaveLabel());
-
-
-        parse.remove(jecgSingle.getField());
-        parse.put(jecgSingle.getField(),JSONObject.parse(jecgSingle.getWaveLabel()));
+        JSONObject webText = (JSONObject) JSONObject.parse(jecgSingle.getWaveLabel());
+        Iterator<String> iterator = webText.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = iterator.next();
+            JSONObject value = (JSONObject)webText.get(key);
+            if(value.size()!=0){
+                parse.remove(key);
+                parse.put(key,value);
+            }
+        }
 
         jecgSingle1.setWaveLabel(JSONObject.toJSONString(parse));
         return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
