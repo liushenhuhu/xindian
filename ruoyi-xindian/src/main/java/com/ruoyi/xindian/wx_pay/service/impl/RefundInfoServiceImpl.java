@@ -3,6 +3,8 @@ package com.ruoyi.xindian.wx_pay.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.xindian.hospital.domain.VisitAppointment;
+import com.ruoyi.xindian.hospital.service.IVisitAppointmentService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.RefundInfo;
 import com.ruoyi.xindian.wx_pay.enums.WxRefundStatus;
@@ -25,6 +27,10 @@ public class RefundInfoServiceImpl extends ServiceImpl<RefundInfoMapper, RefundI
 
     @Resource
     private OrderInfoService orderInfoService;
+
+
+    @Resource
+    private IVisitAppointmentService visitAppointmentService;
 
     /**
      * 根据订单号创建退款订单
@@ -50,6 +56,25 @@ public class RefundInfoServiceImpl extends ServiceImpl<RefundInfoMapper, RefundI
         baseMapper.insert(refundInfo);
 
         return refundInfo;
+    }
+
+    @Override
+    public RefundInfo createRefundByVisitOrderNo(String orderNo, String reason) {
+        //根据订单号获取订单信息
+        VisitAppointment visitAppointmentOrderNo = visitAppointmentService.getVisitAppointmentOrderNo(orderNo);
+
+        //根据订单号生成退款订单
+        RefundInfo refundInfo = new RefundInfo();
+        refundInfo.setOrderNo(orderNo);//订单编号
+        refundInfo.setRefundNo(OrderNoUtils.getRefundNo());//退款单编号
+        refundInfo.setTotalFee(visitAppointmentOrderNo.getPayPrice());//原订单金额(分)
+        refundInfo.setRefund(visitAppointmentOrderNo.getPayPrice());//退款金额(分)
+        refundInfo.setReason(reason);//退款原因
+        //保存退款订单
+        baseMapper.insert(refundInfo);
+
+        return refundInfo;
+
     }
 
     /**

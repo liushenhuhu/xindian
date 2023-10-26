@@ -76,6 +76,9 @@ export default {
       },
     }
   },
+  activated() {
+    this.getList();
+  },
 
   created() {
     this.getList();
@@ -142,9 +145,9 @@ export default {
       setTimeout(function (){
         main.resize();
       })
-      // main.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'12'}});
-      // });
+      main.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     DDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -195,9 +198,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     ZBDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -248,9 +251,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     XJGSDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -301,9 +304,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     XLDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -354,9 +357,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     CDZDDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -407,9 +410,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     WJXDDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -460,9 +463,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
 
     YCCSDrawLine() {
@@ -514,9 +517,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     FSFDDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -567,9 +570,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     CDPDDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -620,9 +623,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
     XGFQPDDrawLine() {
       // 基于准备好的dom，初始化echarts实例
@@ -673,9 +676,9 @@ export default {
       setTimeout(function (){
         main1.resize();
       })
-      // main1.on('click', function(params) {
-      //   th.$router.push({path: "/statistics/earlyAll" , query: {logType: params.data.name,type:'single'}});
-      // });
+      main1.on('click', function(params) {
+        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+      });
     },
 
 

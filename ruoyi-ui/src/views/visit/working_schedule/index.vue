@@ -232,6 +232,7 @@
                           v-model="form.day"
                           type="date"
                           value-format="yyyy-MM-dd"
+                          :picker-options="pickerOption"
                           placeholder="请选择出诊日期">
           </el-date-picker>
         </el-form-item>
@@ -290,6 +291,11 @@ export default {
       outpatientList:[],
       // 弹出层标题
       title: "",
+      pickerOption: {
+        disabledDate: (time) => {
+          return Date.now() - 3600 * 1000 * 24 > time.getTime();
+        },
+      },
       // 是否显示弹出层
       open: false,
       specialList:[],
@@ -380,24 +386,31 @@ export default {
     },
     docIsSpecial(val,id){
 
+      console.log(val)
       if (id===1){
         this.form.clinicId = null;
       }
       let _th = this
       this.hospitalDocList.forEach(function (doc) {
         if (doc.doctorPhone===val){
+          console.log(222)
           _th.specialList.forEach(function (special) {
             if (doc.specialId===special.hospitalSpecial.specialId){
+              console.log(333)
               _th.form.specialName=special.hospitalSpecial.specialName
             }
           })
           _th.outpatientList.forEach(function (outpatient) {
+            console.log(444)
+            console.log(outpatient)
+            console.log(doc)
             if (doc.outpatientId===outpatient.hospitalOutpatient.outpatientId){
               _th.form.outpatientName=outpatient.hospitalOutpatient.outpatientName
 
               let obj = {
                 outpatientId:outpatient.hospitalOutpatient.outpatientId
               }
+              console.log(555)
               listClinic(obj).then(r=>{
                 console.log(r.rows)
                 _th.clinicList = r.rows

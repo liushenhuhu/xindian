@@ -2,12 +2,21 @@ package com.ruoyi.xindian.hospital.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.xindian.hospital.domain.HospitalOutpatientRelation;
+import com.ruoyi.xindian.hospital.domain.HospitalSpecial;
+import com.ruoyi.xindian.hospital.domain.HospitalSpecialRelation;
 import com.ruoyi.xindian.hospital.domain.HospitalSubscribe;
 import com.ruoyi.xindian.hospital.service.HospitalSubscribeService;
 import com.ruoyi.xindian.hospital.mapper.HospitalSubscribeMapper;
+import com.ruoyi.xindian.hospital.service.IHospitalOutpatientRelationService;
+import com.ruoyi.xindian.hospital.service.IHospitalSpecialRelationService;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +31,14 @@ public class HospitalSubscribeServiceImpl extends ServiceImpl<HospitalSubscribeM
 
     @Autowired
     private HospitalSubscribeMapper hospitalSubscribeMapper;
+
+
+    @Resource
+    private IHospitalSpecialRelationService hospitalSpecialRelationService;
+
+
+    @Resource
+    private IHospitalOutpatientRelationService hospitalOutpatientRelationService;
 
     /**
      * 查询门诊预约医院
@@ -95,6 +112,32 @@ public class HospitalSubscribeServiceImpl extends ServiceImpl<HospitalSubscribeM
     public int deleteHospitalSubscribeBySubscribeId(Long subscribeId)
     {
         return hospitalSubscribeMapper.deleteHospitalSubscribeBySubscribeId(subscribeId);
+    }
+
+    @Override
+    public List<ListValueAndLabelVO> getHospitalIdFindList(Long hospitalId) {
+        HospitalSpecialRelation hospitalSpecialRelation = new HospitalSpecialRelation();
+        hospitalSpecialRelation.setHospitalId(hospitalId);
+        List<HospitalSpecialRelation> hospitalSpecialRelations = hospitalSpecialRelationService.selectHospitalSpecialRelationList(hospitalSpecialRelation);
+        List<ListValueAndLabelVO> list = new ArrayList<>();
+        for (HospitalSpecialRelation hospitalSpecialRelation1 : hospitalSpecialRelations){
+            ListValueAndLabelVO listValueAndLabelVO = new ListValueAndLabelVO();
+            listValueAndLabelVO.setLabel(hospitalSpecialRelation1.getHospitalSpecial().getSpecialName());
+            listValueAndLabelVO.setValue(hospitalSpecialRelation1.getHospitalSpecial().getSpecialId().toString());
+            HospitalOutpatientRelation hospitalOutpatientRelation = new HospitalOutpatientRelation();
+            hospitalOutpatientRelation.setHospitalId(hospitalId);
+            hospitalOutpatientRelation.setSpecialId(hospitalSpecialRelation1.getHospitalSpecial().getSpecialId());
+            List<HospitalOutpatientRelation> hospitalOutpatientRelations = hospitalOutpatientRelationService.selectHospitalOutpatientRelationList(hospitalOutpatientRelation);
+            for (HospitalOutpatientRelation hospitalOutpatientRelation1 : hospitalOutpatientRelations){
+
+                DocVO docVO = new DocVO();
+                docVO.setLabel(hospitalOutpatientRelation1.getHospitalOutpatient().getOutpatientName());
+                docVO.setValue(hospitalOutpatientRelation1.getHospitalOutpatient().getOutpatientId().toString());
+                listValueAndLabelVO.getChildren().add(docVO);
+            }
+            list.add(listValueAndLabelVO);
+        }
+        return list;
     }
 }
 

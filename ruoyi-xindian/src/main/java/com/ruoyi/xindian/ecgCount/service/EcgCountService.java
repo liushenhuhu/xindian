@@ -84,6 +84,6 @@ public interface EcgCountService extends IService<EcgCount> {
 
     List<TypeListVo> getZCXDTCount();
 
-    List<TypeListVo> getAgeYoung(Map<String,Object> type);
+    List<TypeListVo> getAgeYoung(Map<String,Object> type,String key);
 
 }

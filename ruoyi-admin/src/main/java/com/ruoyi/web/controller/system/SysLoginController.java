@@ -22,6 +22,7 @@ import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,6 +213,39 @@ public class SysLoginController {
         return ajax;
     }
 
+    /**
+     * 医生登录登录方法
+     *
+     * @param loginBody 登录信息
+     * @return 结果
+     */
+    @PostMapping("/loginDoc")
+    public AjaxResult loginDoc(@RequestBody LoginBody loginBody) throws Exception {
+        AjaxResult ajax = AjaxResult.success();
+        // 生成令牌
+
+        if (!StringUtils.hasText(loginBody.getUsername())){
+            return AjaxResult.error("用户名为空");
+        }
+        String encrypt = aesUtils.encrypt(loginBody.getUsername());
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(encrypt);
+        if (doctor==null){
+            return AjaxResult.error("非医生账号，不能登录");
+        }
+        String token = loginService.login(encrypt, loginBody.getPassword(), loginBody.getCode(),
+                loginBody.getUuid());
+        ajax.put(Constants.TOKEN, token);
+
+        AppData appData = new AppData();
+        appData.setUserName(encrypt);
+        List<AppData> appDataList = appDataService.selectAppDataList(appData);
+        if (null == appDataList || appDataList.size() == 0) {
+            ajax.put("BindingState", false);
+        } else {
+            ajax.put("BindingState", true);
+        }
+        return ajax;
+    }
 
     /**
      * 手机号登录方法

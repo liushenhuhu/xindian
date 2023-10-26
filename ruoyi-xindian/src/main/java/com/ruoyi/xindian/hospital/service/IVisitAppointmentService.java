@@ -2,6 +2,9 @@ package com.ruoyi.xindian.hospital.service;
 
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.VisitAppointment;
+import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 出诊预约表Service接口
@@ -17,7 +20,7 @@ public interface IVisitAppointmentService
      * @param id 出诊预约表主键
      * @return 出诊预约表
      */
-    public VisitAppointment selectVisitAppointmentById(Long id);
+    public VisitAppointment selectVisitAppointmentById(String id);
 
     /**
      * 查询出诊预约表列表
@@ -66,4 +69,21 @@ public interface IVisitAppointmentService
      * @return
      */
     List<VisitAppointment> selectByPlanId(Long planId);
+
+
+
+    VisitAppointment addVisitAppointment(PlanMsgAllVo planMsgAllVo, HttpServletRequest request) throws Exception;
+
+
+
+    VisitAppointment getVisitAppointmentOrderNo(String orderNo);
+
+
+    void updateVisitAppointmentOrderStatus(String orderNo,String type);
+
+
+    void updateVisitAppointmentStatus(String id,String type);
+
+
+
 }

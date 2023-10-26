@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.hospital.domain.*;
 import com.ruoyi.xindian.hospital.service.*;
+import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,12 +95,6 @@ public class VisitPlanController extends BaseController
         if (StringUtils.isNotEmpty(visitPlan.getDoctorPhone())){
             visitPlan.setDoctorPhone(aesUtils.encrypt(visitPlan.getDoctorPhone()));
         }
-        Hospital hospital = hospitalService.selectHospitalByHospitalCode(visitPlan.getHospitalCode());
-
-        if (hospital==null){
-            return AjaxResult.error("请先选择医院");
-        }
-        visitPlan.setHospitalId(hospital.getHospitalId());
         List<VisitPlan> list = visitPlanService.selectVisitPlanList(visitPlan);
         for (VisitPlan value:list){
 
@@ -119,6 +114,31 @@ public class VisitPlanController extends BaseController
                 visitTime = visitAllocationService.addRedis();
                 redisTemplate.opsForHash().putAll("visitTime",visitTime);
             }
+
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+
+            if (visitPlan.getDay()!=null&&sdf.parse(sdf.format(date)).compareTo(sdf.parse(sdf.format(visitPlan.getDay())))==0){
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                Date parse1 = simpleDateFormat.parse(simpleDateFormat.format(date));
+                Iterator<Map.Entry<Object, Object>> iterator1 = visitTime.entrySet().iterator();
+                while (iterator1.hasNext()){
+
+                    Map.Entry<Object, Object> next = iterator1.next();
+                    List<VisitAllocation> value1 =(List<VisitAllocation>) next.getValue();
+
+                    Iterator<VisitAllocation> iterator = value1.iterator();
+                    while (iterator.hasNext()){
+                        Date parse = simpleDateFormat.parse(iterator.next().getStartTime());
+                        if (parse1.compareTo(parse)>0){
+                            iterator.remove();
+                        }
+                    }
+
+                }
+            }
+
             if (value.getTime()==1){
                 value.getVisitTimeMap().put("am",visitTime.get("am"));
             }else if (value.getTime()==2){
@@ -280,5 +300,18 @@ public class VisitPlanController extends BaseController
             }
         }
         return toAjax(visitPlanService.deleteVisitPlanByIds(ids));
+    }
+
+
+    /**
+     * 通过排班id和患者手机号以及挂号时间段获取详细信息
+     * @param planMsgAllVo
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getPlanMsg")
+    public AjaxResult getPlanMsg(PlanMsgAllVo planMsgAllVo) throws Exception {
+
+        return AjaxResult.success(visitPlanService.getPlanMsgAll(planMsgAllVo));
     }
 }

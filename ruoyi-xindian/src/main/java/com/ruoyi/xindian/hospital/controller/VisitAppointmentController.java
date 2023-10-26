@@ -1,11 +1,16 @@
 package com.ruoyi.xindian.hospital.controller;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
+import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,18 +44,50 @@ public class VisitAppointmentController extends BaseController
     private IVisitAppointmentService visitAppointmentService;
 
 
+    private final Lock lock = new ReentrantLock();
     @Resource
     private AesUtils aesUtils;
 
     /**
      * 查询出诊预约表列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:visitAppointment:list')")
     @GetMapping("/list")
-    public TableDataInfo list(VisitAppointment visitAppointment)
-    {
+    public TableDataInfo list(VisitAppointment visitAppointment) throws Exception {
+
+        if (StringUtils.isNotEmpty(visitAppointment.getPatientPhone())){
+            visitAppointment.setPatientPhone(aesUtils.encrypt(visitAppointment.getPatientPhone()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){
+            visitAppointment.setAccompanyPhone(aesUtils.encrypt(visitAppointment.getAccompanyPhone()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getDoctorName())){
+            visitAppointment.setDoctorName(aesUtils.encrypt(visitAppointment.getDoctorName()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getDoctorPhone())){
+            visitAppointment.setDoctorPhone(aesUtils.encrypt(visitAppointment.getDoctorPhone()));
+        }
         startPage();
         List<VisitAppointment> list = visitAppointmentService.selectVisitAppointmentList(visitAppointment);
+        for (VisitAppointment visitAppointment1 : list){
+            if (StringUtils.isNotEmpty(visitAppointment1.getPatientPhone())){
+                visitAppointment1.setPatientPhone(aesUtils.decrypt(visitAppointment1.getPatientPhone()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment1.getPatientName())){
+                visitAppointment1.setPatientName(aesUtils.decrypt(visitAppointment1.getPatientName()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment1.getAccompanyPhone())){
+                visitAppointment1.setAccompanyPhone(aesUtils.decrypt(visitAppointment1.getAccompanyPhone()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment1.getDoctorName())){
+                visitAppointment1.setDoctorName(aesUtils.decrypt(visitAppointment1.getDoctorName()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment1.getDoctorPhone())){
+                visitAppointment1.setDoctorPhone(aesUtils.decrypt(visitAppointment1.getDoctorPhone()));
+            }
+            if (visitAppointment1.getBirthBay()!=null){
+                visitAppointment1.setPatientAge(DateUtil.getAge(visitAppointment1.getBirthBay()));
+            }
+        }
         return getDataTable(list);
     }
 
@@ -70,9 +107,8 @@ public class VisitAppointmentController extends BaseController
     /**
      * 获取出诊预约表详细信息
      */
-    @PreAuthorize("@ss.hasPermi('hospital:visitAppointment:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return AjaxResult.success(visitAppointmentService.selectVisitAppointmentById(id));
     }
@@ -130,4 +166,53 @@ public class VisitAppointmentController extends BaseController
         }
         return AjaxResult.success(visitAppointments);
     }
+
+
+    @PostMapping("/addAppointment")
+    public AjaxResult addAppointment(PlanMsgAllVo planMsgAllVo, HttpServletRequest request) throws Exception {
+
+
+        lock.lock();
+        try {
+            if (StringUtils.isEmpty(planMsgAllVo.getPatientPhone())){
+                return AjaxResult.error("患者手机号错误");
+            }
+            if (planMsgAllVo.getPlanId()==null||planMsgAllVo.getPlanId().equals("")){
+                return AjaxResult.error("排班错误错误");
+            }
+            VisitAppointment visitAppointment = visitAppointmentService.addVisitAppointment(planMsgAllVo, request);
+            if (StringUtils.isNotEmpty(visitAppointment.getPatientPhone())){
+                visitAppointment.setPatientPhone(aesUtils.decrypt(visitAppointment.getPatientPhone()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment.getPatientName())){
+                visitAppointment.setPatientName(aesUtils.decrypt(visitAppointment.getPatientName()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){
+                visitAppointment.setAccompanyPhone(aesUtils.decrypt(visitAppointment.getAccompanyPhone()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment.getDoctorName())){
+                visitAppointment.setDoctorName(aesUtils.decrypt(visitAppointment.getDoctorName()));
+            }
+            if (StringUtils.isNotEmpty(visitAppointment.getDoctorPhone())){
+                visitAppointment.setDoctorPhone(aesUtils.decrypt(visitAppointment.getDoctorPhone()));
+            }
+            if (visitAppointment.getBirthBay()!=null){
+                visitAppointment.setPatientAge(DateUtil.getAge(visitAppointment.getBirthBay()));
+            }
+            return AjaxResult.success(visitAppointment);
+        }catch (Exception e){
+            return AjaxResult.error("创建订单失败");
+        }finally {
+            lock.unlock();
+        }
+
+    }
+
+
+    @PutMapping("/updateStatus")
+    public AjaxResult updateStatus(String appointmentId){
+        visitAppointmentService.updateVisitAppointmentStatus(appointmentId,"2");
+        return AjaxResult.success();
+    }
+
 }

@@ -33,8 +33,8 @@ public class OrderNoUtils {
      * @return
      */
     public static String getNo() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         String newDate = sdf.format(new Date());
         String result = "";
         Random random = new Random();

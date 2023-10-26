@@ -3,61 +3,168 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.hospital.mapper.VisitAppointmentMapper">
-
     <resultMap type="VisitAppointment" id="VisitAppointmentResult">
-        <result property="id"    column="id"    />
+        <result property="appointmentId"    column="appointment_id"    />
         <result property="planId"    column="plan_id"    />
         <result property="patientPhone"    column="patient_phone"    />
         <result property="accompanyPhone"    column="accompany_phone"    />
-        <result property="timePeriod"    column="time_period"    />
+        <result property="periodStart"    column="period_start"    />
         <result property="status"    column="status"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="periodEnd"    column="period_end"    />
+        <result property="specialName"    column="special_name"    />
+        <result property="outpatientName"    column="outpatient_name"    />
+        <result property="clinicAddress"    column="clinic_address"    />
+        <result property="hospitalId"    column="hospital_id"    />
+        <result property="doctorName"    column="doctor_name"    />
+        <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="periodDay"    column="period_day"    />
+        <result property="payPrice"    column="pay_price"    />
+        <result property="outpatientType"    column="outpatient_type"    />
+        <result property="doctorProfessional"    column="doctor_professional"    />
+        <result property="timePeriod"    column="time_period"    />
+        <result property="title"    column="title"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="openId"    column="open_id"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="patientSex"    column="patient_sex"    />
+        <result property="hospitalName"    column="hospital_name"    />
+        <result property="birthBay"    column="birth_bay"    />
     </resultMap>
 
+
+
+
     <sql id="selectVisitAppointmentVo">
-        select id, plan_id, patient_phone, accompany_phone, time_period, status, create_time, update_time from visit_appointment
+        select appointment_id, plan_id, patient_phone, accompany_phone, period_start, status, create_time, update_time, pay_status, period_end, special_name, outpatient_name, clinic_address, hospital_id, doctor_name, doctor_phone, period_day, pay_price, outpatient_type, doctor_professional, time_period, title, order_no,open_id from visit_appointment
     </sql>
 
     <select id="selectVisitAppointmentList" parameterType="VisitAppointment" resultMap="VisitAppointmentResult">
-        <include refid="selectVisitAppointmentVo"/>
+        SELECT
+        patient.patient_name_aes as patient_name,
+        patient.patient_phone_aes as patient_phone,
+        visit_appointment.appointment_id,
+        visit_appointment.plan_id,
+        visit_appointment.patient_phone,
+        visit_appointment.accompany_phone,
+        visit_appointment.`status`,
+        visit_appointment.period_start,
+        visit_appointment.create_time,
+        visit_appointment.update_time,
+        visit_appointment.period_end,
+        visit_appointment.pay_status,
+        visit_appointment.special_name,
+        visit_appointment.clinic_address,
+        visit_appointment.outpatient_name,
+        visit_appointment.hospital_id,
+        visit_appointment.doctor_name,
+        visit_appointment.doctor_phone,
+        visit_appointment.period_day,
+        visit_appointment.outpatient_type,
+        visit_appointment.doctor_professional,
+        visit_appointment.time_period,
+        patient.patient_sex,
+        patient.birth_day
+        FROM
+        visit_appointment
+        INNER JOIN
+        patient
+        ON
+        visit_appointment.patient_phone = patient.patient_phone_aes
         <where>
             <if test="planId != null "> and plan_id = #{planId}</if>
-            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
-            <if test="accompanyPhone != null  and accompanyPhone != ''"> and accompany_phone = #{accompanyPhone}</if>
-            <if test="timePeriod != null "> and time_period = #{timePeriod}</if>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and visit_appointment.patient_phone = #{patientPhone}</if>
+            <if test="accompanyPhone != null  and accompanyPhone != ''"> and visit_appointment.accompany_phone = #{accompanyPhone}</if>
+            <if test="periodStart != null  and periodStart != ''"> and visit_appointment.period_start = #{periodStart}</if>
+            <if test="status != null "> and visit_appointment.status = #{status}</if>
+            <if test="payStatus != null  and payStatus != ''"> and visit_appointment.pay_status = #{payStatus}</if>
+            <if test="periodEnd != null  and periodEnd != ''"> and visit_appointment.period_end = #{periodEnd}</if>
+            <if test="specialName != null  and specialName != ''"> and visit_appointment.special_name like concat('%', #{specialName}, '%')</if>
+            <if test="outpatientName != null  and outpatientName != ''"> and visit_appointment.outpatient_name like concat('%', #{outpatientName}, '%')</if>
+            <if test="clinicAddress != null  and clinicAddress != ''"> and visit_appointment.clinic_address = #{clinicAddress}</if>
+            <if test="hospitalId != null "> and visit_appointment.hospital_id = #{hospitalId}</if>
+            <if test="doctorName != null  and doctorName != ''"> and visit_appointment.doctor_name like concat('%', #{doctorName}, '%')</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and visit_appointment.doctor_phone = #{doctorPhone}</if>
+            <if test="periodDay != null "> and visit_appointment.period_day = #{periodDay}</if>
+            <if test="payPrice != null "> and visit_appointment.pay_price = #{payPrice}</if>
+            <if test="outpatientType != null  and outpatientType != ''"> and visit_appointment.outpatient_type = #{outpatientType}</if>
+            <if test="doctorProfessional != null  and doctorProfessional != ''"> and visit_appointment.doctor_professional = #{doctorProfessional}</if>
+            <if test="timePeriod != null "> and visit_appointment.time_period = #{timePeriod}</if>
+            <if test="title != null  and title != ''"> and visit_appointment.title = #{title}</if>
+            <if test="orderNo != null  and orderNo != ''"> and visit_appointment.order_no = #{orderNo}</if>
         </where>
+        order by update_time desc
     </select>
 
-    <select id="selectVisitAppointmentById" parameterType="Long" resultMap="VisitAppointmentResult">
+    <select id="selectVisitAppointmentById" parameterType="String" resultMap="VisitAppointmentResult">
         <include refid="selectVisitAppointmentVo"/>
-        where id = #{id}
+        where appointment_id = #{appointmentId}
     </select>
+
     <select id="selectByPlanIdVisitAppointments"
             resultType="com.ruoyi.xindian.hospital.domain.VisitAppointment">
         <include refid="selectVisitAppointmentVo"/> where plan_id = #{planId}
     </select>
+    <select id="getVisitAppointmentOrderNo" resultType="com.ruoyi.xindian.hospital.domain.VisitAppointment">
+        <include refid="selectVisitAppointmentVo"/>   where order_no = #{orderNo}
+    </select>
 
-    <insert id="insertVisitAppointment" parameterType="VisitAppointment" useGeneratedKeys="true" keyProperty="id">
+
+    <insert id="insertVisitAppointment" parameterType="VisitAppointment">
         insert into visit_appointment
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appointmentId != null">appointment_id,</if>
             <if test="planId != null">plan_id,</if>
             <if test="patientPhone != null">patient_phone,</if>
             <if test="accompanyPhone != null">accompany_phone,</if>
-            <if test="timePeriod != null">time_period,</if>
+            <if test="periodStart != null">period_start,</if>
             <if test="status != null">status,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="periodEnd != null">period_end,</if>
+            <if test="specialName != null">special_name,</if>
+            <if test="outpatientName != null">outpatient_name,</if>
+            <if test="clinicAddress != null">clinic_address,</if>
+            <if test="hospitalId != null">hospital_id,</if>
+            <if test="doctorName != null">doctor_name,</if>
+            <if test="doctorPhone != null">doctor_phone,</if>
+            <if test="periodDay != null">period_day,</if>
+            <if test="payPrice != null">pay_price,</if>
+            <if test="outpatientType != null">outpatient_type,</if>
+            <if test="doctorProfessional != null">doctor_professional,</if>
+            <if test="timePeriod != null">time_period,</if>
+            <if test="title != null">title,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="openId != null">open_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appointmentId != null">#{appointmentId},</if>
             <if test="planId != null">#{planId},</if>
             <if test="patientPhone != null">#{patientPhone},</if>
             <if test="accompanyPhone != null">#{accompanyPhone},</if>
-            <if test="timePeriod != null">#{timePeriod},</if>
+            <if test="periodStart != null">#{periodStart},</if>
             <if test="status != null">#{status},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="periodEnd != null">#{periodEnd},</if>
+            <if test="specialName != null">#{specialName},</if>
+            <if test="outpatientName != null">#{outpatientName},</if>
+            <if test="clinicAddress != null">#{clinicAddress},</if>
+            <if test="hospitalId != null">#{hospitalId},</if>
+            <if test="doctorName != null">#{doctorName},</if>
+            <if test="doctorPhone != null">#{doctorPhone},</if>
+            <if test="periodDay != null">#{periodDay},</if>
+            <if test="payPrice != null">#{payPrice},</if>
+            <if test="outpatientType != null">#{outpatientType},</if>
+            <if test="doctorProfessional != null">#{doctorProfessional},</if>
+            <if test="timePeriod != null">#{timePeriod},</if>
+            <if test="title != null">#{title},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="openId != null">#{openId},</if>
         </trim>
     </insert>
 
@@ -67,22 +174,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="planId != null">plan_id = #{planId},</if>
             <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
             <if test="accompanyPhone != null">accompany_phone = #{accompanyPhone},</if>
-            <if test="timePeriod != null">time_period = #{timePeriod},</if>
+            <if test="periodStart != null">period_start = #{periodStart},</if>
             <if test="status != null">status = #{status},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="periodEnd != null">period_end = #{periodEnd},</if>
+            <if test="specialName != null">special_name = #{specialName},</if>
+            <if test="outpatientName != null">outpatient_name = #{outpatientName},</if>
+            <if test="clinicAddress != null">clinic_address = #{clinicAddress},</if>
+            <if test="hospitalId != null">hospital_id = #{hospitalId},</if>
+            <if test="doctorName != null">doctor_name = #{doctorName},</if>
+            <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
+            <if test="periodDay != null">period_day = #{periodDay},</if>
+            <if test="payPrice != null">pay_price = #{payPrice},</if>
+            <if test="outpatientType != null">outpatient_type = #{outpatientType},</if>
+            <if test="doctorProfessional != null">doctor_professional = #{doctorProfessional},</if>
+            <if test="timePeriod != null">time_period = #{timePeriod},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
         </trim>
-        where id = #{id}
+        where appointment_id = #{appointmentId}
+    </update>
+    <update id="updateVisitAppointmentOrderStatus">
+        update visit_appointment set pay_status = #{type} where order_no = #{orderNo}
+    </update>
+    <update id="updateVisitAppointmentStatus">
+        update visit_appointment set status = #{type} where appointment_id = #{id}
     </update>
 
     <delete id="deleteVisitAppointmentById" parameterType="Long">
-        delete from visit_appointment where id = #{id}
+        delete from visit_appointment where appointment_id = #{appointmentId}
     </delete>
 
     <delete id="deleteVisitAppointmentByIds" parameterType="String">
-        delete from visit_appointment where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
+        delete from visit_appointment where appointment_id in
+        <foreach item="appointmentId" collection="array" open="(" separator="," close=")">
+            #{appointmentId}
         </foreach>
     </delete>
 </mapper>

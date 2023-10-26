@@ -39,7 +39,7 @@ public class HospitalSubscribeController extends BaseController
     /**
      * 查询门诊预约医院列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:subscribe:list')")
+//    @PreAuthorize("@ss.hasPermi('hospital:subscribe:list')")
     @GetMapping("/list")
     public TableDataInfo list(HospitalSubscribe hospitalSubscribe)
     {
@@ -102,5 +102,16 @@ public class HospitalSubscribeController extends BaseController
     public AjaxResult remove(@PathVariable Long[] subscribeIds)
     {
         return toAjax(hospitalSubscribeService.deleteHospitalSubscribeBySubscribeIds(subscribeIds));
+    }
+
+    @GetMapping("/getHospitalIdFindList")
+    public AjaxResult getHospitalIdFindList(String hospitalId){
+        Long hospital = null;
+        try {
+            hospital =   Long.valueOf(hospitalId);
+        }catch (Exception e){
+            return AjaxResult.error("参数有问题，请稍后再试");
+        }
+       return AjaxResult.success( hospitalSubscribeService.getHospitalIdFindList(hospital));
     }
 }

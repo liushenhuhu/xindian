@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class Doctor extends BaseEntity
 
     /** 收费价格 */
     @Excel(name = "收费价格")
-    private String chargePrice;
+    private BigDecimal chargePrice;
 
     /** 在线状态 */
     @Excel(name = "在线状态")
@@ -231,15 +232,16 @@ public class Doctor extends BaseEntity
     {
         return applicablePopulation;
     }
-    public void setChargePrice(String chargePrice)
-    {
+
+
+    public BigDecimal getChargePrice() {
+        return chargePrice;
+    }
+
+    public void setChargePrice(BigDecimal chargePrice) {
         this.chargePrice = chargePrice;
     }
 
-    public String getChargePrice()
-    {
-        return chargePrice;
-    }
     public void setOnlineState(String onlineState)
     {
         this.onlineState = onlineState;

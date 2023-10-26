@@ -479,6 +479,7 @@
                                                FROM ecg_count <where>
         gender = '男'
         <if test="zcxdt_ecg != null">and zcxdt_ecg = 1</if>
+        <if test="ycxdt_ecg != null">and zcxdt_ecg = 0</if>
         <if test="dxxl_ecg != null">and dxxl_ecg = 1</if>
         <if test="ywxl_ecg != null">and ywxl_ecg = 1</if>
         <if test="fxxl_ecg != null">and fxxl_ecg = 1</if>
@@ -580,6 +581,7 @@
                                                <where>
                                                    gender = '女'
                                                    <if test="zcxdt_ecg != null">and zcxdt_ecg = 1</if>
+                                                   <if test="ycxdt_ecg != null">and zcxdt_ecg = 0</if>
                                                    <if test="dxxl_ecg != null">and dxxl_ecg = 1</if>
                                                    <if test="ywxl_ecg != null">and ywxl_ecg = 1</if>
                                                    <if test="fxxl_ecg != null">and fxxl_ecg = 1</if>
@@ -748,6 +750,7 @@
                                                 <where>
                                                     age BETWEEN 0 AND  17
                                                     <if test="zcxdt_ecg != null">and zcxdt_ecg = 1</if>
+                                                    <if test="ycxdt_ecg != null">and zcxdt_ecg = 0</if>
                                                     <if test="dxxl_ecg != null">and dxxl_ecg = 1</if>
                                                     <if test="ywxl_ecg != null">and ywxl_ecg = 1</if>
                                                     <if test="fxxl_ecg != null">and fxxl_ecg = 1</if>

@@ -7,7 +7,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.xindian.ecgCount.domain.EcgCount;
+import com.ruoyi.xindian.ecgCount.domain.EcgCountType;
 import com.ruoyi.xindian.ecgCount.service.EcgCountService;
+import com.ruoyi.xindian.ecgCount.service.EcgCountTypeService;
 import com.ruoyi.xindian.ecgCount.vo.TypeListVo;
 import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,9 @@ public class EcgCountController extends BaseController {
 
     @Resource
     private EcgCountService ecgCountService;
+
+    @Resource
+    private EcgCountTypeService ecgCountTypeService;
 
     @Resource
     private RedisTemplate<String , Map<String,Object>> redisTemplate;
@@ -134,18 +140,40 @@ public class EcgCountController extends BaseController {
     @GetMapping ("/ageList")
     public Map<Object,Object> ageList(@RequestParam("type") List<String> type){
         if(type!=null&&type.size()>0){
-            List<String> collect = type.stream().map(i -> i + "_ecg").collect(Collectors.toList());
+
+            List<String> collect = getListType(type);
+            StringBuilder sb = new StringBuilder();
             Map<String, Object> typeMap = new HashMap<>();
             for (String s : collect) {
                 typeMap.put(s, s);
+                sb.append(s).append(",");
             }
-            List<AgeStatistics> manList = ecgCountService.ageListByMan(typeMap);
-            /* 查询性别女 */
-            List<AgeStatistics> womanList = ecgCountService.ageListByWoman(typeMap);
-            Map<Object,Object> map = new HashMap<Object,Object>();
-            map.put("men",manList);
-            map.put("women",womanList);
-            return map;
+            // 去掉最后一个逗号
+            if (sb.length() > 0) {
+                sb.delete(sb.length() - 2, sb.length());
+            }
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("ecgCountTypeAgeJump:"+sb))){
+                return redisTemplate.opsForHash().entries("ecgCountTypeAgeJump:"+sb);
+            }else {
+                /* 查询性别男 */
+                List<AgeStatistics> manList = ecgCountService.ageListByMan(typeMap);
+                /* 查询性别女 */
+                List<AgeStatistics> womanList = ecgCountService.ageListByWoman(typeMap);
+
+                Map<Object,Object> map = new HashMap<Object,Object>();
+                map.put("men",manList);
+                map.put("women",womanList);
+                //存入redis
+                redisTemplate.opsForHash().putAll("ecgCountTypeAgeJump:"+sb, map);
+                //给redis设置毫秒值
+                //第一个参数是key
+                //第二个参数是值
+                //第三个参数是时间颗粒度转换,MILLISECONDS是毫秒,所以这个redis的TTl是一小时
+//                redisTemplate.expire("ecgCountTypeAgeJump:"+sb,43, TimeUnit.HOURS);
+
+                return map;
+            }
+
         }
         if(Boolean.TRUE.equals(redisTemplate.hasKey("ecgCountTypeAge"))) {
             //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）
@@ -203,12 +231,34 @@ public class EcgCountController extends BaseController {
 
     @GetMapping("/getAgeYoung")
     public AjaxResult getAgeYoung(@RequestParam("type") List<String> type){
-        List<String> collect = type.stream().map(i -> i + "_ecg").collect(Collectors.toList());
+        List<String> collect = getListType(type);
+        StringBuilder sb = new StringBuilder();
         Map<String, Object> typeMap = new HashMap<>();
         for (String s : collect) {
             typeMap.put(s, s);
+            sb.append(s).append(",");
         }
-        return AjaxResult.success(ecgCountService.getAgeYoung(typeMap));
+        // 去掉最后一个逗号
+        if (sb.length() > 0) {
+            sb.delete(sb.length() - 2, sb.length());
+        }
+
+        return AjaxResult.success(ecgCountService.getAgeYoung(typeMap,sb.toString()));
+    }
+
+
+    private List<String> getListType(List<String> type){
+        List<String> strings = new ArrayList<>();
+        for (String c : type){
+            EcgCountType ecgValueButLabel = ecgCountTypeService.getEcgValueButLabel(c);
+            if (ecgValueButLabel==null){
+                strings.add("ycxdt");
+                continue;
+            }
+            strings.add(ecgValueButLabel.getValue());
+        }
+
+        return strings.stream().map(i -> i + "_ecg").collect(Collectors.toList());
     }
 
 }

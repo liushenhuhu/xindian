@@ -440,10 +440,29 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
     }
 
     @Override
-    public List<TypeListVo> getAgeYoung(Map<String,Object> type) {
-        if(type!=null&&type.size()>0){
-            List<TypeListVo> youngList = ecgCountMapper.getAgeYoung(type);
-            return youngList;
+    public List<TypeListVo> getAgeYoung(Map<String,Object> type,String key) {
+        if(type!=null&&type.size()>0&&!key.equals("1")){
+
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("ecgAgeYoungJump:"+key))){
+                return redisTemplate.opsForList().range("ecgAgeYoungJump:"+key, 0, -1);
+            }else {
+
+            }
+            List<TypeListVo> typeListVoList = ecgCountMapper.getAgeYoung(type);
+
+            if (typeListVoList!=null&&typeListVoList.size()>0){
+                if (Boolean.TRUE.equals(redisTemplate.hasKey("ecgAgeYoungJump:"+key))){
+                    redisTemplate.opsForList().remove("ecgAgeYoungJump:"+key, 0, -1);
+                }
+                //存入redis
+                redisTemplate.opsForList().leftPushAll("ecgAgeYoungJump:"+key, typeListVoList);
+                //给redis设置毫秒值
+                //第一个参数是key
+                //第二个参数是值
+                //第三个参数是时间颗粒度转换,MILLISECONDS是毫秒,所以这个redis的TTl是一小时
+//                redisTemplate.expire("ecgAgeYoungJump"+key,38, TimeUnit.MINUTES);
+            }
+            return typeListVoList;
         }
         if(Boolean.TRUE.equals(redisTemplate.hasKey("ecgAgeYoung"))) {
             //如果有就查询redis里这个list集合（第一个参数是key,0,-1是查询所有）

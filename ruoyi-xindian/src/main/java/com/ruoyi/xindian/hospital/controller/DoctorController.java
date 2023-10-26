@@ -204,6 +204,9 @@ public class DoctorController extends BaseController
     public AjaxResult getInfoByDoctorPhone(@PathVariable("doctorPhone") String doctorPhone) throws Exception {
         String encrypt = aesUtils.encrypt(doctorPhone);
         Doctor doctor = doctorService.selectDoctorByDoctorPhone(encrypt);
+        if (doctor==null){
+            return AjaxResult.error("医生不存在");
+        }
         doctor.setDoctorPhone(aesUtils.decrypt(doctor.getDoctorPhone()));
         doctor.setDoctorName(aesUtils.decrypt(doctor.getDoctorName()));
         Department department = new Department();

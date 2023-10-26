@@ -14,6 +14,8 @@ public interface RefundInfoService extends IService<RefundInfo> {
 
     RefundInfo createRefundByOrderNo(String orderNo, String reason);
 
+    RefundInfo createRefundByVisitOrderNo(String orderNo, String reason);
+
     void updateRefund(String content) throws Exception;
 
     List<RefundInfo> getNoRefundOrderByDuration(int minutes);

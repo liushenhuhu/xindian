@@ -7,6 +7,7 @@ import com.ruoyi.xindian.ecgCount.service.EcgCountService;
 import com.ruoyi.xindian.equipment.service.EquipmentHeadingCodeService;
 import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
+import com.ruoyi.xindian.visitPay.VisitWxPayController;
 import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
@@ -50,6 +51,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     private WXPayController wxPayController;
 
     @Resource
+    private VisitWxPayController visitWxPayController;
+
+    @Resource
     private EquipmentHeadingCodeService equipmentHeadingCodeService;
 
 
@@ -84,6 +88,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             }
             if (split[0].equals("orderQuery")){
                 wxPayController.orderQuery(split[1]);
+            }
+            if (split[0].equals("orderVisitQuery")){
+                visitWxPayController.orderQuery(split[1]);
             }
             if (split[0].equals("invoice")){
                 try {
@@ -150,7 +157,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 ecgCountController.ageList(new ArrayList<>());
             }
             if (expiredKey.equals("ecgAgeYoung")){
-                ecgCountService.getAgeYoung(new HashMap<>());
+                ecgCountService.getAgeYoung(new HashMap<>(),"1");
             }
             if (expiredKey.equals("ecgZCXDTCountType")){
                 ecgCountService.getZCXDTCount();

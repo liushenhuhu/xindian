@@ -2,6 +2,8 @@ package com.ruoyi.xindian.hospital.service;
 
 import com.ruoyi.xindian.hospital.domain.HospitalSubscribe;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 
 import java.util.List;
 
@@ -60,5 +62,7 @@ public interface HospitalSubscribeService extends IService<HospitalSubscribe> {
      * @return 结果
      */
     public int deleteHospitalSubscribeBySubscribeId(Long subscribeId);
+
+    List<ListValueAndLabelVO> getHospitalIdFindList(Long hospitalId);
 }
 

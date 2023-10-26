@@ -15,10 +15,10 @@ public interface VisitAppointmentMapper
     /**
      * 查询出诊预约表
      * 
-     * @param id 出诊预约表主键
+     * @param appointmentId 出诊预约表主键
      * @return 出诊预约表
      */
-    public VisitAppointment selectVisitAppointmentById(Long id);
+    public VisitAppointment selectVisitAppointmentById(String appointmentId);
 
     /**
      * 查询出诊预约表列表
@@ -62,4 +62,12 @@ public interface VisitAppointmentMapper
 
 
     List<VisitAppointment> selectByPlanIdVisitAppointments(@Param("planId") Long planId);
+
+
+    VisitAppointment getVisitAppointmentOrderNo(@Param("orderNo") String orderNo);
+
+
+    void updateVisitAppointmentOrderStatus(@Param("orderNo") String orderNo,@Param("type")String type);
+    void updateVisitAppointmentStatus(@Param("id") String id,@Param("type")String type);
+
 }

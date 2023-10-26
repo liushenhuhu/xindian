@@ -2,6 +2,7 @@ package com.ruoyi.xindian.hospital.service;
 
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.VisitPlan;
+import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
 
 /**
  * 出诊信息表Service接口
@@ -66,4 +67,7 @@ public interface IVisitPlanService
      * @return 结果
      */
     public int deleteVisitPlanById(Long id);
+
+
+    PlanMsgAllVo getPlanMsgAll(PlanMsgAllVo planMsgAllVo) throws Exception;
 }

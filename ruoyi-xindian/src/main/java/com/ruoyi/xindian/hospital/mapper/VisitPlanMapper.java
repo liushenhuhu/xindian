@@ -20,6 +20,14 @@ public interface VisitPlanMapper
     public VisitPlan selectVisitPlanById(Long id);
 
     /**
+     * 查询出诊信息表
+     *
+     * @param planId 出诊信息表主键
+     * @return 出诊信息表
+     */
+    public VisitPlan selectVisitPlanByIdAll(Long planId);
+
+    /**
      * 查询出诊信息表列表
      * 
      * @param visitPlan 出诊信息表

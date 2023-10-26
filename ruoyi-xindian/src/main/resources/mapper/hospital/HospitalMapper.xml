@@ -19,6 +19,7 @@
         <result property="ifStatistics"    column="if_statistics"    />
         <result property="hospitalInfo"    column="hospital_info"    />
         <result property="deviceOnlineNum" column="num"/>
+        <result property="img" column="img"/>
         <result property="hospitalPhone" column="hospital_phone"/>
         <result property="hospitalSite" column="hospital_site"/>
     </resultMap>

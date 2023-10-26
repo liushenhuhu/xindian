@@ -10,4 +10,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface EcgCountTypeService extends IService<EcgCountType> {
 
+
+    EcgCountType getEcgValueButLabel(String label);
+
+
 }
