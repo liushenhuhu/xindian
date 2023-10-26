@@ -183,7 +183,7 @@ export default {
   created() {
     this.deviceSn=this.$route.query.deviceSn;
     if(this.deviceSn!==null){
-      this.index++
+      this.index++//index 保证created和activated执行一个
       if(this.index!==1){
         return
       }
@@ -377,6 +377,7 @@ export default {
         V5=res.data.result.data.V5
         V6=res.data.result.data.V6
         this.$message.success("设备"+this.deviceSn+"数据获取成功")
+        //右边几个图
         this.setMeanChart()
         this.setsdnn()
         this.setpnn50()
@@ -3027,6 +3028,7 @@ export default {
               smooth: 0 //显示为平滑的曲线*/
             }]
         })
+        //绘图完成后请求下10s数据
          this.$http.post('https://server.mindyard.cn:84/detect_decg',
            JSON.stringify({
              "deviceSn": this.deviceSn,
@@ -3058,6 +3060,7 @@ export default {
               this.timer=null
             }
           //console.log(newData1)
+          //后10s数据有的话就绘图
           if(newData1){
             ts++
             this.data=null
@@ -6373,6 +6376,7 @@ export default {
       },true)
 
     },
+    //点击展开
     show(index){
       let data=[]
       switch (index) {

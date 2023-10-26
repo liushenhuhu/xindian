@@ -191,43 +191,25 @@ export default {
   props: {},
   data() {
     return {
-      activeName:'first',
-      drawShow:false,
+      activeName:'first',//tab切换
+      drawShow:false,//弹框开关
       isLoading: false, //加载状态
-      //模式列表
-      modelList: [
-        {
-          model: "point",
-          name: "点模式",
-          img: require("@/assets/images/point.png"),
-          msg: "右键点击绘制",
-        }/*,
-        {
-          model: "polygon",
-          name: "多边形模式",
-          img: require("@/assets/images/polygon.png"),
-          msg: "右键点击绘制，左键双击自动闭合",
-        }*/
-      ],
-      radio1:'',
-      radio2:'',
-      colorList: [
-        { color: "#000000" },
-      ],
-      arrList1:{},
+      radio1:'',//选中类型 Normal FangZao
+      radio2:'',//选中类型 P1 P2
+      arrList1:{},//心博标注 每一段
       arrList2:{},
       arrList3:{},
       arrList4:{},
       arrList5:{},
       arrList6:{},
       arrList7:{},
-      arrList:{
+      arrList:{//心博标注 提交数据
         pId: null,
         beatLabel:null},
-      pId:null,
-      level:null,
-      chart:null,
-      chart2:null,
+      pId:null,//报告pid
+      level:null,//第几段
+      chart:null,//心博标注 echarts
+      chart2:null,//波段标注 echarts
       delX:{key:null,value:null},//想要删除的点
       seriesdata:[{xAxis: 0},
         {xAxis: 25},
@@ -274,43 +256,28 @@ export default {
         {yAxis: -3},{yAxis: -2.5},{yAxis: 3},{yAxis: 2.5}
       ],//标线
       x:[],//x轴值
-      y:[],
-      pointdata:[],//点
-      graphic:[],//文本
+      pointdata:[],//显示的 点
+      graphic:[],//显示的 文本
       data:[],//导联数据
-      queryParam:{
-        pId: '',
-        level: '',
-      },
-      subData:{
+      subData:{//波段标注 某一段的数据
         P1:[],P2:[],P3:[],
         R1:[],R2:[],R3:[],
         T1:[],T2:[],T3:[],
       },//提交标注信息
-      lead1:false,
-      lead2:false,
+      lead1:false,//是否可以标注
+      lead2:false,//是否可以标注
       flag:null,//1：静态单导  12.静态12导
       closeStyle:{position:'absolute',right:'1px',top:'20px'},
-      message: {
-        devicesn: "",
-        user_id: "",
-        pid: "",
-        logid: "",
-        sex: "",
-        age: "",
-        time: "",
-        logType:'',
-      },
-      query:{
+      query:{//波段标注 提交数据
         pId:"",
         beatLabel:'',
         waveLabel:'',
       },
-      datalabel:{
+      datalabel:{//进来页面时读取的标注数据
         waveLabel:"",
         beatLabel:""
       },
-      title:''
+      title:''//几导联
     };
   },
   watch:{
@@ -342,6 +309,7 @@ export default {
     this.chart2 = echarts.init(document.getElementById('chart2'));
   },
   methods: {
+    //心博标注 初始化
     async getchart(data,pIds,level,title,flag,datalabel) {
       console.log("第几个",level)
       this.title=title
@@ -362,11 +330,10 @@ export default {
       this.level = level;
       this.x.length=0
       this.arrList.pId=pIds
-      this.queryParam.pId = pIds;
-      this.queryParam.level = level;
       for (var i = 0; i <= data.length; i++) {
         this.x.push(i);
       }
+      //标线
       var seriesdata=this.seriesdata
       if(data.length>1500){
         seriesdata=[{yAxis: -2},{yAxis: -1.5},{yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},{yAxis: 1.5},{yAxis: 2},
@@ -375,6 +342,7 @@ export default {
           seriesdata.push({xAxis:i})
         }
       }
+      //绘图
       let detailoption = {
         animation: false,
         backgroundColor: "#ffffff",
@@ -528,6 +496,7 @@ export default {
               this[`${'arrList' + level}`]=each
             }
           }
+          //为空
         if(this[`${'arrList' + level}`]==null||this[`${'arrList' + level}`]=={}){
           this[`${'arrList' + level}`]={Normal:[], FangZao:[], ShiZao:[], FangYi:[], GanRao:[]}
         }
@@ -587,6 +556,7 @@ export default {
       var width=window.screen.width
       var height=window.screen.height
       this.chart.off('contextmenu')
+      //右击显示删除
       this.chart.on('contextmenu',(params)=>{
         console.log(params)
         $('#rightMenu').css({
@@ -601,6 +571,7 @@ export default {
         console.log(this.delX)
       });
       this.chart.getZr().off('click')
+      //点击左键标点
       this.chart.getZr().on('click',params=>{
           $('#rightMenu').css({
             'display': 'none',
@@ -798,6 +769,7 @@ export default {
         })
       //console.log(this.graphic)
     },
+    //删除点
     del(){
       var length1=this.pointdata.length
       //删除点data
@@ -829,6 +801,7 @@ export default {
     clickSubmit(){
       console.log(this.arrList1)
       if(this.flag==1){
+        //单导 分段提交
         var obj={0:{...this.arrList1},1:{...this.arrList2},2:{...this.arrList3},3:{...this.arrList4}}
         for (let key in obj) {
           console.log(obj[key])
@@ -841,6 +814,7 @@ export default {
           beatLabel:JSON.stringify(obj)
         }
       }else {
+        //12导全部提交
         var obj={...this.arrList1}
         var newObj1 = {};
         var newObj2 = {};
@@ -886,7 +860,7 @@ export default {
         this.isLoading = false;
       }
     },
-
+    //切换tab
     handleClick(tab, event) {
       //console.log(tab, event);
       console.log(this.lead1,this.lead2)
@@ -899,7 +873,7 @@ export default {
         console.log("绘制图2")
       }
     },
-
+    //波段标注 清空按钮 清空数据
     clearData(){
       this.pointdata=[]
       this.subData={
@@ -918,15 +892,18 @@ export default {
         }
       });
     },
+    //波段标注 提交数据
     submitData(){
       this.query.pId=this.pId
       if(this.datalabel.waveLabel!=null&&this.datalabel.waveLabel!=''){
         var waveLabel=JSON.parse(this.datalabel.waveLabel)
         console.log(waveLabel)
         if(this.flag==1){
+          //单导  每一段 全部提交
           waveLabel[this.level-1]=this.subData
           this.query.waveLabel=JSON.stringify(waveLabel)
         }else {
+          //12导 分段 全部提交
           var obj={...this.subData}
           var newObj1 = {};
           var newObj2 = {};
@@ -963,10 +940,12 @@ export default {
       }
 
     },
+    //波段标注 初始化
     showchart(title, data) {
       if(title=='II'){
         this.lead2=true
       }
+      //标线
       var seriesdata=this.seriesdata
       if(data.length>1500){
         seriesdata=[{yAxis: -2},{yAxis: -1.5},{yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},{yAxis: 1.5},{yAxis: 2},
@@ -975,6 +954,7 @@ export default {
           seriesdata.push({xAxis:i})
         }
       }
+      //绘图
       let detailoption = {
         animation: false,
         backgroundColor: "#ffffff",
@@ -1131,8 +1111,10 @@ export default {
       if(this.lead2){
         this.subData={P1:[],P2:[],P3:[], R1:[],R2:[],R3:[], T1:[],T2:[],T3:[]}
           if (this.flag == 1) {
+            //单导
             this.subData = JSON.parse(this.datalabel.waveLabel)[this.level - 1]
           } else {
+            //12导
             let wave=JSON.parse(this.datalabel.waveLabel)
             for (let key1 in wave) {
               for (let key2 in wave[key1]) {
@@ -1146,6 +1128,7 @@ export default {
           }
         console.log("有数据")
         console.log(this.subData)
+        //添加点
         for (const key in this.subData) {
           for (let j = 0; j < this.subData[key].length; j++) {
             let pointdata={
@@ -1192,6 +1175,7 @@ export default {
       var width=window.screen.width
       var height=window.screen.height
       this.chart2.off('contextmenu')
+      //右击显示删除
       this.chart2.on('contextmenu',(params)=>{
         //console.log(params)
         $('#rightMenu2').css({
@@ -1206,6 +1190,7 @@ export default {
         console.log(this.delX)
       });
       this.chart2.getZr().off('click')
+      //左击标点
       this.chart2.getZr().on('click',params=>{
         $('#rightMenu2').css({
           'display': 'none',
@@ -1216,6 +1201,7 @@ export default {
           this.xIndex=this.chart2.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[0];
           //this.yIndex=this.chart2.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[1];
           console.log(this.xIndex)
+          //存在不添加
           let temp=false
           this.pointdata.forEach(i=>{
             if(this.xIndex==i.xAxis){
@@ -1227,8 +1213,8 @@ export default {
           if(this.radio2==''||temp){
             return
           }
-
           console.log(this.subData)
+          //添加点数据
           this.subData[this.radio2].push(this.xIndex)
           //console.log(this.subData)
           let pointdata={
@@ -1246,6 +1232,7 @@ export default {
             },
           }
           this.pointdata.push(pointdata)
+          //重绘
           this.chart2.setOption({
             series:{
               markPoint:{
@@ -1260,6 +1247,7 @@ export default {
       });
       this.show=true
     },
+    //关闭
     Off(){
       this.lead1=false
       this.lead2=false
@@ -1268,6 +1256,7 @@ export default {
       this.activeName="first"
       this.show=false
     },
+    //波段 删除点
     del2(){
       console.log(this.delX.key,this.delX.value)
       this.pointdata.some((item,index)=>{
@@ -1300,6 +1289,7 @@ export default {
       });
 
     },
+    //切换标注类型
     clickitem(e){
       e === this.radio2 ? this.radio2 = '' : this.radio2 = e
     },

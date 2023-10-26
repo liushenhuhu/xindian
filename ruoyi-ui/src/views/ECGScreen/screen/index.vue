@@ -461,7 +461,9 @@ export default {
         hospName=user.data.hospitalName
       })
     }
+    //清空数据
     this.clearList()
+    //请求设备列表
     this.get_device(hospName);
   },
   mounted() {
@@ -531,6 +533,7 @@ export default {
   },
 
   methods: {
+    //请求设备列表
     async get_device(hospName){
       // console.log(this.timer0)
       // console.log("医院名称:"+hospName)
@@ -552,6 +555,7 @@ export default {
        ).then(res=>{
          this.arr=res.data.result.dev_list;
          // console.log(this.arr)
+        //分页
          let length =  res.data.result.dev_list.length;//总设备个数
          this.total=length;
          this.pagenum = (length%9==0) ? (length/9) : length/9+1;//总页数
@@ -576,7 +580,7 @@ export default {
          // console.log("请求错误"+err)
         this.closeFullScreen()
        })
-
+      //当前页小于总页数时请求数据
       if(this.pagenum>=this.pages){
         const num=this.currentpage[this.pages-1].length
         if(num>=1){
@@ -616,6 +620,30 @@ export default {
         //   this.list12()
         // }
       }
+      setTimeout(()=>{
+        var child_0=echarts.init(document.getElementById('child_0'))
+        var child_1=echarts.init(document.getElementById('child_1'))
+        var child_2=echarts.init(document.getElementById('child_2'))
+        var child_3=echarts.init(document.getElementById('child_3'))
+        var child_4=echarts.init(document.getElementById('child_4'))
+        var child_5=echarts.init(document.getElementById('child_5'))
+        var child_6=echarts.init(document.getElementById('child_6'))
+        var child_7=echarts.init(document.getElementById('child_7'))
+        var child_8=echarts.init(document.getElementById('child_8'))
+        var erd = elementResizeDetectorMaker()
+        erd.listenTo(document.getElementById("containcontent"), (element)=>{
+            child_0.resize();
+            child_1.resize();
+            child_2.resize();
+            child_3.resize();
+            child_4.resize();
+            child_5.resize();
+            child_6.resize();
+            child_7.resize();
+            child_8.resize();
+        })
+      })
+
       this.closeFullScreen()
     },
     async list1(){
@@ -647,19 +675,23 @@ export default {
           chart.clear();
           chart.setOption(this.chart(this.data0, 0,this.p0Iy,this.p0V1y))
 
-          let tag=1
-          let ts=1
-          let code=200
+          let tag=1 //第一轮请求
+          let ts=1//时间 顺序
+          let code=200 //请求成功
+          //删除定时器
           if(this.timer0){
             window.clearInterval(this.timer0)
             this.timer0=null
           }
           this.timer0=window.setInterval(()=>{
+            //离开路由定时器删除
               if(this.$route.path!=='/ECGscreen'){
                 window.clearInterval(this.timer0)
                 this.timer0=null
               }
+              //自适应
               chart.resize()
+            //第一次请求 请求下个时间段保存到newData
             if(tag===1){
               this.$http.post('https://server.mindyard.cn:84/detect_decg',
                 JSON.stringify({
@@ -679,6 +711,7 @@ export default {
                   code=201
                   return
                 }
+                //请求成功
                 code=200
                 res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
                 this.newData0=res.data.result
@@ -688,10 +721,12 @@ export default {
                 this.newData0={}
                   // console.log("请求错误"+err)
                 })
+              //请求成功
               if(code!==201){
                 // console.log(tag)
                 //this.setColor(0)
                 chart.clear();
+                //绘图 前5s
                 chart.setOption(this.chart(this.data0, 0,this.p0Iy,this.p0V1y))
               }
             }
@@ -703,6 +738,7 @@ export default {
                 tag--
                 //this.setColor(0)
                 chart.clear();
+                //后5s
                 chart.setOption(this.chart(this.data0, 1250,this.p0Iy,this.p0V1y))
               }
             }
@@ -1363,7 +1399,7 @@ export default {
           this.p8Iy=res.data.result.data.II;
           this.p8V1y=res.data.result.data.V1;
           let chart =   echarts.init(document.getElementById('child_8'))
-          //this.setColor(8)
+
           chart.clear();
           chart.setOption(this.chart(this.data8, 0,this.p8Iy,this.p8V1y))
           let tag=1
@@ -1693,6 +1729,7 @@ export default {
       }
 
     },
+    //清空定时器
     clearIntervallist(){
       // // console.log("清除定时任务")
       window.clearInterval(this.timer0);
@@ -1720,6 +1757,7 @@ export default {
       // this.timer10=null;
       // this.timer11=null;
     },
+    //清空数据
     clearList(){
 
       this.data0={}
@@ -1784,6 +1822,7 @@ export default {
       // echarts.init(document.getElementById('child_10')).dispose()
       // echarts.init(document.getElementById('child_11')).dispose()
     },
+    //换页
     handleCurrentChange(pages){
       this.clearIntervallist()
       this.clearList()
@@ -1834,6 +1873,7 @@ export default {
       }
       this.closeFullScreen()
     },
+    //生成x轴
     timex(){
       let timex = (function () {
         let now = new Date();
@@ -1862,6 +1902,7 @@ export default {
         p1Iy.push(pIy[i])
         p1V1y.push(pV1y[i]-1)
       }
+      //变色
       if(Number(data.GengSi) >=0.55||Number(data.FangChan)>=0.55
         ||Number(data.XSL_pr)>=0.55||Number(data.RRGC_pr)>=0.55||Number(data.ShiChan)>=0.55){
         color1='#ff0000'
@@ -1986,6 +2027,7 @@ export default {
         target:document.querySelector("#home")
       });
     },
+    //进入详情
     jump(deviceSn){
       if(deviceSn){
         this.$router.push(
@@ -2000,6 +2042,7 @@ export default {
     closeFullScreen(){
       this.loading.close();
     },
+    //全屏
     inScreen(){
       this.isFullFlag=!this.isFullFlag
       const element = document.getElementById('home');//指定全屏区域元素
@@ -2120,6 +2163,7 @@ export default {
       .son{
         width: 25%;
         text-align: center;
+        font-size: 0.8vw;
         span{
           display: inline-block;
           width: 0.7vw;
