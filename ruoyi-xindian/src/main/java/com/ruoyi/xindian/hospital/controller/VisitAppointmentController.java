@@ -54,39 +54,11 @@ public class VisitAppointmentController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(VisitAppointment visitAppointment) throws Exception {
 
-        if (StringUtils.isNotEmpty(visitAppointment.getPatientPhone())){
-            visitAppointment.setPatientPhone(aesUtils.encrypt(visitAppointment.getPatientPhone()));
-        }
-        if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){
-            visitAppointment.setAccompanyPhone(aesUtils.encrypt(visitAppointment.getAccompanyPhone()));
-        }
-        if (StringUtils.isNotEmpty(visitAppointment.getDoctorName())){
-            visitAppointment.setDoctorName(aesUtils.encrypt(visitAppointment.getDoctorName()));
-        }
-        if (StringUtils.isNotEmpty(visitAppointment.getDoctorPhone())){
-            visitAppointment.setDoctorPhone(aesUtils.encrypt(visitAppointment.getDoctorPhone()));
-        }
+        visitAppointmentAesEncrypt(visitAppointment);
         startPage();
         List<VisitAppointment> list = visitAppointmentService.selectVisitAppointmentList(visitAppointment);
         for (VisitAppointment visitAppointment1 : list){
-            if (StringUtils.isNotEmpty(visitAppointment1.getPatientPhone())){
-                visitAppointment1.setPatientPhone(aesUtils.decrypt(visitAppointment1.getPatientPhone()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment1.getPatientName())){
-                visitAppointment1.setPatientName(aesUtils.decrypt(visitAppointment1.getPatientName()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment1.getAccompanyPhone())){
-                visitAppointment1.setAccompanyPhone(aesUtils.decrypt(visitAppointment1.getAccompanyPhone()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment1.getDoctorName())){
-                visitAppointment1.setDoctorName(aesUtils.decrypt(visitAppointment1.getDoctorName()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment1.getDoctorPhone())){
-                visitAppointment1.setDoctorPhone(aesUtils.decrypt(visitAppointment1.getDoctorPhone()));
-            }
-            if (visitAppointment1.getBirthBay()!=null){
-                visitAppointment1.setPatientAge(DateUtil.getAge(visitAppointment1.getBirthBay()));
-            }
+            visitAppointmentAesDecrypt(visitAppointment1);
         }
         return getDataTable(list);
     }
@@ -108,9 +80,10 @@ public class VisitAppointmentController extends BaseController
      * 获取出诊预约表详细信息
      */
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
-        return AjaxResult.success(visitAppointmentService.selectVisitAppointmentById(id));
+    public AjaxResult getInfo(@PathVariable("id") String id) throws Exception {
+        VisitAppointment visitAppointment = visitAppointmentService.selectVisitAppointmentById(id);
+        visitAppointmentAesDecrypt(visitAppointment);
+        return AjaxResult.success();
     }
 
     /**
@@ -119,8 +92,8 @@ public class VisitAppointmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('hospital:visitAppointment:add')")
     @Log(title = "出诊预约表", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody VisitAppointment visitAppointment)
-    {
+    public AjaxResult add(@RequestBody VisitAppointment visitAppointment) throws Exception {
+        visitAppointmentAesEncrypt(visitAppointment);
         return toAjax(visitAppointmentService.insertVisitAppointment(visitAppointment));
     }
 
@@ -130,8 +103,7 @@ public class VisitAppointmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('hospital:visitAppointment:edit')")
     @Log(title = "出诊预约表", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody VisitAppointment visitAppointment)
-    {
+    public AjaxResult edit(@RequestBody VisitAppointment visitAppointment) throws Exception {visitAppointmentAesEncrypt(visitAppointment);
         return toAjax(visitAppointmentService.updateVisitAppointment(visitAppointment));
     }
 
@@ -157,12 +129,7 @@ public class VisitAppointmentController extends BaseController
     public AjaxResult getAppointmentByPlanId(Long planId) throws Exception {
         List<VisitAppointment> visitAppointments = visitAppointmentService.selectByPlanId(planId);
         for (VisitAppointment visitAppointment : visitAppointments){
-            if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){
-                visitAppointment.setAccompanyPhone(aesUtils.decrypt(visitAppointment.getAccompanyPhone()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment.getPatientPhone())){
-                visitAppointment.setPatientPhone(aesUtils.decrypt(visitAppointment.getPatientPhone()));
-            }
+            visitAppointmentAesDecrypt(visitAppointment);
         }
         return AjaxResult.success(visitAppointments);
     }
@@ -178,27 +145,10 @@ public class VisitAppointmentController extends BaseController
                 return AjaxResult.error("患者手机号错误");
             }
             if (planMsgAllVo.getPlanId()==null||planMsgAllVo.getPlanId().equals("")){
-                return AjaxResult.error("排班错误错误");
+                return AjaxResult.error("排班信息错误");
             }
             VisitAppointment visitAppointment = visitAppointmentService.addVisitAppointment(planMsgAllVo, request);
-            if (StringUtils.isNotEmpty(visitAppointment.getPatientPhone())){
-                visitAppointment.setPatientPhone(aesUtils.decrypt(visitAppointment.getPatientPhone()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment.getPatientName())){
-                visitAppointment.setPatientName(aesUtils.decrypt(visitAppointment.getPatientName()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){
-                visitAppointment.setAccompanyPhone(aesUtils.decrypt(visitAppointment.getAccompanyPhone()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment.getDoctorName())){
-                visitAppointment.setDoctorName(aesUtils.decrypt(visitAppointment.getDoctorName()));
-            }
-            if (StringUtils.isNotEmpty(visitAppointment.getDoctorPhone())){
-                visitAppointment.setDoctorPhone(aesUtils.decrypt(visitAppointment.getDoctorPhone()));
-            }
-            if (visitAppointment.getBirthBay()!=null){
-                visitAppointment.setPatientAge(DateUtil.getAge(visitAppointment.getBirthBay()));
-            }
+            visitAppointmentAesDecrypt(visitAppointment);
             return AjaxResult.success(visitAppointment);
         }catch (Exception e){
             return AjaxResult.error("创建订单失败");
@@ -215,4 +165,47 @@ public class VisitAppointmentController extends BaseController
         return AjaxResult.success();
     }
 
+
+
+    private void visitAppointmentAesEncrypt(VisitAppointment visitAppointment) throws Exception {
+
+        if (StringUtils.isNotEmpty(visitAppointment.getPatientPhone())){
+            visitAppointment.setPatientPhone(aesUtils.encrypt(visitAppointment.getPatientPhone()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){
+            visitAppointment.setAccompanyPhone(aesUtils.encrypt(visitAppointment.getAccompanyPhone()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getDoctorName())){
+            visitAppointment.setDoctorName(aesUtils.encrypt(visitAppointment.getDoctorName()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getDoctorPhone())){
+            visitAppointment.setDoctorPhone(aesUtils.encrypt(visitAppointment.getDoctorPhone()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getPatientName())){
+            visitAppointment.setPatientName(aesUtils.encrypt(visitAppointment.getPatientName()));
+        }
+    }
+
+
+    private void visitAppointmentAesDecrypt(VisitAppointment visitAppointment) throws Exception {
+
+        if (StringUtils.isNotEmpty(visitAppointment.getPatientPhone())){
+            visitAppointment.setPatientPhone(aesUtils.decrypt(visitAppointment.getPatientPhone()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getPatientName())){
+            visitAppointment.setPatientName(aesUtils.decrypt(visitAppointment.getPatientName()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getAccompanyPhone())){
+            visitAppointment.setAccompanyPhone(aesUtils.decrypt(visitAppointment.getAccompanyPhone()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getDoctorName())){
+            visitAppointment.setDoctorName(aesUtils.decrypt(visitAppointment.getDoctorName()));
+        }
+        if (StringUtils.isNotEmpty(visitAppointment.getDoctorPhone())){
+            visitAppointment.setDoctorPhone(aesUtils.decrypt(visitAppointment.getDoctorPhone()));
+        }
+        if (visitAppointment.getBirthBay()!=null){
+            visitAppointment.setPatientAge(DateUtil.getAge(visitAppointment.getBirthBay()));
+        }
+    }
 }
