@@ -45,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT
         patient.patient_name_aes as patient_name,
         patient.patient_phone_aes as patient_phone,
+        hospital.hospital_name,
         visit_appointment.appointment_id,
         visit_appointment.plan_id,
         visit_appointment.patient_phone,
@@ -58,7 +59,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         visit_appointment.special_name,
         visit_appointment.clinic_address,
         visit_appointment.outpatient_name,
-        visit_appointment.hospital_id,
         visit_appointment.doctor_name,
         visit_appointment.doctor_phone,
         visit_appointment.period_day,
@@ -72,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         INNER JOIN
         patient
         ON
-        visit_appointment.patient_phone = patient.patient_phone_aes
+        visit_appointment.patient_phone = patient.patient_phone_aes inner join hospital on visit_appointment.hospital_id=hospital.hospital_id
         <where>
             <if test="planId != null "> and plan_id = #{planId}</if>
             <if test="patientPhone != null  and patientPhone != ''"> and visit_appointment.patient_phone = #{patientPhone}</if>
