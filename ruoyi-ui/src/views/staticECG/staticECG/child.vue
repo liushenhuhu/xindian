@@ -357,30 +357,40 @@ export default {
         },
         dataZoom: [
           {
+            show: true,       // 滑动条组件
+            type: 'slider',
+            brushSelect:false,
+            // y: '90%',
+            startValue: 0,
+            endValue:735,
+            maxValueSpan:735,
+          },
+          {
+            show: true,       // 滑动条组件
+            type: 'slider',
+            orient: 'vertical',
+            brushSelect:false,
+            start: 0,
+            end: 100,
+          },
+          {
             type: 'inside',
             orient: 'vertical',// 鼠标滚轮缩放
             start: 0,
             end: 100,
           },
           {
-            type: 'inside', // 鼠标滚轮缩放
-            startValue: 0,
-            endValue:727,
-            maxValueSpan:727,
-          },
-          {
-            show: true,       // 滑动条组件
-            type: 'slider',
-            y: '90%',
+            type: 'inside',   // 鼠标滚轮缩放
+            y:'90%',
             start: 0,
-            end: 100
-          }
+            end: 100,
+          },
         ],
         grid: {
           left: '3%',
           right: '3%',
           top: '2%',
-          bottom: '13%'
+          bottom: '13%',
         },
         legend: {
           show: false,
@@ -605,6 +615,28 @@ export default {
             });
           }
       })
+      //滑动条事件
+      // 防抖函数，减少事件触发频率
+      function debounce(func, wait) {
+        let timeout;
+        return function () {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            func.apply(this, arguments);
+          }, wait);
+        };
+      }
+      // 创建防抖版本的datazoom事件处理函数
+      var debouncedDataZoomHandler = debounce((params)=>{
+        // 处理datazoom事件的逻辑
+        this.addtext()
+        var chartOption = this.chart.getOption();
+        chartOption.graphic = this.graphic;
+        this.chart.setOption(chartOption,true);
+        console.log('DataZoom Event:', params);
+      }, 50); // 设置防抖延迟时间
+      this.chart.off('datazoom')
+      this.chart.on('datazoom',debouncedDataZoomHandler)
     },
     //添加标点
     addpoint(){
@@ -648,7 +680,7 @@ export default {
     addtext(){
       this.graphic.length=0
       let graphic=[]
-      console.log(this[`${'arrList' + this.level}`])
+      //console.log(this[`${'arrList' + this.level}`])
       for (let key in this[`${'arrList' + this.level}`]) {
         var length=this[`${'arrList' + this.level}`][key].length
         for (let i = 0; i <length; i++) {
@@ -684,7 +716,7 @@ export default {
           }
           this.graphic.push(text)
         }
-      console.log("绘制文本============",this.graphic)
+      //console.log("绘制文本============",this.graphic)
     },
     //按x从小到大插入值
     addValue(params) {
