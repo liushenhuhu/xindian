@@ -214,28 +214,28 @@
           <span style="color: red">  (测试用的医生账号,不会作为专业的医生去随机推送患者诊断请求)</span>
         </el-form-item>
 
-<!--       <div v-if="form.isDoc==='2'">-->
-<!--         <el-form-item label="所属专科" prop="specialId">-->
-<!--           <el-select v-model="form.specialId" placeholder="请输入专科名称" clearable @change="getSpecialList(form.specialId,form.hospital,1)" >-->
-<!--             <el-option-->
-<!--               v-for="item in specialList"-->
-<!--               :key="item.hospitalSpecial.specialId"-->
-<!--               :label="item.hospitalSpecial.specialName"-->
-<!--               :value="item.hospitalSpecial.specialId">-->
-<!--             </el-option>-->
-<!--           </el-select>-->
-<!--         </el-form-item>-->
-<!--         <el-form-item label="所属门诊" prop="outpatientId">-->
-<!--           <el-select v-model="form.outpatientId" placeholder="请输入门诊名称" clearable >-->
-<!--             <el-option-->
-<!--               v-for="item in outpatientList"-->
-<!--               :key="item.hospitalOutpatient.outpatientId"-->
-<!--               :label="item.hospitalOutpatient.outpatientName"-->
-<!--               :value="item.hospitalOutpatient.outpatientId">-->
-<!--             </el-option>-->
-<!--           </el-select>-->
-<!--         </el-form-item>-->
-<!--       </div>-->
+       <div v-if="form.isDoc==='2'">
+         <el-form-item label="所属专科" prop="specialId">
+           <el-select v-model="form.specialId" placeholder="请输入专科名称" clearable @change="getSpecialList(form.specialId,form.hospital,1)" >
+             <el-option
+               v-for="item in specialList"
+               :key="item.hospitalSpecial.specialId"
+               :label="item.hospitalSpecial.specialName"
+               :value="item.hospitalSpecial.specialId">
+             </el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="所属门诊" prop="outpatientId">
+           <el-select v-model="form.outpatientId" placeholder="请输入门诊名称" clearable >
+             <el-option
+               v-for="item in outpatientList"
+               :key="item.hospitalOutpatient.outpatientId"
+               :label="item.hospitalOutpatient.outpatientName"
+               :value="item.hospitalOutpatient.outpatientId">
+             </el-option>
+           </el-select>
+         </el-form-item>
+       </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -402,31 +402,32 @@ export default {
       this.loading = true;
       listDoctor(this.queryParams).then(response => {
         this.doctorList = response.rows;
-        // for(var i=0;i<response.rows.length;i++){
-        //   this.restaurants.find(item => console.log(item))
-        //   this.doctorList[i].departmentCode=this.restaurants.find(item => item.id === response.rows[i].departmentCode);
-        // }
+        for(var i=0;i<response.rows.length;i++){
+          this.restaurants.find(item => console.log(item))
+          this.doctorList[i].departmentCode=this.restaurants.find(item => item.id === response.rows[i].departmentCode);
+        }
         this.total = response.total;
         this.loading = false;
       });
     },
     historyId(val){
       if (val!==""){
+        this.form.departmentCode=null
         hospitalCodeFind(val).then(r=>{
          this.options1=r.data
         })
-        // let _th = this
-        // _th.options.forEach(function(value) {
-        //   if (value.hospitalCode===val){
-        //     let obj = {
-        //       hospitalId:value.hospitalId
-        //     }
-        //     getHospitalSpecialList(obj).then(r=>{
-        //       _th.specialList = r.data
-        //     })
-        //     return;
-        //   }
-        // })
+        let _th = this
+        _th.options.forEach(function(value) {
+          if (value.hospitalCode===val){
+            let obj = {
+              hospitalId:value.hospitalId
+            }
+            getHospitalSpecialList(obj).then(r=>{
+              _th.specialList = r.data
+            })
+            return;
+          }
+        })
       }
     },
     getSpecialList(val,hospital,id){
@@ -517,9 +518,9 @@ export default {
       const doctorId = row.doctorId || this.ids
       getDoctor(doctorId).then(response => {
         this.historyId(response.data.hospitalCode)
-        // if (response.data.specialId&&response.data.hospitalCode){
-        //   this.getSpecialList(response.data.specialId,response.data.hospitalCode,2)
-        // }
+        if (response.data.specialId&&response.data.hospitalCode){
+          this.getSpecialList(response.data.specialId,response.data.hospitalCode,2)
+        }
         this.form = response.data;
 
         this.form.hospital = response.data.hospitalCode

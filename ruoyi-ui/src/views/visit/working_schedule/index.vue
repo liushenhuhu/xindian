@@ -10,7 +10,7 @@
 <!--        />-->
 <!--      </el-form-item>-->
       <el-form-item label="专科名称" prop="specialId">
-        <el-select v-model="queryParams.specialId" placeholder="请输入专科名称" clearable @change="getSpecialList(form.specialId)" >
+        <el-select v-model="queryParams.specialId" placeholder="请输入专科名称" clearable  >
           <el-option
             v-for="item in specialList"
             :key="item.hospitalSpecial.specialId"
@@ -92,7 +92,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:plan:add']"
+          v-hasPermi="['hospital:visitPlan:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -103,7 +103,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:plan:edit']"
+          v-hasPermi="['hospital:visitPlan:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -114,7 +114,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:plan:remove']"
+          v-hasPermi="['hospital:visitPlan:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -124,7 +124,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:plan:export']"
+          v-hasPermi="['hospital:visitPlan:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -163,14 +163,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:plan:edit']"
+            v-hasPermi="['hospital:visitPlan:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:plan:remove']"
+            v-hasPermi="['hospital:visitPlan:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -190,7 +190,7 @@
 <!--        <el-form-item label="医院编号" prop="hospitalCode">-->
 <!--          <el-input v-model="form.hospitalCode" placeholder="请输入医院编号" />-->
 <!--        </el-form-item>-->
-        <el-form-item label="专科名称" prop="specialCode">
+        <el-form-item label="专科名称" prop="specialName">
           <el-input v-model="form.specialName" placeholder="请输入专科名称" disabled/>
         </el-form-item>
         <el-form-item label="门诊名称" prop="outpatientId">
@@ -348,6 +348,9 @@ export default {
         clinicId: [
           { required: true, message: "诊室地址不能为空", trigger: "blur" }
         ],
+        specialName: [
+          { required: true, message: "专科不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -366,7 +369,7 @@ export default {
     getHospitalOutpatientList(obj).then(r=>{
       this.outpatientList = r.data
     })
-    getHospitalVisitDoc(this.$route.query.hospitalId).then(r=>{
+    getHospitalVisitDoc().then(r=>{
       this.hospitalDocList = r.data
     })
   },
@@ -386,31 +389,29 @@ export default {
     },
     docIsSpecial(val,id){
 
+
       console.log(val)
       if (id===1){
         this.form.clinicId = null;
+
       }
+      this.form.outpatientName=null
+      this.form.specialName=null
       let _th = this
       this.hospitalDocList.forEach(function (doc) {
         if (doc.doctorPhone===val){
-          console.log(222)
           _th.specialList.forEach(function (special) {
             if (doc.specialId===special.hospitalSpecial.specialId){
-              console.log(333)
               _th.form.specialName=special.hospitalSpecial.specialName
             }
           })
           _th.outpatientList.forEach(function (outpatient) {
-            console.log(444)
-            console.log(outpatient)
-            console.log(doc)
             if (doc.outpatientId===outpatient.hospitalOutpatient.outpatientId){
               _th.form.outpatientName=outpatient.hospitalOutpatient.outpatientName
 
               let obj = {
                 outpatientId:outpatient.hospitalOutpatient.outpatientId
               }
-              console.log(555)
               listClinic(obj).then(r=>{
                 console.log(r.rows)
                 _th.clinicList = r.rows
@@ -514,7 +515,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/plan/export', {
+      this.download('hospital/plan/export', {
         ...this.queryParams
       }, `plan_${new Date().getTime()}.xlsx`)
     }

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询挂号预约列表
 export function listVisitAppointment(query) {
   return request({
-    url: '/hospital/visitAppointment/list',
+    url: '/hospital/visitAppointment/WebList',
     method: 'get',
     params: query
   })

@@ -100,6 +100,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             doctor.doctor_phone_aes as doctor_phone,
             doctor.doctor_name_aes as doctor_name,
             doctor.special_id,
+            doctor.professional,
+            doctor.charge_price,
             doctor.outpatient_id
         FROM
             visit_plan
@@ -135,6 +137,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gmtCreate != null "> and visit_plan.gmt_create = #{gmtCreate}</if>
             <if test="gmtModified != null "> and visit_plan.gmt_modified = #{gmtModified}</if>
         </where>
+        order by visit_plan.gmt_create desc
     </select>
     <select id="selectVisitPlanByIdAll" resultType="com.ruoyi.xindian.hospital.domain.VisitPlan" resultMap="DocAndVisitPlan">
         SELECT

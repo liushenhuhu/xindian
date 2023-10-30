@@ -57,4 +57,6 @@ public class PlanMsgAllVo {
 
     private String accompanyPhone;
 
+    private String appointmentId;
+
 }

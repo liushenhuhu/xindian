@@ -9,6 +9,9 @@ public interface PaymentInfoService {
     void createPaymentInfo(String xml) throws Exception;
 
 
+    void createPaymentInfoVisit(String xml) throws Exception;
+
+
     /**
      * 查询支付日志
      *

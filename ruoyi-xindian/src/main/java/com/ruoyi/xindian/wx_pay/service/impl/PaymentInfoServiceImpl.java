@@ -80,6 +80,23 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
         baseMapper.insert(paymentInfo);
     }
 
+    @Override
+    public void createPaymentInfoVisit(String xml) throws Exception {
+        log.info("记录支付日志");
+
+        Map<String, Object> plainTextMap = WXPayUtil.xmlToMap(xml);
+
+        //订单号
+        String orderNo = (String)plainTextMap.get("out_trade_no");
+        //业务编号
+        String transactionId = (String)plainTextMap.get("transaction_id");
+        //支付类型
+        String tradeType = (String)plainTextMap.get("trade_type");
+        //交易状态
+        String tradeState = (String)plainTextMap.get("result_code");
+        String totalFee = (String)plainTextMap.get("total_fee");
+        //用户实际支付金额
+    }
 
 
     /**

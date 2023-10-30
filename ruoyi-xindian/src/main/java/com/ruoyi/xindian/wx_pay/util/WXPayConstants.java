@@ -27,8 +27,8 @@ public class WXPayConstants {
 
 
 
-//    public static final String VISIT_CALLBACK_URL = "https://ecg.mindyard.cn:84/prod-api/api/v1/callBack";//微信服务器调用支付结果通知路径(预约门诊支付回调)
-    public static final String VISIT_CALLBACK_URL = "http://x8uz96.natappfree.cc/prod-api/api/v1/callBack";//微信服务器调用支付结果通知路径(预约门诊支付回调)
+    public static final String VISIT_CALLBACK_URL = "https://ecg.mindyard.cn:84/prod-api/visit/pay/callBack";//微信服务器调用支付结果通知路径(预约门诊支付回调)
+//    public static final String VISIT_CALLBACK_URL = "http://x8uz96.natappfree.cc/prod-api/api/v1/callBack";//微信服务器调用支付结果通知路径(预约门诊支付回调)
 
 
     public static final String PATERNER_KEY = "ADFHJWhduenfks17shGDYE6278jfww12";//商户key秘钥   填写你们自己的

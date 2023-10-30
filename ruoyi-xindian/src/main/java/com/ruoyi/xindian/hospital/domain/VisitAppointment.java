@@ -115,7 +115,35 @@ public class VisitAppointment extends BaseEntity
 
     private String hospitalName;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthBay;
+
+
+    /**
+     * 专科编号
+     */
+    private Long specialId;
+
+    /**
+     * 门诊编号
+     */
+    private Long outpatientId;
+
+    public Long getSpecialId() {
+        return specialId;
+    }
+
+    public void setSpecialId(Long specialId) {
+        this.specialId = specialId;
+    }
+
+    public Long getOutpatientId() {
+        return outpatientId;
+    }
+
+    public void setOutpatientId(Long outpatientId) {
+        this.outpatientId = outpatientId;
+    }
 
     public Date getBirthBay() {
         return birthBay;

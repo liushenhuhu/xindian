@@ -18,4 +18,7 @@ public interface VisitAllocationService extends IService<VisitAllocation> {
 
     HashMap<Object ,Object> addRedis();
 
+
+    VisitAllocation selectById(Integer slotId);
+
 }

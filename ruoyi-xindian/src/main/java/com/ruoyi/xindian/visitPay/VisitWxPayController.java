@@ -219,13 +219,13 @@ public class VisitWxPayController {
     /**
      * 调用退款接口，取消订
      * @param id 订单编号
-     * @param reason 退款原因
      * @param response
      * @return
      */
     @GetMapping("refund")
-    public Map<String, Object> refund(String id,String reason,HttpServletResponse response){
+    public Map<String, Object> refund(String id,HttpServletResponse response){
 
+        String reason = "取消预约";
         // 返回参数
         Map<String, Object> resMap = new HashMap<>();
         String resXml = "";
@@ -284,7 +284,7 @@ public class VisitWxPayController {
                         out.flush();
                         out.close();
                         //修改退款记录
-                        refundsInfoService.updateRefund(xmlStr);
+//                        refundsInfoService.updateRefund(xmlStr);
                         System.err.println("返回给微信的值："+resXml.getBytes());
                     }catch (Exception e){
                         resMap.put("fail","订单状态修改失败");

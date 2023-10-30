@@ -25,7 +25,7 @@ public class HospitalSubscribe implements Serializable {
     /**
      * 医院id
      */
-    private Integer hospitalId;
+    private Long hospitalId;
 
     /**
      * 创建时间

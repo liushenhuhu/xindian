@@ -46,7 +46,7 @@ public class HospitalOutpatientController extends BaseController
     /**
      * 查询医院门诊表列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:list')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:list')")
     @GetMapping("/list")
     public TableDataInfo list(HospitalOutpatient hospitalOutpatient)
     {
@@ -58,7 +58,7 @@ public class HospitalOutpatientController extends BaseController
     /**
      * 导出医院门诊表列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:export')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:export')")
     @Log(title = "医院门诊表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, HospitalOutpatient hospitalOutpatient)
@@ -71,7 +71,7 @@ public class HospitalOutpatientController extends BaseController
     /**
      * 获取医院门诊表详细信息
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:query')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -81,7 +81,7 @@ public class HospitalOutpatientController extends BaseController
     /**
      * 新增医院门诊表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:add')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:add')")
     @Log(title = "医院门诊表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody HospitalOutpatient hospitalOutpatient)
@@ -102,7 +102,7 @@ public class HospitalOutpatientController extends BaseController
     /**
      * 修改医院门诊表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:edit')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:edit')")
     @Log(title = "医院门诊表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HospitalOutpatient hospitalOutpatient)
@@ -128,7 +128,7 @@ public class HospitalOutpatientController extends BaseController
     /**
      * 删除医院门诊表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:remove')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalOutpatient:remove')")
     @Log(title = "医院门诊表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

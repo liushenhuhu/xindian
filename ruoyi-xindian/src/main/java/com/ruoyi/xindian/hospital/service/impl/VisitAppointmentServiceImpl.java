@@ -1,5 +1,7 @@
 package com.ruoyi.xindian.hospital.service.impl;
+import java.util.Date;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -13,8 +15,10 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.hospital.domain.VisitAllocation;
 import com.ruoyi.xindian.hospital.domain.VisitPlan;
+import com.ruoyi.xindian.hospital.domain.VisitWait;
 import com.ruoyi.xindian.hospital.mapper.VisitAllocationMapper;
 import com.ruoyi.xindian.hospital.mapper.VisitPlanMapper;
+import com.ruoyi.xindian.hospital.mapper.VisitWaitMapper;
 import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.mapper.PatientMapper;
@@ -61,6 +65,9 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
 
     @Resource
     private SysUserMapper sysUserMapper;
+
+    @Resource
+    private VisitWaitMapper visitWaitMapper;
 
     /**
      * 查询出诊预约表
@@ -117,7 +124,7 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
      * @return 结果
      */
     @Override
-    public int deleteVisitAppointmentByIds(Long[] ids)
+    public int deleteVisitAppointmentByIds(String[] ids)
     {
         return visitAppointmentMapper.deleteVisitAppointmentByIds(ids);
     }
@@ -125,13 +132,13 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
     /**
      * 删除出诊预约表信息
      * 
-     * @param id 出诊预约表主键
+     * @param appointmentId 出诊预约表主键
      * @return 结果
      */
     @Override
-    public int deleteVisitAppointmentById(Long id)
+    public int deleteVisitAppointmentById(String appointmentId)
     {
-        return visitAppointmentMapper.deleteVisitAppointmentById(id);
+        return visitAppointmentMapper.deleteVisitAppointmentById(appointmentId);
     }
 
     @Override
@@ -169,11 +176,12 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
 
         List<VisitAppointment> visitAppointments1 = visitAppointmentMapper.selectVisitAppointmentList(visitAppointment2);
 
-        if (visitAppointments1!=null&&visitAppointments1.size()>0){
 
-            VisitAppointment visitAppointment3 = visitAppointments1.get(0);
+        for (VisitAppointment v : visitAppointments1){
 
-            throw new ServiceException("今日已在"+aesUtils.decrypt(visitAppointment3.getDoctorName())+"医生预约了"+visitAppointment3.getPeriodStart()+"-"+visitAppointment3.getPeriodEnd()+"时段，不能重复预约");
+            if (v.getStatus()!=2){
+                throw new ServiceException("今日已在"+aesUtils.decrypt(v.getDoctorName())+"医生预约了"+v.getPeriodStart()+"-"+v.getPeriodEnd()+"时段，不能重复预约");
+            }
         }
 
         //判断预约的时间的在不在当前医生的判断时间里
@@ -238,6 +246,75 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
     }
 
     @Override
+    public VisitAppointment putVisitAppointment(PlanMsgAllVo planMsgAllVo, HttpServletRequest request) throws Exception {
+
+        VisitAppointment visitAppointment = new VisitAppointment();
+        visitAppointment.setAppointmentId(planMsgAllVo.getAppointmentId());
+        //判断患者信息是否存在
+        Patient patient = patientMapper.selectPatientByPatientPhone(aesUtils.encrypt(planMsgAllVo.getPatientPhone()));
+        if (patient==null){
+            throw new ServiceException("患者信息不存在");
+        }
+
+        visitAppointment.setPatientPhone(patient.getPatientPhone());
+
+        //判断排班信息是否存在
+        VisitPlan visitPlan = visitPlanMapper.selectVisitPlanByIdAll(planMsgAllVo.getPlanId());
+        if (visitPlan==null){
+            throw new ServiceException("排班信息不存在");
+        }
+        //判断预约的时间的在不在当前医生的判断时间里
+        VisitAllocation visitAllocation = visitAllocationMapper.selectOne(new QueryWrapper<VisitAllocation>().eq("slot_id", planMsgAllVo.getSlotId()).eq(visitPlan.getTime()!=3,"category",visitPlan.getTime()));
+        if (visitAllocation==null){
+            throw new ServiceException("排班信息不存在");
+        }
+
+        //判断当前时间段是否被预约
+        List<VisitAppointment> visitAppointments = visitAppointmentMapper.selectByPlanIdVisitAppointments(planMsgAllVo.getPlanId());
+
+        for (VisitAppointment visitAppointment1 : visitAppointments){
+            if (visitAppointment1.getTimePeriod().equals(planMsgAllVo.getSlotId())&&visitAppointment1.getStatus()!=2){
+                throw new ServiceException("当前时间段已被人预约");
+            }
+        }
+
+        //判断当前预约的时间的是否过了当天的预约时间（进行预约当天的）
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        if (visitPlan.getDay()!=null&&sdf.parse(sdf.format(date)).compareTo(sdf.parse(sdf.format(visitPlan.getDay())))==0){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            Date parse1 = simpleDateFormat.parse(simpleDateFormat.format(date));
+            Date parse = simpleDateFormat.parse(visitAllocation.getStartTime());
+            if (parse1.compareTo(parse)>0){
+                throw new ServiceException("当前时间段已过预约时间");
+            }
+
+        }
+        visitAppointment.setPlanId(planMsgAllVo.getPlanId());
+        visitAppointment.setAccompanyPhone(planMsgAllVo.getAccompanyPhone());
+        visitAppointment.setPeriodStart(visitAllocation.getStartTime());
+        visitAppointment.setPeriodEnd(visitAllocation.getEndTime());
+        visitAppointment.setSpecialName(visitPlan.getHospitalSpecial().getSpecialName());
+        visitAppointment.setOutpatientName(visitPlan.getHospitalOutpatient().getOutpatientName());
+        visitAppointment.setClinicAddress(visitPlan.getHospitalClinic().getAddress());
+        visitAppointment.setHospitalId(visitPlan.getHospital().getHospitalId());
+        visitAppointment.setDoctorName(visitPlan.getDoctor().getDoctorName());
+        visitAppointment.setDoctorPhone(visitPlan.getDoctor().getDoctorPhone());
+        visitAppointment.setPeriodDay(sdf.parse(sdf.format(visitPlan.getDay())));
+        visitAppointment.setPayPrice(visitPlan.getDoctor().getChargePrice());
+        visitAppointment.setDoctorProfessional(visitPlan.getDoctor().getProfessional());
+        visitAppointment.setTimePeriod(planMsgAllVo.getSlotId());
+        visitAppointment.setUpdateTime(date);
+
+        int i = visitAppointmentMapper.updateVisitAppointment(visitAppointment);
+
+        if (i>0){
+            return visitAppointment;
+        }
+        throw new ServiceException("修改失败");
+    }
+
+    @Override
     public VisitAppointment getVisitAppointmentOrderNo(String orderNo) {
         VisitAppointment visitAppointmentOrderNo = visitAppointmentMapper.getVisitAppointmentOrderNo(orderNo);
         if (visitAppointmentOrderNo==null){
@@ -254,6 +331,57 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
     @Override
     public void updateVisitAppointmentStatus(String id, String type) {
         visitAppointmentMapper.updateVisitAppointmentStatus(id, type);
+    }
+
+    @Override
+    public int visitSignIn(String appointmentId) throws ParseException {
+
+        VisitAppointment visitAppointment = visitAppointmentMapper.selectVisitAppointmentById(appointmentId);
+        if (visitAppointment==null){
+            throw new ServiceException("预约不存在");
+        }
+        //判断当前预约的时间的是否过了当天的预约时间（进行预约当天的）
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        if (visitAppointment.getPeriodDay()!=null&&sdf.parse(sdf.format(date)).compareTo(sdf.parse(sdf.format(visitAppointment.getPeriodDay())))==0){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            Date parse1 = simpleDateFormat.parse(simpleDateFormat.format(date));
+            Date parse = simpleDateFormat.parse(visitAppointment.getPeriodEnd());
+            Date parse2 = simpleDateFormat.parse(visitAppointment.getPeriodStart());
+
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(parse2);
+            calendar.add(Calendar.MINUTE, -20);
+            Date timeBefore20Minutes = calendar.getTime();
+
+
+
+            if (parse1.compareTo(parse)>0){
+                VisitAppointment visitAppointment1 = new VisitAppointment();
+                visitAppointment1.setStatus(3L);
+                visitAppointment1.setAppointmentId(appointmentId);
+                visitAppointmentMapper.updateVisitAppointment(visitAppointment1);
+                throw new ServiceException("当前时间段已过预约时间,无法签到");
+            }else if (parse1.compareTo(timeBefore20Minutes)<0){
+                throw new ServiceException("现在未到开始时间，请稍后再试");
+            }
+
+        }else {
+            throw new ServiceException("请在预约当天时间段前20分钟内点击签到");
+        }
+
+
+        VisitWait visitWait = new VisitWait();
+        visitWait.setAppointmentId(visitAppointment.getAppointmentId());
+        visitWait.setHospitalId(visitAppointment.getHospitalId());
+        visitWait.setDoctorPhone(visitAppointment.getDoctorPhone());
+        visitWait.setPatientPhone(visitAppointment.getPatientPhone());
+        visitWait.setSlotId(visitAppointment.getTimePeriod());
+        visitWait.setCreateTime(new Date());
+        visitWait.setUpdateTime(new Date());
+
+        return visitWaitMapper.insertVisitWait(visitWait);
     }
 
 }

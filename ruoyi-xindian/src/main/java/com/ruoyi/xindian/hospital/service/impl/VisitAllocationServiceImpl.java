@@ -74,6 +74,11 @@ public class VisitAllocationServiceImpl extends ServiceImpl<VisitAllocationMappe
         stringObjectHashMap.put("pm",categoryPm);
         return stringObjectHashMap;
     }
+
+    @Override
+    public VisitAllocation selectById(Integer slotId) {
+        return visitAllocationMapper.selectOne(new QueryWrapper<VisitAllocation>().eq("slot_id", slotId));
+    }
 }
 
 

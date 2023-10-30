@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.hospital.service;
 
+import java.text.ParseException;
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.VisitAppointment;
 import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
@@ -52,7 +53,7 @@ public interface IVisitAppointmentService
      * @param ids 需要删除的出诊预约表主键集合
      * @return 结果
      */
-    public int deleteVisitAppointmentByIds(Long[] ids);
+    public int deleteVisitAppointmentByIds(String[] ids);
 
     /**
      * 删除出诊预约表信息
@@ -60,7 +61,7 @@ public interface IVisitAppointmentService
      * @param id 出诊预约表主键
      * @return 结果
      */
-    public int deleteVisitAppointmentById(Long id);
+    public int deleteVisitAppointmentById(String id);
 
 
     /**
@@ -73,6 +74,7 @@ public interface IVisitAppointmentService
 
 
     VisitAppointment addVisitAppointment(PlanMsgAllVo planMsgAllVo, HttpServletRequest request) throws Exception;
+    VisitAppointment putVisitAppointment(PlanMsgAllVo planMsgAllVo, HttpServletRequest request) throws Exception;
 
 
 
@@ -84,6 +86,10 @@ public interface IVisitAppointmentService
 
     void updateVisitAppointmentStatus(String id,String type);
 
+
+
+
+    int visitSignIn(String appointmentId) throws ParseException;
 
 
 }

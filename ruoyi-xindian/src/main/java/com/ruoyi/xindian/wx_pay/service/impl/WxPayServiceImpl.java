@@ -97,7 +97,7 @@ public class WxPayServiceImpl implements WxPayService {
 
                 visitAppointmentService.updateVisitAppointmentOrderStatus(orderNo,"1");
                 //记录支付日志
-                paymentInfoService.createPaymentInfo(xml);
+//                paymentInfoService.createPaymentInfo(xml);
             } finally {
                 //要主动释放锁
                 lock.unlock();

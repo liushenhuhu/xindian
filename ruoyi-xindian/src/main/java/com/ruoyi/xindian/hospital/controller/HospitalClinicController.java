@@ -37,7 +37,7 @@ public class HospitalClinicController extends BaseController
     /**
      * 查询诊室信息表列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:list')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:list')")
     @GetMapping("/list")
     public TableDataInfo list(HospitalClinic hospitalClinic)
     {
@@ -49,7 +49,7 @@ public class HospitalClinicController extends BaseController
     /**
      * 导出诊室信息表列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:export')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:export')")
     @Log(title = "诊室信息表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, HospitalClinic hospitalClinic)
@@ -62,7 +62,7 @@ public class HospitalClinicController extends BaseController
     /**
      * 获取诊室信息表详细信息
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:query')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,7 +72,7 @@ public class HospitalClinicController extends BaseController
     /**
      * 新增诊室信息表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:add')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:add')")
     @Log(title = "诊室信息表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody HospitalClinic hospitalClinic)
@@ -83,7 +83,7 @@ public class HospitalClinicController extends BaseController
     /**
      * 修改诊室信息表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:edit')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:edit')")
     @Log(title = "诊室信息表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HospitalClinic hospitalClinic)
@@ -94,7 +94,7 @@ public class HospitalClinicController extends BaseController
     /**
      * 删除诊室信息表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:remove')")
+//    @PreAuthorize("@ss.hasPermi('hospital:hospitalClinic:remove')")
     @Log(title = "诊室信息表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

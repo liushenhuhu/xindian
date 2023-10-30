@@ -9,6 +9,12 @@ export function listSubscribe(query) {
   })
 }
 
+export function getVisitHospitalList() {
+  return request({
+    url: '/hospital/subscribe/getVisitHospitalList',
+    method: 'get'
+  })
+}
 // 查询门诊预约医院详细
 export function getSubscribe(subscribeId) {
   return request({

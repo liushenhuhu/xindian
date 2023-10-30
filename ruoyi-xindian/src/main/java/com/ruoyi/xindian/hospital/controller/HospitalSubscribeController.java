@@ -1,11 +1,19 @@
 package com.ruoyi.xindian.hospital.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.domain.HospitalSubscribe;
 import com.ruoyi.xindian.hospital.service.HospitalSubscribeService;
+import com.ruoyi.xindian.hospital.service.IHospitalService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +44,14 @@ public class HospitalSubscribeController extends BaseController
     @Autowired
     private HospitalSubscribeService hospitalSubscribeService;
 
+
+    @Resource
+    private IHospitalService hospitalService;
+
+    @Resource
+    private TokenService tokenService;
+
+
     /**
      * 查询门诊预约医院列表
      */
@@ -51,7 +67,7 @@ public class HospitalSubscribeController extends BaseController
     /**
      * 导出门诊预约医院列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:subscribe:export')")
+//    @PreAuthorize("@ss.hasPermi('hospital:subscribe:export')")
     @Log(title = "门诊预约医院", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, HospitalSubscribe hospitalSubscribe)
@@ -64,7 +80,7 @@ public class HospitalSubscribeController extends BaseController
     /**
      * 获取门诊预约医院详细信息
      */
-    @PreAuthorize("@ss.hasPermi('hospital:subscribe:query')")
+//    @PreAuthorize("@ss.hasPermi('hospital:subscribe:query')")
     @GetMapping(value = "/{subscribeId}")
     public AjaxResult getInfo(@PathVariable("subscribeId") Long subscribeId)
     {
@@ -74,7 +90,7 @@ public class HospitalSubscribeController extends BaseController
     /**
      * 新增门诊预约医院
      */
-    @PreAuthorize("@ss.hasPermi('hospital:subscribe:add')")
+//    @PreAuthorize("@ss.hasPermi('hospital:subscribe:add')")
     @Log(title = "门诊预约医院", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody HospitalSubscribe hospitalSubscribe)
@@ -85,7 +101,7 @@ public class HospitalSubscribeController extends BaseController
     /**
      * 修改门诊预约医院
      */
-    @PreAuthorize("@ss.hasPermi('hospital:subscribe:edit')")
+//    @PreAuthorize("@ss.hasPermi('hospital:subscribe:edit')")
     @Log(title = "门诊预约医院", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HospitalSubscribe hospitalSubscribe)
@@ -96,7 +112,7 @@ public class HospitalSubscribeController extends BaseController
     /**
      * 删除门诊预约医院
      */
-    @PreAuthorize("@ss.hasPermi('hospital:subscribe:remove')")
+//    @PreAuthorize("@ss.hasPermi('hospital:subscribe:remove')")
     @Log(title = "门诊预约医院", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{subscribeIds}")
     public AjaxResult remove(@PathVariable Long[] subscribeIds)
@@ -113,5 +129,24 @@ public class HospitalSubscribeController extends BaseController
             return AjaxResult.error("参数有问题，请稍后再试");
         }
        return AjaxResult.success( hospitalSubscribeService.getHospitalIdFindList(hospital));
+    }
+
+    @GetMapping("/getVisitHospitalList")
+    public AjaxResult getVisitHospitalList(HttpServletRequest request){
+
+        LoginUser loginUser = tokenService.getLoginUser(request);
+
+        List<HospitalSubscribe> list = new ArrayList<>();
+        HospitalSubscribe hospitalSubscribe = new HospitalSubscribe();
+        if (SysUser.isAdmin(loginUser.getUserId())){
+            list = hospitalSubscribeService.selectHospitalSubscribeList(hospitalSubscribe);
+        }else {
+            if (loginUser.getUser().getHospitalCode()!=null){
+                Hospital hospital = hospitalService.selectHospitalByHospitalCode(loginUser.getUser().getHospitalCode());
+                hospitalSubscribe.setHospitalId(hospital.getHospitalId());
+                list = hospitalSubscribeService.selectHospitalSubscribeList(hospitalSubscribe);
+            }
+        }
+         return AjaxResult.success(list);
     }
 }

@@ -25,7 +25,6 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:subscribe:add']"
         >新增</el-button>
       </el-col>
 <!--      <el-col :span="1.5">-->
@@ -47,7 +46,6 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:subscribe:remove']"
         >删除</el-button>
       </el-col>
 <!--      <el-col :span="1.5">-->
@@ -78,28 +76,24 @@
             type="text"
             icon="el-icon-edit"
             @click="findSpecial(scope.row)"
-            v-hasPermi="['system:subscribe:edit']"
           >查看专科</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="working_schedule(scope.row)"
-            v-hasPermi="['system:subscribe:edit']"
           >医生排班</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:subscribe:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:subscribe:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -136,7 +130,14 @@
 </template>
 
 <script>
-import { listSubscribe, getSubscribe, delSubscribe, addSubscribe, updateSubscribe } from "@/api/visit/subscribe";
+import {
+  listSubscribe,
+  getSubscribe,
+  delSubscribe,
+  addSubscribe,
+  updateSubscribe,
+  getVisitHospitalList
+} from "@/api/visit/subscribe";
 import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {

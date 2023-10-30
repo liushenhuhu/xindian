@@ -189,10 +189,10 @@ public class PatientController extends BaseController
     /**
      * 获取患者详细信息
      */
-    @PreAuthorize("@ss.hasPermi('patient:patient:query')")
     @GetMapping(value = "/getInfoByPhone/{patientPhone}")
     public AjaxResult getInfoByPhone(@PathVariable("patientPhone") String patientPhone) throws Exception {
-        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
+
+        Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(patientPhone));
         Date birthDay = patient.getBirthDay();
         if(birthDay != null){
             patient.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));

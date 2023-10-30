@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.hospital.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.annotation.Resource;
@@ -67,7 +68,6 @@ public class VisitPlanController extends BaseController
     /**
      * 查询出诊信息表列表
      */
-    @PreAuthorize("@ss.hasPermi('hospital:visitPlan:list')")
     @GetMapping("/WebList")
     public TableDataInfo list(VisitPlan visitPlan) throws Exception {
         if (StringUtils.isNotEmpty(visitPlan.getDoctorPhone())){
@@ -107,66 +107,8 @@ public class VisitPlanController extends BaseController
             if(!StringUtils.isEmpty(value.getDoctorPhone())){
                 value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
             }
-            Map<Object, Object> visitTime;
-            if (Boolean.TRUE.equals(redisTemplate.hasKey("visitTime"))){
-              visitTime = redisTemplate.opsForHash().entries("visitTime");
-            }else {
-                visitTime = visitAllocationService.addRedis();
-                redisTemplate.opsForHash().putAll("visitTime",visitTime);
-            }
 
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-
-            if (visitPlan.getDay()!=null&&sdf.parse(sdf.format(date)).compareTo(sdf.parse(sdf.format(visitPlan.getDay())))==0){
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-                Date parse1 = simpleDateFormat.parse(simpleDateFormat.format(date));
-                Iterator<Map.Entry<Object, Object>> iterator1 = visitTime.entrySet().iterator();
-                while (iterator1.hasNext()){
-
-                    Map.Entry<Object, Object> next = iterator1.next();
-                    List<VisitAllocation> value1 =(List<VisitAllocation>) next.getValue();
-
-                    Iterator<VisitAllocation> iterator = value1.iterator();
-                    while (iterator.hasNext()){
-                        Date parse = simpleDateFormat.parse(iterator.next().getStartTime());
-                        if (parse1.compareTo(parse)>0){
-                            iterator.remove();
-                        }
-                    }
-
-                }
-            }
-
-            if (value.getTime()==1){
-                value.getVisitTimeMap().put("am",visitTime.get("am"));
-            }else if (value.getTime()==2){
-                value.getVisitTimeMap().put("pm",visitTime.get("pm"));
-            }else if (value.getTime()==3){
-                value.getVisitTimeMap().putAll(visitTime);
-            }
-            List<VisitAppointment> visitAppointments = visitAppointmentService.selectByPlanId(value.getPlanId());
-
-            for (VisitAppointment visitAppointment : visitAppointments){
-                Iterator<Map.Entry<Object, Object>> iterator = value.getVisitTimeMap().entrySet().iterator();
-                while (iterator.hasNext()){
-
-                    Map.Entry<Object, Object> next = iterator.next();
-                    List<VisitAllocation> value1 =(List<VisitAllocation>) next.getValue();
-
-                    for (VisitAllocation visitAllocation:value1){
-
-                        if (Objects.equals(visitAppointment.getTimePeriod(), visitAllocation.getSlotId())){
-                            visitAllocation.setStatus(1);
-                            break;
-                        }
-                    }
-
-                }
-
-            }
-
+            getDateClassify(value,visitPlan.getDay());
 
         }
         return AjaxResult.success(list);
@@ -175,6 +117,68 @@ public class VisitPlanController extends BaseController
 
 
 
+
+    public void getDateClassify(VisitPlan value,Date date1) throws ParseException {
+        Map<Object, Object> visitTime;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("visitTime"))){
+            visitTime = redisTemplate.opsForHash().entries("visitTime");
+        }else {
+            visitTime = visitAllocationService.addRedis();
+            redisTemplate.opsForHash().putAll("visitTime",visitTime);
+        }
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+
+        if (date1!=null&&sdf.parse(sdf.format(date)).compareTo(sdf.parse(sdf.format(date1)))==0){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            Date parse1 = simpleDateFormat.parse(simpleDateFormat.format(date));
+            Iterator<Map.Entry<Object, Object>> iterator1 = visitTime.entrySet().iterator();
+            while (iterator1.hasNext()){
+
+                Map.Entry<Object, Object> next = iterator1.next();
+                List<VisitAllocation> value1 =(List<VisitAllocation>) next.getValue();
+
+                Iterator<VisitAllocation> iterator = value1.iterator();
+                while (iterator.hasNext()){
+                    Date parse = simpleDateFormat.parse(iterator.next().getStartTime());
+                    if (parse1.compareTo(parse)>0){
+                        iterator.remove();
+                    }
+                }
+
+            }
+        }
+
+        if (value.getTime()==1){
+            value.getVisitTimeMap().put("am",visitTime.get("am"));
+        }else if (value.getTime()==2){
+            value.getVisitTimeMap().put("pm",visitTime.get("pm"));
+        }else if (value.getTime()==3){
+            value.getVisitTimeMap().putAll(visitTime);
+        }
+        List<VisitAppointment> visitAppointments = visitAppointmentService.selectByPlanId(value.getPlanId());
+
+        for (VisitAppointment visitAppointment : visitAppointments){
+            Iterator<Map.Entry<Object, Object>> iterator = value.getVisitTimeMap().entrySet().iterator();
+            while (iterator.hasNext()){
+
+                Map.Entry<Object, Object> next = iterator.next();
+                List<VisitAllocation> value1 =(List<VisitAllocation>) next.getValue();
+
+                for (VisitAllocation visitAllocation:value1){
+
+                    if (Objects.equals(visitAppointment.getTimePeriod(), visitAllocation.getSlotId())&&visitAppointment.getStatus()!=2){
+                        visitAllocation.setStatus(1);
+                        break;
+                    }
+                }
+
+            }
+
+        }
+    }
 
     /**
      * 导出出诊信息表列表

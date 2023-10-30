@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.hospital.mapper.VisitWaitMapper">
+
+    <resultMap type="VisitWait" id="VisitWaitResult">
+        <result property="waitId"    column="wait_id"    />
+        <result property="appointmentId"    column="appointment_id"    />
+        <result property="hospitalId"    column="hospital_id"    />
+        <result property="doctorPhone"    column="doctor_phone"    />
+        <result property="doctorName"    column="doctor_name"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="slotId"    column="slot_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="patientName"    column="patient_name"    />
+        <result property="patientSex"    column="patient_sex"    />
+        <result property="hospitalName"    column="hospital_name"    />
+        <result property="birthBay"    column="birth_day"    />
+        <result property="hospitalClinicName"    column="hospital_clinic_name"    />
+        <result property="outpatientType"    column="outpatient_type"    />
+        <result property="periodDay"    column="period_day"    />
+
+    </resultMap>
+
+    <sql id="selectVisitWaitVo">
+        select wait_id, appointment_id, hospital_id, doctor_phone, patient_phone, slot_id, create_time, update_time from visit_wait
+    </sql>
+
+    <select id="selectVisitWaitList" parameterType="VisitWait" resultMap="VisitWaitResult">
+        SELECT
+        visit_appointment.appointment_id,
+        visit_appointment.clinic_address as hospital_clinic_name ,
+        visit_appointment.doctor_name,
+        visit_appointment.period_day,
+        visit_appointment.outpatient_type,
+        hospital.hospital_name,
+        hospital.hospital_code,
+        hospital.hospital_id,
+        visit_wait.slot_id,
+        visit_wait.create_time,
+        patient.patient_age,
+        patient.patient_sex,
+        patient.birth_day,
+        patient.patient_name_aes as patient_name,
+        visit_wait.patient_phone,
+        visit_wait.wait_id,
+        visit_wait.doctor_phone
+        FROM
+        visit_appointment
+        INNER JOIN
+        hospital
+        INNER JOIN
+        visit_wait
+        ON
+        visit_wait.appointment_id = visit_appointment.appointment_id AND
+        hospital.hospital_id = visit_wait.hospital_id
+        INNER JOIN
+        patient
+        ON
+        visit_appointment.patient_phone = patient.patient_phone_aes
+        <where>
+            <if test="hospitalId != null "> and visit_wait.hospital_id = #{hospitalId}</if>
+            <if test="appointmentId != null "> and visit_wait.appointment_id = #{appointmentId}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and visit_wait.doctor_phone = #{doctorPhone}</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and visit_wait.patient_phone = #{patientPhone}</if>
+            <if test="periodDay != null "> and visit_appointment.period_day = #{periodDay}</if>
+        </where>
+        order by visit_wait.slot_id asc
+    </select>
+
+    <select id="selectVisitWaitByWaitId" parameterType="Long" resultMap="VisitWaitResult">
+        <include refid="selectVisitWaitVo"/>
+        where wait_id = #{waitId}
+    </select>
+
+    <insert id="insertVisitWait" parameterType="VisitWait">
+        insert into visit_wait
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="waitId != null">wait_id,</if>
+            <if test="appointmentId != null">appointment_id,</if>
+            <if test="hospitalId != null">hospital_id,</if>
+            <if test="doctorPhone != null">doctor_phone,</if>
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="slotId != null">slot_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="waitId != null">#{waitId},</if>
+            <if test="appointmentId != null">#{appointmentId},</if>
+            <if test="hospitalId != null">#{hospitalId},</if>
+            <if test="doctorPhone != null">#{doctorPhone},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="slotId != null">#{slotId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVisitWait" parameterType="VisitWait">
+        update visit_wait
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appointmentId != null">appointment_id = #{appointmentId},</if>
+            <if test="hospitalId != null">hospital_id = #{hospitalId},</if>
+            <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="slotId != null">slot_id = #{slotId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where wait_id = #{waitId}
+    </update>
+
+    <delete id="deleteVisitWaitByWaitId" parameterType="Long">
+        delete from visit_wait where wait_id = #{waitId}
+    </delete>
+
+    <delete id="deleteVisitWaitByWaitIds" parameterType="String">
+        delete from visit_wait where wait_id in
+        <foreach item="waitId" collection="array" open="(" separator="," close=")">
+            #{waitId}
+        </foreach>
+    </delete>
+</mapper>

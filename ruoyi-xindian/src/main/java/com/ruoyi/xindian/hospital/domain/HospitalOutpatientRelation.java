@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.hospital.domain;
 
 import java.util.Date;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -46,6 +48,20 @@ public class HospitalOutpatientRelation extends BaseEntity
 
 
     private HospitalOutpatient hospitalOutpatient;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HospitalOutpatientRelation that = (HospitalOutpatientRelation) o;
+        return Objects.equals(id, that.id) && Objects.equals(hospitalId, that.hospitalId) && Objects.equals(outpatientId, that.outpatientId) && Objects.equals(gmtCreate, that.gmtCreate) && Objects.equals(gmtModified, that.gmtModified) && Objects.equals(specialId, that.specialId) && Objects.equals(hospital, that.hospital) && Objects.equals(hospitalOutpatient, that.hospitalOutpatient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, hospitalId, outpatientId, gmtCreate, gmtModified, specialId, hospital, hospitalOutpatient);
+    }
 
     public Long getSpecialId() {
         return specialId;

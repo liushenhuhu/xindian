@@ -47,18 +47,18 @@ public interface VisitAppointmentMapper
     /**
      * 删除出诊预约表
      * 
-     * @param id 出诊预约表主键
+     * @param appointmentId 出诊预约表主键
      * @return 结果
      */
-    public int deleteVisitAppointmentById(Long id);
+    public int deleteVisitAppointmentById(@Param("appointmentId") String appointmentId);
 
     /**
      * 批量删除出诊预约表
      * 
-     * @param ids 需要删除的数据主键集合
+     * @param appointmentId 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteVisitAppointmentByIds(Long[] ids);
+    public int deleteVisitAppointmentByIds(String[] appointmentId);
 
 
     List<VisitAppointment> selectByPlanIdVisitAppointments(@Param("planId") Long planId);

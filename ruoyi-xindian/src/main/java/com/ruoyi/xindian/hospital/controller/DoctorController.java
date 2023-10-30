@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -329,14 +330,36 @@ public class DoctorController extends BaseController
      * 门诊预约通过医院code查询当前医院的医生
      */
     @GetMapping("/getHospitalVisitDoc")
-    public AjaxResult getHospitalVisitDoc(Long hospitalId) throws Exception {
-
-        Hospital hospital = hospitalService.selectHospitalByHospitalId(hospitalId);
-
-        if (hospital==null){
-            return AjaxResult.success(null);
+    public AjaxResult getHospitalVisitDoc(Doctor doctor,HttpServletRequest request) throws Exception {
+        if(!StringUtils.isEmpty(doctor.getDoctorName())){
+            doctor.setDoctorName(aesUtils.encrypt(doctor.getDoctorName()));
         }
-        List<Doctor> doctors = doctorService.selectVisitDoc(hospital.getHospitalName());
+        if(!StringUtils.isEmpty(doctor.getDoctorPhone())){
+            doctor.setDoctorPhone(aesUtils.encrypt(doctor.getDoctorPhone()));
+        }
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<Doctor> doctors = new ArrayList<>();
+        if (doctor.getHospital()==null){
+
+            if (SysUser.isAdmin(loginUser.getUserId())){
+                doctors = doctorService.selectDoctorList(doctor);
+            }else {
+                if (loginUser.getUser().getHospitalCode()!=null){
+                    Hospital hospital = hospitalService.selectHospitalByHospitalCode(loginUser.getUser().getHospitalCode());
+                    if (loginUser.getUser().getDeptId()!=null&&loginUser.getUser().getDeptId()==200 ){
+                        doctors = doctorService.selectVisitDoc(hospital.getHospitalName());
+                    }else {
+                        doctor.setDoctorPhone(loginUser.getUser().getUserName());
+                        doctor.getHospitalNameList().add(hospital.getHospitalName());
+                        doctors = doctorService.selectDoctorList(doctor);
+
+                    }
+                }
+            }
+        }else {
+            doctors = doctorService.selectDoctorList(doctor);
+        }
+
         for (Doctor value:doctors){
             if(!StringUtils.isEmpty(value.getDoctorName())){
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));

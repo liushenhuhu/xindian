@@ -46,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         patient.patient_name_aes as patient_name,
         patient.patient_phone_aes as patient_phone,
         hospital.hospital_name,
+        hospital.hospital_id,
         visit_appointment.appointment_id,
         visit_appointment.plan_id,
         visit_appointment.patient_phone,
@@ -99,7 +100,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectVisitAppointmentById" parameterType="String" resultMap="VisitAppointmentResult">
-        <include refid="selectVisitAppointmentVo"/>
+        SELECT
+            patient.patient_name_aes as patient_name,
+            patient.patient_phone_aes as patient_phone,
+            hospital.hospital_name,
+            visit_appointment.appointment_id,
+            visit_appointment.plan_id,
+            visit_appointment.patient_phone,
+            visit_appointment.accompany_phone,
+            visit_appointment.period_start,
+            visit_appointment.`status`,
+            visit_appointment.create_time,
+            visit_appointment.update_time,
+            visit_appointment.pay_status,
+            visit_appointment.period_end,
+            visit_appointment.special_name,
+            visit_appointment.outpatient_name,
+            visit_appointment.clinic_address,
+            visit_appointment.hospital_id,
+            visit_appointment.doctor_name,
+            visit_appointment.doctor_phone,
+            visit_appointment.period_day,
+            visit_appointment.pay_price,
+            visit_appointment.outpatient_type,
+            visit_appointment.doctor_professional,
+            visit_appointment.time_period,
+            visit_appointment.title,
+            visit_appointment.order_no,
+            visit_appointment.open_id,
+            patient.patient_sex,
+            patient.birth_day
+        FROM
+            visit_appointment
+                INNER JOIN
+            patient
+            ON
+                visit_appointment.patient_phone = patient.patient_phone_aes inner join hospital on visit_appointment.hospital_id=hospital.hospital_id
         where appointment_id = #{appointmentId}
     </select>
 
@@ -177,7 +213,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="periodStart != null">period_start = #{periodStart},</if>
             <if test="status != null">status = #{status},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="payStatus != null">pay_status = #{payStatus},</if>
             <if test="periodEnd != null">period_end = #{periodEnd},</if>
             <if test="specialName != null">special_name = #{specialName},</if>
@@ -193,14 +228,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="timePeriod != null">time_period = #{timePeriod},</if>
             <if test="title != null">title = #{title},</if>
             <if test="orderNo != null">order_no = #{orderNo},</if>
+            update_time = now()
         </trim>
         where appointment_id = #{appointmentId}
     </update>
     <update id="updateVisitAppointmentOrderStatus">
-        update visit_appointment set pay_status = #{type} where order_no = #{orderNo}
+        update visit_appointment set pay_status = #{type} , update_time = now() where order_no = #{orderNo}
     </update>
     <update id="updateVisitAppointmentStatus">
-        update visit_appointment set status = #{type} where appointment_id = #{id}
+        update visit_appointment set status = #{type} , update_time = now() where appointment_id = #{id}
     </update>
 
     <delete id="deleteVisitAppointmentById" parameterType="Long">
