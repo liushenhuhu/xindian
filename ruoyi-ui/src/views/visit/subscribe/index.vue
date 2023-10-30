@@ -25,6 +25,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
+          v-hasPermi="['hospital:subscribe:add']"
         >新增</el-button>
       </el-col>
 <!--      <el-col :span="1.5">-->
@@ -35,7 +36,7 @@
 <!--          size="mini"-->
 <!--          :disabled="single"-->
 <!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['system:subscribe:edit']"-->
+<!--          v-hasPermi="['hospital:subscribe:edit']"-->
 <!--        >修改</el-button>-->
 <!--      </el-col>-->
       <el-col :span="1.5">
@@ -55,7 +56,7 @@
 <!--          icon="el-icon-download"-->
 <!--          size="mini"-->
 <!--          @click="handleExport"-->
-<!--          v-hasPermi="['system:subscribe:export']"-->
+<!--          v-hasPermi="['hospital:subscribe:export']"-->
 <!--        >导出</el-button>-->
 <!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -83,12 +84,12 @@
             icon="el-icon-edit"
             @click="working_schedule(scope.row)"
           >医生排班</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-          >修改</el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--          >修改</el-button>-->
           <el-button
             size="mini"
             type="text"

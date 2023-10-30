@@ -425,10 +425,10 @@ export default {
             getHospitalSpecialList(obj).then(r=>{
               _th.specialList = r.data
             })
-            return;
           }
         })
       }
+
     },
     getSpecialList(val,hospital,id){
       if (id===1){
@@ -445,7 +445,6 @@ export default {
             getHospitalOutpatientList(obj).then(r=>{
               _th.outpatientList = r.data
             })
-            return;
           }
         })
 
@@ -517,12 +516,15 @@ export default {
       this.reset();
       const doctorId = row.doctorId || this.ids
       getDoctor(doctorId).then(response => {
-        this.historyId(response.data.hospitalCode)
+        let is = this.historyId(response.data.hospitalCode)
+        if (is){
+          console.log(1111)
+        }
         if (response.data.specialId&&response.data.hospitalCode){
           this.getSpecialList(response.data.specialId,response.data.hospitalCode,2)
         }
-        this.form = response.data;
 
+        this.form = response.data;
         this.form.hospital = response.data.hospitalCode
         console.log(response.data)
         this.open = true;

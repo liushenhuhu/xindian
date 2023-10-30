@@ -56,12 +56,33 @@ public class HospitalSubscribeController extends BaseController
      * 查询门诊预约医院列表
      */
 //    @PreAuthorize("@ss.hasPermi('hospital:subscribe:list')")
+    @GetMapping("/webList")
+    public TableDataInfo webList(HospitalSubscribe hospitalSubscribe,HttpServletRequest request)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<HospitalSubscribe> list = new ArrayList<>();
+        if (SysUser.isAdmin(loginUser.getUserId())){
+            startPage();
+            list = hospitalSubscribeService.selectHospitalSubscribeList(hospitalSubscribe);
+        }else {
+            if (loginUser.getUser().getHospitalCode()!=null){
+                Hospital hospital = hospitalService.selectHospitalByHospitalCode(loginUser.getUser().getHospitalCode());
+                if (hospital!=null){
+                    hospitalSubscribe.setHospitalId(hospital.getHospitalId());
+                    startPage();
+                    list = hospitalSubscribeService.selectHospitalSubscribeList(hospitalSubscribe);
+                }
+            }
+        }
+        return getDataTable(list);
+    }
+
     @GetMapping("/list")
-    public TableDataInfo list(HospitalSubscribe hospitalSubscribe)
+    public TableDataInfo list(HospitalSubscribe hospitalSubscribe,HttpServletRequest request)
     {
         startPage();
-        List<HospitalSubscribe> list = hospitalSubscribeService.selectHospitalSubscribeList(hospitalSubscribe);
-        return getDataTable(list);
+        List<HospitalSubscribe> hospitalSubscribes = hospitalSubscribeService.selectHospitalSubscribeList(hospitalSubscribe);
+        return getDataTable(hospitalSubscribes);
     }
 
     /**
@@ -90,18 +111,23 @@ public class HospitalSubscribeController extends BaseController
     /**
      * 新增门诊预约医院
      */
-//    @PreAuthorize("@ss.hasPermi('hospital:subscribe:add')")
+    @PreAuthorize("@ss.hasPermi('hospital:subscribe:add')")
     @Log(title = "门诊预约医院", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody HospitalSubscribe hospitalSubscribe)
     {
+        List<HospitalSubscribe> hospitalSubscribes = hospitalSubscribeService.selectHospitalSubscribeList(hospitalSubscribe);
+        if (hospitalSubscribes!=null&& !hospitalSubscribes.isEmpty()){
+            return AjaxResult.error("当前医院已经存在");
+        }
+
         return toAjax(hospitalSubscribeService.insertHospitalSubscribe(hospitalSubscribe));
     }
 
     /**
      * 修改门诊预约医院
      */
-//    @PreAuthorize("@ss.hasPermi('hospital:subscribe:edit')")
+    @PreAuthorize("@ss.hasPermi('hospital:subscribe:edit')")
     @Log(title = "门诊预约医院", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HospitalSubscribe hospitalSubscribe)

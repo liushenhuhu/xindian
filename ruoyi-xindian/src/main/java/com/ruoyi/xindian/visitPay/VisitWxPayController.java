@@ -166,7 +166,7 @@ public class VisitWxPayController {
             resMap.put("message","调用统一订单接口错误");
             e.printStackTrace();
         }
-        redisTemplate.opsForValue().set("orderVisitQuery:"+orderId,orderId,20, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set("orderVisitQuery:"+orderId,orderId,10, TimeUnit.SECONDS);
         return resMap;
     }
 

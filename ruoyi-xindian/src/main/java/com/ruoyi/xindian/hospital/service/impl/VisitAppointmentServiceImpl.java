@@ -202,6 +202,9 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
         //判断当前预约的时间的是否过了当天的预约时间（进行预约当天的）
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
+        if(visitPlan.getDay()!=null&&sdf.parse(sdf.format(date)).compareTo(sdf.parse(sdf.format(visitPlan.getDay())))>0){
+            throw new ServiceException("当前时间已过预约时间");
+        }
         if (visitPlan.getDay()!=null&&sdf.parse(sdf.format(date)).compareTo(sdf.parse(sdf.format(visitPlan.getDay())))==0){
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
             Date parse1 = simpleDateFormat.parse(simpleDateFormat.format(date));

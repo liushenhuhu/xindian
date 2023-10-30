@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询门诊预约医院列表
 export function listSubscribe(query) {
   return request({
-    url: '/hospital/subscribe/list',
+    url: '/hospital/subscribe/webList',
     method: 'get',
     params: query
   })
