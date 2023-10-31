@@ -91,6 +91,17 @@ public class Doctor extends BaseEntity
     @Excel(name = "所属专科")
     private Long specialId;
 
+
+    private String accountStatus;
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
     public Long getOutpatientId() {
         return outpatientId;
     }

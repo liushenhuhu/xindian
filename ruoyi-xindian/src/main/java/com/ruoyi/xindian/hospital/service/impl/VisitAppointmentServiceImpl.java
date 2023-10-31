@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -22,6 +23,8 @@ import com.ruoyi.xindian.hospital.mapper.VisitWaitMapper;
 import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.mapper.PatientMapper;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.vo.DateListVO;
 import com.ruoyi.xindian.wx_pay.util.OrderNoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -385,6 +388,12 @@ public class VisitAppointmentServiceImpl implements IVisitAppointmentService
         visitWait.setUpdateTime(new Date());
 
         return visitWaitMapper.insertVisitWait(visitWait);
+    }
+
+
+    @Override
+    public  List<DateListVO> getDateList(VisitAppointment visitAppointment) {
+        return visitAppointmentMapper.selectAllDateList(visitAppointment).stream().peek(DateListVO-> DateListVO.setInfo(DateListVO.getInfo()+"条")).collect(Collectors.toList());
     }
 
 }

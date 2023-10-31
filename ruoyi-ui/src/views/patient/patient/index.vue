@@ -156,11 +156,7 @@
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="医院" align="center" prop="patientSource">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.hospital_name_name_list" :value="scope.row.patientSource"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="医院" align="center" prop="patientSource"/>
       <el-table-column label="患者电话" align="center" prop="patientPhone"/>
       <el-table-column label="家属电话" align="center" prop="familyPhone"/>
       <el-table-column label="最近连接设备号" align="center" prop="equipmentId"/>
@@ -180,17 +176,9 @@
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
-
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
-<!--            <el-form-item label="每日诊断次数" width="200" style="padding-left: 40px">-->
-<!--              <span>{{ scope.row.detectionNum }}</span>-->
-<!--            </el-form-item>-->
-            <!--            <el-form-item label="医院" width="200" style="padding-left: 40px">
-                          <span>{{ scope.row.patientSource }}</span>
-                        </el-form-item>-->
-
           </el-form>
         </template>
       </el-table-column>

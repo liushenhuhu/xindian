@@ -136,7 +136,7 @@
 
     <!-- 添加或修改医生对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
         <el-form-item label="医生姓名" prop="doctorName">
           <el-input v-model="form.doctorName" placeholder="请输入医生姓名" />
         </el-form-item>
@@ -205,6 +205,12 @@
           </el-dialog>
         </el-form-item>
 
+        <el-form-item label="医生账号状态" prop="accountStatus">
+          <el-radio-group v-model="form.accountStatus">
+            <el-radio  label="0">正常</el-radio>
+            <el-radio label="1">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="医生类型" prop="isDoc">
           <el-radio-group v-model="form.isDoc">
             <el-radio  label="0">测试医生账号</el-radio>
@@ -342,7 +348,6 @@ export default {
   },
   created() {
     this.getList();
-    this.loadAll();
   },
   methods: {
 
@@ -383,11 +388,7 @@ export default {
     handleDownload(file) {
       console.log(file);
     },
-    loadAll() {
-        listDepartment(this.queryParams).then(response => {
-          response.rows.forEach(item => this.restaurants.push({"id": item.departmentCode, "value": item.departmentName}));
-        });
-    },
+
     handleSelect(item) {
       this.queryParams.departmentCode=item.id;
     },
@@ -402,10 +403,6 @@ export default {
       this.loading = true;
       listDoctor(this.queryParams).then(response => {
         this.doctorList = response.rows;
-        for(var i=0;i<response.rows.length;i++){
-          this.restaurants.find(item => console.log(item))
-          this.doctorList[i].departmentCode=this.restaurants.find(item => item.id === response.rows[i].departmentCode);
-        }
         this.total = response.total;
         this.loading = false;
       });

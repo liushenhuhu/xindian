@@ -31,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="patientName"    column="patient_name"    />
         <result property="patientSex"    column="patient_sex"    />
         <result property="hospitalName"    column="hospital_name"    />
-        <result property="birthBay"    column="birth_bay"    />
+        <result property="birthBay"    column="birth_day"    />
     </resultMap>
 
 
@@ -79,7 +79,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="patientPhone != null  and patientPhone != ''"> and visit_appointment.patient_phone = #{patientPhone}</if>
             <if test="accompanyPhone != null  and accompanyPhone != ''"> and visit_appointment.accompany_phone = #{accompanyPhone}</if>
             <if test="periodStart != null  and periodStart != ''"> and visit_appointment.period_start = #{periodStart}</if>
-            <if test="status != null "> and visit_appointment.status = #{status}</if>
+            <if test="status != null and status!=4 "> and visit_appointment.status = #{status} </if>
+            <if test="status != null and status==4 "> and visit_appointment.status !=2</if>
             <if test="payStatus != null  and payStatus != ''"> and visit_appointment.pay_status = #{payStatus}</if>
             <if test="periodEnd != null  and periodEnd != ''"> and visit_appointment.period_end = #{periodEnd}</if>
             <if test="specialName != null  and specialName != ''"> and visit_appointment.special_name like concat('%', #{specialName}, '%')</if>
@@ -145,6 +146,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="getVisitAppointmentOrderNo" resultType="com.ruoyi.xindian.hospital.domain.VisitAppointment">
         <include refid="selectVisitAppointmentVo"/>   where order_no = #{orderNo}
+    </select>
+    <select id="selectAllDateList" resultType="com.ruoyi.xindian.patient_management.vo.DateListVO">
+
+        select   DATE_FORMAT(period_day,'%Y-%m-%d') as date,COUNT(period_day) as info
+        from visit_appointment
+        <where>
+            and doctor_phone = #{doctorPhone}
+        and `status` !=2
+        </where>
+        GROUP BY  DATE_FORMAT(period_day,'%Y-%m-%d')
     </select>
 
 

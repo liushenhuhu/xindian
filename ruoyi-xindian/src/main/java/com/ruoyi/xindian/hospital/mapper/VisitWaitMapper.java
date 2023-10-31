@@ -2,6 +2,7 @@ package com.ruoyi.xindian.hospital.mapper;
 
 import com.ruoyi.xindian.hospital.domain.VisitWait;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
 
 import java.util.List;
 
@@ -61,6 +62,7 @@ public interface VisitWaitMapper extends BaseMapper<VisitWait> {
      * @return 结果
      */
     public int deleteVisitWaitByWaitIds(Long[] waitIds);
+
 }
 
 

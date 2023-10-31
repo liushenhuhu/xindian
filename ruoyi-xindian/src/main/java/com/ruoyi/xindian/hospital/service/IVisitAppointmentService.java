@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.VisitAppointment;
 import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.vo.DateListVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -90,6 +92,9 @@ public interface IVisitAppointmentService
 
 
     int visitSignIn(String appointmentId) throws ParseException;
+
+    List<DateListVO> getDateList(VisitAppointment visitAppointment);
+
 
 
 }

@@ -232,6 +232,9 @@ public class SysLoginController {
         if (doctor==null){
             return AjaxResult.error("非医生账号，不能登录");
         }
+        if (doctor.getAccountStatus().equals("1")){
+            return AjaxResult.error("医生账号已被停用，请联系管理员解封");
+        }
         String token = loginService.login(encrypt, loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);

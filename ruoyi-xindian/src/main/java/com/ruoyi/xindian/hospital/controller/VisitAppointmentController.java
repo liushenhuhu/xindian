@@ -21,6 +21,7 @@ import com.ruoyi.xindian.hospital.service.*;
 import com.ruoyi.xindian.hospital.vo.PlanMsgAllVo;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.vo.DateListVO;
 import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.StrUtil;
 import com.ruoyi.xindian.wx_pay.util.OrderNoUtils;
@@ -144,6 +145,35 @@ public class VisitAppointmentController extends BaseController
         return getDataTable(visitAppointments);
     }
 
+
+
+    /**
+     * 查询出诊预约表列表
+     */
+    @GetMapping("/DocAppList")
+    public TableDataInfo DocAppList(VisitAppointment visitAppointment) throws Exception {
+
+        visitAppointmentAesEncrypt(visitAppointment);
+
+        List<VisitAppointment> visitAppointments = new ArrayList<>();
+        startPage();
+        visitAppointments = visitAppointmentService.selectVisitAppointmentList(visitAppointment);
+
+        for (VisitAppointment visitAppointment1 : visitAppointments){
+            visitAppointmentAesDecrypt(visitAppointment1);
+        }
+        return getDataTable(visitAppointments);
+    }
+
+    /**
+     * 查询出诊预约表列表条数
+     */
+    @GetMapping("/DocList")
+    public AjaxResult DocList(VisitAppointment visitAppointment) throws Exception {
+        visitAppointmentAesEncrypt(visitAppointment);
+        List<DateListVO> dateList = visitAppointmentService.getDateList(visitAppointment);
+        return AjaxResult.success(dateList);
+    }
 
     /**
      * 导出出诊预约表列表

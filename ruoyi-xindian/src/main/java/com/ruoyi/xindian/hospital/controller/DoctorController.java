@@ -96,9 +96,6 @@ public class DoctorController extends BaseController
                 startPage();
                 List<Doctor> doctors = doctorService.selectUserDoc(doctor);
                 for (Doctor value : doctors) {
-                    department.setDepartmentCode(value.getDepartmentCode());
-                    List<Department> departments = departmentService.selectDepartmentList(department);
-                    value.setDepartmentName(departments.get(0).getDepartmentName());
                     //解密
                     if(!StringUtils.isEmpty(value.getDoctorName())){
                         value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
@@ -115,9 +112,6 @@ public class DoctorController extends BaseController
             startPage();
             List<Doctor> list = doctorService.selectDoctorList(doctor);
             for (Doctor value : list) {
-                department.setDepartmentCode(value.getDepartmentCode());
-                List<Department> departments = departmentService.selectDepartmentList(department);
-                value.setDepartmentName(departments.get(0).getDepartmentName());
                 //解密
                 if(!StringUtils.isEmpty(value.getDoctorName())){
                     value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
@@ -136,12 +130,8 @@ public class DoctorController extends BaseController
     @Aes
     @GetMapping("/getDocList")
     public TableDataInfo getDocList(Doctor doctor) throws Exception {
-        Department department = new Department();
         List<Doctor> list = doctorService.selectDoctorList(doctor);
         for (Doctor value : list) {
-            department.setDepartmentCode(value.getDepartmentCode());
-            List<Department> departments = departmentService.selectDepartmentList(department);
-            value.setDepartmentName(departments.get(0).getDepartmentName());
             //解密
             if(!StringUtils.isEmpty(value.getDoctorName())){
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));

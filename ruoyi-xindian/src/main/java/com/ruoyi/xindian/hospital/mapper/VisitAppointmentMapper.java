@@ -2,6 +2,8 @@ package com.ruoyi.xindian.hospital.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.hospital.domain.VisitAppointment;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.vo.DateListVO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -70,4 +72,6 @@ public interface VisitAppointmentMapper
     void updateVisitAppointmentOrderStatus(@Param("orderNo") String orderNo,@Param("type")String type);
     void updateVisitAppointmentStatus(@Param("id") String id,@Param("type")String type);
 
+
+    List<DateListVO> selectAllDateList(VisitAppointment visitAppointment);
 }
