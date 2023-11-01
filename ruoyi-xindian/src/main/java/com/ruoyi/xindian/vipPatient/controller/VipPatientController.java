@@ -261,9 +261,7 @@ public class VipPatientController extends BaseController
      */
     @GetMapping("/detectionNumSubtract")
     public AjaxResult detectionNumSubtract(String patientPhone) throws Exception {
-        String encrypt = aesUtils.encrypt(patientPhone);
         Boolean aBoolean = patientService.detectionNumSubtract(patientPhone);
-
         return AjaxResult.success(aBoolean);
     }
 

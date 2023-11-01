@@ -73,17 +73,17 @@ public class WxMsgRunConfig {
         if (now.isAfter(start) && now.isBefore(end)) {
 
             redisTemplate.opsForValue().set("reportPT:"+pid,pid,10, TimeUnit.MINUTES);
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            CompletableFuture.runAsync(() ->{
-                System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
-                try{
-                    wxPublicRequest.dockerMsg();
-                }catch (Exception e){
-                    System.out.println(e);
-                }
-                System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
-            },executorService);
-            executorService.shutdown(); // 回收线程池
+//            ExecutorService executorService = Executors.newSingleThreadExecutor();
+//            CompletableFuture.runAsync(() ->{
+//                System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
+//                try{
+//                    wxPublicRequest.dockerMsg();
+//                }catch (Exception e){
+//                    System.out.println(e);
+//                }
+//                System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
+//            },executorService);
+//            executorService.shutdown(); // 回收线程池
         }else {
             LocalDateTime nowTime = LocalDateTime.now();
             LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
@@ -224,15 +224,17 @@ public class WxMsgRunConfig {
                 diagnoseDoc.setDiagnoseType("2");
                 diagnoseDocService.insertDiagnose(diagnoseDoc);
 
+            }else {
+                //如果半夜提交报告，则直接延迟到第二天
+                LocalDateTime nowTime = LocalDateTime.now();
+                LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
+                long minutes = nowTime.until(tomorrow8AM, ChronoUnit.MINUTES);
+                Random random = new Random();
+                int randomNumber = random.nextInt(31);
+                redisTemplate.opsForValue().set("reportDT:"+pId,pId,minutes+randomNumber, TimeUnit.MINUTES);
             }
             reportService.updateReport(report2);
-            //如果半夜提交报告，则直接延迟到第二天
-            LocalDateTime nowTime = LocalDateTime.now();
-            LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
-            long minutes = nowTime.until(tomorrow8AM, ChronoUnit.MINUTES);
-            Random random = new Random();
-            int randomNumber = random.nextInt(31);
-            redisTemplate.opsForValue().set("reportDT:"+pId,pId,minutes+randomNumber, TimeUnit.MINUTES);
+
         }
 
     }

@@ -671,7 +671,7 @@
                     #{item}
                 </foreach>
             </if>
-        and diagnosis_status=1 and start_time is not null
+        and diagnosis_status=1 and start_time is not null and r.report_normal=1
         order by report_time desc
         </where>
 

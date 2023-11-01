@@ -65,4 +65,5 @@ public interface VipPatientMapper
     VipPatient selectPhone(@Param("phone") String phone);
 
     int updateVipNumInt(@Param("id") Long id);
+    int updateVipNumAdd(@Param("id") Long id);
 }

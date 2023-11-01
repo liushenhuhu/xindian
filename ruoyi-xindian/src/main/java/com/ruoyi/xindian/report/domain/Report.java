@@ -91,6 +91,25 @@ public class Report extends BaseEntity
 
     private String loginUserPhone;
 
+    /**
+     * 报告状态
+     */
+    private String reportNormal;
+
+
+    /**
+     * 拒绝理由
+     */
+    private String refuseText;
+
+
+    public String getRefuseText() {
+        return refuseText;
+    }
+
+    public void setRefuseText(String refuseText) {
+        this.refuseText = refuseText;
+    }
 
     public String getpId() {
         return pId;

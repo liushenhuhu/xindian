@@ -317,7 +317,6 @@ public class ReportController extends BaseController
     /**
      * 修改报告
      */
-    @PreAuthorize("@ss.hasPermi('report:report:edit')")
     @Log(title = "报告", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Report report, HttpServletRequest request) throws Exception {
@@ -353,36 +352,20 @@ public class ReportController extends BaseController
             if (report1.getDiagnosisStatus()==1){
                 return AjaxResult.error("该数据已被诊断");
             }
-//            if (report.getDiagnosisStatus()==1){
-//                if (!report.getdPhone().equals(report1.getdPhone())){
-//                    return AjaxResult.error("该数据已换人诊断");
-//                }
-//            }
-
         }
 
         report.setReportId(report1.getReportId());
         Date date = new Date();
         report.setReportTime(date);
-        //患者请求医生
-        Report report2 = reportService.selectReportByPId(report.getpId());
-        StringBuilder stringBuilder = new StringBuilder();
-        String phone = aesUtils.decrypt(report2.getPPhone());
-        if (phone.length()>11){
-            stringBuilder.append(aesUtils.encrypt(phone.substring(0,11)));
-        }else {
-            stringBuilder.append(report2.getPPhone());
-        }
-        SysUser sysUser = sysUserMapper.selectUserByPhone(String.valueOf(stringBuilder));
+        report.setReportNormal("1");
         //获取医生信息
-        Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
+        Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report1.getdPhone());
         //获取患者信息
-        Patient patient = patientService.selectPatientByPatientPhone(report2.getPPhone());
+        Patient patient = patientService.selectPatientByPatientPhone(report1.getPPhone());
 
         if (patient.getPatientName()!=null&&!"".equals(patient.getPatientName())){
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
-
 
         SysUser sysUser1 = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
 
@@ -396,23 +379,19 @@ public class ReportController extends BaseController
                     return AjaxResult.error("用户服务次数不足");
                 }
             }
-            if (vipPhone!=null){
-                if (vipPhone.getVipNum()==0){
-                    return AjaxResult.error("用户服务次数不足");
-                }
+            if (vipPhone != null && vipPhone.getVipNum() == 0) {
+                return AjaxResult.error("用户服务次数不足");
             }
-
             //选择医院加入公共抢单
             if(report.getHospital()!=null){
                 Doctor doctor = new Doctor();
                 doctor.getHospitalNameList().add(report.getHospital());
                 doctors = doctorService.selectDoctorList(doctor);
-                if(doctors!=null && doctors.size()!=0){
+                if(doctors!=null && !doctors.isEmpty()){
                     //患者提交报告，通过微信公众号推送提醒消息
                     if (report.getpId()!=null&&!"".equals(report.getpId())){
                         wxMsgRunConfig.redisAdd(report.getpId(),doctors);
                     }
-
                 } else{
                     return AjaxResult.error("当前医院平台无医生");
                 }
@@ -420,37 +399,11 @@ public class ReportController extends BaseController
                 return AjaxResult.error("请先选择医院医院");
             }
             //咨询医生次数减一
-                vipPatientController.detectionNumSubtract(sysUser1.getPhonenumber());
+                patientService.detectionNumSubtract(sysUser1.getPhonenumber());
                 report.setStartTime(new Date());
                 int i = reportService.updateReport(report);
-
-                //记录患者的报告服务次数使用
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            CompletableFuture.runAsync(() ->{
-                System.out.println("异步线程 =====> 开始记录服务使用日志 =====> " + new Date());
-                try{
-                    FwLog fwLog = new FwLog();
-                    fwLog.setUserName(loginUser.getUser().getPhonenumber());
-                    fwLog.setMsg("提交心电报告减少一次心电服务次数");
-                    fwLog.setStatus("1");
-                    fwLog.setLogTime(new Date());
-                    fwLog.setFwStatus("2");
-                    fwLog.setFwNum(1);
-                    String ipAddr = IpUtils.getIpAddr(request);
-                    fwLog.setIpaddr(ipAddr);
-                    try {
-                        String address = getAddress(ipAddr);
-                        fwLog.setLoginLocation(address);
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
-                    fwLogMapper.insert(fwLog);
-                }catch (Exception e){
-                    System.out.println(e);
-                }
-                System.out.println("异步线程 =====> 结束记录服务使用日志 =====> " + new Date());
-            },executorService);
-            executorService.shutdown(); // 回收线程池
+            //记录患者的报告服务次数使用
+            reportPut(loginUser.getUser().getPhonenumber(),request);
            return toAjax(i);
 
 
@@ -460,7 +413,7 @@ public class ReportController extends BaseController
             Detection detection = new Detection();
             detection.setDetectionPid(report1.getpId());
             List<Detection> detections = detectionService.selectDetectionList(detection);
-            if(detections!=null && detections.size()!=0){
+            if(detections!=null && !detections.isEmpty()){
                 detectionService.deleteDetectionByDetectionId(detections.get(detections.size()-1).getDetectionId());
             }
             NotDealWith notDealWith = new NotDealWith();
@@ -470,32 +423,15 @@ public class ReportController extends BaseController
             calendar.setTime(new Date());
             notDealWith.setDoctorPhoneAes(report.getdPhone());
             notDealWith.setRefuseTime(calendar.getTime());
-            notDealWith.setRefuseReason(report.getDiagnosisConclusion());
+            notDealWith.setRefuseReason(report.getRefuseText());
             notDealWithService.insertNotDealWith(notDealWith);
-
+            if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
+                patientService.detectionNumAdd(report1.getLoginUserPhone());
+            }
             //医生拒绝判断小程序消息推送通知用户通知
             //如果报告属于患者家人，则通过发送短信的方式去
-            if (StringUtils.isNotEmpty(report2.getLoginUserPhone())){
-
-                SysUser sysUser2 = sysUserMapper.selectUserByPhone(report2.getLoginUserPhone());
-                if (sysUser2!=null){
-                    try {
-                        wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser2.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
-                    }catch (Exception e){
-                        System.out.println(e);
-                    }
-                }
-
-            }else {
-                if (sysUser==null){
-                    WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
-                }else {
-                    try {
-                        wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
-                    }catch (Exception e){
-                        System.out.println(e);
-                    }
-                }
+            if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
+                WxMsgPut(report1.getLoginUserPhone(),doctor1.getHospital(),patient.getPatientName());
             }
             return toAjax(reportService.updateReportNull(report));
         }else if(report.getDiagnosisStatus()==1){//医生诊断
@@ -524,7 +460,6 @@ public class ReportController extends BaseController
                     diagnoseDoc1.setDiagnoseStatus("1");
                     diagnoseDocService.insertDiagnose(diagnoseDoc1);
                 }
-
             }
             else {
                 Date date1 = new Date();
@@ -539,35 +474,22 @@ public class ReportController extends BaseController
                 diagnoseDoc1.setDoctorPhone(report1.getdPhone());
                 diagnoseDoc1.setDiagnoseStatus("1");
                 diagnoseDocService.updateDiagnose(diagnoseDoc1);
-
             }
-
+            //判断当医生诊断出现干扰大，的时候，将次数重新返还给用户
+            if (StringUtils.isNotEmpty(report.getDiagnosisConclusion())){
+                if (report.getDiagnosisConclusion().contains("重新")){
+                    report.setReportNormal("2");
+                    if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
+                        patientService.detectionNumAdd(report1.getLoginUserPhone());
+                    }
+                }
+            }
             //医生提交诊断报告小程序消息推送通知用户通知
             //如果报告属于患者家人，则通过发送短信的方式去
             reportService.updateReport(report);
-            if (StringUtils.isNotEmpty(report2.getLoginUserPhone())){
-
-                SysUser sysUser2 = sysUserMapper.selectUserByPhone(report2.getLoginUserPhone());
-                if (sysUser2!=null){
-                    try {
-                        wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser2.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
-                    }catch (Exception e){
-                        System.out.println(e);
-                    }
-                }
-
-            }else {
-                if (sysUser==null){
-                    WxUtil.send(String.valueOf(aesUtils.decrypt(String.valueOf(stringBuilder))));
-                }else {
-                    try {
-                        wxPublicRequest.sendMsg(doctor1.getHospital(),sysUser.getOpenId(),patient.getPatientName(),"心电图检测","诊断完成");
-                    }catch (Exception e){
-                        System.out.println(e);
-                    }
-                }
+            if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
+                WxMsgPut(report1.getLoginUserPhone(),doctor1.getHospital(),patient.getPatientName());
             }
-
         }
         return toAjax(1);
     }
@@ -971,5 +893,48 @@ public class ReportController extends BaseController
     public AjaxResult reportAesCopy(Limit limit) throws Exception {
         reportService.reportAes(limit);
         return AjaxResult.success();
+    }
+
+
+    //记录报告
+    private void reportPut(String phone,HttpServletRequest request){
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        CompletableFuture.runAsync(() ->{
+            System.out.println("异步线程 =====> 开始记录服务使用日志 =====> " + new Date());
+            try{
+                FwLog fwLog = new FwLog();
+                fwLog.setUserName(phone);
+                fwLog.setMsg("提交心电报告减少一次心电服务次数");
+                fwLog.setStatus("1");
+                fwLog.setLogTime(new Date());
+                fwLog.setFwStatus("2");
+                fwLog.setFwNum(1);
+                String ipAddr = IpUtils.getIpAddr(request);
+                fwLog.setIpaddr(ipAddr);
+                try {
+                    String address = getAddress(ipAddr);
+                    fwLog.setLoginLocation(address);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                fwLogMapper.insert(fwLog);
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            System.out.println("异步线程 =====> 结束记录服务使用日志 =====> " + new Date());
+        },executorService);
+        executorService.shutdown(); // 回收线程池
+    }
+
+
+    private void WxMsgPut(String patientPhone,String hospitalName,String patientName){
+        SysUser sysUser2 = sysUserMapper.selectUserByPhone(patientPhone);
+        if (sysUser2!=null){
+            try {
+                wxPublicRequest.sendMsg(hospitalName,sysUser2.getOpenId(),patientName,"心电图检测","诊断完成");
+            }catch (Exception e){
+                System.out.println(e);
+            }
+        }
     }
 }

@@ -65,6 +65,11 @@
            set vip_num = vip_num -1
         where id = #{id}
     </update>
+    <update id="updateVipNumAdd">
+        update  vip_patient
+        set vip_num = vip_num +1
+        where id = #{id}
+    </update>
 
     <delete id="deleteVipPatientById" parameterType="Long">
         delete from vip_patient where id = #{id}

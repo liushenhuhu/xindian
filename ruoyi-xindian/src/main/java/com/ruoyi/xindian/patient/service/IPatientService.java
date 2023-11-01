@@ -92,4 +92,5 @@ public interface IPatientService
 
 
     Boolean detectionNumSubtract(String patientPhone );
+    Boolean detectionNumAdd(String patientPhone );
 }

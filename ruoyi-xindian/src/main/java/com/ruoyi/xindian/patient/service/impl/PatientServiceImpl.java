@@ -163,4 +163,16 @@ public class PatientServiceImpl implements IPatientService
         }
         return true;
     }
+
+    @Override
+    public Boolean detectionNumAdd(String patientPhone) {
+        VipPatient vipPhone = vipPatientMapper.selectPhone(patientPhone);
+        if (vipPhone!=null){
+            // 设置库存减一的更新操作
+            vipPatientMapper.updateVipNumAdd(vipPhone.getId());
+        }else {
+            sysUserMapper.updateDetectionNumAdd(patientPhone);
+        }
+        return true;
+    }
 }

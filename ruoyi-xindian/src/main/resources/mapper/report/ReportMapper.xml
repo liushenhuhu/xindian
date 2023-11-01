@@ -20,10 +20,12 @@
         <result property="pPhone"    column="p_phone_aes"    />
         <result property="patientSymptom"    column="patient_symptom"    />
         <result property="loginUserPhone"    column="login_user_phone"    />
+        <result property="refuseText"    column="refuse_text"    />
+        <result property="reportNormal"    column="report_normal"    />
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time,login_user_phone from report
+        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time,login_user_phone,refuse_text,report_normal from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
@@ -81,6 +83,8 @@
             <if test="pPhone != null">p_phone_aes,</if>
             <if test="patientSymptom != null">patient_symptom,</if>
             <if test="loginUserPhone != null">login_user_phone,</if>
+            <if test="refuseText != null">refuse_text,</if>
+            <if test="reportNormal != null">report_normal,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pId != null and pId != ''">#{pId},</if>
@@ -94,7 +98,9 @@
             <if test="handlingSuggestion != null">#{handlingSuggestion},</if>
             <if test="healthAdvice != null">#{healthAdvice},</if>
             <if test="patientSymptom != null">#{patientSymptom},</if>
-            <if test="loginUserPhone != null">loginUserPhone,</if>
+            <if test="loginUserPhone != null">#{loginUserPhone},</if>
+            <if test="refuseText != null">refuseText,</if>
+            <if test="reportNormal != null">reportNormal,</if>
         </trim>
     </insert>
 
@@ -115,6 +121,8 @@
             <if test="pPhone != null">p_phone_aes = #{pPhone},</if>
             <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
             <if test="loginUserPhone != null">login_user_phone = #{loginUserPhone},</if>
+            <if test="reportNormal != null">report_normal = #{reportNormal},</if>
+            <if test="refuseText != null">refuse_text = #{refuseText},</if>
         </trim>
         where report_id = #{reportId}
     </update>
@@ -133,6 +141,8 @@
             <if test="pPhone != null">p_phone_aes = #{pPhone},</if>
             <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
             <if test="loginUserPhone != null">login_user_phone = #{loginUserPhone},</if>
+            <if test="reportNormal != null">report_normal = #{reportNormal},</if>
+            <if test="refuseText != null">refuse_text = #{refuseText},</if>
             diagnosis_doctor_aes = null,
             d_phone_aes = null,
         </trim>
