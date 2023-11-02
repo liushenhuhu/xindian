@@ -41,7 +41,8 @@
         <result property="reportState"    column="report_state"    />
         <result property="patientSymptom"    column="patient_symptom"    />
         <result property="dPhone"    column="d_phone_aes"    />
-
+        <result property="refuseText"    column="refuse_text"    />
+        <result property="reportNormal"    column="report_normal"    />
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -103,7 +104,7 @@
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
                diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone_aes,
                birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
-               end_time, time_duration, d_phone_aes, report_state,patient_symptom
+               end_time, time_duration, d_phone_aes, report_state,patient_symptom,report_normal,refuse_text
         from patient_management m
                  inner join patient p on p.patient_phone_aes = m.patient_phone_aes
                  inner join equipment e on m.equipment_code = e.equipment_code

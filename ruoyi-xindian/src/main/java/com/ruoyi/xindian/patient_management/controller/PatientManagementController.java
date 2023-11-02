@@ -225,15 +225,6 @@ public class PatientManagementController extends BaseController {
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
-//            if (patientManagmentDept.getDoctorPhone() != null) {
-//                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
-//                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
-//                if (doctors.get(0).getDepartmentCode() != null) {
-//                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
-//                    List<Department> departments = departmentService.selectDepartmentList(department);
-//                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
-//                }
-//            }
             if (management.getTimeDuration() == null) {
                 patientManagmentDept.setAcquisitionDuration("报告未生成");
             } else {
@@ -271,8 +262,6 @@ public class PatientManagementController extends BaseController {
             list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("JECG12")) {
             list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-//        } else if (patientManagement.getEcgType().equals("JECGsingleGZ")) {
-//            list = patientManagementService.selectPatientManagementJECGList(patientManagement);
         }else if (patientManagement.getEcgType().equals("JECGsingle")) {
             list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("DECG12")) {
@@ -315,15 +304,6 @@ public class PatientManagementController extends BaseController {
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
-//            if (patientManagmentDept.getDoctorPhone() != null) {
-//                doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
-//                List<Doctor> doctors = doctorService.selectDoctorList(doctor);
-//                if (doctors.get(0).getDepartmentCode() != null) {
-//                    department.setDepartmentCode(doctors.get(0).getDepartmentCode());
-//                    List<Department> departments = departmentService.selectDepartmentList(department);
-//                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
-//                }
-//            }
 
             if (management.getTimeDuration() == null) {
                 patientManagmentDept.setAcquisitionDuration("报告未生成");

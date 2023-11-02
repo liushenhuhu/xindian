@@ -73,17 +73,17 @@ public class WxMsgRunConfig {
         if (now.isAfter(start) && now.isBefore(end)) {
 
             redisTemplate.opsForValue().set("reportPT:"+pid,pid,10, TimeUnit.MINUTES);
-//            ExecutorService executorService = Executors.newSingleThreadExecutor();
-//            CompletableFuture.runAsync(() ->{
-//                System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
-//                try{
-//                    wxPublicRequest.dockerMsg();
-//                }catch (Exception e){
-//                    System.out.println(e);
-//                }
-//                System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
-//            },executorService);
-//            executorService.shutdown(); // 回收线程池
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            CompletableFuture.runAsync(() ->{
+                System.out.println("异步线程 =====> 开始推送公众号消息 =====> " + new Date());
+                try{
+                    wxPublicRequest.dockerMsg();
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+                System.out.println("异步线程 =====> 结束推送公众号消息 =====> " + new Date());
+            },executorService);
+            executorService.shutdown(); // 回收线程池
         }else {
             LocalDateTime nowTime = LocalDateTime.now();
             LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
@@ -103,66 +103,73 @@ public class WxMsgRunConfig {
         Report report2 = reportService.selectReportByPId(pId);
         LocalTime now = LocalTime.now();
 
-        if (report2.getdPhone()!=null&&!"".equals(report2.getdPhone())){
-//            redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
-            System.out.println("订单已被抢走");
+        if (report2.getDiagnosisStatus()!=2){
+            redisTemplate.delete("DocList"+pId);
+            redisTemplate.delete("reportPT:"+pId);
+            System.out.println("订单已诊断");
         }else {
-            if (now.isAfter(start) && now.isBefore(end)) {
+            if (report2.getdPhone()!=null&&!"".equals(report2.getdPhone())){
+//            redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
+                System.out.println("订单已被抢走");
+            }else {
+                if (now.isAfter(start) && now.isBefore(end)) {
 
-                DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
-                diagnoseDoc.setReportId(report2.getReportId());
+                    DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
+                    diagnoseDoc.setReportId(report2.getReportId());
 
 
-                if (!Boolean.TRUE.equals(redisTemplate.hasKey("DocList"+pId))){
-                    List<Doctor> doctors = doctorService.selectIsDoc();
-                    int rand = StrUtil.randomInt(doctors.size());
-                    Doctor doctor = doctors.get(rand);
-                    String dPhone= doctor.getDoctorPhone();
-                    report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
-                    report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
-                    report2.setdPhone(dPhone);
-                    diagnoseDoc.setDoctorPhone(dPhone);
-                    report2.setReportTime(new Date());
-                    report2.setStartTime(new Date());
-                    report2.setDiagnosisDoctor(doctor.getDoctorName());
-                    WxUtil.send(aesUtils.decrypt(dPhone));
-                    redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
-                }else {
-                    List<Object> doctors = redisTemplate.opsForList().range("DocList"+pId, 0, -1);
-                    if (doctors!=null&&doctors.size()>0){
-                        List<Doctor> doctorList = new ArrayList<>();
-                        for (Object c : doctors){
-                            doctorList.addAll((List<Doctor>) c);
-                        }
-                        int rand = StrUtil.randomInt(doctorList.size());
-                        Doctor doctor =doctorList.get(rand);
+                    if (!Boolean.TRUE.equals(redisTemplate.hasKey("DocList"+pId))){
+                        List<Doctor> doctors = doctorService.selectIsDoc();
+                        int rand = StrUtil.randomInt(doctors.size());
+                        Doctor doctor = doctors.get(rand);
                         String dPhone= doctor.getDoctorPhone();
-                        report2.setdPhone(dPhone);
-                        diagnoseDoc.setDoctorPhone(dPhone);
                         report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
                         report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
+                        report2.setdPhone(dPhone);
+                        diagnoseDoc.setDoctorPhone(dPhone);
                         report2.setReportTime(new Date());
                         report2.setStartTime(new Date());
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
                         WxUtil.send(aesUtils.decrypt(dPhone));
+                        redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
+                    }else {
+                        List<Object> doctors = redisTemplate.opsForList().range("DocList"+pId, 0, -1);
+                        if (doctors!=null&&doctors.size()>0){
+                            List<Doctor> doctorList = new ArrayList<>();
+                            for (Object c : doctors){
+                                doctorList.addAll((List<Doctor>) c);
+                            }
+                            int rand = StrUtil.randomInt(doctorList.size());
+                            Doctor doctor =doctorList.get(rand);
+                            String dPhone= doctor.getDoctorPhone();
+                            report2.setdPhone(dPhone);
+                            diagnoseDoc.setDoctorPhone(dPhone);
+                            report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
+                            report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
+                            report2.setReportTime(new Date());
+                            report2.setStartTime(new Date());
+                            report2.setDiagnosisDoctor(doctor.getDoctorName());
+                            WxUtil.send(aesUtils.decrypt(dPhone));
+                        }
                     }
-                }
 
-                diagnoseDoc.setDiagnoseType("2");
-                diagnoseDocService.insertDiagnose(diagnoseDoc);
+                    diagnoseDoc.setDiagnoseType("2");
+                    diagnoseDocService.insertDiagnose(diagnoseDoc);
 
-                reportService.updateReport(report2);
-                redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
-            }else {
-                LocalDateTime nowTime = LocalDateTime.now();
-                LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
-                long minutes = nowTime.until(tomorrow8AM, ChronoUnit.MINUTES);
-                Random random = new Random();
-                int randomNumber = random.nextInt(31);
-                redisTemplate.opsForValue().set("reportPT:"+pId,pId,minutes+randomNumber, TimeUnit.MINUTES);
+                    reportService.updateReport(report2);
+                    redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
+                }else {
+                    LocalDateTime nowTime = LocalDateTime.now();
+                    LocalDateTime tomorrow8AM = LocalDateTime.of(nowTime.toLocalDate().plusDays(1), nowTime.toLocalTime().withHour(8));
+                    long minutes = nowTime.until(tomorrow8AM, ChronoUnit.MINUTES);
+                    Random random = new Random();
+                    int randomNumber = random.nextInt(31);
+                    redisTemplate.opsForValue().set("reportPT:"+pId,pId,minutes+randomNumber, TimeUnit.MINUTES);
 //                redisTemplate.opsForValue().set("reportPT:"+pId,pId,1, TimeUnit.MINUTES);
+                }
             }
         }
+
     }
 
     /**

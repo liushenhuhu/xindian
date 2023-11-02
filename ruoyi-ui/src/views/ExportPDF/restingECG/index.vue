@@ -10,6 +10,7 @@
                 <p>患者信息</p>
               </div>
               <div class="info">
+                <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
                 <div class="textbox"><strong>姓名:</strong>{{ data.name }}</div>
                 <div class="textbox"><strong>性别:</strong>{{ data.gender }}</div>
                 <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
@@ -462,6 +463,7 @@ export default {
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
+        this.data.pId = response.data.pId
         if (!this.data.doctorName){
           const date = new Date();
           const year = date.getFullYear().toString().padStart(4, '0');
@@ -2004,6 +2006,9 @@ export default {
         width:45%;
         margin-bottom: 2vh;
         font-size: 2.1vh;
+      }
+      .textBoxBottom{
+        margin-bottom: 10px;
       }
     }
   }

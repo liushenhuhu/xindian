@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,6 +60,7 @@ import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -129,10 +131,6 @@ public class ReportController extends BaseController
     @Autowired
     private IDetectionService detectionService;
 
-    @Autowired
-    private IHospitalService hospitalService;
-
-
 
     @Resource
     private TokenService tokenService;
@@ -147,6 +145,10 @@ public class ReportController extends BaseController
 
     @Resource
     private WxMsgRunConfig wxMsgRunConfig;
+
+
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
 
 
     @Resource
@@ -320,6 +322,14 @@ public class ReportController extends BaseController
     @Log(title = "报告", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Report report, HttpServletRequest request) throws Exception {
+
+        LoginUser loginUser1 = tokenService.getLoginUser(request);
+        Long userId = loginUser1.getUser().getUserId();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("reportPutAdd"+userId))){
+            return AjaxResult.error("请勿重复提交");
+        }
+        redisTemplate.opsForValue().set("reportPutAdd"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
+
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
 
@@ -403,12 +413,11 @@ public class ReportController extends BaseController
                 report.setStartTime(new Date());
                 int i = reportService.updateReport(report);
             //记录患者的报告服务次数使用
-            reportPut(loginUser.getUser().getPhonenumber(),request);
+            reportPut(loginUser.getUser().getPhonenumber(),"咨询医生减少服务次数","2",request);
            return toAjax(i);
 
 
         } else if(report.getDiagnosisStatus()==3){ //拒绝逻辑
-
             //记录医生拒绝判断的原因
             Detection detection = new Detection();
             detection.setDetectionPid(report1.getpId());
@@ -425,14 +434,19 @@ public class ReportController extends BaseController
             notDealWith.setRefuseTime(calendar.getTime());
             notDealWith.setRefuseReason(report.getRefuseText());
             notDealWithService.insertNotDealWith(notDealWith);
+            if (doctor1==null){
+                return AjaxResult.error("医生不存在");
+            }
             if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
                 patientService.detectionNumAdd(report1.getLoginUserPhone());
+                reportPut(loginUser.getUser().getPhonenumber(),"咨询医生诊断异常数据，次数返回","1",request);
             }
             //医生拒绝判断小程序消息推送通知用户通知
             //如果报告属于患者家人，则通过发送短信的方式去
             if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
                 WxMsgPut(report1.getLoginUserPhone(),doctor1.getHospital(),patient.getPatientName());
             }
+            redisTemplate.delete("DocList"+report.getpId());
             return toAjax(reportService.updateReportNull(report));
         }else if(report.getDiagnosisStatus()==1){//医生诊断
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -481,12 +495,14 @@ public class ReportController extends BaseController
                     report.setReportNormal("2");
                     if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
                         patientService.detectionNumAdd(report1.getLoginUserPhone());
+                        reportPut(loginUser.getUser().getPhonenumber(),"咨询医生诊断异常数据，次数返回","1",request);
                     }
                 }
             }
             //医生提交诊断报告小程序消息推送通知用户通知
             //如果报告属于患者家人，则通过发送短信的方式去
             reportService.updateReport(report);
+            redisTemplate.delete("DocList"+report.getpId());
             if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
                 WxMsgPut(report1.getLoginUserPhone(),doctor1.getHospital(),patient.getPatientName());
             }
@@ -897,17 +913,17 @@ public class ReportController extends BaseController
 
 
     //记录报告
-    private void reportPut(String phone,HttpServletRequest request){
+    private void reportPut(String phone,String msg,String status,HttpServletRequest request){
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         CompletableFuture.runAsync(() ->{
             System.out.println("异步线程 =====> 开始记录服务使用日志 =====> " + new Date());
             try{
                 FwLog fwLog = new FwLog();
                 fwLog.setUserName(phone);
-                fwLog.setMsg("提交心电报告减少一次心电服务次数");
+                fwLog.setMsg(msg);
                 fwLog.setStatus("1");
                 fwLog.setLogTime(new Date());
-                fwLog.setFwStatus("2");
+                fwLog.setFwStatus(status);
                 fwLog.setFwNum(1);
                 String ipAddr = IpUtils.getIpAddr(request);
                 fwLog.setIpaddr(ipAddr);

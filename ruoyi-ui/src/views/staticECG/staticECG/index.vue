@@ -9,8 +9,9 @@
               <p>患者信息</p>
             </div>
             <div class="patientMessage">
-              <div class="textbox"><strong>姓名:</strong>{{ data.name }}</div>
-              <div class="textbox"><strong>性别:</strong>{{ data.gender }}</div>
+              <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
+              <div class="textbox "><strong>姓名:</strong>{{ data.name }}</div>
+              <div class="textbox "><strong>性别:</strong>{{ data.gender }}</div>
               <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
               <div class="textbox"><strong>送检科室:</strong> -</div>
               <div class="textbox"><strong>申请单号:</strong> -</div>
@@ -288,7 +289,8 @@ export default {
         pr:'',
         qrs:'',
         qtc:'',
-        hrv:''
+        hrv:'',
+        pId:''
       },
       data12: {
         x: [],
@@ -335,6 +337,7 @@ export default {
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
+        this.data.pId = response.data.pId
         if (!this.data.doctorName){
           const date = new Date();
           const year = date.getFullYear().toString().padStart(4, '0');
@@ -1706,6 +1709,9 @@ export default {
     width:50%;
     margin-bottom: 1.5vh;
     font-size: 2.1vh;
+  }
+  .textBoxBottom{
+    margin-bottom: 10px;
   }
 }
 

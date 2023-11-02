@@ -218,6 +218,17 @@ public class PatientManagement extends BaseEntity {
 
     private String avgTime;
 
+    /**
+     * 报告状态
+     */
+    private String reportNormal;
+
+
+    /**
+     * 拒绝理由
+     */
+    private String refuseText;
+
     private List<String> hospitalCodeList = new ArrayList<>();
 
     public String getpId() {
