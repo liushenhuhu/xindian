@@ -146,7 +146,7 @@ export default {
         main.resize();
       })
       main.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     DDrawLine() {
@@ -199,7 +199,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     ZBDrawLine() {
@@ -252,7 +252,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     XJGSDrawLine() {
@@ -305,7 +305,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     XLDrawLine() {
@@ -358,7 +358,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     CDZDDrawLine() {
@@ -411,7 +411,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     WJXDDrawLine() {
@@ -464,7 +464,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
 
@@ -518,7 +518,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     FSFDDrawLine() {
@@ -571,7 +571,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     CDPDDrawLine() {
@@ -624,7 +624,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
     XGFQPDDrawLine() {
@@ -677,7 +677,7 @@ export default {
         main1.resize();
       })
       main1.on('click', function(params) {
-        th.$router.push({path: "/ecgCount/ecgAgeAndType" , query: {name: params.name}});
+        th.$router.push({path: "/ecgCount/ageDistribution" , query: {name: params.name}});
       });
     },
 

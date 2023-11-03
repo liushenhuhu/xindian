@@ -1712,6 +1712,7 @@ export default {
   }
   .textBoxBottom{
     margin-bottom: 10px;
+    font-size: 2.1vh;
   }
 }
 

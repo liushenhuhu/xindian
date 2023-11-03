@@ -79,6 +79,10 @@ public interface EcgCountService extends IService<EcgCount> {
     List<AgeStatistics> ageListByWoman(Map<String,Object> type);
 
 
+    List<AgeStatistics> ageListByOneMan();
+
+    List<AgeStatistics> ageListByOneWoman();
+
     Map<String , List<TypeListVo>> getTypeList() throws InstantiationException, IllegalAccessException;
 
 

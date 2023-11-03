@@ -43,6 +43,10 @@ export default {
     font-size: 17.5px;
     border-left: 5px solid #eee;
   }
+  .textOverstriking{
+    font-size: 70px;
+
+  }
   hr {
     margin-top: 20px;
     margin-bottom: 20px;

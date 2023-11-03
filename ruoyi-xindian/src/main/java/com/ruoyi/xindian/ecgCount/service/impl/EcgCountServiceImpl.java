@@ -255,6 +255,16 @@ public class EcgCountServiceImpl extends ServiceImpl<EcgCountMapper, EcgCount>
     }
 
     @Override
+    public List<AgeStatistics> ageListByOneMan() {
+        return ecgCountMapper.ageListByOneMan();
+    }
+
+    @Override
+    public List<AgeStatistics> ageListByOneWoman() {
+        return ecgCountMapper.ageListByOneWoman();
+    }
+
+    @Override
     public Map<String , List<TypeListVo>> getTypeList() throws InstantiationException, IllegalAccessException {
 
 

@@ -79,8 +79,10 @@ public interface EcgCountMapper extends BaseMapper<EcgCount> {
 
 
     List<AgeStatistics> ageListByMan(Map<String,Object> type);
+    List<AgeStatistics> ageListByOneMan();
 
     List<AgeStatistics> ageListByWoman(Map<String,Object> type);
+    List<AgeStatistics> ageListByOneWoman();
 
 
 

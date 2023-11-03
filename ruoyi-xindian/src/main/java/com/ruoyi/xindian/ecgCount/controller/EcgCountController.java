@@ -182,9 +182,9 @@ public class EcgCountController extends BaseController {
             return ecgCountTypeAge;
         }else {
             /* 查询性别男 */
-            List<AgeStatistics> manList = ecgCountService.ageListByMan(null);
+            List<AgeStatistics> manList = ecgCountService.ageListByOneMan();
             /* 查询性别女 */
-            List<AgeStatistics> womanList = ecgCountService.ageListByWoman(null);
+            List<AgeStatistics> womanList = ecgCountService.ageListByOneWoman();
             Map<Object,Object> map = new HashMap<Object,Object>();
             map.put("men",manList);
             map.put("women",womanList);
