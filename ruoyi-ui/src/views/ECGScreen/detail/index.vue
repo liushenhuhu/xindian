@@ -5785,7 +5785,7 @@ export default {
         now = new Date(now.valueOf() - 4);
       }
       const datenow = new Date()
-      for (let b = 0; b < 2500; b++) {
+      for (let b = 0; b <= 2501; b++) {
         time.unshift((new Date(datenow.valueOf() - (b * 4))).toLocaleTimeString());//datenow.valueOf()返回datenow数组的值
         time.pop();
       }
@@ -6440,9 +6440,24 @@ export default {
         },
         dataZoom:[
           {
-            type: 'inside',   // 鼠标滚轮缩放
+            show: false,       // 滑动条组件
+            type: 'slider',
+            orient: 'vertical',
+            brushSelect:false,
             start: 0,
-            end: 100
+            end: 100,
+          },
+          {
+            type: 'inside',
+            orient: 'vertical',// 鼠标滚轮缩放
+            start: 0,
+            end: 100,
+          },
+          {
+            type: 'inside',   // 鼠标滚轮缩放
+            y:'90%',
+            start: 0,
+            end: 100,
           },
           {
             type: 'slider',
@@ -6451,6 +6466,9 @@ export default {
             // end: 100,
             xAxisIndex: [0],
             borderRadius: 2,
+            startValue: 0,
+            endValue:1000,
+            maxValueSpan:1000,
             // backgroundColor: 'rgba(227,227,227,0)',
             showDataShadow: true,//是否显示数据阴影 默认auto
             dataBackground: {
@@ -6465,7 +6483,7 @@ export default {
             },
             filterMode: "none",
             realtime: true,
-            brushSelect:true,
+            brushSelect:false,
             brushStyle: {
               color: "rgba(71, 154, 222, 0.36)",
               borderColor: "rgba(238, 190, 190, 1)",
@@ -6477,10 +6495,9 @@ export default {
           }],
         grid: {
           left: '2%' /*"50px"*/,
-          right: '3%' /*"15px"*/,
+          right: '2%' /*"15px"*/,
           top: '8%',
-          bottom: '20%',
-
+          bottom: '15%',
         },
         legend: {
           show: false,
@@ -6512,7 +6529,8 @@ export default {
           min: -3,
           max: 3,
           boundaryGap: false,
-          splitNumber: 84,
+          splitNumber: 41,
+          minInterval: 0.1,
           axisLabel: { //修改坐标系字体颜色
             show: false,
             textStyle: {
