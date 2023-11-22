@@ -108,6 +108,40 @@ public class StatisticsController extends BaseController {
         }
         return  getDataTable(statistics1);
     }
+    /**
+     * 统计医生的诊断时长和平均诊断时间
+     * @param statistics
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/countListApp")
+    public TableDataInfo countListApp(Statistics statistics) throws Exception {
+        List<Statistics> statistics1 = statisticsService.selectCountList(statistics);
+//        List<Statistics> statistics2 = statisticsService.selectDocDiagnose(statistics);
+        for (Statistics c : statistics1){
+//            for (Statistics b:statistics2){
+//                if (c.getDoctorPhone().equals(b.getDoctorPhone())){
+//                    c.setDiagnoseTypeZhuSUM(b.getDiagnoseTypeZhuSUM());
+//                    c.setDiagnoseStatusWEISUM(b.getDiagnoseStatusWEISUM());
+//                    c.setDiagnoseTypeBIESUM(b.getDiagnoseTypeBIESUM());
+//                    break;
+//                }
+//            }
+            if (c.getDoctorName()!=null&&!"".equals(c.getDoctorName())){
+                c.setDoctorName(aesUtils.decrypt(c.getDoctorName()));
+            }
+            if (c.getDoctorPhone()!=null&&!"".equals(c.getDoctorPhone())){
+                c.setDoctorPhone(aesUtils.decrypt(c.getDoctorPhone()));
+            }
+            BigDecimal bigDecimal = new BigDecimal(String.valueOf(Double.parseDouble(c.getCountTime()) / 60));
+            BigDecimal bigDecimal1 = bigDecimal.setScale(1, RoundingMode.UP);
+            c.setCountTime(bigDecimal1 +"分钟");
+            BigDecimal bigDecimal2 = new BigDecimal(String.valueOf(Double.parseDouble(c.getAverageTime()) / 60));
+            BigDecimal bigDecimal3 = bigDecimal2.setScale(1, RoundingMode.UP);
+            c.setAverageTime(bigDecimal3 +"分钟");
+        }
+        return  getDataTable(statistics1);
+    }
 
     @GetMapping("dateList")
     public TableDataInfo dateList(Statistics str){

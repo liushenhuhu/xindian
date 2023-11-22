@@ -144,7 +144,9 @@
       <el-table-column label="科室" align="center" prop="equipmentName"/>
       <el-table-column label="设备种类" align="center" prop="equipmentType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.ecg_type" :value="scope.row.equipmentType"/>
+          <el-tag >
+            {{scope.row.equipmentType}}
+          </el-tag>
         </template>
       </el-table-column>
 <!--      <el-table-column label="患者电话" align="center" prop="patientPhone"/>-->

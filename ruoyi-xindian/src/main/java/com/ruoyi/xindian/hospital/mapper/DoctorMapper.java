@@ -76,4 +76,6 @@ public interface DoctorMapper
      * @return
      */
     List<Doctor> selectVisitDoc(@Param("hospitalName") String hospitalName);
+
+    List<Doctor> selectXDDoc(@Param("hospitalName") String hospitalName);
 }

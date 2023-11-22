@@ -76,7 +76,7 @@ public class OnlineController extends BaseController {
 
 
     @GetMapping("/updateAll")
-    public AjaxResult updateAll(HttpServletRequest request) {
+    public AjaxResult updateAll(HttpServletRequest request) throws Exception {
         AjaxResult result1 = update1(request);
         AjaxResult result2 = update2(request);
         Map<String, Object> map = new HashMap<>();
@@ -216,7 +216,7 @@ public class OnlineController extends BaseController {
     }
 
     @GetMapping("/update2")
-    public AjaxResult update2(HttpServletRequest request1) {
+    public AjaxResult update2(HttpServletRequest request1) throws Exception {
 //        String url = "http://219.155.7.235:5003/get_device2";
         String url = "https://server.mindyard.cn:84/get_device2";
 //        String url = "http://202.102.249.124:84/get_device2";
@@ -251,6 +251,8 @@ public class OnlineController extends BaseController {
         String s = removeDoubleQuotes(splitData);
         String[] pIdList = s.split(",");
         String res = patientManagementController.updateStatus(pIdList);
+
+
         Map<String, Object> resMap = new HashMap<>();
         resMap.put("pIdList", pIdList);
         resMap.put("res", res);

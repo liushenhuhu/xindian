@@ -28,6 +28,16 @@ public interface IEquipmentService
      */
     public List<Equipment> selectEquipmentList(Equipment equipment);
 
+
+    /**
+     * 统计心电卡使用量
+     * @param equipment
+     * @return
+     */
+    public List<Equipment> selectEquipmentListAll(Equipment equipment);
+
+
+
     /**
      * 新增设备
      *
@@ -72,6 +82,9 @@ public interface IEquipmentService
     public void updateEquipmentStatus(String[] statusList);
 
     public Equipment selectEquipmentByEquipmentCode(String equipmentCode);
+
+
+
 
 
     void batchInsert(String path) throws Exception;

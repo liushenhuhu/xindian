@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.patient.mapper.PatientRelationDocMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.patient.domain.PatientRelationDoc">
+            <id property="relationId" column="relation_id" jdbcType="INTEGER"/>
+            <result property="patientPhone" column="patient_phone" jdbcType="VARCHAR"/>
+            <result property="doctorPhone" column="doctor_phone" jdbcType="VARCHAR"/>
+            <result property="boundStatus" column="bound_status" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="PatientRelationAndDoc" type="com.ruoyi.xindian.patient.domain.PatientRelationDoc" extends="BaseResultMap">
+        <collection property="patients" ofType="patient" resultMap="com.ruoyi.xindian.patient.mapper.PatientMapper.PatientResult"/>
+    </resultMap>
+    <resultMap id="RelationAndDoc" type="com.ruoyi.xindian.patient.domain.PatientRelationDoc" extends="BaseResultMap">
+        <collection property="doctors" ofType="doctor" resultMap="com.ruoyi.xindian.hospital.mapper.DoctorMapper.DoctorResult"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        relation_id,patient_phone,doctor_phone,
+        create_time,bound_status
+    </sql>
+    <select id="selectAllList" resultType="com.ruoyi.xindian.patient.domain.PatientRelationDoc" resultMap="PatientRelationAndDoc">
+        SELECT
+            patient_relation_doc.relation_id,
+            patient_relation_doc.doctor_phone,
+            patient_relation_doc.bound_status,
+            patient_relation_doc.create_time,
+            patient.patient_phone_aes,
+            patient.patient_name_aes,
+            patient.patient_age,
+            patient.patient_sex,
+            patient.birth_day
+        FROM
+            patient_relation_doc
+                INNER JOIN
+            patient
+            ON
+                patient_relation_doc.patient_phone = patient.patient_phone_aes
+        <where>
+            <if test="doctorPhone!=null and doctorPhone!=''">
+                and patient_relation_doc.doctor_phone = #{doctorPhone}
+            </if>
+            <if test="patientPhone!=null and patientPhone!=''">
+                and patient_relation_doc.patient_phone = #{patientPhone}
+            </if>
+            <if test="boundStatus!=null and boundStatus!=''">
+                and patient_relation_doc.bound_status = #{boundStatus}
+            </if>
+        </where>
+    </select>
+    <select id="selectAllDocList" resultType="com.ruoyi.xindian.patient.domain.PatientRelationDoc" resultMap="RelationAndDoc">
+        SELECT
+            patient_relation_doc.patient_phone,
+            patient_relation_doc.relation_id,
+            patient_relation_doc.create_time,
+            patient_relation_doc.bound_status,
+            doctor.doctor_id,
+            doctor.doctor_name_aes as doctor_name,
+            doctor.doctor_phone_aes as doctor_phone,
+            doctor.department_code,
+            doctor.skill,
+            doctor.introduction,
+            doctor.service_content,
+            doctor.applicable_population,
+            doctor.img,
+            doctor.hospital,
+            doctor.professional
+        FROM
+            patient_relation_doc
+                INNER JOIN
+            doctor
+            ON
+                patient_relation_doc.doctor_phone = doctor.doctor_phone_aes
+        <where>
+            <if test="doctorPhone!=null and doctorPhone!=''">
+                and patient_relation_doc.doctor_phone = #{doctorPhone}
+            </if>
+            <if test="patientPhone!=null and patientPhone!=''">
+                and patient_relation_doc.patient_phone = #{patientPhone}
+            </if>
+            <if test="boundStatus!=null and boundStatus!=''">
+                and patient_relation_doc.bound_status = #{boundStatus}
+            </if>
+        </where>
+    </select>
+</mapper>

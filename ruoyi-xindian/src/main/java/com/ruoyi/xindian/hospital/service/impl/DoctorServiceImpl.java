@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.hospital.service.impl;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 医生Service业务层处理
@@ -165,5 +168,27 @@ public class DoctorServiceImpl implements IDoctorService
     @Override
     public List<Doctor> selectVisitDoc(String hospitalName) {
         return doctorMapper.selectVisitDoc(hospitalName);
+    }
+
+    @Override
+    public List<Doctor> selectXDDoc(String hospitalName) {
+
+        return doctorMapper.selectXDDoc(hospitalName).stream().peek(d->{
+            if (StringUtils.isNotEmpty(d.getDoctorName())){
+                try {
+                    d.setDoctorName(aesUtils.decrypt(d.getDoctorName()));
+                } catch (Exception e) {
+                    throw new ServiceException("数据错误");
+                }
+            }
+            if (StringUtils.isNotEmpty(d.getDoctorPhone())){
+                try {
+                    d.setDoctorPhone(aesUtils.decrypt(d.getDoctorPhone()));
+                } catch (Exception e) {
+                    throw new ServiceException("数据错误");
+                }
+            }
+
+        }).collect(Collectors.toList());
     }
 }

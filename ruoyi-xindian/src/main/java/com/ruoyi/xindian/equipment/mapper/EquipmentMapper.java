@@ -30,6 +30,16 @@ public interface EquipmentMapper
      */
     public List<Equipment> selectEquipmentList(Equipment equipment);
 
+
+
+    /**
+     * 查询设备列表
+     *
+     * @param equipment 设备
+     * @return 设备集合
+     */
+    public List<Equipment> selectEquipmentListByUse(Equipment equipment);
+
     /**
      * 新增设备
      *

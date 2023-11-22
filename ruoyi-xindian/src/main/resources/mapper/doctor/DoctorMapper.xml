@@ -101,6 +101,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectVisitDoc" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
         <include refid="selectDoctorVo"/> where hospital = #{hospitalName} and  is_doc = '2'
     </select>
+    <select id="selectXDDoc" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
+        <include refid="selectDoctorVo"/> where hospital = #{hospitalName} and  is_doc = '1' and account_status = '0'
+    </select>
 
 
     <insert id="insertDoctor" parameterType="Doctor" useGeneratedKeys="true" keyProperty="doctorId">

@@ -4,12 +4,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.mapper.PatientMapper;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -33,11 +37,11 @@ public class EquipmentServiceImpl implements IEquipmentService {
     @Autowired
     private EquipmentMapper equipmentMapper;
 
-    @Resource
-    private AssociatedHospitalMapper associatedHospitalMapper;
 
     @Resource
-    private HospitalMapper hospitalMapper;
+    private PatientMapper patientMapper;
+
+
 
     /**
      * 查询设备
@@ -60,6 +64,11 @@ public class EquipmentServiceImpl implements IEquipmentService {
     public List<Equipment> selectEquipmentList(Equipment equipment) {
 
         return equipmentMapper.selectEquipmentList(equipment);
+    }
+
+    @Override
+    public List<Equipment> selectEquipmentListAll(Equipment equipment) {
+        return equipmentMapper.selectEquipmentListByUse(equipment);
     }
 
     /**
@@ -138,10 +147,10 @@ public class EquipmentServiceImpl implements IEquipmentService {
             List<Equipment> equipmentList = new ArrayList<>();
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 XSSFRow row = sheet.getRow(i);
-                String name = row.getCell(1).getStringCellValue();
+                String name = row.getCell(0).getStringCellValue();
 
                 //因为id自增，所以不加id，后期可以自行修改，其他参数自行修改
-                Equipment equipment = new Equipment( name, "V2023-06-19", "False", "29", "JECGsingleWL");
+                Equipment equipment = new Equipment( name, "V2023-07-10", "False", "29", "JECGsingleWL");
                 equipmentList.add(equipment);
             }
             for (int i = 0; i < equipmentList.size(); i ++) {
@@ -163,7 +172,7 @@ public class EquipmentServiceImpl implements IEquipmentService {
         List<String> list = new ArrayList<>();
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             XSSFRow row = sheet.getRow(i);
-            String name = row.getCell(1).getStringCellValue();
+            String name = row.getCell(0).getStringCellValue();
 
             Equipment equipment1 = equipmentMapper.selectEquipmentByEquipmentCode(name);
 

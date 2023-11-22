@@ -1,12 +1,18 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.framework.web.domain.server.Sys;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,12 +60,60 @@ public class SysUserController extends BaseController
     @Autowired
     private AesUtils aesUtils;
 
+
+    @Resource
+    private RedisTemplate<String, SysUser> redisTemplate;
+
     /**
      * 获取用户列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysUser user) throws Exception {
+    public TableDataInfo list(SysUser user,Integer pageSize ,Integer pageNum) throws Exception {
+
+
+        if (StringUtils.isNotEmpty(user.getIsEncrypt())&&"1".equals(user.getIsEncrypt())){
+            if (StringUtils.isNotEmpty(user.getUserName())){
+                List<SysUser> listKey = redisTemplate.opsForList().range("userList", 0, -1);
+                List<SysUser> sysUsers = new ArrayList<>();
+                if (listKey != null) {
+                    for (SysUser c : listKey){
+                        if (c.getUserName().contains(user.getUserName())){
+
+                            sysUsers.add(c);
+                        }
+                    }
+                }
+                if (listKey != null && listKey.size() == sysUsers.size()) {
+                    List<SysUser> listKeys = redisTemplate.opsForList().range("userList", (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                    long total = 0;
+                    if (listKeys != null) {
+                        total = new PageInfo(listKeys).getTotal();
+                    }
+                    return getTable(listKeys, total);
+                }
+                else {
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("userListByTest:" + user.getUserName()))){
+                        List<SysUser> listKeys = redisTemplate.opsForList().range("userListByTest:"+ user.getUserName(), (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+
+                        return getTable(listKeys, redisTemplate.opsForList().size("userListByTest:"+ user.getUserName()));
+                    }else {
+                        redisTemplate.delete("userListByTest:*");
+                        for (SysUser s : sysUsers){
+                            redisTemplate.opsForList().rightPush("userListByTest:"+user.getUserName(),s);
+                        }
+                        List<SysUser> listKeys = redisTemplate.opsForList().range("userListByTest:"+ user.getUserName(), (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                        return getTable(listKeys, redisTemplate.opsForList().size("userListByTest:"+ user.getUserName()));
+                    }
+
+
+                }
+
+            }
+        }
+
+
+
         if(user.getPhonenumber()!=null&&!"".equals(user.getPhonenumber())){
             user.setPhonenumber(aesUtils.encrypt(user.getPhonenumber()));
         }
@@ -76,6 +130,9 @@ public class SysUserController extends BaseController
                 c.setPhonenumber(aesUtils.decrypt(c.getPhonenumber()));
             }
         }
+
+
+
         return getDataTable(list);
     }
 

@@ -39,6 +39,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -50,6 +51,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -91,7 +95,7 @@ public class PatientManagementController extends BaseController {
     @Autowired
     private AesUtils aesUtils;
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
 
@@ -583,7 +587,7 @@ public class PatientManagementController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:edit')")
     @Log(title = "患者管理", businessType = BusinessType.UPDATE)
     @PostMapping("/updateStatus")
-    public String updateStatus(@RequestBody String[] pIds) {
+    public String updateStatus(@RequestBody String[] pIds) throws Exception {
 
         patientManagementService.updateStatusAll();
         patientService.updateMonitoringStatus();
@@ -602,7 +606,54 @@ public class PatientManagementController extends BaseController {
                 }
             }
         }
+        List<Patient> patients = patientService.selectPatientList(new Patient());
+        redisTemplate.delete("patientList");
+        // 创建线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        // 将数据分批传入线程池进行异步插入操作
+        CompletableFuture<Void>[] futures = new CompletableFuture[(int) Math.ceil((double) patients.size() / 1000)];
+        for (int i = 0; i < patients.size(); i += 1000) {
+            int endIndex = Math.min(i + 1000, patients.size());
+            List<Patient> dataChunk = patients.subList(i, endIndex);
+            int batchIndex = i / 1000;
+            futures[batchIndex] = CompletableFuture.runAsync(() -> {
+                try {
+                    redisAdd(dataChunk);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }, executorService);
+        }
+
+        // 等待所有异步操作完成
+        CompletableFuture.allOf(futures).join();
+
+        // 关闭线程池
+        executorService.shutdown();
         return "down";
+    }
+
+    private  void redisAdd(List<Patient> patients) throws Exception {
+        if (patients!=null&& !patients.isEmpty()){
+            for (Patient pat : patients) {
+                if(pat.getBirthDay()!=null)
+                    pat.setPatientAge(String.valueOf(DateUtil.getAge(pat.getBirthDay())));
+                if(pat.getPatientSex().length()>1){
+                    pat.setPatientSex(pat.getPatientSex().substring(0,1));
+                }
+                if(pat.getPatientPhone() != null){
+                    pat.setPatientPhone(aesUtils.decrypt(pat.getPatientPhone()));
+                }
+                if(pat.getPatientName() != null){
+                    pat.setPatientName(aesUtils.decrypt(pat.getPatientName()));
+                }
+                if (pat.getFamilyPhone()!=null&&!"".equals(pat.getFamilyPhone())){
+                    pat.setFamilyPhone(aesUtils.decrypt(pat.getFamilyPhone()));
+                }
+
+                redisTemplate.opsForList().rightPush("patientList",pat);
+            }
+        }
     }
 
     /**

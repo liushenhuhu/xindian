@@ -3,12 +3,15 @@ package com.ruoyi.xindian.equipment.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.framework.web.service.TokenService;
@@ -23,7 +26,9 @@ import com.ruoyi.xindian.hospital.service.IAssociatedHospitalService;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.util.DateUtil;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -334,5 +339,20 @@ public class EquipmentController extends BaseController {
 
         return AjaxResult.success(null);
     }
+
+
+
+
+    @GetMapping("/ecg_use")
+    public TableDataInfo ecg_use(Equipment equipment) throws Exception {
+        if (equipment.getPatientPhone()!=null&&!"".equals(equipment.getPatientPhone())){
+            equipment.setPatientPhone(aesUtils.encrypt(equipment.getPatientPhone()));
+        }
+        startPage();
+        List<Equipment> equipment1 = equipmentService.selectEquipmentListAll(equipment);
+        return getDataTable(equipment1);
+    }
+
+
 
 }

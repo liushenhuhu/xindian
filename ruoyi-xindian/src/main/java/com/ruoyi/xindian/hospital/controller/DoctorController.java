@@ -362,4 +362,13 @@ public class DoctorController extends BaseController
         return AjaxResult.success(doctors);
     }
 
+    @GetMapping("/getXDDoc")
+    public AjaxResult getXDDoc(String hospitalName){
+        List<Doctor> doctors = doctorService.selectXDDoc(hospitalName);
+        return AjaxResult.success(doctors);
+    }
+
+
+
+
 }

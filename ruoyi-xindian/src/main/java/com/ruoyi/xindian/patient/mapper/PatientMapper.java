@@ -72,6 +72,12 @@ public interface PatientMapper
      */
     public Patient selectPatientByPatientPhone(String patientPhone);
 
+
+    List<Patient> selectPatientListByPhoneList(@Param("patientPhones") String[] patientPhones);
+
+
+    List<Patient> selectPatientByCode(@Param("equipmentCode") String equipmentCode);
+
     /**
      * 查询患者
      *
@@ -93,4 +99,7 @@ public interface PatientMapper
 
 
     List<Patient> selectAlertLogListPatients(Limit limit);
+
+
+    Patient selectPatientByPatientPhoneAndHospitalId(String patientPhone);
 }

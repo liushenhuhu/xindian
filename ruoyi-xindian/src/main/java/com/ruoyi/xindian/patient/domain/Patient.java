@@ -116,6 +116,38 @@ public class Patient extends BaseEntity {
 
     private String doctorPhone;
 
+    private Date createTime;
+
+    private String count;
+
+    private String isSelect;
+
+    public String getIsSelect() {
+        return isSelect;
+    }
+
+    public void setIsSelect(String isSelect) {
+        this.isSelect = isSelect;
+    }
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     public String getDoctorPhone() {
         return doctorPhone;
     }
