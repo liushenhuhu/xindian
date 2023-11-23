@@ -455,7 +455,7 @@ export default {
         phonenumber: undefined,
         status: undefined,
         deptId: undefined,
-        isEncrypt:'1'
+        // isEncrypt:'1'
       },
       // 列信息
       columns: [

@@ -25,3 +25,10 @@ export function updateOnlineAll() {
     timeout: 100000
   })
 }
+export function getPatientOnlineStatus() {
+  return request({
+    url: '/getOnline/getPatientOnlineStatus',
+    method: 'get',
+    timeout: 100000
+  })
+}

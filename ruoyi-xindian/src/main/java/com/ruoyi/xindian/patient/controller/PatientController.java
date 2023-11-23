@@ -132,6 +132,11 @@ public class PatientController extends BaseController
 
                     String patientName = aesUtils.decrypt(patient.getPatientName());
 
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("patientListByTest:" + patientName))){
+                        List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:"+ patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+
+                        return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:"+patientName));
+                    }
                     List<Patient> list1 = new ArrayList<>();
                     List<Patient> patientList = redisTemplate.opsForList().range("patientList", 0, -1);
                     if (patientList != null) {
@@ -150,21 +155,12 @@ public class PatientController extends BaseController
                         }
                         return getTable(listKeys, total);
                     }else {
-
-                        if (Boolean.TRUE.equals(redisTemplate.hasKey("patientListByTest:" + patientName))){
-                            List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:"+ patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
-
-                            return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:"+patientName));
-                        }else {
-                            redisTemplate.delete("patientListByTest:*");
-                            for (Patient s : list1){
-                                redisTemplate.opsForList().rightPush("patientListByTest:"+patientName,s);
-                            }
-                            List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:"+patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
-                            return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:"+ patientName));
+                        redisTemplate.delete("patientListByTest:*");
+                        for (Patient s : list1){
+                            redisTemplate.opsForList().rightPush("patientListByTest:"+patientName,s);
                         }
-
-
+                        List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:"+patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                        return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:"+ patientName));
                     }
 
 
