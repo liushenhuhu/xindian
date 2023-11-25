@@ -131,7 +131,7 @@ export default {
         this.customerText = "";
         this.isLoading=true;
         proxyRequest(this.queryParams).then(response => {
-          console.log(response.response[0]);
+          //console.log(response.response[0]);
           /*if(this.queryParams.history !== "" && this.queryParams.history !== null){
 
           }*/
@@ -140,11 +140,12 @@ export default {
           this.customerText = "";
           let obj = {
             id: 1,
-            content: response.response[0],
+            //content: response.response[0],
+            content: response.response,
             index: 1
           }
           this.robotAnswer.push(obj)
-          this.appendRobotMsg(response.response[0]);
+          this.appendRobotMsg(response.response);
           this.isLoading=false;
         })
         this.$nextTick(() => {

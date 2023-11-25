@@ -57,11 +57,12 @@ public class ChatECGController extends BaseController {
         //定义发送数据
         JSONObject param = new JSONObject();
         param.put("prompt", chat.getText());
-        if(StringUtils.isEmpty(chat.getHistory())){
+        param.put("history", JSON.parseArray(chat.getHistory()));
+        /*if(StringUtils.isEmpty(chat.getHistory())){
             param.put("history", new ArrayList());
         }else {
             param.put("history", JSON.parseArray(chat.getHistory()));
-        }
+        }*/
 
         //定义接收数据
         JSONObject result = new JSONObject ();
