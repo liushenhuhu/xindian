@@ -795,10 +795,25 @@ public class ReportController extends BaseController
      * @return
      */
     @PutMapping("/appRelationDocUpdate")
-    public AjaxResult appRelationDocUpdate( @RequestBody Report report) throws Exception {
+    public AjaxResult appRelationDocUpdate( @RequestBody Report report,HttpServletRequest request) throws Exception {
 
-
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        Long userId = loginUser.getUser().getUserId();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("reportPutAddApp"+userId))){
+            return AjaxResult.error("请勿重复提交");
+        }
+        redisTemplate.opsForValue().set("reportPutAddApp"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
+        VipPatient vipPhone = vipPatientService.findVipPhone(loginUser.getUser().getPhonenumber());
+        if (vipPhone==null){
+            if (loginUser.getUser().getDetectionNum()<=0){
+                return AjaxResult.error("用户服务次数不足");
+            }
+        }
+        if (vipPhone != null && vipPhone.getVipNum() <= 0) {
+            return AjaxResult.error("用户服务次数不足");
+        }
         int i = updateReport(report);
+
 
         if (i>0){
             patientService.detectionNumSubtract(report.getLoginUserPhone());

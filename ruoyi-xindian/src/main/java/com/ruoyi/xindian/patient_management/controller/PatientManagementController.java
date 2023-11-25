@@ -2,6 +2,7 @@ package com.ruoyi.xindian.patient_management.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -28,7 +29,9 @@ import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.domain.SingleHistoryData;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient.service.SingleHistoryDataService;
 import com.ruoyi.xindian.patient_management.domain.*;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.Limit;
@@ -95,6 +98,8 @@ public class PatientManagementController extends BaseController {
     @Autowired
     private AesUtils aesUtils;
     @Resource
+    private SingleHistoryDataService singleHistoryDataService;
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
@@ -104,7 +109,7 @@ public class PatientManagementController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PatientManagement patientManagement,HttpServletRequest request) throws Exception {
+    public TableDataInfo list(PatientManagement patientManagement,HttpServletRequest request ,Integer pageNum, Integer pageSize) throws Exception {
 //        startPage();
 //        List<PatientManagement> list_add = new ArrayList<>();
         LoginUser loginUser = tokenService.getLoginUser(request);
@@ -164,22 +169,7 @@ public class PatientManagementController extends BaseController {
                 patientManagement.setDiagnosisStatus(2L);
         }
 
-
-        if (patientManagement.getPatientPhone()!=null){
-            patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
-        }
-        if (patientManagement.getPatientName()!=null){
-            patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
-        }
-        if (patientManagement.getDiagnosisDoctor()!=null&&!"".equals(patientManagement.getDiagnosisDoctor())){
-            patientManagement.setDiagnosisDoctor(aesUtils.encrypt(patientManagement.getDiagnosisDoctor()));
-        }
-        if (patientManagement.getDoctorPhone()!=null&&!"".equals(patientManagement.getDoctorPhone())){
-            patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
-        }
-        if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
-            patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
-        }
+        getEncryptManagement(patientManagement);
 
         startPage();
         if (null == patientManagement.getEcgType()) {
@@ -189,17 +179,85 @@ public class PatientManagementController extends BaseController {
         } else if (patientManagement.getEcgType().equals("JECG12")) {
             list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
         }else if (patientManagement.getEcgType().equals("JECGsingle")) {
-            list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
+
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect())&& patientManagement.getIsSelect().equals("1")&&SysUser.isAdmin(loginUser.getUserId())){
+
+                if (StringUtils.isNotEmpty(patientManagement.getPatientName())){
+                    String patientName = aesUtils.decrypt(patientManagement.getPatientName());
+                    List<PatientManagement> list1 = new ArrayList<>();
+                    String ecgType = patientManagement.getEcgType();
+                    String diagnosisStatus = String.valueOf(patientManagement.getDiagnosisStatus());
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("patientManagementByName"+ecgType+":" + patientName+"="+diagnosisStatus))){
+                        List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                        resList = getEncryptManagement(listKeys);
+                        return getTable(resList, redisTemplate.opsForList().size("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus));
+                    }
+                    List<Object> patientList =  redisTemplate.opsForList().range("patientManagement"+ecgType, 0, -1);
+                    if (patientList != null) {
+                        for (Object pat : patientList) {
+                            PatientManagement patientManagement1 = (PatientManagement)pat;
+                            if (patientManagement1==null||patientManagement1.getPatientName()==null||patientManagement1.getDiagnosisStatus()==null){
+                                continue;
+                            }
+                            if(patientManagement1.getPatientName().contains(patientName)&&patientManagement1.getDiagnosisStatus().equals(patientManagement.getDiagnosisStatus())){
+                                list1.add(patientManagement1);
+                            }
+                        }
+                    }
+                    if (patientList != null && list1.size() == patientList.size()) {
+                        List<Object> listKeys = redisTemplate.opsForList().range("patientManagement"+ecgType, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                        resList = getEncryptManagement(listKeys);
+                        return getTable(resList,patientList.size());
+                    }else {
+                        redisTemplate.delete("patientManagementByName"+ecgType+":*");
+                        for (PatientManagement s : list1){
+                            redisTemplate.opsForList().rightPush("patientManagementByName"+ecgType+":"+patientName+"="+diagnosisStatus,s);
+                        }
+                        List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName"+ecgType+":"+patientName+"="+diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                        resList = getEncryptManagement(listKeys);
+                        return getTable(resList, redisTemplate.opsForList().size("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus));
+                    }
+                }
+            }else {
+                list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
+            }
+
         } else if (patientManagement.getEcgType().equals("DECG12")) {
             list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
         } else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
         }
+        return getTableDataInfo(list, resList);
+    }
+
+    private ArrayList<PatientManagmentDept> getEncryptManagement(List<Object> list) throws Exception {
+        ArrayList<PatientManagmentDept> resList = new ArrayList<>();
+        if (list==null|| list.isEmpty()){
+            return resList;
+        }
+        for (Object pat : list){
+
+            if (pat instanceof PatientManagement){
+
+               PatientManagement patientManagement = (PatientManagement)pat;
+                PatientManagmentDept patientManagmentDept;
+                patientManagmentDept = new PatientManagmentDept();
+                BeanUtils.copyProperties(patientManagement, patientManagmentDept);
+
+                if (patientManagement.getTimeDuration() == null) {
+                    patientManagmentDept.setAcquisitionDuration("报告未生成");
+                } else {
+                    patientManagmentDept.setAcquisitionDuration("记录时长: " + DateUtil.timeToString(patientManagement.getTimeDuration()));
+                }
+                resList.add(patientManagmentDept);
+            }
+        }
+        return resList;
+    }
+
+    private TableDataInfo getTableDataInfo(List<PatientManagement> list, ArrayList<PatientManagmentDept> resList) throws Exception {
         PatientManagmentDept patientManagmentDept;
-        Doctor doctor = new Doctor();
-        Department department = new Department();
         for (PatientManagement management : list) {
-//            patientManagmentDept= (PatientManagmentDept) management;
             if(DateUtil.isValidDate(management.getBirthDay())){
                 try {
                     management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
@@ -208,10 +266,10 @@ public class PatientManagementController extends BaseController {
                 }
             }
 
-            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+            if (management.getPatientPhone()!=null&& !management.getPatientPhone().isEmpty()){
                 management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
             }
-            if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
+            if (management.getPatientName()!=null&& !management.getPatientName().isEmpty()){
                 management.setPatientName(aesUtils.decrypt(management.getPatientName()));
             }
             if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
@@ -238,6 +296,24 @@ public class PatientManagementController extends BaseController {
         }
         long total = new PageInfo(list).getTotal();
         return getTable(resList, total);
+    }
+
+    private void getEncryptManagement(PatientManagement patientManagement) throws Exception {
+        if (patientManagement.getDiagnosisDoctor()!=null&& !patientManagement.getDiagnosisDoctor().isEmpty()){
+            patientManagement.setDiagnosisDoctor(aesUtils.encrypt(patientManagement.getDiagnosisDoctor()));
+        }
+        if (patientManagement.getDoctorPhone()!=null&& !patientManagement.getDoctorPhone().isEmpty()){
+            patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
+        }
+        if (patientManagement.getPatientPhone()!=null){
+            patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
+        }
+        if (patientManagement.getPatientName()!=null){
+            patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
+        }
+        if (patientManagement.getPatPhone()!=null&& !patientManagement.getPatPhone().isEmpty()){
+            patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
+        }
     }
 
 
@@ -273,51 +349,7 @@ public class PatientManagementController extends BaseController {
         } else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
         }
-        PatientManagmentDept patientManagmentDept;
-        Doctor doctor = new Doctor();
-        Department department = new Department();
-        for (PatientManagement management : list) {
-//            patientManagmentDept= (PatientManagmentDept) management;
-            if(DateUtil.isValidDate(management.getBirthDay())){
-                try {
-                    management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
-                } catch (ParseException e) {
-                    System.out.println(1);
-                }
-            }
-            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
-                management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
-
-            }
-            if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
-                management.setPatientName(aesUtils.decrypt(management.getPatientName()));
-            }
-            if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
-                management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
-            }
-            if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
-                management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
-            }
-            if (StringUtils.isNotEmpty(management.getDoctorPhone())){
-                management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
-            }
-            if (StringUtils.isNotEmpty(management.getDPhone())){
-                management.setDPhone(aesUtils.decrypt(management.getDPhone()));
-            }
-
-            patientManagmentDept = new PatientManagmentDept();
-            BeanUtils.copyProperties(management, patientManagmentDept);
-
-
-            if (management.getTimeDuration() == null) {
-                patientManagmentDept.setAcquisitionDuration("报告未生成");
-            } else {
-                patientManagmentDept.setAcquisitionDuration("记录时长: " + DateUtil.timeToString(management.getTimeDuration()));
-            }
-            resList.add(patientManagmentDept);
-        }
-        long total = new PageInfo(list).getTotal();
-        return getTable(resList, total);
+        return getTableDataInfo(list, resList);
     }
 
 
@@ -351,45 +383,7 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementSPList(patientManagement,pageSize,pageNum);
             }
         }
-        for (PatientManagement management : list) {
-            if(DateUtil.isValidDate(management.getBirthDay())){
-                try {
-                    management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
-                } catch (ParseException e) {
-                    System.out.println(1);
-                }
-            }
-            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
-                management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
-
-            }
-            if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
-                management.setPatientName(aesUtils.decrypt(management.getPatientName()));
-            }
-            if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
-                management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
-            }
-            if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
-                management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
-            }
-            if (StringUtils.isNotEmpty(management.getDoctorPhone())){
-                management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
-            }
-            if (StringUtils.isNotEmpty(management.getDPhone())){
-                management.setDPhone(aesUtils.decrypt(management.getDPhone()));
-            }
-            patientManagmentDept = new PatientManagmentDept();
-            BeanUtils.copyProperties(management, patientManagmentDept);
-
-            if (management.getTimeDuration() == null) {
-                patientManagmentDept.setAcquisitionDuration("报告未生成");
-            } else {
-                patientManagmentDept.setAcquisitionDuration("记录时长: " + DateUtil.timeToString(management.getTimeDuration()));
-            }
-            resList.add(patientManagmentDept);
-        }
-        long total = new PageInfo(list).getTotal();
-        return getTable(resList,total);
+        return getTableDataInfo(list, resList);
     }
 
     /**
@@ -555,18 +549,7 @@ public class PatientManagementController extends BaseController {
     @Log(title = "患者管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PatientManagement patientManagement) throws Exception {
-        if (patientManagement.getPatientPhone()!=null&&!"".equals(patientManagement.getPatientPhone())){
-            patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
-        }
-        if (patientManagement.getPatientName()!=null&&!"".equals(patientManagement.getPatientName())){
-            patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
-        }
-        if (patientManagement.getDiagnosisDoctor()!=null&&!"".equals(patientManagement.getDiagnosisDoctor())){
-            patientManagement.setDiagnosisDoctor(aesUtils.encrypt(patientManagement.getDiagnosisDoctor()));
-        }
-        if (patientManagement.getDoctorPhone()!=null&&!"".equals(patientManagement.getDoctorPhone())){
-            patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
-        }
+        getEncryptManagement(patientManagement);
 
         return toAjax(patientManagementService.updatePatientManagement(patientManagement));
     }
@@ -593,7 +576,6 @@ public class PatientManagementController extends BaseController {
         patientService.updateMonitoringStatus();
         if (pIds.length != 0) {
             patientManagementService.updateStatus(pIds);
-//            System.out.println(Arrays.toString(pIds));
             for (String pId : pIds) {
                 PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
                 if (patientManagement != null) {
@@ -606,56 +588,8 @@ public class PatientManagementController extends BaseController {
                 }
             }
         }
-        List<Patient> patients = patientService.selectPatientList(new Patient());
-        redisTemplate.delete("patientList");
-        // 创建线程池
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        // 将数据分批传入线程池进行异步插入操作
-        CompletableFuture<Void>[] futures = new CompletableFuture[(int) Math.ceil((double) patients.size() / 1000)];
-        for (int i = 0; i < patients.size(); i += 1000) {
-            int endIndex = Math.min(i + 1000, patients.size());
-            List<Patient> dataChunk = patients.subList(i, endIndex);
-            int batchIndex = i / 1000;
-            futures[batchIndex] = CompletableFuture.runAsync(() -> {
-                try {
-                    redisAdd(dataChunk);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }, executorService);
-        }
-
-        // 等待所有异步操作完成
-        CompletableFuture.allOf(futures).join();
-
-        // 关闭线程池
-        executorService.shutdown();
         return "down";
     }
-
-    private  void redisAdd(List<Patient> patients) throws Exception {
-        if (patients!=null&& !patients.isEmpty()){
-            for (Patient pat : patients) {
-                if(pat.getBirthDay()!=null)
-                    pat.setPatientAge(String.valueOf(DateUtil.getAge(pat.getBirthDay())));
-                if(pat.getPatientSex().length()>1){
-                    pat.setPatientSex(pat.getPatientSex().substring(0,1));
-                }
-                if(pat.getPatientPhone() != null){
-                    pat.setPatientPhone(aesUtils.decrypt(pat.getPatientPhone()));
-                }
-                if(pat.getPatientName() != null){
-                    pat.setPatientName(aesUtils.decrypt(pat.getPatientName()));
-                }
-                if (pat.getFamilyPhone()!=null&&!"".equals(pat.getFamilyPhone())){
-                    pat.setFamilyPhone(aesUtils.decrypt(pat.getFamilyPhone()));
-                }
-
-                redisTemplate.opsForList().rightPush("patientList",pat);
-            }
-        }
-    }
-
     /**
      * 获取用户信息
      */
@@ -718,7 +652,7 @@ public class PatientManagementController extends BaseController {
     }
 
     @GetMapping("history_info")
-    public AjaxResult getHistoryInfoBypatientPhone(SingleHistoryInfo Info) throws Exception {
+    public AjaxResult getHistoryInfoBypatientPhone(SingleHistoryData Info) throws Exception {
 
         HashMap<String, Object> res = new HashMap<>();
         // 详情
@@ -741,54 +675,25 @@ public class PatientManagementController extends BaseController {
         //心动过速
         description.put("tachycardia", Details.tachycardia);
 
-        if (Info!=null&&Info.getPatientPhone()!=null&&!Info.getPatientPhone().equals("")){
+        if (Info!=null&&Info.getPatientPhone()!=null&& !Info.getPatientPhone().isEmpty()){
             Info.setPatientPhone(aesUtils.encrypt(Info.getPatientPhone()));
         }
-        if (Info != null && (Info.getPatientPhone() == null || Info.getPatientPhone().equals(""))) {
+        if (Info != null && (Info.getPatientPhone() == null || Info.getPatientPhone().isEmpty())) {
             return AjaxResult.error("手机号不完整，请稍后在试");
         }
 
-        List<SingleHistoryInfo> infos = patientManagementService.selectSingleHistoryInfoList(Info);
-        if (infos!=null&&infos.size()>0){
-            for (SingleHistoryInfo info : infos) {
-                if (info.getPatientPhone()!=null){
-                    info.setPatientPhone(aesUtils.decrypt(info.getPatientPhone()));
-                }
-                if (info.getApBeat() == null) info.setApBeat((long) 0);
-                if (info.getPvBeat() == null) info.setPvBeat((long) 0);
-                if (info.getAtrialFibrillation() == null) info.setAtrialFibrillation((long) 0);
-                if (info.getAtrialFlutter() == null) info.setAtrialFlutter((long) 0);
-                if (info.getLeftBlock() == null) info.setLeftBlock((long) 0);
-                if (info.getRightBlock() == null) info.setRightBlock((long) 0);
-                if (info.getBradycardia() == null) info.setBradycardia((long) 0);
-                if (info.getTachycardia() == null) info.setTachycardia((long) 0);
-            }
-            res.put("infoNumber", infos);
-        }else {
-            List<SingleHistoryInfo> list = new ArrayList<>();
-            SingleHistoryInfo singleHistoryInfo = new SingleHistoryInfo();
-            singleHistoryInfo.setApBeat(0L);
-            singleHistoryInfo.setPvBeat(0L);
-            singleHistoryInfo.setAtrialFibrillation(0L);
-            singleHistoryInfo.setAtrialFlutter(0L);
-            singleHistoryInfo.setLeftBlock(0L);
-            singleHistoryInfo.setRightBlock(0L);
-            singleHistoryInfo.setBradycardia(0L);
-            singleHistoryInfo.setTachycardia(0L);
-            list.add(singleHistoryInfo);
-            res.put("infoNumber", list);
-        }
-
+        SingleHistoryData singleHistoryData = singleHistoryDataService.selectSingleHistoryDataByHisId(Info);
         Patient patient = null;
         if (Info != null) {
             patient = patientService.selectPatientByPatientPhone(Info.getPatientPhone());
         }
-        if (patient.getPatientPhone()!=null&&!"".equals(patient.getPatientPhone())){
+        if (patient != null && patient.getPatientPhone() != null && !"".equals(patient.getPatientPhone())) {
             patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
         }
-        if (patient.getPatientName()!=null&&!"".equals(patient.getPatientName())){
+        if (patient != null && patient.getPatientName() != null && !"".equals(patient.getPatientName())) {
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
+        res.put("infoNumber", singleHistoryData);
         res.put("description", description);
         res.put("patient",patient);
         return AjaxResult.success(res);
@@ -803,18 +708,7 @@ public class PatientManagementController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:dateList')")
     @GetMapping("/dateList")
     public AjaxResult dateList(PatientManagement patientManagement) throws Exception {
-        if (patientManagement.getPatientPhone()!=null&&!"".equals(patientManagement.getPatientPhone())){
-            patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
-        }
-        if (patientManagement.getPatientName()!=null&&!"".equals(patientManagement.getPatientName())){
-            patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
-        }
-        if (patientManagement.getDiagnosisDoctor()!=null&&!"".equals(patientManagement.getDiagnosisDoctor())){
-            patientManagement.setDiagnosisDoctor(aesUtils.encrypt(patientManagement.getDiagnosisDoctor()));
-        }
-        if (patientManagement.getDoctorPhone()!=null&&!"".equals(patientManagement.getDoctorPhone())){
-            patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
-        }
+        getEncryptManagement(patientManagement);
         return AjaxResult.success(patientManagementService.getDateList(patientManagement));
     }
 

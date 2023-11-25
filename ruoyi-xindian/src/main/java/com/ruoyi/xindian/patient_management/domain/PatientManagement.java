@@ -224,6 +224,9 @@ public class PatientManagement extends BaseEntity {
     private String reportNormal;
 
 
+    private String isSelect;
+
+
     /**
      * 拒绝理由
      */

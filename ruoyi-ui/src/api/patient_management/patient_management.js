@@ -109,5 +109,11 @@ export function getEcgType(query) {
   })
 }
 
-
+export function redisAddData(query) {
+  return request({
+    url: '/patient_management/patient_management_redis/redisAddData?ecgType='+query,
+    method: 'get',
+    timeout: 100000
+  })
+}
 

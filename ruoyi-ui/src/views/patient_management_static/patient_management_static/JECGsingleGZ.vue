@@ -143,6 +143,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="名称模糊查询" prop="isSelect">
+        <el-radio-group v-model="queryParams.isSelect">
+          <el-radio  label="1">开启</el-radio>
+          <el-radio  label="2">禁用</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -196,7 +202,7 @@
         >导出
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getUpdateList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" :row-class-name="tableRowClassName">
@@ -451,7 +457,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listDoc, docUpdate, getEcgType
+  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, listDoc, docUpdate, getEcgType, redisAddData
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -521,7 +527,8 @@ export default {
         reportTime: null,
         ecgLevel: null,
         doctorPhone: null,
-        patientSex:null
+        patientSex:null,
+        isSelect:'2'
       },
       // 表单参数
       form: {},
@@ -636,6 +643,13 @@ export default {
       }
     },
 
+
+    getUpdateList() {
+      redisAddData(this.ecgType).then(r=>{
+        this.getList()
+      })
+    },
+
     /** 查询患者管理列表 */
     getList() {
       this.loading = true;
@@ -686,6 +700,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+
       this.getList();
     },
     /** 重置按钮操作 */
@@ -708,6 +723,7 @@ export default {
           doctorPhone: null
       }
       this.resetForm("queryForm");
+      this.queryParams.isSelect='2'
       this.handleQuery();
     },
     // 多选框选中数据

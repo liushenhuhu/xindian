@@ -318,7 +318,7 @@ import {
 import $ from "jquery";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
-import {updateOnlineAll} from "@/api/online/online";
+import {getPatientOnlineStatus, updateOnlineAll} from "@/api/online/online";
 import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
@@ -391,7 +391,7 @@ export default {
   },
 
   beforeCreate() {
-    updateOnlineAll();
+    getPatientOnlineStatus();
   },
 
   created() {
@@ -403,8 +403,7 @@ export default {
 
   methods: {
     refreshList() {
-      console.log("refresh======")
-      updateOnlineAll().then(res => {
+      getPatientOnlineStatus().then(res => {
         this.getList();
       })
     },
