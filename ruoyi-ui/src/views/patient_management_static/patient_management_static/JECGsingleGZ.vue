@@ -36,10 +36,10 @@
          </el-option>
        </el-select>
       </el-form-item>
-<!--      <el-form-item label="患者id" prop="pId">
+<!--      <el-form-item label="患者管理编号" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入患者id"
+          placeholder="请输入患者管理编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -720,10 +720,13 @@ export default {
           diagnosisDoctor: null,
           reportTime: null,
           ecgLevel: null,
-          doctorPhone: null
+          doctorPhone: null,
+          patientSex:null,
+          pageNum: 1,
+          pageSize: 10,
+          isSelect: '2'
       }
       this.resetForm("queryForm");
-      this.queryParams.isSelect='2'
       this.handleQuery();
     },
     // 多选框选中数据

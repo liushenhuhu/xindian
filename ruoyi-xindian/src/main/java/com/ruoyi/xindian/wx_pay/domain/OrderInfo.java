@@ -120,6 +120,8 @@ public class OrderInfo implements Serializable {
      * 快递单号
      */
     private String courierNumber;
+
+    private Integer delFlag;
     /**
      * 用户信息
      */

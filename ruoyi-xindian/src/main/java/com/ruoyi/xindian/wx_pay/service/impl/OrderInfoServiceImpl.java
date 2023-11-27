@@ -502,6 +502,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return false;
     }
 
+    @Override
+    public Boolean deleteOrderById(String id) {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(id);
+        orderInfo.setDelFlag(1);
+        return orderInfoMapper.update(orderInfo,new QueryWrapper<OrderInfo>().eq("id",id))>0;
+    }
+
     /**
      * 添加订单
      * @param request
@@ -548,6 +556,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setCreateTime(new Date());
         orderInfo.setUpdateTime(new Date());
         orderInfo.setOrderState(OrderStatus.NOTPAY.getType());
+        orderInfo.setDelFlag(0);
         orderInfoMapper.insert(orderInfo);
 
         SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();
@@ -598,6 +607,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setCreateTime(new Date());
         orderInfo.setUpdateTime(new Date());
         orderInfo.setOrderState(OrderStatus.NOTPAY.getType());
+        orderInfo.setDelFlag(0);
         orderInfoMapper.insert(orderInfo);
 
         SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();

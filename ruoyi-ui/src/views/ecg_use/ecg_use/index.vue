@@ -31,6 +31,9 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
+      <el-col :span="12">
+        <span class="table-title">设备总数量：{{total}}</span>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 

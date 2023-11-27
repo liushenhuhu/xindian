@@ -102,7 +102,7 @@ public class OrderController {
 //    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:remove')")
     @GetMapping("/delete")
     public AjaxResult deleteOrder(String orderId){
-        Boolean isDel  = orderInfoService.deleteOrder(orderId);
+        Boolean isDel  = orderInfoService.deleteOrderById(orderId);
         return AjaxResult.success(isDel);
     }
 

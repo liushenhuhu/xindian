@@ -44,10 +44,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="患者id" prop="pId">
+      <el-form-item label="患者管理编号" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入患者id"
+          placeholder="请输入患者管理编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -145,6 +145,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="名称模糊查询" prop="isSelect">
+        <el-radio-group v-model="queryParams.isSelect">
+          <el-radio  label="1">开启</el-radio>
+          <el-radio  label="2">禁用</el-radio>
+        </el-radio-group>
+      </el-form-item>
 <!--      <el-form-item label="pId" prop="pId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.pId"-->
@@ -206,7 +212,7 @@
         >导出
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getUpdateList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
@@ -454,7 +460,7 @@ import {
   getPatient_management,
   delPatient_management,
   addPatient_management,
-  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, getEcgType
+  updatePatient_management, updateStatus, getUserInfo, sendMsgToPatient, getEcgType, redisAddData
 } from "@/api/patient_management/patient_management";
 import axios from "axios";
 import $ from "jquery";
@@ -512,7 +518,8 @@ export default {
         reportTime: null,
         ecgLevel: null,
         doctorPhone: null,
-        patientSex:null
+        patientSex:null,
+        isSelect:'2'
       },
       // 表单参数
       form: {},
@@ -561,6 +568,11 @@ export default {
       console.log("refresh======")
       updateOnlineAll().then(res => {
         this.getList();
+      })
+    },
+    getUpdateList() {
+      redisAddData(this.ecgType).then(r=>{
+        this.getList()
       })
     },
 
@@ -666,7 +678,11 @@ export default {
           diagnosisDoctor: null,
           reportTime: null,
           ecgLevel: null,
-          doctorPhone: null
+          doctorPhone: null,
+          patientSex:null,
+          isSelect:'2',
+          pageNum: 1,
+          pageSize: 10
       }
       this.resetForm("queryForm");
       this.handleQuery();

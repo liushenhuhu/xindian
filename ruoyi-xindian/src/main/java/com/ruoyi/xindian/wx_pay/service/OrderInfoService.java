@@ -60,6 +60,9 @@ public interface OrderInfoService extends IService<OrderInfo> {
      */
     Boolean deleteOrder(String orderId);
 
+
+    Boolean deleteOrderById(String id);
+
     /**
      * 添加订单
      * @param request

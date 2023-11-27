@@ -47,9 +47,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         doctor.img,
         doctor.professional,
         doctor.is_doc,
+        doctor.outpatient_id,
+        doctor.special_id,
         department.department_name,
         department.hospital_code,
         department.department_id
+
         FROM
         department
         INNER JOIN

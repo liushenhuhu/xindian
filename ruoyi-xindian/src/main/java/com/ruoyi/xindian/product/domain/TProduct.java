@@ -96,11 +96,21 @@ public class TProduct extends BaseEntity
      */
     private String isVip;
 
+    private Integer delFlag;
+
     /**
      * 图片集合
      * @return
      */
     private List<String>  stringImg;
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
 
     public List<String> getStringImg() {
         return stringImg;

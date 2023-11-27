@@ -45,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sales != null "> and sales = #{sales}</if>
              and type = #{type}
              and state != '2'
+             and del_flag = '0'
         </where>
     </select>
 
@@ -60,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productNum != null  and productNum != ''"> and product_num = #{productNum}</if>
             <if test="sales != null "> and sales = #{sales}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
+            and del_flag = '0'
         </where>
     </select>
 
@@ -156,12 +158,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from product_imgs where product_id = #{productId}
     </delete>
 
-    <delete id="deleteTProductByProductIds" parameterType="String">
-        delete from t_product where product_id in
+    <update id="deleteTProductByProductIds" parameterType="String">
+        update  t_product set del_flag = '1' where product_id in
         <foreach item="productId" collection="array" open="(" separator="," close=")">
             #{productId}
         </foreach>
-    </delete>
+    </update>
 
     <select id="selectByIdUrl" parameterType="Integer" resultMap="ProductImgsResult">
         select img from product_imgs where id in

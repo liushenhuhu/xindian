@@ -39,7 +39,7 @@
             COUNT(CASE WHEN bradycardia = 1 THEN 1 END) AS bradycardia,
             COUNT(CASE WHEN tachycardia = 1 THEN 1 END) AS tachycardia
         FROM single_history_data
-        WHERE patient_phone_aes = #{patientPhone} and create_time between #{startTime} and DATE_ADD(#{endTime},INTERVAL 1 DAY)
+        WHERE patient_phone_aes = #{patientPhone} and  DATE_FORMAT(create_time,'%Y-%m-%d') between #{startTime} and DATE_ADD(#{endTime},INTERVAL 1 DAY)
         GROUP BY patient_phone_aes;
     </select>
 </mapper>

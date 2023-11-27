@@ -177,47 +177,17 @@ public class PatientManagementController extends BaseController {
         } else if (patientManagement.getEcgType().equals("DECGsingle")) {
             list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("JECG12")) {
-            list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect())&& patientManagement.getIsSelect().equals("1")&&SysUser.isAdmin(loginUser.getUserId())&&StringUtils.isNotEmpty(patientManagement.getPatientName())){
+                return  getRedisTable(patientManagement, resList, pageNum, pageSize);
+            }else {
+                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+            }
+
         }else if (patientManagement.getEcgType().equals("JECGsingle")) {
 
-            if (StringUtils.isNotEmpty(patientManagement.getIsSelect())&& patientManagement.getIsSelect().equals("1")&&SysUser.isAdmin(loginUser.getUserId())){
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect())&& patientManagement.getIsSelect().equals("1")&&SysUser.isAdmin(loginUser.getUserId())&&StringUtils.isNotEmpty(patientManagement.getPatientName())){
+                return  getRedisTable(patientManagement, resList, pageNum, pageSize);
 
-                if (StringUtils.isNotEmpty(patientManagement.getPatientName())){
-                    String patientName = aesUtils.decrypt(patientManagement.getPatientName());
-                    List<PatientManagement> list1 = new ArrayList<>();
-                    String ecgType = patientManagement.getEcgType();
-                    String diagnosisStatus = String.valueOf(patientManagement.getDiagnosisStatus());
-                    if (Boolean.TRUE.equals(redisTemplate.hasKey("patientManagementByName"+ecgType+":" + patientName+"="+diagnosisStatus))){
-                        List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
-                        resList = getEncryptManagement(listKeys);
-                        return getTable(resList, redisTemplate.opsForList().size("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus));
-                    }
-                    List<Object> patientList =  redisTemplate.opsForList().range("patientManagement"+ecgType, 0, -1);
-                    if (patientList != null) {
-                        for (Object pat : patientList) {
-                            PatientManagement patientManagement1 = (PatientManagement)pat;
-                            if (patientManagement1==null||patientManagement1.getPatientName()==null||patientManagement1.getDiagnosisStatus()==null){
-                                continue;
-                            }
-                            if(patientManagement1.getPatientName().contains(patientName)&&patientManagement1.getDiagnosisStatus().equals(patientManagement.getDiagnosisStatus())){
-                                list1.add(patientManagement1);
-                            }
-                        }
-                    }
-                    if (patientList != null && list1.size() == patientList.size()) {
-                        List<Object> listKeys = redisTemplate.opsForList().range("patientManagement"+ecgType, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
-                        resList = getEncryptManagement(listKeys);
-                        return getTable(resList,patientList.size());
-                    }else {
-                        redisTemplate.delete("patientManagementByName"+ecgType+":*");
-                        for (PatientManagement s : list1){
-                            redisTemplate.opsForList().rightPush("patientManagementByName"+ecgType+":"+patientName+"="+diagnosisStatus,s);
-                        }
-                        List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName"+ecgType+":"+patientName+"="+diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
-                        resList = getEncryptManagement(listKeys);
-                        return getTable(resList, redisTemplate.opsForList().size("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus));
-                    }
-                }
             }else {
                 list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
             }
@@ -229,6 +199,47 @@ public class PatientManagementController extends BaseController {
         }
         return getTableDataInfo(list, resList);
     }
+
+
+    private  TableDataInfo getRedisTable(PatientManagement patientManagement, ArrayList<PatientManagmentDept> resList, int pageNum, int pageSize) throws Exception {
+        if (StringUtils.isNotEmpty(patientManagement.getPatientName())){
+            String patientName = aesUtils.decrypt(patientManagement.getPatientName());
+            List<PatientManagement> list1 = new ArrayList<>();
+            String ecgType = patientManagement.getEcgType();
+            String diagnosisStatus = String.valueOf(patientManagement.getDiagnosisStatus());
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("patientManagementByName"+ecgType+":" + patientName+"="+diagnosisStatus))){
+                List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                resList = getEncryptManagement(listKeys);
+                return getTable(resList, redisTemplate.opsForList().size("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus));
+            }
+            List<Object> patientList =  redisTemplate.opsForList().range("patientManagement"+ecgType, 0, -1);
+            if (patientList != null) {
+                for (Object pat : patientList) {
+                    PatientManagement patientManagement1 = (PatientManagement)pat;
+                    if (patientManagement1==null||patientManagement1.getPatientName()==null||patientManagement1.getDiagnosisStatus()==null){
+                        continue;
+                    }
+                    if(patientManagement1.getPatientName().contains(patientName)&&patientManagement1.getDiagnosisStatus().equals(patientManagement.getDiagnosisStatus())){
+                        list1.add(patientManagement1);
+                    }
+                }
+            }
+            if (patientList != null && list1.size() == patientList.size()) {
+                List<Object> listKeys = redisTemplate.opsForList().range("patientManagement"+ecgType, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                resList = getEncryptManagement(listKeys);
+                return getTable(resList,patientList.size());
+            }else {
+                for (PatientManagement s : list1){
+                    redisTemplate.opsForList().rightPush("patientManagementByName"+ecgType+":"+patientName+"="+diagnosisStatus,s);
+                }
+                List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName"+ecgType+":"+patientName+"="+diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                resList = getEncryptManagement(listKeys);
+                return getTable(resList, redisTemplate.opsForList().size("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus));
+            }
+        }
+        return getTable(resList,0);
+    }
+
 
     private ArrayList<PatientManagmentDept> getEncryptManagement(List<Object> list) throws Exception {
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();

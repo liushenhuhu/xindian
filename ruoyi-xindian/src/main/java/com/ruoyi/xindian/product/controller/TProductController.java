@@ -287,13 +287,7 @@ public class TProductController extends BaseController
 	@DeleteMapping("/web/{productIds}")
     public AjaxResult remove(@PathVariable Long[] productIds)
     {
-        if(tProductService.deleteTProductByProductIds(productIds) > 0){
-            //delLinuxFile(tProductService.select);
-            return toAjax(1);
-        }else {
-            return toAjax(0);
-        }
-
+        return toAjax(tProductService.deleteTProductByProductIds(productIds)>0);
     }
 
     /**

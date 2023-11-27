@@ -125,8 +125,8 @@ public class EquipmentHeadingCodeController {
             try{
                 List<AccountsMsg> accountsMsgs = accountsMsgService.selectByList();
                 for (AccountsMsg c : accountsMsgs){
-                    wxPublicRequest.sendEquipmentMsg(finalEquipmentHeadingCode.getEquipmentCode(), c.getOpenId(),
-                            aesUtils.decrypt(patient.getPatientName()),aesUtils.decrypt(patient.getPatientPhone()),patient.getPatientSex()+"/高:"+medicalHistory.getHeight()+"/重"+medicalHistory.getWeight(),patient.getBirthDay());
+                    wxPublicRequest.sendEquipmentMsgNew(finalEquipmentHeadingCode.getEquipmentCode(),c.getOpenId(),
+                            aesUtils.decrypt(patient.getPatientName())+"/"+patient.getPatientSex(),aesUtils.decrypt(patient.getPatientPhone()),medicalHistory.getHeight()+"/"+medicalHistory.getWeight(),patient.getBirthDay());
                 }
             }catch (Exception e){
                 System.out.println(e);
@@ -190,7 +190,7 @@ public class EquipmentHeadingCodeController {
                 List<AccountsMsg> accountsMsgs = accountsMsgService.selectByList();
                 for (AccountsMsg c : accountsMsgs){
                     wxPublicRequest.sendEquipmentMsg(finalEquipmentHeadingCode.getEquipmentCode(), c.getOpenId(),"换设备："+
-                            aesUtils.decrypt(patient.getPatientName()),aesUtils.decrypt(patient.getPatientPhone()),patient.getPatientSex()+"/高:"+medicalHistory.getHeight()+"/重"+medicalHistory.getWeight(),patient.getBirthDay());
+                            aesUtils.decrypt(patient.getPatientName())+"/"+patient.getPatientSex(),aesUtils.decrypt(patient.getPatientPhone()),medicalHistory.getHeight()+"/"+medicalHistory.getWeight(),patient.getBirthDay());
                 }
             }catch (Exception e){
                 System.out.println(e);

@@ -177,10 +177,10 @@ public class OnlineController extends BaseController {
         if(patientManagements!=null && !patientManagements.isEmpty()){
             return getAjaxResult(patientManagements);
         }
-//
-//        if (patientManagement.getEcgType()!=null&&patientManagement.getEcgType().contains("DECG12")){
-//            return getAjaxResult(patientPhone);
-//        }
+
+        if (patientManagement.getEcgType()!=null&&patientManagement.getEcgType().contains("DECG12")){
+            return getAjaxResult(patientPhone);
+        }
         return AjaxResult.error("无在线设备");
 
     }
