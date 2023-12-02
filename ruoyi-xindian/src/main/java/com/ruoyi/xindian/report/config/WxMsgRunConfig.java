@@ -230,7 +230,7 @@ public class WxMsgRunConfig {
                 }
                 diagnoseDoc.setDiagnoseType("2");
                 diagnoseDocService.insertDiagnose(diagnoseDoc);
-
+                redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
             }else {
                 //如果半夜提交报告，则直接延迟到第二天
                 LocalDateTime nowTime = LocalDateTime.now();

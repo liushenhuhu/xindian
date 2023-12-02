@@ -23,7 +23,7 @@ public class ExcelInsertConfig {
     @GetMapping("/excel")
     public void excelInsert() throws Exception {
         //设备数据导入 自己添加路径
-        equipmentService.batchInsert("C:\\Users\\13401\\Desktop\\河南迈雅100+800+280+20+200SN码.郑州大学100台.(2).xlsx");
+        equipmentService.batchInsert("C:\\Users\\13401\\Desktop\\河南迈雅100台SN码(1).xlsx");
 //        equipmentService.batchSelect("C:\\Users\\13401\\Desktop\\河南迈雅100+800+280+20+200SN码.郑州大学100台.(1).xlsx");
 
     }
@@ -31,7 +31,7 @@ public class ExcelInsertConfig {
 
     @GetMapping("/select/{id}")
     public AjaxResult select(@PathVariable("id") Integer sum) throws Exception {
-        return AjaxResult.success(equipmentService.batchSelect("C:\\Users\\13401\\Desktop\\河南迈雅100+800+280+20+200SN码.郑州大学100台.(2).xlsx",sum));
+        return AjaxResult.success(equipmentService.batchSelect("C:\\Users\\13401\\Desktop\\河南迈雅100台SN码(1).xlsx",sum));
     }
 
 

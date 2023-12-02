@@ -380,7 +380,7 @@
         where phonenumber_aes = #{param2}
     </update>
     <update id="updateDetectionNumInt">
-        update sys_user set detection_num = detection_num -1 where phonenumber_aes = #{patientPhone}
+        update sys_user set detection_num = detection_num -1 where phonenumber_aes = #{patientPhone} and detection_num > 0
 
     </update>
     <update id="updateDeteTime">

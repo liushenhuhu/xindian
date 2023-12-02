@@ -83,6 +83,11 @@ public class PatientServiceImpl implements IPatientService
         return patientMapper.insertPatient(patient);
     }
 
+    @Override
+    public List<Patient> selectPatientByCode(String code) {
+        return patientMapper.selectPatientByCode(code);
+    }
+
     /**
      * 修改患者
      *

@@ -27,6 +27,9 @@ public interface AssociatedHospitalMapper
      */
     public List<AssociatedHospital> selectAssociatedHospitalList(AssociatedHospital associatedHospital);
 
+
+
+    public List<AssociatedHospital> selectAssociatedHospitalListByHId(Long hId);
     /**
      * 新增医院关联
      * 

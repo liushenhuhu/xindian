@@ -22,11 +22,9 @@ import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+
 /**
  * redis失效key监听
- * 
- * @author 郑文
- *
  */
 @Component
 public class RedisKeyExpirationListener extends KeyExpirationEventMessageListener {

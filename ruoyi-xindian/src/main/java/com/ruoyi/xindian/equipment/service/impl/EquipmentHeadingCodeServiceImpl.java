@@ -99,16 +99,17 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                     redisTemplate.delete("getEquipmentCodeAgainTwo!"+split[0]+"="+split[1]);
                     redisTemplate.delete("getEquipmentCodeAgainT15!"+split[0]+"="+split[1]);
                     sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));
+                    EquipmentHeadingCode headingCode = equipmentHeadingCodeMapper.selectOne(new QueryWrapper<EquipmentHeadingCode>().eq("heading_code", equipment.getEquipmentCode()));
                     if (sysUser!=null){
 
-                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，请登迈雅云小程序查看","绑定成功");
+                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),headingCode.getEquipmentCode(),"设备已绑定成功，请登迈雅云小程序查看","绑定成功");
                     }else {
                         PatientRelationship patientRelationship = new PatientRelationship();
                         patientRelationship.setSonPhone(aesUtils.encrypt(split[1]));
                         List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipList(patientRelationship);
                         if (patientRelationships!=null&&patientRelationships.size()>0){
                             sysUser = sysUserMapper.selectUserByPhone(patientRelationships.get(0).getFatherPhone());
-                            wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，请登迈雅云小程序查看","绑定成功");
+                            wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),headingCode.getEquipmentCode(),"设备已绑定成功，请登迈雅云小程序查看","绑定成功");
                         }
                     }
                     //给管理员发消息
@@ -137,15 +138,16 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
 
             }else {
                 sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));
+                EquipmentHeadingCode headingCode = equipmentHeadingCodeMapper.selectOne(new QueryWrapper<EquipmentHeadingCode>().eq("heading_code", equipment.getEquipmentCode()));
                 if (sysUser!=null){
-                    wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备绑定失败，请重新绑定或者联系客服","绑定失败");
+                    wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),headingCode.getEquipmentCode(),"设备绑定失败，请重新绑定或者联系客服","绑定失败");
                 }else {
                     PatientRelationship patientRelationship = new PatientRelationship();
                     patientRelationship.setSonPhone(aesUtils.encrypt(split[1]));
                     List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipList(patientRelationship);
                     if (patientRelationships!=null&&patientRelationships.size()>0){
                         sysUser = sysUserMapper.selectUserByPhone(patientRelationships.get(0).getFatherPhone());
-                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备绑定失败，请重新绑定或者联系客服","绑定失败");
+                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),headingCode.getEquipmentCode(),"设备绑定失败，请重新绑定或者联系客服","绑定失败");
                     }
                 }
 
@@ -156,7 +158,7 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                     decrypt = decrypt.substring(0,3);
                 }
                 for (AccountsMsg c : accountsMsgs){
-                    wxPublicRequest.sendEquipmentMsgFail(c.getOpenId(),decrypt,split[1],split[0]);
+                    wxPublicRequest.sendEquipmentMsgFail(c.getOpenId(),decrypt,split[1],headingCode.getEquipmentCode());
                 }
                 redisTemplate.opsForValue().set("getEquipmentCodeAgainTwo!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),5, TimeUnit.SECONDS);
                 redisTemplate.opsForValue().set("getEquipmentCodeAgainT15!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),30,TimeUnit.MINUTES);
@@ -177,17 +179,17 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                 SysUser sysUser = new SysUser();
 
                 sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));
-
+                EquipmentHeadingCode headingCode = equipmentHeadingCodeMapper.selectOne(new QueryWrapper<EquipmentHeadingCode>().eq("heading_code", equipment.getEquipmentCode()));
                 if (sysUser!=null){
 
-                    wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，无需再重复绑定","绑定成功");
+                    wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),headingCode.getEquipmentCode(),"设备已绑定成功，无需再重复绑定","绑定成功");
                 }else {
                     PatientRelationship patientRelationship = new PatientRelationship();
                     patientRelationship.setSonPhone(aesUtils.encrypt(split[1]));
                     List<PatientRelationship> patientRelationships = patientRelationshipMapper.selectPatientRelationshipList(patientRelationship);
                     if (patientRelationships!=null&&patientRelationships.size()>0){
                         sysUser = sysUserMapper.selectUserByPhone(patientRelationships.get(0).getFatherPhone());
-                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),equipment.getEquipmentCode(),"设备已绑定成功，无需再重复绑定","绑定成功");
+                        wxPublicRequest.boundEquipmentMsg(sysUser.getOpenId(),headingCode.getEquipmentCode(),"设备已绑定成功，无需再重复绑定","绑定成功");
                     }
                 }
 

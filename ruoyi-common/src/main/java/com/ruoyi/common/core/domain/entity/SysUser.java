@@ -121,6 +121,16 @@ public class SysUser extends BaseEntity
 
     private Date detectionTime;
 
+    private String isEncrypt;
+
+    public String getIsEncrypt() {
+        return isEncrypt;
+    }
+
+    public void setIsEncrypt(String isEncrypt) {
+        this.isEncrypt = isEncrypt;
+    }
+
     public String getUserNameAes() {
         return userNameAes;
     }

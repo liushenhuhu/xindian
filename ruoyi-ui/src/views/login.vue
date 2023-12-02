@@ -231,7 +231,7 @@ export default {
       <el-tabs v-model="activeName" @tab-click="loginMethod" class="tabs">
         <el-tab-pane class="tabPane" label="账号密码登录" name="first" >
           <!--   账号密码登录    -->
-          <div class="content1">
+          <div class="content1" v-if="!captchaOnOff">
             <el-form-item prop="username">
               <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="请输入您的账号">
                 <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
@@ -252,7 +252,7 @@ export default {
 
         <el-tab-pane class="tabPane" label="验证码登录" name="second" >
           <!--   验证码登录    -->
-          <div class="content2">
+          <div class="content2" v-if="captchaOnOff">
 <!--            <el-form-item prop="code" >-->
 <!--              <el-input-->
 <!--                v-model="loginForm.code"-->

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="120px">
       <el-form-item label="患者姓名" prop="patientName">
         <el-input
           v-model="queryParams.patientName"
@@ -88,6 +88,12 @@
             :value="dict.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="名称模糊查询" prop="bindingState">
+        <el-radio-group v-model="queryParams.isSelect">
+          <el-radio  label="1">开启</el-radio>
+          <el-radio  label="2">禁用</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -312,7 +318,7 @@ import {
 import $ from "jquery";
 import {getUserInfo, updateStatus} from "@/api/patient_management/patient_management";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
-import {updateOnlineAll} from "@/api/online/online";
+import {getPatientOnlineStatus, updateOnlineAll} from "@/api/online/online";
 import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
@@ -358,6 +364,7 @@ export default {
         monitoringStatus: null,
         bindingState: null,
         detectionNum:null,
+        isSelect:'2',
     birthDay:null
       },
       // 表单参数
@@ -384,7 +391,7 @@ export default {
   },
 
   beforeCreate() {
-    updateOnlineAll();
+    getPatientOnlineStatus();
   },
 
   created() {
@@ -396,8 +403,7 @@ export default {
 
   methods: {
     refreshList() {
-      console.log("refresh======")
-      updateOnlineAll().then(res => {
+      getPatientOnlineStatus().then(res => {
         this.getList();
       })
     },

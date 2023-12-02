@@ -18,7 +18,8 @@
         <result property="bindingState" column="binding_state"/>
         <result property="birthDay"    column="birth_day"    />
         <result property="detectionNum"    column="detection_num"    />
-<!--        <result property="detectionTime"    column="detection_time"    />-->
+        <result property="createTime"    column="create_time"    />
+
     </resultMap>
 
     <sql id="selectPatientVo">
@@ -100,6 +101,48 @@
     </select>
     <select id="selectAlertLogListPatients" resultType="com.ruoyi.xindian.patient.domain.Patient">
         select * from patient limit #{start},#{end}
+    </select>
+    <select id="selectPatientByPatientPhoneAndHospitalId"
+            resultType="com.ruoyi.xindian.patient.domain.Patient">
+
+    </select>
+    <select id="selectPatientListByPhoneList" resultType="com.ruoyi.xindian.patient.domain.Patient" resultMap="PatientResult">
+        select patient_id,
+        patient_name_aes,
+        patient_sex,
+        patient_source,
+        patient_phone_aes,
+        birth_day from patient where patient_phone_aes in
+        <foreach collection="patientPhones" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectPatientByCode" resultType="com.ruoyi.xindian.patient.domain.Patient" resultMap="PatientResult">
+        SELECT
+            patient.patient_name_aes,
+            patient.patient_phone_aes,
+            patient.birth_day,
+            patient.patient_source,
+            patient.patient_sex,
+            patient.patient_age,
+            sys_user.create_time,
+             COUNT(*) AS count
+        FROM
+            patient
+                INNER JOIN
+            sys_user
+            ON
+                patient.patient_phone_aes = sys_user.phonenumber_aes
+                INNER JOIN
+            patient_management
+            ON
+                patient_management.patient_phone_aes = patient.patient_phone_aes
+        <where>
+            <if test="equipmentCode!= null and equipmentCode!= ''">
+              and  equipment_code =  #{equipmentCode}
+            </if>
+        </where>
+        GROUP BY ecg_type,patient_management.patient_phone_aes,sys_user.create_time order by count desc
     </select>
 
     <insert id="insertPatient" parameterType="Patient">

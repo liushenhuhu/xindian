@@ -393,11 +393,11 @@ export default {
       console.log(val)
       if (id===1){
         this.form.clinicId = null;
-
       }
       this.form.outpatientName=null
       this.form.specialName=null
       let _th = this
+      console.log(this.hospitalDocList)
       this.hospitalDocList.forEach(function (doc) {
         if (doc.doctorPhone===val){
           _th.specialList.forEach(function (special) {

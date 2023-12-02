@@ -12,31 +12,36 @@ public class DateUtil {
      * @return
      */
     public static int getAge(Date birth) {
-        Calendar cal = Calendar.getInstance();
-        int thisYear = cal.get(Calendar.YEAR);
-        int thisMonth = cal.get(Calendar.MONTH);
-        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        try {
+            Calendar cal = Calendar.getInstance();
+            int thisYear = cal.get(Calendar.YEAR);
+            int thisMonth = cal.get(Calendar.MONTH);
+            int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
 
-        cal.setTime(birth);
-        int birthYear = cal.get(Calendar.YEAR);
-        int birthMonth = cal.get(Calendar.MONTH);
-        int birthdayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+            cal.setTime(birth);
+            int birthYear = cal.get(Calendar.YEAR);
+            int birthMonth = cal.get(Calendar.MONTH);
+            int birthdayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
 
-        int age = thisYear - birthYear;
+            int age = thisYear - birthYear;
 
-        // 未足月
-        if (thisMonth <= birthMonth) {
-            // 当月
-            if (thisMonth == birthMonth) {
-                // 未足日
-                if (dayOfMonth < birthdayOfMonth) {
+            // 未足月
+            if (thisMonth <= birthMonth) {
+                // 当月
+                if (thisMonth == birthMonth) {
+                    // 未足日
+                    if (dayOfMonth < birthdayOfMonth) {
+                        age--;
+                    }
+                } else {
                     age--;
                 }
-            } else {
-                age--;
             }
+            return age;
+        }catch (Exception e){
+            return 0;
         }
-        return age;
+
     }
 
     /**

@@ -16,8 +16,10 @@ import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -41,7 +43,9 @@ import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalDataService;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.domain.PatientRelationDoc;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient.service.PatientRelationDocService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.Limit;
@@ -63,14 +67,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -156,6 +153,9 @@ public class ReportController extends BaseController
 
     @Resource
     private FwLogMapper fwLogMapper;
+
+    @Resource
+    private PatientRelationDocService patientRelationDocService;
 
     /**
      * 查询报告列表
@@ -784,14 +784,51 @@ public class ReportController extends BaseController
     @GetMapping("/docUpdate")
     public AjaxResult docUpdate( Report report) throws Exception {
 
-        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
-            report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+        int i = updateReport(report);
+        return AjaxResult.success(i>0);
+    }
+
+
+    /**
+     * app选择医师绑定
+     * @param report
+     * @return
+     */
+    @PutMapping("/appRelationDocUpdate")
+    public AjaxResult appRelationDocUpdate( @RequestBody Report report,HttpServletRequest request) throws Exception {
+
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        Long userId = loginUser.getUser().getUserId();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("reportPutAddApp"+userId))){
+            return AjaxResult.error("请勿重复提交");
         }
-        if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
-            report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+        redisTemplate.opsForValue().set("reportPutAddApp"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
+        VipPatient vipPhone = vipPatientService.findVipPhone(loginUser.getUser().getPhonenumber());
+        if (vipPhone==null){
+            if (loginUser.getUser().getDetectionNum()<=0){
+                return AjaxResult.error("用户服务次数不足");
+            }
         }
+        if (vipPhone != null && vipPhone.getVipNum() <= 0) {
+            return AjaxResult.error("用户服务次数不足");
+        }
+        int i = updateReport(report);
+
+
+        if (i>0){
+            patientService.detectionNumSubtract(report.getLoginUserPhone());
+        }
+        return AjaxResult.success(i>0);
+    }
+
+
+    private int updateReport(Report report) throws Exception {
+        getReportEncrypt(report);
         Report report1 = reportService.selectReportByPId(report.getpId());
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+        if (doctor1==null){
+            throw new ServiceException("医师不存在");
+        }
         report.setDiagnosisDoctorAes(aesUtils.decrypt(doctor1.getDoctorName()));
         report.setDPhoneAes(aesUtils.decrypt(doctor1.getDoctorPhone()));
         report.setReportId(report1.getReportId());
@@ -799,8 +836,9 @@ public class ReportController extends BaseController
         report.setDiagnosisDoctor(doctor1.getDoctorName());
         report.setReportTime(new Date());
         report.setStartTime(new Date());
+
         Doctor doctor = new Doctor();
-        doctor.getHospitalNameList().add(report.getHospital());
+        doctor.getHospitalNameList().add(doctor1.getHospital());
         List<Doctor> doctors = doctorService.selectDoctorList(doctor);
         //定时器, 30分钟无医生诊断, 换医生诊断.
         wxMsgRunConfig.redisDTStart(report.getpId(),doctors);
@@ -810,10 +848,23 @@ public class ReportController extends BaseController
         diagnoseDoc.setDoctorPhone(report.getdPhone());
         diagnoseDoc.setDiagnoseType("2");
         diagnoseDocService.insertDiagnose(diagnoseDoc);
-        int i = reportService.updateReport(report);
-        return AjaxResult.success();
+       return reportService.updateReport(report);
     }
 
+    private void getReportEncrypt(Report report) throws Exception {
+        if (report!=null){
+            if (report.getPPhone()!=null&& !report.getPPhone().isEmpty()){
+                report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+            }
+            if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
+                report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+            }
+            if (StringUtils.isNotEmpty(report.getLoginUserPhone())){
+                report.setLoginUserPhone(aesUtils.encrypt(report.getLoginUserPhone()));
+            }
+        }
+
+    }
 
     /**
      * 社区版提交报告，不需要减少次数
@@ -826,12 +877,7 @@ public class ReportController extends BaseController
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
 
-        if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
-            report.setPPhone(aesUtils.encrypt(report.getPPhone()));
-        }
-        if (report.getdPhone()!=null&&!"".equals(report.getdPhone())){
-            report.setdPhone(aesUtils.encrypt(report.getdPhone()));
-        }
+        getReportEncrypt(report);
         if (StringUtils.isNotEmpty(report.getLoginUserPhone())){
             report.setLoginUserPhone(aesUtils.encrypt(report.getLoginUserPhone()));
 

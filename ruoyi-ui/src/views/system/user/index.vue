@@ -454,7 +454,8 @@ export default {
         userName: undefined,
         phonenumber: undefined,
         status: undefined,
-        deptId: undefined
+        deptId: undefined,
+        // isEncrypt:'1'
       },
       // 列信息
       columns: [

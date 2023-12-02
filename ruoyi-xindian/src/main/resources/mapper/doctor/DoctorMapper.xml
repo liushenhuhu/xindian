@@ -47,9 +47,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         doctor.img,
         doctor.professional,
         doctor.is_doc,
+        doctor.outpatient_id,
+        doctor.special_id,
         department.department_name,
         department.hospital_code,
         department.department_id
+
         FROM
         department
         INNER JOIN
@@ -100,6 +103,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectVisitDoc" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
         <include refid="selectDoctorVo"/> where hospital = #{hospitalName} and  is_doc = '2'
+    </select>
+    <select id="selectXDDoc" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
+        <include refid="selectDoctorVo"/> where hospital = #{hospitalName} and  is_doc = '1' and account_status = '0'
     </select>
 
 

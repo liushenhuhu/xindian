@@ -26,6 +26,14 @@ export function getPatientByPatientNumber(patientNumber) {
   })
 }
 
+export function getPatientByCode(query) {
+  return request({
+    url: '/patient/patient/getPatientByCode/' ,
+    method: 'get',
+    params: query,
+  })
+}
+
 // 查询患者详细
 export function getPatientByPatientName(patientName) {
   return request({

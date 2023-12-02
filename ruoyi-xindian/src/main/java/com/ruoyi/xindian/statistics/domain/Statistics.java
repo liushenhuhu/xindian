@@ -73,6 +73,8 @@ public class Statistics extends BaseEntity {
     private int diagnoseStatusWEISUM;
 
 
+
+
     public int getDiagnoseTypeZhuSUM() {
         return diagnoseTypeZhuSUM;
     }

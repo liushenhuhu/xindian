@@ -21,6 +21,10 @@
         select equipment_id, equipment_code, equipment_version, equipment_status, hospital_code, department_code, equipment_type, patient_phone_aes, p_id, on_off_status from equipment
     </sql>
 
+
+    <resultMap id="EquipmentAndPatient" type="Equipment" extends="EquipmentResult">
+        <collection property="patients" ofType="Patient" resultMap="com.ruoyi.xindian.patient.mapper.PatientMapper.PatientResult"/>
+    </resultMap>
     <select id="selectEquipmentList" parameterType="Equipment" resultMap="EquipmentResult">
         SELECT
         hospital.hospital_name as hospital_code,
@@ -84,6 +88,26 @@
             </foreach>
 
         </if>
+    </select>
+    <select id="selectEquipmentListByUse" resultType="com.ruoyi.xindian.equipment.domain.Equipment" resultMap="EquipmentResult">
+        SELECT equipment.equipment_code,equipment_type,COUNT(*) AS count, GROUP_CONCAT(DISTINCT patient_management.patient_phone_aes ) AS patient_phone_aes
+        FROM equipment
+        JOIN patient_management ON equipment.equipment_code = patient_management.equipment_code
+        INNER JOIN sys_user ON patient_management.patient_phone_aes = sys_user.phonenumber_aes
+        <where>
+            <if test="ecgType!=null and ecgType!='' ">
+                and patient_management.ecg_type LIKE concat('%',#{ecgType})
+            </if>
+            <if test="patientPhone!=null and patientPhone!='' ">
+                and patient_management.patient_phone_aes = #{patientPhone}
+            </if>
+            <if test="equipmentCode!=null and equipmentCode!='' ">
+                and equipment.equipment_code like concat('%', #{equipmentCode}, '%')
+            </if>
+        </where>
+        GROUP BY equipment.equipment_code  order by count desc
+
+
     </select>
 
 

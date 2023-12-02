@@ -439,6 +439,7 @@ export default {
       const productId = row.productId || this.ids
       getProduct(productId).then(response => {
         this.form = response.data;
+        this.form.discount = response.data.discount*100
         this.open = true;
         this.title = "修改商品信息";
       });

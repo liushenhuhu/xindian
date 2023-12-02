@@ -77,7 +77,7 @@ export default {
 
   h2 {
     margin-top: 10px;
-    font-size: 26px;
+    font-size: 70px;
     font-weight: 100;
     color: #304156;
   }

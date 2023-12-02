@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.patient.mapper.PatientBloodMapper">
+
+    <resultMap id="PatientBloodResult" type="com.ruoyi.xindian.patient.domain.PatientBlood">
+            <id property="bloodId" column="blood_id" />
+            <result property="patientPhone" column="patient_phone" />
+            <result property="hp" column="hp"/>
+            <result property="lp" column="lp" />
+            <result property="bp" column="bp" />
+            <result property="otherAymptom" column="other_aymptom" />
+            <result property="otherDo" column="other_do" />
+            <result property="createTime" column="create_time" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <sql id="selectPatientBloodVo">
+        select blood_id, patient_phone, hp, lp, bp, other_aymptom, other_do, create_time, update_time from patient_blood
+    </sql>
+
+    <select id="selectPatientBloodList" parameterType="PatientBlood" resultMap="PatientBloodResult">
+        <include refid="selectPatientBloodVo"/>
+        <where>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="hp != null  and hp != ''"> and hp = #{hp}</if>
+            <if test="lp != null  and lp != ''"> and lp = #{lp}</if>
+            <if test="bp != null  and bp != ''"> and bp = #{bp}</if>
+            <if test="otherAymptom != null  and otherAymptom != ''"> and other_aymptom = #{otherAymptom}</if>
+            <if test="otherDo != null  and otherDo != ''"> and other_do = #{otherDo}</if>
+            <if test="startTime != null and startTime != '' and endTime != null and endTime != ''"> and create_time between #{startTime} and DATE_ADD(#{endTime},INTERVAL 1 DAY) </if>
+            <if test="createTime != null  and createTime != ''"> and date_format(create_time, '%Y-%m-%d') =  #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectPatientBloodByBloodId" parameterType="String" resultMap="PatientBloodResult">
+        <include refid="selectPatientBloodVo"/>
+        where blood_id = #{bloodId}
+    </select>
+    <select id="selectPatientBloodStatistics" resultType="com.ruoyi.xindian.patient.domain.PatientBlood">
+        SELECT
+        DATE_FORMAT(create_time, '%Y-%m-%d')AS create_time,
+        CAST(AVG(hp)AS UNSIGNED) AS hp,
+        CAST(AVG(lp)AS UNSIGNED) AS lp,
+        CAST(AVG(bp)AS UNSIGNED) AS bp
+        FROM
+        patient_blood
+        WHERE
+            create_time between #{startTime} and DATE_ADD(#{endTime},INTERVAL 1 DAY) and patient_phone = #{patientPhone}
+        GROUP BY
+        DATE_FORMAT(create_time, '%Y-%m-%d');
+    </select>
+
+    <insert id="insertPatientBlood" parameterType="PatientBlood">
+        insert into patient_blood
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bloodId != null">blood_id,</if>
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="hp != null">hp,</if>
+            <if test="lp != null">lp,</if>
+            <if test="bp != null">bp,</if>
+            <if test="otherAymptom != null">other_aymptom,</if>
+            <if test="otherDo != null">other_do,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bloodId != null">#{bloodId},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="hp != null">#{hp},</if>
+            <if test="lp != null">#{lp},</if>
+            <if test="bp != null">#{bp},</if>
+            <if test="otherAymptom != null">#{otherAymptom},</if>
+            <if test="otherDo != null">#{otherDo},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePatientBlood" parameterType="PatientBlood">
+        update patient_blood
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="hp != null">hp = #{hp},</if>
+            <if test="lp != null">lp = #{lp},</if>
+            <if test="bp != null">bp = #{bp},</if>
+            <if test="otherAymptom != null">other_aymptom = #{otherAymptom},</if>
+            <if test="otherDo != null">other_do = #{otherDo},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where blood_id = #{bloodId}
+    </update>
+
+    <delete id="deletePatientBloodByBloodId" parameterType="String">
+        delete from patient_blood where blood_id = #{bloodId}
+    </delete>
+
+    <delete id="deletePatientBloodByBloodIds" parameterType="String">
+        delete from patient_blood where blood_id in
+        <foreach item="bloodId" collection="array" open="(" separator="," close=")">
+            #{bloodId}
+        </foreach>
+    </delete>
+</mapper>

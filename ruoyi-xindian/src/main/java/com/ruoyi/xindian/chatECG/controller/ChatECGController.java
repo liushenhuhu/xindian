@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -50,17 +52,23 @@ public class ChatECGController extends BaseController {
 
     @PostMapping("/proxyRequest")
     public JSONObject proxyRequest(@RequestBody Chat chat) throws ParseException {
-
+        //System.out.println(new ArrayList());
         LoginUser loginUser = SecurityUtils.getLoginUser();
         //定义发送数据
         JSONObject param = new JSONObject();
         param.put("prompt", chat.getText());
         param.put("history", JSON.parseArray(chat.getHistory()));
-        //定义接收数据
-        JSONObject result = new JSONObject();
+        /*if(StringUtils.isEmpty(chat.getHistory())){
+            param.put("history", new ArrayList());
+        }else {
+            param.put("history", JSON.parseArray(chat.getHistory()));
+        }*/
 
+        //定义接收数据
+        JSONObject result = new JSONObject ();
 
         String url = "http://202.102.249.124:6025/";
+        //String url = "https://ecgdoctor.mindyard.cn/";
         HttpPost httpPost = new HttpPost(url);
         CloseableHttpClient client = HttpClients.createDefault();
         //请求参数转JOSN字符串
@@ -86,7 +94,7 @@ public class ChatECGController extends BaseController {
         System.out.println(result.get("response"));
 
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        /*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parse = new Date();
         result.put("responseTime",simpleDateFormat.format(parse));
 
@@ -123,7 +131,7 @@ public class ChatECGController extends BaseController {
             }
             System.out.println("异步线程 =====> 结束保存数据 =====> " + new Date());
         },executorService);
-        executorService.shutdown(); // 回收线程池
+        executorService.shutdown(); // 回收线程池*/
         return result;
     }
 

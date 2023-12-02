@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.patient.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Aes;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -15,6 +16,7 @@ import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.appData.domain.AppData;
 import com.ruoyi.xindian.appData.service.IAppDataService;
+import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
@@ -28,6 +30,7 @@ import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.domain.PatientRelationshipDto;
 import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,13 +72,17 @@ public class PatientController extends BaseController
     @Resource
     private AesUtils aesUtils;
 
+
+    @Resource
+    private RedisTemplate<String,Patient> redisTemplate;
+
     /**
      * 查询患者列表
      */
     @PreAuthorize("@ss.hasPermi('patient:patient:list')")
     @GetMapping("/list")
     @Aes
-    public TableDataInfo list(Patient patient) throws Exception {
+    public TableDataInfo list(Patient patient,Integer pageSize,Integer pageNum) throws Exception {
         List<Patient> list = new ArrayList<>();
         if (getDeptId()!=null && getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
@@ -120,8 +127,73 @@ public class PatientController extends BaseController
             if(patient.getPatientSource()!=null&&!"".equals(patient.getPatientSource())){
                 patient.getHospitalNameList().add(patient.getPatientSource());
             }
+            if (StringUtils.isNotEmpty(patient.getIsSelect())&& patient.getIsSelect().equals("1")){
+                if (StringUtils.isNotEmpty(patient.getPatientName())){
+
+                    String patientName = aesUtils.decrypt(patient.getPatientName());
+
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("patientListByTest:" + patientName))){
+                        List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:"+ patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+
+                        return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:"+patientName));
+                    }
+                    List<Patient> list1 = new ArrayList<>();
+                    List<Patient> patientList = redisTemplate.opsForList().range("patientList", 0, -1);
+                    if (patientList != null) {
+                        for (Patient pat : patientList) {
+                            if(pat.getPatientName().contains(patientName)){
+                                list1.add(pat);
+                            }
+                        }
+                    }
+
+                    if (patientList != null && list1.size() == patientList.size()) {
+                        List<Patient> listKeys = redisTemplate.opsForList().range("patientList", (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                        long total = 0;
+                        if (listKeys != null) {
+                            total = new PageInfo(listKeys).getTotal();
+                        }
+                        return getTable(listKeys, total);
+                    }else {
+                        redisTemplate.delete("patientListByTest:*");
+                        for (Patient s : list1){
+                            redisTemplate.opsForList().rightPush("patientListByTest:"+patientName,s);
+                        }
+                        List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:"+patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                        return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:"+ patientName));
+                    }
+
+
+                }
+            }
+
+
+
+
+
+
+
             startPage();
-            list = patientService.selectPatientList(patient);
+            list   = patientService.selectPatientList(patient);
+//            for (Patient pat : list1) {
+//                if(pat.getBirthDay()!=null)
+//                    pat.setPatientAge(String.valueOf(DateUtil.getAge(pat.getBirthDay())));
+//                if(pat.getPatientSex().length()>1){
+//                    pat.setPatientSex(pat.getPatientSex().substring(0,1));
+//                }
+//                if(pat.getPatientPhone() != null){
+//                    pat.setPatientPhone(aesUtils.decrypt(pat.getPatientPhone()));
+//                }
+//                if(pat.getPatientName() != null){
+//                    pat.setPatientName(aesUtils.decrypt(pat.getPatientName()));
+//                }
+//                if (pat.getFamilyPhone()!=null&&!"".equals(pat.getFamilyPhone())){
+//                    pat.setFamilyPhone(aesUtils.decrypt(pat.getFamilyPhone()));
+//                }
+//                redisTemplate.opsForList().rightPush("patientList",pat);
+//            }
+
+
         }
 
         for (Patient pat : list) {
@@ -480,5 +552,23 @@ public class PatientController extends BaseController
         return appData;
     }
 
+
+    @GetMapping("/getPatientByCode")
+    public TableDataInfo getPatientByCode(String code) throws Exception{
+        startPage();
+        List<Patient> patients = patientService.selectPatientByCode(code);
+        for (Patient patient:patients){
+            if(patient.getBirthDay()!=null){
+                patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
+            }
+            if(patient.getPatientPhone()!=null){
+                patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
+            }
+            if(patient.getPatientName()!=null){
+                patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+            }
+        }
+        return getDataTable(patients);
+    }
 
 }

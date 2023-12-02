@@ -36,6 +36,10 @@ public interface IPatientService
      */
     public int insertPatient(Patient patient);
 
+
+
+    List<Patient> selectPatientByCode(String code);
+
     /**
      * 修改患者
      *

@@ -1,12 +1,15 @@
 package com.ruoyi.xindian.equipment.domain;
 
+import com.ruoyi.xindian.patient.domain.Patient;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.springframework.security.core.parameters.P;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,6 +74,16 @@ public class Equipment extends BaseEntity
     private List<String> departmentCodeList = new ArrayList<>();
 
 
+    private String ecgType;
+
+
+    private List<Patient> patients = new ArrayList<>();
+
+
+    private Date createTime;
+
+
+    private String count;
 
     public Equipment() {
     }

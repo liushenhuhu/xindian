@@ -48,6 +48,20 @@
           <dict-tag :options="dict.type.if" :value="scope.row.ifStatistics"/>
         </template>
       </el-table-column>
+      <!--  隐藏的患者的个人信息    -->
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-divider content-position="left">其他信息</el-divider>
+            <el-form-item label="医院代号" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.hospitalCode }}</span>
+            </el-form-item>
+            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.hospitalName }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
