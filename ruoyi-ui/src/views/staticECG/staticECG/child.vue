@@ -311,9 +311,10 @@ export default {
   methods: {
     //心博标注 初始化
     async getchart(data,pIds,level,title,flag,datalabel) {
-      console.log("第几个",level)
+      // console.log(this.flag)
+      // console.log("第几个",level)
       this.title=title
-      console.log(title)
+      // console.log(title)
       if(title=="II"){
         this.lead1=true
       }
@@ -486,16 +487,18 @@ export default {
         // if(!obj){
           this.arrList.beatLabel=JSON.parse(this.datalabel.beatLabel)
         // }
-        console.log("重新赋值",this.arrList)
+        // console.log("重新赋值",this.arrList)
           //回显
           //分段
           this[`${'arrList' + level}`]={Normal:[], FangZao:[], ShiZao:[], FangYi:[], GanRao:[]}
           if(this.arrList.beatLabel){
-            if(flag==1){
+            if(this.flag==1){
               //单导
               this[`${'arrList' + level}`]=this.arrList.beatLabel[level-1]
+              // console.log("单导")
             }else {
               //12导
+              // console.log("12导")
               var each={Normal:[], FangZao:[], ShiZao:[], FangYi:[], GanRao:[]}
               for (let key1 in this.arrList.beatLabel) {
                 for (let key2 in this.arrList.beatLabel[key1]) {
@@ -510,7 +513,7 @@ export default {
         if(this[`${'arrList' + level}`]==null||this[`${'arrList' + level}`]=={}){
           this[`${'arrList' + level}`]={Normal:[], FangZao:[], ShiZao:[], FangYi:[], GanRao:[]}
         }
-          console.log(this[`${'arrList' + this.level}`])
+          // console.log(this[`${'arrList' + this.level}`])
           //添加所有点
           this.pointdata.length=0
         var colorList= {Normal:'#fe0101',FangZao:'#ff7000',ShiZao:'#17b09a',FangYi:'#070000',GanRao:'#0021da'}
@@ -551,7 +554,7 @@ export default {
             this.pointdata.push(pointdata)
           })
         }
-          console.log(this.pointdata)
+          // console.log(this.pointdata)
           setTimeout(()=>{
             //添加文本
             this.addtext()
@@ -895,11 +898,12 @@ export default {
     //切换tab
     handleClick(tab, event) {
       //console.log(tab, event);
-      console.log(this.lead1,this.lead2)
+      // console.log(this.lead1,this.lead2)
+      // console.log(this.data)
       if(tab.index=='0'){
         this.getchart(this.data,this.pId,this.level,this.title,null,null)
       }
-      console.log(tab.index,this.chart2)
+      // console.log(tab.index,this.chart2)
       if(tab.index=='1'){
         this.showchart(this.title,this.data,this.level)
         console.log("绘制图2")
