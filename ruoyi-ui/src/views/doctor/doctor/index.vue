@@ -213,11 +213,12 @@
         </el-form-item>
         <el-form-item label="医生类型" prop="isDoc">
           <el-radio-group v-model="form.isDoc">
-            <el-radio  label="0">测试医生账号</el-radio>
-            <el-radio label="1">心电医生账号</el-radio>
-            <el-radio label="2">门诊医生账号</el-radio>
+            <el-radio
+              v-for="dict in dict.type.docker_type"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
           </el-radio-group>
-          <span style="color: red">  (测试用的医生账号,不会作为专业的医生去随机推送患者诊断请求)</span>
         </el-form-item>
 
        <div v-if="form.isDoc==='2'">
@@ -261,7 +262,7 @@ import {getHospitalOutpatientList} from "@/api/visit/hospitalOutpatient";
 
 export default {
   name: "Doctor",
-  dicts: ['hospital_name_list'],
+  dicts: ['hospital_name_list','docker_type'],
   data() {
     return {
       dialogImageUrl: '',

@@ -175,24 +175,6 @@ public class PatientController extends BaseController
 
             startPage();
             list   = patientService.selectPatientList(patient);
-//            for (Patient pat : list1) {
-//                if(pat.getBirthDay()!=null)
-//                    pat.setPatientAge(String.valueOf(DateUtil.getAge(pat.getBirthDay())));
-//                if(pat.getPatientSex().length()>1){
-//                    pat.setPatientSex(pat.getPatientSex().substring(0,1));
-//                }
-//                if(pat.getPatientPhone() != null){
-//                    pat.setPatientPhone(aesUtils.decrypt(pat.getPatientPhone()));
-//                }
-//                if(pat.getPatientName() != null){
-//                    pat.setPatientName(aesUtils.decrypt(pat.getPatientName()));
-//                }
-//                if (pat.getFamilyPhone()!=null&&!"".equals(pat.getFamilyPhone())){
-//                    pat.setFamilyPhone(aesUtils.decrypt(pat.getFamilyPhone()));
-//                }
-//                redisTemplate.opsForList().rightPush("patientList",pat);
-//            }
-
 
         }
 

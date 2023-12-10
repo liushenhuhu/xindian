@@ -151,6 +151,16 @@
         >导出
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-view"
+          size="mini"
+          @click="isShowNameClick"
+        >{{isShowName.name}}
+        </el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
@@ -163,7 +173,12 @@
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
+      <el-table-column label="患者名称" align="center" prop="patientName">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
+          <span v-else>***</span>
+        </template>
+      </el-table-column>
       <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
                   <el-table-column label="患者年龄" align="center" prop="patientAge"/>
                   <el-table-column label="患者性别" align="center" prop="patientSex">
@@ -268,6 +283,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-download"
+            @click="downloadData(scope.row)"
+            v-hasPermi="['patient:patient:inform']"
+          >下载数据</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-s-order"
             @click="handleAlert(scope.row)"
             v-hasPermi="['patient:patient:alert']"
@@ -281,14 +303,14 @@
             v-hasPermi="['patient:patient:alert']"
           >预警统计
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['patient_management:patient_management:export']"
-          >修改
-          </el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['patient_management:patient_management:export']"-->
+<!--          >修改-->
+<!--          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -358,6 +380,17 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -376,6 +409,7 @@ import {updateMonitoringStatus} from "@/api/patient/patient";
 import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 import {listHospitalId} from "@/api/hospital/hospital";
+import {getVerify} from "@/api/verify/verify";
 
 export default {
   name: "DECG12YXD",
@@ -400,6 +434,10 @@ export default {
       // 弹出层标题
       title: "",
       options: [],
+      isShowName:{
+        status:false,
+        name:"显示姓名"
+      },
       // 是否显示弹出层
       open: false,
       // 时间范围
@@ -421,6 +459,11 @@ export default {
         doctorPhone: null,
         patientSex:null
       },
+      verifyForm:{
+        password:null,
+        status:false
+      },
+      dialogFormVisibleVerifyAuthority:false,
       // isRed1: false,
       // isRed2: false,
       // isRed3: false,
@@ -438,6 +481,9 @@ export default {
         ],
         equipmentCode: [
           {required: true, message: "设备号不能为空", trigger: "blur"}
+        ],
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
         ],
       }
     };
@@ -559,6 +605,9 @@ export default {
       this.open = true;
       this.title = "添加患者管理";
     },
+    downloadData(row){
+      window.open(`https://ecg.mindyard.cn:84/DECGReport/DECG/save/${row.pId}.dat`)
+    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -589,22 +638,65 @@ export default {
         }
       });
     },
+    dialogFormVisibleVerify(){
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd:this.verifyForm.password
+          }
+          getVerify(obj).then(r=>{
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status=true
+            this.dialogFormVisibleVerifyAuthority = false
+          })
+        }
+      })
+    },
+
+    isShowNameClick(){
+      if (this.verifyForm.status){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示姓名"
+
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const pIds = row.pId || this.ids;
-      this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
-        return delPatient_management(pIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {
-      });
+      if (this.verifyForm.status){
+        const pIds = row.pId || this.ids;
+        this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
+          return delPatient_management(pIds);
+        }).then(() => {
+          this.getList();
+          this.$modal.msgSuccess("删除成功");
+        }).catch(() => {
+        });
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('patient_management/patient_management/export', {
-        ...this.queryParams
-      }, `patient_management_${new Date().getTime()}.xlsx`)
+      if (this.verifyForm.status){
+        this.download('patient_management/patient_management/export', {
+          ...this.queryParams
+        }, `patient_management_${new Date().getTime()}.xlsx`)
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
     },
     /** 跳转到预警日志*/
     handleAlert(row) {

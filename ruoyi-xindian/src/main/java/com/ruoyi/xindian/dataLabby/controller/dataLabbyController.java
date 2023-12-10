@@ -10,10 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.xindian.dataLabby.domain.dataLabbyDto;
 import com.ruoyi.xindian.dataLabby.service.IDataLabbyService;
 import com.ruoyi.xindian.hospital.domain.Doctor;
@@ -68,6 +71,10 @@ public class dataLabbyController extends BaseController
     private IDoctorService doctorService;
     @Autowired
     private IPatientService patientService;
+
+
+    @Resource
+    private SysDictDataMapper dictDataMapper;
 
     @Resource
     private TokenService tokenService;
@@ -201,16 +208,35 @@ public class dataLabbyController extends BaseController
 
         lock.lock();
         try{
+
             LoginUser loginUser = tokenService.getLoginUser(request);
             String phonenumber = loginUser.getUser().getPhonenumber();
             Doctor doctor = doctorService.selectDoctorByDoctorPhone(phonenumber);
+
+            SysDictData sysDictData1 = new SysDictData();
+            sysDictData1.setDictType("docker_report_preempt");
+            sysDictData1.setStatus("0");
+            List<SysDictData> sysDictData = dictDataMapper.selectDictDataList(sysDictData1);
+            Boolean isDoc = false;
+            for (SysDictData s : sysDictData){
+                if (s.getDictValue().equals(doctor.getIsDoc())){
+                    isDoc=true;
+                    break;
+                }
+            }
+            if (!isDoc){
+                return AjaxResult.error("没有抢单的权限");
+            }
             Report report = reportService.selectReportByPId(pId);
+
             if (report==null){
                 return AjaxResult.error("当前订单不存在");
             }
             if(report.getdPhone()!=null){
                 return AjaxResult.error("当前订单已被抢走！");
             }
+
+
             report.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
             report.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
             report.setdPhone(phonenumber);

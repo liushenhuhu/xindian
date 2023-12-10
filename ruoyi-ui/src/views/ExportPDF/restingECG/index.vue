@@ -11,7 +11,7 @@
               </div>
               <div class="info">
                 <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
-                <div class="textbox"><strong>姓名:</strong>{{ data.name }}</div>
+<!--                <div class="textbox"><strong>姓名:</strong>{{ data.name }}</div>-->
                 <div class="textbox"><strong>性别:</strong>{{ data.gender }}</div>
                 <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
                 <div class="textbox"><strong>送检科室:</strong> -</div>

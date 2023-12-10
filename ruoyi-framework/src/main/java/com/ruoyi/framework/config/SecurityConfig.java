@@ -120,7 +120,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/visit/pay/callBack").anonymous()
                 .antMatchers("/app_update/getAppVersions").anonymous()
                 .antMatchers("/system/user/profile/updatePwdByPhoneT").anonymous()
-                .antMatchers("/login", "/wxLogin", "/wxOpenId","/wxGZHOpenId","/loginDoc","/register","/system/notice/appList", "/register_doctor", "/captchaImage").anonymous()
+                .antMatchers("/login", "/wxLogin", "/wxOpenId","/wxGZHOpenId","/loginDoc","/register","/ecg/report/addReport","/system/notice/appList", "/register_doctor", "/captchaImage").anonymous()
 
                 .antMatchers("/websocket").anonymous()
 //                .antMatchers("/medicalData/**").anonymous()

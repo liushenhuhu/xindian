@@ -96,8 +96,8 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                 if (equipment.getEquipmentStatus().equals("True")&&equipment.getPatientPhone().equals(aesUtils.encrypt(split[1]))){
                     SysUser sysUser = new SysUser();
                     redisTemplate.delete("getEquipmentCodeT15!"+split[0]+"="+split[1]);
-                    redisTemplate.delete("getEquipmentCodeAgainTwo!"+split[0]+"="+split[1]);
-                    redisTemplate.delete("getEquipmentCodeAgainT15!"+split[0]+"="+split[1]);
+//                    redisTemplate.delete("getEquipmentCodeAgainTwo!"+split[0]+"="+split[1]);
+//                    redisTemplate.delete("getEquipmentCodeAgainT15!"+split[0]+"="+split[1]);
                     sysUser = sysUserMapper.selectUserByPhone(aesUtils.encrypt(split[1]));
                     EquipmentHeadingCode headingCode = equipmentHeadingCodeMapper.selectOne(new QueryWrapper<EquipmentHeadingCode>().eq("heading_code", equipment.getEquipmentCode()));
                     if (sysUser!=null){
@@ -160,8 +160,8 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
                 for (AccountsMsg c : accountsMsgs){
                     wxPublicRequest.sendEquipmentMsgFail(c.getOpenId(),decrypt,split[1],headingCode.getEquipmentCode());
                 }
-                redisTemplate.opsForValue().set("getEquipmentCodeAgainTwo!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),5, TimeUnit.SECONDS);
-                redisTemplate.opsForValue().set("getEquipmentCodeAgainT15!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),30,TimeUnit.MINUTES);
+//                redisTemplate.opsForValue().set("getEquipmentCodeAgainTwo!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),5, TimeUnit.SECONDS);
+//                redisTemplate.opsForValue().set("getEquipmentCodeAgainT15!"+equipment.getEquipmentCode()+"="+split[1],equipment.getEquipmentCode(),30,TimeUnit.MINUTES);
             }
         }
 

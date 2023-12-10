@@ -1,15 +1,5 @@
 <template>
   <div>
-<!--    <el-select class="el-select" v-model="value1" multiple placeholder="请选择">-->
-<!--      <el-option-->
-<!--        v-for="item in options"-->
-<!--        :key="item.value"-->
-<!--        :label="item.label"-->
-<!--        :value="item.value">-->
-<!--      </el-option>-->
-<!--    </el-select>-->
-<!--    <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" style="margin-left: 1vw">搜索</el-button>-->
-<!--    <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
     <div id="cf-double-column" class="age" :style="{ width: '100%', height: '100%' }">
       <p class="title"><span class="title-left"></span>数据库统计男女比例图</p>
       <div id="chart" :style="{ width: '100%', height: '550px',margin:'0 auto'}"></div>

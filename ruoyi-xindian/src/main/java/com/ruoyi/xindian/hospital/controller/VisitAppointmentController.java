@@ -80,10 +80,11 @@ public class VisitAppointmentController extends BaseController
     private TokenService tokenService;
 
     @Resource
+    private RedisTemplate<String,String> redisTemplate;
+    @Resource
     private VisitWaitService visitWaitService;
 
-    @Resource
-    private RedisTemplate<String,String> redisTemplate;
+
 
 
     /**

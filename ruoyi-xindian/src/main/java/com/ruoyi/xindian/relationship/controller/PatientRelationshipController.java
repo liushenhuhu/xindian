@@ -77,7 +77,7 @@ public class PatientRelationshipController extends BaseController
             }
 
         }
-        if(patientRelationship!=null && patientRelationship.getFatherPhone() != null){
+        if(patientRelationship.getFatherPhone() != null){
             PatientRelationship relationship = new PatientRelationship();
             Patient patient = patientService.selectPatientByPatientPhone(patientRelationship.getFatherPhone());
             relationship.setRelationshipPatientName(aesUtils.decrypt(patient.getPatientName()));

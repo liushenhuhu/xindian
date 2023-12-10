@@ -51,7 +51,7 @@ public class AppDataController extends BaseController {
     /**
      * 查询app相关数据列表
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:list')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:list')")
     @GetMapping("/list")
     public TableDataInfo list(AppData appData) throws Exception {
         if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
@@ -82,7 +82,7 @@ public class AppDataController extends BaseController {
     /**
      * 查询app相关数据列表
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:list')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:list')")
     @PostMapping("/list1")
     public TableDataInfo list1(@RequestBody AppData appData) throws Exception {
         if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
@@ -113,7 +113,7 @@ public class AppDataController extends BaseController {
     /**
      * 导出app相关数据列表
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:export')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:export')")
     @Log(title = "app相关数据", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AppData appData) {
@@ -125,7 +125,7 @@ public class AppDataController extends BaseController {
     /**
      * 获取app相关数据详细信息
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:query')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:query')")
     @GetMapping(value = "/{appDataId}")
     public AjaxResult getInfo(@PathVariable("appDataId") Long appDataId) throws Exception {
         AppData appData = appDataService.selectAppDataByAppDataId(appDataId);
@@ -207,7 +207,7 @@ public class AppDataController extends BaseController {
     /**
      * 新增app相关数据
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:add')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:add')")
     @Log(title = "app相关数据", businessType = BusinessType.INSERT)
     @PostMapping("/doctor")
     public AjaxResult add_doctor(@RequestBody AppData appData) throws Exception {
@@ -227,7 +227,7 @@ public class AppDataController extends BaseController {
     /**
      * 修改app相关数据
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:edit')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:edit')")
     @Log(title = "app相关数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody AppData appData) throws Exception {
@@ -246,7 +246,7 @@ public class AppDataController extends BaseController {
     /**
      * 删除app相关数据
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
     @Log(title = "app相关数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/doctor/{appDataIds}")
     public AjaxResult remove_doctor(@PathVariable Long[] appDataIds) {
@@ -270,7 +270,7 @@ public class AppDataController extends BaseController {
     /**
      * 删除app相关数据
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
     @Log(title = "app相关数据", businessType = BusinessType.DELETE)
     @GetMapping("/del/{appDataIds}")
     public AjaxResult del(@PathVariable String appDataIds) {
@@ -286,7 +286,7 @@ public class AppDataController extends BaseController {
     /**
      * 删除app相关数据（手机号）
      */
-    @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
+//    @PreAuthorize("@ss.hasPermi('appData:appData:remove')")
     @Log(title = "app相关数据", businessType = BusinessType.DELETE)
     @GetMapping("/delByPhone/{patientPhone}")
     public AjaxResult delByPhone(@PathVariable String patientPhone) {

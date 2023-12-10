@@ -332,7 +332,10 @@ public class ReportController extends BaseController
 
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String s = report.getpId();
-
+        Report report1 = reportService.selectReportByPId(s);
+        if (report1==null){
+            return AjaxResult.error("报告不存在");
+        }
         //相关数据加密
         if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
             report.setPPhone(aesUtils.encrypt(report.getPPhone()));
@@ -357,7 +360,7 @@ public class ReportController extends BaseController
         }
         List<Doctor> doctors = null;
         //当前报告信息，判断报告状态
-        Report report1 = reportService.selectReportByPId(s);
+
         if (!SysUser.isAdmin(loginUser.getUser().getUserId())){
             if (report1.getDiagnosisStatus()==1){
                 return AjaxResult.error("该数据已被诊断");
@@ -449,6 +452,15 @@ public class ReportController extends BaseController
             redisTemplate.delete("DocList"+report.getpId());
             return toAjax(reportService.updateReportNull(report));
         }else if(report.getDiagnosisStatus()==1){//医生诊断
+            if (!SysUser.isAdmin(loginUser1.getUserId())&&(report.getDiagnosisStatus()==1||report.getDiagnosisStatus()==3)&&report1.getdPhone()==null){
+                Doctor doctor = doctorService.selectDoctorByDoctorPhone(loginUser.getUser().getPhonenumber());
+                if (doctor==null){
+                    return AjaxResult.error("不是医师，无权限诊断");
+                }
+                report1.setStartTime(new Date());
+                report.setdPhone(doctor.getDoctorPhone());
+                report.setDiagnosisDoctor(doctor.getDoctorName());
+            }
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             //记录报告的的状态
             if (StringUtils.isNotEmpty(report.getStartDateTime())){
@@ -821,6 +833,61 @@ public class ReportController extends BaseController
         return AjaxResult.success(i>0);
     }
 
+    /**
+     * app选择医师绑定
+     * @param report
+     * @return
+     */
+    @PutMapping("/appRelationDocUpdateByBinding")
+    public AjaxResult appRelationDocUpdateByBinding( @RequestBody Report report,HttpServletRequest request) throws Exception {
+
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        Long userId = loginUser.getUser().getUserId();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("reportPutAddApp"+userId))){
+            return AjaxResult.error("请勿重复提交");
+        }
+        redisTemplate.opsForValue().set("reportPutAddApp"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
+        VipPatient vipPhone = vipPatientService.findVipPhone(loginUser.getUser().getPhonenumber());
+        if (vipPhone==null){
+            if (loginUser.getUser().getDetectionNum()<=0){
+                return AjaxResult.error("用户服务次数不足");
+            }
+        }
+        if (vipPhone != null && vipPhone.getVipNum() <= 0) {
+            return AjaxResult.error("用户服务次数不足");
+        }
+        int i = updateReport(report);
+        getReportEncrypt(report);
+        Report report1 = reportService.selectReportByPId(report.getpId());
+        Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+        if (doctor1==null){
+            throw new ServiceException("医师不存在");
+        }
+        report.setDiagnosisDoctorAes(aesUtils.decrypt(doctor1.getDoctorName()));
+        report.setDPhoneAes(aesUtils.decrypt(doctor1.getDoctorPhone()));
+        report.setReportId(report1.getReportId());
+        report.setDiagnosisStatus(2L);
+        report.setDiagnosisDoctor(doctor1.getDoctorName());
+        report.setReportTime(new Date());
+        report.setStartTime(new Date());
+
+//        Doctor doctor = new Doctor();
+//        doctor.getHospitalNameList().add(doctor1.getHospital());
+//        List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+//        //定时器, 30分钟无医生诊断, 换医生诊断.
+//        wxMsgRunConfig.redisDTStart(report.getpId(),doctors);
+        WxUtil.send(aesUtils.decrypt(report.getdPhone()));
+        DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
+        diagnoseDoc.setReportId(report.getReportId());
+        diagnoseDoc.setDoctorPhone(report.getdPhone());
+        diagnoseDoc.setDiagnoseType("2");
+        diagnoseDocService.insertDiagnose(diagnoseDoc);
+        int i1 = reportService.updateReport(report);
+        if (i1>0){
+            patientService.detectionNumSubtract(report.getLoginUserPhone());
+        }
+        return AjaxResult.success(i>0);
+    }
 
     private int updateReport(Report report) throws Exception {
         getReportEncrypt(report);

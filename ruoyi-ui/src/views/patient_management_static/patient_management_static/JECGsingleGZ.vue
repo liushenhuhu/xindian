@@ -201,6 +201,17 @@
           v-hasPermi="['patient_management:patient_management:export']"
         >导出
         </el-button>
+
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-view"
+          size="mini"
+          @click="isShowNameClick"
+        >{{isShowName.name}}
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getUpdateList"></right-toolbar>
     </el-row>
@@ -244,25 +255,30 @@
               </template>
             </el-table-column>-->
       <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
-      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
+<!--      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">-->
+<!--        <template slot-scope="scope">-->
+<!--          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="患者名称" align="center" prop="patientName">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
+         <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
+          <span v-else>***</span>
         </template>
       </el-table-column>
-      <el-table-column label="患者名称" align="center" prop="patientName" show-overflow-tooltip/>
 <!--      <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
 <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
-      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="风险等级" align="center" prop="ecgLevel">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
         </template>
       </el-table-column>
-      <el-table-column label="心电种类" align="center" prop="ecgType" width="120">
+      <el-table-column label="心电种类" align="center" prop="ecgType" width="140">
         <template slot-scope="scope">
           <el-tag >
             {{scope.row.ecgType}}
@@ -283,9 +299,9 @@
             <el-form-item label="患者管理id" width="200" style="padding-left: 40px">
               <span>{{ scope.row.pId }}</span>
             </el-form-item>
-            <el-form-item label="患者姓名" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientName }}</span>
-            </el-form-item>
+<!--            <el-form-item label="患者姓名" width="200" style="padding-left: 40px">-->
+<!--              <span>{{ scope.row.patientName }}</span>-->
+<!--            </el-form-item>-->
             <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
@@ -351,14 +367,14 @@
             @click="sendMsg(scope.row)"
           >发送短信
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['patient_management:patient_management:export']"
-          >修改
-          </el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['patient_management:patient_management:export']"-->
+<!--          >修改-->
+<!--          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -448,6 +464,17 @@
         <el-button type="primary" @click="dialogForm">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -464,6 +491,7 @@ import $ from "jquery";
 import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 import {listHospitalId} from "@/api/hospital/hospital";
+import {getVerify} from "@/api/verify/verify";
 
 export default {
   name: "JECGsingleGZ",
@@ -488,15 +516,24 @@ export default {
         dPhone:null,
         hospital:null,
       },
+      isShowName:{
+        status:false,
+        name:"显示姓名"
+      },
       option:[],
       value:[],
       dialogFormVisible:false,
+      dialogFormVisibleVerifyAuthority:false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
       showSearch: false,
       // 总条数
       total: 0,
+      verifyForm:{
+        password:null,
+        status:false
+      },
       // 患者管理表格数据
       patient_managementList: [],
       // 弹出层标题
@@ -542,6 +579,9 @@ export default {
         ],
         equipmentCode: [
           {required: true, message: "设备号不能为空", trigger: "blur"}
+        ],
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
         ],
       }
     };
@@ -608,6 +648,8 @@ export default {
       })
     },
 
+
+
     sendMsg(row){
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
       let patientPhone = row.patientPhone
@@ -649,6 +691,7 @@ export default {
         this.getList()
       })
     },
+
 
     /** 查询患者管理列表 */
     getList() {
@@ -771,22 +814,65 @@ export default {
         }
       });
     },
+    dialogFormVisibleVerify(){
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd:this.verifyForm.password
+          }
+          getVerify(obj).then(r=>{
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status=true
+            this.dialogFormVisibleVerifyAuthority = false
+          })
+        }
+      })
+    },
+
+    isShowNameClick(){
+      if (this.verifyForm.status){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示姓名"
+
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const pIds = row.pId || this.ids;
-      this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
-        return delPatient_management(pIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {
-      });
+      if (this.verifyForm.status){
+        const pIds = row.pId || this.ids;
+        this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
+          return delPatient_management(pIds);
+        }).then(() => {
+          this.getList();
+          this.$modal.msgSuccess("删除成功");
+        }).catch(() => {
+        });
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('patient_management/patient_management/export', {
-        ...this.queryParams
-      }, `patient_management_${new Date().getTime()}.xlsx`)
+      if (this.verifyForm.status){
+        this.download('patient_management/patient_management/export', {
+          ...this.queryParams
+        }, `patient_management_${new Date().getTime()}.xlsx`)
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
     },
     /**
      * 查看个人历史记录

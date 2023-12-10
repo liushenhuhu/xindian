@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.verify.mapper.SxReportMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.verify.domain.SxReport">
+            <id property="sxReportId" column="sx_report_id" jdbcType="INTEGER"/>
+            <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
+            <result property="sn" column="sn" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="uploadStart" column="upload_start" jdbcType="VARCHAR"/>
+            <result property="uploadEnd" column="upload_end" jdbcType="VARCHAR"/>
+            <result property="patientPhone" column="patient_phone" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sx_report_id,order_id,sn,
+        user_id,upload_start,upload_end,
+        patient_phone,create_time
+    </sql>
+</mapper>
