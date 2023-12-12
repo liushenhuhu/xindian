@@ -20,6 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="urlOne"    column="url_one"    />
         <result property="frequency"    column="frequency"    />
         <result property="isVip"    column="is_vip"    />
+        <result property="video"    column="video"    />
     </resultMap>
 
     <resultMap type="ProductImgs" id="ProductImgsResult">
@@ -29,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTProductVo">
-        select product_id, product_name, price, product_description, product_url, discount, state, update_time, create_time, product_num, sales,type,url_one ,frequency,is_vip from t_product
+        select product_id, product_name, price, product_description, product_url, discount, state, update_time, create_time, product_num, sales,type,url_one ,frequency,is_vip,video from t_product
     </sql>
 
     <select id="selectTProductList" parameterType="TProduct" resultMap="TProductResult">

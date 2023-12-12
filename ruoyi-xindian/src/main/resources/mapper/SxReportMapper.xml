@@ -13,6 +13,7 @@
             <result property="uploadEnd" column="upload_end" jdbcType="VARCHAR"/>
             <result property="patientPhone" column="patient_phone" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="pdfUrl" column="pdf_url" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -20,4 +21,18 @@
         user_id,upload_start,upload_end,
         patient_phone,create_time
     </sql>
+    <select id="getReportList" resultType="com.ruoyi.xindian.verify.domain.SxReport" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sx_report
+
+        <where>
+        <if test="patientPhone!= null and patientPhone!= ''">
+           and  patient_phone = #{patientPhone}
+        </if>
+        <if test="uploadStart!= null">
+           and  SUBSTRING(upload_start, 1, 10) =  #{uploadStart}
+        </if>
+        </where>
+    </select>
 </mapper>

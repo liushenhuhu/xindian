@@ -78,6 +78,8 @@ public class TProduct extends BaseEntity
     private Long sales;
 
 
+    private String video;
+
     /**
      * 商品类型
      */
@@ -103,6 +105,15 @@ public class TProduct extends BaseEntity
      * @return
      */
     private List<String>  stringImg;
+
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
 
     public Integer getDelFlag() {
         return delFlag;

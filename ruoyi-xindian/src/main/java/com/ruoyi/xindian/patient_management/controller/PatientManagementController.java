@@ -38,6 +38,8 @@ import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.PhoneCheckUtils;
 import com.ruoyi.xindian.util.WxUtil;
+import com.ruoyi.xindian.verify.domain.SxReport;
+import com.ruoyi.xindian.verify.service.SxReportService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -97,6 +99,10 @@ public class PatientManagementController extends BaseController {
 
     @Autowired
     private AesUtils aesUtils;
+
+
+    @Resource
+    private SxReportService sxReportService;
     @Resource
     private SingleHistoryDataService singleHistoryDataService;
     @Resource
@@ -267,6 +273,7 @@ public class PatientManagementController extends BaseController {
     }
 
     private TableDataInfo getTableDataInfo(List<PatientManagement> list, ArrayList<PatientManagmentDept> resList) throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         PatientManagmentDept patientManagmentDept;
         for (PatientManagement management : list) {
             if(DateUtil.isValidDate(management.getBirthDay())){
@@ -295,6 +302,23 @@ public class PatientManagementController extends BaseController {
             if (StringUtils.isNotEmpty(management.getDPhone())){
                 management.setDPhone(aesUtils.decrypt(management.getDPhone()));
             }
+            try {
+                management.setSxStatus(0);
+                if (StringUtils.isNotEmpty(management.getEcgType())&&management.getEcgType().contains("DECG")){
+                    SxReport sxReport = new SxReport();
+                    sxReport.setPatientPhone(aesUtils.encrypt(management.getPatientPhone()));
+                    String format = simpleDateFormat.format(management.getConnectionTime());
+                    sxReport.setUploadStart(format);
+                    List<SxReport> reportList = sxReportService.getReportList(sxReport);
+                    if (reportList!=null&& !reportList.isEmpty()){
+                       management.setSxStatus(1);
+                    }else {
+                        management.setSxStatus(0);
+                    }
+                }
+            }catch (Exception e){
+                management.setSxStatus(0);
+            }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);
 
@@ -303,6 +327,7 @@ public class PatientManagementController extends BaseController {
             } else {
                 patientManagmentDept.setAcquisitionDuration("记录时长: " + DateUtil.timeToString(management.getTimeDuration()));
             }
+
             resList.add(patientManagmentDept);
         }
         long total = new PageInfo(list).getTotal();

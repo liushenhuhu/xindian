@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +30,21 @@ public class FileUploadUtils {
         String front = saveFile(file,location,phone,time);
         String[] fronts = front.split("uploadPath");
         return url+fronts[1];
+    }
+
+
+
+    public String uploadPDFUrl(byte[] bytes,String location,String phone){
+        try {
+            LocalDate now = LocalDate.now();
+            String time = now.toString();
+            String front = fileToBytes(bytes,location,phone,time);
+            String[] fronts = front.split("uploadPath");
+            return url+fronts[1];
+        }catch (Exception e){
+            return null;
+        }
+
     }
 
     private String saveFile(MultipartFile file, String location, String userId, String time) {
@@ -62,6 +79,27 @@ public class FileUploadUtils {
             return path.toString();
         } catch (IOException e) {
             throw new RuntimeException("Failed to save file: " + e.getMessage());
+        }
+    }
+
+
+    private   String fileToBytes(byte[] bytes, String location, String userId, String time) {
+        try {
+            String extension=".pdf";
+            // Generate a unique file name based on the current time
+            String fileName = System.currentTimeMillis() + "-" + location;
+//            String mainDir="E:/saveImg/";
+            File dir = new File(proFile+userId+"/"+time+"/");
+            if(!dir.exists()){
+                boolean mkdirs = dir.mkdirs();
+            }
+            Path path = Paths.get( proFile+userId+"/"+time+"/" + "/" + fileName + extension);
+            // Save the file to disk
+            Files.write(path, bytes);
+            // Return the file path
+            return path.toString();
+        } catch (IOException e) {
+            return null;
         }
     }
 

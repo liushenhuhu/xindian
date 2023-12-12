@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.order.mapper.InvoiceMapper;
+import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.wx_pay.VO.BizField;
 import com.ruoyi.xindian.wx_pay.VO.UserField;
 import com.ruoyi.xindian.wx_pay.VO.WxCardInvoiceAuthurlVO;
@@ -421,6 +422,42 @@ public class WXPublicRequest {
         }
         if (sendMessageVo.getErrcode() != 0) {
             log.error("推送消息失败,原因：{}", sendMessageVo.getErrmsg());
+        }
+        log.info("推送消息成功");
+
+    }
+
+
+    /**
+     * 小程序消息推送（设备绑定状态 通知患者）
+     * @param userOpenid
+     * @throws Exception
+     */
+    public  void SXEquipmentMsg( String userOpenid,String patientName,String patientPhone) throws Exception {
+
+        MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity(new MessageValueEntity(patientName),new MessageValueEntity("心电衣检测报告"),new MessageValueEntity("您的心电采集报告已生成，请前往迈雅云查看"));
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("touser", userOpenid); //用户openid
+        paramsMap.put("miniprogram_state", "fomal");
+        paramsMap.put("page", "pages/record/index");
+        paramsMap.put("template_id", "sVpNLzWnoh20dDZrICkKzeOug2C-vYaEK0Qxe-zpKs8"); //推送消息模板id
+        paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
+        String wxAccessToken = getWXAccessToken();
+
+        HttpHeaders headers = new HttpHeaders(); //构建请求头
+        headers.setContentType(MediaType.APPLICATION_JSON); //设置内容类型为json
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap, headers); //构建http请求实体
+
+        //发送请求路径拼接获取到的access_token
+        SendMessageVo sendMessageVo = restTemplate.postForObject("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" +
+                wxAccessToken, request, SendMessageVo.class);
+
+        if (null == sendMessageVo) {
+            throw new RuntimeException("推送消息失败");
+        }
+        if (sendMessageVo.getErrcode() != 0) {
+            log.error("推送消息失败,原因：{}", sendMessageVo.getErrmsg());
+            WxUtil.sendAdviceSX(patientPhone);
         }
         log.info("推送消息成功");
 

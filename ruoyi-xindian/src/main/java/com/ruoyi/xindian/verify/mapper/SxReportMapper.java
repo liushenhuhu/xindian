@@ -3,6 +3,8 @@ package com.ruoyi.xindian.verify.mapper;
 import com.ruoyi.xindian.verify.domain.SxReport;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
 * @author 13401
 * @description 针对表【sx_report】的数据库操作Mapper
@@ -10,6 +12,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.ruoyi.xindian.verify.domain.SxReport
 */
 public interface SxReportMapper extends BaseMapper<SxReport> {
+
+
+
+
+    List<SxReport> getReportList(SxReport report);
+
 
 }
 

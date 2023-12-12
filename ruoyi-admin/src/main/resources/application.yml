@@ -17,8 +17,8 @@ ruoyi:
   # 验证码类型 math 数组计算 char 字符验证
   captchaType: math
   # 上传文件的地址
-  url: https://ecg.mindyard.cn:84/uploadPath
-#  url: https://develop.mindyard.cn:84/uploadPath
+#  url: https://ecg.mindyard.cn:84/uploadPath
+  url: https://develop.mindyard.cn:84/uploadPath
 
 # 开发环境配置
 server:
@@ -154,5 +154,5 @@ wx-public:
 
 
 uploadImg:
-#  url: https://develop.mindyard.cn:84/uploadPath/
-  url: https://ecg.mindyard.cn:84/uploadPath/
+  url: https://develop.mindyard.cn:84/uploadPath/
+#  url: https://ecg.mindyard.cn:84/uploadPath/

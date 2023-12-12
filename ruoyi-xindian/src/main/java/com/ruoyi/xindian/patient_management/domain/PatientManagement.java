@@ -227,6 +227,10 @@ public class PatientManagement extends BaseEntity {
     private String isSelect;
 
 
+
+
+    private Integer sxStatus;
+
     /**
      * 拒绝理由
      */
