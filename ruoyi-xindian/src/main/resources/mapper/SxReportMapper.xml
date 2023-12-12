@@ -19,7 +19,7 @@
     <sql id="Base_Column_List">
         sx_report_id,order_id,sn,
         user_id,upload_start,upload_end,
-        patient_phone,create_time
+        patient_phone,create_time,pdf_url
     </sql>
     <select id="getReportList" resultType="com.ruoyi.xindian.verify.domain.SxReport" resultMap="BaseResultMap">
         select

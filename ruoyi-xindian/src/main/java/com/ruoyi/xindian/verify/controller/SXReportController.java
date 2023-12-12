@@ -182,7 +182,7 @@ public class SXReportController {
 
         if (pdfUrl!=null){
             sxReport1.setPdfUrl(pdfUrl);
-            sxReportService.updateSxReport(sxReport);
+            sxReportService.updateSxReport(sxReport1);
             return AjaxResult.success(pdfUrl);
         }
         return AjaxResult.error("没有找到该报告");
