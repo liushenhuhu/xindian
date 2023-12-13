@@ -100,12 +100,22 @@ public class TProduct extends BaseEntity
 
     private Integer delFlag;
 
+    private String title;
+
     /**
      * 图片集合
      * @return
      */
     private List<String>  stringImg;
 
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getVideo() {
         return video;
