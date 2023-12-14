@@ -80,6 +80,12 @@ export function sendMsgToPatient(phone) {
   })
 }
 
+export function getSX_PDFByPId(pId) {
+  return request({
+    url: '/ecg/report/getSX_PDFByPId?pId='+pId,
+    method: 'get'
+  })
+}
 export function listDoc() {
   return request({
     url: '/patient_management/patient_management/listDoc',

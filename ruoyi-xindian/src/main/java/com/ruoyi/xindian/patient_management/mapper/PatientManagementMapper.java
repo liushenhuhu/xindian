@@ -72,6 +72,11 @@ public interface PatientManagementMapper
      */
     public int insertPatientManagement(PatientManagement patientManagement);
 
+
+
+
+    PatientManagement selectByPId(String pId);
+
     /**
      * 修改患者管理
      *
@@ -126,4 +131,9 @@ public interface PatientManagementMapper
 
 
     List<DocVO> selectEcgTypeList(@Param("ecgType") String ecgType);
+
+
+
+
+
 }

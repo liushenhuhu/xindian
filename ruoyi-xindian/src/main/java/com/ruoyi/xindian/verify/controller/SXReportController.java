@@ -10,6 +10,8 @@ import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.util.FileUploadUtils;
 import com.ruoyi.xindian.verify.domain.SxReport;
 import com.ruoyi.xindian.verify.service.SxReportService;
@@ -62,7 +64,8 @@ public class SXReportController {
     private WXPublicRequest wxPublicRequest;
 
 
-
+    @Resource
+    private IPatientManagementService patientManagementService;
 
     @Resource
     private FileUploadUtils fileUploadUtils;
@@ -137,6 +140,65 @@ public class SXReportController {
             return AjaxResult.success("success");
         }
         return AjaxResult.error();
+    }
+
+
+
+
+    @GetMapping("/getSX_PDFByPId")
+    public AjaxResult getReportByPId(String pId) throws Exception {
+
+        if (StringUtils.isEmpty(pId)){
+            return AjaxResult.success(null);
+        }
+        PatientManagement management = patientManagementService.selectPatientManagementByPId(pId);
+        if (management==null){
+            return AjaxResult.success(null);
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            SxReport sxReport = new SxReport();
+            sxReport.setPatientPhone(management.getPatientPhone());
+            String format = simpleDateFormat.format(management.getConnectionTime());
+            sxReport.setUploadStart(format);
+            List<SxReport> reportList = sxReportService.getReportList(sxReport);
+            if (reportList==null|| reportList.isEmpty()){
+                return AjaxResult.success(null);
+            }
+            SxReport sxReport1 = reportList.get(0);
+            if (sxReport1==null){
+                return AjaxResult.success(null);
+            }
+            if (StringUtils.isNotEmpty(sxReport1.getPdfUrl())){
+                return AjaxResult.success(sxReport1.getPdfUrl());
+            }
+            HttpHeaders headers = new HttpHeaders(); //构建请求头
+            String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
+            headers.set("authorization","Bearer "+equipmentCodeAccessToken);
+            //封装请求头
+            HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
+            String url = "https://api3.benefm.com/bmecg/third/report/download?orderId="+sxReport1.getOrderId();
+            ResponseEntity<byte[]> sendMessageVo=null;
+            try {
+                sendMessageVo = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            String pdfUrl =null;
+            try {
+                pdfUrl = fileUploadUtils.uploadPDFUrl(sendMessageVo.getBody(), "sx", aesUtils.decrypt(sxReport1.getPatientPhone()));
+            }catch (Exception e){
+                return AjaxResult.success(null);
+            }
+            if (pdfUrl!=null){
+                sxReport1.setPdfUrl(pdfUrl);
+                sxReportService.updateSxReport(sxReport1);
+                return AjaxResult.success(pdfUrl);
+            }
+            return AjaxResult.success(null);
+        }catch (Exception e){
+            return AjaxResult.success(null);
+        }
     }
 
 

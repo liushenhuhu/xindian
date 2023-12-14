@@ -95,6 +95,9 @@ public interface IPatientManagementService
     public  PatientManagement getPhoneByPId(String pId);
 
 
+
+
+
     List<DateListVO> getDateList(PatientManagement patientManagement);
 
 

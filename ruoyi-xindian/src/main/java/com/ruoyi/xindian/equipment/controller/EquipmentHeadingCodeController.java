@@ -153,9 +153,56 @@ public class EquipmentHeadingCodeController {
 //
 
 
+
+    /**
+     * 查询设备编号是否存在数据库中
+     * @param code
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getEquipmentExist")
+    public AjaxResult getEquipmentExist(String code) throws Exception {
+        if (code == null || code.isEmpty()) {
+            return AjaxResult.success(false);
+        }
+        if (code.length() > 17) {
+            code = code.substring(0, 17);
+        }
+        EquipmentHeadingCode equipmentHeadingCode = equipmentHeadingCodeService.selectByCode(code);
+
+        if (equipmentHeadingCode == null) {
+            equipmentHeadingCode = equipmentHeadingCodeService.selectEquipmentCode(code);
+        }
+        if (equipmentHeadingCode == null) {
+            Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(code);
+            return AjaxResult.success(equipment != null);
+        } else {
+            Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equipmentHeadingCode.getHeadingCode());
+            return AjaxResult.success(equipment != null);
+        }
+    }
+
+
+
+
+
+
+    /**
+     * 查询设备编号以及给管理员发送消息
+     * @param code
+     * @param phone
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/getEquipmentCode")
     public AjaxResult getSXUserAdd(String code, String phone, HttpServletRequest request) throws Exception {
 
+        if (code == null || code.isEmpty()) {
+            return AjaxResult.error("识别码不存在");
+        }
+        if (phone == null || phone.isEmpty()) {
+            return AjaxResult.error("手机号码不存在");
+        }
         if (code.length()>17){
             code=code.substring(0,17);
         }
@@ -218,6 +265,13 @@ public class EquipmentHeadingCodeController {
 
 
 
+
+    /**
+     * 获取患者的userId
+     * @param patient
+     * @return
+     * @throws Exception
+     */
     private String getSXUserId(Patient patient) throws Exception {
         if (patient==null){
             return null;
@@ -253,6 +307,12 @@ public class EquipmentHeadingCodeController {
     }
 
 
+    /**
+     * 下载PDF
+     * @param orderId
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/downloadPFD")
     public AjaxResult downloadPFD(String orderId) throws Exception {
         HttpHeaders headers = new HttpHeaders(); //构建请求头

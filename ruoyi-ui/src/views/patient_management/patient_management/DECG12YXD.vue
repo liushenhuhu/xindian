@@ -770,9 +770,8 @@ export default {
       //   query: {pId: row.pId, hospitalName: row.hospitalName, ecg_type: row.ecgType, patientName: row.patientName}
       // });
       // window.open(routeUrl.href, '_blank');
-      this.$router.push({
-        name: "lookPdf",
-        params: {pId: row.pId,ecgTpye:"DECG"}});
+      console.log(row)
+      this.$router.push({path: "/lookPdf", query: {pId: row.pId,ecgType:"DECG",sxStatus:row.sxStatus}});
 
     }
   }

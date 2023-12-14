@@ -696,6 +696,25 @@
     <select id="selectEcgTypeList" resultType="com.ruoyi.xindian.patient_management.vo.DocVO">
         SELECT ecg_type as value , ecg_type as label FROM patient_management WHERE ecg_type like concat(#{ecgType},'%') GROUP BY ecg_type
     </select>
+    <select id="selectByPId" resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">
+        SELECT
+            patient_management.p_id,
+            patient_management.equipment_code,
+            patient_management.patient_code,
+            patient_management.connection_time,
+            patient_management.ecg_level,
+            patient_management.ecg_type,
+            patient_management.patient_phone_aes,
+            patient_management.report_state,
+            patient_management.time_duration,
+            patient_management.generation_time,
+            patient_management.detection_state,
+            patient_management.end_time,
+            patient_management.sampling_rate
+        FROM
+            patient_management
+        where patient_management.p_id=#{pId}
+    </select>
 
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">

@@ -797,9 +797,7 @@ export default {
       // let routeUrl = this.$router.resolve({path: "/DECGReport/DECG_single/report/"+row.pId+"/"+row.pId+".pdf"});
       // window.open(routeUrl.href, '_blank');
       // // this.$router.push("/DECGReport/DECG_single/"+row.pId+"/"+row.pId+".pdf");
-      this.$router.push({
-        name: "lookPdf",
-        params: {pId: row.pId,ecgTpye:"DECG_single"}});
+      this.$router.push({path: "/lookPdf", query: {pId: row.pId,ecgType:"DECG_single"}});
     }
   }
 };
