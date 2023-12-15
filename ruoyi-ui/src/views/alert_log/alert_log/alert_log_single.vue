@@ -328,11 +328,16 @@ export default {
         pId: [
           {required: true, message: "患者id不能为空", trigger: "blur"}
         ]
-      }
+      },
+      num:1,
     };
   },
   activated() {
     document.documentElement.scrollTop=this.currentScrollPos || 0
+    if(this.num>1){
+      this.getList()
+    }
+    this.num++
   },
 
   beforeRouteLeave(to,from,next) {
