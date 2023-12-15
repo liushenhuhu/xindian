@@ -35,6 +35,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -242,7 +243,7 @@ public class EquipmentHeadingCodeController {
 
         HttpEntity<Map<String, Object>> request1 = new HttpEntity<>(paramsMap,headers);
 
-        String url = "https://api3.benefm.com/bmecg/third/report/bindDevice";
+        String url = "https://pro3.mymagicangel.com/bmecg/third/report/bindDevice";
         HashMap<String,String> sendMessageVo=null;
         try {
             sendMessageVo = restTemplate.postForObject(url, request1, HashMap.class);
@@ -279,19 +280,25 @@ public class EquipmentHeadingCodeController {
         String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
         MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patient.getPatientPhone());
 
+        SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("yyyy-MM-dd");
+
         HttpHeaders headers = new HttpHeaders(); //构建请求头
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("authorization","Bearer "+equipmentCodeAccessToken);
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("name",aesUtils.decrypt(patient.getPatientName()) );
         paramsMap.put("sex",patient.getPatientSex() );
-        paramsMap.put("birthday",patient.getBirthDay() );
+        try {
+            paramsMap.put("birthday",simpleDateFormat.format(patient.getBirthDay()) );
+        }catch (Exception e){
+            paramsMap.put("birthday","2000-12-12");
+        }
         paramsMap.put("phone",aesUtils.decrypt(patient.getPatientPhone()) );
         paramsMap.put("height",medicalHistory.getHeight() );
         paramsMap.put("weight",medicalHistory.getWeight() );
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
 
-        String url = "https://api3.benefm.com/p/third/userSync/"+"ZZDX";
+        String url = "https://pro3.mymagicangel.com/p/third/userSync/"+"ZZDX";
         HashMap<String,Map<String,Object>> sendMessageVo=null;
         try {
             sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
@@ -320,7 +327,7 @@ public class EquipmentHeadingCodeController {
         headers.set("authorization","Bearer "+equipmentCodeAccessToken);
         //封装请求头
         HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
-        String url = "https://api3.benefm.com/bmecg/third/report/download?orderId="+orderId;
+        String url = "https://pro3.mymagicangel.com/bmecg/third/report/download?orderId="+orderId;
         ResponseEntity<byte[]> sendMessageVo=null;
         try {
              sendMessageVo = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
