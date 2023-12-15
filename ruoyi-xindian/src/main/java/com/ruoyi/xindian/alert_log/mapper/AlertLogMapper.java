@@ -95,4 +95,6 @@ public interface AlertLogMapper {
 
 
     List<AlertLog> selectEarly(AlertLog alertLog);
+
+    int islabel(AlertLog alertLog);
 }

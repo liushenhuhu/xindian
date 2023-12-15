@@ -101,4 +101,5 @@ public interface IAlertLogService {
 
     void redisEarly(AlertLog alertLog);
 
+    int islabel(AlertLog alertLog);
 }

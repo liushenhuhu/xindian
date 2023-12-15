@@ -265,6 +265,7 @@ import {PatientInformation} from "@/api/log_user/log_user";
 import $ from "jquery";
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import {selectList,getLabel,addLabel} from "@/api/log_user/log_user"
+import {islabel} from "@/api/alert_log/alert_log"
 import {param} from "@/utils";
 import de from "element-ui/src/locale/lang/de";
 export default {
@@ -1992,6 +1993,7 @@ export default {
           console.log(jsonResult.result)
         },
         error: function (data) {
+          console.log(data)
           _th.$modal.msgError("数据获取失败")
         }
       });
@@ -2160,11 +2162,11 @@ export default {
       });
     },
     submit() {
-      // console.log(this.message.logid)
-      // console.log(this.value)
-      // console.log(this.noise_list)
-      // console.log(this.noise_level)
-      // console.log(this.message.user_id)
+      console.log(this.message.logid)
+      console.log(this.value)
+      console.log(this.noise_list)
+      console.log(this.noise_level)
+      console.log(this.message.user_id)
       var that=this
       $.ajax({
         cache: true,
@@ -2190,6 +2192,7 @@ export default {
 //            cocoMessage.error("提交失败", 3000);
         }
       });
+      islabel({logType:this.value,logId:this.message.logid})
     },
     submitData(){
       this.query.waveLabel=JSON.stringify(this.subData)

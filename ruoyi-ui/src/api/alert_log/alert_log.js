@@ -43,8 +43,13 @@ export function delAlert_log(logId) {
     method: 'delete'
   })
 }
-
-
+export function islabel(data) {
+  return request({
+    url: '/alert_log/alert_log/islabel',
+    method: 'get',
+    params:data
+  })
+}
 // export function assigned_ano(data) {
 //   return request({
 //     url: '/alert_log/alert_log/assignedAno',
