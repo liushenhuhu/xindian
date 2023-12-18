@@ -705,17 +705,18 @@ export default {
           time=(time*1000).toFixed(0)
           //文本值
           var x=this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
-          //console.log(x)
+          // console.log(x)
           let text={
             type:'text',
             x: x[0]-15,
-            y:15,
+            y:20,
             z: 999,
+            top:'2.5%',
             style:{
               text: time+`\n${heart}`,
               fill: '#000000',
               fontWeight: 400,
-              fontSize: 15
+              fontSize: 15,
             },
 
           }
@@ -726,16 +727,17 @@ export default {
           var x1=this.chart.convertToPixel({seriesIndex: 0}, [graphic[i], 3])
           let text={
             type: 'line',
+            top:'1.8%',
             style: {
               stroke: '#333',
               lineWidth:2,
-              lineDash: []
+              lineDash:[]
             },
             shape: {
               x1: x1[0],
-              y1: 11,
+              y1: 0,
               x2: x1[0],
-              y2: 22
+              y2: 10
             },
             z:100
           }
