@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 <!--      <el-form-item label="日志id" prop="logId">
         <el-input
           v-model="queryParams.logId"
@@ -46,10 +46,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者id" prop="pId">
+      <el-form-item label="患者管理编号" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入患者id"
+          placeholder="请输入患者管理编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -79,6 +79,14 @@
             :value="item.hospitalCode">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="心电类型" prop="type">
+        <el-input
+          v-model="queryParams.type"
+          placeholder="请输入心电类型"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="是否标注" prop="anoStatus">
         <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
@@ -157,7 +165,7 @@
       <el-table-column label="预警类型" align="center" prop="logType"/>
       <el-table-column label="事件名称" align="center" prop="eventName"/>
       <el-table-column label="事件说明" align="center" prop="eventDescription"/>
-      <el-table-column label="患者id" align="center" prop="pId" show-overflow-tooltip/>
+      <el-table-column label="患者管理编号" align="center" prop="pId" show-overflow-tooltip/>
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
       <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
             <el-table-column label="患者电话" align="center" prop="patientPhone"/>
@@ -167,6 +175,13 @@
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if_status" :value="scope.row.anoStatus"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="心电种类" align="center" prop="ecgType" width="150">
+        <template slot-scope="scope" >
+          <el-tag >
+            {{scope.row.ecgType}}
+          </el-tag>
         </template>
       </el-table-column>
       <!--  隐藏的患者的个人信息    -->
@@ -317,6 +332,7 @@ export default {
         hospitalName: null,
         anoStatus: null,
         ecgType: '12',
+        type: null,
         patientPhone:null,
       },
       // 表单参数
@@ -327,7 +343,7 @@ export default {
           {required: true, message: "日志号不能为空", trigger: "blur"}
         ],
         pId: [
-          {required: true, message: "患者id不能为空", trigger: "blur"}
+          {required: true, message: "患者管理编号不能为空", trigger: "blur"}
         ]
       },
       num:1

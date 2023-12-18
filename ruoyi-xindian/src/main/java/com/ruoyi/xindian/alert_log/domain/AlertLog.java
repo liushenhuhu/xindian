@@ -110,6 +110,8 @@ public class AlertLog extends BaseEntity
     private String redisKey;
 
 
+    private String type;
+
     public String getpId() {
         return pId;
     }
