@@ -700,22 +700,44 @@ export default {
           x1=graphic[i]
           x2=graphic[i+1]
           // console.log(x1,x2)
-          var time=((x2-x1)/25*0.2).toFixed(2); //时间 s
+          var time=(((x2-x1)/25)*0.2); //时间 s
           var heart=(60/time).toFixed(1) //心率
-          var x=this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 0.75])
+          time=(time*1000).toFixed(0)
+          //文本值
+          var x=this.chart.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
           //console.log(x)
           let text={
             type:'text',
             x: x[0]-15,
-            y:x[1],
+            y:15,
             z: 999,
             style:{
-              text: time+`\n(${heart})`,
+              text: time+`\n${heart}`,
               fill: '#000000',
               fontWeight: 400,
               fontSize: 15
             },
 
+          }
+          this.graphic.push(text)
+        }
+        //刻度线
+        for (let i = 0; i <length; i++) {
+          var x1=this.chart.convertToPixel({seriesIndex: 0}, [graphic[i], 3])
+          let text={
+            type: 'line',
+            style: {
+              stroke: '#333',
+              lineWidth:2,
+              lineDash: []
+            },
+            shape: {
+              x1: x1[0],
+              y1: 11,
+              x2: x1[0],
+              y2: 22
+            },
+            z:100
           }
           this.graphic.push(text)
         }
