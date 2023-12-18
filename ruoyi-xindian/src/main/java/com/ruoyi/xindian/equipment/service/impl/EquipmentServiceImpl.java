@@ -14,6 +14,7 @@ import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.mapper.PatientMapper;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -147,7 +148,8 @@ public class EquipmentServiceImpl implements IEquipmentService {
             List<Equipment> equipmentList = new ArrayList<>();
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 XSSFRow row = sheet.getRow(i);
-                String name = row.getCell(0).getStringCellValue();
+                //设置单元格类型
+                String name = row.getCell(1).getStringCellValue();
 
                 //因为id自增，所以不加id，后期可以自行修改，其他参数自行修改
                 Equipment equipment = new Equipment( name, "V2023-07-10", "False", "29", "JECGsingleWL");

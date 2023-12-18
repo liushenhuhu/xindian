@@ -23,7 +23,7 @@ public class ExcelInsertConfig {
     @GetMapping("/excel")
     public void excelInsert() throws Exception {
         //设备数据导入 自己添加路径
-        equipmentService.batchInsert("C:\\Users\\13401\\Desktop\\河南迈雅100台SN码(1).xlsx");
+        equipmentService.batchInsert("C:\\Users\\13401\\Desktop\\河南迈雅215台SN码.xlsx");
 //        equipmentService.batchSelect("C:\\Users\\13401\\Desktop\\河南迈雅100+800+280+20+200SN码.郑州大学100台.(1).xlsx");
 
     }

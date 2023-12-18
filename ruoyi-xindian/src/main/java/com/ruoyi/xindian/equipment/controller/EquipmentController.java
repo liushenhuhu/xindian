@@ -299,14 +299,19 @@ public class EquipmentController extends BaseController {
         return AjaxResult.success(EquipmentCodeList);
     }
 
-//    @PreAuthorize("@ss.hasPermi('equipment:equipment:code')")
+
+    /**
+     * 查询设备号是否存在
+     * @param equimentCode
+     * @return
+     */
     @GetMapping("/code")
     public AjaxResult code(String equimentCode){
         Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equimentCode);
         if (equipment!=null){
             return AjaxResult.success(true);
         }
-        return AjaxResult.error();
+        return AjaxResult.success(true);
     }
     //查询在线设备数量
     @GetMapping("/onlineNum")
