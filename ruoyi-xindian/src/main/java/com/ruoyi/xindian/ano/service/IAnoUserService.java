@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.ano.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.xindian.ano.domain.AnoUser;
 
 /**
@@ -60,4 +62,8 @@ public interface IAnoUserService
     public int deleteAnoUserByAnoUserId(Long anoUserId);
 
     public int insertAno(String userId, String pId);
+
+    List<AnoUser> selectAnoUserList2(SysUser anoUser);
+
+    List<AnoUser> selectNotAssign(AnoUser anoUser);
 }

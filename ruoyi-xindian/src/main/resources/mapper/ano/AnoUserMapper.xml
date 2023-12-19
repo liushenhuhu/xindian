@@ -22,10 +22,23 @@
             <if test="pId != null  and pId != ''">and p_id like concat('%', #{pId}, '%')</if>
         </where>
     </select>
-
+    <select id="selectAnoUserList2" parameterType="SysUser" resultMap="AnoUserResult">
+        select user_id, dept_id, nick_name from sys_user
+        where del_flag = '0'
+        <if test="userId != null and userId != 0">
+            AND user_id like concat('%', #{userId}, '%')
+        </if>
+        and dept_id=#{deptId}
+    </select>
     <select id="selectAnoUserByAnoUserId" parameterType="Long" resultMap="AnoUserResult">
         <include refid="selectAnoUserVo"/>
         where ano_user_id = #{anoUserId}
+    </select>
+    <select id="selectNotAssign" resultType="com.ruoyi.xindian.ano.domain.AnoUser">
+        SELECT l.p_id
+        from alert_log l
+        WHERE l.p_id not IN (select a.p_id FROM ano_user a WHERE a.user_id=#{userId})
+        GROUP BY l.p_id
     </select>
 
     <insert id="insertAnoUser" parameterType="AnoUser" useGeneratedKeys="true" keyProperty="anoUserId">

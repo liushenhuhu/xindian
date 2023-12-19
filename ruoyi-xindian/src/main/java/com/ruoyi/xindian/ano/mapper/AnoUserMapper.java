@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.ano.mapper;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.xindian.ano.domain.AnoUser;
 
 /**
@@ -60,4 +62,8 @@ public interface AnoUserMapper
      * @return 结果
      */
     public int deleteAnoUserByAnoUserIds(Long[] anoUserIds);
+
+    List<AnoUser> selectAnoUserList2(SysUser anoUser);
+
+    List<AnoUser> selectNotAssign(AnoUser anoUser);
 }

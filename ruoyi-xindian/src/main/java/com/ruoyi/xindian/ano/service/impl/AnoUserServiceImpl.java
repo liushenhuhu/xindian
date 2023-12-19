@@ -2,6 +2,7 @@ package com.ruoyi.xindian.ano.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.ano.mapper.AnoUserMapper;
@@ -88,5 +89,15 @@ public class AnoUserServiceImpl implements IAnoUserService {
     @Override
     public int insertAno(String userId, String pId) {
         return anoUserMapper.insertAno(userId, pId);
+    }
+
+    @Override
+    public List<AnoUser> selectAnoUserList2(SysUser anoUser) {
+       return anoUserMapper.selectAnoUserList2(anoUser);
+    }
+
+    @Override
+    public List<AnoUser> selectNotAssign(AnoUser anoUser) {
+        return anoUserMapper.selectNotAssign(anoUser);
     }
 }

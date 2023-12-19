@@ -1,19 +1,15 @@
 package com.ruoyi.xindian.ano.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.xindian.alert_log.domain.AssignedAno;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -116,5 +112,43 @@ public class AnoUserController extends BaseController
         String pId = assignedAno.getpId();
         String userId = assignedAno.getUserId();
         return anoUserService.insertAno(userId, pId);
+    }
+    //查询标注部门下的用户
+    @PreAuthorize("@ss.hasPermi('ano:ano:list')")
+    @GetMapping("/list2")
+    public TableDataInfo list2(SysUser anoUser)
+    {
+        anoUser.setDeptId(106L);
+        startPage();
+        List<AnoUser> list = anoUserService.selectAnoUserList2(anoUser);
+        return getDataTable(list);
+    }
+    //查询所有未分配的患者id
+    @GetMapping("/getNotAssign")
+    public TableDataInfo getNotAssign(AnoUser anoUser)
+    {
+        startPage();
+        List<AnoUser> list = anoUserService.selectNotAssign(anoUser);
+        return getDataTable(list);
+    }
+    @PostMapping("/assignedAnoList")
+    public AjaxResult assignedAnoList(@RequestBody Map<String,Object> map) {
+        Object o = map.get("pId");
+        List<String> pId = new ArrayList<>();
+        if(o instanceof ArrayList<?>){
+            pId = (List<String>) map.get("pId");
+        }else {
+            pId.add((String)map.get("pId"));
+        }
+        Integer userId = (Integer) map.get("userId");
+        for (int i = 0; i < pId.size(); i++) {
+            AnoUser anoUser = new AnoUser();
+            anoUser.setUserId(userId.longValue());
+            anoUser.setpId(pId.get(i));
+            anoUserService.insertAnoUser(anoUser);
+            anoUserService.insertAno(userId+"", pId.get(i));
+        }
+
+        return toAjax(1);
     }
 }
