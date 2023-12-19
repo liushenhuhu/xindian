@@ -156,3 +156,6 @@ wx-public:
 uploadImg:
 #  url: https://develop.mindyard.cn:84/uploadPath/
   url: https://ecg.mindyard.cn:84/uploadPath/
+
+sx:
+  url: https://pro3.mymagicangel.com

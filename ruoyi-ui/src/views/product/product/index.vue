@@ -18,9 +18,12 @@
       </el-form-item>
       <el-form-item label="商品类型" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择商品类型">
-          <el-option label="商品" value="商品"></el-option>
-          <el-option label="服务" value="服务"></el-option>
-          <el-option label="钱包" value="钱包"></el-option>
+          <el-option
+            v-for="dict in dict.type.product_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -79,7 +82,7 @@
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="商Bid" align="center" prop="productId" />-->
       <el-table-column label="商品名称" align="center" prop="productName" />
-      <el-table-column label="价格(分)" align="center" prop="price" />
+      <el-table-column label="价格" align="center" prop="price" />
       <el-table-column label="商品描述" align="center" prop="productDescription" />
       <el-table-column label="商品类型" align="center" prop="type" />
       <el-table-column label="商品图片" align="center" prop="productUrl" >
@@ -92,8 +95,6 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="商品折扣" align="center" prop="discount" />
-      <el-table-column label="商品折扣" align="center" prop="discount" />
       <el-table-column label="商品折扣" align="center" prop="discount" />
       <el-table-column label="状态" align="center" prop="state" >
         <template slot-scope="scope">
@@ -177,9 +178,12 @@
         </el-form-item>
         <el-form-item label="商品类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择商品类型">
-            <el-option label="商品" value="商品"></el-option>
-            <el-option label="服务" value="服务"></el-option>
-            <el-option label="钱包" value="钱包"></el-option>
+            <el-option
+              v-for="dict in dict.type.product_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="商品描述" prop="productDescription">
@@ -248,6 +252,7 @@ import {enableTopologicalTravel} from "echarts/lib/util/component";
 
 export default {
   name: "Product",
+  dicts:['product_type'],
   data() {
     return {
       // 遮罩层
@@ -440,6 +445,7 @@ export default {
       getProduct(productId).then(response => {
         this.form = response.data;
         this.form.discount = response.data.discount*100
+        this.form.price = response.data.price*100
         this.open = true;
         this.title = "修改商品信息";
       });

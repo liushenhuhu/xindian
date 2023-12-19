@@ -163,15 +163,15 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
                 vipPatient(product,orderByOrderNo.getUserId(),c);
 
-            }else {
+            }else if (product.getType().equals("报告服务")){
 
+
+            }
+            else {
                 queryWrapper.eq("order_no", orderNo);
-
                 OrderInfo orderInfo = new OrderInfo();
-
                 orderInfo.setOrderStatus(orderStatus.getType());
                 orderInfo.setOrderState(orderStatus.getType());
-
                 baseMapper.update(orderInfo, queryWrapper);
 //                WxUtil.send("15286981260");
             }
@@ -625,6 +625,46 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
         redisTemplate.opsForValue().set("orderQuery:"+orderInfo.getId(),orderInfo,20, TimeUnit.SECONDS);
+        return orderInfo.getId();
+    }
+
+    @Transactional
+    @Override
+    public String addBGOrder(HttpServletRequest request, Long productId,String pId,String phone) {
+        Product product = productMapper.selectById(productId);
+
+        //获取token中发送请求的用户信息
+        LoginUser loginUser = tokenService.getLoginUser(request);
+
+        SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
+
+        Date date = new Date();
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(OrderNoUtils.getNo());
+        orderInfo.setTitle("购买"+product.getProductName());
+        orderInfo.setOrderNo(OrderNoUtils.getOrderNo());
+        orderInfo.setUserId(loginUser.getUser().getUserId());
+        orderInfo.setTotalFee(product.getDiscount());
+        orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
+        orderInfo.setOpenId(sysUser.getOpenId());
+        orderInfo.setCreateTime(date);
+        orderInfo.setUpdateTime(date);
+        orderInfo.setOrderState(OrderStatus.NOTPAY.getType());
+        orderInfo.setDelFlag(0);
+        orderInfo.setPId(pId);
+        orderInfoMapper.insert(orderInfo);
+
+        SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();
+        suborderOrderInfo.setOrderFather(orderInfo.getId());
+        suborderOrderInfo.setProductId(productId);
+        suborderOrderInfo.setSum(1L);
+        suborderOrderInfo.setCreateTime(date);
+        suborderOrderInfo.setUpdateTime(date);
+        suborderOrderInfo.setProductPrice(product.getDiscount());
+        suborderOrderInfo.setProductName(product.getProductName());
+        int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
+//        redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
+//        redisTemplate.opsForValue().set("orderQuery:"+orderInfo.getId(),orderInfo,20, TimeUnit.SECONDS);
         return orderInfo.getId();
     }
 
