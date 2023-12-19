@@ -374,8 +374,11 @@ export default {
       }else {
         anoUserId=this.ids2
       }
-      console.log(anoUserId)
-
+      assignedAnoList(JSON.stringify({userId:this.queryParams2.userId,pId:anoUserId})).then(res=>{
+        console.log(res)
+        this.$modal.msgSuccess("分配成功");
+        this.getNotAssign()
+      })
     },
     refresh(row) {
       this.reset();
