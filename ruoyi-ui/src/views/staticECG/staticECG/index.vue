@@ -190,7 +190,7 @@
 <!--        <button @click="clickClose" class="noName">关闭</button>-->
 <!--      </div>-->
 <!--    </div>-->
-    <child ref="drawShow"></child>
+    <child ref="drawShow" @closeMain="closeMain"></child>
   </div>
 </template>
 
@@ -322,7 +322,13 @@ export default {
       datalabel:{
         waveLabel:"",
         beatLabel:""
-      }
+      },
+      graphic1:[],
+      graphic2:[],
+      graphic3:[],
+      chart1:null,
+      chart2:null,
+      chart3:null,
     };
   },
   created() {
@@ -541,7 +547,7 @@ export default {
         data: JSON.stringify({
           pid: this.pId
         }),
-
+        async: false,
         beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
           request.setRequestHeader("user", "zzu");
@@ -570,14 +576,16 @@ export default {
           console.log("获取到的导联数据长度", _th.data.datas.length)
           _th.nArr = _th.getNewArray(_th.data.datas, 1000);
           console.log("数据以1000一条分好组", _th.nArr)
-
           for (var i = 0; i < 1001; i++) {
             _th.x.push(i);
           }
+          _th.chart1 = echarts.init(document.getElementById("1"));
+          _th.chart2 = echarts.init(document.getElementById("2"));
+          _th.chart3 = echarts.init(document.getElementById("3"));
+          _th.chart4 = echarts.init(document.getElementById("4"));
 
-          var chart1 = echarts.init(document.getElementById("1"));
-          chart1.clear()
-          chart1.setOption({
+          _th.chart1.clear()
+          _th.chart1.setOption({
             title: {
               text: "",
               top: 5,
@@ -590,6 +598,7 @@ export default {
               bottom: '1',
               containLabel: false
             },
+            graphic:_th.graphic1,
             xAxis: {
               type: 'category',
               boundaryGap: true,
@@ -673,12 +682,9 @@ export default {
               }
 
           });
-          $(window).resize(function (){
-            chart1.resize();
-          });
-          var chart2 = echarts.init(document.getElementById("2"));
-          chart2.clear()
-          chart2.setOption({
+
+          _th.chart2.clear()
+          _th.chart2.setOption({
             title: {
               text: "",
               top: 5,
@@ -773,12 +779,9 @@ export default {
             ],
 
           });
-          $(window).resize(function () {
-            chart2.resize();
-          });
-          var chart3 = echarts.init(document.getElementById("3"));
-          chart3.clear()
-          chart3.setOption({
+
+          _th.chart3.clear()
+          _th.chart3.setOption({
             title: {
               text: "",
               top: 5,
@@ -871,12 +874,9 @@ export default {
               }
             ],
           });
-          $(window).resize(function () {
-            chart3.resize();
-          });
-          var chart4 = echarts.init(document.getElementById("4"));
-          chart4.clear()
-          chart4.setOption({
+
+          _th.chart4.clear()
+          _th.chart4.setOption({
             title: {
               text: "",
               top: 5,
@@ -969,8 +969,15 @@ export default {
               }
             ],
           });
-          $(window).resize(function () {
-            chart4.resize();
+
+          _th.addtext()
+          $(window).resize(function (){
+            _th.chart1.resize();
+            _th.chart2.resize();
+            _th.chart3.resize();
+            _th.chart4.resize();
+            _th.addtext()
+            console.log(1111111)
           });
           // var chart5 = echarts.init(document.getElementById("5"));
           // chart5.clear()
@@ -1470,6 +1477,192 @@ export default {
           console.log("请求失败：", data)
         }
       })
+    },
+    //重绘所有点之间的文本
+    addtext(){
+      this.graphic1.length=0
+      this.graphic2.length=0
+      this.graphic3.length=0
+      let beatLabel=JSON.parse(this.datalabel.beatLabel)
+      var arr1=beatLabel['0'],arr2=beatLabel['1'],arr3=beatLabel['2']
+      let beat1=[],beat2=[],beat3=[]
+      // console.log(arr1,arr2,arr3)
+      let keys=Object.keys(arr1)
+      for (let i=0;i<keys.length; i++) {
+        beat1.push(...arr1[keys[i]])
+        beat2.push(...arr2[keys[i]])
+        beat3.push(...arr3[keys[i]])
+      }
+      // console.log(beat1,beat2,beat3)
+      beat1.sort((a,b)=>a - b)
+      beat2.sort((a,b)=>a - b)
+      beat3.sort((a,b)=>a - b)
+      var length1=beat1.length
+      //刻度线
+      for (let i = 0; i <length1; i++) {
+        var point1=this.chart1.convertToPixel({seriesIndex: 0}, [beat1[i], 3])
+        let text1={
+          type: 'line',
+          style: {
+            stroke: '#333',
+            lineWidth:1.5,
+            lineDash:[]
+          },
+          shape: {
+            x1: point1[0],
+            y1: 1,
+            x2: point1[0],
+            y2: 11
+          },
+          z:100
+        }
+        this.graphic1.push(text1)
+        if(i==length1-1){
+          continue
+        }
+        var x1=beat1[i]
+        var x2=beat1[i+1]
+        // console.log(x1,x2)
+        var time=(((x2-x1)/25)*0.2); //时间 s
+        var heart=(60/time).toFixed(1) //心率
+        time=(time*1000).toFixed(0)
+        //文本值
+        var point2=this.chart1.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
+        // console.log(x)
+        let text2={
+          type:'text',
+          x:point2[0]-15,
+          y:1,
+          z: 999,
+          style:{
+            text: time+`\n${heart}`,
+            fill: '#000000',
+            fontWeight: 400,
+            fontSize: 13,
+          },
+
+        }
+        this.graphic1.push(text2)
+      }
+      var chartOption1 = this.chart1.getOption();
+      chartOption1.graphic = this.graphic1;
+      this.chart1.setOption(chartOption1,true);
+
+      var length2=beat2.length
+      //刻度线
+      for (let i = 0; i <length2; i++) {
+        var point1=this.chart2.convertToPixel({seriesIndex: 0}, [beat2[i], 3])
+        let text1={
+          type: 'line',
+          style: {
+            stroke: '#333',
+            lineWidth:1.5,
+            lineDash:[]
+          },
+          shape: {
+            x1: point1[0],
+            y1: 1,
+            x2: point1[0],
+            y2: 11
+          },
+          z:100
+        }
+        this.graphic2.push(text1)
+        if(i==length2-1){
+          continue
+        }
+        var x1=beat2[i]
+        var x2=beat2[i+1]
+        // console.log(x1,x2)
+        var time=(((x2-x1)/25)*0.2); //时间 s
+        var heart=(60/time).toFixed(1) //心率
+        time=(time*1000).toFixed(0)
+        //文本值
+        var point2=this.chart2.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
+        // console.log(x)
+        let text2={
+          type:'text',
+          x: point2[0]-15,
+          y:1,
+          z: 999,
+          top:'2.5%',
+          style:{
+            text: time+`\n${heart}`,
+            fill: '#000000',
+            fontWeight: 400,
+            fontSize: 13,
+          },
+
+        }
+        this.graphic2.push(text2)
+      }
+      var chartOption2 = this.chart2.getOption();
+      chartOption2.graphic = this.graphic2;
+      this.chart2.setOption(chartOption2,true);
+
+      var length3=beat3.length
+      //刻度线
+      for (let i = 0; i <length3; i++) {
+        var point1=this.chart3.convertToPixel({seriesIndex: 0}, [beat3[i], 3])
+        let text1={
+          type: 'line',
+          style: {
+            stroke: '#333',
+            lineWidth:1.5,
+            lineDash:[]
+          },
+          shape: {
+            x1: point1[0],
+            y1: 1,
+            x2: point1[0],
+            y2: 11
+          },
+          z:100
+        }
+        this.graphic3.push(text1)
+        if(i==length3-1){
+          continue
+        }
+        var x1=beat3[i]
+        var x2=beat3[i+1]
+        // console.log(x1,x2)
+        var time=(((x2-x1)/25)*0.2); //时间 s
+        var heart=(60/time).toFixed(1) //心率
+        time=(time*1000).toFixed(0)
+        //文本值
+        var point2=this.chart3.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
+        // console.log(x)
+        let text2={
+          type:'text',
+          x: point2[0]-15,
+          y:1,
+          z: 999,
+          top:'2.5%',
+          style:{
+            text: time+`\n${heart}`,
+            fill: '#000000',
+            fontWeight: 400,
+            fontSize: 13,
+          },
+
+        }
+        this.graphic3.push(text2)
+      }
+      var chartOption3 = this.chart3.getOption();
+      chartOption3.graphic = this.graphic3;
+      this.chart3.setOption(chartOption3,true);
+      // console.log(this.graphic1,this.graphic2,this.graphic3)
+    },
+    //获取修改后的标注数据
+    closeMain(val){
+      console.log()
+      var value=JSON.parse(val)
+      let data=JSON.parse(this.datalabel.beatLabel)
+      for (let key in value) {
+        data[key]=value[key]
+      }
+      this.datalabel.beatLabel=JSON.stringify(data)
+      this.addtext()
     },
     //获取当前时间
     getData() {

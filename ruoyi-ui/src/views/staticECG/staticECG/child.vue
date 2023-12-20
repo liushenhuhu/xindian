@@ -905,11 +905,15 @@ export default {
           ecgBeatLabelAdd(this.arrList).then(response => {
             this.$modal.msgSuccess("坐标提交成功!");
             this.isLoading = false;
+            this.$emit('closeMain',this.arrList.beatLabel);
           })
         }else {
           put12BeatLabel(this.arrList).then(response => {
             this.$modal.msgSuccess("坐标提交成功!");
             this.isLoading = false;
+
+            this.$emit('closeMain',this.arrList.beatLabel);
+            console.log(111)
           })
         }
         console.log(JSON.parse(this.arrList.beatLabel))
