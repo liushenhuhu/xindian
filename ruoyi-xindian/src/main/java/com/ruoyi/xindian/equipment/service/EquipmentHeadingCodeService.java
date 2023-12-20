@@ -37,4 +37,9 @@ public interface EquipmentHeadingCodeService extends IService<EquipmentHeadingCo
     void getCodeStatus(String code) throws Exception;
 
 
+
+
+    Boolean addSXReport(String phone,String pId) throws Exception;
+
+
 }

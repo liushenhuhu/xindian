@@ -231,6 +231,9 @@ public class PatientManagement extends BaseEntity {
 
     private Integer sxStatus;
 
+
+    private Integer sxPayStatus;
+
     /**
      * 拒绝理由
      */

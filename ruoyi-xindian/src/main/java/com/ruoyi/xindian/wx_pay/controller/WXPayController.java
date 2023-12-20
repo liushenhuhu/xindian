@@ -6,6 +6,9 @@ package com.ruoyi.xindian.wx_pay.controller;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.RefundInfo;
 import com.ruoyi.xindian.wx_pay.enums.OrderStatus;
@@ -25,6 +28,7 @@ import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -51,6 +55,11 @@ public class WXPayController {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+
+
+    @Resource
+    private IPatientManagementService patientManagementService;
+
     @Resource
     private RefundInfoService refundsInfoService;
 
@@ -63,7 +72,7 @@ public class WXPayController {
      */
 
     @RequestMapping("prePay")
-    public Map<String, Object> prePay(String  orderId, HttpServletRequest request){
+    public Map<String, Object> prePay(String  orderId, String type,HttpServletRequest request){
 
         //获取token中发送请求的用户信息
 //        LoginUser loginUser = tokenService.getLoginUser(request);
@@ -99,6 +108,21 @@ public class WXPayController {
             }
             if(!order.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
                 throw new ServiceException("订单不存在");
+            }
+
+            if (StringUtils.isNotEmpty(type)&&type.equals("bg")){
+                if (StringUtils.isEmpty(order.getPId())){
+                    throw new ServiceException("报告不存在，请重新下单");
+                }else {
+                    PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(order.getPId());
+                    if (patientManagement==null){
+                        throw new ServiceException("报告不存在，请重新下单");
+                    }
+                    List<OrderInfo> orderInfos = orderInfoService.selectOrderByPId(order.getPId());
+                    if (orderInfos!=null&&!orderInfos.isEmpty()){
+                        throw new ServiceException("该报告已下单");
+                    }
+                }
             }
             String body = order.getTitle();//订单介绍
             String orderNum = order.getOrderNo();//商户订单号，由随机数组成
@@ -356,5 +380,55 @@ public class WXPayController {
          return false;
         }
     }
+
+    /**
+     * 查询订单知否支付
+     * @param id
+     * @return
+     */
+    public Boolean delOrderQuery(String id){
+
+        // 返回参数
+        String resXml = "";
+        try {
+            // 拼接统一下单地址参数
+            Map<String, Object> paraMap = new HashMap<>();
+            OrderInfo order =  orderInfoService.createOrderByOrderID(id);
+
+            if (order==null){
+                return false;
+            }
+            if (!order.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
+                return false;
+            }
+            String orderNum = order.getOrderNo();//商户订单号，由随机数组成
+            System.out.println("订单号= "+orderNum);
+            // 封装必需的参数
+            paraMap.put("appid", WXPayConstants.APP_ID);
+            paraMap.put("mch_id", WXPayConstants.MCH_ID);//商家ID
+            paraMap.put("nonce_str", WXPayUtil.generateNonceStr());//获取随机字符串 Nonce Str
+            paraMap.put("out_trade_no", orderNum);//订单号
+            String sign = WXPayUtil.generateSignature(paraMap, WXPayConstants.PATERNER_KEY);//商户密码
+            //生成签名. 注意，若含有sign_type字段，必须和signType参数保持一致。
+            paraMap.put("sign", sign);
+            //将所有参数(map)转xml格式
+            String xml = WXPayUtil.mapToXml(paraMap);
+            System.out.println("xml:"+xml);
+            //关闭订单
+            String orderQueryUrl = "https://api.mch.weixin.qq.com/pay/closeorder";//申请关闭订单接口
+            //发送post请求"查看订单状态"
+            String xmlStr = HttpClientUtil.doPostXml(orderQueryUrl, xml);;
+            System.out.println("订单 xmlStr:"+xmlStr);
+            /*退款成功回调修改订单状态*/
+            Map<String, Object> map = WXPayUtil.xmlToMap(xmlStr);//XML格式字符串转换为Map
+            if (map.get("result_code").equals("SUCCESS")&&map.get("return_code").equals("SUCCESS")&&map.get("return_msg").equals("OK")){
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
 }

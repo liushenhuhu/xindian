@@ -433,9 +433,9 @@ public class WXPublicRequest {
      * @param userOpenid
      * @throws Exception
      */
-    public  void SXEquipmentMsg( String userOpenid,String patientName,String patientPhone) throws Exception {
+    public  void SXEquipmentMsg( String userOpenid,String patientName,String patientPhone,String time) throws Exception {
 
-        MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity(new MessageValueEntity(patientName),new MessageValueEntity("心电衣检测报告"),new MessageValueEntity("您的心电采集报告已生成，请前往迈雅云查看"));
+        MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity(new MessageValueEntity(patientName),new MessageValueEntity("心电衣检测报告"),new MessageValueEntity("采集时间为："+time));
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("touser", userOpenid); //用户openid
         paramsMap.put("miniprogram_state", "fomal");
@@ -459,8 +459,6 @@ public class WXPublicRequest {
             log.error("推送消息失败,原因：{}", sendMessageVo.getErrmsg());
             WxUtil.sendAdviceSX(patientPhone);
         }
-        log.info("推送消息成功");
-
     }
 
     /**

@@ -10,6 +10,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
 import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.fw_log.mapper.FwLogMapper;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
@@ -20,6 +21,7 @@ import com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
+import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
@@ -72,6 +74,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
 
     @Resource
+    private EquipmentHeadingCodeController equipmentHeadingCodeController;
+
+    @Resource
     private FwLogMapper fwLogMapper;
 
     @Resource
@@ -80,6 +85,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     @Resource
     private ShipAddressMapper shipAddressMapper;
+
+
+    @Resource
+    private WXPayController wxPayController;
+
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -141,7 +151,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     @Transactional
     @Override
-    public void updateStatusByOrderNo(String orderNo, OrderStatus orderStatus) {
+    public void updateStatusByOrderNo(String orderNo, OrderStatus orderStatus) throws Exception {
 
         OrderInfo orderByOrderNo = getOrderByOrderNo(orderNo);
         List<SuborderOrderInfo> suborderOrderInfos = orderIdAndSuborder(orderByOrderNo.getId());
@@ -164,8 +174,16 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 vipPatient(product,orderByOrderNo.getUserId(),c);
 
             }else if (product.getType().equals("报告服务")){
+                queryWrapper.eq("order_no", orderNo);
 
+                OrderInfo orderInfo = new OrderInfo();
 
+                orderInfo.setOrderStatus(OrderStatus.REPORT_ORDER.getType());
+
+                orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
+                baseMapper.update(orderInfo, queryWrapper);
+
+                equipmentHeadingCodeController.ifSubmitOrder(orderByOrderNo.getPId());
             }
             else {
                 queryWrapper.eq("order_no", orderNo);
@@ -630,7 +648,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     @Transactional
     @Override
-    public String addBGOrder(HttpServletRequest request, Long productId,String pId,String phone) {
+    public String addBGOrder(HttpServletRequest request, Long productId,String pId) {
         Product product = productMapper.selectById(productId);
 
         //获取token中发送请求的用户信息
@@ -663,8 +681,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         suborderOrderInfo.setProductPrice(product.getDiscount());
         suborderOrderInfo.setProductName(product.getProductName());
         int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
-//        redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
-//        redisTemplate.opsForValue().set("orderQuery:"+orderInfo.getId(),orderInfo,20, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,15, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("orderQuery:"+orderInfo.getId(),orderInfo,20, TimeUnit.SECONDS);
         return orderInfo.getId();
     }
 
@@ -681,12 +699,19 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             return;
         }
         if (orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
-
             System.out.println("开始删除失效订单");
-
             deleteOrder(orderId);
         }
+        wxPayController.delOrderQuery(orderId);
     }
+
+
+
+
+
+
+
+
 
     @Override
     public List<OrderInfo> webOrderList(String orderId, String userPhone, String orderState,String orderStatus) {
@@ -746,6 +771,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderInfo;
     }
 
+    @Override
+    public List<OrderInfo> selectOrderByPId(String pId) {
+        return orderInfoMapper.selectList(new QueryWrapper<OrderInfo>().eq("p_id",pId).eq("order_state","交易成功"));
+    }
 
 
     /**

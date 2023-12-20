@@ -4,6 +4,7 @@ import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.alert_log.service.IAlertLogService;
 import com.ruoyi.xindian.ecgCount.controller.EcgCountController;
 import com.ruoyi.xindian.ecgCount.service.EcgCountService;
+import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
 import com.ruoyi.xindian.equipment.service.EquipmentHeadingCodeService;
 import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
@@ -56,6 +57,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
 
 
     @Resource
+    private EquipmentHeadingCodeController equipmentHeadingCodeController;
+
+    @Resource
     private EcgCountService ecgCountService;
 
     @Resource
@@ -93,6 +97,14 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             if (split[0].equals("invoice")){
                 try {
                     wxPublicRequest.getInvoiceState(split[1]);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                return;
+            }
+            if (split[0].equals("addSXReportSubmitOrder")){
+                try {
+                    equipmentHeadingCodeController.ifSubmitOrder(split1[1]);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
