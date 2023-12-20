@@ -1843,6 +1843,7 @@ export default {
             _th.$nextTick(function () {
               chartI.resize();
               _th.chartII.resize();
+              _th.addtext()
               chartIII.resize();
               chartaVF.resize();
               chartaVR.resize();
@@ -1913,7 +1914,6 @@ export default {
           x: point2[0]-15,
           y:1,
           z: 999,
-          top:'2.5%',
           style:{
             text: time+`\n${heart}`,
             fill: '#000000',
@@ -1928,7 +1928,7 @@ export default {
       chartOption2.graphic = this.graphic2;
       this.chartII.setOption(chartOption2,true);
 
-      console.log(this.graphic2)
+      // console.log(this.graphic2)
     },
     closeMain(val){
       console.log(val)
