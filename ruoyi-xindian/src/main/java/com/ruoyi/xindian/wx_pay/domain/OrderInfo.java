@@ -121,6 +121,10 @@ public class OrderInfo implements Serializable {
      */
     private String courierNumber;
 
+
+    private String pId;
+
+
     private Integer delFlag;
     /**
      * 用户信息

@@ -6,6 +6,10 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -43,6 +48,17 @@ public class OrderController {
     @Resource
     private TokenService tokenService;
 
+
+    @Resource
+    private IPatientService patientService;
+
+
+    @Resource
+    private IPatientManagementService patientManagementService;
+
+
+    @Resource
+    private EquipmentHeadingCodeController equipmentHeadingCodeController;
 
     @Resource
     private OrderInfoService orderInfoService;
@@ -109,7 +125,7 @@ public class OrderController {
     
 
     /**
-     * 添加订单
+     * 添加商品订单
      * @param request
      * @param productId
      * @param sum
@@ -117,7 +133,6 @@ public class OrderController {
      * @return
      */
     @PostMapping("/orderAdd")
-//    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:add')")
     public AjaxResult orderAdd(HttpServletRequest request,Long productId,Integer sum,String addressId){
 
 
@@ -173,13 +188,12 @@ public class OrderController {
 
 
     /**
-     * 添加订单
+     * 添加服务订单
      * @param request
      * @param productId
      * @param sum
      * @return
      */
-//    @PreAuthorize("@ss.hasPermi('payOrder:payOrder:add')")
     @PostMapping("/orderKpOrFwAdd")
     public AjaxResult orderKpOrFwAdd(HttpServletRequest request,Long productId,Integer sum){
 
@@ -217,6 +231,64 @@ public class OrderController {
             }
 
             String stringBuilder = orderInfoService.addKpOrFwOrder(request, productId, sum);
+            return AjaxResult.success("操作成功",stringBuilder);
+        }catch (Exception e){
+            System.out.println(e);
+            return AjaxResult.error("创建订单失败");
+        }finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * 添加服务订单
+     * @param request
+     * @param productId
+     * @return
+     */
+    @PostMapping("/addBGOrder")
+    public AjaxResult addBGOrder(HttpServletRequest request,Long productId,String pId,String phone){
+
+        lock.lock();
+        try {
+            LoginUser loginUser1 = tokenService.getLoginUser(request);
+            Long userId = loginUser1.getUser().getUserId();
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("getOrderId"+userId))){
+                return AjaxResult.error("请勿重复支付");
+            }
+            redisTemplate.opsForValue().set("getOrderId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
+
+            if (productId==null){
+                return AjaxResult.error("商品参数错误，请稍后再试");
+            }
+            Product product = productService.selectPId(productId);
+            if (product==null){
+                return AjaxResult.error("商品不存在");
+            }
+            if (product.getState().equals("2")){
+                return AjaxResult.error("商品已下架");
+            }
+
+            if (phone==null){
+                return AjaxResult.error("手机号不能为空");
+            }
+            Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(phone));
+            String sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
+            if (sxUserId==null){
+                return AjaxResult.error("该手机号未绑定");
+            }
+            if (pId==null){
+                return AjaxResult.error("报告不能为空");
+            }
+            LinkedHashMap<String, Object> sxDateList = equipmentHeadingCodeController.getSXDateList(sxUserId, pId);
+            if (sxDateList==null){
+                return AjaxResult.error("该报告不存在");
+            }
+            Integer notifyStatus = (Integer)sxDateList.get("notifyStatus");
+            if (notifyStatus!=null&&notifyStatus==1){
+                return AjaxResult.error("该报告已提交诊断");
+            }
+            String stringBuilder = orderInfoService.addBGOrder(request, productId, pId, phone);
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){
             System.out.println(e);

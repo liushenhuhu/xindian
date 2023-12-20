@@ -16,8 +16,11 @@ import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.controller.OnlineController;
 import com.ruoyi.xindian.patient_management.domain.OnlineParam;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.aspectj.weaver.loadtime.Aj;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
@@ -36,10 +39,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,6 +49,10 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/headingCode/headingCode")
 public class EquipmentHeadingCodeController {
 
+
+
+    @Value("${sx.url}")
+    private String sxUrl;
 
 
     @Resource
@@ -83,6 +87,10 @@ public class EquipmentHeadingCodeController {
 
     @Resource
     private RedisTemplate<String,String> redisTemplate;
+
+
+    @Resource
+    private IPatientManagementService patientManagementService;
 //
 //    /**
 //     * 查询设备编号以及给管理员发送消息
@@ -243,7 +251,7 @@ public class EquipmentHeadingCodeController {
 
         HttpEntity<Map<String, Object>> request1 = new HttpEntity<>(paramsMap,headers);
 
-        String url = "https://pro3.mymagicangel.com/bmecg/third/report/bindDevice";
+        String url = sxUrl+"/bmecg/third/report/zzdx/bindDevice";
         HashMap<String,String> sendMessageVo=null;
         try {
             sendMessageVo = restTemplate.postForObject(url, request1, HashMap.class);
@@ -273,7 +281,7 @@ public class EquipmentHeadingCodeController {
      * @return
      * @throws Exception
      */
-    private String getSXUserId(Patient patient) throws Exception {
+    public String getSXUserId(Patient patient) throws Exception {
         if (patient==null){
             return null;
         }
@@ -298,7 +306,7 @@ public class EquipmentHeadingCodeController {
         paramsMap.put("weight",medicalHistory.getWeight() );
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
 
-        String url = "https://pro3.mymagicangel.com/p/third/userSync/"+"ZZDX";
+        String url = sxUrl+"/p/third/userSync/"+"ZZDX";
         HashMap<String,Map<String,Object>> sendMessageVo=null;
         try {
             sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
@@ -327,7 +335,7 @@ public class EquipmentHeadingCodeController {
         headers.set("authorization","Bearer "+equipmentCodeAccessToken);
         //封装请求头
         HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
-        String url = "https://pro3.mymagicangel.com/bmecg/third/report/download?orderId="+orderId;
+        String url = sxUrl+"/bmecg/third/report/download?orderId="+orderId;
         ResponseEntity<byte[]> sendMessageVo=null;
         try {
              sendMessageVo = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
@@ -336,6 +344,114 @@ public class EquipmentHeadingCodeController {
         }
         fileToBytes(sendMessageVo.getBody(),"D:\\Users\\Downloads\\","test.pdf");
         return null;
+    }
+
+
+    /**
+     * 提交报告到诊断平台
+     * @param phone
+     * @param pId
+     * @return
+     * @throws Exception
+     */
+    public Boolean addSXReport(String phone,String pId) throws Exception {
+
+        Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(phone));
+
+        String sxUserId = getSXUserId(patient);
+
+        LinkedHashMap<String, Object> sxDateList = getSXDateList(sxUserId, pId);
+
+        if (sxDateList==null){
+            return false;
+        }
+
+        try {
+            String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
+            HttpHeaders headers = new HttpHeaders(); //构建请求头
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("authorization","Bearer "+equipmentCodeAccessToken);
+            Map<String, Object> paramsMap = new HashMap<>();
+            paramsMap.put("userId",sxDateList.get("userId"));
+            paramsMap.put("fileName",sxDateList.get("fileName"));
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+            String url = sxUrl+"/bmecg/third/report/zzdx/sendNotify";
+            HashMap<String,Map<String,Object>> sendMessageVo=null;
+            try {
+                sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
+            }catch (Exception e){
+                System.out.println(e);
+                return false;
+            }
+            if (sendMessageVo!=null){
+                if (sendMessageVo.get("resultCode").equals("200")){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+            return true;
+        }catch (Exception e){
+            System.out.println(e);
+            return false;
+        }
+    }
+
+
+
+
+
+
+    /**
+     * 通过userId获取用户检测列表
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public LinkedHashMap<String,Object> getSXDateList(String userId,String pId) throws Exception {
+        HttpHeaders headers = new HttpHeaders(); //构建请求头
+        String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
+        headers.set("authorization","Bearer "+equipmentCodeAccessToken);
+        //封装请求头
+        HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
+        String url = sxUrl+"/bmecg/third/report/zzdx/dataList?userId="+userId+"&page="+1+"&size="+100;
+        ResponseEntity<Object> sendMessageVo=null;
+        try {
+            sendMessageVo = restTemplate.exchange(url, HttpMethod.GET,formEntity, Object.class);
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+        try {
+            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
+
+            if (patientManagement==null){
+                return null;
+            }
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            LinkedHashMap<String,Object> body =(LinkedHashMap<String, Object>) sendMessageVo.getBody();
+
+            LinkedHashMap<String,Object> resultData =(LinkedHashMap<String, Object>) body.get("resultData");
+
+            List<LinkedHashMap<String,Object>> datas =(List<LinkedHashMap<String, Object>>) resultData.get("datas");
+
+            String format = simpleDateFormat.format(patientManagement.getConnectionTime());
+
+            for(LinkedHashMap<String,Object> data:datas){
+                String startTime =data.get("startTime").toString();
+                if (simpleDateFormat.format(simpleDateFormat.parse(startTime)).equals(format)){
+                    return data;
+                }
+            }
+
+            return null;
+
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+
     }
 
 
@@ -397,7 +513,7 @@ public class EquipmentHeadingCodeController {
         paramsMap.put("uid","80000261" );
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
 
-        String url = "https://api3.benefm.com/p/thirdLogin/"+"ZZDX";
+        String url = sxUrl+"/p/thirdLogin/"+"ZZDX";
         HashMap<String,Map<String,Object>> sendMessageVo=null;
         try {
             sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);

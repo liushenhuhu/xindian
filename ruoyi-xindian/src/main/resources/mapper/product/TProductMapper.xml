@@ -106,6 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="urlOne != null">url_one,</if>
             <if test="frequency != null">frequency,</if>
             <if test="isVip != null">is_vip,</if>
+            del_flag,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="productName != null">#{productName},</if>
@@ -122,6 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="urlOne != null">#{urlOne},</if>
             <if test="frequency != null">#{frequency},</if>
             <if test="isVip != null">#{isVip},</if>
+            0,
          </trim>
     </insert>
 
@@ -139,6 +141,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productNum != null">product_num = #{productNum},</if>
             <if test="sales != null">sales = #{sales},</if>
             <if test="urlOne != null">url_one = #{urlOne},</if>
+            <if test="type != null">type = #{type},</if>
             <if test="frequency != null">frequency = #{frequency},</if>
             <if test="isVip != null">is_vip = #{isVip},</if>
         </trim>

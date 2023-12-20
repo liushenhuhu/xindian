@@ -26,6 +26,7 @@
             <result property="orderState" column="order_state" jdbcType="VARCHAR"/>
             <result property="courierCompany" column="courier_company" jdbcType="VARCHAR"/>
             <result property="courierNumber" column="courier_number" jdbcType="VARCHAR"/>
+            <result property="pId" column="p_id" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="ResultMap" type="com.ruoyi.xindian.wx_pay.domain.OrderInfo" extends="BaseResultMap">
@@ -50,7 +51,7 @@
         id,title,order_no,
         user_id,product_id,
         total_fee,code_url,order_status,
-        open_id,address_id,create_time,update_time,patient_phone,patient_name,street_address,street,city,state,country,postal_code
+        open_id,address_id,create_time,update_time,patient_phone,patient_name,street_address,street,city,state,country,postal_code,p_id
     </sql>
     <select id="selectAllList" resultType="com.ruoyi.xindian.wx_pay.domain.OrderInfo" resultMap="ResultMap">
         SELECT
@@ -65,6 +66,7 @@
         t_order_info.order_state,
         t_order_info.courier_company,
         t_order_info.courier_number,
+        t_order_info.p_id,
             t_order_info.id,
             t_order_info.title,
             t_order_info.total_fee,
@@ -111,6 +113,7 @@
             t_order_info.open_id,
             t_order_info.create_time,
             t_order_info.order_status,
+            t_order_info.p_id,
         t_order_info.order_state,
         t_order_info.courier_company,
         t_order_info.courier_number,
@@ -156,6 +159,7 @@
             t_order_info.order_state,
             t_order_info.courier_company,
             t_order_info.courier_number,
+            t_order_info.p_id,
             t_order_info.street
         FROM
 
