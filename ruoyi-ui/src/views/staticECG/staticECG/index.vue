@@ -1532,7 +1532,7 @@ export default {
         let text2={
           type:'text',
           x:point2[0]-15,
-          y:1,
+          y:3,
           z: 999,
           style:{
             text: time+`\n${heart}`,
@@ -1583,9 +1583,8 @@ export default {
         let text2={
           type:'text',
           x: point2[0]-15,
-          y:1,
+          y:3,
           z: 999,
-          top:'2.5%',
           style:{
             text: time+`\n${heart}`,
             fill: '#000000',
@@ -1635,9 +1634,8 @@ export default {
         let text2={
           type:'text',
           x: point2[0]-15,
-          y:1,
+          y:3,
           z: 999,
-          top:'2.5%',
           style:{
             text: time+`\n${heart}`,
             fill: '#000000',
