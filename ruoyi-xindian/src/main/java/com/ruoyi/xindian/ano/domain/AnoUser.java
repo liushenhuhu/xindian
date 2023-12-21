@@ -25,8 +25,19 @@ public class AnoUser extends BaseEntity
     /** 患者管理id */
     @Excel(name = "患者管理id")
     private String pId;
+
+    private Integer type;
     private Long deptId;
     private String nickName;
+
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public String getNickName() {
         return nickName;

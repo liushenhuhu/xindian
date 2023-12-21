@@ -307,11 +307,15 @@ public class EquipmentController extends BaseController {
      */
     @GetMapping("/code")
     public AjaxResult code(String equimentCode){
-        Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equimentCode);
-        if (equipment!=null){
+        try {
+            Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(equimentCode);
+            if (equipment!=null){
+                return AjaxResult.success(true);
+            }
+            return AjaxResult.success(true);
+        }catch (Exception e){
             return AjaxResult.success(true);
         }
-        return AjaxResult.success(true);
     }
     //查询在线设备数量
     @GetMapping("/onlineNum")

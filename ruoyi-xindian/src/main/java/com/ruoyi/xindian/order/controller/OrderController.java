@@ -256,7 +256,7 @@ public class OrderController {
             LoginUser loginUser1 = tokenService.getLoginUser(request);
             Long userId = loginUser1.getUser().getUserId();
             if (Boolean.TRUE.equals(redisTemplate.hasKey("getOrderId"+userId))){
-                return AjaxResult.error("请勿重复支付");
+                return AjaxResult.error("请勿重复点击");
             }
             redisTemplate.opsForValue().set("getOrderId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
 
@@ -286,13 +286,12 @@ public class OrderController {
             Patient patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
             String sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
             if (sxUserId==null){
-                redisTemplate.delete("EquipmentCodeAccess_token");
-                return AjaxResult.error("该手机号未绑定，请稍后再试一次");
+                sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
             }
 
             LinkedHashMap<String, Object> sxDateList = equipmentHeadingCodeController.getSXDateList(sxUserId, pId);
             if (sxDateList==null){
-                return AjaxResult.error("该报告不存在,请注意报告是否采集完成");
+                return AjaxResult.error("数据采集不够24小时,请注意数据是否采集完成");
             }
             Integer notifyStatus = (Integer)sxDateList.get("notifyStatus");
             if (notifyStatus!=null&&notifyStatus==1){

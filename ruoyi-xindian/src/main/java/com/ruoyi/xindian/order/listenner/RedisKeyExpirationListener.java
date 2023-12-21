@@ -104,7 +104,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             }
             if (split[0].equals("addSXReportSubmitOrder")){
                 try {
-                    equipmentHeadingCodeController.ifSubmitOrder(split1[1]);
+                    equipmentHeadingCodeController.ifSubmitOrder(split[1]);
                 } catch (Exception e) {
                     System.out.println(e);
                 }

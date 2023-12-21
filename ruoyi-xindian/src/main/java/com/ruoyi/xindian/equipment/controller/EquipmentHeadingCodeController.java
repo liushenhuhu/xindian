@@ -240,7 +240,7 @@ public class EquipmentHeadingCodeController {
         }
         String sxUserId = getSXUserId(patient);
         if (sxUserId==null){
-            return AjaxResult.error("请求错误，请稍后再试一次");
+            sxUserId = getSXUserId(patient);
         }
         String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
         HttpHeaders headers = new HttpHeaders(); //构建请求头
@@ -342,6 +342,7 @@ public class EquipmentHeadingCodeController {
         try {
              sendMessageVo = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
         }catch (Exception e){
+            redisTemplate.delete("EquipmentCodeAccess_token");
             System.out.println(e);
         }
         fileToBytes(sendMessageVo.getBody(),"D:\\Users\\Downloads\\","test.pdf");
@@ -354,6 +355,7 @@ public class EquipmentHeadingCodeController {
      * @param pId
      */
 
+    @GetMapping("/addSXReport")
     public void ifSubmitOrder(String pId) throws Exception {
 
         PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);if (patientManagement==null){
@@ -381,7 +383,10 @@ public class EquipmentHeadingCodeController {
             System.out.println("距离固定时间加上 24 小时还有 " + diffInMinutes + " 分钟");
             redisTemplate.opsForValue().set("addSXReportSubmitOrder:"+pId,pId,diffInMinutes, TimeUnit.MINUTES);
         } else {
-            addSXReport(phone,pId);
+            Boolean b = addSXReport(phone, pId);
+            if (!b){
+                redisTemplate.opsForValue().set("addSXReportSubmitOrder:"+pId,pId,5, TimeUnit.MINUTES);
+            }
         }
 
     }
@@ -412,13 +417,15 @@ public class EquipmentHeadingCodeController {
         Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(phone));
 
         String sxUserId = getSXUserId(patient);
+        if (sxUserId==null){
+            sxUserId = getSXUserId(patient);
+        }
 
         LinkedHashMap<String, Object> sxDateList = getSXDateList(sxUserId, pId);
 
         if (sxDateList==null){
             return false;
         }
-
         try {
             String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
             HttpHeaders headers = new HttpHeaders(); //构建请求头
@@ -429,7 +436,7 @@ public class EquipmentHeadingCodeController {
             paramsMap.put("fileName",sxDateList.get("fileName"));
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
             String url = sxUrl+"/bmecg/third/report/zzdx/sendNotify";
-            HashMap<String,Map<String,Object>> sendMessageVo=null;
+            HashMap<String,Object> sendMessageVo=null;
             try {
                 sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
             }catch (Exception e){
@@ -437,7 +444,7 @@ public class EquipmentHeadingCodeController {
                 return false;
             }
             if (sendMessageVo!=null){
-                if (sendMessageVo.get("resultCode").equals("200")){
+                if (sendMessageVo.get("resultCode").toString().equals("200")){
                     return true;
                 }else {
                     return false;

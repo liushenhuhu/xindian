@@ -8,10 +8,11 @@
         <result property="anoUserId" column="ano_user_id"/>
         <result property="userId" column="user_id"/>
         <result property="pId" column="p_id"/>
+        <result property="type" column="type"/>
     </resultMap>
 
     <sql id="selectAnoUserVo">
-        select ano_user_id, user_id, p_id
+        select ano_user_id, user_id, p_id,type
         from ano_user
     </sql>
 

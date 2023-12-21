@@ -5,8 +5,10 @@ package com.ruoyi.xindian.wx_pay.controller;
 
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
@@ -56,6 +58,8 @@ public class WXPayController {
     private RedisTemplate<String, Object> redisTemplate;
 
 
+    @Resource
+    private TokenService tokenService;
 
     @Resource
     private IPatientManagementService patientManagementService;
@@ -74,9 +78,13 @@ public class WXPayController {
     @RequestMapping("prePay")
     public Map<String, Object> prePay(String  orderId, String type,HttpServletRequest request){
 
-        //获取token中发送请求的用户信息
-//        LoginUser loginUser = tokenService.getLoginUser(request);
-
+//        获取token中发送请求的用户信息
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        Long userId = loginUser.getUser().getUserId();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("getOrderPayId"+userId))){
+            return AjaxResult.error("请勿重复点击");
+        }
+        redisTemplate.opsForValue().set("getOrderPayId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
 
         // 返回参数
         Map<String, Object> resMap = new HashMap<>();
@@ -112,11 +120,11 @@ public class WXPayController {
 
             if (StringUtils.isNotEmpty(type)&&type.equals("bg")){
                 if (StringUtils.isEmpty(order.getPId())){
-                    throw new ServiceException("报告不存在，请重新下单");
+                    throw new ServiceException("报告不存在，请重新选择报告下单");
                 }else {
                     PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(order.getPId());
                     if (patientManagement==null){
-                        throw new ServiceException("报告不存在，请重新下单");
+                        throw new ServiceException("报告不存在，请重新选择报告下单");
                     }
                     List<OrderInfo> orderInfos = orderInfoService.selectOrderByPId(order.getPId());
                     if (orderInfos!=null&&!orderInfos.isEmpty()){

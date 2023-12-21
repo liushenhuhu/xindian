@@ -106,6 +106,25 @@ public class SXReportController {
                 System.out.println("异步线程 =====> 开始推送报告生成成功消息 =====> " + new Date());
                 try{
                     Patient patient = patientService.selectPatientByPatientPhone(sxReport.getPatientPhone());
+//                    if (StringUtils.isNotEmpty(sxReport.getOrderId())){
+//                        HttpHeaders headers = new HttpHeaders(); //构建请求头
+//                        String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
+//                        headers.set("authorization","Bearer "+equipmentCodeAccessToken);
+//                        //封装请求头
+//                        HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
+//                        String url = "https://api3.benefm.com/bmecg/third/report/download?orderId="+sxReport.getOrderId();
+//                        ResponseEntity<byte[]> sendMessageVo=null;
+//                        try {
+//                            sendMessageVo = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
+//                        }catch (Exception e){
+//                            System.out.println(e);
+//                        }
+//                        String s = fileUploadUtils.uploadPDFUrl(sendMessageVo.getBody(), "sx", aesUtils.decrypt(sxReport.getPatientPhone()));
+//                        if (s!=null){
+//                            sxReport.setPdfUrl(s);
+//                            sxReportService.updateSxReport(sxReport);
+//                        }
+//                    }
                     if (patient!=null){
                         if (sxReport.getPatientPhone()!=null&&aesUtils.decrypt(sxReport.getPatientPhone()).length()>11){
                             sxReport.setPatientPhone(aesUtils.encrypt(aesUtils.decrypt(sxReport.getPatientPhone()).substring(0,11)));
@@ -120,25 +139,6 @@ public class SXReportController {
                                 time = sxReportVO.getStartTime().substring(0,10);
                             }
                             wxPublicRequest.SXEquipmentMsg(sysUser.getOpenId(),aesUtils.decrypt(patient.getPatientName()),aesUtils.decrypt(sxReport.getPatientPhone()),time);
-                        }
-                    }
-                    if (StringUtils.isNotEmpty(sxReport.getOrderId())){
-                        HttpHeaders headers = new HttpHeaders(); //构建请求头
-                        String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
-                        headers.set("authorization","Bearer "+equipmentCodeAccessToken);
-                        //封装请求头
-                        HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
-                        String url = "https://api3.benefm.com/bmecg/third/report/download?orderId="+sxReport.getOrderId();
-                        ResponseEntity<byte[]> sendMessageVo=null;
-                        try {
-                            sendMessageVo = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
-                        }catch (Exception e){
-                            System.out.println(e);
-                        }
-                        String s = fileUploadUtils.uploadPDFUrl(sendMessageVo.getBody(), "sx", aesUtils.decrypt(sxReport.getPatientPhone()));
-                        if (s!=null){
-                            sxReport.setPdfUrl(s);
-                            sxReportService.updateSxReport(sxReport);
                         }
                     }
                 }catch (Exception e){
@@ -182,8 +182,12 @@ public class SXReportController {
             if (StringUtils.isNotEmpty(sxReport1.getPdfUrl())){
                 return AjaxResult.success(sxReport1.getPdfUrl());
             }
-            HttpHeaders headers = new HttpHeaders(); //构建请求头
             String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
+
+
+
+            HttpHeaders headers = new HttpHeaders(); //构建请求头
+
             headers.set("authorization","Bearer "+equipmentCodeAccessToken);
             //封装请求头
             HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
@@ -245,6 +249,21 @@ public class SXReportController {
         }catch (Exception e){
             System.out.println(e);
         }
+        System.out.println(sendMessageVo.getBody().length);
+        if (sendMessageVo.getBody().length<500){
+            redisTemplate.delete("EquipmentCodeAccess_token");
+            HttpHeaders headers1 = new HttpHeaders(); //构建请求头
+            String equipmentCodeAccessToken1 = getEquipmentCodeAccess_token();
+            headers1.set("authorization","Bearer "+equipmentCodeAccessToken1);
+            //封装请求头
+            HttpEntity<MultiValueMap<String, Object>> formEntity1 = new HttpEntity<MultiValueMap<String, Object>>(headers1);
+            String url1 = "https://api3.benefm.com/bmecg/third/report/download?orderId="+sxReport1.getOrderId();
+            try {
+                sendMessageVo = restTemplate.exchange(url1, HttpMethod.GET,formEntity1, byte[].class);
+            }catch (Exception e){
+                System.out.println(e);
+            }
+        }
         String pdfUrl =null;
         try {
             pdfUrl = fileUploadUtils.uploadPDFUrl(sendMessageVo.getBody(), "sx", aesUtils.decrypt(sxReport1.getPatientPhone()));
@@ -286,7 +305,7 @@ public class SXReportController {
         Map<String,Object> resultData = sendMessageVo.get("resultData");
         if (resultData!=null){
             String accessToken = resultData.get("access_token").toString();
-            redisTemplate.opsForValue().set("EquipmentCodeAccess_token",accessToken,1, TimeUnit.HOURS);
+            redisTemplate.opsForValue().set("EquipmentCodeAccess_token",accessToken,20, TimeUnit.MINUTES);
             return accessToken;
         }
         return null;
