@@ -700,7 +700,7 @@ export default {
           x1=graphic[i]
           x2=graphic[i+1]
           // console.log(x1,x2)
-          var time=(((x2-x1)/25)*0.2); //时间 s
+          var time=(((x2-x1)/25)*0.25); //时间 s
           var heart=(60/time).toFixed(1) //心率
           time=(time*1000).toFixed(0)
           //文本值
