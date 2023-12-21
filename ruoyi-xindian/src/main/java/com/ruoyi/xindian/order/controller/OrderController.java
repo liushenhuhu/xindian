@@ -3,12 +3,14 @@ package com.ruoyi.xindian.order.controller;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
@@ -247,7 +249,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/addBGOrder")
-    public AjaxResult addBGOrder(HttpServletRequest request,Long productId,String pId,String phone){
+    public AjaxResult addBGOrder(HttpServletRequest request,Long productId,String pId){
 
         lock.lock();
         try {
@@ -269,26 +271,39 @@ public class OrderController {
                 return AjaxResult.error("商品已下架");
             }
 
-            if (phone==null){
-                return AjaxResult.error("手机号不能为空");
-            }
-            Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(phone));
-            String sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
-            if (sxUserId==null){
-                return AjaxResult.error("该手机号未绑定");
-            }
             if (pId==null){
                 return AjaxResult.error("报告不能为空");
             }
+            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
+            if (patientManagement==null){
+                return AjaxResult.error("报告不存在");
+            }
+            if (StringUtils.isEmpty(patientManagement.getPatientPhone())){
+                return AjaxResult.error("报告不存在");
+            }
+
+
+            Patient patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
+            String sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
+            if (sxUserId==null){
+                redisTemplate.delete("EquipmentCodeAccess_token");
+                return AjaxResult.error("该手机号未绑定，请稍后再试一次");
+            }
+
             LinkedHashMap<String, Object> sxDateList = equipmentHeadingCodeController.getSXDateList(sxUserId, pId);
             if (sxDateList==null){
-                return AjaxResult.error("该报告不存在");
+                return AjaxResult.error("该报告不存在,请注意报告是否采集完成");
             }
             Integer notifyStatus = (Integer)sxDateList.get("notifyStatus");
             if (notifyStatus!=null&&notifyStatus==1){
                 return AjaxResult.error("该报告已提交诊断");
             }
-            String stringBuilder = orderInfoService.addBGOrder(request, productId, pId, phone);
+            Integer fuwaiSendStatus = (Integer)sxDateList.get("fuwaiSendStatus");
+
+            if (fuwaiSendStatus!=null&&fuwaiSendStatus==2){
+                return AjaxResult.error("该报告已提交诊断");
+            }
+            String stringBuilder = orderInfoService.addBGOrder(request, productId, pId);
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){
             System.out.println(e);

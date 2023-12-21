@@ -168,6 +168,18 @@ public class TProductController extends BaseController
         }
         return getTable(resList,new PageInfo(list).getTotal());
     }
+
+    @GetMapping("/getBGFw/list")
+    public TableDataInfo getBGFwList(TProduct tProduct){
+        tProduct.setType("报告服务");
+        startPage();
+        List<TProduct> list = tProductService.selectTProductList(tProduct);
+        for (TProduct product : list) {
+            product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+            product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+        }
+        return getDataTable(list);
+    }
     /**
      * 导出商品信息列表
      */

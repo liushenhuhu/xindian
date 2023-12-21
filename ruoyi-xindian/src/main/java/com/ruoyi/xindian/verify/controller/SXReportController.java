@@ -107,9 +107,19 @@ public class SXReportController {
                 try{
                     Patient patient = patientService.selectPatientByPatientPhone(sxReport.getPatientPhone());
                     if (patient!=null){
+                        if (sxReport.getPatientPhone()!=null&&aesUtils.decrypt(sxReport.getPatientPhone()).length()>11){
+                            sxReport.setPatientPhone(aesUtils.encrypt(aesUtils.decrypt(sxReport.getPatientPhone()).substring(0,11)));
+                        }
                         SysUser sysUser = sysUserService.selectUserByPhone(sxReport.getPatientPhone());
                         if (sysUser!=null){
-                            wxPublicRequest.SXEquipmentMsg(sysUser.getOpenId(),patient.getPatientName(),aesUtils.decrypt(sxReport.getPatientPhone()));
+                            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+                            String time = "";
+                            try {
+                                time= simpleDate.format(simpleDate.parse(sxReportVO.getStartTime()));
+                            }catch (Exception e){
+                                time = sxReportVO.getStartTime().substring(0,10);
+                            }
+                            wxPublicRequest.SXEquipmentMsg(sysUser.getOpenId(),aesUtils.decrypt(patient.getPatientName()),aesUtils.decrypt(sxReport.getPatientPhone()),time);
                         }
                     }
                     if (StringUtils.isNotEmpty(sxReport.getOrderId())){

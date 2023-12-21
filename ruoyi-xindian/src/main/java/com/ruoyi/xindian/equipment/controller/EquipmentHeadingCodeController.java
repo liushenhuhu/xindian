@@ -38,6 +38,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -239,7 +240,7 @@ public class EquipmentHeadingCodeController {
         }
         String sxUserId = getSXUserId(patient);
         if (sxUserId==null){
-            return AjaxResult.error("请求错误");
+            return AjaxResult.error("请求错误，请稍后再试一次");
         }
         String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
         HttpHeaders headers = new HttpHeaders(); //构建请求头
@@ -317,6 +318,7 @@ public class EquipmentHeadingCodeController {
         if (resultData!=null){
             return resultData.get("uid").toString();
         }
+        redisTemplate.delete("EquipmentCodeAccess_token");
 
         return null;
     }
@@ -345,6 +347,57 @@ public class EquipmentHeadingCodeController {
         fileToBytes(sendMessageVo.getBody(),"D:\\Users\\Downloads\\","test.pdf");
         return null;
     }
+
+
+    /**
+     * 判断提交的时间是否在规定时间内
+     * @param pId
+     */
+
+    public void ifSubmitOrder(String pId) throws Exception {
+
+        PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);if (patientManagement==null){
+            return;
+        }
+        if (patientManagement.getConnectionTime()==null){
+            return;
+        }
+
+        if (StringUtils.isEmpty(patientManagement.getPatientPhone())){
+            return;
+        }
+
+        String phone = aesUtils.decrypt(patientManagement.getPatientPhone());
+
+        Date connectionTime = patientManagement.getConnectionTime();
+
+        // 获取当前时间
+        Date currentDate = new Date();
+        // 计算固定时间加上 24 小时后的时间，并获取其与当前时间的时间差
+        long diffInMinutes = calculateMinutesRemaining(currentDate, addHoursToDate(connectionTime, 23));
+
+        if (diffInMinutes > 0) {
+            System.out.println("当前时间在给定固定时间的前面");
+            System.out.println("距离固定时间加上 24 小时还有 " + diffInMinutes + " 分钟");
+            redisTemplate.opsForValue().set("addSXReportSubmitOrder:"+pId,pId,diffInMinutes, TimeUnit.MINUTES);
+        } else {
+            addSXReport(phone,pId);
+        }
+
+    }
+
+    // 将指定的小时数加到给定的时间上，并返回新的 Date 对象
+    private static Date addHoursToDate(Date date, int hours) {
+        long time = date.getTime();
+        return new Date(time + TimeUnit.HOURS.toMillis(hours));
+    }
+
+    // 计算两个时间之间的时间差，返回分钟数
+    private static long calculateMinutesRemaining(Date current, Date target) {
+        long diffInMillies = target.getTime() - current.getTime();
+        return TimeUnit.MILLISECONDS.toMinutes(diffInMillies);
+    }
+
 
 
     /**
@@ -396,10 +449,6 @@ public class EquipmentHeadingCodeController {
             return false;
         }
     }
-
-
-
-
 
 
     /**

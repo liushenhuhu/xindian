@@ -249,6 +249,15 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
 
     }
 
+    @Override
+    public Boolean addSXReport(String phone, String pId) throws Exception {
+        return null;
+    }
+
+
+
+
+
     public String splitData(String str, String strStart, String strEnd) {
         String tempStr;
         tempStr = str.substring(str.indexOf(strStart) + 1, str.lastIndexOf(strEnd));

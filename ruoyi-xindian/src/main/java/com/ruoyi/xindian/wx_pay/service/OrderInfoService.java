@@ -29,7 +29,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
 
     List<OrderInfo> listOrderByCreateTimeDesc();
 
-    void updateStatusByOrderNo(String orderNo, OrderStatus orderStatus);
+    void updateStatusByOrderNo(String orderNo, OrderStatus orderStatus) throws Exception;
 
     String getOrderStatus(String orderNo);
 
@@ -85,7 +85,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
 
 
 
-    String addBGOrder(HttpServletRequest request, Long productId,String pId,String phone);
+    String addBGOrder(HttpServletRequest request, Long productId,String pId);
 
 
     void redisOrderKey(String orderId);
@@ -108,4 +108,11 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @return
      */
     OrderInfo ListOrderId(String id);
+
+
+
+    List<OrderInfo> selectOrderByPId(String pId);
+
+
+
 }

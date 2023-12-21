@@ -52,9 +52,17 @@ public enum OrderStatus {
     ORDER_BACK("退款申请"),
 
     /**
-     *
+     *服务
      */
     SERVE_ORDER("服务"),
+
+
+    /**
+     * 报告服务
+     */
+    REPORT_ORDER("报告服务"),
+
+
     /**
      * 退款异常
      */

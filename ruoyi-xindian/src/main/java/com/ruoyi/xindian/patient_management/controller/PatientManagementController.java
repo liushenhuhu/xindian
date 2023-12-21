@@ -40,6 +40,8 @@ import com.ruoyi.xindian.util.PhoneCheckUtils;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.verify.domain.SxReport;
 import com.ruoyi.xindian.verify.service.SxReportService;
+import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
+import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -100,6 +102,9 @@ public class PatientManagementController extends BaseController {
     @Autowired
     private AesUtils aesUtils;
 
+
+    @Resource
+    private OrderInfoService orderInfoService;
 
     @Resource
     private SxReportService sxReportService;
@@ -304,6 +309,7 @@ public class PatientManagementController extends BaseController {
             }
             try {
                 management.setSxStatus(0);
+                management.setSxPayStatus(0);
                 if (StringUtils.isNotEmpty(management.getEcgType())&&management.getEcgType().contains("DECG")){
                     SxReport sxReport = new SxReport();
                     sxReport.setPatientPhone(aesUtils.encrypt(management.getPatientPhone()));
@@ -315,9 +321,17 @@ public class PatientManagementController extends BaseController {
                     }else {
                         management.setSxStatus(0);
                     }
+
+                    List<OrderInfo> orderInfos = orderInfoService.selectOrderByPId(management.getpId());
+                    if (orderInfos!=null&& !orderInfos.isEmpty()){
+                        management.setSxPayStatus(1);
+                    }else {
+                        management.setSxPayStatus(0);
+                    }
                 }
             }catch (Exception e){
-                management.setSxStatus(0);
+                management.setSxPayStatus(0);
+                management.setSxPayStatus(0);
             }
             patientManagmentDept = new PatientManagmentDept();
             BeanUtils.copyProperties(management, patientManagmentDept);

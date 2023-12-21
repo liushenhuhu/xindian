@@ -115,7 +115,7 @@
             <if test="patientPhone != null ">and pm.patient_phone_aes = #{patientPhone}</if>
             <if test="hospitalCode != null ">and pm.hospital_code = #{hospitalCode}</if>
             <if test="ecgType != null ">and ecg_type = #{ecgType}</if>
-            <if test="type != null ">and ecg_type = #{type}</if>
+            <if test="type != null ">and ecg_type like concat('%', #{type} , '%')</if>
             <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone like concat('%', #{doctorPhone},
                 '%')
             </if>
@@ -130,7 +130,7 @@
         <where>
             <if test="ecgType != null  and ecgType != ''">and (ecg_type like "JECG12%" or ecg_type like "DECG12%")
             </if>
-            <if test="type != null ">and ecg_type = #{type}</if>
+            <if test="type != null ">and ecg_type like concat('%', #{type} , '%')</if>
             <if test="logId != null ">and log_id = #{logId}</if>
             <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
                 and log_time between #{params.beginLogTime} and #{params.endLogTime}
@@ -162,7 +162,7 @@
         <where>
             <if test="ecgType != null  and ecgType != ''">and (ecg_type like "JECGsingle%" or ecg_type like "DECGsingle%")
             </if>
-            <if test="type != null ">and ecg_type = #{type}</if>
+            <if test="type != null ">and ecg_type like concat('%', #{type} , '%')</if>
             <if test="logId != null ">and log_id = #{logId}</if>
             <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
                 and log_time between #{params.beginLogTime} and #{params.endLogTime}
@@ -195,7 +195,7 @@
             <if test="params.beginLogTime != null and params.beginLogTime != '' and params.endLogTime != null and params.endLogTime != ''">
                 and log_time between #{params.beginLogTime} and #{params.endLogTime}
             </if>
-            <if test="type != null ">and ecg_type = #{type}</if>
+            <if test="type != null ">and ecg_type like concat('%', #{type} , '%')</if>
             <if test="logType != null  and logType != ''">and log_type like concat('%', #{logType}, '%')</if>
             <if test="eventName != null  and eventName != ''">and event_name like concat('%', #{eventName}, '%')</if>
             <if test="eventDescription != null  and eventDescription != ''">and event_description like concat('%',
