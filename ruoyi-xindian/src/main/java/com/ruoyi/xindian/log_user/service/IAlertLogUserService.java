@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.log_user.service;
 
 import java.util.List;
+
+import com.ruoyi.xindian.ano.domain.AnoUser;
 import com.ruoyi.xindian.log_user.domain.AlertLogUser;
 import com.ruoyi.xindian.log_user.domain.SelectVO;
 
@@ -61,4 +63,6 @@ public interface IAlertLogUserService
     public int deleteAlertLogUserByLogId(String logId);
 
     List<SelectVO> selectList();
+
+    void deleteAlertLogUserByUserIdAndPid(AnoUser anoUser);
 }

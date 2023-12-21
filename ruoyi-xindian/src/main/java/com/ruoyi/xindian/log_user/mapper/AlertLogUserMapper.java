@@ -1,6 +1,8 @@
 package com.ruoyi.xindian.log_user.mapper;
 
 import java.util.List;
+
+import com.ruoyi.xindian.ano.domain.AnoUser;
 import com.ruoyi.xindian.log_user.domain.AlertLogUser;
 import com.ruoyi.xindian.log_user.domain.SelectVO;
 import org.apache.ibatis.annotations.Param;
@@ -62,4 +64,6 @@ public interface AlertLogUserMapper
     public int deleteAlertLogUserByLogIds(String[] logIds);
 
     public List<SelectVO> selectList();
+
+    void deleteAlertLogUserByUserIdAndPid(AnoUser anoUser);
 }

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.xindian.alert_log.domain.AssignedAno;
+import com.ruoyi.xindian.log_user.service.IAlertLogUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ public class AnoUserController extends BaseController
 {
     @Autowired
     private IAnoUserService anoUserService;
-
+    @Autowired
+    private IAlertLogUserService alertLogUserService;
     /**
      * 查询ano列表
      */
@@ -100,6 +102,13 @@ public class AnoUserController extends BaseController
         return toAjax(anoUserService.deleteAnoUserByAnoUserIds(anoUserIds));
     }
 
+    @Log(title = "ano", businessType = BusinessType.DELETE)
+    @DeleteMapping("/del")
+    public AjaxResult remove2(@RequestBody AnoUser anoUser)
+    {
+        alertLogUserService.deleteAlertLogUserByUserIdAndPid(anoUser);
+        return toAjax(anoUserService.deleteAnoUserByAnoUser(anoUser));
+    }
     @PostMapping("/assignedAno")
     public AjaxResult assignedAno(@RequestBody AssignedAno assignedAno) {
         String pId = assignedAno.getpId();

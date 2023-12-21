@@ -147,6 +147,28 @@
     </el-dialog>
 <!--    分配pid-->
     <el-dialog title="分配标注患者" :visible.sync="showNotAssign"  append-to-body>
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
+        <el-form-item label="患者id" prop="pId">
+          <el-input
+            v-model="queryParams.pId"
+            placeholder="请输入患者管理id"
+            clearable
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item label="账号id" prop="userId">
+          <el-input
+            v-model="queryParams.userName"
+            placeholder="请输入账号id"
+            clearable
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button
@@ -199,6 +221,13 @@
               @click="refresh(scope.row)"
             >更新
             </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="delAno(scope.row)"
+            >删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -224,7 +253,7 @@ import {
   assigned_ano,
   re_assigned_ano,
   listAno2,
-  getNotAssign, assignedAnoList
+  getNotAssign, assignedAnoList, delAno2
 } from "@/api/ano/ano";
 
 export default {
@@ -431,6 +460,13 @@ export default {
           }
         }
       });
+    },
+    delAno(row){
+      console.log(row)
+      delAno2(row).then(res=>{
+        this.get3()
+        this.$modal.msgSuccess("删除成功");
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {

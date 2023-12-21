@@ -859,10 +859,10 @@ export default {
             ],
           });
           //绘制文本
-          _th.addtext()
+          // _th.addtext()
           $(window).resize(function () {
             _th.chartII.resize();
-            _th.addtext()
+            // _th.addtext()
           });
           var chartIII = echarts.init(document.getElementById("III"));
           chartIII.clear()
@@ -1843,7 +1843,7 @@ export default {
             _th.$nextTick(function () {
               chartI.resize();
               _th.chartII.resize();
-              _th.addtext()
+              // _th.addtext()
               chartIII.resize();
               chartaVF.resize();
               chartaVR.resize();
@@ -1866,74 +1866,74 @@ export default {
       })
     },
     //重绘所有点之间的文本
-    addtext(){
-      this.graphic2.length=0
-      let beatLabel=JSON.parse(this.datalabel.beatLabel)
-      var arr2=beatLabel['0']
-      let beat2=[]
-      // console.log(arr2)
-      for (let key in arr2) {
-        beat2.push(...arr2[key])
-      }
-      beat2.sort((a,b)=>a - b)
-
-      var length2=beat2.length
-      //刻度线
-      for (let i = 0; i <length2; i++) {
-        var point1=this.chartII.convertToPixel({seriesIndex: 0}, [beat2[i], 3])
-        let text1={
-          type: 'line',
-          style: {
-            stroke: '#333',
-            lineWidth:1.5,
-            lineDash:[]
-          },
-          shape: {
-            x1: point1[0],
-            y1: 1,
-            x2: point1[0],
-            y2: 11
-          },
-          z:100
-        }
-        this.graphic2.push(text1)
-        if(i==length2-1){
-          continue
-        }
-        var x1=beat2[i]
-        var x2=beat2[i+1]
-        // console.log(x1,x2)
-        var time=(((x2-x1)/25)*0.2); //时间 s
-        var heart=(60/time).toFixed(1) //心率
-        time=(time*1000).toFixed(0)
-        //文本值
-        var point2=this.chartII.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
-        // console.log(x)
-        let text2={
-          type:'text',
-          x: point2[0]-15,
-          y:1,
-          z: 999,
-          style:{
-            text: time+`\n${heart}`,
-            fill: '#000000',
-            fontWeight: 400,
-            fontSize: 13,
-          },
-
-        }
-        this.graphic2.push(text2)
-      }
-      var chartOption2 = this.chartII.getOption();
-      chartOption2.graphic = this.graphic2;
-      this.chartII.setOption(chartOption2,true);
-
-      // console.log(this.graphic2)
-    },
+    // addtext(){
+    //   this.graphic2.length=0
+    //   let beatLabel=JSON.parse(this.datalabel.beatLabel)
+    //   var arr2=beatLabel['0']
+    //   let beat2=[]
+    //   // console.log(arr2)
+    //   for (let key in arr2) {
+    //     beat2.push(...arr2[key])
+    //   }
+    //   beat2.sort((a,b)=>a - b)
+    //
+    //   var length2=beat2.length
+    //   //刻度线
+    //   for (let i = 0; i <length2; i++) {
+    //     var point1=this.chartII.convertToPixel({seriesIndex: 0}, [beat2[i], 3])
+    //     let text1={
+    //       type: 'line',
+    //       style: {
+    //         stroke: '#333',
+    //         lineWidth:1.5,
+    //         lineDash:[]
+    //       },
+    //       shape: {
+    //         x1: point1[0],
+    //         y1: 1,
+    //         x2: point1[0],
+    //         y2: 11
+    //       },
+    //       z:100
+    //     }
+    //     this.graphic2.push(text1)
+    //     if(i==length2-1){
+    //       continue
+    //     }
+    //     var x1=beat2[i]
+    //     var x2=beat2[i+1]
+    //     // console.log(x1,x2)
+    //     var time=(((x2-x1)/25)*0.2); //时间 s
+    //     var heart=(60/time).toFixed(1) //心率
+    //     time=(time*1000).toFixed(0)
+    //     //文本值
+    //     var point2=this.chartII.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
+    //     // console.log(x)
+    //     let text2={
+    //       type:'text',
+    //       x: point2[0]-15,
+    //       y:1,
+    //       z: 999,
+    //       style:{
+    //         text: time+`\n${heart}`,
+    //         fill: '#000000',
+    //         fontWeight: 400,
+    //         fontSize: 13,
+    //       },
+    //
+    //     }
+    //     this.graphic2.push(text2)
+    //   }
+    //   var chartOption2 = this.chartII.getOption();
+    //   chartOption2.graphic = this.graphic2;
+    //   this.chartII.setOption(chartOption2,true);
+    //
+    //   // console.log(this.graphic2)
+    // },
     closeMain(val){
       console.log(val)
-      this.datalabel.beatLabel=val
-      this.addtext()
+      // this.datalabel.beatLabel=val
+      // this.addtext()
     },
     //获取当前时间
     getData() {

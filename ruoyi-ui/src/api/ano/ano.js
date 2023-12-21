@@ -49,7 +49,13 @@ export function delAno(userId) {
     method: 'delete'
   })
 }
-
+export function delAno2(data) {
+  return request({
+    url: '/ano/ano/del',
+    method: 'delete',
+    data:data
+  })
+}
 export function assigned_ano(data) {
   return request({
     url: '/ano/ano/assignedAno',

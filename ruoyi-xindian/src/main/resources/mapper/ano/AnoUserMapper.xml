@@ -86,4 +86,7 @@
             #{anoUserId}
         </foreach>
     </delete>
+    <delete id="deleteAnoUserByAnoUser" parameterType="AnoUser">
+        delete from ano_user where user_id=#{userId} and p_id=#{pId}
+    </delete>
 </mapper>

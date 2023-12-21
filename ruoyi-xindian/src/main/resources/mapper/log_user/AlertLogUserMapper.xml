@@ -135,4 +135,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{logId}
         </foreach>
     </delete>
+    <delete id="deleteAlertLogUserByUserIdAndPid" parameterType="AnoUser">
+        delete from alert_log_user where user_id=#{userId} and p_id=#{pId}
+    </delete>
 </mapper>

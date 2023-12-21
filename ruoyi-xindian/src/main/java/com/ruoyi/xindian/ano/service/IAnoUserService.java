@@ -66,4 +66,6 @@ public interface IAnoUserService
     List<AnoUser> selectAnoUserList2(SysUser anoUser);
 
     List<AnoUser> selectNotAssign(AnoUser anoUser);
+
+    int deleteAnoUserByAnoUser(AnoUser anoUser);
 }

@@ -100,4 +100,9 @@ public class AnoUserServiceImpl implements IAnoUserService {
     public List<AnoUser> selectNotAssign(AnoUser anoUser) {
         return anoUserMapper.selectNotAssign(anoUser);
     }
+
+    @Override
+    public int deleteAnoUserByAnoUser(AnoUser anoUser) {
+        return anoUserMapper.deleteAnoUserByAnoUser(anoUser);
+    }
 }
