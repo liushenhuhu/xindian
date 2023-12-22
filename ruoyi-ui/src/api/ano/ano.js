@@ -8,6 +8,8 @@ export function listAno(query) {
     params: query
   })
 }
+
+
 //去重userid查询
 export function listAno2(query) {
   return request({
@@ -88,5 +90,36 @@ export function assignedAnoList(data) {
     method: 'post',
     data: data,
     timeout: 200000
+  })
+}
+
+export function addAnoAdmin(data) {
+  return request({
+    url: '/ano/admin',
+    method: 'post',
+    data: data,
+    timeout: 200000
+  })
+}
+
+export function getAnoList(query) {
+  return request({
+    url: '/ano/admin/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getAnoAdmin(query) {
+  return request({
+    url: '/ano/admin/getAnoAdmin',
+    method: 'get',
+    params: query
+  })
+}
+export function delAnoAdmin(anoAdminId) {
+  return request({
+    url: '/ano/admin/'+anoAdminId,
+    method: 'delete',
   })
 }

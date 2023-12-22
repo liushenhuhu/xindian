@@ -9,14 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--      <el-form-item label="患者管理id" prop="pId">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.pId"-->
-      <!--          placeholder="请输入患者管理id"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -80,14 +72,6 @@
       <!--      <el-table-column label="患者管理id" align="center" prop="pId"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!--          <el-button-->
-          <!--            size="mini"-->
-          <!--            type="text"-->
-          <!--            icon="el-icon-refresh-right"-->
-          <!--            @click="refresh(scope.row)"-->
-          <!--            v-hasPermi="['ano:ano:edit']"-->
-          <!--          >更新-->
-          <!--          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -102,26 +86,17 @@
             @click="getList3(scope.row)"
           >查看已分配
           </el-button>
-          <!--          <el-button-->
-          <!--            size="mini"-->
-          <!--            type="text"-->
-          <!--            icon="el-icon-edit"-->
-          <!--            @click="handleUpdate(scope.row)"-->
-          <!--            v-hasPermi="['ano:ano:edit']"-->
-          <!--          >修改-->
-          <!--          </el-button>-->
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['ano:ano:remove']"
-          >删除
-          </el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['ano:ano:remove']"-->
+<!--          >删除-->
+<!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
-
     <pagination
       v-show="total>0"
       :total="total"
@@ -145,28 +120,32 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+
+
+
     <!--    分配pid-->
-    <el-dialog title="分配标注患者" :visible.sync="showNotAssign"  append-to-body>
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
-        <el-form-item label="患者id" prop="pId">
+    <el-dialog title="分配审核患者" :visible.sync="showNotAssign"  append-to-body width="900px">
+      <el-form :model="queryParams2" ref="queryForm" size="small" :inline="true" v-show="showSearch2" label-width="90px">
+<!--        <el-form-item label="患者管理id" prop="pId">-->
+<!--          <el-input-->
+<!--            v-model="queryParams2.pId"-->
+<!--            placeholder="请输入患者管理id"-->
+<!--            clearable-->
+<!--            @keyup.enter.native="getNotAssign"-->
+<!--          />-->
+<!--        </el-form-item>-->
+        <el-form-item label="设备类型" prop="ecgType">
           <el-input
-            v-model="queryParams.pId"
-            placeholder="请输入患者管理id"
+            v-model="queryParams2.ecgType"
+            placeholder="请输入设备类型"
             clearable
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="账号id" prop="userId">
-          <el-input
-            v-model="queryParams.userName"
-            placeholder="请输入账号id"
-            clearable
-            @keyup.enter.native="handleQuery"
+            @keyup.enter.native="getNotAssign"
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="getNotAssign">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQueryNotAssign(queryParams2.userId)">重置</el-button>
         </el-form-item>
       </el-form>
       <el-row :gutter="10" class="mb8">
@@ -186,7 +165,13 @@
       <el-table v-loading="loading2" :data="notAssignList" @selection-change="handleSelectionChange2">
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="患者id" align="center" prop="pId"/>
-        <!--      <el-table-column label="患者管理id" align="center" prop="pId"/>-->
+        <el-table-column label="设备类型" align="center" prop="ecgType">
+          <template slot-scope="scope" >
+            <el-tag >
+              {{scope.row.ecgType}}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -208,19 +193,57 @@
       />
     </el-dialog>
     <!--    查看已经分配的-->
-    <el-dialog title="已分配" :visible.sync="show3"  append-to-body>
-      <el-table v-loading="loading3" :data="list3">
+    <el-dialog title="已分配" :visible.sync="show3"  append-to-body width="900px">
+      <el-form :model="queryParams3" ref="queryForm" size="small" :inline="true" v-show="showSearch3" label-width="90px">
+        <el-form-item label="患者管理id" prop="pId">
+          <el-input
+            v-model="queryParams3.pId"
+            placeholder="请输入患者管理id"
+            clearable
+            @keyup.enter.native="get3"
+          />
+        </el-form-item>
+        <el-form-item label="设备类型" prop="ecgType">
+          <el-input
+            v-model="queryParams3.ecgType"
+            placeholder="请输入设备类型"
+            clearable
+            @keyup.enter.native="get3"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="get3">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQueryShow3(queryParams3.userId)">重置</el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-row :gutter="10" class="mb8">
+              <el-col :span="1.5">
+                <el-button
+                  type="danger"
+                  plain
+                  icon="el-icon-delete"
+                  size="mini"
+                  :disabled="multipleByAdm"
+                  @click="delAno"
+                >删除
+                </el-button>
+              </el-col>
+        <right-toolbar :showSearch.sync="showSearch3" @queryTable="get3"></right-toolbar>
+      </el-row>
+      <el-table v-loading="loading3" :data="list3" @selection-change="handleSelectionChangeByAdm">
+        <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="账号id" align="center" prop="userId"/>
         <el-table-column label="患者管理id" align="center" prop="pId"/>
+        <el-table-column label="设备类型" align="center" prop="ecgType">
+          <template slot-scope="scope" >
+            <el-tag >
+              {{scope.row.ecgType}}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-refresh-right"
-              @click="refresh(scope.row)"
-            >更新
-            </el-button>
             <el-button
               size="mini"
               type="text"
@@ -253,7 +276,7 @@ import {
   assigned_ano,
   re_assigned_ano,
   listAno2,
-  getNotAssign, assignedAnoList, delAno2
+  getNotAssign, assignedAnoList, delAno2, getAnoList, addAnoAdmin, getAnoAdmin, delAnoAdmin
 } from "@/api/ano/ano";
 
 export default {
@@ -264,6 +287,10 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      admIds:[],
+      singleByAdmIds:[],
+      // 非单个禁用
+      multipleByAdm: true,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -283,7 +310,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
-        pId: null
+        pId: null,
+        deptId: 202
       },
       // 表单参数
       form: {},
@@ -294,6 +322,7 @@ export default {
       loading2: true,
       // 选中数组
       ids2: [],
+      showSearch3:false,
       // 非单个禁用
       single2: true,
       // 非多个禁用
@@ -305,6 +334,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
+        ecgType: null,
+        pId: null
       },
       show3:false,
       loading3:false,
@@ -313,6 +344,9 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
+        ecgType: null,
+        pId: null
+
       },
       total3:0
     };
@@ -331,18 +365,32 @@ export default {
       });
     },
     getList3(row) {
-      console.log(row)
       this.show3=true
       this.queryParams3.userId=row.userId
       this.get3()
     },
     get3(){
       this.loading3 = true;
-      listAno(this.queryParams3).then(response => {
+      getAnoAdmin(this.queryParams3).then(response => {
         this.list3 = response.rows;
         this.total3 = response.total;
         this.loading3 = false;
       });
+    },
+    resetQueryShow3(userId){
+      this.queryParams3={
+        pageNum: 1,
+        pageSize: 10,
+        userId: userId,
+        ecgType: null,
+        pId: null
+      }
+      this.get3()
+    },
+    handleSelectionChangeByAdm(selection){
+      this.admIds = selection.map(item => item.anoAdminId)
+      this.singleByAdmIds = selection.length!== 1
+      this.multipleByAdm =!selection.length
     },
     // 取消按钮
     cancel() {
@@ -403,7 +451,7 @@ export default {
       }else {
         anoUserId=this.ids2
       }
-      assignedAnoList(JSON.stringify({userId:this.queryParams2.userId,pId:anoUserId})).then(res=>{
+      addAnoAdmin(JSON.stringify({userId:this.queryParams2.userId,pId:anoUserId})).then(res=>{
         console.log(res)
         this.$modal.msgSuccess("分配成功");
         this.getNotAssign()
@@ -430,12 +478,22 @@ export default {
     },
     getNotAssign(){
       this.loading2=true
-      getNotAssign(this.queryParams2).then(res=>{
+      getAnoList(this.queryParams2).then(res=>{
         console.log(res)
         this.notAssignList=res.rows
         this.total2=res.total
         this.loading2=false
       })
+    },
+    resetQueryNotAssign(id){
+      this.queryParams2 = {
+        pageNum: 1,
+        pageSize: 10,
+        userId: id,
+        ecgType: null,
+        pId: null
+      }
+      this.getNotAssign()
     },
     /** 提交按钮 */
     submitForm() {
@@ -462,11 +520,13 @@ export default {
       });
     },
     delAno(row){
-      console.log(row)
-      delAno2(row).then(res=>{
-        this.get3()
+      const anoAdminIds = row.anoAdminId || this.admIds;
+      this.$modal.confirm('是否确认删除审核标注分配编号为"' + anoAdminIds + '"的数据项？').then(function() {
+        return delAnoAdmin(anoAdminIds);
+      }).then(() => {
+        this.get3();
         this.$modal.msgSuccess("删除成功");
-      })
+      }).catch(() => {});
     },
     /** 删除按钮操作 */
     handleDelete(row) {

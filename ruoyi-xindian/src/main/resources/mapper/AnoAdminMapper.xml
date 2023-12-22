@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.ano.mapper.AnoAdminMapper">
+
+    <resultMap id="AnoAdminResult" type="com.ruoyi.xindian.ano.domain.AnoAdmin">
+            <id property="anoAdminId" column="ano_admin_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="pId" column="p_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="selectAnoAdminVo">
+        select ano_admin_id, user_id, p_id from ano_admin
+    </sql>
+    <select id="selectAnoAdminList" resultType="com.ruoyi.xindian.ano.domain.AnoAdmin" resultMap="AnoAdminResult">
+
+        select c.p_id ,p.ecg_type as ecgType
+        FROM(
+                SELECT a.p_id  FROM(SELECT p_id FROM alert_log GROUP BY p_id) a LEFT JOIN ano_admin b on a.p_id = b.p_id WHERE b.p_id is null
+            ) c INNER JOIN patient_management p ON c.p_id = p.p_id
+        <where>
+            <if test="ecgType!= null  and ecgType!= ''">and p.ecg_type like concat('%', #{ecgType}, '%')</if>
+        </where>
+    </select>
+    <select id="selectAnoAdminByAnoAdminId" parameterType="Long" resultMap="AnoAdminResult">
+        <include refid="selectAnoAdminVo"/>
+        where ano_admin_id = #{anoAdminId}
+    </select>
+    <select id="selectAnoAdminListALL" parameterType="AnoAdmin" resultMap="AnoAdminResult">
+        SELECT
+        ano_admin.p_id,
+        ano_admin.user_id,
+        ano_admin.ano_admin_id,
+        patient_management.ecg_type as ecgType
+        FROM
+        ano_admin
+        INNER JOIN
+        patient_management
+        ON
+        ano_admin.p_id = patient_management.p_id
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="pId != null  and pId != ''"> and ano_admin.p_id = #{pId}</if>
+            <if test="ecgType!= null  and ecgType!= ''">and ecg_type like concat('%', #{ecgType}, '%')</if>
+        </where>
+        ORDER BY ano_admin.ano_admin_id DESC
+    </select>
+
+    <insert id="insertAnoAdmin" parameterType="AnoAdmin" useGeneratedKeys="true" keyProperty="anoAdminId">
+        insert into ano_admin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="pId != null">p_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="pId != null">#{pId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAnoAdmin" parameterType="AnoAdmin">
+        update ano_admin
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="pId != null">p_id = #{pId},</if>
+        </trim>
+        where ano_admin_id = #{anoAdminId}
+    </update>
+
+    <delete id="deleteAnoAdminByAnoAdminId" parameterType="Long">
+        delete from ano_admin where ano_admin_id = #{anoAdminId}
+    </delete>
+
+    <delete id="deleteAnoAdminByAnoAdminIds" parameterType="String">
+        delete from ano_admin where ano_admin_id in
+        <foreach item="anoAdminId" collection="array" open="(" separator="," close=")">
+            #{anoAdminId}
+        </foreach>
+    </delete>
+</mapper>

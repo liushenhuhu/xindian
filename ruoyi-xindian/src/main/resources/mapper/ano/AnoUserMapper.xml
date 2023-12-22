@@ -38,10 +38,12 @@
     <select id="selectNotAssign" resultType="com.ruoyi.xindian.ano.domain.AnoUser">
         SELECT l.p_id
         from alert_log l
-        WHERE l.p_id not IN (select a.p_id FROM ano_user a WHERE a.user_id=#{userId})
+        WHERE l.p_id not IN (select a.p_id FROM ano_user a
+             <where>
+                 <if test="userId!= null ">and a.user_id=#{userId}</if>
+             </where> )
         GROUP BY l.p_id
     </select>
-
     <insert id="insertAnoUser" parameterType="AnoUser" useGeneratedKeys="true" keyProperty="anoUserId">
         insert ignore into ano_user
         <trim prefix="(" suffix=")" suffixOverrides=",">

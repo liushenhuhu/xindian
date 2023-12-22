@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.label.mapper.AlertLogAuditMapper">
+
+    <resultMap id="AlertLogAuditResult" type="com.ruoyi.xindian.label.domain.AlertLogAudit">
+            <id property="logId" column="log_id" jdbcType="VARCHAR"/>
+            <result property="logNoise" column="log_noise" jdbcType="INTEGER"/>
+            <result property="logNoiseLevel" column="log_noise_level" jdbcType="VARCHAR"/>
+            <result property="pId" column="p_id" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="logType" column="log_type" jdbcType="VARCHAR"/>
+            <result property="eventName" column="event_name" jdbcType="VARCHAR"/>
+            <result property="eventDescription" column="event_description" jdbcType="VARCHAR"/>
+            <result property="anoStatus" column="ano_status" jdbcType="TINYINT"/>
+            <result property="dataLabel" column="data_label" jdbcType="VARCHAR"/>
+            <result property="pointLabel" column="point_label" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="selectAlertLogAuditVo">
+        select log_id, log_noise, log_noise_level, p_id, user_id, log_type, event_name, event_description, ano_status, data_label, point_label from alert_log_audit
+    </sql>
+
+    <select id="selectAlertLogAuditList" parameterType="AlertLogAudit" resultMap="AlertLogAuditResult">
+        <include refid="selectAlertLogAuditVo"/>
+        <where>
+            <if test="logNoise != null "> and log_noise = #{logNoise}</if>
+            <if test="logNoiseLevel != null  and logNoiseLevel != ''"> and log_noise_level = #{logNoiseLevel}</if>
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="logType != null  and logType != ''"> and log_type = #{logType}</if>
+            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
+            <if test="eventDescription != null  and eventDescription != ''"> and event_description = #{eventDescription}</if>
+            <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
+            <if test="dataLabel != null  and dataLabel != ''"> and data_label = #{dataLabel}</if>
+            <if test="pointLabel != null  and pointLabel != ''"> and point_label = #{pointLabel}</if>
+        </where>
+    </select>
+
+    <select id="selectAlertLogAuditByLogId" parameterType="String" resultMap="AlertLogAuditResult">
+        <include refid="selectAlertLogAuditVo"/>
+        where log_id = #{logId}
+    </select>
+
+    <insert id="insertAlertLogAudit" parameterType="AlertLogAudit">
+        insert into alert_log_audit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logId != null">log_id,</if>
+            <if test="logNoise != null">log_noise,</if>
+            <if test="logNoiseLevel != null">log_noise_level,</if>
+            <if test="pId != null">p_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="logType != null">log_type,</if>
+            <if test="eventName != null">event_name,</if>
+            <if test="eventDescription != null">event_description,</if>
+            <if test="anoStatus != null">ano_status,</if>
+            <if test="dataLabel != null">data_label,</if>
+            <if test="pointLabel != null">point_label,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logId != null">#{logId},</if>
+            <if test="logNoise != null">#{logNoise},</if>
+            <if test="logNoiseLevel != null">#{logNoiseLevel},</if>
+            <if test="pId != null">#{pId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="logType != null">#{logType},</if>
+            <if test="eventName != null">#{eventName},</if>
+            <if test="eventDescription != null">#{eventDescription},</if>
+            <if test="anoStatus != null">#{anoStatus},</if>
+            <if test="dataLabel != null">#{dataLabel},</if>
+            <if test="pointLabel != null">#{pointLabel},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAlertLogAudit" parameterType="AlertLogAudit">
+        update alert_log_audit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logNoise != null">log_noise = #{logNoise},</if>
+            <if test="logNoiseLevel != null">log_noise_level = #{logNoiseLevel},</if>
+            <if test="pId != null">p_id = #{pId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="logType != null">log_type = #{logType},</if>
+            <if test="eventName != null">event_name = #{eventName},</if>
+            <if test="eventDescription != null">event_description = #{eventDescription},</if>
+            <if test="anoStatus != null">ano_status = #{anoStatus},</if>
+            <if test="dataLabel != null">data_label = #{dataLabel},</if>
+            <if test="pointLabel != null">point_label = #{pointLabel},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteAlertLogAuditByLogId" parameterType="String">
+        delete from alert_log_audit where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteAlertLogAuditByLogIds" parameterType="String">
+        delete from alert_log_audit where log_id in
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+</mapper>

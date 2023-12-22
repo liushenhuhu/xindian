@@ -148,6 +148,8 @@ public class AnoUserController extends BaseController
         List<AnoUser> list = anoUserService.selectNotAssign(anoUser);
         return getDataTable(list);
     }
+
+
     @PostMapping("/assignedAnoList")
     public AjaxResult assignedAnoList(@RequestBody Map<String,Object> map) {
         Object o = map.get("pId");
@@ -168,4 +170,7 @@ public class AnoUserController extends BaseController
 
         return toAjax(1);
     }
+
+
+
 }
