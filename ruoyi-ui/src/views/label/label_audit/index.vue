@@ -9,6 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <!--      <el-form-item label="患者管理id" prop="pId">-->
+      <!--        <el-input-->
+      <!--          v-model="queryParams.pId"-->
+      <!--          placeholder="请输入患者管理id"-->
+      <!--          clearable-->
+      <!--          @keyup.enter.native="handleQuery"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -16,52 +24,52 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['ano:ano:add']"-->
-<!--        >新增-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['ano:ano:edit']"-->
-<!--        >修改-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          plain-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['ano:ano:remove']"-->
-<!--        >删除-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          plain-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['ano:ano:export']"-->
-<!--        >导出-->
-<!--        </el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="primary"-->
+      <!--          plain-->
+      <!--          icon="el-icon-plus"-->
+      <!--          size="mini"-->
+      <!--          @click="handleAdd"-->
+      <!--          v-hasPermi="['ano:ano:add']"-->
+      <!--        >新增-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="success"-->
+      <!--          plain-->
+      <!--          icon="el-icon-edit"-->
+      <!--          size="mini"-->
+      <!--          :disabled="single"-->
+      <!--          @click="handleUpdate"-->
+      <!--          v-hasPermi="['ano:ano:edit']"-->
+      <!--        >修改-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="danger"-->
+      <!--          plain-->
+      <!--          icon="el-icon-delete"-->
+      <!--          size="mini"-->
+      <!--          :disabled="multiple"-->
+      <!--          @click="handleDelete"-->
+      <!--          v-hasPermi="['ano:ano:remove']"-->
+      <!--        >删除-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="warning"-->
+      <!--          plain-->
+      <!--          icon="el-icon-download"-->
+      <!--          size="mini"-->
+      <!--          @click="handleExport"-->
+      <!--          v-hasPermi="['ano:ano:export']"-->
+      <!--        >导出-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -69,17 +77,17 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="账号id" align="center" prop="userId"/>
       <el-table-column label="用户名" align="center" prop="nickName"/>
-<!--      <el-table-column label="患者管理id" align="center" prop="pId"/>-->
+      <!--      <el-table-column label="患者管理id" align="center" prop="pId"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-refresh-right"-->
-<!--            @click="refresh(scope.row)"-->
-<!--            v-hasPermi="['ano:ano:edit']"-->
-<!--          >更新-->
-<!--          </el-button>-->
+          <!--          <el-button-->
+          <!--            size="mini"-->
+          <!--            type="text"-->
+          <!--            icon="el-icon-refresh-right"-->
+          <!--            @click="refresh(scope.row)"-->
+          <!--            v-hasPermi="['ano:ano:edit']"-->
+          <!--          >更新-->
+          <!--          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -94,14 +102,14 @@
             @click="getList3(scope.row)"
           >查看已分配
           </el-button>
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['ano:ano:edit']"-->
-<!--          >修改-->
-<!--          </el-button>-->
+          <!--          <el-button-->
+          <!--            size="mini"-->
+          <!--            type="text"-->
+          <!--            icon="el-icon-edit"-->
+          <!--            @click="handleUpdate(scope.row)"-->
+          <!--            v-hasPermi="['ano:ano:edit']"-->
+          <!--          >修改-->
+          <!--          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -137,7 +145,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-<!--    分配pid-->
+    <!--    分配pid-->
     <el-dialog title="分配标注患者" :visible.sync="showNotAssign"  append-to-body>
       <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
         <el-form-item label="患者id" prop="pId">
@@ -305,7 +313,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
-        deptId: 106
       },
       total3:0
     };

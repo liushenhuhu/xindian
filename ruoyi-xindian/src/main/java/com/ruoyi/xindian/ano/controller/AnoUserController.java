@@ -122,17 +122,25 @@ public class AnoUserController extends BaseController
         String userId = assignedAno.getUserId();
         return anoUserService.insertAno(userId, pId);
     }
-    //查询标注部门下的用户
-    @PreAuthorize("@ss.hasPermi('ano:ano:list')")
+
+    /**
+     * 查询标注部门下的用户
+     * @param anoUser
+     * @return
+     */
     @GetMapping("/list2")
     public TableDataInfo list2(SysUser anoUser)
     {
-        anoUser.setDeptId(106L);
         startPage();
         List<AnoUser> list = anoUserService.selectAnoUserList2(anoUser);
         return getDataTable(list);
     }
-    //查询所有未分配的患者id
+
+    /**
+     * 查询所有未分配的患者id
+     * @param anoUser
+     * @return
+     */
     @GetMapping("/getNotAssign")
     public TableDataInfo getNotAssign(AnoUser anoUser)
     {
