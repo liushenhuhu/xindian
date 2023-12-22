@@ -10,6 +10,7 @@ import com.ruoyi.xindian.alert_log.domain.AssignedAno;
 import com.ruoyi.xindian.log_user.service.IAlertLogUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -149,6 +150,7 @@ public class AnoUserController extends BaseController
         return getDataTable(list);
     }
     @PostMapping("/assignedAnoList")
+    @Transactional
     public AjaxResult assignedAnoList(@RequestBody Map<String,Object> map) {
         Object o = map.get("pId");
         List<String> pId = new ArrayList<>();
@@ -156,6 +158,12 @@ public class AnoUserController extends BaseController
             pId = (List<String>) map.get("pId");
         }else {
             pId.add((String)map.get("pId"));
+        }
+        for (int j = 0; j < pId.size(); j++) {
+            int count=anoUserService.selectCount(pId.get(j));
+            if(count>1){
+                pId.remove(j);
+            }
         }
         Integer userId = (Integer) map.get("userId");
         for (int i = 0; i < pId.size(); i++) {

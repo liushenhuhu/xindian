@@ -138,27 +138,27 @@
       </div>
     </el-dialog>
 <!--    分配pid-->
-    <el-dialog title="分配标注患者" :visible.sync="showNotAssign"  append-to-body>
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
-        <el-form-item label="患者id" prop="pId">
+    <el-dialog title="分配标注患者" :visible.sync="showNotAssign" width="850px" append-to-body>
+      <el-form :model="queryParams2" ref="queryForm2" size="small" :inline="true" v-show="showSearch2" >
+        <el-form-item label="心电种类" prop="pId">
           <el-input
-            v-model="queryParams.pId"
-            placeholder="请输入患者管理id"
+            v-model="queryParams2.ecgType"
+            placeholder="请选择心电种类"
             clearable
-            @keyup.enter.native="handleQuery"
+            @keyup.enter.native="handleQuery2"
           />
         </el-form-item>
-        <el-form-item label="账号id" prop="userId">
+        <el-form-item label="已分配账号id" prop="assignedId" label-width="100px">
           <el-input
-            v-model="queryParams.userName"
-            placeholder="请输入账号id"
+            v-model="queryParams2.assignedId"
+            placeholder="请输入已分配账号id"
             clearable
-            @keyup.enter.native="handleQuery"
+            @keyup.enter.native="handleQuery2"
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery2">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery2">重置</el-button>
         </el-form-item>
       </el-form>
       <el-row :gutter="10" class="mb8">
@@ -178,7 +178,14 @@
       <el-table v-loading="loading2" :data="notAssignList" @selection-change="handleSelectionChange2">
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="患者id" align="center" prop="pId"/>
-        <!--      <el-table-column label="患者管理id" align="center" prop="pId"/>-->
+        <el-table-column label="心电种类" align="center" prop="ecgType">
+          <template slot-scope="scope" >
+            <el-tag >
+              {{scope.row.ecgType}}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="已分配账号id" align="center" prop="assignedId"/>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -275,7 +282,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
-        pId: null
+        pId: null,
+        deptId: 106
       },
       // 表单参数
       form: {},
@@ -297,6 +305,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
+        assignedId:null,
+        ecgType:null,
       },
       show3:false,
       loading3:false,
@@ -305,7 +315,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
-        deptId: 106
       },
       total3:0
     };
@@ -360,6 +369,16 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+    /** 搜索按钮操作 */
+    handleQuery2() {
+      this.queryParams2.pageNum = 1;
+      this.getNotAssign();
+    },
+    /** 重置按钮操作 */
+    resetQuery2() {
+      this.resetForm("queryForm2");
+      this.handleQuery2();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {

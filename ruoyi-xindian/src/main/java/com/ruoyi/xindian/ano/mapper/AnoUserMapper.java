@@ -68,4 +68,6 @@ public interface AnoUserMapper
     List<AnoUser> selectNotAssign(AnoUser anoUser);
 
     int deleteAnoUserByAnoUser(AnoUser anoUser);
+
+    int selectCount(String pId);
 }
