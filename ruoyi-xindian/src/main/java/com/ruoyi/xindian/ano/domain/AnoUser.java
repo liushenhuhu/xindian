@@ -30,6 +30,27 @@ public class AnoUser extends BaseEntity
     private Long deptId;
     private String nickName;
 
+    private String ecgType;
+
+    private Long assignedId;
+
+    public Long getAssignedId() {
+        return assignedId;
+    }
+
+    public void setAssignedId(Long assignedId) {
+        this.assignedId = assignedId;
+    }
+
+    public String getEcgType() {
+        return ecgType;
+    }
+
+    public void setEcgType(String ecgType) {
+        this.ecgType = ecgType;
+    }
+
+
 
     public Integer getType() {
         return type;
@@ -38,6 +59,7 @@ public class AnoUser extends BaseEntity
     public void setType(Integer type) {
         this.type = type;
     }
+
 
     public String getNickName() {
         return nickName;

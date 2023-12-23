@@ -211,47 +211,7 @@ export default {
       chart:null,//心博标注 echarts
       chart2:null,//波段标注 echarts
       delX:{key:null,value:null},//想要删除的点
-      seriesdata:[{xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
-        {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
-        {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
-        {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
-        {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
-        {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
-        {xAxis: 600},
-        {xAxis: 625},
-        {xAxis: 650},
-        {xAxis: 675},
-        {xAxis: 700},
-        {xAxis: 725},
-        {xAxis: 750},
-        {xAxis: 775},
-        {xAxis: 800},
-        {xAxis: 825},
-        {xAxis: 850},
-        {xAxis: 875},
-        {xAxis: 900},
-        {xAxis: 925},
-        {xAxis: 950},
-        {xAxis: 975},
-        {xAxis: 1000},
+      seriesdata:[
         {yAxis: -2},{yAxis: -1.5},{yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},{yAxis: 1.5},{yAxis: 2},
         {yAxis: -3},{yAxis: -2.5},{yAxis: 3},{yAxis: 2.5}
       ],//标线
@@ -334,12 +294,15 @@ export default {
       for (var i = 0; i <= data.length; i++) {
         this.x.push(i);
       }
+      for (let i = 0; i < 1000; i+=20) {
+        this.seriesdata.push({xAxis:i})
+      }
       //标线
       var seriesdata=this.seriesdata
       if(data.length>1500){
         seriesdata=[{yAxis: -2},{yAxis: -1.5},{yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},{yAxis: 1.5},{yAxis: 2},
         {yAxis: -3},{yAxis: -2.5},{yAxis: 3},{yAxis: 2.5}]
-        for (let i = 0; i < data.length; i+=25) {
+        for (let i = 0; i < data.length; i+=20) {
           seriesdata.push({xAxis:i})
         }
       }
@@ -363,8 +326,8 @@ export default {
             brushSelect:false,
             // y: '90%',
             startValue: 0,
-            endValue:735,
-            maxValueSpan:735,
+            endValue:638,
+            maxValueSpan:638,
           },
           {
             show: true,       // 滑动条组件
@@ -426,7 +389,7 @@ export default {
           min: -3,
           max: 3,
           boundaryGap: false,
-          splitNumber: 41,
+          splitNumber: 51,
           minInterval: 0.1,
           axisLabel: { //修改坐标系字体颜色
             show: false,
@@ -1009,12 +972,15 @@ export default {
       if(title=='II'){
         this.lead2=true
       }
+      for (let i = 0; i < 1000; i+=20) {
+        this.seriesdata.push({xAxis:i})
+      }
       //标线
       var seriesdata=this.seriesdata
       if(data.length>1500){
         seriesdata=[{yAxis: -2},{yAxis: -1.5},{yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},{yAxis: 1.5},{yAxis: 2},
           {yAxis: -3},{yAxis: -2.5},{yAxis: 3},{yAxis: 2.5}]
-        for (let i = 0; i < data.length; i+=25) {
+        for (let i = 0; i < data.length; i+=20) {
           seriesdata.push({xAxis:i})
         }
       }
@@ -1038,10 +1004,10 @@ export default {
             brushSelect:false,
             // y: '90%',
             startValue: 0,
-            endValue:252,
+            endValue:266,
             // minSpan: 52.5,
             // maxSpan: 52.6,
-            minValueSpan:252,
+            minValueSpan:266,
             maxValueSpan:727
           },
           {
@@ -1105,7 +1071,8 @@ export default {
           min: -3,
           max: 3,
           boundaryGap: false,
-          interval: 0.1,
+          splitNumber: 51,
+          minInterval: 0.1,
           axisLabel: { //修改坐标系字体颜色
             show: false,
             textStyle: {

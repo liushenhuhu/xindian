@@ -36,14 +36,26 @@
         where ano_user_id = #{anoUserId}
     </select>
     <select id="selectNotAssign" resultType="com.ruoyi.xindian.ano.domain.AnoUser">
-        SELECT l.p_id
-        from alert_log l
-        WHERE l.p_id not IN (select a.p_id FROM ano_user a
-             <where>
-                 <if test="userId!= null ">and a.user_id=#{userId}</if>
-             </where> )
-        GROUP BY l.p_id
+
+        select c.p_id ,p.ecg_type , c.user_id as assigned_id
+        FROM(SELECT d.p_id,e.user_id  FROM (select a.p_id
+        FROM (select  p_id  from alert_log  GROUP BY p_id) a LEFT JOIN (select p_id  FROM ano_user WHERE user_id =#{userId}) u on a.p_id = u.p_id  WHERE u.p_id is null) d LEFT JOIN (
+        SELECT q.p_id, u.user_id
+        FROM (SELECT p_id FROM ano_user GROUP BY p_id HAVING COUNT(*) &lt;= 2) q
+        INNER JOIN ano_user u ON q.p_id = u.p_id AND u.user_id &lt;&gt; #{userId}) e  on e.p_id  = d.p_id WHERE d.p_id not in (SELECT p_id FROM ano_user GROUP BY p_id
+        HAVING COUNT(*) =2)
+        ) c INNER JOIN patient_management p ON c.p_id = p.p_id
+        <where>
+            <if test="ecgType != null and ecgType !=''">and p.ecg_type like concat('%', #{ecgType}, '%')</if>
+            <if test="assignedId != null">and c.user_id=#{assignedId}</if>
+        </where>
+        order by c.user_id desc
+
     </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(*) from ano_user where p_id=#{pId}
+    </select>
+
     <insert id="insertAnoUser" parameterType="AnoUser" useGeneratedKeys="true" keyProperty="anoUserId">
         insert ignore into ano_user
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -105,4 +105,9 @@ public class AnoUserServiceImpl implements IAnoUserService {
     public int deleteAnoUserByAnoUser(AnoUser anoUser) {
         return anoUserMapper.deleteAnoUserByAnoUser(anoUser);
     }
+
+    @Override
+    public int selectCount(String s) {
+        return anoUserMapper.selectCount(s);
+    }
 }
