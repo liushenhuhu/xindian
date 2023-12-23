@@ -213,49 +213,7 @@ export default {
     return {
       videoVisible: false,//echarts弹出框显示
       markdata: [
-        {xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
-        {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
-        {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
-        {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
-        {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
-        {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
-        {xAxis: 600},
-        {xAxis: 625},
-        {xAxis: 650},
-        {xAxis: 675},
-        {xAxis: 700},
-        {xAxis: 725},
-        {xAxis: 750},
-        {xAxis: 775},
-        {xAxis: 800},
-        {xAxis: 825},
-        {xAxis: 850},
-        {xAxis: 875},
-        {xAxis: 900},
-        {xAxis: 925},
-        {xAxis: 950},
-        {xAxis: 975},
-        {xAxis: 1000},
         {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},
-
       ],//没放大之前标记线
       dialogFormVisible: false,//弹出框
       items: "",//常用术语
@@ -578,6 +536,9 @@ export default {
           console.log("数据以1000一条分好组", _th.nArr)
           for (var i = 0; i < 1001; i++) {
             _th.x.push(i);
+          }
+          for (var i = 0; i < 1000; i+=20) {
+            _th.markdata.push({xAxis: i})
           }
           _th.chart1 = echarts.init(document.getElementById("1"));
           _th.chart2 = echarts.init(document.getElementById("2"));
@@ -1961,7 +1922,7 @@ export default {
   flex-direction: column;
 }
 .line {
-  height: 18vh;
+  height: 15.5vh;
   width: 100%;
   margin: 0;
   padding: 0;

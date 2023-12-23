@@ -322,89 +322,6 @@ export default {
         {yAxis: 3},
       ],//放大之后标记线
       markdata: [
-        {xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
-        {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
-        {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
-        {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
-        {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
-        {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
-        {xAxis: 600},
-        {xAxis: 625},
-        {xAxis: 650},
-        {xAxis: 675},
-        {xAxis: 700},
-        {xAxis: 725},
-        {xAxis: 750},
-        {xAxis: 775},
-        {xAxis: 800},
-        {xAxis: 825},
-        {xAxis: 850},
-        {xAxis: 875},
-        {xAxis: 900},
-        {xAxis: 925},
-        {xAxis: 950},
-        {xAxis: 975},
-        {xAxis: 1000},
-        {xAxis: 1000},
-        {xAxis: 1025},
-        {xAxis: 1050},
-        {xAxis: 1075},
-        {xAxis: 1100},
-        {xAxis: 1125},
-        {xAxis: 1150},
-        {xAxis: 1175},
-        {xAxis: 1200},
-        {xAxis: 1225},
-        {xAxis: 1250},
-        {xAxis: 1275},
-        {xAxis: 1300},
-        {xAxis: 1325},
-        {xAxis: 1350},
-        {xAxis: 1375},
-        {xAxis: 1400},
-        {xAxis: 1425},
-        {xAxis: 1450},
-        {xAxis: 1475},
-        {xAxis: 1500},
-        {xAxis: 1525},
-        {xAxis: 1550},
-        {xAxis: 1575},
-        {xAxis: 1600},
-        {xAxis: 1625},
-        {xAxis: 1650},
-        {xAxis: 1675},
-        {xAxis: 1700},
-        {xAxis: 1725},
-        {xAxis: 1750},
-        {xAxis: 1775},
-        {xAxis: 1800},
-        {xAxis: 1825},
-        {xAxis: 1850},
-        {xAxis: 1875},
-        {xAxis: 1900},
-        {xAxis: 1925},
-        {xAxis: 1950},
-        {xAxis: 1975},
-        {xAxis: 2000},
-
         {yAxis: -1},
         {yAxis: -0.5},
         {yAxis: 0},
@@ -658,18 +575,20 @@ export default {
           }
           if(_th.data12.dataII.length==1000){
             $('.line').css({
-              height:'18vh'
+              height:'15.5vh'
             });
           }else if(_th.data12.dataII.length==2000){
             $('.line').css({
-              height:'8.5vh'
+              height:'7.6vh'
             });
           }else if(_th.data12.dataII.length==3000){
             $('.line').css({
-              height:'8.4vh'
+              height:'7.6vh'
             });
           }
-
+          for (var i = 0; i < 2000; i+=20) {
+            _th.markdata.push({xAxis: i})
+          }
           var chartI = echarts.init(document.getElementById("I"));
           chartI.clear()
           chartI.setOption({
@@ -718,12 +637,12 @@ export default {
               axisLine: {
                 show: false
               },
-              //  splitNumber: 3, // 横线数
-              interval: 0.1, // 刻度间隔
+              splitNumber: 51, // 横线数
+              minInterval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
                 lineStyle: {//网格样式
-                  color: "#eaadab", //网格的颜色
+                  color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
                   type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
                 }
@@ -748,12 +667,12 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -844,12 +763,12 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -943,13 +862,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1041,13 +960,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1139,13 +1058,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1237,13 +1156,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1335,13 +1254,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1432,13 +1351,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1529,13 +1448,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1626,13 +1545,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1723,13 +1642,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
@@ -1820,13 +1739,13 @@ export default {
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#d77a7a',
-                    width: 0.5
+                    color: '#df8989',
+                    width: 1
                   },
                   label: {
 
                     position: 'start', // 表现内容展示的位置
-                    color: '#b33939'  // 展示内容颜色
+                    color: '#df8989'  // 展示内容颜色
                   },
 
                   data: _th.markdata
