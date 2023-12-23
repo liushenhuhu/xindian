@@ -1,21 +1,23 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="98px">
-      <el-form-item label="患者管理id" prop="pId">
+      <el-form-item label="日志id" prop="logId">
         <el-input
-          v-model="queryParams.pId"
+          v-model="queryParams.logId"
           placeholder="请输入患者管理id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="事件名称" prop="eventName">
-        <el-input
-          v-model="queryParams.eventName"
-          placeholder="请输入事件名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="是否审核" prop="auditAnoStatus">
+        <el-select v-model="queryParams.auditAnoStatus" placeholder="请选择是否标注" clearable>
+          <el-option
+            v-for="dict in dict.type.if_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -45,17 +47,17 @@
 <!--          v-hasPermi="['label:audit:edit']"-->
 <!--        >修改</el-button>-->
 <!--      </el-col>-->
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['label:audit:remove']"
-        >删除</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['label:audit:remove']"-->
+<!--        >删除</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -69,19 +71,25 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="auditList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="auditList"  :span-method="objectSpanMethod" border @selection-change="handleSelectionChange">
+<!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="日志id" align="center" prop="logId" />
 <!--      <el-table-column label="噪声" align="center" prop="logNoise" />-->
-      <el-table-column label="噪声等级" align="center" prop="logNoiseLevel" />
-      <el-table-column label="患者管理id" align="center" prop="pId" />
-<!--      <el-table-column label="账号id" align="center" prop="userId" />-->
-      <el-table-column label="预警类型" align="center" prop="logType" />
-<!--      <el-table-column label="事件名称" align="center" prop="eventName" />-->
-<!--      <el-table-column label="事件说明" align="center" prop="eventDescription" />-->
-      <el-table-column label="是否标注" align="center" prop="anoStatus" />
-<!--      <el-table-column label="数据标签" align="center" prop="dataLabel" />-->
-<!--      <el-table-column label="点标签" align="center" prop="pointLabel" />-->
+<!--      <el-table-column label="审核人" align="center" prop="auditUserId" />-->
+      <el-table-column label="标注人" align="center" prop="userUserId" />
+      <el-table-column label="标注结果" align="center" prop="userLogNoiseLevel" />
+      <el-table-column label="是否标注" align="center" prop="userAnoStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if_status" :value="scope.row.userAnoStatus"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否审核" align="center" prop="auditAnoStatus" >
+        <template slot-scope="scope">
+          <el-tag type="danger" v-if="scope.row.auditAnoStatus==null" >否</el-tag>
+          <el-tag v-else >是</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="审核结果" align="center" prop="auditLogNoiseLevel" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
 <!--          <el-button-->
@@ -94,10 +102,9 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['label:audit:remove']"
-          >删除</el-button>
+            icon="el-icon-search"
+            @click="skip(scope.row)"
+          >审核</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -151,6 +158,7 @@ import { listAudit, getAudit, delAudit, addAudit, updateAudit } from "@/api/labe
 
 export default {
   name: "Audit",
+  dicts: [ 'if_status'],
   data() {
     return {
       // 遮罩层
@@ -161,6 +169,7 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -180,11 +189,13 @@ export default {
         pId: null,
         userId: null,
         logType: null,
+        logId: null,
         eventName: null,
         eventDescription: null,
         anoStatus: null,
         dataLabel: null,
-        pointLabel: null
+        pointLabel: null,
+        auditAnoStatus: null
       },
       // 表单参数
       form: {},
@@ -197,6 +208,21 @@ export default {
     this.getList();
   },
   methods: {
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0 || columnIndex===4|| columnIndex===5|| columnIndex===6) {
+        if (rowIndex % 2 === 0) {
+          return {
+            rowspan: 2,
+            colspan: 1
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+        }
+      }
+    },
     /** 查询标注数据审核列表 */
     getList() {
       this.loading = true;
@@ -227,6 +253,16 @@ export default {
         pointLabel: null
       };
       this.resetForm("form");
+    },
+    skip(row){
+      console.log(row)
+      this.$router.push({
+        path: '/label/looklog2',
+        query: {
+          logId: row.logId,
+          status: row.auditAnoStatus==null?0:1
+        }
+      })
     },
     /** 搜索按钮操作 */
     handleQuery() {

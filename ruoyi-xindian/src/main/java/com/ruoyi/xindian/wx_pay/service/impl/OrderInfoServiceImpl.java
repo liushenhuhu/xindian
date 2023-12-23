@@ -19,8 +19,10 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
 import com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper;
 import com.ruoyi.xindian.util.WxUtil;
+import com.ruoyi.xindian.vipPatient.controller.SxReportUnscrambleController;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
+import com.ruoyi.xindian.vipPatient.service.SxReportUnscrambleService;
 import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.Product;
@@ -72,6 +74,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Resource
     private SysUserMapper sysUserMapper;
 
+
+    @Resource
+    private SxReportUnscrambleService sxReportUnscrambleService;
 
     @Resource
     private EquipmentHeadingCodeController equipmentHeadingCodeController;
@@ -196,6 +201,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
 
 
+    }
+
+
+
+    public Boolean addSXOrder(Product product ,Long userId,SuborderOrderInfo suborderOrderInfo) throws Exception {
+        SysUser sysUser = sysUserMapper.selectUserById(userId);
+        return  sxReportUnscrambleService.insertSxReportUnscramble(sysUser.getPhonenumber(),product.getFrequency()*suborderOrderInfo.getSum())>0;
     }
 
 

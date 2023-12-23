@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.label.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.xindian.label.VO.AuditVo;
 import com.ruoyi.xindian.label.domain.AlertLogAudit;
 import com.ruoyi.xindian.label.service.AlertLogAuditService;
 import com.ruoyi.xindian.label.mapper.AlertLogAuditMapper;
@@ -37,13 +38,12 @@ public class AlertLogAuditServiceImpl extends ServiceImpl<AlertLogAuditMapper, A
     /**
      * 查询标注数据审核列表
      *
-     * @param alertLogAudit 标注数据审核
      * @return 标注数据审核
      */
     @Override
-    public List<AlertLogAudit> selectAlertLogAuditList(AlertLogAudit alertLogAudit)
+    public List<AuditVo> selectAlertLogAuditList(AuditVo auditVo)
     {
-        return alertLogAuditMapper.selectAlertLogAuditList(alertLogAudit);
+        return alertLogAuditMapper.selectAlertLogAuditList(auditVo);
     }
 
     /**

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.vipPatient.mapper.SxReportUnscrambleMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.vipPatient.domain.SxReportUnscramble">
+            <id property="sxReportId" column="sx_report_id" jdbcType="INTEGER"/>
+            <result property="patientPhone" column="patient_phone" jdbcType="VARCHAR"/>
+            <result property="endDate" column="end_date" jdbcType="TIMESTAMP"/>
+            <result property="vipNum" column="vip_num" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sx_report_id,patient_phone,end_date,
+        vip_num,create_time
+    </sql>
+</mapper>

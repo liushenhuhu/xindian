@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.label.mapper;
 
+import com.ruoyi.xindian.label.VO.AuditVo;
 import com.ruoyi.xindian.label.domain.AlertLogAudit;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -25,10 +26,9 @@ public interface AlertLogAuditMapper extends BaseMapper<AlertLogAudit> {
     /**
      * 查询标注数据审核列表
      *
-     * @param alertLogAudit 标注数据审核
      * @return 标注数据审核集合
      */
-    public List<AlertLogAudit> selectAlertLogAuditList(AlertLogAudit alertLogAudit);
+    public List<AuditVo> selectAlertLogAuditList(AuditVo auditVo);
 
     /**
      * 新增标注数据审核

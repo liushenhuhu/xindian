@@ -23,25 +23,35 @@
         select log_id, log_noise, log_noise_level, p_id, user_id, log_type, event_name, event_description, ano_status, data_label, point_label from alert_log_audit
     </sql>
 
-    <select id="selectAlertLogAuditList" parameterType="AlertLogAudit" resultMap="AlertLogAuditResult">
-        <include refid="selectAlertLogAuditVo"/>
-        <where>
-            <if test="logNoise != null "> and log_noise = #{logNoise}</if>
-            <if test="logNoiseLevel != null  and logNoiseLevel != ''"> and log_noise_level = #{logNoiseLevel}</if>
-            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="logType != null  and logType != ''"> and log_type = #{logType}</if>
-            <if test="eventName != null  and eventName != ''"> and event_name like concat('%', #{eventName}, '%')</if>
-            <if test="eventDescription != null  and eventDescription != ''"> and event_description = #{eventDescription}</if>
-            <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
-            <if test="dataLabel != null  and dataLabel != ''"> and data_label = #{dataLabel}</if>
-            <if test="pointLabel != null  and pointLabel != ''"> and point_label = #{pointLabel}</if>
-        </where>
-    </select>
 
     <select id="selectAlertLogAuditByLogId" parameterType="String" resultMap="AlertLogAuditResult">
         <include refid="selectAlertLogAuditVo"/>
         where log_id = #{logId}
+    </select>
+    <select id="selectAlertLogAuditList" resultType="com.ruoyi.xindian.label.VO.AuditVo">
+        select b.log_id as logId,b.user_log_noise_level as userLogNoiseLevel,b.audit_log_noise_level as auditLogNoiseLevel,b.user_user_id as userUserId,b.audit_user_id as auditUserId,b.user_ano_status as userAnoStatus ,b.audit_ano_status as auditAnoStatus  from (SELECT  c.log_id,
+        c.log_noise_level as user_log_noise_level,
+        f.log_noise_level as audit_log_noise_level,
+        c.user_id as user_user_id,
+        f.user_id as audit_user_id,
+        f.ano_status as audit_ano_status,
+        c.ano_status as user_ano_status  from alert_log_user c INNER JOIN (SELECT a.p_id  ,count(a.p_id) as num from ano_user a INNER JOIN (select p_id  from ano_admin <where>
+        <if test="userId!=null and userId!=''">
+            user_id = #{userId}
+        </if>
+    </where>) b on a.p_id =b.p_id   GROUP BY a.p_id HAVING
+        num = 2) d on c.p_id = d.p_id  LEFT JOIN (select user_id ,ano_status ,log_noise_level,log_id from alert_log_audit) f on f.log_id = c.log_id  ORDER BY c.log_id desc ) b
+        <where>
+            <if test="logId!=null and logId!=''">
+                b.log_id = #{logId}
+            </if>
+            <if test="auditAnoStatus!=null and auditAnoStatus!='' and auditAnoStatus ==1">
+                b.audit_ano_status is not null
+            </if>
+            <if test="auditAnoStatus!=null and auditAnoStatus!='' and auditAnoStatus ==0">
+                b.audit_ano_status is null
+            </if>
+        </where>
     </select>
 
     <insert id="insertAlertLogAudit" parameterType="AlertLogAudit">
