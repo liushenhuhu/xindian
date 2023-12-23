@@ -125,9 +125,11 @@ public class AlertLogAuditController extends BaseController {
         map.put("Audit",alertLogAudit);
 
         //标注人员的结果
-        HashMap<String, LogUserVO> collect = alertLogAuditService.selectLogUser(logId).stream().collect(Collectors.toMap(l -> l.getUserId().toString(), l -> l, (oldValue, newValue) -> oldValue, HashMap::new));
+        List<LogUserVO> logUserVOS = alertLogAuditService.selectLogUser(logId);
+        for (int i = 0; i < logUserVOS.size(); i++) {
+            map.put("user"+i,logUserVOS.get(i));
+        }
 
-        map.putAll(collect);
 
         return AjaxResult.success(map);
     }

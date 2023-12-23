@@ -42,3 +42,10 @@ export function delAudit(logId) {
     method: 'delete'
   })
 }
+// 根据logid查询两个标注信息
+export function getLogTwoUser(logId) {
+  return request({
+    url: '/label/audit/getLogId?logId=' + logId,
+    method: 'get',
+  })
+}

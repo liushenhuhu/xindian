@@ -221,13 +221,13 @@
         </div>
       </div>
       <div :class="['center-1',{'bgc':selectUser1}]" id="center-1" @click="changeUser('center-1')">
-        <div class="xinDian-1">标注1</div>
+        <div class="xinDian-1">{{user1}}</div>
         <div class="quality-1">
           <div class="item" v-for="o in userNoise1" >{{o}}</div>
         </div>
       </div>
       <div :class="['center-1',{'bgc':selectUser2}]" id="center-2" @click="changeUser('center-2')">
-        <div class="xinDian-1">标注2</div>
+        <div class="xinDian-1">{{user2}}</div>
         <div class="quality-1">
           <div class="item" v-for="o in userNoise2" >{{o}}</div>
         </div>
@@ -235,8 +235,8 @@
       <div class="topLeft">
         <div class="topMiddle">
           <div class="warning">预警类型</div>
-          <div :class="['text',{'textActive':selectType1}]" @click="changeType(1)">标注1:{{userLogType1}}</div>
-          <div :class="['text',{'textActive':selectType2}]" @click="changeType(2)">标注2:{{userLogType2}}</div>
+          <div :class="['text',{'textActive':selectType1}]" @click="changeType(1)">{{user1}}:{{userLogType1}}</div>
+          <div :class="['text',{'textActive':selectType2}]" @click="changeType(2)">{{user2}}:{{userLogType2}}</div>
           <div class="warningDetail">
             <form id="loginForm" name="loginForm" style="padding:3vw;display: flex;justify-content: space-between;width: 100%">
               <template>
@@ -282,6 +282,7 @@ import {selectList,getLabel,addLabel} from "@/api/log_user/log_user"
 import {islabel} from "@/api/alert_log/alert_log"
 import {param} from "@/utils";
 import de from "element-ui/src/locale/lang/de";
+import {addAudit, getLogTwoUser} from "@/api/label/audit";
 export default {
   name: "lookLog1",
   computed: {
@@ -533,12 +534,15 @@ export default {
       changeUserNoise:false,
       selectUser1:false,
       selectUser2:false,
-      userNoise1:['A','B','C','D','A','B','C','D','A','B','C','D'],
-      userNoise2:['D','A','A','B','C','D','A','B','C','B','C','D'],
-      userLogType1:'房性心律',
-      userLogType2:'室性早搏',
+      userNoise1:[],
+      userNoise2:[],
+      user1:'',
+      user2:'',
+      userLogType1:'',
+      userLogType2:'',
       selectType1:false,
       selectType2:false,
+      status:0,
     };
   },
 
@@ -546,47 +550,21 @@ export default {
     console.log('created')
     if (this.$route.query.logId) {
       this.message.logid = this.$route.query.logId;
-      this.message.logType = this.$route.query.logType;
-      this.message.user_id = this.$route.query.userId;
+      this.status=this.$route.query.status;
+      // this.message.logType = this.$route.query.logType;
+      // this.message.user_id = this.$route.query.userId;
       this.value=this.$route.query.logType;
       this.query.logId=this.$route.query.logId;
       this.query.userId=this.$route.query.userId;
       this.getSelectList()
       this.getLabel()
+      this.getLogTwoUser()
     }
   },
   mounted() {
     this.getMessage()
     this.chartjump = echarts.init(document.getElementById('chartjump'));
   },
-  // watch:{
-  //   'tap.noise':{
-  //     handler(new_value,old_value){
-  //         if(new_value){
-  //           this.chartjump.dispatchAction({
-  //             type: 'takeGlobalCursor',
-  //             // 如果想变为“可刷选状态”，必须设置。不设置则会关闭“可刷选状态”。
-  //             key: 'brush',
-  //             brushOption: {
-  //               // 参见 brush 组件的 brushType。如果设置为 false 则关闭“可刷选状态”。
-  //               brushType: 'lineX',
-  //               // 参见 brush 组件的 brushMode。如果不设置，则取 brush 组件的 brushMode 设置。
-  //               brushMode: 'multiple',
-  //             }
-  //           });
-  //         }else {
-  //           this.chartjump.dispatchAction({
-  //             type: 'takeGlobalCursor',
-  //           });
-  //           this.chartjump.dispatchAction({
-  //             type: 'brush',
-  //             areas: []
-  //           });
-  //         }
-  //     },
-  //     deep: true
-  //   }
-  // },
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
@@ -595,6 +573,20 @@ export default {
       selectList().then(res=>{
         console.log(res)
         this.options=res.data
+      })
+    },
+    getLogTwoUser(){
+      getLogTwoUser(this.message.logid).then(res=>{
+        if(this.status==1){
+          this.noise_level=res.data.Audit.logNoiseLevel.split('')
+          this.value=res.data.Audit.logType
+        }
+        this.user1=res.data.user0.userId
+        this.user2=res.data.user1.userId
+        this.userNoise1=res.data.user0.logNoiseLevel.split('')
+        this.userNoise2=res.data.user1.logNoiseLevel.split('')
+        this.userLogType1=res.data.user0.logType
+        this.userLogType2=res.data.user1.logType
       })
     },
     //获取心电数据
@@ -2046,7 +2038,9 @@ export default {
     },
     //ABCD等级的判断
     level(data) {
-      this.noise_level = data.result.noise_level
+      if(this.status==0){
+        this.noise_level = data.result.noise_level
+      }
       console.log("传的ABCD的等级", this.noise_level)
     },
     //修改红绿颜色框的颜色
@@ -2189,7 +2183,13 @@ export default {
       // console.log(this.noise_list)
       console.log(this.noise_level)
       console.log(this.message.user_id)
-      var that=this
+      if(this.value==''){
+        this.$message.error('请选中预警类型')
+      }
+      addAudit({logId:this.message.logid,logNoiseLevel:this.noise_level,logType: this.value,pId:this.message.pid}).then(res=>{
+        this.$message.success("提交成功")
+      })
+      // var that=this
 //       $.ajax({
 //         cache: true,
 //         type: "POST",
@@ -2219,9 +2219,9 @@ export default {
     submitData(){
       this.query.waveLabel=JSON.stringify(this.subData)
       console.log(this.subData)
-      addLabel(this.query).then(res=>{
-        this.$modal.msgSuccess("标注提交成功");
-      }).catch(err=>{})
+      // addLabel(this.query).then(res=>{
+      //   this.$modal.msgSuccess("标注提交成功");
+      // }).catch(err=>{})
     },
     showchart(title, data) {
       this.title=title
@@ -2592,12 +2592,18 @@ export default {
     changeUser(val){
       let data=[],i=0
       if(val=='center-1'){
+        if(this.userNoise1.length==0){
+          return
+        }
         this.selectUser1=!this.selectUser1
         this.selectUser2=false
         if(this.selectUser1){
           data=this.userNoise1
         }
       }else {
+        if(this.userNoise2.length==0){
+          return
+        }
         this.selectUser2=!this.selectUser2
         this.selectUser1=false
         if(this.selectUser2){
@@ -2621,12 +2627,18 @@ export default {
     changeType(val){
       console.log(val)
       if(val==1){
+        if(this.userLogType1==''){
+          return
+        }
         this.selectType1=!this.selectType1
         this.selectType2=false
         if(this.selectType1){
           this.value=this.userLogType1
         }
       }else {
+        if(this.userLogType2==''){
+          return
+        }
         this.selectType2=!this.selectType2
         this.selectType1=false
         if(this.selectType2){
