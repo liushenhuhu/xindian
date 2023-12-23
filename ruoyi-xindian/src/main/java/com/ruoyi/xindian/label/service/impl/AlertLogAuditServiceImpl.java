@@ -2,6 +2,7 @@ package com.ruoyi.xindian.label.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.xindian.label.VO.AuditVo;
+import com.ruoyi.xindian.label.VO.LogUserVO;
 import com.ruoyi.xindian.label.domain.AlertLogAudit;
 import com.ruoyi.xindian.label.service.AlertLogAuditService;
 import com.ruoyi.xindian.label.mapper.AlertLogAuditMapper;
@@ -92,6 +93,11 @@ public class AlertLogAuditServiceImpl extends ServiceImpl<AlertLogAuditMapper, A
     public int deleteAlertLogAuditByLogId(String logId)
     {
         return alertLogAuditMapper.deleteAlertLogAuditByLogId(logId);
+    }
+
+    @Override
+    public List<LogUserVO> selectLogUser(String logId) {
+        return alertLogAuditMapper.selectLogUser(logId);
     }
 }
 

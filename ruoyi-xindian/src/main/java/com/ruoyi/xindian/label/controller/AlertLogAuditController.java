@@ -9,6 +9,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.label.VO.AuditVo;
+import com.ruoyi.xindian.label.VO.LogUserVO;
 import com.ruoyi.xindian.label.domain.AlertLogAudit;
 import com.ruoyi.xindian.label.service.AlertLogAuditService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/label/audit")
@@ -107,6 +112,25 @@ public class AlertLogAuditController extends BaseController {
 
 
 
+
+    @GetMapping("/getLogId")
+    public AjaxResult getLogId(String logId)
+    {
+
+        Map<String,Object> map = new HashMap<>();
+
+        //审核后的结果
+        AlertLogAudit alertLogAudit = alertLogAuditService.selectAlertLogAuditByLogId(logId);
+
+        map.put("Audit",alertLogAudit);
+
+        //标注人员的结果
+        HashMap<String, LogUserVO> collect = alertLogAuditService.selectLogUser(logId).stream().collect(Collectors.toMap(l -> l.getUserId().toString(), l -> l, (oldValue, newValue) -> oldValue, HashMap::new));
+
+        map.putAll(collect);
+
+        return AjaxResult.success(map);
+    }
 
 
 

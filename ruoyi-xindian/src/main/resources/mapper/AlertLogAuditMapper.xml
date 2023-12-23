@@ -53,6 +53,16 @@
             </if>
         </where>
     </select>
+    <select id="selectLogUser" resultType="com.ruoyi.xindian.label.VO.LogUserVO">
+        SELECT
+            alert_log_user.log_id,
+            alert_log_user.log_noise_level,
+            alert_log_user.user_id,
+            alert_log_user.log_type
+        FROM
+            alert_log_user
+        WHERE alert_log_user.log_id =#{logId}
+    </select>
 
     <insert id="insertAlertLogAudit" parameterType="AlertLogAudit">
         insert into alert_log_audit

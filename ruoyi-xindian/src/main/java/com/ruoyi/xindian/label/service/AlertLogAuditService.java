@@ -1,8 +1,10 @@
 package com.ruoyi.xindian.label.service;
 
 import com.ruoyi.xindian.label.VO.AuditVo;
+import com.ruoyi.xindian.label.VO.LogUserVO;
 import com.ruoyi.xindian.label.domain.AlertLogAudit;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
 
 import java.util.List;
 
@@ -24,7 +26,6 @@ public interface AlertLogAuditService extends IService<AlertLogAudit> {
     /**
      * 查询标注数据审核列表
      *
-     * @param AuditVo 标注数据审核
      * @return 标注数据审核集合
      */
     public List<AuditVo> selectAlertLogAuditList(AuditVo auditVo);
@@ -60,4 +61,8 @@ public interface AlertLogAuditService extends IService<AlertLogAudit> {
      * @return 结果
      */
     public int deleteAlertLogAuditByLogId(String logId);
+
+
+    List<LogUserVO> selectLogUser(String logId);
+
 }

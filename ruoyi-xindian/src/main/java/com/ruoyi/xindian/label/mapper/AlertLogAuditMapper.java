@@ -1,8 +1,10 @@
 package com.ruoyi.xindian.label.mapper;
 
 import com.ruoyi.xindian.label.VO.AuditVo;
+import com.ruoyi.xindian.label.VO.LogUserVO;
 import com.ruoyi.xindian.label.domain.AlertLogAudit;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -61,6 +63,10 @@ public interface AlertLogAuditMapper extends BaseMapper<AlertLogAudit> {
      * @return 结果
      */
     public int deleteAlertLogAuditByLogIds(String[] logIds);
+
+
+    List<LogUserVO> selectLogUser(@Param("logId") String logId);
+
 }
 
 
