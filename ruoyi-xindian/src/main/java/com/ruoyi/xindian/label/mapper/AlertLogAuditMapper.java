@@ -67,6 +67,7 @@ public interface AlertLogAuditMapper extends BaseMapper<AlertLogAudit> {
 
     List<LogUserVO> selectLogUser(@Param("logId") String logId);
 
+    List<AlertLogAudit> selectAuditList(AuditVo auditVo);
 }
 
 

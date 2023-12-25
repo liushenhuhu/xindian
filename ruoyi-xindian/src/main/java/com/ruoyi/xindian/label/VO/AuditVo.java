@@ -24,4 +24,5 @@ public class AuditVo {
 
     private Long userId;
 
+    private String ecgType;
 }

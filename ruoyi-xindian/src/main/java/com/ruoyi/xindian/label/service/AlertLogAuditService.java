@@ -65,4 +65,5 @@ public interface AlertLogAuditService extends IService<AlertLogAudit> {
 
     List<LogUserVO> selectLogUser(String logId);
 
+    List<AlertLogAudit> selectAuditList(AuditVo auditVo);
 }

@@ -54,18 +54,18 @@ public class AlertLogAuditController extends BaseController {
         return getDataTable(list);
     }
 
-//    /**
-//     * 导出标注数据审核列表
-//     */
-//    @PreAuthorize("@ss.hasPermi('label:audit:export')")
-//    @Log(title = "标注数据审核", businessType = BusinessType.EXPORT)
-//    @PostMapping("/export")
-//    public void export(HttpServletResponse response, AlertLogAudit alertLogAudit)
-//    {
-//        List<AlertLogAudit> list = alertLogAuditService.selectAlertLogAuditList(alertLogAudit);
-//        ExcelUtil<AlertLogAudit> util = new ExcelUtil<AlertLogAudit>(AlertLogAudit.class);
-//        util.exportExcel(response, list, "标注数据审核数据");
-//    }
+    /**
+     * 导出标注数据审核列表
+     */
+    @PreAuthorize("@ss.hasPermi('label:audit:export')")
+    @Log(title = "标注数据审核", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, AuditVo auditVo)
+    {
+        List<AlertLogAudit> list = alertLogAuditService.selectAuditList(auditVo);
+        ExcelUtil<AlertLogAudit> util = new ExcelUtil<AlertLogAudit>(AlertLogAudit.class);
+        util.exportExcel(response, list, "标注数据审核数据");
+    }
 
     /**
      * 获取标注数据审核详细信息
@@ -85,6 +85,7 @@ public class AlertLogAuditController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody AlertLogAudit alertLogAudit)
     {
+        alertLogAudit.setUserId(getUserId());
         return toAjax(alertLogAuditService.insertAlertLogAudit(alertLogAudit));
     }
 
@@ -96,6 +97,7 @@ public class AlertLogAuditController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody AlertLogAudit alertLogAudit)
     {
+        alertLogAudit.setUserId(getUserId());
         return toAjax(alertLogAuditService.updateAlertLogAudit(alertLogAudit));
     }
 

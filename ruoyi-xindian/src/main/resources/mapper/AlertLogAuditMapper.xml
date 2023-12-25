@@ -63,6 +63,15 @@
             alert_log_user
         WHERE alert_log_user.log_id =#{logId}
     </select>
+    <select id="selectAuditList" resultType="com.ruoyi.xindian.label.domain.AlertLogAudit">
+        select u.log_id, u.log_noise, u.log_noise_level, u.p_id,u.log_type, u.event_name, u.event_description
+        from alert_log_audit u left join patient_management p on u.p_id=p.p_id
+        <where>
+            <if test="ecgType!=null and ecgType!=''">
+                p.ecg_type  like concat('%', #{ecgType}, '%')
+            </if>
+        </where>
+    </select>
 
     <insert id="insertAlertLogAudit" parameterType="AlertLogAudit">
         insert into alert_log_audit

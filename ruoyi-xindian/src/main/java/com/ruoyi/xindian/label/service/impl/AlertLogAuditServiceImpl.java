@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.label.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.xindian.label.VO.AuditVo;
 import com.ruoyi.xindian.label.VO.LogUserVO;
 import com.ruoyi.xindian.label.domain.AlertLogAudit;
@@ -56,6 +57,12 @@ public class AlertLogAuditServiceImpl extends ServiceImpl<AlertLogAuditMapper, A
     @Override
     public int insertAlertLogAudit(AlertLogAudit alertLogAudit)
     {
+        alertLogAudit.setEventDescription(alertLogAudit.getLogType());
+        alertLogAudit.setEventName(alertLogAudit.getLogType());
+
+        int noise = getNoise(alertLogAudit.getLogNoiseLevel());
+        alertLogAudit.setLogNoise(noise);
+
         return alertLogAuditMapper.insertAlertLogAudit(alertLogAudit);
     }
 
@@ -68,9 +75,38 @@ public class AlertLogAuditServiceImpl extends ServiceImpl<AlertLogAuditMapper, A
     @Override
     public int updateAlertLogAudit(AlertLogAudit alertLogAudit)
     {
+        alertLogAudit.setEventDescription(alertLogAudit.getLogType());
+        alertLogAudit.setEventName(alertLogAudit.getLogType());
+
+        int noise = getNoise(alertLogAudit.getLogNoiseLevel());
+        alertLogAudit.setLogNoise(noise);
         return alertLogAuditMapper.updateAlertLogAudit(alertLogAudit);
     }
-
+    public int getNoise(String level){
+        if(level.length()!=12){
+            throw new ServiceException("噪声参数错误");
+        }
+        StringBuilder noise= new StringBuilder();
+        String[] split = level.split("");
+        for (int i = 0; i < split.length; i++) {
+            if(split[i].equals("A")){
+                noise.append("0");
+                continue;
+            }
+            noise.append("1");
+        }
+        return bin2Dec(noise.toString());
+    }
+    public  int bin2Dec(String binaryString){
+        int sum = 0;
+        for(int i = 0;i < binaryString.length();i++){
+            char ch = binaryString.charAt(i);
+            if(ch > '2' || ch < '0')
+                throw new NumberFormatException(String.valueOf(i));
+            sum = sum * 2 + (binaryString.charAt(i) - '0');
+        }
+        return sum;
+    }
     /**
      * 批量删除标注数据审核
      *
@@ -98,6 +134,11 @@ public class AlertLogAuditServiceImpl extends ServiceImpl<AlertLogAuditMapper, A
     @Override
     public List<LogUserVO> selectLogUser(String logId) {
         return alertLogAuditMapper.selectLogUser(logId);
+    }
+
+    @Override
+    public List<AlertLogAudit> selectAuditList(AuditVo auditVo) {
+        return alertLogAuditMapper.selectAuditList(auditVo);
     }
 }
 
