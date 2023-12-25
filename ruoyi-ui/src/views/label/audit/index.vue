@@ -64,7 +64,7 @@
           plain
           icon="el-icon-download"
           size="mini"
-          @click="handleExport"
+          @click="showExport"
           v-hasPermi="['label:audit:export']"
         >导出</el-button>
       </el-col>
@@ -150,6 +150,31 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+<!--    导出类型-->
+    <el-dialog title="导出" :visible.sync="show1" width="500px" append-to-body>
+      <el-form ref="form1" :model="form1" :rules="rules" label-width="80px">
+        <el-form-item label="心电类型" prop="logNoise">
+          <el-select
+            v-model="form1.ecgType"
+            placeholder="设备类型"
+            clearable
+            style="width: 240px"
+          >
+            <el-option
+              v-for="dict in dict.type.equipment_source"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleExport">导出</el-button>
+        <el-button @click="cancel1">取 消</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -158,7 +183,7 @@ import { listAudit, getAudit, delAudit, addAudit, updateAudit } from "@/api/labe
 
 export default {
   name: "Audit",
-  dicts: [ 'if_status'],
+  dicts: [ 'if_status','equipment_source'],
   data() {
     return {
       // 遮罩层
@@ -201,7 +226,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      show1:false,
+      form1:{ecgType:""},
     };
   },
   created() {
@@ -236,6 +263,10 @@ export default {
     cancel() {
       this.open = false;
       this.reset();
+    },
+    cancel1() {
+      this.show1 = false;
+      this.form1.ecgType=""
     },
     // 表单重置
     reset() {
@@ -326,11 +357,14 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
     },
+    showExport(){
+      this.show1=true
+    },
     /** 导出按钮操作 */
     handleExport() {
       this.download('label/audit/export', {
-        ...this.queryParams
-      }, `audit_${new Date().getTime()}.xlsx`)
+        ...this.form1
+      }, `标注结果集_${new Date().getTime()}.xlsx`)
     }
   }
 };

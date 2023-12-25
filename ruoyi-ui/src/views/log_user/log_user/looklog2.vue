@@ -282,7 +282,7 @@ import {selectList,getLabel,addLabel} from "@/api/log_user/log_user"
 import {islabel} from "@/api/alert_log/alert_log"
 import {param} from "@/utils";
 import de from "element-ui/src/locale/lang/de";
-import {addAudit, getLogTwoUser} from "@/api/label/audit";
+import {addAudit, getLogTwoUser, updateAudit} from "@/api/label/audit";
 export default {
   name: "lookLog1",
   computed: {
@@ -546,8 +546,8 @@ export default {
     };
   },
 
-  created() {
-    console.log('created')
+  async created() {
+    // console.log('created')
     if (this.$route.query.logId) {
       this.message.logid = this.$route.query.logId;
       this.status=this.$route.query.status;
@@ -556,9 +556,10 @@ export default {
       this.value=this.$route.query.logType;
       this.query.logId=this.$route.query.logId;
       this.query.userId=this.$route.query.userId;
+      await this.getLogTwoUser()
       this.getSelectList()
       this.getLabel()
-      this.getLogTwoUser()
+
     }
   },
   mounted() {
@@ -571,14 +572,29 @@ export default {
     },
     getSelectList(){
       selectList().then(res=>{
-        console.log(res)
+        // console.log(res)
         this.options=res.data
       })
     },
     getLogTwoUser(){
       getLogTwoUser(this.message.logid).then(res=>{
-        if(this.status==1){
-          this.noise_level=res.data.Audit.logNoiseLevel.split('')
+        // console.log(res)
+        if(res.data.Audit!=null){
+          this.status=1
+          var level=res.data.Audit.logNoiseLevel.split('')
+          let i=0
+          let list={}
+          for (let key in this.noise_level) {
+            this.noise_level[key]=level[i]
+            if(level[i]=='A'){
+              list[this.levellight[key]]=0
+            }else {
+              list[this.levellight[key]]=1
+            }
+            i++
+          }
+          // console.log(list)
+          this.light(list)
           this.value=res.data.Audit.logType
         }
         this.user1=res.data.user0.userId
@@ -635,8 +651,10 @@ export default {
           _th.message.age = Number(jsonResult.result.age).toFixed(0);
           _th.message.sex = jsonResult.result.sex;
           _th.message.time = jsonResult.result.clockTime;
-          _th.light(jsonResult)
-          _th.level(jsonResult)
+          if(_th.status==0){
+            _th.light(jsonResult.result.noise)
+            _th.level(jsonResult.result.noise_level)
+          }
           if (_th.message.devicesn != null) {
             (function () {
               var i;
@@ -2004,10 +2022,10 @@ export default {
           } else {
             _th.$modal.msgError("设备未连接")
           }
-          console.log(jsonResult.result)
+          // console.log(jsonResult.result)
         },
         error: function (data) {
-          console.log(data)
+          // console.log(data)
           _th.$modal.msgError("数据获取失败")
         }
       });
@@ -2015,7 +2033,7 @@ export default {
     //获取标注数据
     getLabel(){
       getLabel(this.query).then(res=>{
-        console.log(res)
+        // console.log(res)
         if(res.data.waveLabel!=null){
           this.subData=JSON.parse(res.data.waveLabel)
         }
@@ -2024,8 +2042,8 @@ export default {
     },
     //判断红绿颜色
     light(data) {
-      this.noise_list = data.result.noise
-      console.log(this.noise_list)
+      this.noise_list = data
+      // console.log(this.noise_list)
       for (var key in this.noise_list) {
         if (this.noise_list[key] === 1) {
           let temp = document.getElementById(key)
@@ -2038,33 +2056,31 @@ export default {
     },
     //ABCD等级的判断
     level(data) {
-      if(this.status==0){
-        this.noise_level = data.result.noise_level
-      }
-      console.log("传的ABCD的等级", this.noise_level)
+      this.noise_level = data
+      // console.log("传的ABCD的等级", this.noise_level)
     },
     //修改红绿颜色框的颜色
     changeColor(tid) {
-      console.log("红绿颜色修改点击事件：",tid)
+      // console.log("红绿颜色修改点击事件：",tid)
       var b = tid.target.id;
-      console.log("点击获取到的导联id：",b)
+      // console.log("点击获取到的导联id：",b)
       let temp = document.getElementById(b)
       if (this.noise_list[b] === 0) {
         this.noise_list[b] = 1;
         temp.style.backgroundColor = "red";
         this.noise_level[this.lightlevel[b]]="B"
-        console.log("点击修改之后的噪声数据：",this.noise_list)
+        // console.log("点击修改之后的噪声数据：",this.noise_list)
       } else {
         this.noise_list[b] = 0;
         temp.style.backgroundColor = "greenyellow";
         this.noise_level[this.lightlevel[b]]="A"
-        console.log("点击修改之后的噪声数据：",this.noise_list)
+        // console.log("点击修改之后的噪声数据：",this.noise_list)
       }
     },
     //全为A
     allA() {
       for (var k in this.noise_level) {
-        console.log(this.noise_level[k])
+        // console.log(this.noise_level[k])
         this.noise_level[k] = "A"
         this.noise_list[this.levellight[k]]=0
         let temp = document.getElementById(this.levellight[k])
@@ -2115,8 +2131,8 @@ export default {
         this.noise_list[this.levellight[lab]]=1
       }
 
-      console.log("修改之后的等级：",this.noise_level);
-      console.log("修改之后的等级：", this.noise_list)
+      // console.log("修改之后的等级：",this.noise_level);
+      // console.log("修改之后的等级：", this.noise_list)
     },
     //重置按钮
     cleartap(){
@@ -2132,7 +2148,7 @@ export default {
             || (v[0].xAxis <=newitem[1] && v[1].xAxis >= newitem[1])
             ||(v[0].xAxis >=newitem[0] && v[1].xAxis <= newitem[1]);
         });
-        console.log("是否有交叉",result)
+        // console.log("是否有交叉",result)
         if(result==-1){
           this.markArea.push(a)
         }else {
@@ -2178,17 +2194,35 @@ export default {
       });
     },
     submit() {
-      console.log(this.message.logid)
-      console.log(this.value)
+      // console.log(this.message.logid)
+      // console.log(this.value)
       // console.log(this.noise_list)
-      console.log(this.noise_level)
-      console.log(this.message.user_id)
+      // console.log(this.noise_level)
+      // console.log(this.message.user_id)
       if(this.value==''){
         this.$message.error('请选中预警类型')
       }
-      addAudit({logId:this.message.logid,logNoiseLevel:this.noise_level,logType: this.value,pId:this.message.pid}).then(res=>{
-        this.$message.success("提交成功")
-      })
+      let noise_level='',temp=false //是否都标注了
+      for (let key in this.noise_level) {
+        noise_level+=this.noise_level[key]
+        if(this.noise_level[key]==''){
+          temp=true
+        }
+      }
+      if(temp){
+        this.$message.error('请填写完整')
+      }
+      console.log({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid})
+      if(this.status==0){
+        addAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid}).then(res=>{
+          this.$message.success("提交成功")
+        })
+      }else {
+        updateAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid}).then(res=>{
+          this.$message.success("提交成功")
+        })
+      }
+
       // var that=this
 //       $.ajax({
 //         cache: true,
@@ -2218,7 +2252,7 @@ export default {
     },
     submitData(){
       this.query.waveLabel=JSON.stringify(this.subData)
-      console.log(this.subData)
+      // console.log(this.subData)
       // addLabel(this.query).then(res=>{
       //   this.$modal.msgSuccess("标注提交成功");
       // }).catch(err=>{})
@@ -2389,8 +2423,8 @@ export default {
       }
       //回显
       if(this.lead){
-        console.log("有数据")
-        console.log(this.subData)
+        // console.log("有数据")
+        // console.log(this.subData)
         for (const key in this.subData) {
           for (let j = 0; j < this.subData[key].length; j++) {
             let pointdata={
@@ -2438,7 +2472,7 @@ export default {
       var height=window.screen.height
       this.chartjump.off('contextmenu')
       this.chartjump.on('contextmenu',(params)=>{
-        console.log(params)
+        // console.log(params)
         $('#rightMenu').css({
           'display': 'block',
           'left': params.event.offsetX/width*100 + 'vw',
@@ -2448,7 +2482,7 @@ export default {
           this.delX.value=params.data.xAxis
           this.delX.key=params.data.name
         }
-        console.log(this.delX)
+        // console.log(this.delX)
       });
       this.chartjump.getZr().off('click')
       this.chartjump.getZr().on('click',params=>{
@@ -2460,7 +2494,7 @@ export default {
         if (this.chartjump.containPixel('grid',pointInPixel)) {
           this.xIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[0];
           //this.yIndex=this.chartjump.convertFromPixel({seriesIndex:0},[params.offsetX, params.offsetY])[1];
-          console.log(this.xIndex)
+          // console.log(this.xIndex)
           let temp=false
           this.pointdata.forEach(i=>{
             if(this.xIndex==i.xAxis){
@@ -2547,7 +2581,7 @@ export default {
       this.show=false
     },
     del(){
-      console.log(this.delX.key,this.delX.value)
+      // console.log(this.delX.key,this.delX.value)
       this.pointdata.some((item,index)=>{
         if(item.xAxis==this.delX.value){
           this.pointdata.splice(index,1)
@@ -2557,7 +2591,7 @@ export default {
       this.subData[this.delX.key].some((item,index)=>{
         if(item==this.delX.value){
           this.subData[this.delX.key].splice(index,1)
-          console.log("删除成功")
+          // console.log("删除成功")
           return true
         }
       })
@@ -2625,7 +2659,7 @@ export default {
     },
     //选着某个人的标注类型
     changeType(val){
-      console.log(val)
+      // console.log(val)
       if(val==1){
         if(this.userLogType1==''){
           return
