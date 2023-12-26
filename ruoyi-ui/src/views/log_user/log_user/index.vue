@@ -286,11 +286,18 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {},
+      num:1,
     };
   },
   created() {
     this.getList();
+  },
+  activated() {
+    if(this.num>1){
+      this.getList()
+    }
+    this.num++
   },
   methods: {
     /** 查询标注分配列表 */

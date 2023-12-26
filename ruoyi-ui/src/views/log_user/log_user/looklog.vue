@@ -537,34 +537,6 @@ export default {
     this.getMessage()
     this.chartjump = echarts.init(document.getElementById('chartjump'));
   },
-  // watch:{
-  //   'tap.noise':{
-  //     handler(new_value,old_value){
-  //         if(new_value){
-  //           this.chartjump.dispatchAction({
-  //             type: 'takeGlobalCursor',
-  //             // 如果想变为“可刷选状态”，必须设置。不设置则会关闭“可刷选状态”。
-  //             key: 'brush',
-  //             brushOption: {
-  //               // 参见 brush 组件的 brushType。如果设置为 false 则关闭“可刷选状态”。
-  //               brushType: 'lineX',
-  //               // 参见 brush 组件的 brushMode。如果不设置，则取 brush 组件的 brushMode 设置。
-  //               brushMode: 'multiple',
-  //             }
-  //           });
-  //         }else {
-  //           this.chartjump.dispatchAction({
-  //             type: 'takeGlobalCursor',
-  //           });
-  //           this.chartjump.dispatchAction({
-  //             type: 'brush',
-  //             areas: []
-  //           });
-  //         }
-  //     },
-  //     deep: true
-  //   }
-  // },
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
@@ -2192,14 +2164,14 @@ export default {
 //            cocoMessage.error("提交失败", 3000);
         }
       });
-      islabel({logType:this.value,logId:this.message.logid})
+      islabel({logType:this.value,logId:this.message.logid,userId:this.message.user_id})
     },
     submitData(){
       this.query.waveLabel=JSON.stringify(this.subData)
       console.log(this.subData)
-      addLabel(this.query).then(res=>{
-        this.$modal.msgSuccess("标注提交成功");
-      }).catch(err=>{})
+      // addLabel(this.query).then(res=>{
+      //   this.$modal.msgSuccess("标注提交成功");
+      // }).catch(err=>{})
     },
     showchart(title, data) {
       this.title=title

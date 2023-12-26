@@ -30,7 +30,7 @@ public class AnoAdminController extends BaseController {
     /**
      * 查询审核标注分配列表
      */
-    @PreAuthorize("@ss.hasPermi('ano:admin:list')")
+
     @GetMapping("/list")
     public TableDataInfo list(AnoAdmin anoAdmin)
     {
@@ -52,7 +52,6 @@ public class AnoAdminController extends BaseController {
     /**
      * 导出审核标注分配列表
      */
-    @PreAuthorize("@ss.hasPermi('ano:admin:export')")
     @Log(title = "审核标注分配", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AnoAdmin anoAdmin)
@@ -65,7 +64,6 @@ public class AnoAdminController extends BaseController {
     /**
      * 获取审核标注分配详细信息
      */
-    @PreAuthorize("@ss.hasPermi('ano:admin:query')")
     @GetMapping(value = "/{anoAdminId}")
     public AjaxResult getInfo(@PathVariable("anoAdminId") Long anoAdminId)
     {
@@ -75,7 +73,6 @@ public class AnoAdminController extends BaseController {
     /**
      * 新增审核标注分配
      */
-    @PreAuthorize("@ss.hasPermi('ano:admin:add')")
     @Log(title = "审核标注分配", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Map<String,Object> map)
@@ -100,7 +97,6 @@ public class AnoAdminController extends BaseController {
     /**
      * 修改审核标注分配
      */
-    @PreAuthorize("@ss.hasPermi('ano:admin:edit')")
     @Log(title = "审核标注分配", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody AnoAdmin anoAdmin)
@@ -111,7 +107,6 @@ public class AnoAdminController extends BaseController {
     /**
      * 删除审核标注分配
      */
-    @PreAuthorize("@ss.hasPermi('ano:admin:remove')")
     @Log(title = "审核标注分配", businessType = BusinessType.DELETE)
     @DeleteMapping("/{anoAdminIds}")
     public AjaxResult remove(@PathVariable Long[] anoAdminIds)

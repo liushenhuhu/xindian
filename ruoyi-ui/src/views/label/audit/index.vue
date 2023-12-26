@@ -4,7 +4,7 @@
       <el-form-item label="日志id" prop="logId">
         <el-input
           v-model="queryParams.logId"
-          placeholder="请输入患者管理id"
+          placeholder="请输入日志id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -229,10 +229,17 @@ export default {
       },
       show1:false,
       form1:{ecgType:""},
+      num:1,
     };
   },
   created() {
     this.getList();
+  },
+  activated() {
+    if(this.num>1){
+      this.getList()
+    }
+    this.num++
   },
   methods: {
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
