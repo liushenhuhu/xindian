@@ -2195,12 +2195,13 @@ export default {
     },
     submit() {
       // console.log(this.message.logid)
-      // console.log(this.value)
+      console.log(this.value)
       // console.log(this.noise_list)
       // console.log(this.noise_level)
       // console.log(this.message.user_id)
-      if(this.value==''){
-        this.$message.error('请选中预警类型')
+      if(this.value==null || this.value==''){
+        this.$message.error('请选择预警类型')
+        return
       }
       let noise_level='',temp=false //是否都标注了
       for (let key in this.noise_level) {
@@ -2211,11 +2212,13 @@ export default {
       }
       if(temp){
         this.$message.error('请填写完整')
+        return
       }
       console.log({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid})
       if(this.status==0){
         addAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid}).then(res=>{
           this.$message.success("提交成功")
+          this.status=1
         })
       }else {
         updateAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid}).then(res=>{
