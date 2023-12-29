@@ -127,14 +127,14 @@
     <!--    分配pid-->
     <el-dialog title="分配审核患者" :visible.sync="showNotAssign"  append-to-body width="900px">
       <el-form :model="queryParams2" ref="queryForm" size="small" :inline="true" v-show="showSearch2" label-width="90px">
-<!--        <el-form-item label="患者管理id" prop="pId">-->
-<!--          <el-input-->
-<!--            v-model="queryParams2.pId"-->
-<!--            placeholder="请输入患者管理id"-->
-<!--            clearable-->
-<!--            @keyup.enter.native="getNotAssign"-->
-<!--          />-->
-<!--        </el-form-item>-->
+        <el-form-item label="患者管理id" prop="pId">
+          <el-input
+            v-model="queryParams2.pId"
+            placeholder="请输入患者管理id"
+            clearable
+            @keyup.enter.native="getNotAssign"
+          />
+        </el-form-item>
         <el-form-item label="设备类型" prop="ecgType">
           <el-input
             v-model="queryParams2.ecgType"

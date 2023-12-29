@@ -138,9 +138,17 @@
       </div>
     </el-dialog>
 <!--    分配pid-->
-    <el-dialog title="分配标注患者" :visible.sync="showNotAssign" width="850px" append-to-body>
+    <el-dialog title="分配标注患者" :visible.sync="showNotAssign" width="950px" append-to-body>
       <el-form :model="queryParams2" ref="queryForm2" size="small" :inline="true" v-show="showSearch2" >
-        <el-form-item label="心电种类" prop="pId">
+        <el-form-item label="患者管理id" prop="pId">
+          <el-input
+            v-model="queryParams2.pId"
+            placeholder="请输入患者管理id"
+            clearable
+            @keyup.enter.native="handleQuery2"
+          />
+        </el-form-item>
+        <el-form-item label="心电种类" prop="ecgType">
           <el-input
             v-model="queryParams2.ecgType"
             placeholder="请选择心电种类"
@@ -307,6 +315,7 @@ export default {
         userId: null,
         assignedId:null,
         ecgType:null,
+        pId:null,
       },
       show3:false,
       loading3:false,

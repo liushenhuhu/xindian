@@ -48,6 +48,7 @@
         <where>
             <if test="ecgType != null and ecgType !=''">and p.ecg_type like concat('%', #{ecgType}, '%')</if>
             <if test="assignedId != null">and c.user_id=#{assignedId}</if>
+            <if test="pId != null">and c.p_id=#{pId}</if>
         </where>
         order by c.user_id desc
 
