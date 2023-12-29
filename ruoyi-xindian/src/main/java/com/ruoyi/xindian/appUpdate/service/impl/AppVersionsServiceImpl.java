@@ -25,8 +25,8 @@ public class AppVersionsServiceImpl extends ServiceImpl<AppVersionsMapper, AppVe
 
     @Override
     public AppVersions getAppVersionsCompare(AppVersions appVersions) {
-        AppVersions versionsId = appVersionsMapper.selectOne(new QueryWrapper<AppVersions>().orderByDesc("versions_id").last("limit 1"));
-        if (!appVersions.getVersionsNumber().equals(versionsId.getVersionsNumber())){
+        AppVersions versionsId = appVersionsMapper.selectOne(new QueryWrapper<AppVersions>().eq("type", appVersions.getType()).orderByDesc("versions_id").last("limit 1"));
+        if (versionsId!=null && !appVersions.getVersionsNumber().equals(versionsId.getVersionsNumber())){
             return versionsId;
         }
         return null;

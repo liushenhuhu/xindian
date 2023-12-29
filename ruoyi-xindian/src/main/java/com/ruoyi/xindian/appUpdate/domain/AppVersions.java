@@ -41,6 +41,9 @@ public class AppVersions implements Serializable {
      */
     private Date updateTime;
 
+    private String type;
+
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

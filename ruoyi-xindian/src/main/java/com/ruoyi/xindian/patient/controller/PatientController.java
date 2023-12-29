@@ -29,6 +29,7 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.domain.PatientRelationshipDto;
 import com.ruoyi.xindian.util.DateUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -552,5 +553,50 @@ public class PatientController extends BaseController
         }
         return getDataTable(patients);
     }
+    @PostMapping("/addPatientByJZ")
+    public AjaxResult getPatientByCode(@RequestBody Patient patient) throws Exception {
+        if(StringUtils.isEmpty(patient.getPatientPhone())){
+            patient.setPatientPhone(randomGenNum(11));
+        }
+        if(patient.getBirthDay() != null){
+            patient.setPatientAge(Integer.toString(DateUtil.getAge(patient.getBirthDay())));
+        }
+        if(patient.getPatientPhone() != null){
+            patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
+        }
+        if(patient.getPatientName() != null){
+            patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
+        }
+        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+            patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
+        }
 
+        Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+        if (patient1!= null) {
+            return AjaxResult.success(patient1);
+        }else {
+            int i = patientService.insertPatient(patient);
+
+            MedicalHistory medicalHistory = new MedicalHistory();
+
+            BeanUtils.copyProperties(patient,medicalHistory);
+            int i1 = medicalHistoryService.insertMedicalHistory(medicalHistory);
+            return AjaxResult.success(patient);
+        }
+
+    }
+
+    /**
+     * 随机数
+     * @param place 定义随机数的位数
+     */
+    public String randomGenNum(int place) {
+        String base = "123456789";
+        StringBuilder sb = new StringBuilder();
+        Random rd = new Random();
+        for(int i=0;i<place;i++) {
+            sb.append(base.charAt(rd.nextInt(base.length())));
+        }
+        return sb.toString();
+    }
 }

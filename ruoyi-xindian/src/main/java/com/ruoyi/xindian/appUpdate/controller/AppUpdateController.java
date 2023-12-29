@@ -30,6 +30,9 @@ public class AppUpdateController {
         if (StringUtils.isEmpty(appVersions.getVersionsNumber())){
             return AjaxResult.error("请携带版本号");
         }
+        if(appVersions.getType()==null){
+            return AjaxResult.error("请携带类型");
+        }
         AppVersions appVersionsCompare = appVersionsService.getAppVersionsCompare(appVersions);
         if (appVersionsCompare==null){
             return AjaxResult.success("您的版本为最新版");

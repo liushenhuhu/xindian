@@ -2,6 +2,7 @@ package com.ruoyi.xindian.patient.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
+import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.List;
  * @author hanhan
  * @date 2022-08-20
  */
-public class Patient extends BaseEntity {
+public class Patient extends MedicalHistory {
     private static final long serialVersionUID = 1L;
 
     /**

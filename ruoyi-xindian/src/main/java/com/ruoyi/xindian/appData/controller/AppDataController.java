@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * app相关数据Controller
@@ -203,6 +204,28 @@ public class AppDataController extends BaseController {
         return toAjax(res);
     }
 
+
+    @GetMapping("/getPatientByCode")
+    public AjaxResult getPatientByCode(Patient patient){
+        if(patient.getPatientPhone()==null){
+            patient.setPatientPhone(randomGenNum(11));
+        }
+        return AjaxResult.success(patient);
+    }
+
+    /**
+     * 随机数
+     * @param place 定义随机数的位数
+     */
+    public String randomGenNum(int place) {
+        String base = "123456789";
+        StringBuilder sb = new StringBuilder();
+        Random rd = new Random();
+        for(int i=0;i<place;i++) {
+            sb.append(base.charAt(rd.nextInt(base.length())));
+        }
+        return sb.toString();
+    }
 
     /**
      * 新增app相关数据
