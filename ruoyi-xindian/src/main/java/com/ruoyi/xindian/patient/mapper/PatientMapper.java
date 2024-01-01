@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.patient.mapper;
 
+import com.ruoyi.xindian.patient.domain.DoctorRelationPatient;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient_management.vo.Limit;
 import org.apache.ibatis.annotations.Param;
@@ -102,4 +103,7 @@ public interface PatientMapper
 
 
     Patient selectPatientByPatientPhoneAndHospitalId(String patientPhone);
+
+
+    List<Patient> selectByDoc(DoctorRelationPatient doctorRelationPatient);
 }
