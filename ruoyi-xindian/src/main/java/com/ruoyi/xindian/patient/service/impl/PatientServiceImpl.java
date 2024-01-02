@@ -9,6 +9,7 @@ import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
+import com.ruoyi.xindian.patient.domain.DoctorRelationPatient;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.mapper.PatientMapper;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -179,5 +180,10 @@ public class PatientServiceImpl implements IPatientService
             sysUserMapper.updateDetectionNumAdd(patientPhone);
         }
         return true;
+    }
+
+    @Override
+    public List<Patient> selectByDoc(DoctorRelationPatient doctorRelationPatient) {
+        return null;
     }
 }

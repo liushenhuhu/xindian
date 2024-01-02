@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.patient.service;
 
+import com.ruoyi.xindian.patient.domain.DoctorRelationPatient;
 import com.ruoyi.xindian.patient.domain.Patient;
 
 import java.util.List;
@@ -97,4 +98,8 @@ public interface IPatientService
 
     Boolean detectionNumSubtract(String patientPhone );
     Boolean detectionNumAdd(String patientPhone );
+
+
+    List<Patient> selectByDoc(DoctorRelationPatient doctorRelationPatient);
+
 }

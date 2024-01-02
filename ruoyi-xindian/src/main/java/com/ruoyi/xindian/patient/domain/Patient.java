@@ -123,6 +123,8 @@ public class Patient extends MedicalHistory {
 
     private String isSelect;
 
+
+
     public String getIsSelect() {
         return isSelect;
     }

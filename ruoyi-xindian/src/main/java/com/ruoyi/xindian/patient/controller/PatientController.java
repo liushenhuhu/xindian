@@ -1,4 +1,5 @@
 package com.ruoyi.xindian.patient.controller;
+import java.util.Date;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Aes;
@@ -23,8 +24,10 @@ import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
+import com.ruoyi.xindian.patient.domain.DoctorRelationPatient;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.domain.PatientMedicalHistoryDTO;
+import com.ruoyi.xindian.patient.service.DoctorRelationPatientService;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.domain.PatientRelationshipDto;
@@ -73,6 +76,10 @@ public class PatientController extends BaseController
     @Resource
     private AesUtils aesUtils;
 
+
+
+    @Resource
+    private DoctorRelationPatientService doctorRelationPatientService;
 
     @Resource
     private RedisTemplate<String,Patient> redisTemplate;
@@ -555,35 +562,49 @@ public class PatientController extends BaseController
     }
     @PostMapping("/addPatientByJZ")
     public AjaxResult getPatientByCode(@RequestBody Patient patient) throws Exception {
+        if (patient.getDoctorPhone()==null){
+            return AjaxResult.success(patient);
+        }
         if(StringUtils.isEmpty(patient.getPatientPhone())){
-            patient.setPatientPhone(randomGenNum(11));
+            patient.setPatientPhone(patient.getDoctorPhone()+"-"+randomGenNum(5));
         }
-        if(patient.getBirthDay() != null){
-            patient.setPatientAge(Integer.toString(DateUtil.getAge(patient.getBirthDay())));
-        }
-        if(patient.getPatientPhone() != null){
-            patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
-        }
-        if(patient.getPatientName() != null){
-            patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
-        }
-        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
-            patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
-        }
+        encryptPatient(patient);
 
         Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
         if (patient1!= null) {
+
+            DoctorRelationPatient doctorRelationPatient = new DoctorRelationPatient();
+            doctorRelationPatient.setDoctorPhone(patient.getDoctorPhone());
+            doctorRelationPatient.setPatientPhone(patient.getPatientPhone());
+            List<DoctorRelationPatient> doctorRelationPatients = doctorRelationPatientService.selectDoctorRelationPatientList(doctorRelationPatient);
+            if (doctorRelationPatients!=null&& doctorRelationPatients.isEmpty()) {
+                doctorRelationPatientService.insertDoctorRelationPatient(doctorRelationPatient);
+            }
+            decryptPatient(patient1);
             return AjaxResult.success(patient1);
         }else {
             int i = patientService.insertPatient(patient);
-
             MedicalHistory medicalHistory = new MedicalHistory();
-
             BeanUtils.copyProperties(patient,medicalHistory);
             int i1 = medicalHistoryService.insertMedicalHistory(medicalHistory);
+            DoctorRelationPatient doctorRelationPatient = new DoctorRelationPatient();
+            doctorRelationPatient.setDoctorPhone(patient.getDoctorPhone());
+            doctorRelationPatient.setPatientPhone(patient.getPatientPhone());
+            doctorRelationPatientService.insertDoctorRelationPatient(doctorRelationPatient);
+            decryptPatient(patient);
             return AjaxResult.success(patient);
         }
 
+    }
+
+
+    @GetMapping("/getDoctorRelationPatient")
+    public AjaxResult getDoctorRelationPatient(DoctorRelationPatient doctorRelationPatient) throws Exception {
+        List<Patient> patients = patientService.selectByDoc(doctorRelationPatient);
+        for (Patient patient:patients){
+            decryptPatient(patient);
+        }
+        return AjaxResult.success(patients);
     }
 
     /**
@@ -598,5 +619,40 @@ public class PatientController extends BaseController
             sb.append(base.charAt(rd.nextInt(base.length())));
         }
         return sb.toString();
+    }
+
+
+    private void  encryptPatient(Patient patient) throws Exception {
+        if(patient.getBirthDay() != null){
+            patient.setPatientAge(Integer.toString(DateUtil.getAge(patient.getBirthDay())));
+        }
+        if(patient.getPatientPhone() != null){
+            patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
+        }
+        if(patient.getPatientName() != null){
+            patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
+        }
+        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+            patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
+        }
+        if (patient.getDoctorPhone()!=null&&!"".equals(patient.getDoctorPhone())){
+            patient.setDoctorPhone(aesUtils.encrypt(patient.getDoctorPhone()));
+        }
+    }
+
+    private void decryptPatient(Patient patient) throws Exception {
+
+        if(patient.getBirthDay()!=null){
+            patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
+        }
+        if(patient.getPatientPhone()!=null){
+            patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
+        }
+        if(patient.getPatientName()!=null){
+            patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+        }
+        if(patient.getDoctorPhone()!=null){
+            patient.setDoctorPhone(aesUtils.decrypt(patient.getDoctorPhone()));
+        }
     }
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.appUpdate.mapper.AppVersionMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.appUpdate.domain.AppVersion">
+            <id property="versionId" column="version_id" jdbcType="INTEGER"/>
+            <result property="versionName" column="version_name" jdbcType="VARCHAR"/>
+            <result property="versionCode" column="version_code" jdbcType="VARCHAR"/>
+            <result property="downloadUrl" column="download_url" jdbcType="VARCHAR"/>
+            <result property="wgtUrl" column="wgt_url" jdbcType="VARCHAR"/>
+            <result property="forceUpdate" column="force_update" jdbcType="TINYINT"/>
+            <result property="isSilently" column="is_silently" jdbcType="TINYINT"/>
+            <result property="versionDesc" column="version_desc" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        version_id,version_name,version_code,
+        download_url,wgt_url,force_update,
+        is_silently,version_desc,create_time,
+        type
+    </sql>
+</mapper>

@@ -144,6 +144,29 @@
         </where>
         GROUP BY ecg_type,patient_management.patient_phone_aes,sys_user.create_time order by count desc
     </select>
+    <select id="selectByDoc" resultType="com.ruoyi.xindian.patient.domain.Patient">
+        SELECT
+            patient.patient_id,
+            patient.patient_code,
+            patient.patient_age,
+            patient.patient_sex,
+            patient.patient_source,
+            patient.birth_day,
+            patient.patient_phone_aes,
+            patient.patient_name_aes
+        FROM
+            doctor_relation_patient
+                INNER JOIN
+            patient
+            ON
+                doctor_relation_patient.patient_phone = patient.patient_phone_aes
+        <where>
+            <if test="doctorPhone!= null and doctorPhone!= ''">
+              and  doctor_relation_patient.doctor_phone =  #{doctorPhone}
+            </if>
+        </where>
+        order by doctor_relation_patient.create_time desc
+    </select>
 
     <insert id="insertPatient" parameterType="Patient">
         insert into patient
