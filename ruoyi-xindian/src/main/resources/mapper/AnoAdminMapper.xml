@@ -14,11 +14,10 @@
         select ano_admin_id, user_id, p_id from ano_admin
     </sql>
     <select id="selectAnoAdminList" resultType="com.ruoyi.xindian.ano.domain.AnoAdmin" resultMap="AnoAdminResult">
-
         select c.p_id ,p.ecg_type as ecgType
         FROM(
-                SELECT a.p_id  FROM(SELECT p_id FROM alert_log GROUP BY p_id) a LEFT JOIN ano_admin b on a.p_id = b.p_id WHERE b.p_id is null
-            ) c INNER JOIN patient_management p ON c.p_id = p.p_id
+        SELECT a.p_id  FROM( SELECT a.p_id  FROM(SELECT p_id FROM alert_log GROUP BY p_id) a LEFT JOIN ano_admin b on a.p_id = b.p_id WHERE b.p_id is null) a inner JOIN (SELECT p_id,count(*) as num FROM ano_user GROUP BY p_id HAVING num=2) e ON e.p_id=a.p_id
+        ) c INNER JOIN patient_management p ON c.p_id = p.p_id
         <where>
             <if test="ecgType!= null  and ecgType!= ''">and p.ecg_type like concat('%', #{ecgType}, '%')</if>
             <if test="pId!= null ">and c.p_id = #{pId}</if>

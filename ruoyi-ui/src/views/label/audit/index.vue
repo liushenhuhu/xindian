@@ -19,6 +19,12 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="是否疑似病理" prop="userIsSuspected">
+        <el-select v-model="queryParams.userIsSuspected" placeholder="请选择是否疑似病理" clearable>
+          <el-option label="是" :value="1"/>
+          <el-option label="否" :value="0"/>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -78,6 +84,11 @@
 <!--      <el-table-column label="审核人" align="center" prop="auditUserId" />-->
       <el-table-column label="标注人" align="center" prop="userUserId" />
       <el-table-column label="标注结果" align="center" prop="userLogNoiseLevel" />
+      <el-table-column label="是否疑似病理" align="center" prop="userIsSuspected" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if_status" :value="scope.row.userIsSuspected"/>
+        </template>
+      </el-table-column>
       <el-table-column label="是否标注" align="center" prop="userAnoStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if_status" :value="scope.row.userAnoStatus"/>
@@ -220,7 +231,8 @@ export default {
         anoStatus: null,
         dataLabel: null,
         pointLabel: null,
-        auditAnoStatus: null
+        auditAnoStatus: null,
+        userIsSuspected:null,
       },
       // 表单参数
       form: {},
@@ -243,7 +255,7 @@ export default {
   },
   methods: {
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0 || columnIndex===4|| columnIndex===5|| columnIndex===6) {
+      if (columnIndex === 0 || columnIndex===5|| columnIndex===6 || columnIndex===7) {
         if (rowIndex % 2 === 0) {
           return {
             rowspan: 2,

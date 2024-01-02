@@ -13,13 +13,13 @@
           <el-radio-button @click.native.prevent="clickitem('T2')" label="T2">T2</el-radio-button>
           <el-radio-button @click.native.prevent="clickitem('T3')" label="T3">T3</el-radio-button>
         </el-radio-group>
-<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.P}" @click="labelSelectionP()">P</el-button>-->
-<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.Q}" @click="labelSelectionQ()">Q</el-button>-->
-<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.R}" @click="labelSelectionR()">R</el-button>-->
-<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.S}" @click="labelSelectionS()">S</el-button>-->
-<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.T}" @click="labelSelectionT()">T</el-button>-->
-<!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.noise}" @click="labelSelectionnoise()">选框</el-button>-->
-<!--        <el-button class="btn3" @click="labelSelectionAllNoise()">AllNoise</el-button>-->
+        <!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.P}" @click="labelSelectionP()">P</el-button>-->
+        <!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.Q}" @click="labelSelectionQ()">Q</el-button>-->
+        <!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.R}" @click="labelSelectionR()">R</el-button>-->
+        <!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.S}" @click="labelSelectionS()">S</el-button>-->
+        <!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.T}" @click="labelSelectionT()">T</el-button>-->
+        <!--        <el-button :class="{btn3:true,istap:tap,nottap:!tap.noise}" @click="labelSelectionnoise()">选框</el-button>-->
+        <!--        <el-button class="btn3" @click="labelSelectionAllNoise()">AllNoise</el-button>-->
         <el-button class="btn3" @click="clearData()">清空</el-button>
         <el-button class="btn3" @click="submitData()">提交</el-button>
         <el-popover
@@ -47,62 +47,62 @@
         <div class="echarts">
           <div class="container">
             <div class="chart" id="I" @dblclick="showchart('I',data.I)"></div>
-<!--            <button class="btn" id="I导联" @click="showchart('I',data.I)">展开</button>-->
+            <!--            <button class="btn" id="I导联" @click="showchart('I',data.I)">展开</button>-->
             <span class="light" id="Ilight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="II" @dblclick="showchart('II',data.II)"></div>
-<!--            <button class="btn" id="II导联" @click="showchart('II',data.II)">展开</button>-->
+            <!--            <button class="btn" id="II导联" @click="showchart('II',data.II)">展开</button>-->
             <span class="light" id="IIlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="III" @dblclick="showchart('III',data.III)"></div>
-<!--            <button class="btn" id="III导联" @click="showchart('III',data.III)">展开</button>-->
+            <!--            <button class="btn" id="III导联" @click="showchart('III',data.III)">展开</button>-->
             <span class="light" id="IIIlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVR" @dblclick="showchart('aVR',data.aVR)"></div>
-<!--            <button class="btn" id="aVR导联" @click="showchart('aVR',data.aVR)">展开</button>-->
+            <!--            <button class="btn" id="aVR导联" @click="showchart('aVR',data.aVR)">展开</button>-->
             <span class="light" id="aVRlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVL" @dblclick="showchart('aVL',data.aVL)"></div>
-<!--            <button class="btn" id="aVL导联" @click="showchart('aVL',data.aVL)">展开</button>-->
+            <!--            <button class="btn" id="aVL导联" @click="showchart('aVL',data.aVL)">展开</button>-->
             <span class="light" id="aVLlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="aVF" @dblclick="showchart('aVF',data.aVF)"></div>
-<!--            <button class="btn" id="aVF导联" @click="showchart('aVF',data.aVF)">展开</button>-->
+            <!--            <button class="btn" id="aVF导联" @click="showchart('aVF',data.aVF)">展开</button>-->
             <span class="light" id="aVFlight" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V1" @dblclick="showchart('V1',data.V1)"></div>
-<!--            <button class="btn" id="V1导联" @click="showchart('V1',data.V1)">展开</button>-->
+            <!--            <button class="btn" id="V1导联" @click="showchart('V1',data.V1)">展开</button>-->
             <span class="light" id="V1light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V2" @dblclick="showchart('V2',data.V2)"></div>
-<!--            <button class="btn" id="V2导联" @click="showchart('V2',data.V2)">展开</button>-->
+            <!--            <button class="btn" id="V2导联" @click="showchart('V2',data.V2)">展开</button>-->
             <span class="light" id="V2light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V3" @dblclick="showchart('V3',data.V3)"></div>
-<!--            <button class="btn" id="V3导联" @click="showchart('V3',data.V3)">展开</button>-->
+            <!--            <button class="btn" id="V3导联" @click="showchart('V3',data.V3)">展开</button>-->
             <span class="light" id="V3light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V4" @dblclick="showchart('V4',data.V4)"></div>
-<!--            <button class="btn" id="V4导联" @click="showchart('V4',data.V4)">展开</button>-->
+            <!--            <button class="btn" id="V4导联" @click="showchart('V4',data.V4)">展开</button>-->
             <span class="light" id="V4light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V5" @dblclick="showchart('V5',data.V5)"></div>
-<!--            <button class="btn" id="V5导联" @click="showchart('V5',data.V5)">展开</button>-->
+            <!--            <button class="btn" id="V5导联" @click="showchart('V5',data.V5)">展开</button>-->
             <span class="light" id="V5light" @click="changeColor($event)"></span>
           </div>
           <div class="container">
             <div class="chart" id="V6" @dblclick="showchart('V6',data.V6)"></div>
-<!--            <button class="btn" id="V6导联" @click="showchart('V6',data.V6)">展开</button>-->
+            <!--            <button class="btn" id="V6导联" @click="showchart('V6',data.V6)">展开</button>-->
             <span class="light" id="V6light" @click="changeColor($event)"></span>
           </div>
         </div>
@@ -242,6 +242,7 @@
               </template>
               <el-button type="success" id="btn1" class="btn1" @click="submit()">提交</el-button>
             </form>
+            <el-button class="btn2" id="btn2" @click="suspected">是否疑似病理</el-button>
           </div>
         </div>
         <div class="topMiddle">
@@ -261,12 +262,9 @@
 
 <script>
 import {getReportByPId} from "@/api/report/report";
-import {PatientInformation} from "@/api/log_user/log_user";
+import {PatientInformation,selectList,getLabel,addLabel,islabel} from "@/api/log_user/log_user";
 import $ from "jquery";
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
-import {selectList,getLabel,addLabel} from "@/api/log_user/log_user"
-import {islabel} from "@/api/alert_log/alert_log"
-import {param} from "@/utils";
 import de from "element-ui/src/locale/lang/de";
 export default {
   name: "lookLog1",
@@ -509,24 +507,33 @@ export default {
       markArea:[],
       title:'',
       subData:{
-          P1:[],P2:[],P3:[],
-          R1:[],R2:[],R3:[],
-          T1:[],T2:[],T3:[],
+        P1:[],P2:[],P3:[],
+        R1:[],R2:[],R3:[],
+        T1:[],T2:[],T3:[],
       },//提交标注信息
 
       pointdata:[],//画点的option
       point:[[],{P:[], Q:[], R:[], S:[], T:[]}],
-      arr:[]//要删除的点所在的区间
+      arr:[],//要删除的点所在的区间
+      isSuspected:false,
     };
   },
-
+  watch:{
+    isSuspected(val){
+      if(this.isSuspected){
+        document.getElementById('btn2').style.backgroundColor='#4cc9f0'
+      }else {
+        document.getElementById('btn2').style.backgroundColor='rgba(255,255,255,0)'
+      }
+    }
+  },
   created() {
     console.log('created')
     if (this.$route.query.logId) {
       this.message.logid = this.$route.query.logId;
-      this.message.logType = this.$route.query.logType;
+      // this.message.logType = this.$route.query.logType;
       this.message.user_id = this.$route.query.userId;
-      this.value=this.$route.query.logType;
+      // this.value=this.$route.query.logType;
       this.query.logId=this.$route.query.logId;
       this.query.userId=this.$route.query.userId;
       this.getSelectList()
@@ -593,6 +600,10 @@ export default {
           _th.message.age = Number(jsonResult.result.age).toFixed(0);
           _th.message.sex = jsonResult.result.sex;
           _th.message.time = jsonResult.result.clockTime;
+          if(jsonResult.result.isSuspected==1){
+            _th.isSuspected=true
+          }
+          _th.value=jsonResult.result.logType
           _th.light(jsonResult)
           _th.level(jsonResult)
           if (_th.message.devicesn != null) {
@@ -2133,6 +2144,9 @@ export default {
         }
       });
     },
+    suspected(){
+      this.isSuspected=!this.isSuspected
+    },
     submit() {
       console.log(this.message.logid)
       console.log(this.value)
@@ -2164,7 +2178,7 @@ export default {
 //            cocoMessage.error("提交失败", 3000);
         }
       });
-      islabel({logType:this.value,logId:this.message.logid,userId:this.message.user_id})
+      islabel({logType:this.value,logId:this.message.logid,userId:this.message.user_id,isSuspected:this.isSuspected?1:0})
     },
     submitData(){
       this.query.waveLabel=JSON.stringify(this.subData)
@@ -2443,15 +2457,15 @@ export default {
           }
           this.pointdata.push(pointdata)
           this.chartjump.setOption({
-              series:{
-                markPoint:{
-                  symbol: "pin",
-                  symbolSize: 24,
-                  animation:false,
-                  data: this.pointdata,
-                }
+            series:{
+              markPoint:{
+                symbol: "pin",
+                symbolSize: 24,
+                animation:false,
+                data: this.pointdata,
               }
-            })
+            }
+          })
         }
       });
       this.show=true
@@ -2513,15 +2527,15 @@ export default {
       })
       this.delX={key:null,value:null}
       this.chartjump.setOption({
-          series:{
-            markPoint:{
-              symbol: "pin",
-              symbolSize: 24,
-              animation:false,
-              data: this.pointdata,
-            }
+        series:{
+          markPoint:{
+            symbol: "pin",
+            symbolSize: 24,
+            animation:false,
+            data: this.pointdata,
           }
-        })
+        }
+      })
       $('#rightMenu').css({
         'display': 'none',
       });
@@ -2532,9 +2546,9 @@ export default {
       for (let i of a) {
         if (Array.isArray(i))
           return 2
-        }
-        return 1
-      },
+      }
+      return 1
+    },
     clickitem(e){
       e === this.radio ? this.radio = '' : this.radio = e
     }
@@ -2680,6 +2694,7 @@ body,html{
 
 .warningDetail {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
@@ -2687,7 +2702,11 @@ body,html{
   width: 100%;
   height: 35%;
   font-size: 1vw;
-  color: #136d87;
+  ::v-deep .btn2{
+    background-color: rgba(255, 255, 255, 0);
+    color: #136d87;
+    border:1px solid #136d87;
+  }
 
 }
 .btn1{

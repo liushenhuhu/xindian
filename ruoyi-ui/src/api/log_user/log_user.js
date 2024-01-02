@@ -66,4 +66,11 @@ export function delLog_user(logId) {
     method: 'delete'
   })
 }
-
+//标注成功
+export function islabel(data) {
+  return request({
+    url: '/log_user/log_user/islabel',
+    method: 'get',
+    params:data
+  })
+}

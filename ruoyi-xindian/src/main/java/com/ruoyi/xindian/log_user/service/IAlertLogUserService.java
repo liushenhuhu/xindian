@@ -65,4 +65,6 @@ public interface IAlertLogUserService
     List<SelectVO> selectList();
 
     void deleteAlertLogUserByUserIdAndPid(AnoUser anoUser);
+
+    int islabel(AlertLogUser alertLogUser);
 }

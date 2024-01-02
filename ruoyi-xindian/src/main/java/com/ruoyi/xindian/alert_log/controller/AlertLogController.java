@@ -213,10 +213,5 @@ public class AlertLogController extends BaseController {
         return toAjax(alertLogService.updateAno(userId, pId));
     }
 
-    @GetMapping("/islabel")
-    public AjaxResult islabel(AlertLog alertLog) {
-
-        return toAjax(alertLogService.islabel(alertLog));
-    }
 
 }

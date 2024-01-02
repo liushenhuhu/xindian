@@ -16,11 +16,12 @@
             <result property="anoStatus" column="ano_status" jdbcType="TINYINT"/>
             <result property="dataLabel" column="data_label" jdbcType="VARCHAR"/>
             <result property="pointLabel" column="point_label" jdbcType="VARCHAR"/>
+             <result property="isSuspected" column="is_suspected" jdbcType="TINYINT"/>
     </resultMap>
 
 
     <sql id="selectAlertLogAuditVo">
-        select log_id, log_noise, log_noise_level, p_id, user_id, log_type, event_name, event_description, ano_status, data_label, point_label from alert_log_audit
+        select log_id, log_noise, log_noise_level, p_id, user_id, log_type, event_name, event_description, ano_status, data_label, point_label,is_suspected from alert_log_audit
     </sql>
 
 
@@ -29,18 +30,38 @@
         where log_id = #{logId}
     </select>
     <select id="selectAlertLogAuditList" resultType="com.ruoyi.xindian.label.VO.AuditVo">
-        select b.log_id as logId,b.user_log_noise_level as userLogNoiseLevel,b.audit_log_noise_level as auditLogNoiseLevel,b.user_user_id as userUserId,b.audit_user_id as auditUserId,b.user_ano_status as userAnoStatus ,b.audit_ano_status as auditAnoStatus  from (SELECT  c.log_id,
+
+        select b.log_id as logId,b.user_log_noise_level as userLogNoiseLevel,
+               b.audit_log_noise_level as auditLogNoiseLevel,
+               b.user_user_id as userUserId,
+               b.audit_user_id as auditUserId,
+               b.user_ano_status as userAnoStatus ,
+               b.audit_ano_status as auditAnoStatus ,
+                b.userIsSuspected as userIsSuspected
+        from (SELECT  c.log_id,
         c.log_noise_level as user_log_noise_level,
         f.log_noise_level as audit_log_noise_level,
         c.user_id as user_user_id,
         f.user_id as audit_user_id,
         f.ano_status as audit_ano_status,
-        c.ano_status as user_ano_status  from alert_log_user c INNER JOIN (SELECT a.p_id  ,count(a.p_id) as num from ano_user a INNER JOIN (select p_id  from ano_admin <where>
+        c.is_suspected as userIsSuspected,
+        c.ano_status as user_ano_status  from
+        alert_log_user c INNER JOIN (SELECT log_id,  COUNT(*) as num FROM alert_log_user   GROUP BY log_id  HAVING num = 2) g on c.log_id = g.log_id
+        <if test="userIsSuspected!=null and userIsSuspected==1">
+            INNER JOIN (SELECT log_id from alert_log_user WHERE is_suspected=1)h on h.log_id = c.log_id
+        </if>
+            INNER JOIN (SELECT a.p_id  ,count(a.p_id) as num from ano_user a INNER JOIN (select p_id  from ano_admin
+                <where>
         <if test="userId!=null and userId!=''">
             user_id = #{userId}
         </if>
-    </where>) b on a.p_id =b.p_id   GROUP BY a.p_id HAVING
-        num = 2) d on c.p_id = d.p_id  LEFT JOIN (select user_id ,ano_status ,log_noise_level,log_id from alert_log_audit) f on f.log_id = c.log_id  ORDER BY c.log_id desc ) b
+    </where>)
+                b on a.p_id =b.p_id
+
+
+     GROUP BY a.p_id HAVING
+        num = 2) d on c.p_id = d.p_id  LEFT JOIN (select user_id ,ano_status ,log_noise_level,log_id from alert_log_audit) f on f.log_id = c.log_id  ORDER BY c.log_id desc) b
+
         <where>
             <if test="logId!=null and logId!=''">
                 b.log_id = #{logId}
@@ -58,7 +79,8 @@
             alert_log_user.log_id,
             alert_log_user.log_noise_level,
             alert_log_user.user_id,
-            alert_log_user.log_type
+            alert_log_user.log_type,
+            alert_log_user.is_suspected
         FROM
             alert_log_user
         WHERE alert_log_user.log_id =#{logId}
@@ -87,6 +109,7 @@
             <if test="anoStatus != null">ano_status,</if>
             <if test="dataLabel != null">data_label,</if>
             <if test="pointLabel != null">point_label,</if>
+            <if test="isSuspected != null">is_suspected,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="logId != null">#{logId},</if>
@@ -100,6 +123,7 @@
             <if test="anoStatus != null">#{anoStatus},</if>
             <if test="dataLabel != null">#{dataLabel},</if>
             <if test="pointLabel != null">#{pointLabel},</if>
+            <if test="isSuspected != null">#{isSuspected},</if>
         </trim>
     </insert>
 
@@ -116,6 +140,7 @@
             <if test="anoStatus != null">ano_status = #{anoStatus},</if>
             <if test="dataLabel != null">data_label = #{dataLabel},</if>
             <if test="pointLabel != null">point_label = #{pointLabel},</if>
+            <if test="isSuspected != null">is_suspected=#{isSuspected},</if>
         </trim>
         where log_id = #{logId}
     </update>

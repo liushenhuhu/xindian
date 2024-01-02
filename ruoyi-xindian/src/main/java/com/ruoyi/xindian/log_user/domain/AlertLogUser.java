@@ -75,6 +75,16 @@ public class AlertLogUser extends BaseEntity
     @Excel(name = "患者性别")
     private String patientSex;
 
+    private int isSuspected;
+
+    public int getIsSuspected() {
+        return isSuspected;
+    }
+
+    public void setIsSuspected(int isSuspected) {
+        this.isSuspected = isSuspected;
+    }
+
     public String getpId() {
         return pId;
     }

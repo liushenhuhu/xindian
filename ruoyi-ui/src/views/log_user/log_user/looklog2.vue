@@ -256,6 +256,7 @@
               </template>
               <el-button type="success" id="btn1" class="btn1" @click="submit()">提交</el-button>
             </form>
+            <el-button class="btn2" id="btn2" @click="suspected">是否疑似病理</el-button>
           </div>
         </div>
         <div class="topMiddle">
@@ -543,9 +544,18 @@ export default {
       selectType1:false,
       selectType2:false,
       status:0,
+      isSuspected:false,
     };
   },
-
+  watch:{
+    isSuspected(val){
+      if(this.isSuspected){
+        document.getElementById('btn2').style.backgroundColor='#4cc9f0'
+      }else {
+        document.getElementById('btn2').style.backgroundColor='rgba(255,255,255,0)'
+      }
+    }
+  },
   async created() {
     // console.log('created')
     if (this.$route.query.logId) {
@@ -596,6 +606,7 @@ export default {
           // console.log(list)
           this.light(list)
           this.value=res.data.Audit.logType
+
         }
         this.user1=res.data.user0.userId
         this.user2=res.data.user1.userId
@@ -603,6 +614,12 @@ export default {
         this.userNoise2=res.data.user1.logNoiseLevel.split('')
         this.userLogType1=res.data.user0.logType
         this.userLogType2=res.data.user1.logType
+        if((res.data.user0.isSuspected==1 || res.data.user0.isSuspected==1)){
+          this.isSuspected=true
+        }
+        if(res.data.Audit!=null && res.data.Audit.isSuspected==1){
+          this.isSuspected=true
+        }
       })
     },
     //获取心电数据
@@ -2193,6 +2210,9 @@ export default {
         }
       });
     },
+    suspected(){
+      this.isSuspected=!this.isSuspected
+    },
     submit() {
       // console.log(this.message.logid)
       console.log(this.value)
@@ -2216,12 +2236,12 @@ export default {
       }
       console.log({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid})
       if(this.status==0){
-        addAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid}).then(res=>{
+        addAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid,isSuspected:this.isSuspected?1:0}).then(res=>{
           this.$message.success("提交成功")
           this.status=1
         })
       }else {
-        updateAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid}).then(res=>{
+        updateAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid,isSuspected:this.isSuspected?1:0}).then(res=>{
           this.$message.success("提交成功")
         })
       }
@@ -2853,6 +2873,15 @@ body,html{
   height: 35%;
   font-size: 1vw;
   color: #136d87;
+  #loginForm{
+    padding:0 20px  !important;
+    margin-bottom: 10px;
+  }
+  ::v-deep .btn2{
+    background-color: rgba(255, 255, 255, 0);
+    color: #136d87;
+    border:1px solid #136d87;
+  }
 }
 .btn1{
   color: #136d87;

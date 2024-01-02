@@ -318,9 +318,7 @@
         </trim>
         where log_id = #{logId}
     </update>
-    <update id="islabel">
-        update alert_log_user set log_type=#{logType},event_name=#{logType},event_description=#{logType},ano_status=1 where log_id=#{logId} and user_id=#{userId}
-    </update>
+
 
     <delete id="deleteAlertLogByLogId" parameterType="string">
         delete

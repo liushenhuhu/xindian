@@ -13,5 +13,5 @@ public class LogUserVO {
     private String logNoiseLevel;
 
     private String logType;
-
+    private int isSuspected;
 }

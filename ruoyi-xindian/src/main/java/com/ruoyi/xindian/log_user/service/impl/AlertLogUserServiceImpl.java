@@ -103,4 +103,9 @@ public class AlertLogUserServiceImpl implements IAlertLogUserService
     public void deleteAlertLogUserByUserIdAndPid(AnoUser anoUser) {
         alertLogUserMapper.deleteAlertLogUserByUserIdAndPid(anoUser);
     }
+
+    @Override
+    public int islabel(AlertLogUser alertLogUser) {
+        return alertLogUserMapper.islabel(alertLogUser);
+    }
 }

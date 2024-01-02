@@ -49,6 +49,16 @@ public class AlertLogAudit implements Serializable {
     @Excel(name = "事件说明")
     private String eventDescription;
 
+    private int isSuspected;
+
+    public int getIsSuspected() {
+        return isSuspected;
+    }
+
+    public void setIsSuspected(int isSuspected) {
+        this.isSuspected = isSuspected;
+    }
+
     /**
      * 是否标注
      */

@@ -66,4 +66,6 @@ public interface AlertLogUserMapper
     public List<SelectVO> selectList();
 
     void deleteAlertLogUserByUserIdAndPid(AnoUser anoUser);
+
+    int islabel(AlertLogUser alertLogUser);
 }

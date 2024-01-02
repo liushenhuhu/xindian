@@ -118,4 +118,10 @@ public class AlertLogUserController extends BaseController
         List<SelectVO> selectVOList=alertLogUserService.selectList();
         return AjaxResult.success(selectVOList);
     }
+    //标注成功
+    @GetMapping("/islabel")
+    public AjaxResult islabel(AlertLogUser alertLogUser) {
+
+        return toAjax(alertLogUserService.islabel(alertLogUser));
+    }
 }

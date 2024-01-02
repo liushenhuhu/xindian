@@ -150,7 +150,7 @@ public class AnoUserController extends BaseController
         return getDataTable(list);
     }
 
-
+    //分配
     @PostMapping("/assignedAnoList")
     @Transactional
     public AjaxResult assignedAnoList(@RequestBody Map<String,Object> map) {

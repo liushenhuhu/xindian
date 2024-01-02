@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="patientAge" column="patient_age"/>
         <result property="patientSex" column="patient_sex"/>
         <result property="userId" column="user_id"/>
+        <result property="isSuspected" column="is_suspected"/>
     </resultMap>
     <resultMap type="SelectVO" id="SelectResult">
 <!--        <result property="id"    column="id"    />-->
@@ -27,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <sql id="selectAlertLogUserVo">
         select log_id, log_type, event_name, event_description, p_id,
-               ano_status, user_id
+               ano_status, user_id,is_suspected
         from alert_log_user
     </sql>
 <!--    #         select al.log_id, log_time, alu.log_type, alu.event_name, alu.event_description, al.p_id,-->
@@ -123,6 +124,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="anoStatus != null">ano_status = #{anoStatus},</if>
         </trim>
         where log_id = #{logId} and user_id=#{userId}
+    </update>
+    <update id="islabel">
+        update alert_log_user set log_type=#{logType},event_name=#{logType},event_description=#{logType},ano_status=1,is_suspected=#{isSuspected}
+                              where log_id=#{logId} and user_id=#{userId}
     </update>
 
     <delete id="deleteAlertLogUserByLogId" parameterType="String">

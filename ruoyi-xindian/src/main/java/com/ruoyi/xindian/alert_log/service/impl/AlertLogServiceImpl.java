@@ -331,9 +331,4 @@ public class AlertLogServiceImpl implements IAlertLogService
 
     }
 
-    @Override
-    public int islabel(AlertLog alertLog) {
-
-        return alertLogMapper.islabel(alertLog);
-    }
 }
