@@ -1,8 +1,11 @@
 package com.ruoyi.xindian.equipment.controller;
 
+import com.github.pagehelper.util.StringUtil;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.equipment.domain.AccountsMsg;
 import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.domain.EquipmentHeadingCode;
@@ -10,6 +13,9 @@ import com.ruoyi.xindian.equipment.mapper.EquipmentHeadingCodeMapper;
 import com.ruoyi.xindian.equipment.service.AccountsMsgService;
 import com.ruoyi.xindian.equipment.service.EquipmentHeadingCodeService;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
+import com.ruoyi.xindian.fw_log.domain.FwLog;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -18,6 +24,10 @@ import com.ruoyi.xindian.patient_management.controller.OnlineController;
 import com.ruoyi.xindian.patient_management.domain.OnlineParam;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.util.WxUtil;
+import com.ruoyi.xindian.vipPatient.domain.SxReportUnscramble;
+import com.ruoyi.xindian.vipPatient.service.SxReportUnscrambleService;
+import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +55,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/headingCode/headingCode")
@@ -71,12 +83,19 @@ public class EquipmentHeadingCodeController {
 
 
     @Resource
+    private IDoctorService doctorService;
+
+    @Resource
+    private SxReportUnscrambleService sxReportUnscrambleService;
+
+    @Resource
     private AccountsMsgService accountsMsgService;
 
     @Resource
     private AesUtils aesUtils;
 
 
+    private final Lock lock = new ReentrantLock();
     @Resource
     private IMedicalHistoryService medicalHistoryService;
 
@@ -89,6 +108,9 @@ public class EquipmentHeadingCodeController {
     @Resource
     private RedisTemplate<String,String> redisTemplate;
 
+
+    @Resource
+    private TokenService tokenService;
 
     @Resource
     private IPatientManagementService patientManagementService;
@@ -350,11 +372,88 @@ public class EquipmentHeadingCodeController {
     }
 
 
+
+
+
+    @GetMapping("/submitSXReport")
+    public AjaxResult submitSXReport(String pId,HttpServletRequest request) throws Exception {
+
+        lock.lock();
+        try {
+            LoginUser loginUser = tokenService.getLoginUser(request);
+            if (loginUser==null){
+                return AjaxResult.error("请先登录");
+            }
+            Long userId = loginUser.getUser().getUserId();
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("submitSXReport"+userId))){
+                return AjaxResult.error("请勿重复点击");
+            }
+            redisTemplate.opsForValue().set("submitSXReport"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
+
+            if (StringUtil.isEmpty(pId)){
+                return AjaxResult.error("参数错误");
+            }
+
+            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
+            if (patientManagement==null){
+                return AjaxResult.error("报告不存在");
+            }
+            if (StringUtils.isEmpty(patientManagement.getPatientPhone())){
+                return AjaxResult.error("报告不存在");
+            }
+
+            Patient patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
+            String sxUserId = getSXUserId(patient);
+            if (sxUserId==null){
+                sxUserId =getSXUserId(patient);
+            }
+
+            LinkedHashMap<String, Object> sxDateList = getSXDateList(sxUserId, pId);
+            if (sxDateList==null){
+                return AjaxResult.error("数据采集不够24小时,请注意数据是否采集完成");
+            }
+            Integer notifyStatus = (Integer)sxDateList.get("notifyStatus");
+            if (notifyStatus!=null&&notifyStatus==1){
+                return AjaxResult.error("该报告已提交诊断");
+            }
+            Integer fuwaiSendStatus = (Integer)sxDateList.get("fuwaiSendStatus");
+
+            if (fuwaiSendStatus!=null&&fuwaiSendStatus==2){
+                return AjaxResult.error("该报告已提交诊断");
+            }
+
+            SxReportUnscramble sxReportUnscramble = sxReportUnscrambleService.selectSxReportUnscrambleById(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
+            if (sxReportUnscramble==null){
+                return AjaxResult.error(302,"服务次数不够，请先购买");
+            }
+            if (sxReportUnscramble.getVipNum()==null||sxReportUnscramble.getVipNum()<=0){
+                return AjaxResult.error(302,"服务次数不够，请先购买");
+            }
+
+            int i = sxReportUnscrambleService.updateSxReportUnscrambleByNumReduce(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
+            if (i>0){
+                ifSubmitOrder(pId);
+                PatientManagement patientManagement1 = new PatientManagement();
+                patientManagement1.setpId(pId);
+                patientManagement1.setSxReportStatus(1);
+                patientManagementService.updatePatientManagement(patientManagement1);
+                return AjaxResult.success("提交成功");
+            }
+            return AjaxResult.error("网络开小差~~，请稍后再试一次");
+
+        }catch (Exception e){
+            System.out.println(e);
+            return AjaxResult.error("网络开小差~~，请稍后再试一次");
+        }finally {
+            lock.unlock();
+        }
+    }
+
+
     /**
      * 判断提交的时间是否在规定时间内
      * @param pId
      */
-
     @GetMapping("/addSXReport")
     public void ifSubmitOrder(String pId) throws Exception {
 
@@ -445,11 +544,30 @@ public class EquipmentHeadingCodeController {
             }
             if (sendMessageVo!=null){
                 if (sendMessageVo.get("resultCode").toString().equals("200")){
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    CompletableFuture.runAsync(() ->{
+                        System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
+                        try{
+                            Doctor doctor = new Doctor();
+                            doctor.setIsDoc("4");
+                            doctor.setAccountStatus("0");
+                            List<Doctor> doctors = doctorService.selectUserDoc(doctor);
+                            for (Doctor d : doctors){
+                                WxUtil.sendSubmitAdviceSX(aesUtils.decrypt(d.getDoctorPhone()));
+                            }
+                        }catch (Exception e){
+                            System.out.println(e);
+                        }
+                        System.out.println("异步线程 =====> 结束添加购买服务日志 =====> " + new Date());
+                    },executorService);
+                    executorService.shutdown(); // 回收线程池
                     return true;
                 }else {
                     return false;
                 }
             }
+
+
             return true;
         }catch (Exception e){
             System.out.println(e);
@@ -509,6 +627,12 @@ public class EquipmentHeadingCodeController {
         }
 
     }
+
+
+
+
+
+
 
 
     /**
@@ -584,6 +708,22 @@ public class EquipmentHeadingCodeController {
         }
         return null;
     }
+
+
+    /**
+     * 通过pId去通知监测人员有人需要实时监测
+     * @param pId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/submitDetectionReport")
+    public AjaxResult submitDetectionReport(String pId, HttpServletRequest request) throws Exception {
+        return AjaxResult.success(equipmentHeadingCodeService.submitDetectionReport(pId,request));
+
+    }
+
+
+
 
     /**
      * 患者解除绑定

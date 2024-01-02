@@ -35,7 +35,7 @@ public interface IPatientService
      * @param patient 患者
      * @return 结果
      */
-    public int insertPatient(Patient patient);
+    public int insertPatient(Patient patient) throws Exception;
 
 
 
@@ -47,7 +47,7 @@ public interface IPatientService
      * @param patient 患者
      * @return 结果
      */
-    public int updatePatient(Patient patient);
+    public int updatePatient(Patient patient) throws Exception;
 
     /**
      * 批量删除患者

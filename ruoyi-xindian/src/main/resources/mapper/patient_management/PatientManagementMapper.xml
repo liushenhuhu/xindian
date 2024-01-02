@@ -43,6 +43,7 @@
         <result property="dPhone"    column="d_phone_aes"    />
         <result property="refuseText"    column="refuse_text"    />
         <result property="reportNormal"    column="report_normal"    />
+        <result property="sxReportStatus"    column="sx_report_status"    />
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -104,7 +105,7 @@
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
                diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone_aes,
                birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
-               end_time, time_duration, d_phone_aes, report_state,patient_symptom,report_normal,refuse_text
+               end_time, time_duration, d_phone_aes, report_state,patient_symptom,report_normal,refuse_text,sx_report_status
         from patient_management m
                  inner join patient p on p.patient_phone_aes = m.patient_phone_aes
                  inner join equipment e on m.equipment_code = e.equipment_code
@@ -155,6 +156,7 @@
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
+            <if test="sxReportStatus != null">and sx_report_status = #{sxReportStatus}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             and doctor_phone_aes is not null
         </where>
@@ -190,6 +192,7 @@
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
+            <if test="sxReportStatus != null">and sx_report_status = #{sxReportStatus}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
@@ -762,6 +765,7 @@
             <if test="ecgLevel != null">ecg_level = #{ecgLevel},</if>
             <if test="doctorPhone != null">doctor_phone_aes = #{doctorPhone},</if>
             <if test="detectionState != null">detection_state = #{detectionState},</if>
+            <if test="sxReportStatus != null">sx_report_status = #{sxReportStatus},</if>
         </trim>
         where p_id = #{pId}
     </update>

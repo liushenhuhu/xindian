@@ -245,6 +245,9 @@ public class PatientController extends BaseController
         if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
             patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
         }
+        if(StringUtils.isNotEmpty(patient.getFamilyName())){
+            patient.setFamilyName(aesUtils.decrypt(patient.getFamilyName()));
+        }
         return AjaxResult.success(patient);
     }
 
@@ -267,6 +270,9 @@ public class PatientController extends BaseController
         }
         if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
             patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
+        }
+        if(StringUtils.isNotEmpty(patient.getFamilyName())){
+            patient.setFamilyName(aesUtils.decrypt(patient.getFamilyName()));
         }
         return AjaxResult.success(patient);
     }
@@ -292,6 +298,9 @@ public class PatientController extends BaseController
         }
         if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
             patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
+        }
+        if(StringUtils.isNotEmpty(patient.getFamilyName())){
+            patient.setFamilyName(aesUtils.decrypt(patient.getFamilyName()));
         }
         return AjaxResult.success(patient);
     }
@@ -461,7 +470,6 @@ public class PatientController extends BaseController
             medicalHistoryService.insertMedicalHistory(medicalHistory);
         }
         return AjaxResult.success(aesUtils.decrypt(patient.getPatientPhone()));
-
 
     }
 

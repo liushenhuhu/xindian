@@ -321,9 +321,7 @@ public class PatientManagementController extends BaseController {
                     }else {
                         management.setSxStatus(0);
                     }
-
-                    List<OrderInfo> orderInfos = orderInfoService.selectOrderByPId(management.getpId());
-                    if (orderInfos!=null&& !orderInfos.isEmpty()){
+                    if (management.getSxReportStatus()!=null&&management.getSxReportStatus()==1){
                         management.setSxPayStatus(1);
                     }else {
                         management.setSxPayStatus(0);

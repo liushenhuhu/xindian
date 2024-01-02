@@ -188,7 +188,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
                 baseMapper.update(orderInfo, queryWrapper);
 
-                equipmentHeadingCodeController.ifSubmitOrder(orderByOrderNo.getPId());
+                addSXOrder(product,orderByOrderNo.getUserId(),c);
+//                equipmentHeadingCodeController.ifSubmitOrder(orderByOrderNo.getPId());
             }
             else {
                 queryWrapper.eq("order_no", orderNo);
@@ -207,7 +208,30 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     public Boolean addSXOrder(Product product ,Long userId,SuborderOrderInfo suborderOrderInfo) throws Exception {
         SysUser sysUser = sysUserMapper.selectUserById(userId);
-        return  sxReportUnscrambleService.insertSxReportUnscramble(sysUser.getPhonenumber(),product.getFrequency()*suborderOrderInfo.getSum())>0;
+        int i = sxReportUnscrambleService.insertSxReportUnscramble(sysUser.getPhonenumber(), product.getFrequency() * suborderOrderInfo.getSum());
+        if (i>0){
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            CompletableFuture.runAsync(() ->{
+                System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
+                try{
+                    FwLog fwLog = new FwLog();
+                    fwLog.setUserName(sysUser.getPhonenumber());
+                    fwLog.setMsg("购买动态心电解读");
+                    fwLog.setStatus("1");
+                    fwLog.setLogTime(new Date());
+                    fwLog.setFwStatus("1");
+                    fwLog.setFwNum(product.getFrequency());
+                    fwLogMapper.insert(fwLog);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+                System.out.println("异步线程 =====> 结束添加购买服务日志 =====> " + new Date());
+            },executorService);
+            executorService.shutdown(); // 回收线程池
+            return true;
+        }
+        return  false;
+
     }
 
 
@@ -649,7 +673,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         suborderOrderInfo.setProductPrice(product.getDiscount());
         suborderOrderInfo.setProductName(product.getProductName());
         int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
-        if(!product.getType().equals("服务")){
+        if(product.getType().equals("商品")){
             updateProductAdd(sum,productId);
         }
 

@@ -181,10 +181,93 @@ public class WxUtil {
     }
 
     /**
+     * 用户采集12导的时候出现预警发送通知
+     * @param telephone
+     */
+    public static void sendSubmitSXLog(String telephone){
+        System.out.println(telephone);
+        //【迈雅云】您或您的家人在使用心电衣设备时，检测出异常状态，请登录迈雅云查看异常情况。
+        String host = "https://dfsmsv2.market.alicloudapi.com";
+        String path = "/data/send_sms_v2";
+        String method = "POST";
+        String appcode = "37a5b008bed84153ad0691d0c33fe42a";
+        Map<String, String> headers = new HashMap<String, String>();
+        //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+        headers.put("Authorization", "APPCODE " + appcode);
+        //根据API的要求，定义相对应的Content-Type
+        headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        Map<String, String> querys = new HashMap<String, String>();
+        Map<String, String> bodys = new HashMap<String, String>();
+        bodys.put("content", "code:1234");
+        bodys.put("phone_number", telephone);
+        bodys.put("template_id", "CST_xrdxptvsdhdy10867");
+
+        try {
+            /**
+             * 重要提示如下:
+             * HttpUtils请从
+             * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/src/main/java/com/aliyun/api/gateway/demo/util/HttpUtils.java
+             * 下载
+             *
+             * 相应的依赖请参照
+             * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
+             */
+            HttpResponse response = HttpUtil.doPost(host, path, method, headers, querys, bodys);
+            System.out.println(response.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+     * 用户提交动态报告通知医生诊断
+     * @param telephone
+     */
+    public static void sendSubmitAdviceSX(String telephone){
+        System.out.println(telephone);
+        //【迈雅科技】用户提交了一条诊断报告，请前往动态心电分析诊断系统进行诊断。
+        String host = "https://dfsmsv2.market.alicloudapi.com";
+        String path = "/data/send_sms_v2";
+        String method = "POST";
+        String appcode = "37a5b008bed84153ad0691d0c33fe42a";
+        Map<String, String> headers = new HashMap<String, String>();
+        //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+        headers.put("Authorization", "APPCODE " + appcode);
+        //根据API的要求，定义相对应的Content-Type
+        headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        Map<String, String> querys = new HashMap<String, String>();
+        Map<String, String> bodys = new HashMap<String, String>();
+        bodys.put("content", "code:1234");
+        bodys.put("phone_number", telephone);
+        bodys.put("template_id", "CST_jzajwbynjwbc10858");
+
+        try {
+            /**
+             * 重要提示如下:
+             * HttpUtils请从
+             * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/src/main/java/com/aliyun/api/gateway/demo/util/HttpUtils.java
+             * 下载
+             *
+             * 相应的依赖请参照
+             * https://github.com/aliyun/api-gateway-demo-sign-java/blob/master/pom.xml
+             */
+            HttpResponse response = HttpUtil.doPost(host, path, method, headers, querys, bodys);
+            System.out.println(response.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
      * 善行医师报告生成成功消息通知
      * @param telephone
      */
     public static void sendAdviceSX(String telephone){
+        System.out.println(telephone);
         //【迈雅云】您的报告已经生成成功，请前往【迈雅云】小程序查看
         String host = "https://dfsmsv2.market.alicloudapi.com";
         String path = "/data/send_sms_v2";

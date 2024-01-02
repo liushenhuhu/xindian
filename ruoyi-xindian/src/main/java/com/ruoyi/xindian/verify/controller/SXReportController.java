@@ -13,6 +13,7 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.util.FileUploadUtils;
+import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.verify.domain.SxReport;
 import com.ruoyi.xindian.verify.service.SxReportService;
 import com.ruoyi.xindian.verify.vo.SxReportVO;

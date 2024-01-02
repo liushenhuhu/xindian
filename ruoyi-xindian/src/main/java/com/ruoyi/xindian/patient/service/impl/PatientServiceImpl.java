@@ -2,6 +2,8 @@ package com.ruoyi.xindian.patient.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
@@ -46,6 +48,10 @@ public class PatientServiceImpl implements IPatientService
     @Resource
     private HospitalMapper hospitalMapper;
 
+
+    @Resource
+    private AesUtils aesUtils;
+
     @Resource
     private SysUserMapper sysUserMapper;
     /**
@@ -79,8 +85,10 @@ public class PatientServiceImpl implements IPatientService
      * @return 结果
      */
     @Override
-    public int insertPatient(Patient patient)
-    {
+    public int insertPatient(Patient patient) throws Exception {
+        if (StringUtils.isNotEmpty(patient.getFamilyName())){
+            patient.setFamilyName(aesUtils.encrypt(patient.getFamilyName()));
+        }
         return patientMapper.insertPatient(patient);
     }
 
@@ -96,8 +104,10 @@ public class PatientServiceImpl implements IPatientService
      * @return 结果
      */
     @Override
-    public int updatePatient(Patient patient)
-    {
+    public int updatePatient(Patient patient) throws Exception {
+        if (StringUtils.isNotEmpty(patient.getFamilyName())){
+            patient.setFamilyName(aesUtils.encrypt(patient.getFamilyName()));
+        }
         return patientMapper.updatePatient(patient);
     }
 

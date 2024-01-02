@@ -19,6 +19,7 @@
         <result property="birthDay"    column="birth_day"    />
         <result property="detectionNum"    column="detection_num"    />
         <result property="createTime"    column="create_time"    />
+        <result property="familyName"    column="family_name"    />
 
     </resultMap>
 
@@ -35,7 +36,7 @@
                monitoring_status,
                binding_state,
                birth_day,
-               detection_num
+               detection_num,family_name
 
         from patient
     </sql>
@@ -185,6 +186,7 @@
             <if test="birthDay != null">birth_day,</if>
             <if test="detectionNum != null">detection_num,</if>
             <if test="detectionTime != null">detection_time,</if>
+            <if test="familyName != null">family_name,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
@@ -201,6 +203,7 @@
             <if test="birthDay != null">#{birthDay},</if>
             <if test="detectionNum != null">#{detectionNum},</if>
             <if test="detectionTime != null">#{detectionTime},</if>
+            <if test="familyName != null">#{familyName},</if>
         </trim>
     </insert>
 
@@ -219,6 +222,7 @@
             <if test="bindingState != null">binding_state = #{bindingState},</if>
             <if test="birthDay != null">birth_day = #{birthDay},</if>
             <if test="detectionNum != null">detection_num = #{detectionNum},</if>
+            <if test="familyName != null">family_name = #{familyName},</if>
         </trim>
         where patient_id = #{patientId}
     </update>
