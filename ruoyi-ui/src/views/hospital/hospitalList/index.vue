@@ -89,7 +89,7 @@
 
 <script>
 import {listHospital, getHospital, delHospital, addHospital, updateHospital, addDict,onlineNum} from "@/api/hospital/hospitalList";
-import {updateOnlineAll} from "@/api/online/online"
+import {updateOnline1, updateOnlineAll} from "@/api/online/online"
 export default {
   name: "HospitalList",
   dicts: ['if'],
@@ -141,12 +141,21 @@ export default {
         hospitalCode: [
           { required: true, message: "医院代号不能为空", trigger: "blur" }
         ],
-      }
+      },
+      timer:null
     };
   },
   created() {
     this.updateOnline()
     this.getList();
+
+
+  },
+  beforeDestroy() {
+    console.log('beeeeeeeeeeeeeee')
+    if(this.timer){
+      clearInterval(this.timer)   //结束定时器，
+    }
   },
   methods: {
     findXD(){
@@ -156,8 +165,17 @@ export default {
     },
     //请求设备在线设备数量修改在线状态
     updateOnline(){
-      updateOnlineAll().then(res=>{
-        console.log(res)
+      updateOnline1().then(res=>{
+        // console.log(res)
+        onlineNum().then(res=>{
+          // console.log("在线设备数量",res)
+          this.num=res.data
+          listHospital(this.queryParams).then(response => {
+            // console.log(response)
+            this.hospitalList = response.rows;
+            this.total = response.total;
+          });
+        })
       })
     },
     /** 查询医院列表 */
@@ -172,13 +190,18 @@ export default {
         this.hospitalList = response.rows;
         this.total = response.total;
         this.loading = false;
+        if(this.timer){
+          clearInterval(this.timer)   //结束定时器，
+        }
+        this.timer=setInterval(()=>{
+          this.updateOnline()
+        },5000)
       });
       // JSON.parse("")
     },
     /** 刷新 */
     refresh() {
       this.updateOnline()
-      this.getList();
     },
     // 取消按钮
     cancel() {
