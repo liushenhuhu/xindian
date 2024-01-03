@@ -9,6 +9,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="是否疑似病理" prop="isSuspected">
+        <el-select v-model="queryParams.isSuspected" placeholder="请选择是否疑似病理" clearable>
+          <el-option label="是" :value="1"/>
+          <el-option label="否" :value="0"/>
+        </el-select>
+      </el-form-item>
 <!--      <el-form-item label="发生时间" prop="logTime">-->
 <!--        <el-form-item>-->
 <!--          <el-date-picker-->
@@ -148,6 +154,11 @@
       <el-table-column label="预警类型" align="center" prop="logType"/>
       <el-table-column label="事件名称" align="center" prop="eventName"/>
       <el-table-column label="事件说明" align="center" prop="eventDescription"/>
+      <el-table-column label="是否疑似病理" align="center" prop="isSuspected" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if_status" :value="scope.row.isSuspected"/>
+        </template>
+      </el-table-column>
       <el-table-column label="患者id" align="center" prop="pId" show-overflow-tooltip/>
       <el-table-column label="日志id" align="center" prop="logId" show-overflow-tooltip/>
 <!--      <el-table-column label="患者年龄" align="center" prop="patientAge"/>-->
@@ -281,7 +292,8 @@ export default {
         pId: null,
         hospitalName: null,
         anoStatus: null,
-        userId: null
+        userId: null,
+        isSuspected:null,
       },
       // 表单参数
       form: {},
