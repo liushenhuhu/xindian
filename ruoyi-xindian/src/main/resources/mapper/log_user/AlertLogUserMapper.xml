@@ -57,6 +57,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 <if test="pId != null "> and p_id like concat('%', #{pId}, '%')</if>
                 <if test="anoStatus != null "> and ano_status = #{anoStatus}</if>
                 <if test="userId != null "> and user_id = #{userId}</if>
+                <if test="isSuspected != null "> and is_suspected = #{isSuspected}</if>
+
             </where>
     </select>
 <!--    #         order by log_time desc-->

@@ -9,12 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否疑似病理" prop="isSuspected">
-        <el-select v-model="queryParams.isSuspected" placeholder="请选择是否疑似病理" clearable>
-          <el-option label="是" :value="1"/>
-          <el-option label="否" :value="0"/>
-        </el-select>
-      </el-form-item>
 <!--      <el-form-item label="发生时间" prop="logTime">-->
 <!--        <el-form-item>-->
 <!--          <el-date-picker-->
@@ -87,6 +81,12 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="是否疑似病理" prop="isSuspected" label-width="100">
+        <el-select v-model="queryParams.isSuspected" placeholder="请选择是否疑似病理" clearable>
+          <el-option label="是" :value="1"/>
+          <el-option label="否" :value="0"/>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
