@@ -194,6 +194,62 @@ public class WXPublicRequest {
         }
     }
 
+
+    /**
+     * 微信公众号消息推送(用户下单，通知医生进行心电图实时监测)
+     * @param userOpenid 公众号openid
+     * @param name 下单用户姓名
+     * @param phone 下单用户手机号
+     * @param pId 患者管理id
+     * @param typeName 服务名称
+     */
+    public  void sendSXDetectionMsg(String userOpenid, String name, String phone,String pId,String typeName) throws ParseException {
+        String OrderMsgTemplateId = "mXbyKoPxbejYL0Ol26rdTzNRLzzfMZWraGvCXCaszhI";
+
+//        客户姓名
+//        {{thing14.DATA}}
+//        服务名称
+//        {{thing15.DATA}}
+//        下单手机号
+//        {{phone_number4.DATA}}
+//        订单编号
+//        {{character_string1.DATA}}
+//        下单时间
+//        {{time3.DATA}}
+
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy-MM-dd HH:mm");
+        String timeNow = sdf.format(new Date());
+        WxMpInMemoryConfigStorage wxStorage = new WxMpInMemoryConfigStorage();
+        wxStorage.setAppId(WXPayConstants.WX_PUBLIC_ID);
+        wxStorage.setSecret(WXPayConstants.WX_PUBLIC_SECRET);
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(wxStorage);
+        // 此处的 key/value 需和模板消息对应
+        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+                new WxMpTemplateData("thing14", name),
+                new WxMpTemplateData("thing15", typeName),
+                new WxMpTemplateData("phone_number4", phone),
+                new WxMpTemplateData("character_string1", pId),
+                new WxMpTemplateData("time3", timeNow)
+        );
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(userOpenid)
+                .templateId(OrderMsgTemplateId)
+                .data(wxMpTemplateDataList)
+//                .url(detailUrl)
+//                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+                .build();
+        try {
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        } catch (Exception e) {
+            System.out.println("推送失败：" + e.getMessage());
+        }
+
+    }
+
+
+
     /**
      * 微信公众号消息推送（设备绑定失败）
      * @param userOpenid

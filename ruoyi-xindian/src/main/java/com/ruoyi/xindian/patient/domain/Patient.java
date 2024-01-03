@@ -125,6 +125,16 @@ public class Patient extends MedicalHistory {
 
 
 
+    private String familyName;
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
     public String getIsSelect() {
         return isSelect;
     }

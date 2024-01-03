@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.model.LoginBody;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.framework.web.service.TokenService;
@@ -50,7 +51,13 @@ public class GenerateSms {
     @ApiImplicitParam(name = "mobile", value = "手机号码", required = true, dataType = "String", paramType = "query")
     @PostMapping("/sms/code")
     @ResponseBody
-    public AjaxResult sms(@RequestBody LoginBody loginBody) {
+    public AjaxResult sms(@RequestBody LoginBody loginBody,HttpServletRequest request) {
+        String ipAddr = IpUtils.getIpAddr(request);
+        // 防止重复点击
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("patientLogin" + ipAddr))){
+            return AjaxResult.error("已发送，请勿重复点击");
+        }
+        redisTemplate.opsForValue().set("patientLogin"+ipAddr,ipAddr,60,TimeUnit.SECONDS);
         return phoneCodeUserGet(loginBody);
     }
 

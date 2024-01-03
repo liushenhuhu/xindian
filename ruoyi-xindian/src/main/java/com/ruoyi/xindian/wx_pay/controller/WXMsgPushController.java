@@ -61,13 +61,7 @@ public class WXMsgPushController {
      */
     @GetMapping("/ww")
     public AjaxResult text() throws Exception {
-//        WXPublicRequest.sendOrderMsg("你好，有一条新的问诊订单","otRV25MQPOOEn-qJmZve9im0Phno", "张三","这是一条测试消息");
-        wxPublicRequest.boundEquipmentMsg("otRV25D_bnz4hjyXOUQoWWoieFVI","A10000122111221","后续管理员联系您:17638341690","绑定失败");
-//        wxPublicRequest. getCardInvoiceSeturl();
-//        wxPublicRequest.checkCardInvoiceSetbizattrContact();
-//        wxPublicRequest.getCgiBinTicket();
-//        wxPublicRequest.setCardInvoiceSetbizattrContact();
-//        return AjaxResult.success( wxPublicRequest.getInvoiceState("20230721173518132"));
+        wxPublicRequest.sendSXDetectionMsg("o3aud5xxBfdxArqeIj12idYIxstE","王金辉","17638341690","20200222222222","心电衣检测");
         return AjaxResult.success();
     }
 

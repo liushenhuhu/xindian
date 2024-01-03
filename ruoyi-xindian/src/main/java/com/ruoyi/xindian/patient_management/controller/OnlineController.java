@@ -233,7 +233,7 @@ public class OnlineController extends BaseController {
     }
 
     @GetMapping("/getPatientOnlineStatus")
-    public AjaxResult getOnlineStatus(HttpServletRequest request1) {
+    public AjaxResult getOnlineStatus(HttpServletRequest request1) throws Exception {
         String[] pIdList = splitData(request1);
         patientService.updateMonitoringStatus();
         if (pIdList.length != 0) {

@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.vipPatient.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -237,7 +238,7 @@ public class VipPatientController extends BaseController
         return toAjax(vipPatientService.updateVipPatient(vipPatient));
     }
     @GetMapping("/once")
-    public AjaxResult once(){
+    public AjaxResult once() throws Exception {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         String phonenumber = loginUser.getUser().getPhonenumber();
         Patient p = patientService.selectPatientByPatientPhone(phonenumber);
@@ -249,7 +250,10 @@ public class VipPatientController extends BaseController
         TProduct tProduct = new TProduct();
         tProduct.setType("服务");
         List<TProduct> tProducts = itProductService.selectTProductList(tProduct);
-
+        for (TProduct product : tProducts) {
+            product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+            product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+        }
         return getDataTable(tProducts);
     }
 

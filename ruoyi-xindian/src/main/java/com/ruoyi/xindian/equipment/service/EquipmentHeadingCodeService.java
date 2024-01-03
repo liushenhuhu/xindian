@@ -3,6 +3,8 @@ package com.ruoyi.xindian.equipment.service;
 import com.ruoyi.xindian.equipment.domain.EquipmentHeadingCode;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
 * @author 13401
 * @description 针对表【equipment_heading_code】的数据库操作Service
@@ -41,5 +43,7 @@ public interface EquipmentHeadingCodeService extends IService<EquipmentHeadingCo
 
     Boolean addSXReport(String phone,String pId) throws Exception;
 
+
+    Boolean submitDetectionReport(String pId, HttpServletRequest request) throws Exception;
 
 }

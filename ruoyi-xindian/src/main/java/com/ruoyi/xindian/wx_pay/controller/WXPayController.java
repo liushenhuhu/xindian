@@ -76,7 +76,7 @@ public class WXPayController {
      */
 
     @RequestMapping("prePay")
-    public Map<String, Object> prePay(String  orderId, String type,HttpServletRequest request){
+    public Map<String, Object> prePay(String  orderId,HttpServletRequest request){
 
 //        获取token中发送请求的用户信息
         LoginUser loginUser = tokenService.getLoginUser(request);
@@ -118,20 +118,6 @@ public class WXPayController {
                 throw new ServiceException("订单不存在");
             }
 
-            if (StringUtils.isNotEmpty(type)&&type.equals("bg")){
-                if (StringUtils.isEmpty(order.getPId())){
-                    throw new ServiceException("报告不存在，请重新选择报告下单");
-                }else {
-                    PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(order.getPId());
-                    if (patientManagement==null){
-                        throw new ServiceException("报告不存在，请重新选择报告下单");
-                    }
-                    List<OrderInfo> orderInfos = orderInfoService.selectOrderByPId(order.getPId());
-                    if (orderInfos!=null&&!orderInfos.isEmpty()){
-                        throw new ServiceException("该报告已下单");
-                    }
-                }
-            }
             String body = order.getTitle();//订单介绍
             String orderNum = order.getOrderNo();//商户订单号，由随机数组成
             String openId = order.getOpenId();//获取到用户登录的openid

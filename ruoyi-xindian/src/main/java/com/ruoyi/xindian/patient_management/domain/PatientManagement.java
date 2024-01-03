@@ -232,6 +232,8 @@ public class PatientManagement extends BaseEntity {
     private Integer sxStatus;
 
 
+    private Integer sxReportStatus;
+
     private Integer sxPayStatus;
 
     /**

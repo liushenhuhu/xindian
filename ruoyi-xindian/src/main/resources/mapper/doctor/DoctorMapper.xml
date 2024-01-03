@@ -73,6 +73,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="onlineState != null  and onlineState != ''"> and online_state = #{onlineState}</if>
             <if test="img != null  and img != ''"> and img = #{img}</if>
             <if test="professional != null  and professional != ''"> and professional = #{professional}</if>
+            <if test="isDoc!= null  and isDoc!= ''"> and is_doc = #{isDoc}</if>
+            <if test="accountStatus!= null  and accountStatus!= ''"> and account_status = #{accountStatus}</if>
             <if test="equipmentList != null  and equipmentList != ''"> and equipment_list = #{equipmentList}</if>
             <if test="hospitalNameList != null and hospitalNameList.size()>0">
                 and  hospital in

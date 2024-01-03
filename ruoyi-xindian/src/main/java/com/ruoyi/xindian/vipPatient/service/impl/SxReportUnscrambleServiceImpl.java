@@ -37,11 +37,12 @@ public class SxReportUnscrambleServiceImpl extends ServiceImpl<SxReportUnscrambl
     @Override
     public int insertSxReportUnscramble(String patientPhone,Long num) throws Exception {
 
-        SxReportUnscramble sxReportUnscramble = selectSxReportUnscrambleById(patientPhone);
+        SxReportUnscramble sxReportUnscramble = selectSxReportUnscrambleById(aesUtils.decrypt(patientPhone));
         if (sxReportUnscramble == null){
             SxReportUnscramble sxReportUnscramble1 = new SxReportUnscramble();
             sxReportUnscramble1.setPatientPhone(patientPhone);
             sxReportUnscramble1.setVipNum(num);
+            sxReportUnscramble1.setCreateTime(new Date());
             return sxReportUnscrambleMapper.insert(sxReportUnscramble1);
         }
         if (sxReportUnscramble.getVipNum() == null) {
