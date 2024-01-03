@@ -259,9 +259,13 @@ public class EquipmentController extends BaseController {
     @Log(title = "设备", businessType = BusinessType.UPDATE)
     @PostMapping("/updateEquipmentStatus")
     public String updateEquipmentStatus(@RequestBody String[] equipmentList) {
+
         equipmentService.updateEquipmentStatusAll();
-        if (equipmentList.length != 0) {
+
+        if (equipmentList.length != 0&& !equipmentList[0].isEmpty()) {
+            System.out.println(System.currentTimeMillis());
             equipmentService.updateEquipmentStatus(equipmentList);
+            System.out.println(System.currentTimeMillis());
         }
         return "down";
     }
