@@ -189,7 +189,6 @@
             type="text"
             icon="el-icon-view"
             @click="handleLook(scope.row)"
-            v-hasPermi="['alert_log:alert_log:look']"
           >查看日志
           </el-button>
           <el-button

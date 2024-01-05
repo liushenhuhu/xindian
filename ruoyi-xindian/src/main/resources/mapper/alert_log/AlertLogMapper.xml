@@ -220,22 +220,11 @@
         where al.log_id = #{logId}
     </select>
     <select id="select12List" resultType="com.ruoyi.xindian.alert_log.domain.AlertLog">
-        <if test="ecgType != null&amp;&amp;ecgType =='12'">
             SELECT a.log_type AS name, COUNT(a.log_type) AS value
             FROM alert_log AS a
             INNER JOIN patient_management AS p ON a.p_id = p.p_id
-            INNER JOIN log12_type AS t ON p.ecg_type = t.log_type
             WHERE	p.p_id =#{pId}
             GROUP BY a.log_type;
-        </if>
-        <if test="ecgType != null&amp;&amp;ecgType =='single'">
-            SELECT a.log_type AS name, COUNT(a.log_type) AS value
-            FROM alert_log AS a
-            INNER JOIN patient_management AS p ON a.p_id = p.p_id
-            INNER JOIN logSingle_type AS t ON p.ecg_type = t.log_type
-            WHERE	p.p_id =#{pId}
-            GROUP BY a.log_type;
-        </if>
     </select>
     <select id="selectEarly" resultType="com.ruoyi.xindian.alert_log.domain.AlertLog">
         <if test="ecgType != null&amp;&amp;ecgType =='J12'">

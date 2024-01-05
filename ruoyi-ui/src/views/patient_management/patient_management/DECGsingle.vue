@@ -144,7 +144,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['patient_management:patient_management:export']"
+          v-hasPermi="['DECGsingle:delete:report']"
         >删除
         </el-button>
       </el-col>
@@ -155,7 +155,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['patient_management:patient_management:export']"
+          v-hasPermi="['DECGsingle:export:report']"
         >导出
         </el-button>
       </el-col>
@@ -268,7 +268,7 @@
             type="text"
             icon="el-icon-loading"
             @click="monitoring(scope.row)"
-            v-hasPermi="['patient:patient:monitoring']"
+            v-hasPermi="['DECGsingle:monitor:monitor']"
           >实时监测
           </el-button>
           <el-button
@@ -276,7 +276,7 @@
             type="text"
             icon="el-icon-download"
             @click="handleInform(scope.row)"
-            v-hasPermi="['patient:patient:downloadInform']"
+            v-hasPermi="['DECGsingle:create:report']"
           >生成报告
           </el-button>
           <el-button
@@ -284,7 +284,7 @@
             type="text"
             icon="el-icon-magic-stick"
             @click="downloadInform(scope.row)"
-            v-hasPermi="['patient:patient:inform']"
+            v-hasPermi="['DECGsingle:find:report']"
           >查看报告
           </el-button>
           <el-button
@@ -292,14 +292,14 @@
             type="text"
             icon="el-icon-download"
             @click="downloadData(scope.row)"
-            v-hasPermi="['patient:patient:inform']"
+            v-hasPermi="['DECGsingle:download:report']"
           >下载数据</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-s-order"
             @click="handleAlert(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
+            v-hasPermi="['DECGsingle:log:list']"
           >预警日志
           </el-button>
           <el-button
@@ -307,7 +307,7 @@
             type="text"
             icon="el-icon-s-data"
             @click="DRyujing(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
+            v-hasPermi="['DECGsingle:log:count']"
           >预警统计
           </el-button>
 <!--          <el-button-->
@@ -323,7 +323,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['patient_management:patient_management:export']"
+            v-hasPermi="['DECGsingle:delete:report']"
           >删除
           </el-button>
         </template>

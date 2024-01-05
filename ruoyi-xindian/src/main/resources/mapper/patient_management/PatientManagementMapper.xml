@@ -344,6 +344,11 @@
             <if test="patientSex != null  and patientSex != ''"> and patient_sex like concat(#{patientSex},'%') </if>
             <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
             <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="bindingDoctors != null  and bindingDoctors.size>0">and p.binding_doctor in
+                <foreach collection="bindingDoctors" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
             <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
             <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>

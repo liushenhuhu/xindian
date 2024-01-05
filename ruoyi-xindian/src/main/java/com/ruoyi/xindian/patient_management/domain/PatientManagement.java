@@ -199,6 +199,9 @@ public class PatientManagement extends BaseEntity {
     /**结束采集时间*/
     private Date endTime;
 
+
+    private List<String> bindingDoctors = new ArrayList<>();
+
     /**报告时长*/
     private String timeDuration;
 

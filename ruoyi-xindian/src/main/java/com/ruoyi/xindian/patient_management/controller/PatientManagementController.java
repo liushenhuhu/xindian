@@ -178,8 +178,22 @@ public class PatientManagementController extends BaseController {
             patientManagement.setDoctorPhone(aesUtils.decrypt(phonenumber));
             if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
                 patientManagement.setDiagnosisStatus(2L);
+        }else if(sysUser!= null && sysUser.getRoleId()!= null && sysUser.getRoleId() == 1104) {
+            patientManagement.getHospitalCodeList().add(sysUser.getHospitalCode());
+        }else if(sysUser!= null && sysUser.getRoleId()!= null && sysUser.getRoleId() == 1105) {
+            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+            if (hospital==null){
+              return  getTable(resList,0);
+            }
+            Doctor doctor = new Doctor();
+            doctor.getHospitalNameList().add(hospital.getHospitalName());
+            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            if (doctors!=null&& !doctors.isEmpty()){
+                for (Doctor doctor1:doctors){
+                    patientManagement.getBindingDoctors().add(doctor1.getDoctorPhone());
+                }
+            }
         }
-
         getEncryptManagement(patientManagement);
 
         startPage();

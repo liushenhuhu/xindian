@@ -238,7 +238,7 @@ public class SysLoginController {
         String token = loginService.login(encrypt, loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
-
+        ajax.put("doctor", doctor);
         AppData appData = new AppData();
         appData.setUserName(encrypt);
         List<AppData> appDataList = appDataService.selectAppDataList(appData);

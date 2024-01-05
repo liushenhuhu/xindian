@@ -187,6 +187,7 @@
             <if test="detectionNum != null">detection_num,</if>
             <if test="detectionTime != null">detection_time,</if>
             <if test="familyName != null">family_name,</if>
+            <if test="bindingDoctor != null">binding_doctor,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientId != null">#{patientId},</if>
@@ -204,6 +205,7 @@
             <if test="detectionNum != null">#{detectionNum},</if>
             <if test="detectionTime != null">#{detectionTime},</if>
             <if test="familyName != null">#{familyName},</if>
+            <if test="bindingDoctor != null">#{bindingDoctor},</if>
         </trim>
     </insert>
 

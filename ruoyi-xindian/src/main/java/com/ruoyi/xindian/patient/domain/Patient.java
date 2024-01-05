@@ -102,6 +102,8 @@ public class Patient extends MedicalHistory {
     @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date birthDay;
 
+    private String bindingDoctor;
+
     /**
      * 检测次数
      */
@@ -126,6 +128,14 @@ public class Patient extends MedicalHistory {
 
 
     private String familyName;
+
+    public String getBindingDoctor() {
+        return bindingDoctor;
+    }
+
+    public void setBindingDoctor(String bindingDoctor) {
+        this.bindingDoctor = bindingDoctor;
+    }
 
     public String getFamilyName() {
         return familyName;

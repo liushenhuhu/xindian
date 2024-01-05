@@ -576,6 +576,7 @@ public class PatientController extends BaseController
         if(StringUtils.isEmpty(patient.getPatientPhone())){
             patient.setPatientPhone(patient.getDoctorPhone()+"-"+randomGenNum(5));
         }
+        patient.setBindingDoctor(aesUtils.encrypt(patient.getDoctorPhone()));
         encryptPatient(patient);
 
         Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());

@@ -45,7 +45,7 @@ public class AlertLogController extends BaseController {
      * 查询预警日志列表
      */
     @Aes
-    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
+//    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
     @GetMapping("/list")
     public TableDataInfo list(AlertLog alertLog) throws Exception {
         List<AlertLog> list = new ArrayList<>();
@@ -104,7 +104,7 @@ public class AlertLogController extends BaseController {
     /**
      * 查询预警日志列表
      */
-    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
+//    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:list')")
     @GetMapping("/listAno")
     public TableDataInfo listAno(AlertLog alertLog) {
         List<AlertLog> list = new ArrayList<>();
@@ -144,7 +144,7 @@ public class AlertLogController extends BaseController {
     /**
      * 导出预警日志列表
      */
-    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:export')")
+//    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:export')")
     @Log(title = "预警日志", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AlertLog alertLog) {
@@ -164,7 +164,7 @@ public class AlertLogController extends BaseController {
     /**
      * 获取预警日志详细信息
      */
-    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:query')")
+//    @PreAuthorize("@ss.hasPermi('alert_log:alert_log:query')")
     @GetMapping(value = "/{logId}")
     public AjaxResult getInfo(@PathVariable("logId") String logId) {
         return AjaxResult.success(alertLogService.selectAlertLogByLogId(logId));
