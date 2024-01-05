@@ -245,6 +245,10 @@
             <el-button class="btn2" id="btn2" @click="suspected">是否疑似病理</el-button>
           </div>
         </div>
+        <div class="page">
+          <el-button class="next"  @click="prev" type="primary" :loading="loading">上一个</el-button>
+          <el-button class="next"  @click="next" :loading="loading">下一个</el-button>
+        </div>
         <div class="topMiddle">
           <div class="warning">患者信息</div>
           <div class="messageDetail">
@@ -262,7 +266,7 @@
 
 <script>
 import {getReportByPId} from "@/api/report/report";
-import {PatientInformation,selectList,getLabel,addLabel,islabel} from "@/api/log_user/log_user";
+import {PatientInformation, selectList, getLabel, addLabel, islabel, listLog_user} from "@/api/log_user/log_user";
 import $ from "jquery";
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import de from "element-ui/src/locale/lang/de";
@@ -516,6 +520,12 @@ export default {
       point:[[],{P:[], Q:[], R:[], S:[], T:[]}],
       arr:[],//要删除的点所在的区间
       isSuspected:false,
+      pageNum:1,
+      logUserList:[],
+      index:0,
+      loading:false,
+      logUserListTotal:0,
+      anoStatus:null,
     };
   },
   watch:{
@@ -528,14 +538,18 @@ export default {
     }
   },
   created() {
-    console.log('created')
+    // console.log('created')
     if (this.$route.query.logId) {
+      console.log(this.$route.query.anoStatus)
+      this.anoStatus = this.$route.query.anoStatus;
       this.message.logid = this.$route.query.logId;
       // this.message.logType = this.$route.query.logType;
       this.message.user_id = this.$route.query.userId;
       // this.value=this.$route.query.logType;
       this.query.logId=this.$route.query.logId;
       this.query.userId=this.$route.query.userId;
+      this.pageNum=this.$route.query.pageNum
+      this.getLogUserList()
       this.getSelectList()
       this.getLabel()
     }
@@ -553,6 +567,17 @@ export default {
         console.log(res)
         this.options=res.data
       })
+    },
+    async getLogUserList(){
+      await listLog_user({pageNum: this.pageNum, pageSize: 10,anoStatus:this.anoStatus}).then(response => {
+        this.logUserList = response.rows;
+        this.logUserListTotal = response.total;
+        this.logUserList.forEach((item,index)=>{
+          if(this.message.logid==item.logId){
+            this.index=index
+          }
+        })
+      });
     },
     //获取心电数据
     getMessage() {
@@ -602,8 +627,11 @@ export default {
           _th.message.time = jsonResult.result.clockTime;
           if(jsonResult.result.isSuspected==1){
             _th.isSuspected=true
+          }else {
+            _th.isSuspected=false
           }
           _th.value=jsonResult.result.logType
+          _th.loading=false
           _th.light(jsonResult)
           _th.level(jsonResult)
           if (_th.message.devicesn != null) {
@@ -1994,7 +2022,7 @@ export default {
     //判断红绿颜色
     light(data) {
       this.noise_list = data.result.noise
-      console.log(this.noise_list)
+      // console.log(this.noise_list)
       for (var key in this.noise_list) {
         if (this.noise_list[key] === 1) {
           let temp = document.getElementById(key)
@@ -2008,7 +2036,7 @@ export default {
     //ABCD等级的判断
     level(data) {
       this.noise_level = data.result.noise_level
-      console.log("传的ABCD的等级", this.noise_level)
+      // console.log("传的ABCD的等级", this.noise_level)
     },
     //修改红绿颜色框的颜色
     changeColor(tid) {
@@ -2146,6 +2174,53 @@ export default {
     },
     suspected(){
       this.isSuspected=!this.isSuspected
+    },
+    async prev(){
+      this.loading=true
+      if(this.pageNum==1&&this.index==0){
+        this.$message.warning("已经是第一页！！！")
+        this.loading=false
+        return
+      }
+      this.index--
+      if(this.index<0){
+        if(this.pageNum>1){
+          this.pageNum--
+        }
+        await this.getLogUserList()
+        this.index=9
+      }
+      this.message.logid=this.logUserList[this.index].logId
+      let anoStatus=''
+      if(this.anoStatus!=null){
+        anoStatus=`&anoStatus=${this.anoStatus}`
+      }
+      var newUrl = this.$route.path + `?logId=${this.message.logid}&userId=${this.message.user_id}&pageNum=${this.pageNum}`+anoStatus
+      window.history.replaceState('', '', newUrl)
+      this.getMessage()
+    },
+    async next(){
+      this.loading=true
+      this.index++
+      if(this.index>=this.logUserList.length){
+        if((this.pageNum-1)*10+this.logUserList.length>=this.logUserListTotal){
+          this.$message.warning("已经是最后一页！！！")
+          this.index--
+          this.loading=false
+          return
+        }
+        this.pageNum++
+        await this.getLogUserList()
+        this.index=0
+      }
+      this.message.logid=this.logUserList[this.index].logId
+      let anoStatus=''
+      if(this.anoStatus!=null){
+        anoStatus=`&anoStatus=${this.anoStatus}`
+      }
+      var newUrl = this.$route.path + `?logId=${this.message.logid}&userId=${this.message.user_id}&pageNum=${this.pageNum}`+anoStatus
+      window.history.replaceState('', '', newUrl)
+      this.getMessage()
     },
     submit() {
       console.log(this.message.logid)
@@ -2708,6 +2783,18 @@ body,html{
     border:1px solid #136d87;
   }
 
+}
+.page{
+  display: flex;
+  justify-content: center;
+
+}
+::v-deep .next{
+  background-color: rgba(255, 255, 255, 0);
+  color: #136d87;
+  border:1px solid #136d87;
+  width: 100px;
+  margin-right: 10px;
 }
 .btn1{
   color: #136d87;

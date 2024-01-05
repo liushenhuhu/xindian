@@ -310,7 +310,9 @@ export default {
         path: '/label/looklog2',
         query: {
           logId: row.logId,
-          status: row.auditAnoStatus==null?0:1
+          status: row.auditAnoStatus==null?0:1,
+          pageNum:this.queryParams.pageNum,
+          auditAnoStatus:this.queryParams.auditAnoStatus
         }
       })
     },

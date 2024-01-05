@@ -259,6 +259,10 @@
             <el-button class="btn2" id="btn2" @click="suspected">是否疑似病理</el-button>
           </div>
         </div>
+        <div class="page">
+          <el-button class="next"  @click="prev" type="primary" :loading="loading">上一个</el-button>
+          <el-button class="next"  @click="next" :loading="loading">下一个</el-button>
+        </div>
         <div class="topMiddle">
           <div class="warning">患者信息</div>
           <div class="messageDetail">
@@ -276,14 +280,14 @@
 
 <script>
 import {getReportByPId} from "@/api/report/report";
-import {PatientInformation} from "@/api/log_user/log_user";
+import {listLog_user, PatientInformation} from "@/api/log_user/log_user";
 import $ from "jquery";
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import {selectList,getLabel,addLabel} from "@/api/log_user/log_user"
 import {islabel} from "@/api/alert_log/alert_log"
 import {param} from "@/utils";
 import de from "element-ui/src/locale/lang/de";
-import {addAudit, getLogTwoUser, updateAudit} from "@/api/label/audit";
+import {addAudit, getLogTwoUser, listAudit, updateAudit} from "@/api/label/audit";
 export default {
   name: "lookLog1",
   computed: {
@@ -371,6 +375,7 @@ export default {
         V5level: "",
         V6level: "",
       },
+      levelArr:["Ilevel", "IIlevel", "IIIlevel", "aVRlevel", "aVLlevel", "aVFlevel", "V1level", "V2level","V3level", "V4level", "V5level", "V6level"],
       message: {
         devicesn: "",
         user_id: "",
@@ -545,6 +550,12 @@ export default {
       selectType2:false,
       status:0,
       isSuspected:false,
+      pageNum:1,
+      auditList:[],
+      index:0,
+      loading:false,
+      auditListTotal:0,
+      auditAnoStatus:null,
     };
   },
   watch:{
@@ -561,12 +572,15 @@ export default {
     if (this.$route.query.logId) {
       this.message.logid = this.$route.query.logId;
       this.status=this.$route.query.status;
+      this.auditAnoStatus = this.$route.query.auditAnoStatus;
+      this.pageNum=this.$route.query.pageNum
       // this.message.logType = this.$route.query.logType;
       // this.message.user_id = this.$route.query.userId;
       this.value=this.$route.query.logType;
       this.query.logId=this.$route.query.logId;
       this.query.userId=this.$route.query.userId;
       await this.getLogTwoUser()
+      this.getlistAudit()
       this.getSelectList()
       this.getLabel()
 
@@ -574,6 +588,7 @@ export default {
   },
   mounted() {
     this.getMessage()
+
     this.chartjump = echarts.init(document.getElementById('chartjump'));
   },
   methods: {
@@ -586,27 +601,44 @@ export default {
         this.options=res.data
       })
     },
-    getLogTwoUser(){
-      getLogTwoUser(this.message.logid).then(res=>{
+    async getlistAudit(){
+      await listAudit({pageNum: this.pageNum, pageSize: 10,auditAnoStatus:this.auditAnoStatus}).then(response => {
+        this.auditList = response.rows;
+        this.auditListTotal = response.total;
+        this.auditList.set
+        const map = new Map()
+        this.auditList=this.auditList.filter((item) => !map.has(item.logId) && map.set(item.logId, 1))
+        this.auditList.forEach((item,index)=>{
+          if(this.message.logid==item.logId){
+            this.index=index
+          }
+        })
+        // console.log(this.auditList)
+      });
+    },
+    async getLogTwoUser(){
+     await getLogTwoUser(this.message.logid).then(res=>{
         // console.log(res)
         if(res.data.Audit!=null){
           this.status=1
           var level=res.data.Audit.logNoiseLevel.split('')
           let i=0
           let list={}
-          for (let key in this.noise_level) {
-            this.noise_level[key]=level[i]
+
+          this.levelArr.forEach(item=>{
+            this.noise_level[item]=level[i]
             if(level[i]=='A'){
-              list[this.levellight[key]]=0
+              list[this.levellight[item]]=0
             }else {
-              list[this.levellight[key]]=1
+              list[this.levellight[item]]=1
             }
             i++
-          }
-          // console.log(list)
+          })
+          console.log(list)
           this.light(list)
           this.value=res.data.Audit.logType
-
+        }else {
+          this.status=0
         }
         this.user1=res.data.user0.userId
         this.user2=res.data.user1.userId
@@ -614,12 +646,16 @@ export default {
         this.userNoise2=res.data.user1.logNoiseLevel.split('')
         this.userLogType1=res.data.user0.logType
         this.userLogType2=res.data.user1.logType
-        if((res.data.user0.isSuspected==1 || res.data.user0.isSuspected==1)){
+        if(res.data.Audit!=null && res.data.Audit.isSuspected==0){
+          this.isSuspected=false
+        }else if(res.data.Audit!=null && res.data.Audit.isSuspected==1){
           this.isSuspected=true
-        }
-        if(res.data.Audit!=null && res.data.Audit.isSuspected==1){
+        }else if((res.data.user0.isSuspected==1 || res.data.user0.isSuspected==1)){
           this.isSuspected=true
+        }else {
+          this.isSuspected=false
         }
+
       })
     },
     //获取心电数据
@@ -672,6 +708,7 @@ export default {
             _th.light(jsonResult.result.noise)
             _th.level(jsonResult.result.noise_level)
           }
+          _th.loading=false
           if (_th.message.devicesn != null) {
             (function () {
               var i;
@@ -2060,7 +2097,7 @@ export default {
     //判断红绿颜色
     light(data) {
       this.noise_list = data
-      // console.log(this.noise_list)
+      console.log(this.noise_list)
       for (var key in this.noise_list) {
         if (this.noise_list[key] === 1) {
           let temp = document.getElementById(key)
@@ -2213,6 +2250,70 @@ export default {
     suspected(){
       this.isSuspected=!this.isSuspected
     },
+    //清除选中
+    clear(){
+      this.selectUser1=false
+      this.selectUser2=false
+      this.selectType1=false
+      this.selectType2=false
+    },
+    async prev(){
+      this.loading=true
+      if(this.pageNum==1&&this.index==0){
+        this.$message.warning("已经是第一页！！！")
+        this.loading=false
+        return
+      }
+      this.index--
+      if(this.index<0){
+        if(this.pageNum>1){
+          this.pageNum--
+        }
+        await this.getlistAudit()
+        this.index=4
+      }
+      this.message.logid=this.auditList[this.index].logId
+      let auditAnoStatus=''
+      if(this.auditAnoStatus!=null){
+        auditAnoStatus=`&auditAnoStatus=${this.auditAnoStatus}`
+      }
+      await this.getLogTwoUser()
+      var newUrl = this.$route.path + `?logId=${this.message.logid}&status=${this.status}&pageNum=${this.pageNum}`+auditAnoStatus
+      window.history.replaceState('', '', newUrl)
+      this.clear()
+      this.getMessage()
+
+    },
+    async next(){
+      this.loading=true
+      this.index++
+      if(this.index>=this.auditList.length){
+        if((this.pageNum-1)*10+this.auditList.length*2>=this.auditListTotal){
+          this.$message.warning("已经是最后一页！！！")
+          this.index--
+          this.loading=false
+          return
+        }
+        this.pageNum++
+        await this.getlistAudit()
+        this.index=0
+      }
+      console.log(this.index)
+      if(this.index==0){
+        console.log(this.auditList)
+      }
+      this.message.logid=this.auditList[this.index].logId
+      let auditAnoStatus=''
+      if(this.auditAnoStatus!=null){
+        auditAnoStatus=`&auditAnoStatus=${this.auditAnoStatus}`
+      }
+      await this.getLogTwoUser()
+      var newUrl = this.$route.path + `?logId=${this.message.logid}&status=${this.status}&pageNum=${this.pageNum}`+auditAnoStatus
+      window.history.replaceState('', '', newUrl)
+      this.clear()
+      this.getMessage()
+
+    },
     submit() {
       // console.log(this.message.logid)
       console.log(this.value)
@@ -2224,8 +2325,11 @@ export default {
         return
       }
       let noise_level='',temp=false //是否都标注了
+      noise_level=this.noise_level['Ilevel']+this.noise_level['IIlevel']+this.noise_level['IIIlevel']+
+        this.noise_level['aVRlevel']+this.noise_level['aVLlevel']+this.noise_level['aVFlevel']+
+        this.noise_level['V1level']+this.noise_level['V2level']+this.noise_level['V3level']+
+        this.noise_level['V4level']+this.noise_level['V5level']+this.noise_level['V6level']
       for (let key in this.noise_level) {
-        noise_level+=this.noise_level[key]
         if(this.noise_level[key]==''){
           temp=true
         }
@@ -2667,9 +2771,22 @@ export default {
           data=this.userNoise2
         }
       }
+      console.log(data)
+      this.noise_level={
+        Ilevel: data[0],
+        IIlevel:data[1],
+        IIIlevel:data[2],
+        aVRlevel:data[3],
+        aVLlevel:data[4],
+        aVFlevel:data[5],
+        V1level: data[6],
+        V2level: data[7],
+        V3level: data[8],
+        V4level: data[9],
+        V5level: data[10],
+        V6level: data[11],
+      }
       for (let key in this.noise_level) {
-        this.noise_level[key]=data[i]
-        i++
         let temp = document.getElementById(this.levellight[key])
         if(this.noise_level[key]=='A'){
           this.noise_list[this.levellight[key]]=0
@@ -2679,6 +2796,7 @@ export default {
           temp.style.backgroundColor = "red"
         }
       }
+      console.log(this.noise_level)
     },
     //选着某个人的标注类型
     changeType(val){
@@ -2882,6 +3000,18 @@ body,html{
     color: #136d87;
     border:1px solid #136d87;
   }
+}
+.page{
+  display: flex;
+  justify-content: center;
+
+}
+::v-deep .next{
+  background-color: rgba(255, 255, 255, 0);
+  color: #136d87;
+  border:1px solid #136d87;
+  width: 100px;
+  margin-right: 10px;
 }
 .btn1{
   color: #136d87;
