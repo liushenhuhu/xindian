@@ -59,7 +59,16 @@ public class AlertLogUserController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, AlertLogUser alertLogUser)
     {
-        List<AlertLogUser> list = alertLogUserService.selectAlertLogUserList(alertLogUser);
+        alertLogUser.setAnoStatus(1L);
+        List<AlertLogUser> list = new ArrayList<>();
+        if (getDeptId() != null && getDeptId() == 106) {
+            Long userId = getUserId();
+            alertLogUser.setUserId((long) Math.toIntExact(userId));
+            list = alertLogUserService.selectAlertLogUserList(alertLogUser);
+        } else {
+            list = alertLogUserService.selectAlertLogUserList(alertLogUser);
+        }
+
         ExcelUtil<AlertLogUser> util = new ExcelUtil<AlertLogUser>(AlertLogUser.class);
         util.exportExcel(response, list, "标注分配数据");
     }

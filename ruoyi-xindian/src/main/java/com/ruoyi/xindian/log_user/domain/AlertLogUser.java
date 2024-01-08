@@ -28,7 +28,7 @@ public class AlertLogUser extends BaseEntity
 
     /** 发生时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "发生时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+//    @Excel(name = "发生时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date logTime;
 
     /** 噪声 */
@@ -60,19 +60,19 @@ public class AlertLogUser extends BaseEntity
     private Long anoStatus;
 
     /** 患者id */
-    @Excel(name = "患者id")
+//    @Excel(name = "患者id")
     private String pId;
 
     /**
      * 患者年龄
      */
-    @Excel(name = "患者年龄 ")
+//    @Excel(name = "患者年龄 ")
     private String patientAge;
 
     /**
      * 患者性别
      */
-    @Excel(name = "患者性别")
+//    @Excel(name = "患者性别")
     private String patientSex;
 
     private Integer isSuspected;

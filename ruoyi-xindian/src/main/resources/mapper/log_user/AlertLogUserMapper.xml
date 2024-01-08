@@ -16,6 +16,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="patientSex" column="patient_sex"/>
         <result property="userId" column="user_id"/>
         <result property="isSuspected" column="is_suspected"/>
+        <result property="logNoiseLevel" column="log_noise_level"/>
+        <result property="logNoise" column="log_noise"/>
     </resultMap>
     <resultMap type="SelectVO" id="SelectResult">
 <!--        <result property="id"    column="id"    />-->
@@ -28,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <sql id="selectAlertLogUserVo">
         select log_id, log_type, event_name, event_description, p_id,
-               ano_status, user_id,is_suspected
+               ano_status, user_id,is_suspected,log_noise_level,log_noise
         from alert_log_user
     </sql>
 <!--    #         select al.log_id, log_time, alu.log_type, alu.event_name, alu.event_description, al.p_id,-->
