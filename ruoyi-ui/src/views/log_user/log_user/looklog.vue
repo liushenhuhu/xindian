@@ -569,7 +569,7 @@ export default {
       })
     },
     async getLogUserList(){
-      await listLog_user({pageNum: this.pageNum, pageSize: 10,anoStatus:this.anoStatus}).then(response => {
+      await listLog_user({pageNum: this.pageNum, pageSize: 10,anoStatus:this.anoStatus,userId:this.query.userId}).then(response => {
         this.logUserList = response.rows;
         this.logUserListTotal = response.total;
         this.logUserList.forEach((item,index)=>{

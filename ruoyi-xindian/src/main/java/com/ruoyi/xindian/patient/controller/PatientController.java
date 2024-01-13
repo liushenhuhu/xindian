@@ -574,7 +574,7 @@ public class PatientController extends BaseController
             return AjaxResult.success(patient);
         }
         if(StringUtils.isEmpty(patient.getPatientPhone())){
-            patient.setPatientPhone(patient.getDoctorPhone()+"-"+randomGenNum(5));
+            patient.setPatientPhone(patient.getDoctorPhone()+"-"+randomGenNum(6));
         }
         patient.setBindingDoctor(aesUtils.encrypt(patient.getDoctorPhone()));
         encryptPatient(patient);
@@ -621,7 +621,7 @@ public class PatientController extends BaseController
      * @param place 定义随机数的位数
      */
     public String randomGenNum(int place) {
-        String base = "123456789";
+        String base = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder sb = new StringBuilder();
         Random rd = new Random();
         for(int i=0;i<place;i++) {

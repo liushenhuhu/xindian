@@ -60,7 +60,7 @@ public class AlertLogUser extends BaseEntity
     private Long anoStatus;
 
     /** 患者id */
-//    @Excel(name = "患者id")
+    @Excel(name = "患者id")
     private String pId;
 
     /**
