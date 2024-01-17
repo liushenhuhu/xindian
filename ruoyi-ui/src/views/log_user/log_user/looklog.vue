@@ -539,6 +539,7 @@ export default {
   },
   created() {
     // console.log('created')
+    console.log(this.$route.query.queryParams)
     if (this.$route.query.logId) {
       console.log(this.$route.query.anoStatus)
       this.anoStatus = this.$route.query.anoStatus;
@@ -569,7 +570,22 @@ export default {
       })
     },
     async getLogUserList(){
-      await listLog_user({pageNum: this.pageNum, pageSize: 10,anoStatus:this.anoStatus,userId:this.query.userId}).then(response => {
+      let queryParams =  this.$route.query.queryParams
+      let obj = {
+        logId: queryParams.logId?queryParams.logId:'',
+        userId:queryParams.userId?queryParams.userId:"",
+        pageNum: this.pageNum,
+        pageSize: 10,
+        anoStatus:this.anoStatus,
+        logTime: queryParams.logTime,
+        logType: queryParams.logType,
+        eventName: queryParams.eventName,
+        eventDescription: queryParams.eventDescription,
+        pId: queryParams.pId,
+        isSuspected:queryParams.isSuspected,
+      }
+
+      await listLog_user(obj).then(response => {
         this.logUserList = response.rows;
         this.logUserListTotal = response.total;
         this.logUserList.forEach((item,index)=>{
@@ -2190,7 +2206,9 @@ export default {
         await this.getLogUserList()
         this.index=9
       }
+      console.log(this.logUserList[this.index])
       this.message.logid=this.logUserList[this.index].logId
+      this.message.user_id = this.logUserList[this.index].userId
       let anoStatus=''
       if(this.anoStatus!=null){
         anoStatus=`&anoStatus=${this.anoStatus}`
@@ -2213,7 +2231,9 @@ export default {
         await this.getLogUserList()
         this.index=0
       }
+      console.log(this.logUserList[this.index])
       this.message.logid=this.logUserList[this.index].logId
+      this.message.user_id = this.logUserList[this.index].userId
       let anoStatus=''
       if(this.anoStatus!=null){
         anoStatus=`&anoStatus=${this.anoStatus}`

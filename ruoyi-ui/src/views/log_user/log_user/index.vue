@@ -422,7 +422,7 @@ export default {
       console.log(row.logId);
       this.$router.push({
         path: "/lookLog1",// name: "lookLog"
-        query: {logId: row.logId, userId: row.userId,pageNum:this.queryParams.pageNum,anoStatus:this.queryParams.anoStatus}
+        query: {logId: row.logId, userId: row.userId,pageNum:this.queryParams.pageNum,anoStatus:this.queryParams.anoStatus,queryParams:this.queryParams}
       });
     }
   }
