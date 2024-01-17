@@ -377,131 +377,8 @@ export default {
       timex:[],
       show:false,
       seriesdata:[
-        {xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
-        {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
-        {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
-        {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
-        {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
-        {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
-        {xAxis: 600},
-        {xAxis: 625},
-        {xAxis: 650},
-        {xAxis: 675},
-        {xAxis: 700},
-        {xAxis: 725},
-        {xAxis: 750},
-        {xAxis: 775},
-        {xAxis: 800},
-        {xAxis: 825},
-        {xAxis: 850},
-        {xAxis: 875},
-        {xAxis: 900},
-        {xAxis: 925},
-        {xAxis: 950},
-        {xAxis: 975},
-        {xAxis: 1000},
-        {xAxis: 1025},
-        {xAxis: 1050},
-        {xAxis: 1075},
-        {xAxis: 1100},
-        {xAxis: 1125},
-        {xAxis: 1150},
-        {xAxis: 1175},
-        {xAxis: 1200},
-        {xAxis: 1225},
-        {xAxis: 1250},
-        {xAxis: 1275},
-        {xAxis: 1300},
-        {xAxis: 1325},
-        {xAxis: 1350},
-        {xAxis: 1375},
-        {xAxis: 1400},
-        {xAxis: 1425},
-        {xAxis: 1450},
-        {xAxis: 1475},
-        {xAxis: 1500},
-        {xAxis: 1525},
-        {xAxis: 1550},
-        {xAxis: 1575},
-        {xAxis: 1600},
-        {xAxis: 1625},
-        {xAxis: 1650},
-        {xAxis: 1675},
-        {xAxis: 1700},
-        {xAxis: 1725},
-        {xAxis: 1750},
-        {xAxis: 1775},
-        {xAxis: 1800},
-        {xAxis: 1825},
-        {xAxis: 1850},
-        {xAxis: 1875},
-        {xAxis: 1900},
-        {xAxis: 1925},
-        {xAxis: 1950},
-        {xAxis: 1975},
-        {xAxis: 2000}, {xAxis: 2025}, {xAxis: 2050}, {xAxis: 2100}, {xAxis: 2125}, {xAxis: 2150}, {xAxis: 2175}, {xAxis: 2200}, {xAxis: 2225}, {xAxis: 2250}, {xAxis: 2275}, {xAxis: 2300}, {xAxis: 2325}, {xAxis: 2350},
-        {xAxis: 2375}, {xAxis: 2400}, {xAxis: 2425}, {xAxis: 2450}, {xAxis: 2475}, {xAxis: 2500},
-
-        {yAxis: -3}, {yAxis: -2.5}, {yAxis: -2}, {yAxis: -1.5}, {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1}, {yAxis: 1.5}, {yAxis: 2}, {yAxis: 2.5}, {yAxis: 3},],
-      seriesdata1:[{xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
-        {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
-        {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
-        {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
-        {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
-        {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
-        {xAxis: 600},
-        {xAxis: 625},
-        {xAxis: 650},
-        {xAxis: 675},
-        {xAxis: 700},
-        {xAxis: 725},
-        {xAxis: 750},
-        {xAxis: 775},
-        {xAxis: 800},
-        {xAxis: 825},
-        {xAxis: 850},
-        {xAxis: 875},
-        {xAxis: 900},
-        {xAxis: 925},
-        {xAxis: 950},
-        {xAxis: 975},
-        {xAxis: 1000},
+        {yAxis: -3}, {yAxis: -2.5}, {yAxis: -2}, {yAxis: -1.5}, {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1}, {yAxis: 1.5}, {yAxis: 2}, {yAxis: 2.5}, {yAxis: 3}],
+      seriesdata1:[
         {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},],
       data:{},
       chartjump:null,
@@ -673,8 +550,16 @@ export default {
                 V5y.push(jsonResult.result.V5[i]);
                 V6y.push(jsonResult.result.V6[i]);
               }
+              for (var i = 0; i < 2500; i+=20) {
+                _th.seriesdata.push({xAxis: i})
+              }
               var seriesdata=_th.seriesdata
-              if (jsonResult.result.II.length === 1000) seriesdata = _th.seriesdata1
+              if (jsonResult.result.II.length === 1000){
+                for (var i = 0; i < 1000; i+=20) {
+                  _th.seriesdata1.push({xAxis: i})
+                }
+                seriesdata = _th.seriesdata1
+              }
               chartI.clear()
               chartI.setOption({
                 animation: false,
@@ -2660,12 +2545,10 @@ body,html{
 .main {
   width: 100%;
   background: #f1faff;
-
-
 }
 
 .top {
-  height: 15vw;
+  height: 9vw;
   width: 100%;
   //border: 4px solid #62be38;
   display: flex;
@@ -2675,7 +2558,7 @@ body,html{
 }
 
 .topLeft {
-  width: 30%;
+  width: 29.5%;
   //height: 100%;
   border-left: 1px solid #136d87;
   display: flex;
@@ -2883,8 +2766,8 @@ form input {
 }
 
 .bottomLeft .echarts .container .chart {
-  height: 10vh;
-  width: 98.2%;
+  height: 9vh;
+  width: 99%;
   //background-color: #ffffff;
 }
 
@@ -2965,7 +2848,7 @@ form input {
 }
 .light {
   display: inline-block;
-  width: 1.8%;
+  width: 1%;
   height: 95%;
   position: absolute;
   top: 0;
@@ -3013,9 +2896,9 @@ form input {
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
   //font-size: 1.5vw;
   font-weight: 500;
-  height: 9.95vh;
+  height: 9vh;
   width: 3vw;
-  line-height: 9.95vh;
+  line-height: 9vh;
   margin: 0;
   padding: 0;
   position: relative;

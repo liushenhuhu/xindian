@@ -75,7 +75,19 @@
       text-overflow: ellipsis !important;
       white-space: nowrap !important;
     }
-
+    .el-menu-item{
+      font-size: 14px;
+    }
+    .el-submenu__title{
+      font-size: 15px;
+    }
+    .el-menu-item.is-active{
+      color: #FFFFFF !important;
+      font-weight: bold;
+    }
+    .submenu-title-noDropdown{
+      font-size: 15px;
+    }
     // menu hover
     .submenu-title-noDropdown,
     .el-submenu__title {
@@ -119,7 +131,7 @@
     .submenu-title-noDropdown {
       padding: 0 !important;
       position: relative;
-
+      color: #FFFFFF;
       .el-tooltip {
         padding: 0 !important;
 

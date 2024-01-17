@@ -235,9 +235,11 @@ export default {
 .tags-view-container {
   height: 34px;
   width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  background: #1D434A;
+  //border-bottom: 1px solid #d8dce5;
+  //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  border-bottom:0;
+  box-shadow:none;
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -245,9 +247,10 @@ export default {
       cursor: pointer;
       height: 26px;
       line-height: 26px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
+      //border: 1px solid #d8dce5;
+      //color: #495060;
+      //background: #fff;
+      color: #FFFFFF;
       padding: 0 8px;
       font-size: 12px;
       margin-left: 5px;
@@ -273,6 +276,15 @@ export default {
           margin-right: 2px;
         }
       }
+    }
+    .tags-view-item.active{
+      background-color: #FFFFFF !important;
+      color: black;
+      //transform: scale(1.1) translateY(3px);
+      //z-index: 999;
+    }
+    .tags-view-item.active::before{
+      background-color: black;
     }
   }
   .contextmenu {
