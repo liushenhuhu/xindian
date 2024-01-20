@@ -23,7 +23,7 @@ export default {
     return {
       // 版本号
       version: "3.8.4",
-      videoSrc:'https://ecg.mindyard.cn/data/mp4/0a76aee533301411abb8a7f58f3253e3.mp4',
+      videoSrc:'https://ecg.mindyard.cn/data/mp4/9504d4ab49be5561a6ec218100d705df.mp4',
       status:false,
     };
   },
