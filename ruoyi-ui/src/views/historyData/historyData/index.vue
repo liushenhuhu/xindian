@@ -165,6 +165,16 @@
         >导出
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-view"
+          size="mini"
+          @click="isShowNameClick"
+        >{{isShowName.name}}
+        </el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -181,7 +191,12 @@
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="患者名称" align="center" prop="patientName" show-overflow-tooltip/>
+      <el-table-column label="患者名称" align="center" prop="patientName">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
+          <span v-else>***</span>
+        </template>
+      </el-table-column>
       <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
       <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
       <el-table-column label="医院名称" align="center" prop="hospitalName"/>
@@ -372,6 +387,17 @@
         <el-button type="primary" @click="dialogForm">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -389,6 +415,7 @@ import {updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
 import {listHospitalId} from "@/api/hospital/hospital";
 import {docList} from "@/api/doctor/doctor";
+import {getVerify} from "@/api/verify/verify";
 
 export default {
   name: "JECGsingleGZ",
@@ -412,6 +439,15 @@ export default {
         pId:null,
         dPhone:null,
         hospital:null,
+      },
+      verifyForm:{
+        password:null,
+        status:false
+      },
+      dialogFormVisibleVerifyAuthority:false,
+      isShowName:{
+        status:false,
+        name:"显示姓名"
       },
       option:[],
       value:[],
@@ -472,6 +508,9 @@ export default {
         equipmentCode: [
           {required: true, message: "设备号不能为空", trigger: "blur"}
         ],
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
+        ],
       }
     };
   },
@@ -530,6 +569,36 @@ export default {
         console.log(r)
         this.option = r.data
       })
+    },
+    dialogFormVisibleVerify(){
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd:this.verifyForm.password
+          }
+          getVerify(obj).then(r=>{
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status=true
+            this.dialogFormVisibleVerifyAuthority = false
+          })
+        }
+      })
+    },
+    isShowNameClick(){
+      if (this.verifyForm.status){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示姓名"
+
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
     },
     dialogForm(){
       this.reportList.dPhone = this.value[1]
@@ -709,20 +778,32 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const pIds = row.pId || this.ids;
-      this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
-        return delPatient_management(pIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {
-      });
+      if (this.verifyForm.status){
+        const pIds = row.pId || this.ids;
+        this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
+          return delPatient_management(pIds);
+        }).then(() => {
+          this.getList();
+          this.$modal.msgSuccess("删除成功");
+        }).catch(() => {
+        });
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('patient_management/patient_management/export', {
-        ...this.queryParams
-      }, `patient_management_${new Date().getTime()}.xlsx`)
+      if (this.verifyForm.status){
+        this.download('patient_management/patient_management/export', {
+          ...this.queryParams
+        }, `patient_management_${new Date().getTime()}.xlsx`)
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
     },
     /** 查看心电图*/
     lookECG(row) {

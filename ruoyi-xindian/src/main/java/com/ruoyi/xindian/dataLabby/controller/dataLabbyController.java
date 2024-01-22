@@ -241,25 +241,25 @@ public class dataLabbyController extends BaseController
             }
 
 
-//            report.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
-//            report.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
-//            report.setdPhone(phonenumber);
-//            report.setDiagnosisDoctor(doctor.getDoctorName());
-//            report.setDiagnosisStatus(2L);
-//            report.setReportTime(new Date());
-//            report.setStartTime(new Date());
-//
-//            DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
-//            diagnoseDoc.setReportId(report.getReportId());
-//            diagnoseDoc.setDoctorPhone(phonenumber);
-//            diagnoseDoc.setDiagnoseType("1");
-//            diagnoseDocService.insertDiagnose(diagnoseDoc);
-//            reportService.updateReport(report);
-//            Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(phonenumber);
-//            Doctor doctor2 = new Doctor();
-//            doctor2.getHospitalNameList().add(doctor1.getHospital());
-//            List<Doctor> doctors = doctorService.selectDoctorList(doctor2);
-//            wxMsgRunConfig.redisDTStart(pId,doctors);
+            report.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
+            report.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
+            report.setdPhone(phonenumber);
+            report.setDiagnosisDoctor(doctor.getDoctorName());
+            report.setDiagnosisStatus(2L);
+            report.setReportTime(new Date());
+            report.setStartTime(new Date());
+
+            DiagnoseDoc diagnoseDoc = new DiagnoseDoc();
+            diagnoseDoc.setReportId(report.getReportId());
+            diagnoseDoc.setDoctorPhone(phonenumber);
+            diagnoseDoc.setDiagnoseType("1");
+            diagnoseDocService.insertDiagnose(diagnoseDoc);
+            reportService.updateReport(report);
+            Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(phonenumber);
+            Doctor doctor2 = new Doctor();
+            doctor2.getHospitalNameList().add(doctor1.getHospital());
+            List<Doctor> doctors = doctorService.selectDoctorList(doctor2);
+            wxMsgRunConfig.redisDTStart(pId,doctors);
         } catch (Exception e){
             return AjaxResult.error(String.valueOf(e));
         } finally {

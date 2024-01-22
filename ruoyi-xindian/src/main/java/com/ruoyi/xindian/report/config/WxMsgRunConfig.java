@@ -253,7 +253,6 @@ public class WxMsgRunConfig {
      * @param doctorList
      */
     public void redisDTStart(String pId, List<Doctor> doctorList){
-        redisTemplate.delete("DocList"+pId);
         List<Doctor> doctors = new ArrayList<>(doctorList);
         redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
         redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);

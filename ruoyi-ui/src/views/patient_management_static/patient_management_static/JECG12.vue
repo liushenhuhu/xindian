@@ -657,6 +657,7 @@ export default {
       console.log(this.reportList)
       docUpdate(this.reportList).then(r =>{
         this.getList();
+        this.$modal.msgSuccess("修改成功");
         this.dialogFormVisible = false;
       })
     },

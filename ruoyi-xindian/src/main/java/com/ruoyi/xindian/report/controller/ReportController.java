@@ -399,6 +399,7 @@ public class ReportController extends BaseController
             if(report.getHospital()!=null){
                 Doctor doctor = new Doctor();
                 doctor.getHospitalNameList().add(report.getHospital());
+                doctor.setAccountStatus("0");
                 doctors = doctorService.selectDoctorList(doctor);
                 if(doctors!=null && !doctors.isEmpty()){
                     //患者提交报告，通过微信公众号推送提醒消息
@@ -900,6 +901,7 @@ public class ReportController extends BaseController
         report.setDPhoneAes(aesUtils.decrypt(doctor1.getDoctorPhone()));
         report.setReportId(report1.getReportId());
         report.setDiagnosisStatus(2L);
+        report.setLoginUserPhone(report1.getPPhone());
         report.setDiagnosisDoctor(doctor1.getDoctorName());
         report.setReportTime(new Date());
         report.setStartTime(new Date());

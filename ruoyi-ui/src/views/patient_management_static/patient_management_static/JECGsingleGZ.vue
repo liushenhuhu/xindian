@@ -643,6 +643,7 @@ export default {
       this.reportList.hospital = this.value[0]
       console.log(this.reportList)
       docUpdate(this.reportList).then(r =>{
+        this.$modal.msgSuccess("修改成功");
         this.getList();
         this.dialogFormVisible = false;
       })
