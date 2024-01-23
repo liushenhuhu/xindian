@@ -656,6 +656,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataI,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -752,6 +753,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataII,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -851,6 +853,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataIII,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -949,6 +952,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataaVR,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1047,6 +1051,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataaVL,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1145,6 +1150,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataaVF,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1243,6 +1249,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV1,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1340,6 +1347,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV2,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1437,6 +1445,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV3,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1534,6 +1543,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV4,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1631,6 +1641,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV5,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
@@ -1728,6 +1739,7 @@ export default {
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV6,
+                zlevel:99,
                 lineStyle: {
                   normal: {
                     color: "#000000",

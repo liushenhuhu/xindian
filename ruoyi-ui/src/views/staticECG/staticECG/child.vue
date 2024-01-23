@@ -438,6 +438,7 @@ export default {
           name: '当前电位',
           type: 'line',
           data: data,
+          zlevel:99,
           smooth: true //显示为平滑的曲线*/
         },
       };
@@ -1120,6 +1121,7 @@ export default {
           name: '当前电位',
           type: 'line',
           data: data,
+          zlevel:99,
           smooth: true //显示为平滑的曲线*/
         },
       };
