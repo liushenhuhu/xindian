@@ -17,7 +17,7 @@
     <div class="mainbox" >
       <div class="container">
         <div class="event" v-if="data0!=null&&JSON.stringify(data0)!='{}'">
-          <div class="son">心机梗塞<span id="span0-1" :style="dotColor(data0.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span0-1" :style="dotColor(data0.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span0-2" :style="dotColor(data0.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span0-3" :style="dotColor(data0.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span0-5"></span></div>
@@ -46,7 +46,7 @@
 
       <div class="container">
         <div class="event" v-if="data1!=null&&JSON.stringify(data1)!='{}'">
-          <div class="son">心机梗塞<span id="span1-1" :style="dotColor(data1.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span1-1" :style="dotColor(data1.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span1-2" :style="dotColor(data1.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span1-3" :style="dotColor(data1.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span1-5"></span></div>
@@ -74,7 +74,7 @@
 
       <div class="container"  >
         <div class="event" v-if="data2!=null&&JSON.stringify(data2)!='{}'">
-          <div class="son">心机梗塞<span id="span2-1" :style="dotColor(data2.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span2-1" :style="dotColor(data2.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span2-2" :style="dotColor(data2.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span2-3" :style="dotColor(data2.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span2-5"></span></div>
@@ -103,7 +103,7 @@
 
       <div class="container"  >
         <div class="event"  v-if="data3!=null&&JSON.stringify(data3)!='{}'">
-          <div class="son">心机梗塞<span id="span3-1" :style="dotColor(data3.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span3-1" :style="dotColor(data3.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span3-2" :style="dotColor(data3.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span3-3" :style="dotColor(data3.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span3-5"></span></div>
@@ -132,7 +132,7 @@
 
       <div class="container" >
         <div class="event"  v-if="data4!=null&&JSON.stringify(data4)!='{}'">
-          <div class="son">心机梗塞<span id="span4-1" :style="dotColor(data4.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span4-1" :style="dotColor(data4.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span4-2" :style="dotColor(data4.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span4-3" :style="dotColor(data4.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span4-5"></span></div>
@@ -161,7 +161,7 @@
 
       <div class="container" >
         <div class="event"  v-if="data5!=null&&JSON.stringify(data5)!='{}'">
-          <div class="son">心机梗塞<span id="span5-1" :style="dotColor(data5.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span5-1" :style="dotColor(data5.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span5-2" :style="dotColor(data5.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span5-3" :style="dotColor(data5.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span5-5"></span></div>
@@ -189,7 +189,7 @@
 
       <div class="container" >
         <div class="event"  v-if="data6!=null&&JSON.stringify(data6)!='{}'">
-          <div class="son">心机梗塞<span id="span6-1" :style="dotColor(data6.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span6-1" :style="dotColor(data6.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span6-2" :style="dotColor(data6.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span6-3" :style="dotColor(data6.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span6-5"></span></div>
@@ -217,7 +217,7 @@
 
       <div class="container" >
         <div class="event"  v-if="data7!=null&&JSON.stringify(data7)!='{}'">
-          <div class="son">心机梗塞<span id="span7-1" :style="dotColor(data7.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span7-1" :style="dotColor(data7.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span7-2" :style="dotColor(data7.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span7-3" :style="dotColor(data7.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span7-5"></span></div>
@@ -246,7 +246,7 @@
 
       <div class="container" >
         <div class="event"  v-if="data8!=null&&JSON.stringify(data8)!='{}'">
-          <div class="son">心机梗塞<span id="span8-1" :style="dotColor(data8.GengSi)"></span></div>
+          <div class="son">心肌梗塞<span id="span8-1" :style="dotColor(data8.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span8-2" :style="dotColor(data8.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span8-3" :style="dotColor(data8.XSL_pr)"></span></div>
           <div class="son">室性心动过速<span id="span8-5"></span></div>
@@ -275,7 +275,7 @@
 
 <!--      <div class="container" >-->
 <!--        <div class="event"  v-if="data9!=null&&JSON.stringify(data9)!='{}'">-->
-<!--          <div class="son">心机梗塞<span id="span9-1" :style="dotColor(data9.GengSi)"></span></div>-->
+<!--          <div class="son">心肌梗塞<span id="span9-1" :style="dotColor(data9.GengSi)"></span></div>-->
 <!--          <div class="son">房颤房扑<span id="span9-2" :style="dotColor(data9.FangChan)"></span></div>-->
 <!--          <div class="son">心室率过低<span id="span9-3" :style="dotColor(data9.XSL_pr)"></span></div>-->
 <!--          <div class="son">长RR间期<span id="span9-4" :style="dotColor(data9.RRGC_pr)"></span></div>-->
@@ -303,7 +303,7 @@
 
 <!--      <div class="container" >-->
 <!--        <div class="event"  v-if="data10!=null&&JSON.stringify(data10)!='{}'">-->
-<!--          <div class="son">心机梗塞<span id="span10-1" :style="dotColor(data10.GengSi)"></span></div>-->
+<!--          <div class="son">心肌梗塞<span id="span10-1" :style="dotColor(data10.GengSi)"></span></div>-->
 <!--          <div class="son">房颤房扑<span id="span10-2" :style="dotColor(data10.FangChan)"></span></div>-->
 <!--          <div class="son">心室率过低<span id="span10-3" :style="dotColor(data10.XSL_pr)"></span></div>-->
 <!--          <div class="son">长RR间期<span id="span10-4" :style="dotColor(data10.RRGC_pr)"></span></div>-->
@@ -331,7 +331,7 @@
 
 <!--      <div class="container" >-->
 <!--        <div class="event"  v-if="data11!=null&&JSON.stringify(data11)!='{}'">-->
-<!--          <div class="son">心机梗塞<span id="span11-1" :style="dotColor(data11.GengSi)"></span></div>-->
+<!--          <div class="son">心肌梗塞<span id="span11-1" :style="dotColor(data11.GengSi)"></span></div>-->
 <!--          <div class="son">房颤房扑<span id="span11-2" :style="dotColor(data11.FangChan)"></span></div>-->
 <!--          <div class="son">心室率过低<span id="span11-3" :style="dotColor(data11.XSL_pr)"></span></div>-->
 <!--          <div class="son">长RR间期<span id="span11-4" :style="dotColor(data11.RRGC_pr)"></span></div>-->
