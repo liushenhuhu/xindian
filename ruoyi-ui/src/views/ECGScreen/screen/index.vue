@@ -512,7 +512,7 @@ export default {
   computed: {
     color() {
       return hr_mean => {
-        if(hr_mean>=100||hr_mean<=60){
+        if(hr_mean>100||hr_mean<60){
           return 'color:red;background-color: rgba(255, 0, 0,0.3);';
         }
         return ;
