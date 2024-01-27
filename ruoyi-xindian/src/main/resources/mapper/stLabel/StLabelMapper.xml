@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.stLabel.mapper.StLabelMapper">
+
+    <resultMap type="StLabel" id="StLabelResult">
+        <result property="logId"    column="log_id"    />
+        <result property="ecgData"    column="ecg_data"    />
+        <result property="diagnosticResult"    column="diagnostic_result"    />
+        <result property="labelJson"    column="label_json"    />
+        <result property="isLabel"    column="is_label"    />
+        <result property="labelTime"    column="label_time"    />
+    </resultMap>
+
+    <sql id="selectStLabelVo">
+        select log_id, ecg_data, diagnostic_result, label_json, is_label, label_time from st_label
+    </sql>
+
+    <select id="selectStLabelList" parameterType="StLabel" resultMap="StLabelResult">
+        select log_id, diagnostic_result, label_json, is_label, label_time from st_label
+        <where>
+            <if test="logId != null  and logId != ''"> and log_id = #{logId}</if>
+            <if test="ecgData != null  and ecgData != ''"> and ecg_data = #{ecgData}</if>
+            <if test="diagnosticResult != null  and diagnosticResult != ''"> and diagnostic_result = #{diagnosticResult}</if>
+            <if test="labelJson != null  and labelJson != ''"> and label_json = #{labelJson}</if>
+            <if test="isLabel != null "> and is_label = #{isLabel}</if>
+            <if test="labelTime != null "> and label_time = #{labelTime}</if>
+        </where>
+    </select>
+
+    <select id="selectStLabelByLogId" parameterType="String" resultMap="StLabelResult">
+        <include refid="selectStLabelVo"/>
+        where log_id = #{logId}
+    </select>
+
+    <insert id="insertStLabel" parameterType="StLabel">
+        insert into st_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logId != null">log_id,</if>
+            <if test="ecgData != null">ecg_data,</if>
+            <if test="diagnosticResult != null">diagnostic_result,</if>
+            <if test="labelJson != null">label_json,</if>
+            <if test="isLabel != null">is_label,</if>
+            <if test="labelTime != null">label_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logId != null">#{logId},</if>
+            <if test="ecgData != null">#{ecgData},</if>
+            <if test="diagnosticResult != null">#{diagnosticResult},</if>
+            <if test="labelJson != null">#{labelJson},</if>
+            <if test="isLabel != null">#{isLabel},</if>
+            <if test="labelTime != null">#{labelTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateStLabel" parameterType="StLabel">
+        update st_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ecgData != null">ecg_data = #{ecgData},</if>
+            <if test="diagnosticResult != null">diagnostic_result = #{diagnosticResult},</if>
+            <if test="labelJson != null">label_json = #{labelJson},</if>
+            <if test="isLabel != null">is_label = #{isLabel},</if>
+            <if test="labelTime != null">label_time = #{labelTime},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteStLabelByLogId" parameterType="String">
+        delete from st_label where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteStLabelByLogIds" parameterType="String">
+        delete from st_label where log_id in
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+</mapper>
