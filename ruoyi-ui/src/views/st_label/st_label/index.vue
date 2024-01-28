@@ -225,7 +225,9 @@ export default {
       });
     },
     goDetails(logId){
-      this.$router.push({ path: '/label/details', query: { logId: logId }})
+      this.$router.push({
+        path: '/label/details',
+        query: { logId: logId,pageNum: this.queryParams.pageNum,isLabel:this.queryParams.isLabel}})
     },
     // 取消按钮
     cancel() {
