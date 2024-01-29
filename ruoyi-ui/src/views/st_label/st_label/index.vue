@@ -4,7 +4,7 @@
       <el-form-item label="日志id" prop="logId">
           <el-input
             v-model="queryParams.logId"
-            placeholder="请输入诊断结果"
+            placeholder="请输入日志id"
             clearable
             @keyup.enter.native="handleQuery"
           />
@@ -208,11 +208,18 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      num:1,
     };
   },
   created() {
     this.getList();
+  },
+  activated() {
+    if(this.num>1){
+      this.getList()
+    }
+    this.num++
   },
   methods: {
     /** 查询ST标注列表 */

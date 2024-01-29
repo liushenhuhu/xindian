@@ -94,7 +94,7 @@
         </div>
         <div class="selectTag">
           <div class="tag-title">
-            <span v-for="item in options">{{item}}</span>
+            <el-button v-for="(item,index) in options" class="allBtn" @click="selectAll(item,index)">{{item}}</el-button>
           </div>
           <div class="tagItem" style="border-top: 0">
             <el-checkbox-group v-model="tagI" style="width:100%" >
@@ -198,6 +198,7 @@ export default {
       logId:'',
       diagnosticResult:"",
       options:[ "T波改变", "ST段改变", "ST-T改变", "U波倒置","Q波", "QT间期延长",],
+      optionsStatus:[false,false,false,false,false,false,],
       timex:[],
       show:false,
       seriesdata:[
@@ -267,6 +268,7 @@ export default {
       var chartaVF = echarts.init(document.getElementById('aVF'));
       getStLabel(this.logId).then(res => {
         this.diagnosticResult=res.data.diagnosticResult
+        //赋值已标注
         this.clearTag()
         for (let key in JSON.parse(res.data.labelJson)) {
           this[`${'tag' + key}`]=JSON.parse(res.data.labelJson)[key].split(',')
@@ -1686,6 +1688,46 @@ export default {
       window.history.replaceState('', '', newUrl)
       this.getMessage()
     },
+    selectAll(val,index){
+      if(this.tagI.includes(val)&& this.tagII.includes(val)&&
+      this.tagIII.includes(val)&& this.tagaVR.includes(val)&&
+      this.tagaVL.includes(val)&& this.tagaVF.includes(val)&&
+      this.tagV1.includes(val)&& this.tagV2.includes(val)&&
+      this.tagV3.includes(val)&& this.tagV4.includes(val)&&
+      this.tagV5.includes(val)&& this.tagV6.includes(val)){
+        this.optionsStatus[index]=true
+      }
+      this.optionsStatus[index]=!this.optionsStatus[index]
+      if(this.optionsStatus[index]){
+        //全选
+        this.tagI.push(val)
+        this.tagII.push(val)
+        this.tagIII.push(val)
+        this.tagaVR.push(val)
+        this.tagaVL.push(val)
+        this.tagaVF.push(val)
+        this.tagV1.push(val)
+        this.tagV2.push(val)
+        this.tagV3.push(val)
+        this.tagV4.push(val)
+        this.tagV5.push(val)
+        this.tagV6.push(val)
+      }else {
+        //取消全选
+        this.tagI=this.tagI.filter(item => item !== val);
+        this.tagII=this.tagII.filter(item => item !== val);
+        this.tagIII=this.tagIII.filter(item => item !== val);
+        this.tagaVR=this.tagaVR.filter(item => item !== val);
+        this.tagaVL=this.tagaVL.filter(item => item !== val);
+        this.tagaVF=this.tagaVF.filter(item => item !== val);
+        this.tagV1=this.tagV1.filter(item => item !== val);
+        this.tagV2=this.tagV2.filter(item => item !== val);
+        this.tagV3=this.tagV3.filter(item => item !== val);
+        this.tagV4=this.tagV4.filter(item => item !== val);
+        this.tagV5=this.tagV5.filter(item => item !== val);
+        this.tagV6=this.tagV6.filter(item => item !== val);
+      }
+    },
     clearTag(){
       this.tagI=[]
       this.tagII=[]
@@ -1702,20 +1744,21 @@ export default {
       this.tagV6=[]
     },
     submit() {
-      console.log(this.tagI,this.tagII,this.tagIII,this.tagaVL,this.tagaVR,this.tagaVF,this.tagV1,this.tagV2,this.tagV3,this.tagV4,this.tagV5,this.tagV6)
+      // console.log(this.tagI,this.tagII,this.tagIII,this.tagaVL,this.tagaVR,this.tagaVF,this.tagV1,this.tagV2,this.tagV3,this.tagV4,this.tagV5,this.tagV6)
+
       var labelJson = {
-        "I": this.tagI.toString(),
-        "II": this.tagII.toString(),
-        "III": this.tagIII.toString(),
-        "aVL": this.tagaVL.toString(),
-        "aVR": this.tagaVR.toString(),
-        "aVF": this.tagaVF.toString(),
-        "V1": this.tagV1.toString(),
-        "V2": this.tagV2.toString(),
-        "V3": this.tagV3.toString(),
-        "V4": this.tagV4.toString(),
-        "V5": this.tagV5.toString(),
-        "V6": this.tagV6.toString()
+        I: this.distinct(this.tagI).toString(),
+        II: this.distinct(this.tagII).toString(),
+        III: this.distinct(this.tagIII).toString(),
+        aVL: this.distinct(this.tagaVL).toString(),
+        aVR: this.distinct(this.tagaVR).toString(),
+        aVF: this.distinct(this.tagaVF).toString(),
+        V1: this.distinct(this.tagV1).toString(),
+        V2: this.distinct(this.tagV2).toString(),
+        V3: this.distinct(this.tagV3).toString(),
+        V4: this.distinct(this.tagV4).toString(),
+        V5: this.distinct(this.tagV5).toString(),
+        V6: this.distinct(this.tagV6).toString()
       }
       var obj={
           logId:this.logId,
@@ -1725,6 +1768,19 @@ export default {
       updateStLabel(obj).then(response => {
         this.$modal.msgSuccess("提交成功");
       });
+    },
+    //去重
+    distinct(arr) {
+      for (var i = 0, len = arr.length; i < len; i++) {
+        for (var i2 = i + 1; i2 < len; i2++) {
+          if (arr[i] === arr[i2]) {
+            arr.splice(i2, 1); // 删除重复的数据
+            i2--; // 删除数据后index需要前移一位
+            len = arr.length; // 删除数据后重新获取数组长度
+          }
+        }
+      }
+      return arr;
     },
     clickitem(e){
       e === this.radio ? this.radio = '' : this.radio = e
@@ -2133,6 +2189,15 @@ body,html{
 
   //border-bottom: 1px solid #136d87;
 }
+.allBtn{
+  margin: 0;
+  padding: 6px;
+  font-size: .9vw;
+  background-color: #F1FAFF;
+  border: 1px solid #136d87;
+  z-index: 999;
+  color: #136d87;
+}
 .tagItem{
   height:10vh;
   border-top: 1px solid #136d87;
@@ -2261,28 +2326,39 @@ form input {
   display: flex;
   //justify-content: space-between;
   //flex-wrap: wrap;
-  //align-items: stretch;
   width: 100%;
+  height: 100%;
   text-align: left;
   .el-checkbox{
-    text-align: center;
     flex:1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
     margin-right: 0;
+    border-right: 1px solid #136d87;
+  }
+  .el-checkbox:last-child{
+    border: 0;
   }
   .el-checkbox__inner {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #136d87;
   }
-
+  .el-checkbox__label{
+    padding: 0;
+  }
   .el-checkbox__inner::after {
     border: 3px solid #fff;
     border-left: 0;
     border-top: 0;
-    left: 8px;
-    top: 4px;
+    left: 11px;
+    top: 6px;
   }
   .el-checkbox__input.is-checked .el-checkbox__inner::after {
-    transform: rotate(50deg) scaleY(1.3);
+    transform: rotate(50deg) scaleY(1.4);
   }
 }
 .showbox {
