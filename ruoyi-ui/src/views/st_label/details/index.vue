@@ -2190,8 +2190,9 @@ body,html{
   //border-bottom: 1px solid #136d87;
 }
 .allBtn{
+  flex: 1;
   margin: 0;
-  padding: 6px;
+  padding: 5px 0;
   font-size: .9vw;
   background-color: #F1FAFF;
   border: 1px solid #136d87;
