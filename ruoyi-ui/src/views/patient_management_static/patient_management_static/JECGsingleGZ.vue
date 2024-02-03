@@ -363,6 +363,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-eleme"
+            @click="lookHistoryData30(scope.row)"
+          >30天趋势图
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-position"
             @click="sendMsg(scope.row)"
           >发送短信
@@ -881,6 +888,9 @@ export default {
     lookHistoryData(val){
       console.log(val)
       this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECGsingle"}});
+    },
+    lookHistoryData30(row){
+      this.$router.push({path: "/scatterPlot", query: {patientPhone: row.patientPhone}});
     },
     /** 查看心电图*/
     lookECG(row) {

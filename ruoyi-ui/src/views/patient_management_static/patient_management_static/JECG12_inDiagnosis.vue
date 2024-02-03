@@ -369,6 +369,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-eleme"
+            @click="lookHistoryData30(scope.row)"
+          >30天趋势图
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-s-order"
             @click="lookECG(scope.row)"
             v-hasPermi="['patient:patient:alert']"
@@ -648,6 +655,9 @@ export default {
         this.$modal.msgSuccess("修改成功");
         this.dialogFormVisible = false;
       })
+    },
+    lookHistoryData30(row){
+      this.$router.push({path: "/scatterPlot", query: {patientPhone: row.patientPhone}});
     },
     sendMsg(row){
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;

@@ -295,53 +295,86 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
     }
 
     @Override
-    public Map<String, List<String[]>> selectPatientManagementCountApp(PatientManagement patientManagement) throws Exception {
+    public Map<String, List<List<Object>>> selectPatientManagementCountApp(PatientManagement patientManagement) throws Exception {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Map<String, List<String[]>> map = new HashMap<>();
+        Map<String, List<List<Object>>> map = new HashMap<>();
         if (StringUtils.isNotEmpty(patientManagement.getPatientPhone())){
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }
         List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementByPm(patientManagement);
-        List<String[]> hr_mean = new ArrayList<>();
-        List<String[]> P_time = new ArrayList<>();
-        List<String[]> QRS_interval = new ArrayList<>();
-        List<String[]> PR_interval = new ArrayList<>();
-        List<String[]> QTc = new ArrayList<>();
-        List<String[]> RMSSD = new ArrayList<>();
+        List<List<Object>> hr_mean = new ArrayList<>();
+        List<List<Object>> P_time = new ArrayList<>();
+        List<List<Object>> QRS_interval = new ArrayList<>();
+        List<List<Object>> PR_interval = new ArrayList<>();
+        List<List<Object>> QTc = new ArrayList<>();
+        List<List<Object>> RMSSD = new ArrayList<>();
 
         for (PatientManagement c : patientManagements){
             if (c.getPmEcgData()!=null){
                 String formatted= formatter.format(c.getConnectionTime());
                 Date dateTime = formatter.parse(formatted);
-                String formattedDate = dateTime.getTime() / 1000+"";
+                long formattedDate = dateTime.getTime() / 1000;
                 PmEcgData pmEcgData = c.getPmEcgData();
                 if (StringUtils.isNotEmpty(pmEcgData.getHrMean())){
-                    String[] strings = {formattedDate,pmEcgData.getHrMean()};
-                    hr_mean.add(strings);
+                    Double aDouble = getDouble(pmEcgData.getHrMean());
+                    if (aDouble!=null){
+                        List<Object> list = new ArrayList<>();
+                        list.add(formattedDate);
+                        list.add(aDouble);
+                        hr_mean.add(list);
+                    }
+
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getpTime())){
-                    String[] strings = {formattedDate,pmEcgData.getpTime()};
-                    P_time.add(strings);
+                    Double aDouble = getDouble(pmEcgData.getpTime());
+                    if (aDouble!=null){
+                        List<Object> list = new ArrayList<>();
+                        list.add(formattedDate);
+                        list.add(aDouble);
+                        P_time.add(list);
+                    }
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getQrsInterval())){
-                    String[] strings = {formattedDate,pmEcgData.getQrsInterval()};
-                    QRS_interval.add(strings);
+
+                    Double aDouble = getDouble(pmEcgData.getQrsInterval());
+                    if (aDouble!=null){
+                        List<Object> list = new ArrayList<>();
+                        list.add(formattedDate);
+                        list.add(aDouble);
+                        QRS_interval.add(list);
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getPrInterval())){
-                    String[] strings = {formattedDate,pmEcgData.getPrInterval()};
-                    PR_interval.add(strings);
+                    Double aDouble = getDouble(pmEcgData.getPrInterval());
+                    if (aDouble!=null){
+                        List<Object> list = new ArrayList<>();
+                        list.add(formattedDate);
+                        list.add(aDouble);
+                        PR_interval.add(list);
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getQtc())){
-                    String[] strings = {formattedDate,pmEcgData.getQtc()};
-                    QTc.add(strings);
+
+                    Double aDouble = getDouble(pmEcgData.getQtc());
+                    if (aDouble!=null){
+                        List<Object> list = new ArrayList<>();
+                        list.add(formattedDate);
+                        list.add(aDouble);
+                        QTc.add(list);
+                    }
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getRmssd())){
-                    String[] strings = {formattedDate,pmEcgData.getRmssd()};
-                    RMSSD.add(strings);
+                    Double aDouble = getDouble(pmEcgData.getRmssd());
+                    if (aDouble!=null){
+                        List<Object> list = new ArrayList<>();
+                        list.add(formattedDate);
+                        list.add(aDouble);
+                        RMSSD.add(list);
+                    }
                 }
             }
 
@@ -354,6 +387,15 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         map.put("QTc",QTc);
         map.put("RMSSD",RMSSD);
         return map;
+    }
+
+    private Double getDouble(String str) {
+        try {
+            return Double.parseDouble(str);
+        }catch (Exception e) {
+            return null;
+        }
+
     }
 
     private Map<String, List<String[]>> patientManagementCountApp(SimpleDateFormat formatter,PatientManagement patientManagement) throws Exception {

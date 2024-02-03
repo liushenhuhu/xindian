@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-page-header @back="goBack" content="30天趋势图">  </el-page-header>
+    <el-form :model="queryParams" style="margin-top: 20px" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="患者手机号" prop="patientPhone" label-width="80">
         <el-input
           v-model="queryParams.patientPhone"
@@ -71,7 +72,7 @@ export default {
   data() {
     return {
       queryParams:{
-        patientPhone:13856850666,
+        patientPhone:this.$route.query.patientPhone,
         startTime:null,
         endTime:null
       },
@@ -128,6 +129,7 @@ export default {
   },
   methods: {
     getData(){
+      this.queryParams.patientPhone = this.$route.query.patientPhone
       getHrCount(this.queryParams).then(res=>{
         this.setChart1(res.data.PR_interval)
         this.setChart2(res.data.P_time)
@@ -136,6 +138,9 @@ export default {
         this.setChart5(res.data.RMSSD)
         this.setChart6(res.data.hr_mean)
       })
+    },
+    goBack() {
+      this.$router.go(-1)
     },
     GetDateStr(AddDayCount){
       var dd = new Date();
@@ -161,7 +166,7 @@ export default {
         grid:{
           left:'2%',
           top:'16%',
-          right:'2%',
+          right:'5%',
           bottom:'2%',
           containLabel:true
         },
@@ -205,7 +210,7 @@ export default {
         grid:{
           left:'2%',
           top:'16%',
-          right:'2%',
+          right:'5%',
           bottom:'2%',
           containLabel:true
         },
@@ -249,7 +254,7 @@ export default {
         grid:{
           left:'2%',
           top:'16%',
-          right:'2%',
+          right:'5%',
           bottom:'2%',
           containLabel:true
         },
@@ -293,7 +298,7 @@ export default {
         grid:{
           left:'2%',
           top:'16%',
-          right:'2%',
+          right:'5%',
           bottom:'2%',
           containLabel:true
         },
@@ -337,7 +342,7 @@ export default {
         grid:{
           left:'2%',
           top:'16%',
-          right:'2%',
+          right:'5%',
           bottom:'2%',
           containLabel:true
         },
@@ -381,7 +386,7 @@ export default {
         grid:{
           left:'2%',
           top:'16%',
-          right:'2%',
+          right:'5%',
           bottom:'2%',
           containLabel:true
         },
@@ -415,8 +420,9 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.daterangeReportTime = [];
       this.resetForm("queryForm");
+      this.queryParams.endTime=this.GetDateStr(0)
+      this.queryParams.startTime=this.GetDateStr(-30)
       this.handleQuery();
     },
   },

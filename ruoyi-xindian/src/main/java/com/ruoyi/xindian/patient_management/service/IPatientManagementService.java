@@ -118,5 +118,5 @@ public interface IPatientManagementService
 
     Map<String, List<String[]>> selectPatientManagementCount(PatientManagement patientManagement) throws Exception;
 
-    Map<String, List<String[]>> selectPatientManagementCountApp(PatientManagement patientManagement) throws Exception;
+    Map<String, List<List<Object>>> selectPatientManagementCountApp(PatientManagement patientManagement) throws Exception;
 }
