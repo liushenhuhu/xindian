@@ -3,6 +3,7 @@ package com.ruoyi.xindian.patient_management.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.xindian.pmEcgData.domain.PmEcgData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -210,6 +211,9 @@ public class PatientManagement extends BaseEntity {
     private String endReportTime;
     private String patientSymptom;
 
+    private String startTime;
+
+
     private Integer rushState = 1;
 
 
@@ -239,6 +243,8 @@ public class PatientManagement extends BaseEntity {
 
     private Integer sxPayStatus;
 
+
+    private PmEcgData pmEcgData;
     /**
      * 拒绝理由
      */

@@ -61,6 +61,10 @@
         <result property="pId"    column="p_id"    />
         <result property="connectionTime"    column="connection_time"    />
     </resultMap>
+
+    <resultMap id="PatientAndPm" type="PatientManagement" extends="PatientManagementResult">
+        <association property="pmEcgData" javaType="pmEcgData" resultMap="com.ruoyi.xindian.pmEcgData.mapper.PmEcgDataMapper.PmEcgDataResult"/>
+     </resultMap>
     <sql id="selectSingleHistoryInfoVo">
         select ecg_id, patient_phone_aes, normal_ecg, ap_beat, pv_beat, atrial_fibrillation, atrial_flutter, left_block, right_block, bradycardia, tachycardia from single_history_info
     </sql>
@@ -722,6 +726,26 @@
         FROM
             patient_management
         where patient_management.p_id=#{pId}
+    </select>
+    <select id="selectPatientManagementByPm"
+            resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientAndPm">
+        SELECT
+            patient_management.connection_time,
+            pm_ecg_data.p_id,
+            pm_ecg_data.hr_mean,
+            pm_ecg_data.P_time,
+            pm_ecg_data.QRS_interval,
+            pm_ecg_data.PR_interval,
+            pm_ecg_data.QTc,
+            pm_ecg_data.RMSSD
+        FROM
+            patient_management
+                INNER JOIN
+            pm_ecg_data
+            ON
+                patient_management.p_id = pm_ecg_data.p_id
+        WHERE patient_phone_aes = #{patientPhone} and
+            connection_time  BETWEEN #{startTime} AND DATE_ADD(#{endTime}, INTERVAL 1 DAY)
     </select>
 
 

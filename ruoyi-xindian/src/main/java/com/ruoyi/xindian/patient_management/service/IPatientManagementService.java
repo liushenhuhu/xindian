@@ -10,6 +10,7 @@ import com.ruoyi.xindian.patient_management.vo.PInfoVO;
 import com.ruoyi.xindian.report.domain.Report;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 患者管理Service接口
@@ -114,4 +115,6 @@ public interface IPatientManagementService
 
     List<DocVO> selectEcgType(String ecgType);
 
+
+    Map<String, List<String[]>> selectPatientManagementCount(PatientManagement patientManagement) throws Exception;
 }

@@ -133,7 +133,7 @@ public interface PatientManagementMapper
     List<DocVO> selectEcgTypeList(@Param("ecgType") String ecgType);
 
 
-
+    List<PatientManagement> selectPatientManagementByPm(PatientManagement patientManagement);
 
 
 }
