@@ -250,6 +250,9 @@ public class PatientManagement extends BaseEntity {
      */
     private String refuseText;
 
+
+
+
     private List<String> hospitalCodeList = new ArrayList<>();
 
     public String getpId() {

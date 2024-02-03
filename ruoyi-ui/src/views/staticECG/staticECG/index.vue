@@ -104,15 +104,22 @@
             <div class="doctor">
               <div class="input">
                 <strong>医师:</strong>
-                <el-input v-model="data.doctorName" clearable></el-input>
+                <el-select v-model="data.doctorName" clearable>
+                  <el-option
+                    v-for="item in options"
+                    :label="item.doctorName"
+                    :value="item.doctorName">
+                  </el-option>
+                </el-select>
               </div>
               <div class="input">
                 <strong>日期:</strong>
-                <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable></el-input>
+                <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable ></el-input>
                 <el-input v-else v-model="data.dataTime" clearable></el-input>
               </div>
             </div>
             <div class="upload">
+              <el-button class="anNiu" type="success" plain @click="sendWarnMsg()">发送预警</el-button>
               <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
               <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
             </div>
@@ -197,11 +204,12 @@
 <script>
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import $ from 'jquery';
-import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/report/report";
+import {getCommonTerms, addReport, getReportByPId, updateReport, reportEarlyWarningMsg} from "@/api/report/report";
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 import child from './child.vue'
 import CacheList from "@/views/monitor/cache/list.vue";
 import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
+import {selectDoctor} from "@/api/statistics/statistics";
 
 export default {
   name: "index",
@@ -225,6 +233,7 @@ export default {
       pId: null,
       dialogVisibleTag:null,
       arr: [],
+      options:[],
       data: {
         name: "",
         gender: "",
@@ -314,6 +323,9 @@ export default {
         }
         console.log(this.data)
       });
+      selectDoctor().then(response => {
+        this.options = response;
+      })
     }
   },
   mounted() {
@@ -1665,6 +1677,25 @@ export default {
         this.$message.error('该患者手机号不合法！！！');
       }
     },
+    sendWarnMsg(){
+      if(this.data.resultByDoctor==''||this.data.resultByDoctor==null||this.data.resultByDoctor.length>20){
+        this.$message({
+          type: 'error',
+          message: '预警消息不能为空或长度最多20个字'
+        });
+        return
+      }
+      let obj = {
+        pId : this.data.pId,
+        warningText: this.data.resultByDoctor
+      }
+      reportEarlyWarningMsg(obj).then(r=>{
+        this.$message({
+          type: 'success',
+          message: '发送成功!'
+        });
+      })
+    },
     //医生诊断
     btnUpload() {
       if(this.data.resultByDoctor==''||this.data.resultByDoctor==null){
@@ -1900,7 +1931,7 @@ export default {
       margin-right: .5vw;
     }
     ::v-deep .el-input--medium .el-input__inner{
-      width: 60%;
+      //width: 60%;
     }
   ;
   }

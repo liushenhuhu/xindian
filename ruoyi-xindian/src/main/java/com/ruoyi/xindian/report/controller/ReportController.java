@@ -1068,4 +1068,42 @@ public class ReportController extends BaseController
             }
         }
     }
+
+    @GetMapping("/reportEarlyWarningMsg")
+    public AjaxResult reportEarlyWarningMsg(Report report) throws Exception {
+
+        Report report1 = reportService.selectReportByPId(report.getpId());
+        if (report1==null){
+            return AjaxResult.error("报告不存在");
+        }
+        PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(report.getpId());
+        if (patientManagement==null){
+            return AjaxResult.error("报告不存在");
+        }
+        String phone = "";
+        if (StringUtils.isNotEmpty(report1.getLoginUserPhone())){
+            phone  = report1.getLoginUserPhone();
+        } else if (report1.getPPhone()!=null) {
+            String decrypt = aesUtils.decrypt(report1.getPPhone());
+            if (decrypt.length()>=11){
+                phone =  aesUtils.encrypt(decrypt.substring(0, 11));
+            }
+        }
+
+        if (report.getWarningText()==null||report.getWarningText().length()>20){
+            return AjaxResult.error("预警消息最多20个字");
+        }
+
+        SysUser sysUser = sysUserMapper.selectUserByPhone(phone);
+        if (sysUser!=null){
+            boolean isKeys = wxPublicRequest.reportEarlyWarning(sysUser.getOpenId(), "心电图检测", aesUtils.decrypt(patientManagement.getPatientName()), report.getWarningText(), patientManagement.getConnectionTime());
+            if (isKeys){
+                return AjaxResult.success();
+            }
+            return AjaxResult.error("用户未授权推送");
+        }
+
+
+        return AjaxResult.error("用户未授权推送");
+    }
 }

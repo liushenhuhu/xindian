@@ -446,6 +446,49 @@ public class WXPublicRequest {
         }
 
     }
+    /**
+     * 小程序消息推送（设备绑定状态 通知患者）
+     * @param userOpenid 用户openid
+     *                   serveName 服务名称
+     *                   patientName 患者姓名
+     *                   msg 消息
+     *                   time 检测时间
+     *
+     *
+     * @throws Exception
+     */
+    public  boolean  reportEarlyWarning( String userOpenid, String serveName, String patientName,String msg,Date time) throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy-MM-dd HH:mm");
+        String timeNow = sdf.format(time);
+        MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity(new MessageValueEntity(serveName),new MessageValueEntity(patientName),new MessageValueEntity(msg),new MessageValueEntity(timeNow));
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("touser", userOpenid); //用户openid
+        paramsMap.put("miniprogram_state", "fomal");
+        paramsMap.put("page", "pages/record/index");
+        paramsMap.put("template_id", "0Zlja-FFGdgUb5UTG0PZOPegETQUEliGJZweViOdb-I"); //推送消息模板id
+        paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
+        String wxAccessToken = getWXAccessToken();
+
+        HttpHeaders headers = new HttpHeaders(); //构建请求头
+        headers.setContentType(MediaType.APPLICATION_JSON); //设置内容类型为json
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap, headers); //构建http请求实体
+
+        //发送请求路径拼接获取到的access_token
+        SendMessageVo sendMessageVo = restTemplate.postForObject("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" +
+                wxAccessToken, request, SendMessageVo.class);
+
+        if (null == sendMessageVo) {
+            throw new RuntimeException("推送消息失败");
+        }
+        if (sendMessageVo.getErrcode() != 0) {
+            log.error("推送消息失败,原因：{}", sendMessageVo.getErrmsg());
+            return false;
+        }
+
+        log.info("推送消息成功");
+        return true;
+    }
 
 
     /**

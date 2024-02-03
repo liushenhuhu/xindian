@@ -106,8 +106,13 @@
               <div class="doctor">
                 <div class="input">
                   <strong>医师:</strong>
-                  <el-input v-model="data.doctorName" clearable>{{ data.doctorName }}
-                  </el-input>
+                    <el-select v-model="data.doctorName" clearable>
+                      <el-option
+                        v-for="item in options"
+                        :label="item.doctorName"
+                        :value="item.doctorName">
+                      </el-option>
+                    </el-select>
                 </div>
                 <div class="input">
                   <strong>日期:</strong>
@@ -116,6 +121,7 @@
                 </div>
               </div>
               <div class="oder">
+                <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">发送预警</el-button>
                 <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
                 <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
               </div>
@@ -178,12 +184,13 @@
 <script>
 import * as echarts from '@/views/ECGScreen/detail/echarts.min'
 import $ from 'jquery';
-import {getCommonTerms, addReport, getReportByPId, updateReport} from "@/api/report/report";
+import {getCommonTerms, addReport, getReportByPId, updateReport, reportEarlyWarningMsg} from "@/api/report/report";
 import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 import html2canvas from "html2canvas";
 import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
 import {addLabel} from "@/api/log_user/log_user";
 import child from "@/views/staticECG/staticECG/child.vue";
+import {selectDoctor} from "@/api/statistics/statistics";
 var elementResizeDetectorMaker = require("element-resize-detector")
 export default {
   name: "index",
@@ -199,6 +206,7 @@ export default {
       inputVisible: false,
       inputValue: '',
       dialogVisibleTag:null,
+      options: [],
       data: {
         name: "",
         gender: "",
@@ -402,6 +410,9 @@ export default {
       if (!show) {
         this.get();
       }
+      selectDoctor().then(response => {
+        this.options = response;
+      })
     }
   },
   mounted() {
@@ -1873,6 +1884,25 @@ export default {
         + (str.getMonth() + 1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes() + ":" + str.getSeconds();
       return nowTime;
     },
+    sendWarnMsg(){
+      if(this.data.resultByDoctor==''||this.data.resultByDoctor==null||this.data.resultByDoctor.length>20){
+        this.$message({
+          type: 'error',
+          message: '预警消息不能为空或长度最多20个字'
+        });
+        return
+      }
+      let obj = {
+        pId : this.data.pId,
+        warningText: this.data.resultByDoctor
+      }
+      reportEarlyWarningMsg(obj).then(r=>{
+        this.$message({
+          type: 'success',
+          message: '发送成功!'
+        });
+      })
+    },
     //发送短信
     sendMsg() {
       let patientPhone = this.data.pphone
@@ -2100,7 +2130,7 @@ export default {
     margin-top: 1vh;
     margin-left: 2vw;
     ::v-deep .el-input--medium .el-input__inner{
-      width: 60%;
+      //width: 80%;
     }
     //margin-left: 1vw;
     strong{

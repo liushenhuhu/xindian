@@ -103,6 +103,10 @@ public class Report extends BaseEntity
     private String refuseText;
 
 
+    /**
+     * 预警消息
+     */
+    private String warningText;
     public String getRefuseText() {
         return refuseText;
     }

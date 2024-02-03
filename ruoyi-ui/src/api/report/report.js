@@ -57,3 +57,10 @@ export function getCommonTerms() {
     method: 'get'
   })
 }
+export function reportEarlyWarningMsg(data) {
+  return request({
+    url: '/report/report/reportEarlyWarningMsg',
+    method: 'get',
+    params: data
+  })
+}

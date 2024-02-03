@@ -42,6 +42,7 @@ import com.ruoyi.xindian.verify.domain.SxReport;
 import com.ruoyi.xindian.verify.service.SxReportService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
+import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -103,6 +104,8 @@ public class PatientManagementController extends BaseController {
     private AesUtils aesUtils;
 
 
+    @Resource
+    private WXPublicRequest wxPublicRequest;
     @Resource
     private OrderInfoService orderInfoService;
 
@@ -839,5 +842,7 @@ public class PatientManagementController extends BaseController {
     public AjaxResult getHrCountApp(PatientManagement patientManagement) throws Exception {
         return AjaxResult.success(patientManagementService.selectPatientManagementCountApp(patientManagement));
     }
+
+
 
 }
