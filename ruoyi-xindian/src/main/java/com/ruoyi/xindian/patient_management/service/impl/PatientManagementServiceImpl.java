@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 患者管理Service业务层处理
@@ -293,6 +290,14 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
 
     @Override
     public Map<String, List<String[]>> selectPatientManagementCount(PatientManagement patientManagement) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd");
+        return patientManagementCountApp(formatter, patientManagement);
+    }
+
+    @Override
+    public Map<String, List<String[]>> selectPatientManagementCountApp(PatientManagement patientManagement) throws Exception {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, List<String[]>> map = new HashMap<>();
         if (StringUtils.isNotEmpty(patientManagement.getPatientPhone())){
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
@@ -304,8 +309,65 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         List<String[]> PR_interval = new ArrayList<>();
         List<String[]> QTc = new ArrayList<>();
         List<String[]> RMSSD = new ArrayList<>();
-        SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日");
 
+        for (PatientManagement c : patientManagements){
+            if (c.getPmEcgData()!=null){
+                String formatted= formatter.format(c.getConnectionTime());
+                Date dateTime = formatter.parse(formatted);
+                String formattedDate = dateTime.getTime() / 1000+"";
+                PmEcgData pmEcgData = c.getPmEcgData();
+                if (StringUtils.isNotEmpty(pmEcgData.getHrMean())){
+                    String[] strings = {formattedDate,pmEcgData.getHrMean()};
+                    hr_mean.add(strings);
+                }
+                if (StringUtils.isNotEmpty(pmEcgData.getpTime())){
+                    String[] strings = {formattedDate,pmEcgData.getpTime()};
+                    P_time.add(strings);
+                }
+                if (StringUtils.isNotEmpty(pmEcgData.getQrsInterval())){
+                    String[] strings = {formattedDate,pmEcgData.getQrsInterval()};
+                    QRS_interval.add(strings);
+                }
+
+                if (StringUtils.isNotEmpty(pmEcgData.getPrInterval())){
+                    String[] strings = {formattedDate,pmEcgData.getPrInterval()};
+                    PR_interval.add(strings);
+                }
+
+                if (StringUtils.isNotEmpty(pmEcgData.getQtc())){
+                    String[] strings = {formattedDate,pmEcgData.getQtc()};
+                    QTc.add(strings);
+                }
+
+                if (StringUtils.isNotEmpty(pmEcgData.getRmssd())){
+                    String[] strings = {formattedDate,pmEcgData.getRmssd()};
+                    RMSSD.add(strings);
+                }
+            }
+
+
+        }
+        map.put("hr_mean",hr_mean);
+        map.put("P_time",P_time);
+        map.put("QRS_interval",QRS_interval);
+        map.put("PR_interval",PR_interval);
+        map.put("QTc",QTc);
+        map.put("RMSSD",RMSSD);
+        return map;
+    }
+
+    private Map<String, List<String[]>> patientManagementCountApp(SimpleDateFormat formatter,PatientManagement patientManagement) throws Exception {
+        Map<String, List<String[]>> map = new HashMap<>();
+        if (StringUtils.isNotEmpty(patientManagement.getPatientPhone())){
+            patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
+        }
+        List<PatientManagement> patientManagements = patientManagementMapper.selectPatientManagementByPm(patientManagement);
+        List<String[]> hr_mean = new ArrayList<>();
+        List<String[]> P_time = new ArrayList<>();
+        List<String[]> QRS_interval = new ArrayList<>();
+        List<String[]> PR_interval = new ArrayList<>();
+        List<String[]> QTc = new ArrayList<>();
+        List<String[]> RMSSD = new ArrayList<>();
 
         for (PatientManagement c : patientManagements){
             if (c.getPmEcgData()!=null){

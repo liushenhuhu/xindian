@@ -835,4 +835,9 @@ public class PatientManagementController extends BaseController {
         return AjaxResult.success(patientManagementService.selectPatientManagementCount(patientManagement));
     }
 
+    @GetMapping("/getHrCountApp")
+    public AjaxResult getHrCountApp(PatientManagement patientManagement) throws Exception {
+        return AjaxResult.success(patientManagementService.selectPatientManagementCountApp(patientManagement));
+    }
+
 }
