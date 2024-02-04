@@ -59,6 +59,35 @@
           <div class="chart" id="chart6"></div>
         </el-card>
       </div>
+      <div class="row">
+        <el-card>
+          <div class="chart" id="chart7"></div>
+        </el-card>
+        <el-card>
+          <div class="chart" id="chart8"></div>
+        </el-card>
+      </div>
+      <div class="row">
+        <el-card>
+          <div class="chart" id="chart9"></div>
+        </el-card>
+        <el-card>
+          <div class="chart" id="chart10"></div>
+        </el-card>
+      </div>
+      <div class="row">
+        <el-card>
+          <div class="chart" id="chart11"></div>
+        </el-card>
+        <el-card>
+          <div class="chart" id="chart12"></div>
+        </el-card>
+      </div>
+      <div class="row">
+        <el-card>
+          <div class="chart" id="chart13"></div>
+        </el-card>
+      </div>
     </div>
   </div>
 </template>
@@ -94,6 +123,13 @@ export default {
     this.chart4 = echarts.init(document.getElementById('chart4'));
     this.chart5 = echarts.init(document.getElementById('chart5'));
     this.chart6 = echarts.init(document.getElementById('chart6'));
+    this.chart7 = echarts.init(document.getElementById('chart7'));
+    this.chart8 = echarts.init(document.getElementById('chart8'));
+    this.chart9 = echarts.init(document.getElementById('chart9'));
+    this.chart10 = echarts.init(document.getElementById('chart10'));
+    this.chart11 = echarts.init(document.getElementById('chart11'));
+    this.chart12 = echarts.init(document.getElementById('chart12'));
+    this.chart13 = echarts.init(document.getElementById('chart13'));
     window.addEventListener("resize", () => {
       this.chart1.resize()
       this.chart2.resize()
@@ -101,6 +137,13 @@ export default {
       this.chart4.resize()
       this.chart5.resize()
       this.chart6.resize()
+      this.chart7.resize()
+      this.chart8.resize()
+      this.chart9.resize()
+      this.chart10.resize()
+      this.chart11.resize()
+      this.chart12.resize()
+      this.chart13.resize()
     });
     // 获取目标元素
     const resizeBox = document.getElementById('main');
@@ -118,6 +161,13 @@ export default {
           this.chart4.resize()
           this.chart5.resize()
           this.chart6.resize()
+          this.chart7.resize()
+          this.chart8.resize()
+          this.chart9.resize()
+          this.chart10.resize()
+          this.chart11.resize()
+          this.chart12.resize()
+          this.chart13.resize()
         },50)
       }
     });
@@ -137,6 +187,13 @@ export default {
         this.setChart4(res.data.QTc)
         this.setChart5(res.data.RMSSD)
         this.setChart6(res.data.hr_mean)
+        this.setChart7(res.data.P_amplitude)
+        this.setChart8(res.data.R_amplitude)
+        this.setChart9(res.data.T_amplitude)
+        this.setChart10(res.data.T_time)
+        this.setChart11(res.data.SDNN)
+        this.setChart12(res.data.QT_interval)
+        this.setChart13(res.data.nni)
       })
     },
     goBack() {
@@ -161,7 +218,7 @@ export default {
       }
       var option = {
         title:{
-          text:'PR间期'
+          text:'PR间期(ms)'
         },
         grid:{
           left:'2%',
@@ -178,7 +235,15 @@ export default {
           data:datax,
           boundaryGap: false
         },
-        yAxis: {},
+        yAxis: {
+          min:0,
+          max:400,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
         series: [
           {
             symbolSize: 5,
@@ -205,7 +270,7 @@ export default {
       }
       var option = {
         title:{
-          text:'P波'
+          text:'P波(ms)'
         },
         grid:{
           left:'2%',
@@ -222,7 +287,15 @@ export default {
           data:datax,
           boundaryGap: false
         },
-        yAxis: {},
+        yAxis: {
+          min:0,
+          max:200,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
         series: [
           {
             symbolSize: 5,
@@ -249,7 +322,7 @@ export default {
       }
       var option = {
         title:{
-          text:'QRS波群'
+          text:'QRS波群(ms)'
         },
         grid:{
           left:'2%',
@@ -266,7 +339,15 @@ export default {
           data:datax,
           boundaryGap: false
         },
-        yAxis: {},
+        yAxis: {
+          min:0,
+          max:200,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
         series: [
           {
             symbolSize: 5,
@@ -293,7 +374,7 @@ export default {
       }
       var option = {
         title:{
-          text:'QTc'
+          text:'QTc(ms)'
         },
         grid:{
           left:'2%',
@@ -310,7 +391,15 @@ export default {
           data:datax,
           boundaryGap: false
         },
-        yAxis: {},
+        yAxis: {
+          min:0,
+          max:400,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
         series: [
           {
             symbolSize: 5,
@@ -337,7 +426,7 @@ export default {
       }
       var option = {
         title:{
-          text:'HRV'
+          text:'HRV(ms)'
         },
         grid:{
           left:'2%',
@@ -354,7 +443,15 @@ export default {
           data:datax,
           boundaryGap: false
         },
-        yAxis: {},
+        yAxis: {
+          min:0,
+          max:400,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
         series: [
           {
             symbolSize: 5,
@@ -381,7 +478,7 @@ export default {
       }
       var option = {
         title:{
-          text:'心率'
+          text:'心率(bpm)'
         },
         grid:{
           left:'2%',
@@ -398,7 +495,15 @@ export default {
           data:datax,
           boundaryGap: false
         },
-        yAxis: {},
+        yAxis: {
+          min:0,
+          max:200,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
         series: [
           {
             symbolSize: 5,
@@ -413,6 +518,354 @@ export default {
       this.chart6.clear()
       this.chart6.setOption(option);
       this.chart6.resize()
+    },
+    setChart7(data){
+      let datax=[]
+      let datay=[]
+      if(data && data.length!=0){
+        data.forEach(item=>{
+          datax.push(item[0])
+          datay.push(item[1])
+        })
+      }
+      var option = {
+        title:{
+          text:'P波振幅(ms)'
+        },
+        grid:{
+          left:'2%',
+          top:'16%',
+          right:'5%',
+          bottom:'2%',
+          containLabel:true
+        },
+        tooltip:{
+          show:true
+        },
+        xAxis: {
+          type: 'category',
+          data:datax,
+          boundaryGap: false
+        },
+        yAxis: {
+        },
+        series: [
+          {
+            symbolSize: 5,
+            data:datay,
+            type: 'scatter',
+            itemStyle: {
+              color: "rgba(224, 67, 67, 1)"
+            },
+          }
+        ]
+      };
+      this.chart7.clear()
+      this.chart7.setOption(option);
+      this.chart7.resize()
+    },
+    setChart8(data){
+      let datax=[]
+      let datay=[]
+      if(data && data.length!=0){
+        data.forEach(item=>{
+          datax.push(item[0])
+          datay.push(item[1])
+        })
+      }
+      var option = {
+        title:{
+          text:'R波振幅(ms)'
+        },
+        grid:{
+          left:'2%',
+          top:'16%',
+          right:'5%',
+          bottom:'2%',
+          containLabel:true
+        },
+        tooltip:{
+          show:true
+        },
+        xAxis: {
+          type: 'category',
+          data:datax,
+          boundaryGap: false
+        },
+        yAxis: {
+        },
+        series: [
+          {
+            symbolSize: 5,
+            data:datay,
+            type: 'scatter',
+            itemStyle: {
+              color: "rgba(224, 67, 67, 1)"
+            },
+          }
+        ]
+      };
+      this.chart8.clear()
+      this.chart8.setOption(option);
+      this.chart8.resize()
+    },
+    setChart9(data){
+      let datax=[]
+      let datay=[]
+      if(data && data.length!=0){
+        data.forEach(item=>{
+          datax.push(item[0])
+          datay.push(item[1])
+        })
+      }
+      var option = {
+        title:{
+          text:'T波振幅(ms)'
+        },
+        grid:{
+          left:'2%',
+          top:'16%',
+          right:'5%',
+          bottom:'2%',
+          containLabel:true
+        },
+        tooltip:{
+          show:true
+        },
+        xAxis: {
+          type: 'category',
+          data:datax,
+          boundaryGap: false
+        },
+        yAxis: {
+        },
+        series: [
+          {
+            symbolSize: 5,
+            data:datay,
+            type: 'scatter',
+            itemStyle: {
+              color: "rgba(224, 67, 67, 1)"
+            },
+          }
+        ]
+      };
+      this.chart9.clear()
+      this.chart9.setOption(option);
+      this.chart9.resize()
+    },
+    setChart10(data){
+      let datax=[]
+      let datay=[]
+      if(data && data.length!=0){
+        data.forEach(item=>{
+          datax.push(item[0])
+          datay.push(item[1])
+        })
+      }
+      var option = {
+        title:{
+          text:'T波时限(ms)'
+        },
+        grid:{
+          left:'2%',
+          top:'16%',
+          right:'5%',
+          bottom:'2%',
+          containLabel:true
+        },
+        tooltip:{
+          show:true
+        },
+        xAxis: {
+          type: 'category',
+          data:datax,
+          boundaryGap: false
+        },
+        yAxis: {
+        },
+        series: [
+          {
+            symbolSize: 5,
+            data:datay,
+            type: 'scatter',
+            itemStyle: {
+              color: "rgba(224, 67, 67, 1)"
+            },
+          }
+        ]
+      };
+      this.chart10.clear()
+      this.chart10.setOption(option);
+      this.chart10.resize()
+    },
+    setChart11(data){
+      let datax=[]
+      let datay=[]
+      if(data && data.length!=0){
+        data.forEach(item=>{
+          datax.push(item[0])
+          datay.push(item[1])
+        })
+      }
+      var option = {
+        title:{
+          text:'SDNN(ms)'
+        },
+        grid:{
+          left:'2%',
+          top:'16%',
+          right:'5%',
+          bottom:'2%',
+          containLabel:true
+        },
+        tooltip:{
+          show:true
+        },
+        xAxis: {
+          type: 'category',
+          data:datax,
+          boundaryGap: false
+        },
+        yAxis: {
+        },
+        series: [
+          {
+            symbolSize: 5,
+            data:datay,
+            type: 'scatter',
+            itemStyle: {
+              color: "rgba(224, 67, 67, 1)"
+            },
+          }
+        ]
+      };
+      this.chart11.clear()
+      this.chart11.setOption(option);
+      this.chart11.resize()
+    },
+    setChart12(data){
+      let datax=[]
+      let datay=[]
+      if(data && data.length!=0){
+        data.forEach(item=>{
+          datax.push(item[0])
+          datay.push(item[1])
+        })
+      }
+      var option = {
+        title:{
+          text:'QT间期(ms)'
+        },
+        grid:{
+          left:'2%',
+          top:'16%',
+          right:'5%',
+          bottom:'2%',
+          containLabel:true
+        },
+        tooltip:{
+          show:true
+        },
+        xAxis: {
+          type: 'category',
+          data:datax,
+          boundaryGap: false
+        },
+        yAxis: {
+          min:0,
+          max:400,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
+        series: [
+          {
+            symbolSize: 5,
+            data:datay,
+            type: 'scatter',
+            itemStyle: {
+              color: "rgba(224, 67, 67, 1)"
+            },
+          }
+        ]
+      };
+      this.chart12.clear()
+      this.chart12.setOption(option);
+      this.chart12.resize()
+    },
+    setChart13(data){
+      let datax=[]
+      let datay=[]
+      if(data && data.length!=0){
+        console.log(data)
+        data.forEach(item=>{
+         // JSON.parse(item[1]).forEach(arr=>{
+         //   datax.push(arr)
+         //   datay.push(arr)
+         //  })
+          let arr = JSON.parse(item[1])
+          for (let i = 0; i < arr.length-1; i++) {
+            datax.push(arr[i])
+          }
+
+          for (let i = 1; i < arr.length; i++) {
+            datay.push(arr[i])
+          }
+
+        })
+
+      }
+      console.log(datax)
+      console.log(datay)
+      var option = {
+        title:{
+          text:'nni(ms)'
+        },
+        grid:{
+          left:'2%',
+          top:'16%',
+          right:'5%',
+          bottom:'2%',
+          containLabel:true
+        },
+        tooltip:{
+          show:true
+        },
+        xAxis: {
+          min:0,
+          max:2000,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
+        yAxis: {
+          min:0,
+          max:2000,
+          axisLabel:{
+            formatter:function(value){
+              return value
+            }
+          }
+        },
+        series: [
+          {
+            symbolSize: 5,
+            data:datay,
+            type: 'scatter',
+            itemStyle: {
+              color: "rgba(224, 67, 67, 1)"
+            },
+          }
+        ]
+      };
+      this.chart13.clear()
+      this.chart13.setOption(option);
+      this.chart13.resize()
     },
     /** 搜索按钮操作 */
     handleQuery() {

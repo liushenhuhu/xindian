@@ -19,6 +19,7 @@
         <result property="qtc"    column="QTc"    />
         <result property="sdnn"    column="SDNN"    />
         <result property="rmssd"    column="RMSSD"    />
+        <result property="nni"    column="nni"    />
     </resultMap>
 
     <sql id="selectPmEcgDataVo">

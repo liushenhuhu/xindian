@@ -34,7 +34,6 @@
           </el-option>
         </el-select>
       </el-form-item>
-
 <!--      <el-form-item label="患者身份证号" prop="patientCode">
         <el-input
           v-model="queryParams.patientCode"
@@ -61,7 +60,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="设备号" prop="equipmentCode">
+   <el-form-item label="设备号" prop="equipmentCode">
         <el-input
           v-model="queryParams.equipmentCode"
           placeholder="请输入设备号"
@@ -69,17 +68,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="连接时间">
-        <el-date-picker
-          v-model="daterangeConnectionTime"
-          style="width: 205px"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetimerange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>-->
+<!-- <el-form-item label="连接时间">-->
+<!--        <el-date-picker-->
+<!--          v-model="daterangeConnectionTime"-->
+<!--          style="width: 205px"-->
+<!--          value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--          type="datetimerange"-->
+<!--          range-separator="-"-->
+<!--          start-placeholder="开始日期"-->
+<!--          end-placeholder="结束日期"-->
+<!--        ></el-date-picker>-->
+<!--      </el-form-item>-->
       <!--      <el-form-item label="在线状态" prop="onlineStatus">
               <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
                 <el-option
@@ -98,7 +97,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">
+      <el-form-item label="诊断状态" prop="diagnosisStatus">
         <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
           <el-option
             v-for="dict in dict.type.diagnosis_status"
@@ -107,7 +106,7 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>-->
+      </el-form-item>
 <!--      <el-form-item label="诊断结论" prop="diagnosisConclusion">
         <el-input
           v-model="queryParams.diagnosisConclusion"
@@ -145,14 +144,14 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
-      <!--      <el-form-item label="pId" prop="pId">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.pId"-->
-      <!--          placeholder="请输入pId"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
+<!--            <el-form-item label="管理id" prop="pId">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.pId"-->
+<!--                placeholder="请输入管理id"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
       <el-form-item label="名称模糊查询" prop="isSelect">
         <el-radio-group v-model="queryParams.isSelect">
           <el-radio  label="1">开启</el-radio>
@@ -266,11 +265,7 @@
 
 
       <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
-<!--      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+
       <el-table-column label="患者名称" align="center" prop="patientName">
         <template slot-scope="scope">
           <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
@@ -297,7 +292,11 @@
           </el-tag>
         </template>
       </el-table-column>
-
+      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
+        </template>
+      </el-table-column>
 
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">
@@ -570,7 +569,7 @@ export default {
         ecgType: null,
         PatPhone: null,
         intelligentDiagnosis: null,
-        diagnosisStatus: 0,
+        diagnosisStatus: null,
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
@@ -737,7 +736,7 @@ export default {
           ecgType: null,
           PatPhone: null,
           intelligentDiagnosis: null,
-          diagnosisStatus: 0,
+          diagnosisStatus: null,
           diagnosisConclusion: null,
           diagnosisDoctor: null,
           reportTime: null,

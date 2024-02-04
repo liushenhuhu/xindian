@@ -78,6 +78,16 @@ public class PmEcgData extends BaseEntity
      */
     private String rmssd;
 
+    private String nni;
+
+    public String getNni() {
+        return nni;
+    }
+
+    public void setNni(String nni) {
+        this.nni = nni;
+    }
+
     public String getHrMean() {
         return hrMean;
     }

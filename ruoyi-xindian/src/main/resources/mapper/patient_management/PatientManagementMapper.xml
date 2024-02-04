@@ -733,11 +733,18 @@
             patient_management.connection_time,
             pm_ecg_data.p_id,
             pm_ecg_data.hr_mean,
+            pm_ecg_data.P_amplitude,
+            pm_ecg_data.R_amplitude,
+            pm_ecg_data.T_amplitude,
             pm_ecg_data.P_time,
             pm_ecg_data.QRS_interval,
+            pm_ecg_data.T_time,
             pm_ecg_data.PR_interval,
+            pm_ecg_data.QT_interval,
             pm_ecg_data.QTc,
-            pm_ecg_data.RMSSD
+            pm_ecg_data.SDNN,
+            pm_ecg_data.RMSSD,
+            pm_ecg_data.nni
         FROM
             patient_management
                 INNER JOIN

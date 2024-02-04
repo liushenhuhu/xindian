@@ -54,14 +54,14 @@
           </el-option>
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="设备号" prop="equipmentCode">
+    <el-form-item label="设备号" prop="equipmentCode">
         <el-input
           v-model="queryParams.equipmentCode"
           placeholder="请输入设备号"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
 <!--      <el-form-item label="连接时间">
         <el-date-picker
           v-model="daterangeConnectionTime"
@@ -91,16 +91,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="诊断状态" prop="diagnosisStatus">&ndash;&gt;-->
-<!--        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>-->
-<!--          <el-option-->
-<!--            v-for="dict in dict.type.diagnosis_status"-->
-<!--            :key="dict.value"-->
-<!--            :label="dict.label"-->
-<!--            :value="dict.value"-->
-<!--          />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
+      <el-form-item label="诊断状态" prop="diagnosisStatus">
+        <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
+          <el-option
+            v-for="dict in dict.type.diagnosis_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
 <!--      <el-form-item label="诊断结论" prop="diagnosisConclusion">
         <el-input
           v-model="queryParams.diagnosisConclusion"
@@ -255,11 +255,7 @@
               </template>
             </el-table-column>-->
       <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
-<!--      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">-->
-<!--        <template slot-scope="scope">-->
-<!--          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+
       <el-table-column label="患者名称" align="center" prop="patientName">
         <template slot-scope="scope">
          <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
@@ -283,6 +279,11 @@
           <el-tag >
             {{scope.row.ecgType}}
           </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
       <!--  隐藏的患者的个人信息    -->
@@ -564,8 +565,8 @@ export default {
         patientName: null,
         ecgType: null,
         PatPhone: null,
+        diagnosisStatus: null,
         intelligentDiagnosis: null,
-        diagnosisStatus: 0,
         diagnosisConclusion: null,
         diagnosisDoctor: null,
         reportTime: null,
@@ -766,10 +767,10 @@ export default {
           ecgType: null,
           PatPhone: null,
           intelligentDiagnosis: null,
-          diagnosisStatus: 0,
           diagnosisConclusion: null,
           diagnosisDoctor: null,
           reportTime: null,
+        diagnosisStatus: null,
           ecgLevel: null,
           doctorPhone: null,
           patientSex:null,

@@ -410,6 +410,13 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         List<String[]> PR_interval = new ArrayList<>();
         List<String[]> QTc = new ArrayList<>();
         List<String[]> RMSSD = new ArrayList<>();
+        List<String[]> P_amplitude = new ArrayList<>();
+        List<String[]> R_amplitude = new ArrayList<>();
+        List<String[]> T_amplitude = new ArrayList<>();
+        List<String[]> T_time = new ArrayList<>();
+        List<String[]> SDNN = new ArrayList<>();
+        List<String[]> nni = new ArrayList<>();
+        List<String[]> QT_interval = new ArrayList<>();
 
         for (PatientManagement c : patientManagements){
             if (c.getPmEcgData()!=null){
@@ -442,6 +449,34 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
                     String[] strings = {formattedDate,pmEcgData.getRmssd(),c.getpId()};
                     RMSSD.add(strings);
                 }
+                if (StringUtils.isNotEmpty(pmEcgData.getpAmplitude())){
+                    String[] strings = {formattedDate,pmEcgData.getpAmplitude(),c.getpId()};
+                    P_amplitude.add(strings);
+                }
+                if (StringUtils.isNotEmpty(pmEcgData.getrAmplitude())){
+                    String[] strings = {formattedDate,pmEcgData.getrAmplitude(),c.getpId()};
+                    R_amplitude.add(strings);
+                }
+                if (StringUtils.isNotEmpty(pmEcgData.gettAmplitude())){
+                    String[] strings = {formattedDate,pmEcgData.gettAmplitude(),c.getpId()};
+                    T_amplitude.add(strings);
+                }
+                if (StringUtils.isNotEmpty(pmEcgData.gettTime())){
+                    String[] strings = {formattedDate,pmEcgData.gettTime(),c.getpId()};
+                    T_time.add(strings);
+                }
+                if (StringUtils.isNotEmpty(pmEcgData.getSdnn())){
+                    String[] strings = {formattedDate,pmEcgData.getSdnn(),c.getpId()};
+                    SDNN.add(strings);
+                }
+                if (StringUtils.isNotEmpty(pmEcgData.getNni())){
+                    String[] strings = {formattedDate,pmEcgData.getNni(),c.getpId()};
+                    nni.add(strings);
+                }
+                if (StringUtils.isNotEmpty(pmEcgData.getQtInterval())){
+                    String[] strings = {formattedDate,pmEcgData.getQtInterval(),c.getpId()};
+                    QT_interval.add(strings);
+                }
             }
 
 
@@ -452,6 +487,13 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         map.put("PR_interval",PR_interval);
         map.put("QTc",QTc);
         map.put("RMSSD",RMSSD);
+        map.put("P_amplitude",P_amplitude);
+        map.put("R_amplitude",R_amplitude);
+        map.put("T_amplitude",T_amplitude);
+        map.put("T_time",T_time);
+        map.put("SDNN",SDNN);
+        map.put("nni",nni);
+        map.put("QT_interval",QT_interval);
         return map;
     }
 
