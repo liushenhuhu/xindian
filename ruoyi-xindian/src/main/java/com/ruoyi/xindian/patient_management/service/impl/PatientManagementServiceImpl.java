@@ -290,7 +290,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
 
     @Override
     public Map<String, List<String[]>> selectPatientManagementCount(PatientManagement patientManagement) throws Exception {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
         return patientManagementCountApp(formatter, patientManagement);
     }
 
@@ -416,30 +416,30 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
                 String formattedDate = formatter.format(c.getConnectionTime());
                 PmEcgData pmEcgData = c.getPmEcgData();
                 if (StringUtils.isNotEmpty(pmEcgData.getHrMean())){
-                    String[] strings = {formattedDate,pmEcgData.getHrMean()};
+                    String[] strings = {formattedDate,pmEcgData.getHrMean(),c.getpId()};
                     hr_mean.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getpTime())){
-                    String[] strings = {formattedDate,pmEcgData.getpTime()};
+                    String[] strings = {formattedDate,pmEcgData.getpTime(),c.getpId()};
                     P_time.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getQrsInterval())){
-                    String[] strings = {formattedDate,pmEcgData.getQrsInterval()};
+                    String[] strings = {formattedDate,pmEcgData.getQrsInterval(),c.getpId()};
                     QRS_interval.add(strings);
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getPrInterval())){
-                    String[] strings = {formattedDate,pmEcgData.getPrInterval()};
+                    String[] strings = {formattedDate,pmEcgData.getPrInterval(),c.getpId()};
                     PR_interval.add(strings);
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getQtc())){
-                    String[] strings = {formattedDate,pmEcgData.getQtc()};
+                    String[] strings = {formattedDate,pmEcgData.getQtc(),c.getpId()};
                     QTc.add(strings);
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getRmssd())){
-                    String[] strings = {formattedDate,pmEcgData.getRmssd()};
+                    String[] strings = {formattedDate,pmEcgData.getRmssd(),c.getpId()};
                     RMSSD.add(strings);
                 }
             }

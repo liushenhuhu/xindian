@@ -28,7 +28,7 @@ public class MessageTemplateEntity {
     public MessageTemplateEntity() {
     }
 
-    public MessageTemplateEntity(MessageValueEntity thing1, MessageValueEntity thing22, MessageValueEntity name3, MessageValueEntity time8) {
+    public MessageTemplateEntity(MessageValueEntity thing1, MessageValueEntity name3, MessageValueEntity thing22 ,MessageValueEntity time8) {
         this.thing1 = thing1;
         this.thing22 = thing22;
         this.name3 = name3;

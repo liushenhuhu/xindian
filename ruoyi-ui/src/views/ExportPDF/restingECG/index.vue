@@ -116,12 +116,16 @@
                 </div>
                 <div class="input">
                   <strong>日期:</strong>
-                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable></el-input>
-                  <el-input v-else v-model="data.dataTime" clearable></el-input>
+                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 80%"></el-input>
+                  <el-input v-else v-model="data.dataTime" clearable style="width: 80%"></el-input>
                 </div>
               </div>
               <div class="oder">
-                <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">发送预警</el-button>
+                <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
+                  <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
+                    <i class="el-icon-question"></i>
+                  </el-tooltip>
+                  发送预警</el-button>
                 <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
                 <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
               </div>
@@ -2368,5 +2372,7 @@ export default {
   padding: 0 10px !important;
 }
 }
-
+::v-deep .el-select-dropdown__item {
+  padding: 0 20px;
+}
 </style>

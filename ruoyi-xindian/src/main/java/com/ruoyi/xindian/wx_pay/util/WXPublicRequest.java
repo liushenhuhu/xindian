@@ -466,7 +466,7 @@ public class WXPublicRequest {
         paramsMap.put("touser", userOpenid); //用户openid
         paramsMap.put("miniprogram_state", "fomal");
         paramsMap.put("page", "pages/record/index");
-        paramsMap.put("template_id", "0Zlja-FFGdgUb5UTG0PZOPegETQUEliGJZweViOdb-I"); //推送消息模板id
+        paramsMap.put("template_id", "6T4B2LiB7B16AJstsR2SxTdXRio57pKS-ME04h_FLfI"); //推送消息模板id
         paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
         String wxAccessToken = getWXAccessToken();
 
