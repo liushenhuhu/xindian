@@ -112,6 +112,13 @@ export default {
       chart4:null,
       chart5:null,
       chart6:null,
+      chart7:null,
+      chart8:null,
+      chart9:null,
+      chart10:null,
+      chart11:null,
+      chart12:null,
+      chart13:null,
     }
   },
   created() {
@@ -168,6 +175,8 @@ export default {
           this.chart11.resize()
           this.chart12.resize()
           this.chart13.resize()
+          let width=this.chart13.getWidth()
+          this.chart13.resize( {height: width})
         },50)
       }
     });
@@ -233,7 +242,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
           min:0,
@@ -285,7 +299,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
           min:0,
@@ -337,7 +356,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
           min:0,
@@ -389,7 +413,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
           min:0,
@@ -441,7 +470,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
           min:0,
@@ -493,7 +527,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
           min:0,
@@ -545,7 +584,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
         },
@@ -590,7 +634,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
         },
@@ -635,7 +684,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
         },
@@ -680,7 +734,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
         },
@@ -725,7 +784,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
         },
@@ -770,7 +834,12 @@ export default {
         xAxis: {
           type: 'category',
           data:datax,
-          boundaryGap: false
+          boundaryGap: false,
+          axisLabel:{
+            formatter:function (value, index) {
+              return value.split(' ')[0];
+            }
+          }
         },
         yAxis: {
           min:0,
@@ -892,7 +961,7 @@ export default {
     margin-bottom:25px;
     ::v-deep .el-card{
       width: 49%;
-      height: 35vh;
+      min-height: 35vh;
       .el-card__body{
         height: 100%;
       }
