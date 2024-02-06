@@ -221,7 +221,6 @@ export default {
         status.queryParams.month = status.lowNumber(params.name)
         console.log(status.queryParams.year+'-'+status.queryParams.month)
 
-
         status.$router.push({path:'/Diagnostic_statistics',query:{countTime:status.queryParams.year+'-'+status.queryParams.month,doctorPhone:status.queryParams.doctorPhone,ecgtype:status.queryParams.reportType}})
       })
     },

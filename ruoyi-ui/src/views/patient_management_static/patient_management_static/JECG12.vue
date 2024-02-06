@@ -854,7 +854,7 @@ export default {
 
     },
     lookHistoryData30(row){
-      this.$router.push({path: "/scatterPlot", query: {patientPhone: row.patientPhone}});
+      this.$router.push({path: "/scatterPlot", query: {patientPhone: row.patientPhone,ecgType:2}});
     },
     //发送短信
     sendMsg(row){

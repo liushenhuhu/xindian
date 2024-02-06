@@ -119,9 +119,11 @@ export default {
       chart11:null,
       chart12:null,
       chart13:null,
+      ecgType:1,//1：静态单导  2：静态12导
     }
   },
   created() {
+    this.ecgType=this.$route.query.ecgType
   },
   mounted() {
     this.chart1 = echarts.init(document.getElementById('chart1'));
@@ -217,14 +219,6 @@ export default {
       return y+"-"+m+"-"+d;
     },
     setChart1(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'PR间期(ms)'
@@ -237,11 +231,10 @@ export default {
           containLabel:true
         },
         tooltip:{
-          show:true
+          show:true,
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -252,16 +245,11 @@ export default {
         yAxis: {
           min:0,
           max:400,
-          axisLabel:{
-            formatter:function(value){
-              return value
-            }
-          }
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -272,16 +260,14 @@ export default {
       this.chart1.clear()
       this.chart1.setOption(option);
       this.chart1.resize()
+      this.chart1.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart2(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'P波(ms)'
@@ -298,7 +284,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -309,16 +294,11 @@ export default {
         yAxis: {
           min:0,
           max:200,
-          axisLabel:{
-            formatter:function(value){
-              return value
-            }
-          }
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -329,16 +309,14 @@ export default {
       this.chart2.clear()
       this.chart2.setOption(option);
       this.chart2.resize()
+      this.chart2.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart3(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'QRS波群(ms)'
@@ -355,7 +333,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -366,17 +343,12 @@ export default {
         yAxis: {
           min:0,
           max:200,
-          axisLabel:{
-            formatter:function(value){
-              return value
-            }
-          }
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
             type: 'scatter',
+            data:data,
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
             },
@@ -386,16 +358,14 @@ export default {
       this.chart3.clear()
       this.chart3.setOption(option);
       this.chart3.resize()
+      this.chart3.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart4(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'QTc(ms)'
@@ -412,7 +382,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -423,16 +392,11 @@ export default {
         yAxis: {
           min:0,
           max:400,
-          axisLabel:{
-            formatter:function(value){
-              return value
-            }
-          }
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -443,16 +407,14 @@ export default {
       this.chart4.clear()
       this.chart4.setOption(option);
       this.chart4.resize()
+      this.chart4.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart5(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'HRV(ms)'
@@ -469,7 +431,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -480,16 +441,11 @@ export default {
         yAxis: {
           min:0,
           max:400,
-          axisLabel:{
-            formatter:function(value){
-              return value
-            }
-          }
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -500,16 +456,14 @@ export default {
       this.chart5.clear()
       this.chart5.setOption(option);
       this.chart5.resize()
+      this.chart5.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart6(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'心率(bpm)'
@@ -526,7 +480,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -537,16 +490,11 @@ export default {
         yAxis: {
           min:0,
           max:200,
-          axisLabel:{
-            formatter:function(value){
-              return value
-            }
-          }
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -557,16 +505,14 @@ export default {
       this.chart6.clear()
       this.chart6.setOption(option);
       this.chart6.resize()
+      this.chart6.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart7(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'P波振幅(ms)'
@@ -583,7 +529,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -595,8 +540,8 @@ export default {
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -607,16 +552,14 @@ export default {
       this.chart7.clear()
       this.chart7.setOption(option);
       this.chart7.resize()
+      this.chart7.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart8(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'R波振幅(ms)'
@@ -633,7 +576,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -645,8 +587,8 @@ export default {
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -657,16 +599,14 @@ export default {
       this.chart8.clear()
       this.chart8.setOption(option);
       this.chart8.resize()
+      this.chart8.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart9(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'T波振幅(ms)'
@@ -683,7 +623,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -695,8 +634,8 @@ export default {
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -707,16 +646,14 @@ export default {
       this.chart9.clear()
       this.chart9.setOption(option);
       this.chart9.resize()
+      this.chart9.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart10(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'T波时限(ms)'
@@ -733,7 +670,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -745,8 +681,8 @@ export default {
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -757,16 +693,14 @@ export default {
       this.chart10.clear()
       this.chart10.setOption(option);
       this.chart10.resize()
+      this.chart10.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart11(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'SDNN(ms)'
@@ -783,7 +717,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -795,8 +728,8 @@ export default {
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -807,16 +740,14 @@ export default {
       this.chart11.clear()
       this.chart11.setOption(option);
       this.chart11.resize()
+      this.chart11.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart12(data){
-      let datax=[]
-      let datay=[]
-      if(data && data.length!=0){
-        data.forEach(item=>{
-          datax.push(item[0])
-          datay.push(item[1])
-        })
-      }
       var option = {
         title:{
           text:'QT间期(ms)'
@@ -833,7 +764,6 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data:datax,
           boundaryGap: false,
           axisLabel:{
             formatter:function (value, index) {
@@ -844,16 +774,11 @@ export default {
         yAxis: {
           min:0,
           max:400,
-          axisLabel:{
-            formatter:function(value){
-              return value
-            }
-          }
         },
         series: [
           {
-            symbolSize: 5,
-            data:datay,
+            symbolSize: 7,
+            data:data,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
@@ -864,12 +789,18 @@ export default {
       this.chart12.clear()
       this.chart12.setOption(option);
       this.chart12.resize()
+      this.chart12.on('click', (params)=>{
+        this.$router.push({
+          path:this.ecgType==1?'/staticECG':'/restingECG',
+          query:{pId:params.data[2]}
+        })
+      })
     },
     setChart13(data){
       let datax=[]
       let datay=[]
       if(data && data.length!=0){
-        console.log(data)
+        // console.log(data)
         data.forEach(item=>{
          // JSON.parse(item[1]).forEach(arr=>{
          //   datax.push(arr)
@@ -887,8 +818,8 @@ export default {
         })
 
       }
-      console.log(datax)
-      console.log(datay)
+      // console.log(datax)
+      // console.log(datay)
       var option = {
         title:{
           text:'nni(ms)'
@@ -923,7 +854,7 @@ export default {
         },
         series: [
           {
-            symbolSize: 5,
+            symbolSize: 7,
             data:datay,
             type: 'scatter',
             itemStyle: {
@@ -935,6 +866,7 @@ export default {
       this.chart13.clear()
       this.chart13.setOption(option);
       this.chart13.resize()
+
     },
     /** 搜索按钮操作 */
     handleQuery() {

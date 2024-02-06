@@ -891,7 +891,7 @@ export default {
       this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECGsingle"}});
     },
     lookHistoryData30(row){
-      this.$router.push({path: "/scatterPlot", query: {patientPhone: row.patientPhone}});
+      this.$router.push({path: "/scatterPlot", query: {patientPhone: row.patientPhone,ecgType:1}});
     },
     /** 查看心电图*/
     lookECG(row) {
