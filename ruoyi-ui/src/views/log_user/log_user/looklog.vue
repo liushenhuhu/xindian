@@ -403,6 +403,8 @@ export default {
       loading:false,
       logUserListTotal:0,
       anoStatus:null,
+      typeObj:{},
+      pageSize:10,
     };
   },
   watch:{
@@ -427,6 +429,8 @@ export default {
       this.query.logId=this.$route.query.logId;
       this.query.userId=this.$route.query.userId;
       this.pageNum=this.$route.query.pageNum
+      this.pageSize=this.$route.query.pageSize
+      this.typeObj = this.$route.query.queryParams
       this.getLogUserList()
       this.getSelectList()
       this.getLabel()
@@ -447,12 +451,13 @@ export default {
       })
     },
     async getLogUserList(){
-      let queryParams =  this.$route.query.queryParams
+      this.typeObj =  this.$route.query.queryParams
+      let queryParams = this.typeObj
       let obj = {
         logId: queryParams.logId?queryParams.logId:'',
         userId:queryParams.userId?queryParams.userId:"",
         pageNum: this.pageNum,
-        pageSize: 10,
+        pageSize: this.pageSize,
         anoStatus:this.anoStatus,
         logTime: queryParams.logTime,
         logType: queryParams.logType,
@@ -2089,7 +2094,7 @@ export default {
           this.pageNum--
         }
         await this.getLogUserList()
-        this.index=9
+        this.index=this.pageSize-1
       }
       console.log(this.logUserList[this.index])
       this.message.logid=this.logUserList[this.index].logId
@@ -2098,7 +2103,7 @@ export default {
       if(this.anoStatus!=null){
         anoStatus=`&anoStatus=${this.anoStatus}`
       }
-      var newUrl = this.$route.path + `?logId=${this.message.logid}&userId=${this.message.user_id}&pageNum=${this.pageNum}`+anoStatus
+      var newUrl = this.$route.path + `?logId=${this.message.logid}&userId=${this.message.user_id}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`+anoStatus+`&queryParams=${this.typeObj}`
       window.history.replaceState('', '', newUrl)
       this.getMessage()
     },
@@ -2106,7 +2111,7 @@ export default {
       this.loading=true
       this.index++
       if(this.index>=this.logUserList.length){
-        if((this.pageNum-1)*10+this.logUserList.length>=this.logUserListTotal){
+        if((this.pageNum-1)*this.pageSize+this.logUserList.length>=this.logUserListTotal){
           this.$message.warning("已经是最后一页！！！")
           this.index--
           this.loading=false
@@ -2123,7 +2128,7 @@ export default {
       if(this.anoStatus!=null){
         anoStatus=`&anoStatus=${this.anoStatus}`
       }
-      var newUrl = this.$route.path + `?logId=${this.message.logid}&userId=${this.message.user_id}&pageNum=${this.pageNum}`+anoStatus
+      var newUrl = this.$route.path + `?logId=${this.message.logid}&userId=${this.message.user_id}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`+anoStatus+`&queryParams=${this.typeObj}`
       window.history.replaceState('', '', newUrl)
       this.getMessage()
     },

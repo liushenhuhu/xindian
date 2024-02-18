@@ -807,16 +807,19 @@ export default {
          //   datay.push(arr)
          //  })
           let arr = JSON.parse(item[1])
+
           for (let i = 0; i < arr.length-1; i++) {
             datax.push(arr[i])
-          }
 
+          }
           for (let i = 1; i < arr.length; i++) {
             datay.push(arr[i])
           }
-
         })
-
+      }
+      let arrData = []
+      for (let i = 0; i < datax.length; i++) {
+        arrData.push([datax[i],datay[i]])
       }
       // console.log(datax)
       // console.log(datay)
@@ -855,7 +858,7 @@ export default {
         series: [
           {
             symbolSize: 7,
-            data:datay,
+            data:arrData,
             type: 'scatter',
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
