@@ -22,6 +22,7 @@
             <if test="sonPhone != null  and sonPhone != ''"> and son_phone_aes = #{sonPhone}</if>
             <if test="relationship != null  and relationship != ''"> and relationship = #{relationship}</if>
         </where>
+        order by id asc
     </select>
 
     <select id="selectPatientRelationshipById" parameterType="Long" resultMap="PatientRelationshipResult">

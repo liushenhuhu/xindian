@@ -751,7 +751,7 @@
             pm_ecg_data
             ON
                 patient_management.p_id = pm_ecg_data.p_id
-        WHERE patient_phone_aes = #{patientPhone} and
+        WHERE patient_phone_aes = #{patientPhone} and  ecg_type lIKE concat('JECG','%') and
             connection_time  BETWEEN #{startTime} AND DATE_ADD(#{endTime}, INTERVAL 1 DAY)
     </select>
 

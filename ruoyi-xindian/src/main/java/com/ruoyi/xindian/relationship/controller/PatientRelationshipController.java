@@ -61,7 +61,6 @@ public class PatientRelationshipController extends BaseController
         if (patientRelationship.getSonPhone()!=null&&!"".equals(patientRelationship.getSonPhone())){
             patientRelationship.setSonPhone(aesUtils.encrypt(patientRelationship.getSonPhone()));
         }
-        startPage();
         List<PatientRelationship> list = patientRelationshipService.selectPatientRelationshipList(patientRelationship);
         for (PatientRelationship relationship : list) {
 
