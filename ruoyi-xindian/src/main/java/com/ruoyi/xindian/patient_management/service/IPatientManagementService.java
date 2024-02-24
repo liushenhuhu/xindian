@@ -45,6 +45,7 @@ public interface IPatientManagementService
     public List<PatientManagement> selectPatientManagementList1();
     public List<PatientManagement> selectPatientManagementJECGList(PatientManagement patientManagement);
     public List<PatientManagement> selectPatientManagementJECGsingle(PatientManagement patientManagement);
+    public List<PatientManagement> selectPatientManagementJECG4(PatientManagement patientManagement);
 
     public List<PatientManagement> selectListOrderByTime(PatientManagement patientManagement);
 

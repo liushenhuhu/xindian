@@ -52,6 +52,7 @@ public interface PatientManagementMapper
     public List<PatientManagement> selectPatientManagementJECGList();
     public List<PatientManagement> selectPatientManagementJECGList1();
     public List<PatientManagement> selectPatientManagementJECGsingle(PatientManagement patientManagement);
+    public List<PatientManagement> selectPatientManagementJECG4(PatientManagement patientManagement);
 
 
     public List<PatientManagement> selectListOrderByTime(PatientManagement patientManagement);

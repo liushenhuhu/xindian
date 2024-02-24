@@ -220,7 +220,15 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
             }
 
-        } else if (patientManagement.getEcgType().equals("DECG12")) {
+        } else if (patientManagement.getEcgType().equals("JECG4")) {
+
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect())&& patientManagement.getIsSelect().equals("1")&&SysUser.isAdmin(loginUser.getUserId())&&StringUtils.isNotEmpty(patientManagement.getPatientName())){
+                return  getRedisTable(patientManagement, resList, pageNum, pageSize);
+            }else {
+                list = patientManagementService.selectPatientManagementJECG4(patientManagement);
+            }
+
+        }else if (patientManagement.getEcgType().equals("DECG12")) {
             list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
         } else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
