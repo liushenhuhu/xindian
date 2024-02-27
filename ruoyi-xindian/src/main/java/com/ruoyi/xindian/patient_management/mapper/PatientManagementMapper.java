@@ -61,6 +61,7 @@ public interface PatientManagementMapper
     public List<PatientManagement> selectPatientManagementListDECGsingle(PatientManagement patientManagement);
 
     public List<PatientManagement> selectPatientManagementListJECG12(PatientManagement patientManagement);
+    public List<PatientManagement> selectPatientManagementListJECGDUO(PatientManagement patientManagement);
 
     public List<PatientManagement> selectPatientManagementListDECG12(PatientManagement patientManagement);
     public List<PatientManagement> selectPatientManagementList12(PatientManagement patientManagement);

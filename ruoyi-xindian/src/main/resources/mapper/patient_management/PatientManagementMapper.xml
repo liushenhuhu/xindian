@@ -607,7 +607,12 @@
             left join hospital h on m.hospital_code = h.hospital_code
             left join report r on m.p_id = r.p_id
       <where>
-        <if test="ecgType != null  and ecgType != ''"> and ecg_type like concat(#{ecgType}, '%') </if>
+        <if test="ecgType != null  and ecgType != '' and ecgType=='JECGDUO'">
+             and (ecg_type like 'JECG12%' or ecg_type like 'JECG4%'  )
+        </if>
+          <if test="ecgType != null  and ecgType != '' and ecgType!='JECGDUO'">
+              and ecg_type like concat(#{ecgType}, '%')
+          </if>
         and m.patient_phone_aes = #{patientPhone}
     </where>
         GROUP BY  DATE_FORMAT(connection_time,'%Y-%m-%d')
@@ -755,7 +760,7 @@
             connection_time  BETWEEN #{startTime} AND DATE_ADD(#{endTime}, INTERVAL 1 DAY)
     </select>
     <select id="selectPatientManagementJECG4"
-            resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement">
+            resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">
         <include refid="selectPatientManagementVo"/>
         <where>
             <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
@@ -797,6 +802,47 @@
             </if>
         </where>
         order by report_time desc
+    </select>
+    <select id="selectPatientManagementListJECGDUO"
+            resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">
+        <include refid="selectPatientManagementVo"/>
+        <where>
+            <if test="pId != null  and pId != ''"> and m.p_id = #{pId}</if>
+            <if test="patientSex != null  and patientSex != ''"> and patient_sex like concat(#{patientSex},'%') </if>
+            <if test="patientName != null  and patientName != ''">and patient_name_aes like concat('%', #{patientName}, '%')</if>
+            <if test="patientCode != null  and patientCode != ''">and p.patient_code like concat('%', #{patientCode}, '%')</if>
+            <if test="equipmentCode != null  and equipmentCode != ''">and m.equipment_code like concat('%', #{equipmentCode}, '%')</if>
+            <if test="params.beginConnectionTime != null and params.beginConnectionTime != '' and params.endConnectionTime != null and params.endConnectionTime != ''"> and connection_time between #{params.beginConnectionTime} and #{params.endConnectionTime}</if>
+            <if test="bedNumber != null  and bedNumber != ''">and bed_number like concat('%', #{bedNumber}, '%')</if>
+            <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
+            <if test="ecgType != null  and ecgType != ''"> and ecg_type like "JECG%" and  ecg_type NOT LIKE 'JECGs%'</if>
+            <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
+            <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone_aes = #{patientPhone}</if>
+            <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone_aes like concat(#{PatPhone},'%') </if>
+            <if test="intelligentDiagnosis != null  and intelligentDiagnosis != ''"> and intelligent_diagnosis like concat('%', #{intelligentDiagnosis}, '%')</if>
+            <if test="diagnosisStatus != null  and diagnosisStatus != '' or diagnosisStatus == 0"> and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''"> and diagnosis_conclusion like concat('%', #{diagnosisConclusion}, '%')</if>
+            <if test="diagnosisDoctor != null  and diagnosisDoctor != ''"> and diagnosis_doctor_aes like concat('%', #{diagnosisDoctor}, '%')</if>
+            <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
+            <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and d_phone_aes like concat('%', #{doctorPhone}, '%')</if>
+            <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
+            <if test="detectionState != null">and detection_state = #{detectionState}</if>
+            <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
+                and  m.equipment_code in
+                <foreach collection="equipmentCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
+                and  m.hospital_code in
+                <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by online_status desc, connection_time desc
     </select>
 
 

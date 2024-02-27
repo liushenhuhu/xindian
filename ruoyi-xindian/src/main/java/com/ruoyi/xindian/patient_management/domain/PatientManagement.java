@@ -250,7 +250,13 @@ public class PatientManagement extends BaseEntity {
      */
     private String refuseText;
 
+    /** 身高 */
+    @Excel(name = "身高")
+    private Double height;
 
+    /** 体重 */
+    @Excel(name = "体重")
+    private Double weight;
 
 
     private List<String> hospitalCodeList = new ArrayList<>();

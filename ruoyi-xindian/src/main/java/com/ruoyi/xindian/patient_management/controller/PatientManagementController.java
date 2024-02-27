@@ -28,6 +28,8 @@ import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.medical.domain.MedicalHistory;
+import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.domain.SingleHistoryData;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -102,6 +104,10 @@ public class PatientManagementController extends BaseController {
 
     @Autowired
     private AesUtils aesUtils;
+
+
+    @Resource
+    private IMedicalHistoryService medicalHistoryService;
 
 
     @Resource
@@ -332,6 +338,11 @@ public class PatientManagementController extends BaseController {
             if (StringUtils.isNotEmpty(management.getDPhone())){
                 management.setDPhone(aesUtils.decrypt(management.getDPhone()));
             }
+            MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(aesUtils.encrypt(management.getPatientPhone()));
+            if (medicalHistory!=null){
+                management.setWeight(medicalHistory.getWeight());
+                management.setHeight(medicalHistory.getHeight());
+            }
             try {
                 management.setSxStatus(0);
                 management.setSxPayStatus(0);
@@ -419,7 +430,9 @@ public class PatientManagementController extends BaseController {
             list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("DECG12")) {
             list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
-        } else {
+        }else if (patientManagement.getEcgType().equals("JECGDUO")) {
+            list = patientManagementService.selectPatientManagementListJECGDUO(patientManagement);
+        }  else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
         }
         return getTableDataInfo(list, resList);

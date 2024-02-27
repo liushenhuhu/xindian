@@ -146,6 +146,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
 
     }
 
+    @Override
+    public List<PatientManagement> selectPatientManagementListJECGDUO(PatientManagement patientManagement) {
+        return patientManagementMapper.selectPatientManagementListJECGDUO(patientManagement);
+    }
+
 
     /**
      * 新增患者管理

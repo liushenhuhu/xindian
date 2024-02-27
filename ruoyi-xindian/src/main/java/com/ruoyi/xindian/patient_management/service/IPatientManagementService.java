@@ -52,6 +52,7 @@ public interface IPatientManagementService
     public List<PatientManagement> selectPatientManagementListDECGsingle(PatientManagement patientManagement);
 
     public List<PatientManagement> selectPatientManagementListDECG12(PatientManagement patientManagement);
+    public List<PatientManagement> selectPatientManagementListJECGDUO(PatientManagement patientManagement);
 
     public List<PatientManagement> selectPatientManagementListJECG12(PatientManagement patientManagement);
 
