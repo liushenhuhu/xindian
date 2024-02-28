@@ -399,6 +399,25 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         return map;
     }
 
+    @Override
+    public Map<String, Integer> selectTodayCount(String patientPhone) throws Exception {
+
+        Map<String, Integer> map = new HashMap<>();
+        if (StringUtils.isEmpty(patientPhone)){
+            return map;
+        }
+        PatientManagement patientManagement = new PatientManagement();
+        patientManagement.setPatientPhone(aesUtils.encrypt(patientPhone));
+        //统计用户做的所有数据
+        int i = patientManagementMapper.selectPatientManagementCount(patientManagement);
+        map.put("all",i);
+        //统计用户今日数据
+        patientManagement.setStartTime("2023");
+        int i1 = patientManagementMapper.selectPatientManagementCount(patientManagement);
+        map.put("today",i1);
+        return map;
+    }
+
     private Double getDouble(String str) {
         try {
             return Double.parseDouble(str);
