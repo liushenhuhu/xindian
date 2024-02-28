@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.order.mapper.InvoiceMapper;
+import com.ruoyi.xindian.patient_management.domain.DocReportMsg;
+import com.ruoyi.xindian.patient_management.mapper.DocReportMsgMapper;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.wx_pay.VO.BizField;
 import com.ruoyi.xindian.wx_pay.VO.UserField;
@@ -51,6 +53,9 @@ public class WXPublicRequest {
 
 
     @Resource
+    private DocReportMsgMapper docReportMsgMapper;
+
+    @Resource
     private OrderInfoMapper orderInfoMapper;
 
 
@@ -70,13 +75,18 @@ public class WXPublicRequest {
      */
     public  void dockerMsg() throws Exception {
 
-        String accessToken = getAccessToken();
-        Set<String> userOpenId = getUserOpenId(accessToken);
-        LinkedList<String> linkedList = new LinkedList<>(userOpenId);
-        int len = (int)Math.ceil((double)linkedList.size()/10);
-        for (int i=0;i<len;i++){
-            executorPool.send(linkedList);
+        List<DocReportMsg> docReportMsgs = docReportMsgMapper.selectList(null);
+        for (DocReportMsg docReportMsg : docReportMsgs) {
+            sendOrderMsg("你好，有一条新的问诊订单",docReportMsg.getOpenId(), "诊断订单","患者提交了一个心电订单");
         }
+
+//        String accessToken = getAccessToken();
+//        Set<String> userOpenId = getUserOpenId(accessToken);
+//        LinkedList<String> linkedList = new LinkedList<>(userOpenId);
+//        int len = (int)Math.ceil((double)linkedList.size()/10);
+//        for (int i=0;i<len;i++){
+//            executorPool.send(linkedList);
+//        }
     }
 
 

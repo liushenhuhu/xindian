@@ -865,5 +865,13 @@ public class PatientManagementController extends BaseController {
     }
 
 
+    /**
+     * 获取用户的监测总数和今日监测数量
+     */
+    @GetMapping("/getTodayCount")
+    public AjaxResult getTodayCount(String patientPhone) throws Exception {
+        return AjaxResult.success(patientManagementService.selectTodayCount(patientPhone));
+    }
+
 
 }

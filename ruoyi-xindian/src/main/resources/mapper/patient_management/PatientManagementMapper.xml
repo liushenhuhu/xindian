@@ -844,6 +844,15 @@
         </where>
         order by online_status desc, connection_time desc
     </select>
+    <select id="selectPatientManagementCount" resultType="java.lang.Integer">
+        select count(*) from patient_management
+        <where>
+            and patient_phone_aes = #{patientPhone}
+            <if test="startTime!=null">
+                and DATE(connection_time) = CURDATE()
+            </if>
+        </where>
+    </select>
 
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">

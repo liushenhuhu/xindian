@@ -138,4 +138,6 @@ public interface PatientManagementMapper
     List<PatientManagement> selectPatientManagementByPm(PatientManagement patientManagement);
 
 
+    int selectPatientManagementCount(PatientManagement patientManagement);
+
 }
