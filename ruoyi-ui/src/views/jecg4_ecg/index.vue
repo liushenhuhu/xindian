@@ -306,6 +306,7 @@ export default {
   },
   beforeDestroy() {
     //取消windows的resize事件
+    console.log('beforeDestory')
     window.removeEventListener('resize', this.resizeDraw);
   },
   created() {
@@ -512,6 +513,7 @@ export default {
       this.dialogFormVisible = false;
     },
     resizeDraw() {
+      let _th = this;
       console.log('窗口宽度改变')
       console.log($('#II').width())
       $('.line').css({
