@@ -809,12 +809,13 @@ export default {
     lookECG(row) {
       if (this.$route.query.ecgType && this.$route.query.ecgType==='JECG12'){
         this.$router.push({path: "/restingECG", query: {pId: row.pId}});
-      }else if (this.$route.query.ecgType && this.$route.query.ecgType==='JECGsingle'){
+      }else if (this.$route.query.ecgType && this.$route.query.ecgType==='JECGsingle') {
         this.$router.push({path: "/staticECG", query: {pId: row.pId,}});
+      }else if (this.$route.query.ecgType&&this.$route.query.ecgType==="JECG4"){
+        this.$router.push({path: "/JECG4_ECG", query: {pId: row.pId,}})
       }else {
         this.$modal.msgError("类型不匹配，请稍后再试");
       }
-
     },
     /** 生成报告*/
     handleInform(row) {
