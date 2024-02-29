@@ -10,7 +10,7 @@
             </div>
             <div class="patientMessage">
               <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
-<!--              <div class="textbox "><strong>姓名:</strong>{{ data.name }}</div>-->
+              <!--              <div class="textbox "><strong>姓名:</strong>{{ data.name }}</div>-->
               <div class="textbox "><strong>性别:</strong>{{ data.gender }}</div>
               <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
               <div class="textbox"><strong>送检科室:</strong> -</div>
@@ -47,8 +47,12 @@
               <span></span>
               <div class="between">
                 <p>医师诊断</p>
-                <el-button type="text" @click="dialogVisible" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语</el-button>
-                <el-button type="text" @click="Camera" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语</el-button>
+                <el-button type="text" @click="dialogVisible"
+                           style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语
+                </el-button>
+                <el-button type="text" @click="Camera"
+                           style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语
+                </el-button>
               </div>
             </div>
             <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
@@ -71,7 +75,7 @@
                 closable
                 :disable-transitions="false"
                 @close="handleCloseTag(tag)">
-                {{tag}}
+                {{ tag }}
               </el-tag>
               <el-input
                 class="input-new-tag"
@@ -85,7 +89,7 @@
               </el-input>
               <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
               <div slot="footer" class="dialog-footer">
-                <el-button  @click="dialogVisibleTag=false">取 消</el-button>
+                <el-button @click="dialogVisibleTag=false">取 消</el-button>
                 <el-button type="primary" @click="termTag">确 定</el-button>
               </div>
             </el-dialog>
@@ -114,7 +118,8 @@
               </div>
               <div class="input">
                 <strong>日期:</strong>
-                <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 80%"></el-input>
+                <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
+                          style="width: 80%"></el-input>
                 <el-input v-else v-model="data.dataTime" clearable style="width: 80%"></el-input>
               </div>
             </div>
@@ -132,76 +137,76 @@
         </div>
       </div>
       <div class="noright">
-          <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
-          <div>
-            <div id="II" class="line" @dblclick="clicktrue('II',data4.dataII)"></div>
-          </div>
-          <div>
-            <div id="V2" class="line" @dblclick="clicktrue('V2',data4.dataV2)"></div>
-          </div>
-          <div>
-            <div id="V4" class="line" @dblclick="clicktrue('V4',data4.dataV4)"></div>
-          </div>
-          <div>
-            <div id="V6" class="line" @dblclick="clicktrue('V6',data4.dataV6)"></div>
-          </div>
-<!--          <div>-->
-<!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <div id="6" class="line" @dblclick="showChart6()"></div>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <div id="7" class="line" @dblclick="showChart7()"></div>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <div id="8" class="line" @dblclick="showChart8()"></div>-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <div id="9" class="line" @dblclick="showChart9()"></div>-->
-<!--          </div>-->
+        <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
+        <div>
+          <div id="II" class="line" @dblclick="clicktrue('I',data4.dataII)"></div>
         </div>
+        <div>
+          <div id="V2" class="line" @dblclick="clicktrue('V2',data4.dataV2)"></div>
+        </div>
+        <div>
+          <div id="V4" class="line" @dblclick="clicktrue('V4',data4.dataV4)"></div>
+        </div>
+        <div>
+          <div id="V6" class="line" @dblclick="clicktrue('V6',data4.dataV6)"></div>
+        </div>
+        <!--          <div>-->
+        <!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
+        <!--          </div>-->
+        <!--          <div>-->
+        <!--            <div id="6" class="line" @dblclick="showChart6()"></div>-->
+        <!--          </div>-->
+        <!--          <div>-->
+        <!--            <div id="7" class="line" @dblclick="showChart7()"></div>-->
+        <!--          </div>-->
+        <!--          <div>-->
+        <!--            <div id="8" class="line" @dblclick="showChart8()"></div>-->
+        <!--          </div>-->
+        <!--          <div>-->
+        <!--            <div id="9" class="line" @dblclick="showChart9()"></div>-->
+        <!--          </div>-->
+      </div>
     </div>
     <div class="nobottom"></div>
 
-<!--    <div>-->
-<!--      <div class="lineI" v-show="open1">-->
-<!--        <div id="I1" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open2">-->
-<!--        <div id="I2" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open3">-->
-<!--        <div id="I3" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open4">-->
-<!--        <div id="I4" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open5">-->
-<!--        <div id="I5" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open6">-->
-<!--        <div id="I6" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open7">-->
-<!--        <div id="I7" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open8">-->
-<!--        <div id="I8" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open9">-->
-<!--        <div id="I9" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div>-->
+    <!--      <div class="lineI" v-show="open1">-->
+    <!--        <div id="I1" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open2">-->
+    <!--        <div id="I2" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open3">-->
+    <!--        <div id="I3" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open4">-->
+    <!--        <div id="I4" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open5">-->
+    <!--        <div id="I5" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open6">-->
+    <!--        <div id="I6" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open7">-->
+    <!--        <div id="I7" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open8">-->
+    <!--        <div id="I8" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open9">-->
+    <!--        <div id="I9" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <child ref="drawShow" @closeMain="closeMain"></child>
   </div>
 </template>
@@ -219,7 +224,7 @@ import child from "@/views/staticECG/staticECG/child.vue";
 
 export default {
   name: "index",
-  components:{
+  components: {
     // CacheList,
     child
   },
@@ -237,9 +242,9 @@ export default {
       isSelected: false,//术语按钮没有被按下
       selectedButtons: [],//选中的按钮
       pId: null,
-      dialogVisibleTag:null,
+      dialogVisibleTag: null,
       arr: [],
-      options:[],
+      options: [],
       data: {
         name: "",
         gender: "",
@@ -257,13 +262,13 @@ export default {
         diagnosisData: null,
         bSuggest: "",
         cSuggest: "",
-        hr:'',
-        p:'',
-        pr:'',
-        qrs:'',
-        qtc:'',
-        hrv:'',
-        pId:''
+        hr: '',
+        p: '',
+        pr: '',
+        qrs: '',
+        qtc: '',
+        hrv: '',
+        pId: ''
       },
       data4: {
         x: [],
@@ -287,19 +292,24 @@ export default {
       open7: false,
       open8: false,
       open9: false,
-      datalabel:{
-        waveLabel:"",
-        beatLabel:""
+      datalabel: {
+        waveLabel: "",
+        beatLabel: ""
       },
-      graphic1:[],
-      graphic2:[],
-      graphic3:[],
-      chart1:null,
-      chart2:null,
-      chart3:null,
+      graphic1: [],
+      graphic2: [],
+      graphic3: [],
+      chart1: null,
+      chart2: null,
+      chart3: null,
     };
   },
+  beforeDestroy() {
+    //取消windows的resize事件
+    window.removeEventListener('resize', this.resizeDraw);
+  },
   created() {
+    console.log('222222')
     var pId = this.$route.query.pId;
     console.log()
     if (pId) {
@@ -312,7 +322,7 @@ export default {
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
         this.data.pId = response.data.pId
-        if (!this.data.doctorName){
+        if (!this.data.doctorName) {
           const date = new Date();
           const year = date.getFullYear().toString().padStart(4, '0');
           const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -320,7 +330,7 @@ export default {
           const hour = date.getHours().toString().padStart(2, '0');
           const minute = date.getMinutes().toString().padStart(2, '0');
           const second = date.getSeconds().toString().padStart(2, '0');
-          this.data.diagnosisData=`${year}-${month}-${day} ${hour}:${minute}:${second}`
+          this.data.diagnosisData = `${year}-${month}-${day} ${hour}:${minute}:${second}`
         }
         console.log(this.data)
       });
@@ -334,19 +344,19 @@ export default {
     // this.drawgrid();//canvas 画图
   },
   methods: {
-    dialogVisible(){
-      getTerm().then(r=>{
-        if (r.rows.length>0){
+    dialogVisible() {
+      getTerm().then(r => {
+        if (r.rows.length > 0) {
           this.dynamicTags = JSON.parse(r.rows[0].termText)
         }
         this.dialogVisibleTag = true
       })
     },
-    termTag(){
+    termTag() {
       let obj = {
         "termText": JSON.stringify(this.dynamicTags)
       }
-      addOrUpdateTerm(obj).then(r=>{
+      addOrUpdateTerm(obj).then(r => {
         this.$modal.msgSuccess("添加成功");
         this.dialogVisibleTag = false
       })
@@ -371,103 +381,103 @@ export default {
       this.inputVisible = false;
       this.inputValue = '';
     },
-    clicktrue(title,data){
-      return;
+    clicktrue(title, data) {
+      // return;
       console.log(this.datalabel)
-      this.$refs.drawShow.getchart(data,this.pId,1,title,12,this.datalabel);
+      this.$refs.drawShow.getchart(data, this.pId, 1, title, 12, this.datalabel);
     },
     showChart1() {
       return;
-      this.open1=true
+      this.open1 = true
       var pId = this.pId;
       // 找到对应的canvas
       var canvas = $("#II").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 1;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
-      this.open1=true
-      this.$refs.drawShow.getchart(this.nArr[0],pId,level,"II",1,this.datalabel);
+      this.open1 = true
+      this.$refs.drawShow.getchart(this.nArr[0], pId, level, "II", 1, this.datalabel);
     },
     showChart2() {
       var pId = this.pId;
       var canvas = $("#V2").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 2;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[1],pId,level,"II",1,this.datalabel);
+      this.$refs.drawShow.getchart(this.nArr[1], pId, level, "II", 1, this.datalabel);
     },
     showChart3() {
       var pId = this.pId;
       var canvas = $("#V4").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 3;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[2],pId,level,"II",1,this.datalabel);
+      this.$refs.drawShow.getchart(this.nArr[2], pId, level, "II", 1, this.datalabel);
     },
     showChart4() {
       var pId = this.pId;
       var canvas = $("#V6").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 4;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[3],pId,level,"II",1,this.datalabel);
+      this.$refs.drawShow.getchart(this.nArr[3], pId, level, "II", 1, this.datalabel);
     },
     showChart5() {
       var pId = this.pId;
       var canvas = $("#5").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 5;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[4],pId,level);
+      this.$refs.drawShow.getchart(this.nArr[4], pId, level);
     },
     showChart6() {
       var pId = this.pId;
       var canvas = $("#6").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 6;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[5],pId,level);
+      this.$refs.drawShow.getchart(this.nArr[5], pId, level);
     },
     showChart7() {
       var pId = this.pId;
       var canvas = $("#7").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 7;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[6],pId,level);
+      this.$refs.drawShow.getchart(this.nArr[6], pId, level);
     },
     showChart8() {
       var pId = this.pId;
       var canvas = $("#8").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 8;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[7],pId,level);
+      this.$refs.drawShow.getchart(this.nArr[7], pId, level);
     },
     showChart9() {
       var pId = this.pId;
       var canvas = $("#9").find("canvas")[0];
       // 将图片转化为图片数据  toDataURL返回的base64
-      var base64 = canvas.toDataURL("image/png",1);
+      var base64 = canvas.toDataURL("image/png", 1);
       var level = 9;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[8],pId,level);
+      this.$refs.drawShow.getchart(this.nArr[8], pId, level);
     },
     clickClose() {
       this.open1 = false;
@@ -481,27 +491,40 @@ export default {
       this.open9 = false;
     },
     //按下常用术语按钮
-    putDown(key,event) {
+    putDown(key, event) {
       //console.log(event.currentTarget.classList.toggle('selected'))
       event.currentTarget.classList.toggle('selected')
       console.log(this.arr)
       let index = this.arr.indexOf(key);
       //console.log(index)
-      if(index !== -1){
-        this.arr.splice(index,1);
-      }else {
+      if (index !== -1) {
+        this.arr.splice(index, 1);
+      } else {
         this.arr.push(key);
       }
     },
-    dialogForm(){
-      if (this.data.resultByDoctor){
-        this.data.resultByDoctor = this.data.resultByDoctor+','+this.arr.toString()
-      }else {
-        this.data.resultByDoctor =this.arr.toString()
+    dialogForm() {
+      if (this.data.resultByDoctor) {
+        this.data.resultByDoctor = this.data.resultByDoctor + ',' + this.arr.toString()
+      } else {
+        this.data.resultByDoctor = this.arr.toString()
       }
-      this.dialogFormVisible=false;
+      this.dialogFormVisible = false;
     },
-    //请求数据
+    resizeDraw() {
+      console.log('窗口宽度改变')
+      console.log($('#II').width())
+      $('.line').css({
+        height: $('#II').width() * 0.17 + 'px'
+      });
+      _th.chart1.resize();
+      _th.chart2.resize();
+      _th.chart3.resize();
+      _th.chart4.resize();
+      _th.addtext()
+      console.log(1111111)
+    },
+//请求数据
     get() {
       console.log('开始查询')
       const loading = this.$loading({
@@ -522,7 +545,7 @@ export default {
         dataType: "json",
         data: JSON.stringify({
           pid: this.pId,
-          ecgType:"4",
+          ecgType: "4",
         }),
         async: false,
         beforeSend: function (request) {
@@ -539,33 +562,33 @@ export default {
           _th.data.name = data.result.patientName
           //_th.data.result = data.result.intelligent_diagnosis
           _th.data.hr = data.result.ecg_analysis_data["平均心率"]
-          _th.data.hr=data.result.ecg_analysis_data["平均心率"]
-          _th.data.p=data.result.ecg_analysis_data["P波时限"]
-          _th.data.pr=data.result.ecg_analysis_data["PR间期"]
-          _th.data.qrs=data.result.ecg_analysis_data["QRS波时限"]
-          _th.data.qtc=data.result.ecg_analysis_data["QTc"]
-          _th.data.hrv=data.result.ecg_analysis_data["RMSSD"]
+          _th.data.hr = data.result.ecg_analysis_data["平均心率"]
+          _th.data.p = data.result.ecg_analysis_data["P波时限"]
+          _th.data.pr = data.result.ecg_analysis_data["PR间期"]
+          _th.data.qrs = data.result.ecg_analysis_data["QRS波时限"]
+          _th.data.qtc = data.result.ecg_analysis_data["QTc"]
+          _th.data.hrv = data.result.ecg_analysis_data["RMSSD"]
           // _th.data.datas = data.result.II
           _th.data4.dataII = data.result["II"];
           _th.data4.dataV2 = data.result["V2"];
           _th.data4.dataV4 = data.result["V4"];
           _th.data4.dataV6 = data.result["V6"];
-          _th.datalabel.waveLabel=data.result.waveLabel
-          _th.datalabel.beatLabel=data.result.beatLabel
+          _th.datalabel.waveLabel = data.result.waveLabel
+          _th.datalabel.beatLabel = data.result.beatLabel
           //console.log("获取到的导联数据", _th.data.datas)
           // _th.nArr = _th.getNewArray(_th.data.datas, 500);
-          _th.nArrII = _th.getNewArray(_th.data4.dataII,500)
-          _th.nArrV2 = _th.getNewArray(_th.data4.dataV2,500)
-          _th.nArrV4 = _th.getNewArray(_th.data4.dataV4,500)
-          _th.nArrV6 = _th.getNewArray(_th.data4.dataV6,500)
+          _th.nArrII = _th.getNewArray(_th.data4.dataII, 500)
+          _th.nArrV2 = _th.getNewArray(_th.data4.dataV2, 500)
+          _th.nArrV4 = _th.getNewArray(_th.data4.dataV4, 500)
+          _th.nArrV6 = _th.getNewArray(_th.data4.dataV6, 500)
           for (var i = 0; i < 500; i++) {
             _th.x.push(i);
           }
-          for (var i = 0; i < 1000; i+=20) {
+          for (var i = 0; i < 1000; i += 20) {
             _th.markdata.push({xAxis: i})
           }
           $('.line').css({
-            height:$('#II').width()*0.17+'px'
+            height: $('#II').width() * 0.17 + 'px'
           });
           _th.chart1 = echarts.init(document.getElementById("II"));
           _th.chart2 = echarts.init(document.getElementById("V2"));
@@ -959,19 +982,7 @@ export default {
           });
           _th.addtext()
 
-          $(window).resize(function (){
-            console.log('窗口宽度改变')
-            console.log($('#II').width())
-            $('.line').css({
-              height:$('#II').width()*0.17+'px'
-            });
-            _th.chart1.resize();
-            _th.chart2.resize();
-            _th.chart3.resize();
-            _th.chart4.resize();
-            _th.addtext()
-            console.log(1111111)
-          });
+          window.addEventListener('resize', _th.resizeDraw)
         },
         error: function (data) {
           alert("数据请求错误,请刷新页面或联系管理员")
@@ -979,37 +990,38 @@ export default {
           console.log("请求失败：", data)
         }
       })
-    },
-    //重绘所有点之间的文本
-    addtext(){
+    }
+    ,
+//重绘所有点之间的文本
+    addtext() {
       return
-      this.graphic1.length=0
-      this.graphic2.length=0
-      this.graphic3.length=0
-      let beatLabel=JSON.parse(this.datalabel.beatLabel)
-      var arr1=beatLabel['0'],arr2=beatLabel['1'],arr3=beatLabel['2']
-      let beat1=[],beat2=[],beat3=[]
+      this.graphic1.length = 0
+      this.graphic2.length = 0
+      this.graphic3.length = 0
+      let beatLabel = JSON.parse(this.datalabel.beatLabel)
+      var arr1 = beatLabel['0'], arr2 = beatLabel['1'], arr3 = beatLabel['2']
+      let beat1 = [], beat2 = [], beat3 = []
       // console.log(arr1,arr2,arr3)
-      let keys=Object.keys(arr1)
-      for (let i=0;i<keys.length; i++) {
+      let keys = Object.keys(arr1)
+      for (let i = 0; i < keys.length; i++) {
         beat1.push(...arr1[keys[i]])
         beat2.push(...arr2[keys[i]])
         beat3.push(...arr3[keys[i]])
       }
       // console.log(beat1,beat2,beat3)
-      beat1.sort((a,b)=>a - b)
-      beat2.sort((a,b)=>a - b)
-      beat3.sort((a,b)=>a - b)
-      var length1=beat1.length
+      beat1.sort((a, b) => a - b)
+      beat2.sort((a, b) => a - b)
+      beat3.sort((a, b) => a - b)
+      var length1 = beat1.length
       //刻度线
-      for (let i = 0; i <length1; i++) {
-        var point1=this.chart1.convertToPixel({seriesIndex: 0}, [beat1[i], 3])
-        let text1={
+      for (let i = 0; i < length1; i++) {
+        var point1 = this.chart1.convertToPixel({seriesIndex: 0}, [beat1[i], 3])
+        let text1 = {
           type: 'line',
           style: {
             stroke: '#333',
-            lineWidth:1.5,
-            lineDash:[]
+            lineWidth: 1.5,
+            lineDash: []
           },
           shape: {
             x1: point1[0],
@@ -1017,28 +1029,28 @@ export default {
             x2: point1[0],
             y2: 11
           },
-          z:100
+          z: 100
         }
         this.graphic1.push(text1)
-        if(i==length1-1){
+        if (i == length1 - 1) {
           continue
         }
-        var x1=beat1[i]
-        var x2=beat1[i+1]
+        var x1 = beat1[i]
+        var x2 = beat1[i + 1]
         // console.log(x1,x2)
-        var time=(((x2-x1)/25)*0.25); //时间 s
-        var heart=(60/time).toFixed(1) //心率
-        time=(time*1000).toFixed(0)
+        var time = (((x2 - x1) / 25) * 0.25); //时间 s
+        var heart = (60 / time).toFixed(1) //心率
+        time = (time * 1000).toFixed(0)
         //文本值
-        var point2=this.chart1.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
+        var point2 = this.chart1.convertToPixel({seriesIndex: 0}, [(x2 - x1) / 2 + x1, 3])
         // console.log(x)
-        let text2={
-          type:'text',
-          x:point2[0]-15,
-          y:3,
+        let text2 = {
+          type: 'text',
+          x: point2[0] - 15,
+          y: 3,
           z: 999,
-          style:{
-            text: time+`\n${heart}`,
+          style: {
+            text: time + `\n${heart}`,
             fill: '#000000',
             fontWeight: 400,
             fontSize: 13,
@@ -1049,18 +1061,18 @@ export default {
       }
       var chartOption1 = this.chart1.getOption();
       chartOption1.graphic = this.graphic1;
-      this.chart1.setOption(chartOption1,true);
+      this.chart1.setOption(chartOption1, true);
 
-      var length2=beat2.length
+      var length2 = beat2.length
       //刻度线
-      for (let i = 0; i <length2; i++) {
-        var point1=this.chart2.convertToPixel({seriesIndex: 0}, [beat2[i], 3])
-        let text1={
+      for (let i = 0; i < length2; i++) {
+        var point1 = this.chart2.convertToPixel({seriesIndex: 0}, [beat2[i], 3])
+        let text1 = {
           type: 'line',
           style: {
             stroke: '#333',
-            lineWidth:1.5,
-            lineDash:[]
+            lineWidth: 1.5,
+            lineDash: []
           },
           shape: {
             x1: point1[0],
@@ -1068,28 +1080,28 @@ export default {
             x2: point1[0],
             y2: 11
           },
-          z:100
+          z: 100
         }
         this.graphic2.push(text1)
-        if(i==length2-1){
+        if (i == length2 - 1) {
           continue
         }
-        var x1=beat2[i]
-        var x2=beat2[i+1]
+        var x1 = beat2[i]
+        var x2 = beat2[i + 1]
         // console.log(x1,x2)
-        var time=(((x2-x1)/25)*0.25); //时间 s
-        var heart=(60/time).toFixed(1) //心率
-        time=(time*1000).toFixed(0)
+        var time = (((x2 - x1) / 25) * 0.25); //时间 s
+        var heart = (60 / time).toFixed(1) //心率
+        time = (time * 1000).toFixed(0)
         //文本值
-        var point2=this.chart2.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
+        var point2 = this.chart2.convertToPixel({seriesIndex: 0}, [(x2 - x1) / 2 + x1, 3])
         // console.log(x)
-        let text2={
-          type:'text',
-          x: point2[0]-15,
-          y:3,
+        let text2 = {
+          type: 'text',
+          x: point2[0] - 15,
+          y: 3,
           z: 999,
-          style:{
-            text: time+`\n${heart}`,
+          style: {
+            text: time + `\n${heart}`,
             fill: '#000000',
             fontWeight: 400,
             fontSize: 13,
@@ -1100,18 +1112,18 @@ export default {
       }
       var chartOption2 = this.chart2.getOption();
       chartOption2.graphic = this.graphic2;
-      this.chart2.setOption(chartOption2,true);
+      this.chart2.setOption(chartOption2, true);
 
-      var length3=beat3.length
+      var length3 = beat3.length
       //刻度线
-      for (let i = 0; i <length3; i++) {
-        var point1=this.chart3.convertToPixel({seriesIndex: 0}, [beat3[i], 3])
-        let text1={
+      for (let i = 0; i < length3; i++) {
+        var point1 = this.chart3.convertToPixel({seriesIndex: 0}, [beat3[i], 3])
+        let text1 = {
           type: 'line',
           style: {
             stroke: '#333',
-            lineWidth:1.5,
-            lineDash:[]
+            lineWidth: 1.5,
+            lineDash: []
           },
           shape: {
             x1: point1[0],
@@ -1119,28 +1131,28 @@ export default {
             x2: point1[0],
             y2: 11
           },
-          z:100
+          z: 100
         }
         this.graphic3.push(text1)
-        if(i==length3-1){
+        if (i == length3 - 1) {
           continue
         }
-        var x1=beat3[i]
-        var x2=beat3[i+1]
+        var x1 = beat3[i]
+        var x2 = beat3[i + 1]
         // console.log(x1,x2)
-        var time=(((x2-x1)/25)*0.25); //时间 s
-        var heart=(60/time).toFixed(1) //心率
-        time=(time*1000).toFixed(0)
+        var time = (((x2 - x1) / 25) * 0.25); //时间 s
+        var heart = (60 / time).toFixed(1) //心率
+        time = (time * 1000).toFixed(0)
         //文本值
-        var point2=this.chart3.convertToPixel({seriesIndex: 0}, [(x2-x1)/2+x1, 3])
+        var point2 = this.chart3.convertToPixel({seriesIndex: 0}, [(x2 - x1) / 2 + x1, 3])
         // console.log(x)
-        let text2={
-          type:'text',
-          x: point2[0]-15,
-          y:3,
+        let text2 = {
+          type: 'text',
+          x: point2[0] - 15,
+          y: 3,
           z: 999,
-          style:{
-            text: time+`\n${heart}`,
+          style: {
+            text: time + `\n${heart}`,
             fill: '#000000',
             fontWeight: 400,
             fontSize: 13,
@@ -1151,38 +1163,41 @@ export default {
       }
       var chartOption3 = this.chart3.getOption();
       chartOption3.graphic = this.graphic3;
-      this.chart3.setOption(chartOption3,true);
+      this.chart3.setOption(chartOption3, true);
       // console.log(this.graphic1,this.graphic2,this.graphic3)
-    },
-    //获取修改后的标注数据
-    closeMain(val){
+    }
+    ,
+//获取修改后的标注数据
+    closeMain(val) {
       console.log()
       return
-      var value=JSON.parse(val)
-      let data=JSON.parse(this.datalabel.beatLabel)
+      var value = JSON.parse(val)
+      let data = JSON.parse(this.datalabel.beatLabel)
       for (let key in value) {
-        data[key]=value[key]
+        data[key] = value[key]
       }
-      this.datalabel.beatLabel=JSON.stringify(data)
+      this.datalabel.beatLabel = JSON.stringify(data)
       this.addtext()
-    },
-    //获取当前时间
+    }
+    ,
+//获取当前时间
     getData() {
       var str = new Date();
       var nowTime = str.getFullYear() + "-"
         + (str.getMonth() + 1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes() + ":" + str.getSeconds();
       return nowTime;
-    },
+    }
+    ,
     /*cancleDialog(){
       this.dialogFormVisible = false;
       this.arr = [];
     },*/
-    //发送短信
+//发送短信
     sendMsg() {
       console.log("患者电话: " + this.data.pphone)
       let patientPhone = this.data.pphone
-      if (patientPhone.length===14||patientPhone.length===15){
-        patientPhone=patientPhone.substring(0,11)
+      if (patientPhone.length === 14 || patientPhone.length === 15) {
+        patientPhone = patientPhone.substring(0, 11)
       }
       console.log(patientPhone)
       if (patientPhone) {
@@ -1207,9 +1222,10 @@ export default {
       } else {
         this.$message.error('该患者手机号不合法！！！');
       }
-    },
-    sendWarnMsg(){
-      if(this.data.resultByDoctor==''||this.data.resultByDoctor==null||this.data.resultByDoctor.length>20){
+    }
+    ,
+    sendWarnMsg() {
+      if (this.data.resultByDoctor == '' || this.data.resultByDoctor == null || this.data.resultByDoctor.length > 20) {
         this.$message({
           type: 'error',
           message: '预警消息不能为空或长度最多20个字'
@@ -1217,40 +1233,40 @@ export default {
         return
       }
       let obj = {
-        pId : this.data.pId,
+        pId: this.data.pId,
         warningText: this.data.resultByDoctor
       }
-      reportEarlyWarningMsg(obj).then(r=>{
+      reportEarlyWarningMsg(obj).then(r => {
         this.$message({
           type: 'success',
           message: '发送成功!'
         });
       })
-    },
-    //医生诊断
+    }
+    ,
+//医生诊断
     btnUpload() {
-      if(this.data.resultByDoctor==''||this.data.resultByDoctor==null){
+      if (this.data.resultByDoctor == '' || this.data.resultByDoctor == null) {
         this.$message({
           type: 'error',
           message: '诊断结果不能为空!'
         });
         return
       }
-      if (this.data.doctorName==''||this.data.doctorName==null){
+      if (this.data.doctorName == '' || this.data.doctorName == null) {
         this.$message({
           type: 'error',
           message: '诊断医生不能为空!'
         });
         return
       }
-        const date = new Date();
-        const year = date.getFullYear().toString().padStart(4, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const hour = date.getHours().toString().padStart(2, '0');
-        const minute = date.getMinutes().toString().padStart(2, '0');
-        const second = date.getSeconds().toString().padStart(2, '0');
-
+      const date = new Date();
+      const year = date.getFullYear().toString().padStart(4, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      const hour = date.getHours().toString().padStart(2, '0');
+      const minute = date.getMinutes().toString().padStart(2, '0');
+      const second = date.getSeconds().toString().padStart(2, '0');
 
 
       console.log(this.data.resultByDoctor)
@@ -1279,8 +1295,9 @@ export default {
           })
         }
       })
-    },
-    //常用术语
+    }
+    ,
+//常用术语
     Camera() {
       var _th = this
       getCommonTerms().then(response => {
@@ -1290,10 +1307,11 @@ export default {
           label
         }));
         _th.items = result
-        _th.dialogFormVisible=true
+        _th.dialogFormVisible = true
         console.log("格式过的常用术语：", _th.items);
       })
-    },
+    }
+    ,
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
@@ -1301,8 +1319,9 @@ export default {
         })
         .catch(_ => {
         });
-    },
-    //截断数据（一条数据现在2000）
+    }
+    ,
+//截断数据（一条数据现在2000）
     getNewArray(array, subGroupLength) {
       let i = 0;
       let newArray = [];
@@ -1310,7 +1329,8 @@ export default {
         newArray.push(array.slice(i, i += subGroupLength));
       }
       return newArray;
-    },
+    }
+    ,
   },
 }
 </script>
@@ -1320,9 +1340,11 @@ export default {
   display: flex;
   flex-direction: column;
 }
-::v-deep el-button{
+
+::v-deep el-button {
   background-color: #1890ff;
 }
+
 .noleft {
   flex: 1;
   display: flex;
@@ -1331,32 +1353,35 @@ export default {
   color: #000000;
   //background-color: rgba(108, 176, 245, 0.98);
   //background: linear-gradient(to left,#ffffff, rgba(158, 173, 189, 0.98));
-  .box{
+  .box {
     overflow: hidden;
     width: 98%;
     margin: 0 auto;
     display: flex;
     align-items: center;
-    margin-top:1.5vh;
+    margin-top: 1.5vh;
     margin-bottom: 1.5vh;
     border-radius: 2vh;
     background-color: #e8e8e8;
     //opacity: 0.6;
-    .box1{
+    .box1 {
       width: 35%;
       height: 100%;
       display: flex;
       flex-direction: column;
     }
-    .box2{
+
+    .box2 {
       width: 32.5%;
       height: 100%;
     }
-    .box3{
+
+    .box3 {
       width: 32.5%;
       height: 100%;
     }
-    .h11{
+
+    .h11 {
       width: 100%;
       font-size: 2.5vh;
       background-color: #e2e2e3;
@@ -1364,22 +1389,26 @@ export default {
       height: 4vh;
       display: flex;
       margin-top: 1vh;
-      span{
+
+      span {
         width: 6px;
         height: 100%;
         background-color: #00afff;
       }
-      p{
+
+      p {
         height: 40px;
         line-height: 4vh;
         margin: 0;
         margin-left: 1vw;
       }
-      .between{
+
+      .between {
         width: 100%;
         display: flex;
         justify-content: space-between;
-        p{
+
+        p {
           height: 4vh;
           line-height: 4vh;
           margin: 0;
@@ -1387,50 +1416,56 @@ export default {
         }
       }
     }
-    .result{
+
+    .result {
       height: 13.5vh;
       width: 100%;
     }
   }
 }
-.size{
+
+.size {
   font-size: 2.3vh;
 }
-.mmargin{
+
+.mmargin {
   margin: 1.5vh 0 1.5vh 0;
 }
-.margin{
+
+.margin {
   width: 100%;
   display: flex;
   justify-content: center;
   margin-top: 1vw;
 }
-.ml{
+
+.ml {
   margin-left: 2vw;
   margin-right: 2vw;
 }
+
 .patientMessage {
   flex: 1;
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   flex-wrap: wrap;
   //background-color: #e01806;
   //height: 20vh;
   padding: 1.5vh 0 1.5vh 0;
-  margin-left:2vw;
+  margin-left: 2vw;
   width: 90%;
-  .textbox{
-    width:50%;
+
+  .textbox {
+    width: 50%;
     margin-bottom: 1.5vh;
     font-size: 2.1vh;
   }
-  .textBoxBottom{
+
+  .textBoxBottom {
     margin-bottom: 10px;
     font-size: 2.1vh;
   }
 }
-
-
 
 
 .automaticResult {
@@ -1451,17 +1486,20 @@ export default {
   flex-direction: column;
   width: 100%;
   justify-content: center;
-  .input{
+
+  .input {
     display: flex;
     flex-direction: row;
     margin-top: 1vh;
     margin-left: 2vw;
-    strong{
+
+    strong {
       white-space: nowrap;
       line-height: 36px;
       margin-right: .5vw;
     }
-    ::v-deep .el-input--medium .el-input__inner{
+
+    ::v-deep .el-input--medium .el-input__inner {
       //width: 60%;
     }
   ;
@@ -1483,6 +1521,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .line {
   height: 15.5vh;
   width: 99%;
@@ -1532,12 +1571,14 @@ export default {
   background-color: #435bf7;
   color: #fff !important;
 }
+
 .font {
   font-size: 1vw;
   font-weight: 700;
   color: #6f0600;
   background-color: #fff;
 }
+
 .lineI {
   position: absolute;
   display: inline-block;
@@ -1551,6 +1592,7 @@ export default {
   border: 1px solid black;
   z-index: 3;
 }
+
 .noName {
   position: absolute;
   top: 0;
@@ -1573,9 +1615,11 @@ export default {
   transform: translate(-50%, -50%);
   border: 1px solid #fff;
 }
+
 .el-tag + .el-tag {
   margin-left: 10px;
 }
+
 .button-new-tag {
   margin-left: 10px;
   height: 32px;
@@ -1583,6 +1627,7 @@ export default {
   padding-top: 0;
   padding-bottom: 0;
 }
+
 .input-new-tag {
   width: 90px;
   margin-left: 10px;
