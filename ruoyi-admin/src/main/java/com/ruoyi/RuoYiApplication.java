@@ -1,6 +1,7 @@
 package com.ruoyi;
 
 import com.ruoyi.xindian.report.config.WxMsgRunConfig;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,7 @@ import javax.annotation.Resource;
  * @author ruoyi
  */
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+//@EnableRabbit
 public class RuoYiApplication
 {
 

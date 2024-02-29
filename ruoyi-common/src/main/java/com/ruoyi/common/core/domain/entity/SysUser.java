@@ -76,6 +76,15 @@ public class SysUser extends BaseEntity
     @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Type.EXPORT)
     private Date loginDate;
 
+
+    /** 公众号open_id */
+    @Excel(name = "公众号open_id")
+    private String publicOpenId;
+
+    /** 消息推送状态（1：推送，2：不推送） */
+    @Excel(name = "消息推送状态", readConverterExp = "1=：推送，2：不推送")
+    private Long publicMsgStatus;
+
     /** 部门对象 */
     @Excels({
         @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT),

@@ -29,6 +29,8 @@
         <result property="roleId" column="role_id"/>
         <result property="openId" column="open_id"/>
         <result property="unionId" column="union_id"/>
+        <result property="publicOpenId"    column="public_open_id"    />
+        <result property="publicMsgStatus"    column="public_msg_status"    />
         <result property="detectionTime" column="detection_time"/>
         <result property="detectionNum" column="detection_num"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
@@ -76,6 +78,8 @@
                u.department_code,
                u.open_id,
                u.union_id,
+               u.public_open_id,
+               u.public_msg_status,
                u.detection_time,
                u.detection_num,
                d.dept_id,
@@ -103,7 +107,8 @@
     </select>
 
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-        select u.user_id, u.dept_id, u.nick_name, u.user_name_aes, u.email, u.avatar, u.phonenumber_aes, u.sex, u.status,
+        select u.user_id, u.dept_id, u.nick_name, u.user_name_aes, u.email,  u.public_open_id,
+        u.public_msg_status, u.avatar, u.phonenumber_aes, u.sex, u.status,
         u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user
         u
         left join sys_dept d on u.dept_id = d.dept_id
@@ -126,6 +131,8 @@
         <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
             AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
         </if>
+        <if test="unionId != null  and unionId != ''"> and union_id = #{unionId}</if>
+        <if test="publicOpenId != null  and publicOpenId != ''"> and public_open_id = #{publicOpenId}</if>
         <if test="deptId != null and deptId != 0">
             AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId},
             ancestors) ))
@@ -135,7 +142,7 @@
     </select>
 
     <select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
-        select distinct u.user_id, u.dept_id, u.user_name_aes, u.nick_name, u.email, u.phonenumber_aes, u.status, u.create_time
+        select distinct u.user_id, u.dept_id, u.user_name_aes, u.nick_name, u.email,  u.public_open_id, u.public_msg_status, u.phonenumber_aes, u.status, u.create_time
         from sys_user u
         left join sys_dept d on u.dept_id = d.dept_id
         left join sys_user_role ur on u.user_id = ur.user_id
@@ -221,6 +228,8 @@
         <if test="openId != null and openId != ''">open_id,</if>
         <if test="unionId != null and unionId != ''">union_id,</if>
         <if test="detectionNum != null and detectionNum != ''">detection_num,</if>
+        <if test="publicOpenId != null">public_open_id,</if>
+        <if test="publicMsgStatus != null">public_msg_status,</if>
         detection_time,
         create_time
         )values(
@@ -242,6 +251,8 @@
         <if test="openId != null">#{openId},</if>
         <if test="unionId != null">#{unionId},</if>
         <if test="detectionNum != null">#{detectionNum},</if>
+        <if test="publicOpenId != null">#{publicOpenId},</if>
+        <if test="publicMsgStatus != null">#{publicMsgStatus},</if>
         <if test="detectionTime != null">#{detectionTime},</if>
         sysdate()
         )
@@ -318,6 +329,8 @@
             <if test="unionId != null">union_id = #{unionId},</if>
             <if test="detectionNum != null">detection_num = #{detectionNum},</if>
             <if test="detectionTime != null">detection_time = #{detectionTime},</if>
+            <if test="publicOpenId != null">public_open_id = #{publicOpenId},</if>
+            <if test="publicMsgStatus != null">public_msg_status = #{publicMsgStatus},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}

@@ -16,6 +16,7 @@ import com.ruoyi.xindian.wx_pay.VO.WxCardInvoiceAuthurlVO;
 import com.ruoyi.xindian.wx_pay.VO.invoiceVO;
 import com.ruoyi.xindian.wx_pay.domain.*;
 import com.ruoyi.xindian.wx_pay.mapper.OrderInfoMapper;
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -87,6 +88,55 @@ public class WXPublicRequest {
 //        for (int i=0;i<len;i++){
 //            executorPool.send(linkedList);
 //        }
+    }
+
+    /**
+     * 微信公众号消息推送（每日定时提醒用户监测心电图）
+     * @param first 提醒消息
+     * @param userOpenid 公众号id
+     * @param date 时间
+     */
+    public  void sendEverydayRemindMsg(String first,
+                                       String userOpenid, Date date) {
+
+        /**
+         * 提醒时间
+         * {{time2.DATA}}
+         * 温馨提示
+         * {{thing1.DATA}}
+         */
+        String OrderMsgTemplateId = "Zu5o6py5KkQS10Ue2Xa2sW7sA6R-HZ280t8yWl2brxo";
+
+        // 卡片详情跳转页，设置此值，当点击消息时会打开指定的页面
+//        String detailUrl = "https://baidu.com";
+
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy-MM-dd HH:mm");
+        String timeNow = sdf.format(date);
+        WxMpInMemoryConfigStorage wxStorage = new WxMpInMemoryConfigStorage();
+        wxStorage.setAppId(WXPayConstants.WX_PUBLIC_ID);
+        wxStorage.setSecret(WXPayConstants.WX_PUBLIC_SECRET);
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(wxStorage);
+        // 此处的 key/value 需和模板消息对应
+        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+                new WxMpTemplateData("time2",timeNow),
+                new WxMpTemplateData("thing1", first),
+                new WxMpTemplateData("remark", "点击查看详情")
+        );
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(userOpenid)
+                .templateId(OrderMsgTemplateId)
+                .data(wxMpTemplateDataList)
+//                .url(detailUrl)
+                .miniProgram(new WxMpTemplateMessage.MiniProgram("wx331beedb5dbfe460","/pages/grob/grob"))
+                .build();
+        try {
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        } catch (Exception e) {
+            System.out.println("推送失败：" + e.getMessage());
+        }
+
     }
 
 
