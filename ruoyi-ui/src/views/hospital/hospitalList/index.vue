@@ -26,6 +26,16 @@
 <!--        />-->
 <!--      </el-form-item>-->
 
+      <el-form-item label="医院名称" prop="hospitalName">
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+          <el-option
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalId">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -34,6 +44,18 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button v-if="isQb" plain type="primary" icon="el-icon-edit" size="mini" @click="findXD">查看全部医院心电大屏</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <span style="margin-left: 20px">选择医院：</span>
+        <el-select v-model="hospitalId" placeholder="请选择医院" >
+          <el-option
+            v-for="item in options"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalId">
+          </el-option>
+        </el-select>
+        <el-button v-if="isQb" plain type="primary" icon="el-icon-edit" size="mini" @click="findXDBYOne">查看心电大屏</el-button>
       </el-col>
       <div class="texta">总在线设备数：{{num}}</div>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refresh"></right-toolbar>
@@ -90,6 +112,7 @@
 <script>
 import {listHospital, getHospital, delHospital, addHospital, updateHospital, addDict,onlineNum} from "@/api/hospital/hospitalList";
 import {updateOnline1, updateOnlineAll} from "@/api/online/online"
+import {listHospitalId} from "@/api/hospital/hospital";
 export default {
   name: "HospitalList",
   dicts: ['if'],
@@ -114,6 +137,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      hospitalId:null,
+      options:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -148,8 +173,9 @@ export default {
   created() {
     this.updateOnline()
     this.getList();
-
-
+    listHospitalId(null).then(r=>{
+      this.options=r.rows
+    })
   },
   beforeDestroy() {
     console.log('beeeeeeeeeeeeeee')
@@ -162,6 +188,12 @@ export default {
       const hospitalId = '1'
       console.log(hospitalId)
       this.$router.push({path:'ECGscreen',query:{hospitalId:hospitalId}})
+    },
+    findXDBYOne(){
+      if (!this.hospitalId){
+        return;
+      }
+      this.$router.push({path:'ECGscreen',query:{hospitalId:this.hospitalId}})
     },
     //请求设备在线设备数量修改在线状态
     updateOnline(){
