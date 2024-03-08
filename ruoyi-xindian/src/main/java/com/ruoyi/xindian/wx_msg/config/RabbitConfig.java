@@ -1,11 +1,6 @@
 package com.ruoyi.xindian.wx_msg.config;
 
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.CustomExchange;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;

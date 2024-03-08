@@ -1,6 +1,5 @@
 package com.ruoyi.xindian.wx_msg.listener;
 
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
