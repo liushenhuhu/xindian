@@ -206,7 +206,7 @@ public class PatientManagement extends BaseEntity {
 
     /** 维度 */
     @Excel(name = "维度")
-    private String dimensionality;
+    private String latitude;
 
     private List<String> bindingDoctors = new ArrayList<>();
 
