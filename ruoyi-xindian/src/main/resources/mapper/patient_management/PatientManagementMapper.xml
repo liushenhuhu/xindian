@@ -44,6 +44,8 @@
         <result property="refuseText"    column="refuse_text"    />
         <result property="reportNormal"    column="report_normal"    />
         <result property="sxReportStatus"    column="sx_report_status"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="dimensionality"    column="dimensionality"    />
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -102,8 +104,8 @@
 <!--        </if>-->
 <!--    </where>-->
     <sql id="selectPatientManagementVo">
-        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code,
-               connection_time, bed_number, case_history_number,
+        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.dimensionality,
+            connection_time, bed_number, case_history_number,
                ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
                m.patient_phone_aes, family_phone,  monitoring_status,
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
@@ -640,7 +642,7 @@
         order by report_time desc
     </select>
     <select id="selectPatientManagementList12" resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">
-        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code,
+        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code,, m.longitude, m.dimensionality,
         connection_time, bed_number, case_history_number,
         ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
         m.patient_phone_aes, family_phone,  monitoring_status,
@@ -727,6 +729,8 @@
             patient_management.generation_time,
             patient_management.detection_state,
             patient_management.end_time,
+            patient_management.longitude,
+            patient_management.dimensionality,
             patient_management.sampling_rate
         FROM
             patient_management

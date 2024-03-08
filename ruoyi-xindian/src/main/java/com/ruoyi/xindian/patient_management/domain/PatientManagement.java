@@ -200,6 +200,13 @@ public class PatientManagement extends BaseEntity {
     /**结束采集时间*/
     private Date endTime;
 
+    /** 经度 */
+    @Excel(name = "经度")
+    private String longitude;
+
+    /** 维度 */
+    @Excel(name = "维度")
+    private String dimensionality;
 
     private List<String> bindingDoctors = new ArrayList<>();
 
