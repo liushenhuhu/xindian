@@ -80,6 +80,11 @@ public class ReportServiceImpl implements IReportService
     }
 
     @Override
+    public int updateReportByPId(Report report) {
+        return reportMapper.updateReportByPId(report);
+    }
+
+    @Override
     public int updateReportNull(Report report) {
         return reportMapper.updateReportNull(report);
     }

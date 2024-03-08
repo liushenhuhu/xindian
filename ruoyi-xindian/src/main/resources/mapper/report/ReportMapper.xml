@@ -148,6 +148,27 @@
         </trim>
         where report_id = #{reportId}
     </update>
+    <update id="updateReportByPId">
+        update report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
+            <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
+            <if test="diagnosisDoctor != null">diagnosis_doctor_aes = #{diagnosisDoctor},</if>
+            <if test="reportTime != null">report_time = #{reportTime},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="reportType != null">report_type = #{reportType},</if>
+            <if test="intelligentDiagnosis != null">intelligent_diagnosis = #{intelligentDiagnosis},</if>
+            <if test="dPhone != null">d_phone_aes = #{dPhone},</if>
+            <if test="handlingSuggestion != null">handling_suggestion = #{handlingSuggestion},</if>
+            <if test="healthAdvice != null">health_advice = #{healthAdvice},</if>
+            <if test="pPhone != null">p_phone_aes = #{pPhone},</if>
+            <if test="patientSymptom != null">patient_symptom = #{patientSymptom},</if>
+            <if test="loginUserPhone != null">login_user_phone = #{loginUserPhone},</if>
+            <if test="reportNormal != null">report_normal = #{reportNormal},</if>
+            <if test="refuseText != null">refuse_text = #{refuseText},</if>
+        </trim>
+        where p_id = #{pId}
+    </update>
 
     <delete id="deleteReportByReportId" parameterType="Long">
         delete from report where report_id = #{reportId}

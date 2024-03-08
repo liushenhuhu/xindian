@@ -45,6 +45,15 @@ public interface ReportMapper
      * @return 结果
      */
     public int updateReport(Report report);
+
+
+    /**
+     * 修改报告
+     *
+     * @param report 报告
+     * @return 结果
+     */
+    public int updateReportByPId(Report report);
     /**
      * 修改报告
      *

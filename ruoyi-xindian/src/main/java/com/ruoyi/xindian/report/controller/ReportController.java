@@ -1106,4 +1106,10 @@ public class ReportController extends BaseController
 
         return AjaxResult.error("用户未授权推送");
     }
+
+
+    @PutMapping("/putReport")
+    public AjaxResult putReport(@RequestBody Report report) throws Exception {
+       return AjaxResult.success(reportService.updateReportByPId(report));
+    }
 }
