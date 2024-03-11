@@ -22,8 +22,7 @@ export default {
     };
   },
   created() {
-    let hospitalId =this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId')
-    sessionStorage.setItem('hospitalId',hospitalId)
+    let hospitalId =this.$route.query.hospitalId
     console.log('获取到的id',hospitalId);
     getInfoId(hospitalId).then(user => {
       console.log(user);
@@ -46,8 +45,7 @@ export default {
     })
   },
   activated() {
-    let hospitalId =this.$route.params.hospitalId?this.$route.params.hospitalId:sessionStorage.getItem('hospitalId')
-    sessionStorage.setItem('hospitalId',hospitalId)
+    let hospitalId =this.$route.query.hospitalId
     console.log('获取到的params',hospitalId)
     getInfoId(hospitalId).then(user => {
       console.log(user);

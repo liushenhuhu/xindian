@@ -33,6 +33,18 @@ public class PatientRelationship extends BaseEntity
 //    患者姓名
     private String relationshipPatientName;
 
+
+    private String hospital;
+
+
+    public String getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(String hospital) {
+        this.hospital = hospital;
+    }
+
     public String getRelationshipPatientName() {
         return relationshipPatientName;
     }

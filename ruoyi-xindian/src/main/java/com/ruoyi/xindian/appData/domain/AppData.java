@@ -58,6 +58,37 @@ public class AppData extends BaseEntity
     /** 关系*/
     private String relation;
 
+    private String hospital;
+
+    private String familyPhone;
+
+    private String familyName;
+
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getFamilyPhone() {
+        return familyPhone;
+    }
+
+    public void setFamilyPhone(String familyPhone) {
+        this.familyPhone = familyPhone;
+    }
+
+    public String getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(String hospital) {
+        this.hospital = hospital;
+    }
+
     public String getPatientNameAes() {
         return patientNameAes;
     }

@@ -98,6 +98,95 @@ public class EquipmentHeadingCodeServiceImpl extends ServiceImpl<EquipmentHeadin
     @Resource
     private EquipmentHeadingCodeMapper equipmentHeadingCodeMapper;
 
+
+
+
+
+    /**
+     * 查询善行设备管理
+     *
+     * @param codeId 善行设备管理主键
+     * @return 善行设备管理
+     */
+    @Override
+    public EquipmentHeadingCode selectEquipmentHeadingCodeByCodeId(Long codeId)
+    {
+        return equipmentHeadingCodeMapper.selectEquipmentHeadingCodeByCodeId(codeId);
+    }
+
+    /**
+     * 查询善行设备管理列表
+     *
+     * @param equipmentHeadingCode 善行设备管理
+     * @return 善行设备管理
+     */
+    @Override
+    public List<EquipmentHeadingCode> selectEquipmentHeadingCodeList(EquipmentHeadingCode equipmentHeadingCode)
+    {
+        return equipmentHeadingCodeMapper.selectEquipmentHeadingCodeList(equipmentHeadingCode);
+    }
+
+    /**
+     * 新增善行设备管理
+     *
+     * @param equipmentHeadingCode 善行设备管理
+     * @return 结果
+     */
+    @Override
+    public int insertEquipmentHeadingCode(EquipmentHeadingCode equipmentHeadingCode)
+    {
+        String equipmentCode = equipmentHeadingCode.getHeadingCode();
+        if (equipmentCode!=null){
+           if (equipmentCode.length()>17){
+               equipmentCode=equipmentCode.substring(0,17);
+           }
+        }
+        Equipment equipment = new Equipment();
+        equipment.setEquipmentCode(equipmentCode);
+        equipment.setEquipmentType("DECG12SX");
+        equipment.setHospitalCode("29");
+        equipment.setEquipmentVersion("v1.1");
+        equipment.setEquipmentStatus("False");
+        equipmentService.insertEquipment(equipment);
+        return equipmentHeadingCodeMapper.insertEquipmentHeadingCode(equipmentHeadingCode);
+    }
+
+    /**
+     * 修改善行设备管理
+     *
+     * @param equipmentHeadingCode 善行设备管理
+     * @return 结果
+     */
+    @Override
+    public int updateEquipmentHeadingCode(EquipmentHeadingCode equipmentHeadingCode)
+    {
+        return equipmentHeadingCodeMapper.updateEquipmentHeadingCode(equipmentHeadingCode);
+    }
+
+    /**
+     * 批量删除善行设备管理
+     *
+     * @param codeIds 需要删除的善行设备管理主键
+     * @return 结果
+     */
+    @Override
+    public int deleteEquipmentHeadingCodeByCodeIds(Long[] codeIds)
+    {
+        return equipmentHeadingCodeMapper.deleteEquipmentHeadingCodeByCodeIds(codeIds);
+    }
+
+    /**
+     * 删除善行设备管理信息
+     *
+     * @param codeId 善行设备管理主键
+     * @return 结果
+     */
+    @Override
+    public int deleteEquipmentHeadingCodeByCodeId(Long codeId)
+    {
+        return equipmentHeadingCodeMapper.deleteEquipmentHeadingCodeByCodeId(codeId);
+    }
+
     @Override
     public EquipmentHeadingCode selectByCode(String code) {
         return equipmentHeadingCodeMapper.selectOne(new QueryWrapper<EquipmentHeadingCode>().eq("heading_code",code));

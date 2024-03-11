@@ -17,7 +17,7 @@ public class EquipmentHeadingCode implements Serializable {
     /**
      * 
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer codeId;
 
     /**
@@ -29,6 +29,9 @@ public class EquipmentHeadingCode implements Serializable {
      * sn码
      */
     private String equipmentCode;
+
+
+    private Integer type;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

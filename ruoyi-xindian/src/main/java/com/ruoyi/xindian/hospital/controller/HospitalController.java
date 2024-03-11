@@ -57,6 +57,15 @@ public class HospitalController extends BaseController
         return getDataTable(list);
     }
 
+    @GetMapping("/appList")
+    public AjaxResult appList(Hospital hospital)
+    {
+        List<Hospital> list = hospitalService.selectHospitalList(hospital);
+        for (Hospital hospital1 : list) {
+            hospital1.setPrice("0");
+        }
+        return AjaxResult.success(list);
+    }
     /**
      * 导出医院列表
      */

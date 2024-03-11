@@ -13,6 +13,37 @@ public class MedicalHistoryDto extends MedicalHistory{
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthDay;
 
+
+    private String familyPhone;
+
+    private String familyName;
+
+    private String hospital;
+
+    public String getFamilyPhone() {
+        return familyPhone;
+    }
+
+    public void setFamilyPhone(String familyPhone) {
+        this.familyPhone = familyPhone;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(String hospital) {
+        this.hospital = hospital;
+    }
+
     public MedicalHistoryDto() {
     }
 

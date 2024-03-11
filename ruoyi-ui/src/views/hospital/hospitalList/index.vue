@@ -200,7 +200,7 @@ export default {
       updateOnline1().then(res=>{
         // console.log(res)
         onlineNum().then(res=>{
-          // console.log("在线设备数量",res)
+          console.log("在线设备数量",res)
           this.num=res.data
           listHospital(this.queryParams).then(response => {
             // console.log(response)

@@ -4,13 +4,65 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.equipment.mapper.EquipmentHeadingCodeMapper">
 
-    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.equipment.domain.EquipmentHeadingCode">
-            <id property="codeId" column="code_id" jdbcType="INTEGER"/>
-            <result property="headingCode" column="heading_code" jdbcType="VARCHAR"/>
-            <result property="equipmentCode" column="equipment_code" jdbcType="VARCHAR"/>
+    <resultMap type="EquipmentHeadingCode" id="EquipmentHeadingCodeResult">
+        <result property="codeId"    column="code_id"    />
+        <result property="headingCode"    column="heading_code"    />
+        <result property="equipmentCode"    column="equipment_code"    />
+        <result property="type"    column="type"    />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        code_id,heading_code,equipment_code
+    <sql id="selectEquipmentHeadingCodeVo">
+        select code_id, heading_code, equipment_code, type from equipment_heading_code
     </sql>
+
+    <select id="selectEquipmentHeadingCodeList" parameterType="EquipmentHeadingCode" resultMap="EquipmentHeadingCodeResult">
+        <include refid="selectEquipmentHeadingCodeVo"/>
+        <where>
+            <if test="headingCode != null  and headingCode != ''"> and heading_code = #{headingCode}</if>
+            <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code = #{equipmentCode}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+
+    <select id="selectEquipmentHeadingCodeByCodeId" parameterType="Long" resultMap="EquipmentHeadingCodeResult">
+        <include refid="selectEquipmentHeadingCodeVo"/>
+        where code_id = #{codeId}
+    </select>
+
+    <insert id="insertEquipmentHeadingCode" parameterType="EquipmentHeadingCode">
+        insert into equipment_heading_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="codeId != null">code_id,</if>
+            <if test="headingCode != null and headingCode != ''">heading_code,</if>
+            <if test="equipmentCode != null and equipmentCode != ''">equipment_code,</if>
+            <if test="type != null">type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="codeId != null">#{codeId},</if>
+            <if test="headingCode != null and headingCode != ''">#{headingCode},</if>
+            <if test="equipmentCode != null and equipmentCode != ''">#{equipmentCode},</if>
+            <if test="type != null">#{type},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEquipmentHeadingCode" parameterType="EquipmentHeadingCode">
+        update equipment_heading_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="headingCode != null and headingCode != ''">heading_code = #{headingCode},</if>
+            <if test="equipmentCode != null and equipmentCode != ''">equipment_code = #{equipmentCode},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where code_id = #{codeId}
+    </update>
+
+    <delete id="deleteEquipmentHeadingCodeByCodeId" parameterType="Long">
+        delete from equipment_heading_code where code_id = #{codeId}
+    </delete>
+
+    <delete id="deleteEquipmentHeadingCodeByCodeIds" parameterType="String">
+        delete from equipment_heading_code where code_id in
+        <foreach item="codeId" collection="array" open="(" separator="," close=")">
+            #{codeId}
+        </foreach>
+    </delete>
 </mapper>

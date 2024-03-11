@@ -107,6 +107,7 @@ public class MedicalHistoryController extends BaseController
             if(patient!=null){
                 medicalHistoryDto.setGender(patient.getPatientSex());
                 medicalHistoryDto.setUserName(aesUtils.decrypt(patient.getPatientName()));
+                medicalHistoryDto.setHospital(patient.getPatientSource());
             }
         }
 
@@ -177,6 +178,14 @@ public class MedicalHistoryController extends BaseController
         patient.setPatientSex(medicalHistory.getGender());
         patient.setPatientName(medicalHistory.getUserName());
         patient.setBirthDay(medicalHistory.getBirthDay());
+        if (medicalHistory.getHospital()!=null){
+            patient.setPatientSource(medicalHistory.getHospital());
+        }
+        if (medicalHistory.getFamilyPhone()!=null&&!"".equals(medicalHistory.getFamilyPhone())){
+            medicalHistory.setFamilyPhone(aesUtils.encrypt(medicalHistory.getFamilyPhone()));
+        }
+        patient.setFamilyName(appData.getFamilyName());
+        patient.setFamilyPhone(appData.getFamilyPhone());
         patientService.updatePatient(patient);
         if(appData!=null)
         {

@@ -85,6 +85,68 @@ public class Hospital extends BaseEntity
     //设备在线数量
     private Integer deviceOnlineNum;
 
+
+    /** 市 */
+    @Excel(name = "市")
+    private String city;
+
+    /** 区 */
+    @Excel(name = "区")
+    private String district;
+
+
+    /** 市id */
+    @Excel(name = "市id")
+    private Integer cityId;
+
+    /** 区id */
+    @Excel(name = "区id")
+    private Integer districtId;
+
+    /** 省份id */
+    @Excel(name = "省份id")
+    private Integer provinceId;
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(Integer districtId) {
+        this.districtId = districtId;
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
     public Integer getDeviceOnlineNum() {
         return deviceOnlineNum;
     }

@@ -164,11 +164,19 @@ public class AppDataController extends BaseController {
         if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
             appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
         }
+        if (appData.getFamilyPhone()!=null&&!"".equals(appData.getFamilyPhone())){
+            appData.setFamilyPhone(aesUtils.encrypt(appData.getFamilyPhone()));
+        }
         patientSel.setPatientPhone(appData.getPatientPhone());
         patient.setPatientName(appData.getPatientName());
         patient.setPatientPhone(appData.getPatientPhone());
         patient.setPatientSex(appData.getPatientSex());
         patient.setBirthDay(appData.getBirthDay());
+        patient.setFamilyName(appData.getFamilyName());
+        patient.setFamilyPhone(appData.getFamilyPhone());
+        if (appData.getHospital()!=null){
+            patient.setPatientSource(appData.getHospital());
+        }
         if(appData.getPatientAge() != null){
             patient.setPatientAge(appData.getPatientAge());
         }

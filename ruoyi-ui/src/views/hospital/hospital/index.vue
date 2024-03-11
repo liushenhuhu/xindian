@@ -147,8 +147,11 @@
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="医院id" align="center" prop="hospitalId" />-->
       <el-table-column label="省份" align="center" prop="province" />
+      <el-table-column label="市" align="center" prop="city" />
+      <el-table-column label="县(区)" align="center" prop="district" />
       <el-table-column label="医院名称" align="center" prop="hospitalName" />
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+
 <!--      <el-table-column label="医院账号" align="center" prop="hospitalAccount" />
       <el-table-column label="医院密码" align="center" prop="hospitalPassword" />
       <el-table-column label="设备数量" align="center" prop="equipmentNumber" />
@@ -195,10 +198,45 @@
 
     <!-- 添加或修改医院对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="180px">
-        <el-form-item label="省份" prop="province" >
-          <el-input v-model="form.province" placeholder="请输入省份" />
-        </el-form-item>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="省" prop="provinceId">
+              <el-select v-model="form.provinceId" clearable placeholder="请选择省份"  @change="loadCities(form.provinceId)">
+                <el-option
+                  v-for="item in states"
+                  :label="item.name"
+                  :key="item.id" :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="市" prop="cityId">
+              <el-select v-model="form.cityId" clearable placeholder="请选择市" @change="loadcountry(form.cityId)">
+                <el-option
+                  v-for="item in cities"
+                  :label="item.name"
+                  :key="item.id" :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="县" prop="districtId">
+              <el-select v-model="form.districtId" clearable placeholder="请选择县" @change="loadcountryId(form.districtId)">
+                <el-option
+                  v-for="item in counties"
+                  :label="item.name"
+                  :key="item.id" :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="医院名称" prop="hospitalName">
           <el-input v-model="form.hospitalName" placeholder="请输入医院名称" />
         </el-form-item>
@@ -260,6 +298,7 @@
 
 <script>
 import {listHospital, getHospital, delHospital, addHospital, updateHospital, addDict} from "@/api/hospital/hospital";
+import {address} from "@/api/payOrder/payOrder";
 
 export default {
   name: "Hospital",
@@ -282,6 +321,9 @@ export default {
       hospitalList: [],
       // 弹出层标题
       title: "",
+      states: [],
+      cities: [],
+      counties: [],
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -302,9 +344,35 @@ export default {
         hospitalInfo:null,
         hospitalSite:null,
         hospitalPhone:null,
+
       },
       // 表单参数
-      form: {},
+      form : {
+        hospitalId: null,
+        province: null,
+        hospitalName: null,
+        hospitalCode: null,
+        hospitalAccount: null,
+        hospitalPassword: null,
+        equipmentNumber: null,
+        patientNumber: null,
+        monitoringPatientNumber: null,
+        accountNumber: null,
+        firstEcgTime: null,
+        ifStatistics: "0",
+        hospitalSite:null,
+        hospitalPhone:null,
+        img: null,
+        hospitalInfo: null,
+        city: null,
+        district: null,
+        districtId: '',
+        cityId: '',
+        street:null,
+        streetId:'',
+
+        provinceId:'',
+      },
       // 表单校验
       rules: {
         hospitalName: [
@@ -313,14 +381,25 @@ export default {
         hospitalCode: [
           { required: true, message: "医院代号不能为空", trigger: "blur" }
         ],
+        provinceId: [
+          { required: true, message: '请选择省', trigger: 'change' }
+        ],
+        cityId: [
+          { required: true, message: '请选择市', trigger: 'change' }
+        ],
+        districtId: [
+          { required: true, message: '请选择县', trigger: 'change' }
+        ],
       }
     };
   },
   created() {
+    address(null,1).then(response => {
+      console.log(response)
+      this.states = response.data
+    });
     this.getList();
-    addDict().then(res =>{
-      console.log(res)
-    })
+
   },
   methods: {
     /** 查询医院列表 */
@@ -331,10 +410,6 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
-      addDict().then(res =>{
-        console.log(res)
-      })
-      JSON.parse("")
     },
     /** 刷新 */
     refresh() {
@@ -362,7 +437,15 @@ export default {
         ifStatistics: "0",
         hospitalSite:null,
         hospitalPhone:null,
-
+        img: null,
+        hospitalInfo: null,
+        city: null,
+        district: null,
+        districtId: '',
+        cityId: '',
+        street:null,
+        streetId:'',
+        provinceId:'',
       };
       this.resetForm("form");
     },
@@ -387,21 +470,32 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加医院";
+
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const hospitalId = row.hospitalId || this.ids
       getHospital(hospitalId).then(response => {
+        console.log(response)
         this.form = response.data;
         this.open = true;
         this.title = "修改医院";
+        address(response.data.provinceId,2).then(response => {
+          this.cities = response.data
+        });
+        address(response.data.cityId,3).then(response => {
+          this.counties = response.data
+        });
       });
+
+
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          console.log(this.form)
           if (this.form.hospitalId != null) {
             updateHospital(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -417,6 +511,29 @@ export default {
           }
         }
       });
+    },
+    loadCities(name){
+
+      address(name,2).then(response => {
+        this.cities = response.data
+      });
+
+      this.form.cityId = null
+      this.form.districtId = null
+      this.form.province = this.states.find(item => item.id === name).name
+    },
+    loadcountry(name){
+
+      address(name,3).then(response => {
+        this.counties = response.data
+      });
+      this.form.districtId = null
+      this.form.city  = this.cities.find(item => item.id === name).name
+    },
+    loadcountryId(name){
+      console.log(name)
+      console.log(this.counties)
+      this.form.district =this.counties.find(item => item.id === name).name
     },
     /** 删除按钮操作 */
     handleDelete(row) {

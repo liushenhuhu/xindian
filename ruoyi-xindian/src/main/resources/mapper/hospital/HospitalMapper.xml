@@ -22,18 +22,23 @@
         <result property="img" column="img"/>
         <result property="hospitalPhone" column="hospital_phone"/>
         <result property="hospitalSite" column="hospital_site"/>
+        <result property="city"    column="city"    />
+        <result property="district"    column="district"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="districtId"    column="district_id"    />
+        <result property="provinceId"    column="province_id"    />
     </resultMap>
 
     <sql id="selectHospitalVo">
         select hospital_id, province, hospital_name, hospital_code, hospital_account,
                hospital_password, equipment_number, patient_number, monitoring_patient_number,
-               account_number, first_ecg_time, if_statistics, img,hospital_info,hospital_site,hospital_phone
+               account_number, first_ecg_time, if_statistics, img,hospital_info,hospital_site,hospital_phone, city, district, city_id, district_id, province_id
         from hospital
     </sql>
     <sql id="selectHospitalVo2">
         select hospital_id, province, hospital_name, h.hospital_code, hospital_account,
                hospital_password, equipment_number, patient_number, monitoring_patient_number,
-               account_number, first_ecg_time, if_statistics, img,hospital_info,et.num
+               account_number, first_ecg_time, if_statistics, img,hospital_info,et.num , city, district, city_id, district_id, province_id
         from hospital h left join (select e.hospital_code,count(e.hospital_code) as num from equipment e
                                    where e.equipment_status='True'
                                    GROUP BY e.hospital_code) et on h.hospital_code = et.hospital_code
@@ -51,6 +56,11 @@
             <if test="accountNumber != null "> and account_number like concat('%', #{accountNumber}, '%')</if>
             <if test="firstEcgTime != null "> and first_ecg_time like concat('%', #{firstEcgTime}, '%')</if>
             <if test="ifStatistics != null  and ifStatistics != ''"> and if_statistics like concat('%', #{ifStatistics}, '%')</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="district != null  and district != ''"> and district = #{district}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="districtId != null  and districtId != ''"> and district_id = #{districtId}</if>
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
             <if test="hospitalCodeList != null and hospitalCodeList.size()>0">
                 and  h.hospital_code in
                 <foreach collection="hospitalCodeList" index="index" item="item" separator="," open="(" close=")">
@@ -85,6 +95,8 @@
             <if test="accountNumber != null "> and account_number like concat('%', #{accountNumber}, '%')</if>
             <if test="firstEcgTime != null "> and first_ecg_time like concat('%', #{firstEcgTime}, '%')</if>
             <if test="ifStatistics != null  and ifStatistics != ''"> and if_statistics like concat('%', #{ifStatistics}, '%')</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="district != null  and district != ''"> and district = #{district}</if>
         </where>
 
     </select>
@@ -112,6 +124,11 @@
             <if test="hospitalInfo != null">hospital_info,</if>
             <if test="hospitalPhone!= null">hospital_phone,</if>
             <if test="hospitalSite != null">hospital_site,</if>
+            <if test="city != null">city,</if>
+            <if test="district != null">district,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="districtId != null">district_id,</if>
+            <if test="provinceId != null">province_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="hospitalId != null">#{hospitalId},</if>
@@ -129,6 +146,11 @@
             <if test="hospitalInfo != null">#{hospitalInfo},</if>
             <if test="hospitalSite != null">#{hospitalSite},</if>
             <if test="hospitalPhone != null">#{hospitalPhone},</if>
+            <if test="city != null">#{city},</if>
+            <if test="district != null">#{district},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="districtId != null">#{districtId},</if>
+            <if test="provinceId != null">#{provinceId},</if>
         </trim>
     </insert>
 
@@ -149,6 +171,11 @@
             <if test="hospitalInfo != null">hospital_info = #{hospitalInfo},</if>
             <if test="hospitalSite != null">hospital_site = #{hospitalSite},</if>
             <if test="hospitalPhone != null">hospital_phone = #{hospitalPhone},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="district != null">district = #{district},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="districtId != null">district_id = #{districtId},</if>
+            <if test="provinceId != null">province_id = #{provinceId},</if>
         </trim>
         where hospital_id = #{hospitalId}
     </update>

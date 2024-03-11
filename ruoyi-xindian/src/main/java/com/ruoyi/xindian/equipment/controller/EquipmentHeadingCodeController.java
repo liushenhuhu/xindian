@@ -1,9 +1,14 @@
 package com.ruoyi.xindian.equipment.controller;
 
 import com.github.pagehelper.util.StringUtil;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.equipment.domain.AccountsMsg;
@@ -33,11 +38,9 @@ import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -60,7 +63,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequestMapping("/headingCode/headingCode")
-public class EquipmentHeadingCodeController {
+public class EquipmentHeadingCodeController extends BaseController {
 
 
 
@@ -114,6 +117,83 @@ public class EquipmentHeadingCodeController {
 
     @Resource
     private IPatientManagementService patientManagementService;
+
+
+
+
+    /**
+     * 查询善行设备管理列表
+     */
+    @PreAuthorize("@ss.hasPermi('headingCode:headingCode:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(EquipmentHeadingCode equipmentHeadingCode)
+    {
+        startPage();
+        List<EquipmentHeadingCode> list = equipmentHeadingCodeService.selectEquipmentHeadingCodeList(equipmentHeadingCode);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出善行设备管理列表
+     */
+    @PreAuthorize("@ss.hasPermi('headingCode:headingCode:export')")
+    @Log(title = "善行设备管理", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, EquipmentHeadingCode equipmentHeadingCode)
+    {
+        List<EquipmentHeadingCode> list = equipmentHeadingCodeService.selectEquipmentHeadingCodeList(equipmentHeadingCode);
+        ExcelUtil<EquipmentHeadingCode> util = new ExcelUtil<EquipmentHeadingCode>(EquipmentHeadingCode.class);
+        util.exportExcel(response, list, "善行设备管理数据");
+    }
+
+    /**
+     * 获取善行设备管理详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('headingCode:headingCode:query')")
+    @GetMapping(value = "/{codeId}")
+    public AjaxResult getInfo(@PathVariable("codeId") Long codeId)
+    {
+        return AjaxResult.success(equipmentHeadingCodeService.selectEquipmentHeadingCodeByCodeId(codeId));
+    }
+
+    /**
+     * 新增善行设备管理
+     */
+    @PreAuthorize("@ss.hasPermi('headingCode:headingCode:add')")
+    @Log(title = "善行设备管理", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody EquipmentHeadingCode equipmentHeadingCode)
+    {
+        return toAjax(equipmentHeadingCodeService.insertEquipmentHeadingCode(equipmentHeadingCode));
+    }
+
+    /**
+     * 修改善行设备管理
+     */
+    @PreAuthorize("@ss.hasPermi('headingCode:headingCode:edit')")
+    @Log(title = "善行设备管理", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody EquipmentHeadingCode equipmentHeadingCode)
+    {
+        return toAjax(equipmentHeadingCodeService.updateEquipmentHeadingCode(equipmentHeadingCode));
+    }
+
+    /**
+     * 删除善行设备管理
+     */
+    @PreAuthorize("@ss.hasPermi('headingCode:headingCode:remove')")
+    @Log(title = "善行设备管理", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{codeIds}")
+    public AjaxResult remove(@PathVariable Long[] codeIds)
+    {
+        return toAjax(equipmentHeadingCodeService.deleteEquipmentHeadingCodeByCodeIds(codeIds));
+    }
+
+
+
+
+
+
 //
 //    /**
 //     * 查询设备编号以及给管理员发送消息

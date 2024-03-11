@@ -370,11 +370,13 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      let a = row.ecgType.substring(0,6)
-      if (a==='JECG12'){
+      let a = row.ecgType.substring(0,5)
+      if (a==='JECG1'){
         this.$router.push({path: "/restingECG", query: {pId: row.pId}});
-      }else if (a==='JECGsi'){
+      }else if (a==='JECGs'){
         this.$router.push({path: "/staticECG", query: {pId: row.pId,}});
+      }else if (a==="JECG4"){
+        this.$router.push({path: "/JECG4_ECG", query: {pId: row.pId,}})
       }else {
         this.$modal.msgError("类型不匹配，请稍后再试");
       }
