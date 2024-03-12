@@ -202,6 +202,12 @@ public class PatientManagementController extends BaseController {
                     patientManagement.getBindingDoctors().add(doctor1.getDoctorPhone());
                 }
             }
+        }else if(sysUser!= null && sysUser.getRoleId()!= null && sysUser.getRoleId() == 1106) {
+            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+            if (hospital==null){
+                return  getTable(resList,0);
+            }
+            patientManagement.getHospitalCodeList().add(hospital.getHospitalCode());
         }
         getEncryptManagement(patientManagement);
 

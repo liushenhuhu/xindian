@@ -277,7 +277,7 @@
             type="text"
             icon="el-icon-magic-stick"
             @click="downloadInform(scope.row)"
-            v-hasPermi="['patient:patient:inform']"
+            v-hasPermi="['patient_management:patient_management:inform']"
           >查看报告
           </el-button>
           <el-button
@@ -648,6 +648,8 @@ export default {
             this.$modal.msgSuccess("密码正确");
             this.verifyForm.status=true
             this.dialogFormVisibleVerifyAuthority = false
+            this.isShowName.status =!this.isShowName.status;
+            this.isShowName.name = "隐藏姓名"
           })
         }
       })

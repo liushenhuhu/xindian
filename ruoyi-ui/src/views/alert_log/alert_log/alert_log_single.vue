@@ -136,7 +136,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['alert_log:alert_log:remove']"
+          v-hasPermi="['alert_log_s:alert_log:remove']"
         >删除
         </el-button>
       </el-col>
@@ -147,7 +147,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['alert_log:alert_log:export']"
+          v-hasPermi="['alert_log_s:alert_log:export']"
         >导出
         </el-button>
       </el-col>
@@ -230,7 +230,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['alert_log:alert_log:remove']"
+            v-hasPermi="['alert_log_s:alert_log:remove']"
           >删除
           </el-button>
         </template>
@@ -490,7 +490,7 @@ export default {
       // });
       this.$router.push({
         path: "/lookLog1",// name: "lookLog"
-        query: {logId: row.logId, logType: row.logType, userId: 0}
+        query: {logId: row.logId, logType: row.logType, userId: 0,state:1}
       });
     },
   }

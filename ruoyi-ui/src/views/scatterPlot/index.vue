@@ -11,7 +11,7 @@
         />
       </el-form-item>
       <el-form-item label="开始时间" prop="startTime">
-        <el-date-picker clearable
+        <el-date-picker
                         v-model="queryParams.startTime"
                         type="date"
                         value-format="yyyy-MM-dd"
@@ -19,7 +19,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="结束时间" prop="endTime">
-        <el-date-picker clearable
+        <el-date-picker
                         v-model="queryParams.endTime"
                         type="date"
                         value-format="yyyy-MM-dd"
@@ -873,6 +873,24 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
+      console.log(this.queryParams)
+      if (this.queryParams.endTime&&this.queryParams.startTime){
+        const date1String = this.queryParams.startTime;
+        const date2String = this.queryParams.endTime;
+
+        const date1 = new Date(date1String);
+        const date2 = new Date(date2String);
+
+        if (date1 > date2) {
+          console.log(`${date1String} 大于 ${date2String}`);
+          this.$modal.msgError("开始时间不能比结束时间大");
+          return
+        } else if (date1 < date2) {
+          console.log(`${date1String} 小于 ${date2String}`);
+        } else {
+          console.log(`${date1String} 等于 ${date2String}`);
+        }
+      }
       this.getData();
     },
     /** 重置按钮操作 */

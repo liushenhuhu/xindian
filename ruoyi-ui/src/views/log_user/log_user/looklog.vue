@@ -246,8 +246,8 @@
           </div>
         </div>
         <div class="page">
-          <el-button class="next"  @click="prev" type="primary" :loading="loading">上一个</el-button>
-          <el-button class="next"  @click="next" :loading="loading">下一个</el-button>
+          <el-button class="next" v-if="state"  @click="prev" type="primary" :loading="loading">上一个</el-button>
+          <el-button class="next" v-if="state" @click="next" :loading="loading">下一个</el-button>
         </div>
         <div class="topMiddle">
           <div class="warning">患者信息</div>
@@ -375,6 +375,7 @@ export default {
       value: '正常心电图',
       options:[],
       timex:[],
+      state:true,
       show:false,
       seriesdata:[
         {yAxis: -3}, {yAxis: -2.5}, {yAxis: -2}, {yAxis: -1.5}, {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1}, {yAxis: 1.5}, {yAxis: 2}, {yAxis: 2.5}, {yAxis: 3}],
@@ -431,6 +432,11 @@ export default {
       this.pageNum=this.$route.query.pageNum
       this.pageSize=this.$route.query.pageSize
       this.typeObj = this.$route.query.queryParams
+      if (this.$route.query.state|| this.$route.query.state==1){
+        this.state = false
+      }else {
+        this.state = true
+      }
       this.getLogUserList()
       this.getSelectList()
       this.getLabel()

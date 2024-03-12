@@ -273,6 +273,7 @@
             type="text"
             icon="el-icon-s-order"
             @click="selectECG(scope.row)"
+            v-hasPermi="['patient_management:patient_management:diagnose']"
           >选择医生诊断
           </el-button>
           <el-button
@@ -290,14 +291,14 @@
             @click="sendMsg(scope.row)"
           >发送短信
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['patient_management:patient_management:edit']"
-          >修改
-          </el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['patient_management:patient_management:edit']"-->
+<!--          >修改-->
+<!--          </el-button>-->
           <el-button
             size="mini"
             type="text"

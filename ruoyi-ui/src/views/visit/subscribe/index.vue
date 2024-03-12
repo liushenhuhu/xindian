@@ -47,6 +47,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
+          v-hasPermi="['hospital:subscribe:remove']"
         >删除</el-button>
       </el-col>
 <!--      <el-col :span="1.5">-->

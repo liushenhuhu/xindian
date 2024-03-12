@@ -354,6 +354,7 @@
             type="text"
             icon="el-icon-s-operation"
             @click="selectECG(scope.row)"
+            v-hasPermi="['patient_management:patient_management:diagnose']"
           >另选医生诊断
           </el-button>
           <el-button
@@ -808,6 +809,8 @@ export default {
             this.$modal.msgSuccess("密码正确");
             this.verifyForm.status=true
             this.dialogFormVisibleVerifyAuthority = false
+            this.isShowName.status =!this.isShowName.status;
+            this.isShowName.name = "隐藏姓名"
           })
         }
       })

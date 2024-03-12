@@ -92,7 +92,9 @@ public class PatientController extends BaseController
     @Aes
     public TableDataInfo list(Patient patient,Integer pageSize,Integer pageNum) throws Exception {
         List<Patient> list = new ArrayList<>();
-        if (getDeptId()!=null && getDeptId() == 200) {
+        Long userId = getUserId();
+
+        if (!SysUser.isAdmin(userId)) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String userHospitalCode= sysUser.getHospitalCode();
             if(userHospitalCode!=null){

@@ -97,7 +97,8 @@ public class EquipmentController extends BaseController {
                 equipment.getDepartmentCodeList().add(c.getDepartmentCode());
             }
         }
-        if (getDeptId()!=null && getDeptId() == 200) {
+        Long userId = getUserId();
+        if (!SysUser.isAdmin(userId)) {
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalCode = sysUser.getHospitalCode();
             equipment.getHospitalCodeList().add(hospitalCode);

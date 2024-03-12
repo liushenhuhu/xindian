@@ -779,6 +779,8 @@ export default {
             this.$modal.msgSuccess("密码正确");
             this.verifyForm.status=true
             this.dialogFormVisibleVerifyAuthority = false
+            this.isShowName.status =!this.isShowName.status;
+            this.isShowName.name = "隐藏姓名"
           })
         }
       })

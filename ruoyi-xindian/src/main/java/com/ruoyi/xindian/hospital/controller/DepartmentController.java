@@ -70,7 +70,7 @@ public class DepartmentController extends BaseController
 
         LoginUser loginUser = tokenService.getLoginUser(request);
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
-        if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
+        if (!SysUser.isAdmin(loginUser.getUserId())){
 
             department.getHospitalCodeList().add(sysUser.getHospitalCode());
             Hospital hospital = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());

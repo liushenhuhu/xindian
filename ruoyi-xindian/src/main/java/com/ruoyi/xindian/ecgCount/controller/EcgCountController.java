@@ -57,7 +57,7 @@ public class EcgCountController extends BaseController {
     /**
      * 查询数据库统计列表
      */
-    @PreAuthorize("@ss.hasPermi('system:count:list')")
+//    @PreAuthorize("@ss.hasPermi('system:count:list')")
     @GetMapping("/list")
     public TableDataInfo list(EcgCount ecgCount)
     {
