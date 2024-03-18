@@ -69,14 +69,14 @@
           </el-option>
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="设备号" prop="equipmentCode">
+    <el-form-item label="设备号" prop="equipmentCode">
         <el-input
           v-model="queryParams.equipmentCode"
           placeholder="请输入设备号"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>-->
+      </el-form-item>
 <!--      <el-form-item label="连接时间">
         <el-date-picker
           v-model="daterangeConnectionTime"
@@ -98,13 +98,23 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="医生电话" prop="doctorPhone">
+      <el-form-item label="医生电话" prop="dPhone">
         <el-input
-          v-model="queryParams.doctorPhone"
+          v-model="queryParams.dPhone"
           placeholder="请输入医生电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="社区医生" prop="doctorPhone">
+        <el-select v-model="queryParams.doctorPhone" placeholder="请选择社区医生" >
+          <el-option
+            v-for="item in option2"
+            :key="item.doctorId"
+            :label="item.doctorName"
+            :value="item.doctorPhone">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -418,6 +428,7 @@ import {updateOnlineAll} from "@/api/online/online";
 import pdf from "vue-pdf"
 import {listHospitalId} from "@/api/hospital/hospital";
 import {getVerify} from "@/api/verify/verify";
+import {docList} from "@/api/doctor/doctor";
 
 export default {
   name: "DECGsingle",
@@ -452,6 +463,7 @@ export default {
       // 时间范围
       daterangeConnectionTime: [],
       ecgList:[],
+      option2:[],
       ecgType:'DECGsingle',
       // 查询参数
       queryParams: {
@@ -516,6 +528,9 @@ export default {
     })
     listHospitalId(null).then(r=>{
       this.options=r.rows
+    })
+    docList().then(q=>{
+      this.option2=q.data
     })
     if (this.$route.params.patientName) {
       this.queryParams.patientName = this.$route.params.patientName;
@@ -655,6 +670,7 @@ export default {
             this.$modal.msgSuccess("密码正确");
             this.verifyForm.status=true
             this.dialogFormVisibleVerifyAuthority = false
+            sessionStorage.setItem('isShowName',true)
             this.isShowName.status =!this.isShowName.status;
             this.isShowName.name = "隐藏姓名"
           })
@@ -667,7 +683,8 @@ export default {
     },
 
     isShowNameClick(){
-      if (this.verifyForm.status){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
         if (this.isShowName.status){
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示姓名"
@@ -684,7 +701,8 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      if (this.verifyForm.status){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
         const pIds = row.pId || this.ids;
         this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
           return delPatient_management(pIds);
@@ -701,7 +719,8 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      if (this.verifyForm.status){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
         this.download('patient_management/patient_management/export', {
           ...this.queryParams
         }, `patient_management_${new Date().getTime()}.xlsx`)

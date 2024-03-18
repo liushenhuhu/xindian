@@ -265,6 +265,12 @@ public class SysLoginController {
         String uuid = loginBody.getUuid();
         AjaxResult ajax = loginService.smsLogin(mobile, smsCode, uuid);
 
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(aesUtils.encrypt(mobile));
+        if (doctor==null){
+            ajax.put("isDoctor",false);
+        }else {
+            ajax.put("isDoctor",true);
+        }
         AppData appData = new AppData();
         appData.setUserName(aesUtils.encrypt(loginBody.getMobile()));
         List<AppData> appDataList = appDataService.selectAppDataList(appData);

@@ -136,10 +136,18 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="医生电话" prop="doctorPhone">
+      <el-form-item label="医生电话" prop="dPhone">
         <el-input
-          v-model="queryParams.doctorPhone"
+          v-model="queryParams.dPhone"
           placeholder="请输入医生电话"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设备号" prop="equipmentCode">
+        <el-input
+          v-model="queryParams.equipmentCode"
+          placeholder="请输入设备号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -809,6 +817,7 @@ export default {
             this.$modal.msgSuccess("密码正确");
             this.verifyForm.status=true
             this.dialogFormVisibleVerifyAuthority = false
+            sessionStorage.setItem('isShowName',true)
             this.isShowName.status =!this.isShowName.status;
             this.isShowName.name = "隐藏姓名"
           })
@@ -820,7 +829,8 @@ export default {
     },
 
     isShowNameClick(){
-      if (this.verifyForm.status){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
         if (this.isShowName.status){
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示姓名"
@@ -837,7 +847,8 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      if (this.verifyForm.status){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
         const pIds = row.pId || this.ids;
         this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
           return delPatient_management(pIds);
@@ -854,7 +865,8 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      if (this.verifyForm.status){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
         this.download('patient_management/patient_management/export', {
           ...this.queryParams
         }, `patient_management_${new Date().getTime()}.xlsx`)

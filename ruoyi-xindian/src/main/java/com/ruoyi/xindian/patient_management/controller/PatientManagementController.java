@@ -404,6 +404,9 @@ public class PatientManagementController extends BaseController {
         if (patientManagement.getPatPhone()!=null&& !patientManagement.getPatPhone().isEmpty()){
             patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
         }
+        if (patientManagement.getDPhone()!=null&& !patientManagement.getDPhone().isEmpty()){
+            patientManagement.setDPhone(aesUtils.encrypt(patientManagement.getDPhone()));
+        }
     }
 
 
