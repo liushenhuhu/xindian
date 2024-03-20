@@ -19,9 +19,15 @@ export class Voc {
    */
   init = () => {
     if ("WebSocket" in window) {
-      this.ws = new WebSocket(this.linkUrl());
+      let url = this.linkUrl()
+      console.log('地址')
+      console.log(url)
+      this.ws = new WebSocket(url);
     } else if ("MozWebSocket" in window) {
-      this.ws = new MozWebSocket(this.linkUrl());
+      let url = this.linkUrl()
+      console.log('地址')
+      console.log(url)
+      this.ws = new MozWebSocket(url);
     } else {
       alert("浏览器不支持WebSocket");
       return;
