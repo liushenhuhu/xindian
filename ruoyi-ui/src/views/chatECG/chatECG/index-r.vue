@@ -273,7 +273,7 @@ export default {
       Recorder.getPermission().then(() => {
         this.vocState = 1;
         th.recorder.start();
-        th.recorder.onProgress = (params) => {
+        th.recorder.onprogress = (params) => {
           th.voc.send(new Int8Array(params.data[params.data.length - 1].buffer))
         }
       }, (err) => {
