@@ -449,6 +449,7 @@ export default {
       timer11:null,
       time:null,//时间 X轴
       index:0,
+      tishii:true
     };
   },
   async created() {
@@ -464,7 +465,7 @@ export default {
     //清空数据
     this.clearList()
     //请求设备列表
-    this.get_device(hospName);
+    this.get_device(hospName,this.tishi);
   },
   mounted() {
 
@@ -533,8 +534,25 @@ export default {
   },
 
   methods: {
+    // 提示框方法
+    tishi(length){
+      this.$message.success({
+            message: '设备列表获取成功',
+            type: 'success',
+            duration: 2500,
+            center:true,
+            onClose:()=> {
+              this.$message.success({
+                message: '共有' + length + "台设备链接",
+                type: 'success',
+                duration: 4000,
+                center:true
+              })
+            }
+          })
+    },
     //请求设备列表
-    async get_device(hospName){
+    async get_device(hospName,tishii){
       // console.log(this.timer0)
       // console.log("医院名称:"+hospName)
       this.index++
@@ -562,20 +580,23 @@ export default {
            for (let i = 0; i < length; i+=9) {
              this.currentpage.push(this.arr.slice(i,i+9))
            }
-          this.$message.success({
-            message: '设备列表获取成功',
-            type: 'success',
-            duration: 2500,
-            center:true,
-            onClose:()=> {
-              this.$message.success({
-                message: '共有' + length + "台设备链接",
-                type: 'success',
-                duration: 4000,
-                center:true
-              })
-            }
-          })
+          // this.$message.success({
+          //   message: '设备列表获取成功',
+          //   type: 'success',
+          //   duration: 2500,
+          //   center:true,
+          //   onClose:()=> {
+          //     this.$message.success({
+          //       message: '共有' + length + "台设备链接",
+          //       type: 'success',
+          //       duration: 4000,
+          //       center:true
+          //     })
+          //   }
+          // })
+          if (tishii) {
+            this.tishi(length)
+          }
         }).catch(err=>{
          // console.log("请求错误"+err)
         this.closeFullScreen()
@@ -586,6 +607,9 @@ export default {
         if(num>=1){
           this.list1()
         }
+        // else{
+        //   this.get_device(hospName);
+        // }
         if(num>=2){
           this.list2()
         }
@@ -746,6 +770,7 @@ export default {
           // console.log("timer00="+this.timer0)
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
     },
@@ -835,6 +860,7 @@ export default {
 
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -926,6 +952,7 @@ export default {
             }, 5000)
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1015,6 +1042,7 @@ export default {
 
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1104,6 +1132,7 @@ export default {
             }, 5000)
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1192,6 +1221,7 @@ export default {
             }, 5000)
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1282,6 +1312,7 @@ export default {
 
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1371,6 +1402,7 @@ export default {
 
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1460,6 +1492,7 @@ export default {
 
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1549,6 +1582,7 @@ export default {
 
         }).catch(err=>{
           // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1637,6 +1671,7 @@ export default {
             }, 5000)
         }).catch(err=>{
           // // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
@@ -1725,6 +1760,7 @@ export default {
 
         }).catch(err=>{
           // // console.log("请求错误"+err)
+          this.get_device(hospName);
         })
       }
 
