@@ -254,10 +254,13 @@ export default {
       let th = this
       this.voc = new Voc();
       this.voc.init();
-      this.voc.onmessage(() => {
+      this.voc.onmessage((text) => {
+        th.customerText = text;
+        th.sentMsg()
         console.log('结束消息')
       })
-      this.voc.onmiddlemessage(() => {
+      this.voc.onmiddlemessage((text) => {
+        th.customerText = text;
         console.log('中间消息')
       })
       this.recorder = new Recorder({
