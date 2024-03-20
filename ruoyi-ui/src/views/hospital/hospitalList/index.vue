@@ -55,7 +55,7 @@
             :value="item.hospitalId">
           </el-option>
         </el-select>
-        <el-button v-if="isQb" plain type="primary" icon="el-icon-edit" size="mini" @click="findXDBYOne">查看心电大屏</el-button>
+        <el-button v-if="isQb" plain style="margin-left:20px" type="primary" icon="el-icon-edit" size="mini" @click="findXDBYOne">查看选中医院心电大屏</el-button>
       </el-col>
       <div class="texta">总在线设备数：{{num}}</div>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refresh"></right-toolbar>

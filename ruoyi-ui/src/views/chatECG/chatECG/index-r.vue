@@ -6,7 +6,7 @@
         <div class="left">
           <div class="new">
             <div class="img_box">
-              <img class="zhengda" src="@/assets/images/zhengda.png" />
+              <img class="zhengda" src="@/assets/images/zhengda.png"/>
             </div>
             <div
               class="new_his"
@@ -26,7 +26,7 @@
               :class="{ bgc: i === 0 }"
               :key="item.conversationId"
               @click="conversationClickCut(item.conversationId, 2)"
-              
+
             >
               <!-- <img class="mesimg2" src="@/assets/images/messge2.png"/> -->
               <div class="his_title">
@@ -68,13 +68,13 @@
         <!--    right      -->
         <div class="right">
           <div class="right-title">
-            <img class="xietong" src="@/assets/images/xietong.png" />
+            <img class="xietong" src="@/assets/images/xietong.png"/>
           </div>
           <div class="message" id="right" ref="message">
             <div v-for="(item, index) in info" :key="index">
               <!-- AI回答 -->
               <div class="info_r" v-if="item.type == 'leftinfo'">
-                <img src="@/assets/images/rotoimg.png" class="pic_ro" alt />
+                <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
                 <div class="con_r">
                   <div class="time_r">{{ item.time }}</div>
                   <div class="con_text">{{ item.content }}</div>
@@ -96,21 +96,21 @@
                   <div class="time_l">{{ item.time }}</div>
                   <span class="con_text">{{ item.content }}</span>
                 </div>
-                <img src="@/assets/images/userimg.png" class="pic_l" />
+                <img src="@/assets/images/userimg.png" class="pic_l"/>
               </div>
             </div>
             <div class="info_r" v-if="isLoading">
-              <img src="@/assets/images/rotoimg.png" class="pic_ro" alt />
+              <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
               <div class="con_r con_text">
                 <div style="display: flex; height: 35px; align-items: center">
-                  <loading />
+                  <loading/>
                 </div>
               </div>
             </div>
           </div>
           <div class="text-area">
             <div class="left-child">
-              <img class="mesimg1" src="@/assets/images/messge1.png" />
+              <img class="mesimg1" src="@/assets/images/messge1.png"/>
               <textarea
                 placeholder="请输入您的问题..."
                 style="
@@ -126,11 +126,27 @@
                 v-model="customerText"
                 @keyup.enter="sentMsg()"
               ></textarea>
-              <img
-                class="mesimg3"
-                src="@/assets/images/messge3.png"
-                @click="sentMsg()"
-              />
+              <div class="right-child">
+                <div v-if="vocState == 0" class="mkf">
+                  <img
+                    class="mesimg3"
+                    src="@/assets/images/microphone-0.png"
+                    @click="recorderStart()"
+                  />
+                </div>
+                <div v-else-if="vocState == 1" class="mkf mkf-s">
+                  <img
+                    class="mesimg3"
+                    src="@/assets/images/microphone-1.png"
+                    @click="recorderStop()"
+                  />
+                </div>
+                <img
+                  class="mesimg3"
+                  src="@/assets/images/messge3.png"
+                  @click="sentMsg()"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -147,7 +163,10 @@ import {
   updateConversation,
 } from "@/api/chatECG/chatECG";
 import loading from "./loading";
-import { delDoctor } from "@/api/doctor/doctor";
+import {delDoctor} from "@/api/doctor/doctor";
+import Recorder from "js-audio-recorder";
+import {Voc, PPlayer} from '@/utils/voice.js'
+
 export default {
   components: {
     loading,
@@ -181,6 +200,10 @@ export default {
       focusStatus: false,
       hasBorderlessClass: true,
       isAddNewWin: false,
+      recorder: null,
+      voc: null,
+      vocState: 0,
+      audioPlayer: null,
     };
   },
   computed: {
@@ -197,9 +220,64 @@ export default {
     this.conversationClickAdd()
     this.showTimer();
   },
+  mounted() {
+    this.audioPlayer = new PPlayer()
+  },
+  beforeDestroy() {
+    this.endAll()
+  },
   watch: {},
 
   methods: {
+    endAll(){
+      this.recorderStop()
+      this.audioPlayer.stopAudio()
+    },
+    recorderStart() {
+      let th = this
+      this.voc = new Voc();
+      this.voc.init();
+      this.voc.onmessage(() => {
+        console.log('结束消息')
+      })
+      this.voc.onmiddlemessage(() => {
+        console.log('中间消息')
+      })
+      this.recorder = new Recorder({
+        sampleBits: 16,
+        sampleRate: 16000,
+        numChannels: 1,
+        compiling: true,
+      })
+
+      Recorder.getPermission().then(() => {
+        this.vocState = 1;
+        th.recorder.start();
+        th.recorder.onProgress = (params) => {
+          th.voc.send(new Int8Array(params.data[params.data.length - 1].buffer))
+        }
+      }, (err) => {
+        th.$message({
+          message: "请先允许网页使用麦克风",
+          type: 'info'
+        })
+        this.vocState = 0;
+      })
+    },
+    recorderStop() {
+      this.vocState = 0;
+      //结束对讲
+      let th = this;
+      this.recorder.stop();
+      if (this.voc) {
+        this.voc.close();
+        this.voc = null;
+      }
+      this.recorder.destroy().then(() => {
+        th.recorder = null;
+      })
+
+    },
     formatDateToCustomFormat(date) {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -207,7 +285,6 @@ export default {
       const hours = String(date.getHours()).padStart(2, "0");
       const minutes = String(date.getMinutes()).padStart(2, "0");
       const seconds = String(date.getSeconds()).padStart(2, "0");
-
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
     findMaxIdObject(array) {
@@ -227,6 +304,7 @@ export default {
     // 用户发送消息
     sentMsg() {
       //console.log("queryParams: ====="+this.queryParams.history);
+      this.audioPlayer.stopAudio()
       clearTimeout(this.timer);
       this.showTimer();
       let text = this.customerText.trim();
@@ -262,6 +340,7 @@ export default {
             this.robotAnswer.push(obj);
             this.appendRobotMsg(response);
             this.isLoading = false;
+            this.audioPlayer.send(response.response)
           });
           this.$nextTick(() => {
             var contentHeight = document.getElementById("right");
@@ -270,8 +349,8 @@ export default {
         }
         if (this.conversation.length > 0) {
           this.$refs[
-            "div-" + this.conversation[0].conversationId
-          ][0].classList.remove("bgc");
+          "div-" + this.conversation[0].conversationId
+            ][0].classList.remove("bgc");
           this.conversation.forEach((i, index) => {
             if (this.$refs["div-" + i.conversationId]) {
               this.$refs["div-" + i.conversationId][0].style.backgroundColor =
@@ -319,9 +398,10 @@ export default {
               index: 1,
             };
             this.robotAnswer.push(obj);
-            console.log("这是++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+this.robotAnswer);
+            console.log("这是++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + this.robotAnswer);
             this.appendRobotMsg(response);
             this.isLoading = false;
+            this.audioPlayer.send(response.response)
           });
           this.$nextTick(() => {
             var contentHeight = document.getElementById("right");
@@ -467,7 +547,7 @@ export default {
         console.log(r);
         this.conversation = r.data;
         this.conversation.forEach((item) => {
-          Object.assign(item, { show: false });
+          Object.assign(item, {show: false});
         });
         if (v === 1) {
           if (r.data.length > 0) {
@@ -514,7 +594,8 @@ export default {
           this.getConversation(1);
           this.$modal.msgSuccess("删除成功");
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     },
 
     /**
@@ -534,8 +615,8 @@ export default {
       this.isAddNewWin = false;
       if (id === 2) {
         this.$refs[
-          "div-" + this.conversation[0].conversationId
-        ][0].classList.remove("bgc");
+        "div-" + this.conversation[0].conversationId
+          ][0].classList.remove("bgc");
       }
 
       this.conversation.forEach((i, index) => {
@@ -611,8 +692,8 @@ export default {
       this.isAddNewWin = true;
 
       this.$refs[
-        "div-" + this.conversation[0].conversationId
-      ][0].classList.remove("bgc");
+      "div-" + this.conversation[0].conversationId
+        ][0].classList.remove("bgc");
       this.conversation.forEach((i, index) => {
         this.$refs["div-" + i.conversationId][0].style.backgroundColor = "";
       });
@@ -646,15 +727,18 @@ export default {
     },
   },
   props: {},
-  destroyed() {},
+  destroyed() {
+  },
 };
 </script>
 <style lang="scss" scoped>
 .bgc {
   background-color: #343541;
 }
+
 .mainbox {
   width: 100%;
+
   .box {
     width: 100%;
     height: calc(100vh - 84px);
@@ -670,12 +754,14 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     #content {
       height: 97%;
       //overflow-y: scroll;
       font-size: 20px;
       width: 98%;
       display: flex;
+
       .con_text {
         width: fit-content;
         color: #333;
@@ -686,22 +772,26 @@ export default {
         border-radius: 6px;
         padding: 10px;
       }
+
       .con_que {
         color: #1c88ff;
         height: 30px;
         line-height: 30px;
         cursor: pointer;
       }
+
       .info_r {
         display: flex;
         align-items: center;
         margin-top: 1vh;
+
         .pic_ro {
           width: 3vw;
           height: 6vh;
           // 机器人回话的位置
           margin-left: 3vw;
         }
+
         .con_r {
           display: inline-block;
           max-width: 60%;
@@ -710,6 +800,7 @@ export default {
 
           /* min-height: 20px; */
         }
+
         .time_r {
           text-align: right;
           //margin-left: 5vw;
@@ -717,6 +808,7 @@ export default {
           font-size: 18px;
         }
       }
+
       .info_l {
         // 自己问答位置
         margin-right: 3vw;
@@ -725,16 +817,19 @@ export default {
         align-items: center;
         justify-content: right;
         color: #ffffff;
+
         .pic_l {
           width: 3vw;
           height: 6vh;
           margin-top: 2vh;
         }
+
         .time_l {
           text-align: left;
           color: #5b5b5b;
           font-size: 18px;
         }
+
         .con_l {
           display: inline-block;
           max-width: 60%;
@@ -758,16 +853,19 @@ export default {
             float: right;
           }
         }
+
         .circle_l {
           margin-left: 10px;
         }
       }
+
       #question {
         cursor: pointer;
       }
     }
   }
 }
+
 .setproblem {
   width: 100%;
   height: 8vh;
@@ -776,11 +874,13 @@ export default {
   //margin-top: -7.3vw;
   z-index: 999;
 }
+
 .setproblem textarea {
   color: #999999;
   padding: 10px;
   box-sizing: border-box;
 }
+
 .setproblem button {
   width: 5.875rem;
   height: 2.5rem;
@@ -820,6 +920,7 @@ export default {
   font-size: 24px;
   color: #3163c5;
 }
+
 .title {
   width: 98%;
   //position: absolute;
@@ -832,16 +933,19 @@ export default {
   border: 4px rgba(47, 82, 143) solid;
   display: flex;
   align-items: center;
+
   img {
     margin: 0 30px;
   }
 }
+
 .title-hn {
   display: inline-block;
   //vertical-align: middle;
   //float: right;
   //margin-right: 46%;
 }
+
 .left {
   width: 28%;
   display: flex;
@@ -852,11 +956,13 @@ export default {
   border: 2px solid #9a9999;
   border-radius: 15px;
   margin-right: 1vw;
+
   .new {
     height: 9%;
     width: 100%;
     display: flex;
     align-items: center;
+
     .img_box {
       background-color: #ffffff;
       border-radius: 50%;
@@ -864,10 +970,12 @@ export default {
       justify-content: center;
       align-items: center;
       margin-left: 1vw;
+
       .zhengda {
         height: 7vh;
       }
     }
+
     .new_his {
       flex: 1;
       height: 100%;
@@ -881,6 +989,7 @@ export default {
       font-size: 23px;
     }
   }
+
   .his {
     height: 85%;
     display: flex;
@@ -889,6 +998,7 @@ export default {
     overflow: hidden;
     overflow-y: scroll;
     user-select: none;
+
     .his_item {
       box-sizing: border-box;
       display: flex;
@@ -901,14 +1011,17 @@ export default {
       border-radius: 0.5vw;
       margin-top: 1.5vh;
       margin-left: 1vh;
+
       .mesimg2 {
         margin-left: 1vw;
         width: 2.5vw;
         height: 2.2vw;
       }
+
       .his_title {
         width: 60%;
         margin: 0 1vw 0 0.5vw;
+
         .tit {
           width: 98%;
           margin: 1vh 0 0.5vh 0;
@@ -923,11 +1036,11 @@ export default {
           cursor: pointer;
 
 
-
           white-space: nowrap; /*超出的空白区域不换行*/
           overflow: hidden; /*超出隐藏*/
           text-overflow: ellipsis;
         }
+
         .titUp {
           width: 100%;
           margin: 1vh 0 0.5vh 0;
@@ -938,6 +1051,7 @@ export default {
           font-size: 0.9vw;
           color: #ababab;
         }
+
         ::v-deep .el-input--medium .el-input__inner {
           font-size: 1.3vw;
           height: auto;
@@ -945,11 +1059,13 @@ export default {
           padding: 2px 0 2px 0;
         }
       }
+
       .delimg {
         margin-right: 0.5vw;
         width: 1.8vw;
         height: 1.8vw;
       }
+
       .upimg {
         width: 1.8vw;
         height: 1.8vw;
@@ -957,6 +1073,7 @@ export default {
     }
   }
 }
+
 .left-child {
   display: flex;
   width: 83%;
@@ -966,41 +1083,74 @@ export default {
   position: relative;
   border-radius: 1vw;
 }
+
 .left-child .mesimg1 {
   width: 2.5vw;
   height: 2.2vw;
   margin: 0.8vh 1vw 0 0.5vw;
 }
-.left-child .mesimg3 {
+
+.left-child .right-child {
+  width: 2.5vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.right-child .mkf {
+  height: 2.5vw;
+  width: 2.5vw;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.right-child .mkf-s {
+  background-color: #13ce66;
+}
+
+.right-child .mkf .mesimg3 {
+  height: 100%;
+  width: 100%;
+}
+
+.left-child .right-child .mesimg3 {
   width: 2.5vw;
   height: 2.2vw;
-  position: absolute;
-  bottom: 0.5vh;
-  right: 0.5vw;
+  //position: absolute;
+  //bottom: 0.5vh;
+  //right: 0.5vw;
 }
+
 .right {
   width: 70%;
   background-color: #ffffff;
   border-radius: 1.5vw;
   overflow: hidden;
 }
+
 .right .right-title {
   height: 12%;
 }
+
 .right .right-title .xietong {
   height: 8vh;
   margin: 2vh 0 0 1vw;
 }
+
 .right .message {
   height: 65%;
   background-color: #ffffff;
   overflow-y: scroll;
 }
+
 .right .text-area {
   height: 22%;
   width: 100%;
   margin-top: 2vh;
 }
+
 .left-btn {
   width: 100%;
   height: 10%;
@@ -1008,6 +1158,7 @@ export default {
   display: flex;
   justify-content: space-around;
 }
+
 //滑动条
 *::-webkit-scrollbar {
   width: 0.7vw;
