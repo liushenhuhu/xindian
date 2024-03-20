@@ -25,7 +25,7 @@
                 <div class="textbox"><strong>QRS波群:</strong>{{ data.qrs }}ms</div>
                 <div class="textbox"><strong>QTc:</strong>{{ data.qtc }}ms</div>
                 <div class="textbox"><strong>HRV:</strong>{{ data.hrv }}ms</div>
-                <div class="textbox"><strong>心梗机率:</strong>{{ data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险' }}</div>
+                <div class="textbox" v-if="false"><strong>心梗机率:</strong>{{ data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险' }}</div>
               </div>
             </div>
             <div class="result1 size mmargin">
