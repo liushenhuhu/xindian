@@ -251,9 +251,12 @@ export default {
       }
     },
     recorderStart() {
+
+      let ts = new Date().getTime() / 1000;
+      ts = parseInt(ts)
       let th = this
       this.voc = new Voc();
-      this.voc.init();
+      this.voc.init(ts);
       this.voc.onmessage((text) => {
         th.customerText = text;
         th.sentMsg()
