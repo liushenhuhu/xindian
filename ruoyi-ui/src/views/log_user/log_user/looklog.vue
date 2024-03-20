@@ -610,7 +610,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -724,7 +724,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -836,7 +836,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -948,7 +948,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -1059,7 +1059,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -1170,7 +1170,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -1281,7 +1281,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -1393,7 +1393,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: true,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -1504,7 +1504,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -1615,7 +1615,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -1726,7 +1726,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -1837,7 +1837,7 @@ export default {
                   },
                   axisLabel: { //修改坐标系字体颜色
                     show: false,
-                    interval: 4,
+                    interval: 3,
                     textStyle: {
                       color: "#000000"
                     }
@@ -2255,7 +2255,7 @@ export default {
             show: false
           },
           axisLabel: { //修改坐标系字体颜色
-            interval: 4,
+            interval: 3,
             show: false,
             textStyle: {
               color: "#000000"

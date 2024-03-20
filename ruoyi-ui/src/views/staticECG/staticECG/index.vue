@@ -24,6 +24,7 @@
               <div class="textbox"><strong>QRS波群:</strong>{{ data.qrs }}ms</div>
               <div class="textbox"><strong>QTc:</strong>{{ data.qtc }}ms</div>
               <div class="textbox"><strong>HRV:</strong>{{ data.hrv }}ms</div>
+              <div class="textbox"><strong>心梗机率:</strong>{{ data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险' }}</div>
             </div>
           </div>
           <div class="box2">
@@ -262,7 +263,9 @@ export default {
         qrs:'',
         qtc:'',
         hrv:'',
-        pId:''
+        pId:'',
+        patientSymptom:'暂无症状',
+        p_xingeng:''//心梗率
       },
       data12: {
         x: [],
@@ -326,6 +329,9 @@ export default {
           const second = date.getSeconds().toString().padStart(2, '0');
           this.data.diagnosisData=`${year}-${month}-${day} ${hour}:${minute}:${second}`
         }
+        if (response.data.patientSymptom!=null) {
+          this.data.patientSymptom = response.data.patientSymptom
+ 	      }
         console.log(this.data)
       });
       selectDoctor().then(response => {
@@ -547,6 +553,7 @@ export default {
           _th.data.datas = data.result.II
           _th.datalabel.waveLabel=data.result.waveLabel
           _th.datalabel.beatLabel=data.result.beatLabel
+          _th.data.p_xingeng = data.result.p_xingeng
           //console.log("获取到的导联数据", _th.data.datas)
           console.log("获取到的导联数据长度", _th.data.datas.length)
           _th.nArr = _th.getNewArray(_th.data.datas, 1000);
@@ -583,7 +590,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -680,7 +687,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -777,7 +784,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -872,7 +879,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -977,7 +984,7 @@ export default {
           //     data: _th.x,
           //     axisLabel: {
           //       show: false,
-          //       interval: 4,
+          //       interval: 3,
           //     },
           //     axisTick: {
           //       show: false
@@ -1075,7 +1082,7 @@ export default {
           //     data: _th.x,
           //     axisLabel: {
           //       show: false,
-          //       interval: 4,
+          //       interval: 3,
           //     },
           //     axisTick: {
           //       show: false
@@ -1173,7 +1180,7 @@ export default {
           //     data: _th.x,
           //     axisLabel: {
           //       show: false,
-          //       interval: 4,
+          //       interval: 3,
           //     },
           //     axisTick: {
           //       show: false
@@ -1271,7 +1278,7 @@ export default {
           //     data: _th.x,
           //     axisLabel: {
           //       show: false,
-          //       interval: 4,
+          //       interval: 3,
           //     },
           //     axisTick: {
           //       show: false
@@ -1369,7 +1376,7 @@ export default {
           //     data: _th.x,
           //     axisLabel: {
           //       show: false,
-          //       interval: 4,
+          //       interval: 3,
           //     },
           //     axisTick: {
           //       show: false
