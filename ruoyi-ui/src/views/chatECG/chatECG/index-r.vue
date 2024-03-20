@@ -224,14 +224,31 @@ export default {
     this.audioPlayer = new PPlayer()
   },
   beforeDestroy() {
+    console.log('即将销毁')
     this.endAll()
+  },
+  //keep-alive生命周期
+  activated() {
+    console.log(123)
+  },
+  deactivated() {
+    console.log(456)
   },
   watch: {},
 
   methods: {
     endAll(){
-      this.recorderStop()
-      this.audioPlayer.stopAudio()
+      let th = this;
+      try{
+        console.log('清除一切')
+        th.audioPlayer.stopAudio()
+        if(this.recorder){
+          th.recorderStop()
+        }
+      }catch (e) {
+        console.log('错误')
+        console.log(e)
+      }
     },
     recorderStart() {
       let th = this
