@@ -574,7 +574,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     @Transactional
     @Override
-    public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId) throws Exception {
+    public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId,String remark) throws Exception {
         Product product = productMapper.selectById(productId);
 
         if(product.getType().equals("服务")){
@@ -609,6 +609,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setOpenId(sysUser.getOpenId());
         orderInfo.setCreateTime(new Date());
         orderInfo.setUpdateTime(new Date());
+        orderInfo.setRemark(remark);
         orderInfo.setOrderState(OrderStatus.NOTPAY.getType());
         orderInfo.setDelFlag(0);
         orderInfoMapper.insert(orderInfo);

@@ -135,7 +135,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/orderAdd")
-    public AjaxResult orderAdd(HttpServletRequest request,Long productId,Integer sum,String addressId){
+    public AjaxResult orderAdd(HttpServletRequest request,Long productId,Integer sum,String addressId,String remark){
 
 
         lock.lock();
@@ -176,7 +176,7 @@ public class OrderController {
                 return AjaxResult.error("商品库存不足");
             }
 
-            String stringBuilder = orderInfoService.addOrder(request, productId, sum, id);
+            String stringBuilder = orderInfoService.addOrder(request, productId, sum, id, remark);
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){
             System.out.println(e);

@@ -126,6 +126,8 @@ public class OrderInfo implements Serializable {
 
 
     private Integer delFlag;
+
+    private String  remark;
     /**
      * 用户信息
      */
