@@ -116,6 +116,7 @@ export class Voc {
         resultText += resultTextTemp;
         if (this.result.message) {
           this.result.message(resultText)
+          //todo 修改为时间或者是关键词发送
         }
         resultTextTemp = ""
         resultText = '';
@@ -133,7 +134,7 @@ export class Voc {
     ts=ts.toString()
     // let ts = new Date.now() / 1000
     //获取触发函数时的时间戳
-    return `wss://rtasr.xfyun.cn/v1/ws?appid=${this.appid}&ts=${ts}&signa=${this.encrypt(ts)}`
+    return `wss://rtasr.xfyun.cn/v1/ws?appid=${this.appid}&ts=${ts}&signa=${this.encrypt(ts)}&vadMdn=2&pd=medical`
   }
 
   encrypt = (ts) => {

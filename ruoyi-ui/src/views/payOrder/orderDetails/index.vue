@@ -11,6 +11,11 @@
      <el-col :span="8"><div class="grid-content bg-purple-dark">订单状态：{{form.orderStatus}}</div><span></span></el-col>
      <el-col :span="8"><div class="grid-content bg-purple-dark">订单金额：{{form.totalFee}}</div><span></span></el-col>
    </el-row>
+   <el-row>
+     <el-col :span="12">
+       <div class="grid-content bg-purple-dark">用户备注：{{form.remark||'无'}}</div>
+     </el-col>
+   </el-row>
    <el-divider content-position="left">订单地址</el-divider>
    <el-row>
      <el-col :span="12"><div class="grid-content bg-purple-dark">收货人姓名：{{form.patientName}}</div></el-col>
@@ -62,6 +67,8 @@ export default {
     listOrder(id).then(r=>{
       console.log(r)
       this.form = r.data
+      console.log('数据')
+      console.log(this.form)
       this.infoList = r.data.suborderOrderInfos
       this.loading=false
     })
