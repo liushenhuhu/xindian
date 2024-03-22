@@ -124,7 +124,7 @@ public class OrderController {
         return AjaxResult.success(isDel);
     }
 
-    
+
 
     /**
      * 添加商品订单
@@ -135,7 +135,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/orderAdd")
-    public AjaxResult orderAdd(HttpServletRequest request,Long productId,Integer sum,String addressId){
+    public AjaxResult orderAdd(HttpServletRequest request,Long productId,Integer sum,String addressId,String remark){
 
 
         lock.lock();
