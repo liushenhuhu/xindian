@@ -1,5 +1,6 @@
 let resultText = "";
 
+const CryptoJS = require('crypto-js');
 export class Voc {
   appid = '571c7913'
   api_key = '045b619501631628625c632f1f8de463'
@@ -17,14 +18,14 @@ export class Voc {
   /**
    * 初始化websocket连接
    */
-  init = () => {
+  init = (ts) => {
     if ("WebSocket" in window) {
-      let url = this.linkUrl()
+      let url = this.linkUrl(ts)
       console.log('地址')
       console.log(url)
       this.ws = new WebSocket(url);
     } else if ("MozWebSocket" in window) {
-      let url = this.linkUrl()
+      let url = this.linkUrl(ts)
       console.log('地址')
       console.log(url)
       this.ws = new MozWebSocket(url);
@@ -87,6 +88,7 @@ export class Voc {
   }
 
   renderResult(resultData) {
+    let th = this;
     let jsonData = JSON.parse(resultData);
     if (jsonData.action == "started") {
       // 握手成功
@@ -121,12 +123,16 @@ export class Voc {
     } else if (jsonData.action == "error") {
       // 连接发生错误
       console.log("出错了:", jsonData);
+      if(this.result.err){
+        this.result.err(jsonData)
+      }
     }
   }
 
-  linkUrl = () => {
-    let ts = Date.now() / 1000
-    ts = parseInt(ts)
+  linkUrl = (ts) => {
+    ts=ts.toString()
+    // let ts = new Date.now() / 1000
+    //获取触发函数时的时间戳
     return `wss://rtasr.xfyun.cn/v1/ws?appid=${this.appid}&ts=${ts}&signa=${this.encrypt(ts)}`
   }
 
@@ -142,6 +148,22 @@ export class Voc {
     let result = hmac.digest('base64');
     return result;
   }
+  // encrypt = (ts) => {
+  //   if(typeof(ts)!= 'string'){
+  //     ts = ts.toString()
+  //   }
+  //   let th = this;
+  //   //使用CryptoJS进行MD5加密
+  //   let md5 = CryptoJS.MD5(th.appid + ts);
+  //   console.log(md5)
+  //   //使用CryptoJS进行HMAC-SHA1加密
+  //   let hmac = CryptoJS.HmacSHA1(md5, th.api_key);
+  //   console.log(hmac)
+  //   //使用CryptoJS进行BASE64编码
+  //   let result = CryptoJS.enc.Base64.stringify(hmac);
+  //   console.log(result)
+  //   return result;
+  // }
 }
 
 // import PCMPlayer from 'pcm-player'
@@ -150,7 +172,6 @@ export class Voc {
 //导入js文件,使用其中的audioPlayer
 // import AudioPlayer from './AudioPlay/index.umd.js'
 
-const CryptoJS = require('crypto-js')
 
 export class PPlayer {
   player = null;
