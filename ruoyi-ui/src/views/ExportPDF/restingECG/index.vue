@@ -25,6 +25,7 @@
                 <div class="textbox"><strong>QRS波群:</strong>{{ data.qrs }}ms</div>
                 <div class="textbox"><strong>QTc:</strong>{{ data.qtc }}ms</div>
                 <div class="textbox"><strong>HRV:</strong>{{ data.hrv }}ms</div>
+                <div class="textbox" v-if="false"><strong>心梗机率:</strong>{{ data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险' }}</div>
               </div>
             </div>
             <div class="result1 size mmargin">
@@ -234,7 +235,8 @@ export default {
         pr:'',
         qrs:'',
         qtc:'',
-        hrv:''
+        hrv:'',
+        p_xingeng:''//心梗率
       },
       markData: [
         {xAxis: 0},
@@ -559,6 +561,7 @@ export default {
           _th.data.pv5 = data.result.ecg_analysis_data["PV5_mv"]
           _th.data.sv1 = data.result.ecg_analysis_data["SV1_mv"]
           _th.data.rv5_sv1 = data.result.ecg_analysis_data["RV5_SV1"]
+          _th.data.p_xingeng = data.result.p_xingeng
           _th.data12.dataI = data.result.I
           _th.nArrI = _th.getNewArray(_th.data12.dataI, 1000);
           _th.data12.dataII = data.result.II
@@ -624,7 +627,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -721,7 +724,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -821,7 +824,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -919,7 +922,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -1018,7 +1021,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -1117,7 +1120,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -1216,7 +1219,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -1314,7 +1317,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -1412,7 +1415,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -1510,7 +1513,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -1608,7 +1611,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -1706,7 +1709,7 @@ export default {
               data: _th.data12.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false

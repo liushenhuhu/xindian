@@ -24,6 +24,7 @@
               <div class="textbox"><strong>QRS波群:</strong>{{ data.qrs }}ms</div>
               <div class="textbox"><strong>QTc:</strong>{{ data.qtc }}ms</div>
               <div class="textbox"><strong>HRV:</strong>{{ data.hrv }}ms</div>
+              <div class="textbox"><strong>心梗机率:</strong>{{ data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险' }}</div>
             </div>
           </div>
           <div class="box2">
@@ -268,7 +269,9 @@ export default {
         qrs: '',
         qtc: '',
         hrv: '',
-        pId: ''
+        pId: '',
+        patientSymptom:'暂无症状',
+        p_xingeng:''//心梗率
       },
       data4: {
         x: [],
@@ -333,6 +336,9 @@ export default {
           const second = date.getSeconds().toString().padStart(2, '0');
           this.data.diagnosisData = `${year}-${month}-${day} ${hour}:${minute}:${second}`
         }
+        if (response.data.patientSymptom!=null) {
+          this.data.patientSymptom = response.data.patientSymptom
+ 			  }
         console.log(this.data)
       });
       selectDoctor().then(response => {
@@ -562,6 +568,7 @@ export default {
           _th.data.age = data.result.age
           _th.data.gender = data.result.gender
           _th.data.name = data.result.patientName
+          _th.data.p_xingeng = data.result.p_xingeng
           //_th.data.result = data.result.intelligent_diagnosis
           _th.data.hr = data.result.ecg_analysis_data["平均心率"]
           _th.data.hr = data.result.ecg_analysis_data["平均心率"]
@@ -618,7 +625,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -715,7 +722,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -812,7 +819,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
@@ -907,7 +914,7 @@ export default {
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 4,
+                interval: 3,
               },
               axisTick: {
                 show: false
