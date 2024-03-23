@@ -3056,11 +3056,6 @@ export default {
 
 
 <style scoped lang="scss">
-// ::v-deep .is-multiple {
-//   min-height: 70vh !important;
-//   // border: 1px solid red;
-//   background-color: #000000;
-// }
 body,
 html {
   color: #00afff;
@@ -3095,6 +3090,7 @@ html {
 .patientInformation-xiangxi {
   display: flex;
   justify-content: space-between;
+  // border: 1px solid red;
 }
 .topLeft {
   width: 29.5%;
@@ -3509,6 +3505,7 @@ form input {
   font-size: 1.5vw;
   background-color: red;
   border: 1px solid #136d87;
+  color: #000;
 }
 
 .allin .green {
@@ -3619,6 +3616,12 @@ form input {
   // height: 10vh;
   // border: 1px solid red;
   // height: 9vh;
+  button{
+    margin-right: 1vw;
+    // color: #b33939;
+  }:last-child{
+    margin-right: 0;
+  }
 }
 ::v-deep .btn2 {
     background-color: rgba(255, 255, 255, 0);
