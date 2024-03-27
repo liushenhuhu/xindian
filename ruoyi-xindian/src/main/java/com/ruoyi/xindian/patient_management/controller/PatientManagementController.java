@@ -99,7 +99,7 @@ public class PatientManagementController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
+    @Resource
     private HospitalMapper hospitalMapper;
 
     @Autowired
@@ -245,7 +245,7 @@ public class PatientManagementController extends BaseController {
         } else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
         }
-        return getTableDataInfo(list, resList);
+        return getTableDataInfo(list, resList,2);
     }
 
 
@@ -314,7 +314,7 @@ public class PatientManagementController extends BaseController {
         return resList;
     }
 
-    private TableDataInfo getTableDataInfo(List<PatientManagement> list, ArrayList<PatientManagmentDept> resList) throws Exception {
+    private TableDataInfo getTableDataInfo(List<PatientManagement> list, ArrayList<PatientManagmentDept> resList,Integer type) throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         PatientManagmentDept patientManagmentDept;
         for (PatientManagement management : list) {
@@ -344,11 +344,14 @@ public class PatientManagementController extends BaseController {
             if (StringUtils.isNotEmpty(management.getDPhone())){
                 management.setDPhone(aesUtils.decrypt(management.getDPhone()));
             }
-            MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(aesUtils.encrypt(management.getPatientPhone()));
-            if (medicalHistory!=null){
-                management.setWeight(medicalHistory.getWeight());
-                management.setHeight(medicalHistory.getHeight());
+            if (type!=null&&type==1){
+                MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(aesUtils.encrypt(management.getPatientPhone()));
+                if (medicalHistory!=null){
+                    management.setWeight(medicalHistory.getWeight());
+                    management.setHeight(medicalHistory.getHeight());
+                }
             }
+
             try {
                 management.setSxStatus(0);
                 management.setSxPayStatus(0);
@@ -444,7 +447,7 @@ public class PatientManagementController extends BaseController {
         }  else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
         }
-        return getTableDataInfo(list, resList);
+        return getTableDataInfo(list, resList,1);
     }
 
 
@@ -478,7 +481,7 @@ public class PatientManagementController extends BaseController {
                 list = patientManagementService.selectPatientManagementSPList(patientManagement,pageSize,pageNum);
             }
         }
-        return getTableDataInfo(list, resList);
+        return getTableDataInfo(list, resList,1);
     }
 
     /**

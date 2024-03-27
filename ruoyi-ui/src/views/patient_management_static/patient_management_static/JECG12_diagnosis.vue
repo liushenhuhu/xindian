@@ -383,6 +383,13 @@
           >30天趋势图
           </el-button>
           <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-download"
+              @click="downloadData(scope.row)"
+              v-hasPermi="['patient:patient:inform']"
+          >下载数据</el-button>
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-position"
@@ -867,7 +874,10 @@ export default {
     downloadInform(row) {
       let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
       window.open(routeUrl.href, '_blank');
-    }
+    },
+    downloadData(row){
+      window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG/save/${row.pId}.dat`)
+    },
   }
 };
 </script>
