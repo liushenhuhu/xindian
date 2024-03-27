@@ -140,6 +140,9 @@
                     src="@/assets/images/microphone-1.png"
                     @click="recorderStop()"
                   />
+                  <div class="mkftips" v-show="resultState">
+                    倾听中...
+                  </div>
                 </div>
                 <img
                   class="mesimg3"
@@ -204,6 +207,11 @@ export default {
       voc: null,
       vocState: 0,
       audioPlayer: null,
+      resultTextTemp: '',
+      resultText: '',
+      resultState: 0,
+      audioLock: null,
+      msgOverLock: null,
     };
   },
   computed: {
@@ -237,34 +245,62 @@ export default {
   watch: {},
 
   methods: {
-    endAll(){
+    endAll() {
       let th = this;
-      try{
+      try {
         console.log('清除一切')
         th.audioPlayer.stopAudio()
-        if(this.recorder){
+        if (this.recorder) {
           th.recorderStop()
         }
-      }catch (e) {
+      } catch (e) {
         console.log('错误')
         console.log(e)
       }
     },
     recorderStart() {
-
       let ts = new Date().getTime() / 1000;
       ts = parseInt(ts)
       let th = this
       this.voc = new Voc();
       this.voc.init(ts);
       this.voc.onmessage((text) => {
-        th.customerText = text;
-        th.sentMsg()
+        th.customerText += text;
+        th.resultTextTemp = '';
+        const arr = ['，', '。', '？', '！', '；',]
+        if (arr.includes(th.customerText[0])) {
+          th.customerText = th.customerText.slice(1)
+        }
         console.log('结束消息')
       })
+      this.voc.onOverMsg(() => {
+        th.sentMsg()
+        th.resultState = 0;
+        console.log('结束消息')
+        let audio = new Audio()
+        audio.src = require('@/assets/audio/msgEnd.mp3')
+        audio.play()
+      })
       this.voc.onmiddlemessage((text) => {
-        th.customerText = text;
+        th.resultTextTemp = text;
+        if (!th.resultState) {
+          //首次且仅触发一次
+          //播放本地音频文件
+          th.msgOverLock = Symbol()
+          th.audioPlayer.stopAudio()
+          let audio = new Audio()
+          audio.src = require('@/assets/audio/msgOpen.mp3')
+          audio.play()
+          th.resultState = 1;
+
+        }
         console.log('中间消息')
+      })
+      this.voc.setErrorFunc(() => {
+        this.$message.error('语音启动失败，请再次尝试')
+        setTimeout(() => {
+          this.recorderStop()
+        }, 50)
       })
       this.recorder = new Recorder({
         sampleBits: 16,
@@ -288,7 +324,9 @@ export default {
       })
     },
     recorderStop() {
+      console.log('执行关闭')
       this.vocState = 0;
+      this.resultState = 0;
       //结束对讲
       let th = this;
       this.recorder.stop();
@@ -299,7 +337,6 @@ export default {
       this.recorder.destroy().then(() => {
         th.recorder = null;
       })
-
     },
     formatDateToCustomFormat(date) {
       const year = date.getFullYear();
@@ -326,11 +363,24 @@ export default {
     },
     // 用户发送消息
     sentMsg() {
+      let th = this;
       //console.log("queryParams: ====="+this.queryParams.history);
       this.audioPlayer.stopAudio()
       clearTimeout(this.timer);
       this.showTimer();
       let text = this.customerText.trim();
+      //把text中的小雅替换成空
+      text = text.replace(/小雅/g, "");
+      const arr = ['，', '。', '？', '！', '；',]
+      if (arr.includes(text[0])) {
+        text = text.slice(1)
+      }
+      if (text.length === 0) {
+        return
+      }
+      let lock = Symbol();
+      this.audioLock = lock;
+      th.msgOverLock = lock
       this.queryParams.text = text;
       this.queryParams.createTime = this.formatDateToCustomFormat(new Date());
       if (this.isAddNewWin || this.conversation.length === 0) {
@@ -350,6 +400,7 @@ export default {
             content: text,
           };
           this.info.push(obj);
+          console.log(3)
           this.customerText = "";
           this.isLoading = true;
           proxyRequest(this.queryParams).then((response) => {
@@ -362,8 +413,12 @@ export default {
             };
             this.robotAnswer.push(obj);
             this.appendRobotMsg(response);
-            this.isLoading = false;
-            this.audioPlayer.send(response.response)
+            if (th.audioLock === lock) {
+              this.isLoading = false;
+              if(th.msgOverLock === lock){
+                th.audioPlayer.send(response.response)
+              }
+            }
           });
           this.$nextTick(() => {
             var contentHeight = document.getElementById("right");
@@ -1127,6 +1182,19 @@ export default {
   width: 2.5vw;
   border-radius: 50%;
   cursor: pointer;
+  position: relative;
+}
+
+.mkftips {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  //宽度自适应，被内容撑开
+  width: calc(4em + 12px);
+  text-align: center;
+  transform: translate(-50%, -120%);
+  background-color: rgb(107, 245, 46);
+  color: #fff;
 }
 
 .right-child .mkf-s {

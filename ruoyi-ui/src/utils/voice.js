@@ -1,9 +1,13 @@
 let resultText = "";
 
 const CryptoJS = require('crypto-js');
+
 export class Voc {
   appid = '571c7913'
   api_key = '045b619501631628625c632f1f8de463'
+  openState = '0'
+  timeOutObj = null;
+  oneState = 1;
 
   constructor() {
     this.ws = null;
@@ -12,6 +16,7 @@ export class Voc {
       message: null,
       err: null,
       middleMsg: null,
+      overMsg: null,
     }
   }
 
@@ -46,6 +51,8 @@ export class Voc {
     this.ws.onclose = () => console.log('讯飞科大连接关闭')
     this.ws.onerror = (err) => {
       this.result.err(err)
+      console.log('讯飞科大连接错误')
+      this.ws.close()
     }
   }
 
@@ -64,6 +71,10 @@ export class Voc {
     console.log('关闭连接')
     this.ws.send('{"end": true}')
     this.ws.close()
+    if(this.timeOutObj){
+      clearTimeout(this.timeOutObj)
+      this.timeOutObj = null
+    }
   }
   /**
    * 设置获取最终的消息结果
@@ -71,6 +82,9 @@ export class Voc {
    */
   onmessage = (func) => {
     this.result.message = func
+  }
+  onOverMsg = (func) => {
+    this.result.overMsg = func
   }
   /**
    * 设置获取中间消息结果
@@ -105,8 +119,56 @@ export class Voc {
         });
       });
       const arr = ['，', '。', '？', '！', '；',]
-      if (arr.includes(resultTextTemp[0])) {
+      if (arr.includes(resultTextTemp[0]) && th.openState == 0) {
         resultTextTemp = resultTextTemp.slice(1)
+      }
+      console.log('中间结果：', resultTextTemp)
+      if (resultTextTemp.includes('小雅')) {
+        if(th.openState == 0 ){
+
+        }
+        th.openState = 1;
+      }
+      if (th.openState != 1) return;
+
+      if(this.timeOutObj){
+        clearTimeout(this.timeOutObj)
+        this.timeOutObj = null
+      }
+      if(this.oneState&&resultTextTemp.includes('小雅')){
+        this.timeOutObj = setTimeout(() => {
+          if(th.result.overMsg){
+            th.result.overMsg()
+            console.log('触发发送')
+          }
+          th.openState =0;
+        },10000)
+        th.oneState = 0;
+        resultTextTemp = resultTextTemp.slice(resultTextTemp.indexOf('小雅')+2)
+        if (arr.includes(resultTextTemp[0])) {
+          resultTextTemp = resultTextTemp.slice(1)
+          if(resultTextTemp.length!=0){
+            clearTimeout(this.timeOutObj)
+            this.timeOutObj = null;
+            this.timeOutObj = setTimeout(() => {
+              if(th.result.overMsg){
+                th.result.overMsg()
+                console.log('触发发送')
+              }
+              th.openState =0;
+              th.oneState = 1;
+            },3000)
+          }
+        }
+      }else{
+        this.timeOutObj = setTimeout(() => {
+          if(th.result.overMsg){
+            th.result.overMsg()
+            console.log('触发发送')
+          }
+          th.openState =0;
+          th.oneState = 1;
+        },3000)
       }
       if (this.result.middleMsg) {
         this.result.middleMsg(resultTextTemp)
@@ -114,9 +176,9 @@ export class Voc {
       if (data.cn.st.type == 0) {
         // 【最终】识别结果：
         resultText += resultTextTemp;
+        console.log('最终结果：', resultText)
         if (this.result.message) {
           this.result.message(resultText)
-          //todo 修改为时间或者是关键词发送
         }
         resultTextTemp = ""
         resultText = '';
@@ -124,14 +186,14 @@ export class Voc {
     } else if (jsonData.action == "error") {
       // 连接发生错误
       console.log("出错了:", jsonData);
-      if(this.result.err){
+      if (this.result.err) {
         this.result.err(jsonData)
       }
     }
   }
 
   linkUrl = (ts) => {
-    ts=ts.toString()
+    ts = ts.toString()
     // let ts = new Date.now() / 1000
     //获取触发函数时的时间戳
     return `wss://rtasr.xfyun.cn/v1/ws?appid=${this.appid}&ts=${ts}&signa=${this.encrypt(ts)}&vadMdn=2&pd=medical`
