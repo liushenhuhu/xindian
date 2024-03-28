@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.xindian.log_user.domain.AlertLogCount;
 import com.ruoyi.xindian.log_user.service.AlertLogCountService;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -105,5 +106,15 @@ public class AlertLogCountController extends BaseController
     public AjaxResult remove(@PathVariable Long[] countIds)
     {
         return toAjax(alertLogCountService.deleteAlertLogCountByCountIds(countIds));
+    }
+
+    /**
+     * 查找数据库统计中的所有类型
+     * @return
+     */
+    @GetMapping("/getLogType")
+    public AjaxResult getLogType(){
+        List<ListValueAndLabelVO> logType = alertLogCountService.getLogType();
+        return AjaxResult.success(logType);
     }
 }
