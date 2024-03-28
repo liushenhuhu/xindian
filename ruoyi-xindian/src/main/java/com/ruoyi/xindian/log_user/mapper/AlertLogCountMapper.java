@@ -2,6 +2,7 @@ package com.ruoyi.xindian.log_user.mapper;
 
 import com.ruoyi.xindian.log_user.domain.AlertLogCount;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 
 import java.util.List;
 
@@ -59,6 +60,8 @@ public interface AlertLogCountMapper extends BaseMapper<AlertLogCount> {
      * @return 结果
      */
     public int deleteAlertLogCountByCountIds(Long[] countIds);
+
+    List<ListValueAndLabelVO> getLogType();
 }
 
 

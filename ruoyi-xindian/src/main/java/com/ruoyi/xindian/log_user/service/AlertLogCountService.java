@@ -2,6 +2,7 @@ package com.ruoyi.xindian.log_user.service;
 
 import com.ruoyi.xindian.log_user.domain.AlertLogCount;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 
 import java.util.List;
 
@@ -58,4 +59,6 @@ public interface AlertLogCountService extends IService<AlertLogCount> {
      * @return 结果
      */
     public int deleteAlertLogCountByCountId(Long countId);
+
+    List<ListValueAndLabelVO> getLogType();
 }

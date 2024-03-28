@@ -187,6 +187,9 @@
         <include refid="selectAlertLogCountVo"/>
         where count_id = #{countId}
     </select>
+    <select id="getLogType" resultType="com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO">
+        SELECT `value` as label ,label as value,type  FROM alert_log_select
+    </select>
 
     <insert id="insertAlertLogCount" parameterType="AlertLogCount">
         replace into alert_log_count

@@ -9,6 +9,8 @@ import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.mapper.PatientMapper;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.patient_management.vo.DocVO;
+import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -120,6 +122,22 @@ public class AlertLogCountServiceImpl extends ServiceImpl<AlertLogCountMapper, A
     public int deleteAlertLogCountByCountId(Long countId)
     {
         return alertLogCountMapper.deleteAlertLogCountByCountId(countId);
+    }
+
+    @Override
+    public List<ListValueAndLabelVO> getLogType() {
+        List<ListValueAndLabelVO> logType = alertLogCountMapper.getLogType();
+        DocVO docVO2 = new DocVO();
+        docVO2.setValue("1");
+        docVO2.setLabel("是");
+        DocVO docVO3 = new DocVO();
+        docVO3.setValue("0");
+        docVO3.setLabel("否");
+        for (ListValueAndLabelVO valueAndLabelVO : logType){
+            valueAndLabelVO.getChildren().add(docVO2);
+            valueAndLabelVO.getChildren().add(docVO3);
+        }
+        return logType;
     }
 }
 
