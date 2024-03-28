@@ -87,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <select id="selectList" resultType="com.ruoyi.xindian.log_user.domain.SelectVO" resultMap="SelectResult">
-        select type,value,value as label
+        select type,value,label
         from alert_log_select
 
     </select>

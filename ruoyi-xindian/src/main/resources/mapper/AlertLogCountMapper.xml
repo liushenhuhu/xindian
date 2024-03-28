@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.log_user.mapper.AlertLogCountMapper">
+
+
+    <resultMap type="AlertLogCount" id="AlertLogCountResult">
+        <result property="countId"    column="count_id"    />
+        <result property="logId"    column="log_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="pId"    column="p_id"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="age"    column="age"    />
+        <result property="gender"    column="gender"    />
+        <result property="leadCount"    column="lead_count"    />
+        <result property="zcxdtEcg"    column="zcxdt_ecg"    />
+        <result property="dxxlEcg"    column="dxxl_ecg"    />
+        <result property="ywxlEcg"    column="ywxl_ecg"    />
+        <result property="fxxlEcg"    column="fxxl_ecg"    />
+        <result property="sxxlEcg"    column="sxxl_ecg"    />
+        <result property="jjxxlEcg"    column="jjxxl_ecg"    />
+        <result property="qbxlEcg"    column="qbxl_ecg"    />
+        <result property="sxxdgsEcg"    column="sxxdgs_ecg"    />
+        <result property="ssxxdgsEcg"    column="ssxxdgs_ecg"    />
+        <result property="jjxxdgsEcg"    column="jjxxdgs_ecg"    />
+        <result property="fxxdgsEcg"    column="fxxdgs_ecg"    />
+        <result property="fxybEcg"    column="fxyb_ecg"    />
+        <result property="fxzbEcg"    column="fxzb_ecg"    />
+        <result property="fxtbEcg"    column="fxtb_ecg"    />
+        <result property="sxybEcg"    column="sxyb_ecg"    />
+        <result property="sxzbEcg"    column="sxzb_ecg"    />
+        <result property="jjxybEcg"    column="jjxyb_ecg"    />
+        <result property="jjxzbEcg"    column="jjxzb_ecg"    />
+        <result property="jjxtbEcg"    column="jjxtb_ecg"    />
+        <result property="dxtbEcg"    column="dxtb_ecg"    />
+        <result property="xstbEcg"    column="xstb_ecg"    />
+        <result property="qxtbEcg"    column="qxtb_ecg"    />
+        <result property="xfcdEcg"    column="xfcd_ecg"    />
+        <result property="xfpdEcg"    column="xfpd_ecg"    />
+        <result property="xscdEcg"    column="xscd_ecg"    />
+        <result property="xspdEcg"    column="xspd_ecg"    />
+        <result property="ydfszdEcg"    column="ydfszd_ecg"    />
+        <result property="edfszdEcg"    column="edfszd_ecg"    />
+        <result property="edixfszdEcg"    column="edIxfszd_ecg"    />
+        <result property="ediixfszdEcg"    column="edIIxfszd_ecg"    />
+        <result property="sdfszdEcg"    column="sdfszd_ecg"    />
+        <result property="dfzdEcg"    column="dfzd_ecg"    />
+        <result property="gdfszdEcg"    column="gdfszd_ecg"    />
+        <result property="zqfzzdEcg"    column="zqfzzd_ecg"    />
+        <result property="zhfzzdEcg"    column="zhfzzd_ecg"    />
+        <result property="wqxzszzdEcg"    column="wqxzszzd_ecg"    />
+        <result property="bwqxzszzdEcg"    column="bwqxzszzd_ecg"    />
+        <result property="wqxyszzdEcg"    column="wqxyszzd_ecg"    />
+        <result property="bwqxyszzdEcg"    column="bwqxyszzd_ecg"    />
+        <result property="ftyxsnzdEcg"    column="ftyxsnzd_ecg"    />
+        <result property="sncyxcdEcg"    column="sncyxcd_ecg"    />
+        <result property="xsyjbEcg"    column="xsyjb_ecg"    />
+        <result property="yjzhzEcg"    column="yjzhz_ecg"    />
+        <result property="zxffdEcg"    column="zxffd_ecg"    />
+        <result property="zxsfdEcg"    column="zxsfd_ecg"    />
+        <result property="yxffdEcg"    column="yxffd_ecg"    />
+        <result property="yxsfdEcg"    column="yxsfd_ecg"    />
+        <result property="stgbEcg"    column="stgb_ecg"    />
+        <result property="stTgbEcg"    column="st_tgb_ecg"    />
+        <result property="tbycEcg"    column="tbyc_ecg"    />
+        <result property="qtjqycEcg"    column="qtjqyc_ecg"    />
+        <result property="qtcjqycEcg"    column="qtcjqyc_ecg"    />
+        <result property="kjubEcg"    column="kjub_ecg"    />
+        <result property="zqfjEcg"    column="zqfj_ecg"    />
+        <result property="qjbxjgsEcg"    column="qjbxjgs_ecg"    />
+        <result property="qcbxjgsEcg"    column="qcbxjgs_ecg"    />
+        <result property="qgfbxjgsEcg"    column="qgfbxjgs_ecg"    />
+        <result property="qbxjgsEcg"    column="qbxjgs_ecg"    />
+        <result property="xbxjgsEcg"    column="xbxjgs_ecg"    />
+        <result property="xhbxjgsEcg"    column="xhbxjgs_ecg"    />
+        <result property="hbxjgsEcg"    column="hbxjgs_ecg"    />
+        <result property="xcbbxjgsEcg"    column="xcbbxjgs_ecg"    />
+        <result property="gcbbxjgsEcg"    column="gcbbxjgs_ecg"    />
+        <result property="cbbxjgsEcg"    column="cbbxjgs_ecg"    />
+        <result property="xnmxxjgsEcg"    column="xnmxxjgs_ecg"    />
+        <result property="ysxjgsEcg"    column="ysxjgs_ecg"    />
+        <result property="fsttgxxjgsEcg"    column="fsttgxxjgs_ecg"    />
+        <result property="xjbxjgsEcg"    column="xjbxjgs_ecg"    />
+        <result property="jbxjgsEcg"    column="jbxjgs_ecg"    />
+        <result property="yjxEcg"    column="yjx_ecg"    />
+        <result property="jxEcg"    column="jx_ecg"    />
+        <result property="cjxEcg"    column="cjx_ecg"    />
+        <result property="xdtwjzEcg"    column="xdtwjz_ecg"    />
+        <result property="grxhEcg"    column="grxh_ecg"    />
+        <result property="crrjqEcg"    column="crrjq_ecg"    />
+    </resultMap>
+
+    <sql id="selectAlertLogCountVo">
+        select count_id, log_id, user_id, p_id, record_date, age, gender, lead_count, zcxdt_ecg, dxxl_ecg, ywxl_ecg, fxxl_ecg, sxxl_ecg, jjxxl_ecg, qbxl_ecg, sxxdgs_ecg, ssxxdgs_ecg, jjxxdgs_ecg, fxxdgs_ecg, fxyb_ecg, fxzb_ecg, fxtb_ecg, sxyb_ecg, sxzb_ecg, jjxyb_ecg, jjxzb_ecg, jjxtb_ecg, dxtb_ecg, xstb_ecg, qxtb_ecg, xfcd_ecg, xfpd_ecg, xscd_ecg, xspd_ecg, ydfszd_ecg, edfszd_ecg, edIxfszd_ecg, edIIxfszd_ecg, sdfszd_ecg, dfzd_ecg, gdfszd_ecg, zqfzzd_ecg, zhfzzd_ecg, wqxzszzd_ecg, bwqxzszzd_ecg, wqxyszzd_ecg, bwqxyszzd_ecg, ftyxsnzd_ecg, sncyxcd_ecg, xsyjb_ecg, yjzhz_ecg, zxffd_ecg, zxsfd_ecg, yxffd_ecg, yxsfd_ecg, stgb_ecg, st_tgb_ecg, tbyc_ecg, qtjqyc_ecg, qtcjqyc_ecg, kjub_ecg, zqfj_ecg, qjbxjgs_ecg, qcbxjgs_ecg, qgfbxjgs_ecg, qbxjgs_ecg, xbxjgs_ecg, xhbxjgs_ecg, hbxjgs_ecg, xcbbxjgs_ecg, gcbbxjgs_ecg, cbbxjgs_ecg, xnmxxjgs_ecg, ysxjgs_ecg, fsttgxxjgs_ecg, xjbxjgs_ecg, jbxjgs_ecg, yjx_ecg, jx_ecg, cjx_ecg, xdtwjz_ecg, grxh_ecg, crrjq_ecg from alert_log_count
+    </sql>
+
+    <select id="selectAlertLogCountList" parameterType="AlertLogCount" resultMap="AlertLogCountResult">
+        <include refid="selectAlertLogCountVo"/>
+        <where>
+            <if test="logId != null  and logId != ''"> and log_id = #{logId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+            <if test="recordDate != null "> and record_date = #{recordDate}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="leadCount != null  and leadCount != ''"> and lead_count = #{leadCount}</if>
+            <if test="zcxdtEcg != null "> and zcxdt_ecg = #{zcxdtEcg}</if>
+            <if test="dxxlEcg != null "> and dxxl_ecg = #{dxxlEcg}</if>
+            <if test="ywxlEcg != null "> and ywxl_ecg = #{ywxlEcg}</if>
+            <if test="fxxlEcg != null "> and fxxl_ecg = #{fxxlEcg}</if>
+            <if test="sxxlEcg != null "> and sxxl_ecg = #{sxxlEcg}</if>
+            <if test="jjxxlEcg != null "> and jjxxl_ecg = #{jjxxlEcg}</if>
+            <if test="qbxlEcg != null "> and qbxl_ecg = #{qbxlEcg}</if>
+            <if test="sxxdgsEcg != null "> and sxxdgs_ecg = #{sxxdgsEcg}</if>
+            <if test="ssxxdgsEcg != null "> and ssxxdgs_ecg = #{ssxxdgsEcg}</if>
+            <if test="jjxxdgsEcg != null "> and jjxxdgs_ecg = #{jjxxdgsEcg}</if>
+            <if test="fxxdgsEcg != null "> and fxxdgs_ecg = #{fxxdgsEcg}</if>
+            <if test="fxybEcg != null "> and fxyb_ecg = #{fxybEcg}</if>
+            <if test="fxzbEcg != null "> and fxzb_ecg = #{fxzbEcg}</if>
+            <if test="fxtbEcg != null "> and fxtb_ecg = #{fxtbEcg}</if>
+            <if test="sxybEcg != null "> and sxyb_ecg = #{sxybEcg}</if>
+            <if test="sxzbEcg != null "> and sxzb_ecg = #{sxzbEcg}</if>
+            <if test="jjxybEcg != null "> and jjxyb_ecg = #{jjxybEcg}</if>
+            <if test="jjxzbEcg != null "> and jjxzb_ecg = #{jjxzbEcg}</if>
+            <if test="jjxtbEcg != null "> and jjxtb_ecg = #{jjxtbEcg}</if>
+            <if test="dxtbEcg != null "> and dxtb_ecg = #{dxtbEcg}</if>
+            <if test="xstbEcg != null "> and xstb_ecg = #{xstbEcg}</if>
+            <if test="qxtbEcg != null "> and qxtb_ecg = #{qxtbEcg}</if>
+            <if test="xfcdEcg != null "> and xfcd_ecg = #{xfcdEcg}</if>
+            <if test="xfpdEcg != null "> and xfpd_ecg = #{xfpdEcg}</if>
+            <if test="xscdEcg != null "> and xscd_ecg = #{xscdEcg}</if>
+            <if test="xspdEcg != null "> and xspd_ecg = #{xspdEcg}</if>
+            <if test="ydfszdEcg != null "> and ydfszd_ecg = #{ydfszdEcg}</if>
+            <if test="edfszdEcg != null "> and edfszd_ecg = #{edfszdEcg}</if>
+            <if test="edixfszdEcg != null "> and edIxfszd_ecg = #{edixfszdEcg}</if>
+            <if test="ediixfszdEcg != null "> and edIIxfszd_ecg = #{ediixfszdEcg}</if>
+            <if test="sdfszdEcg != null "> and sdfszd_ecg = #{sdfszdEcg}</if>
+            <if test="dfzdEcg != null "> and dfzd_ecg = #{dfzdEcg}</if>
+            <if test="gdfszdEcg != null "> and gdfszd_ecg = #{gdfszdEcg}</if>
+            <if test="zqfzzdEcg != null "> and zqfzzd_ecg = #{zqfzzdEcg}</if>
+            <if test="zhfzzdEcg != null "> and zhfzzd_ecg = #{zhfzzdEcg}</if>
+            <if test="wqxzszzdEcg != null "> and wqxzszzd_ecg = #{wqxzszzdEcg}</if>
+            <if test="bwqxzszzdEcg != null "> and bwqxzszzd_ecg = #{bwqxzszzdEcg}</if>
+            <if test="wqxyszzdEcg != null "> and wqxyszzd_ecg = #{wqxyszzdEcg}</if>
+            <if test="bwqxyszzdEcg != null "> and bwqxyszzd_ecg = #{bwqxyszzdEcg}</if>
+            <if test="ftyxsnzdEcg != null "> and ftyxsnzd_ecg = #{ftyxsnzdEcg}</if>
+            <if test="sncyxcdEcg != null "> and sncyxcd_ecg = #{sncyxcdEcg}</if>
+            <if test="xsyjbEcg != null "> and xsyjb_ecg = #{xsyjbEcg}</if>
+            <if test="yjzhzEcg != null "> and yjzhz_ecg = #{yjzhzEcg}</if>
+            <if test="zxffdEcg != null "> and zxffd_ecg = #{zxffdEcg}</if>
+            <if test="zxsfdEcg != null "> and zxsfd_ecg = #{zxsfdEcg}</if>
+            <if test="yxffdEcg != null "> and yxffd_ecg = #{yxffdEcg}</if>
+            <if test="yxsfdEcg != null "> and yxsfd_ecg = #{yxsfdEcg}</if>
+            <if test="stgbEcg != null "> and stgb_ecg = #{stgbEcg}</if>
+            <if test="stTgbEcg != null "> and st_tgb_ecg = #{stTgbEcg}</if>
+            <if test="tbycEcg != null "> and tbyc_ecg = #{tbycEcg}</if>
+            <if test="qtjqycEcg != null "> and qtjqyc_ecg = #{qtjqycEcg}</if>
+            <if test="qtcjqycEcg != null "> and qtcjqyc_ecg = #{qtcjqycEcg}</if>
+            <if test="kjubEcg != null "> and kjub_ecg = #{kjubEcg}</if>
+            <if test="zqfjEcg != null "> and zqfj_ecg = #{zqfjEcg}</if>
+            <if test="qjbxjgsEcg != null "> and qjbxjgs_ecg = #{qjbxjgsEcg}</if>
+            <if test="qcbxjgsEcg != null "> and qcbxjgs_ecg = #{qcbxjgsEcg}</if>
+            <if test="qgfbxjgsEcg != null "> and qgfbxjgs_ecg = #{qgfbxjgsEcg}</if>
+            <if test="qbxjgsEcg != null "> and qbxjgs_ecg = #{qbxjgsEcg}</if>
+            <if test="xbxjgsEcg != null "> and xbxjgs_ecg = #{xbxjgsEcg}</if>
+            <if test="xhbxjgsEcg != null "> and xhbxjgs_ecg = #{xhbxjgsEcg}</if>
+            <if test="hbxjgsEcg != null "> and hbxjgs_ecg = #{hbxjgsEcg}</if>
+            <if test="xcbbxjgsEcg != null "> and xcbbxjgs_ecg = #{xcbbxjgsEcg}</if>
+            <if test="gcbbxjgsEcg != null "> and gcbbxjgs_ecg = #{gcbbxjgsEcg}</if>
+            <if test="cbbxjgsEcg != null "> and cbbxjgs_ecg = #{cbbxjgsEcg}</if>
+            <if test="xnmxxjgsEcg != null "> and xnmxxjgs_ecg = #{xnmxxjgsEcg}</if>
+            <if test="ysxjgsEcg != null "> and ysxjgs_ecg = #{ysxjgsEcg}</if>
+            <if test="fsttgxxjgsEcg != null "> and fsttgxxjgs_ecg = #{fsttgxxjgsEcg}</if>
+            <if test="xjbxjgsEcg != null "> and xjbxjgs_ecg = #{xjbxjgsEcg}</if>
+            <if test="jbxjgsEcg != null "> and jbxjgs_ecg = #{jbxjgsEcg}</if>
+            <if test="yjxEcg != null "> and yjx_ecg = #{yjxEcg}</if>
+            <if test="jxEcg != null "> and jx_ecg = #{jxEcg}</if>
+            <if test="cjxEcg != null "> and cjx_ecg = #{cjxEcg}</if>
+            <if test="xdtwjzEcg != null "> and xdtwjz_ecg = #{xdtwjzEcg}</if>
+            <if test="grxhEcg != null "> and grxh_ecg = #{grxhEcg}</if>
+            <if test="crrjqEcg != null "> and crrjq_ecg = #{crrjqEcg}</if>
+        </where>
+    </select>
+
+    <select id="selectAlertLogCountByCountId" parameterType="Long" resultMap="AlertLogCountResult">
+        <include refid="selectAlertLogCountVo"/>
+        where count_id = #{countId}
+    </select>
+
+    <insert id="insertAlertLogCount" parameterType="AlertLogCount">
+        replace into alert_log_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="countId != null">count_id,</if>
+            <if test="logId != null">log_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="pId != null">p_id,</if>
+            <if test="recordDate != null">record_date,</if>
+            <if test="age != null">age,</if>
+            <if test="gender != null">gender,</if>
+            <if test="leadCount != null">lead_count,</if>
+            <if test="zcxdtEcg != null">zcxdt_ecg,</if>
+            <if test="dxxlEcg != null">dxxl_ecg,</if>
+            <if test="ywxlEcg != null">ywxl_ecg,</if>
+            <if test="fxxlEcg != null">fxxl_ecg,</if>
+            <if test="sxxlEcg != null">sxxl_ecg,</if>
+            <if test="jjxxlEcg != null">jjxxl_ecg,</if>
+            <if test="qbxlEcg != null">qbxl_ecg,</if>
+            <if test="sxxdgsEcg != null">sxxdgs_ecg,</if>
+            <if test="ssxxdgsEcg != null">ssxxdgs_ecg,</if>
+            <if test="jjxxdgsEcg != null">jjxxdgs_ecg,</if>
+            <if test="fxxdgsEcg != null">fxxdgs_ecg,</if>
+            <if test="fxybEcg != null">fxyb_ecg,</if>
+            <if test="fxzbEcg != null">fxzb_ecg,</if>
+            <if test="fxtbEcg != null">fxtb_ecg,</if>
+            <if test="sxybEcg != null">sxyb_ecg,</if>
+            <if test="sxzbEcg != null">sxzb_ecg,</if>
+            <if test="jjxybEcg != null">jjxyb_ecg,</if>
+            <if test="jjxzbEcg != null">jjxzb_ecg,</if>
+            <if test="jjxtbEcg != null">jjxtb_ecg,</if>
+            <if test="dxtbEcg != null">dxtb_ecg,</if>
+            <if test="xstbEcg != null">xstb_ecg,</if>
+            <if test="qxtbEcg != null">qxtb_ecg,</if>
+            <if test="xfcdEcg != null">xfcd_ecg,</if>
+            <if test="xfpdEcg != null">xfpd_ecg,</if>
+            <if test="xscdEcg != null">xscd_ecg,</if>
+            <if test="xspdEcg != null">xspd_ecg,</if>
+            <if test="ydfszdEcg != null">ydfszd_ecg,</if>
+            <if test="edfszdEcg != null">edfszd_ecg,</if>
+            <if test="edixfszdEcg != null">edIxfszd_ecg,</if>
+            <if test="ediixfszdEcg != null">edIIxfszd_ecg,</if>
+            <if test="sdfszdEcg != null">sdfszd_ecg,</if>
+            <if test="dfzdEcg != null">dfzd_ecg,</if>
+            <if test="gdfszdEcg != null">gdfszd_ecg,</if>
+            <if test="zqfzzdEcg != null">zqfzzd_ecg,</if>
+            <if test="zhfzzdEcg != null">zhfzzd_ecg,</if>
+            <if test="wqxzszzdEcg != null">wqxzszzd_ecg,</if>
+            <if test="bwqxzszzdEcg != null">bwqxzszzd_ecg,</if>
+            <if test="wqxyszzdEcg != null">wqxyszzd_ecg,</if>
+            <if test="bwqxyszzdEcg != null">bwqxyszzd_ecg,</if>
+            <if test="ftyxsnzdEcg != null">ftyxsnzd_ecg,</if>
+            <if test="sncyxcdEcg != null">sncyxcd_ecg,</if>
+            <if test="xsyjbEcg != null">xsyjb_ecg,</if>
+            <if test="yjzhzEcg != null">yjzhz_ecg,</if>
+            <if test="zxffdEcg != null">zxffd_ecg,</if>
+            <if test="zxsfdEcg != null">zxsfd_ecg,</if>
+            <if test="yxffdEcg != null">yxffd_ecg,</if>
+            <if test="yxsfdEcg != null">yxsfd_ecg,</if>
+            <if test="stgbEcg != null">stgb_ecg,</if>
+            <if test="stTgbEcg != null">st_tgb_ecg,</if>
+            <if test="tbycEcg != null">tbyc_ecg,</if>
+            <if test="qtjqycEcg != null">qtjqyc_ecg,</if>
+            <if test="qtcjqycEcg != null">qtcjqyc_ecg,</if>
+            <if test="kjubEcg != null">kjub_ecg,</if>
+            <if test="zqfjEcg != null">zqfj_ecg,</if>
+            <if test="qjbxjgsEcg != null">qjbxjgs_ecg,</if>
+            <if test="qcbxjgsEcg != null">qcbxjgs_ecg,</if>
+            <if test="qgfbxjgsEcg != null">qgfbxjgs_ecg,</if>
+            <if test="qbxjgsEcg != null">qbxjgs_ecg,</if>
+            <if test="xbxjgsEcg != null">xbxjgs_ecg,</if>
+            <if test="xhbxjgsEcg != null">xhbxjgs_ecg,</if>
+            <if test="hbxjgsEcg != null">hbxjgs_ecg,</if>
+            <if test="xcbbxjgsEcg != null">xcbbxjgs_ecg,</if>
+            <if test="gcbbxjgsEcg != null">gcbbxjgs_ecg,</if>
+            <if test="cbbxjgsEcg != null">cbbxjgs_ecg,</if>
+            <if test="xnmxxjgsEcg != null">xnmxxjgs_ecg,</if>
+            <if test="ysxjgsEcg != null">ysxjgs_ecg,</if>
+            <if test="fsttgxxjgsEcg != null">fsttgxxjgs_ecg,</if>
+            <if test="xjbxjgsEcg != null">xjbxjgs_ecg,</if>
+            <if test="jbxjgsEcg != null">jbxjgs_ecg,</if>
+            <if test="yjxEcg != null">yjx_ecg,</if>
+            <if test="jxEcg != null">jx_ecg,</if>
+            <if test="cjxEcg != null">cjx_ecg,</if>
+            <if test="xdtwjzEcg != null">xdtwjz_ecg,</if>
+            <if test="grxhEcg != null">grxh_ecg,</if>
+            <if test="crrjqEcg != null">crrjq_ecg,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="countId != null">#{countId},</if>
+            <if test="logId != null">#{logId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="pId != null">#{pId},</if>
+            <if test="recordDate != null">#{recordDate},</if>
+            <if test="age != null">#{age},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="leadCount != null">#{leadCount},</if>
+            <if test="zcxdtEcg != null">#{zcxdtEcg},</if>
+            <if test="dxxlEcg != null">#{dxxlEcg},</if>
+            <if test="ywxlEcg != null">#{ywxlEcg},</if>
+            <if test="fxxlEcg != null">#{fxxlEcg},</if>
+            <if test="sxxlEcg != null">#{sxxlEcg},</if>
+            <if test="jjxxlEcg != null">#{jjxxlEcg},</if>
+            <if test="qbxlEcg != null">#{qbxlEcg},</if>
+            <if test="sxxdgsEcg != null">#{sxxdgsEcg},</if>
+            <if test="ssxxdgsEcg != null">#{ssxxdgsEcg},</if>
+            <if test="jjxxdgsEcg != null">#{jjxxdgsEcg},</if>
+            <if test="fxxdgsEcg != null">#{fxxdgsEcg},</if>
+            <if test="fxybEcg != null">#{fxybEcg},</if>
+            <if test="fxzbEcg != null">#{fxzbEcg},</if>
+            <if test="fxtbEcg != null">#{fxtbEcg},</if>
+            <if test="sxybEcg != null">#{sxybEcg},</if>
+            <if test="sxzbEcg != null">#{sxzbEcg},</if>
+            <if test="jjxybEcg != null">#{jjxybEcg},</if>
+            <if test="jjxzbEcg != null">#{jjxzbEcg},</if>
+            <if test="jjxtbEcg != null">#{jjxtbEcg},</if>
+            <if test="dxtbEcg != null">#{dxtbEcg},</if>
+            <if test="xstbEcg != null">#{xstbEcg},</if>
+            <if test="qxtbEcg != null">#{qxtbEcg},</if>
+            <if test="xfcdEcg != null">#{xfcdEcg},</if>
+            <if test="xfpdEcg != null">#{xfpdEcg},</if>
+            <if test="xscdEcg != null">#{xscdEcg},</if>
+            <if test="xspdEcg != null">#{xspdEcg},</if>
+            <if test="ydfszdEcg != null">#{ydfszdEcg},</if>
+            <if test="edfszdEcg != null">#{edfszdEcg},</if>
+            <if test="edixfszdEcg != null">#{edixfszdEcg},</if>
+            <if test="ediixfszdEcg != null">#{ediixfszdEcg},</if>
+            <if test="sdfszdEcg != null">#{sdfszdEcg},</if>
+            <if test="dfzdEcg != null">#{dfzdEcg},</if>
+            <if test="gdfszdEcg != null">#{gdfszdEcg},</if>
+            <if test="zqfzzdEcg != null">#{zqfzzdEcg},</if>
+            <if test="zhfzzdEcg != null">#{zhfzzdEcg},</if>
+            <if test="wqxzszzdEcg != null">#{wqxzszzdEcg},</if>
+            <if test="bwqxzszzdEcg != null">#{bwqxzszzdEcg},</if>
+            <if test="wqxyszzdEcg != null">#{wqxyszzdEcg},</if>
+            <if test="bwqxyszzdEcg != null">#{bwqxyszzdEcg},</if>
+            <if test="ftyxsnzdEcg != null">#{ftyxsnzdEcg},</if>
+            <if test="sncyxcdEcg != null">#{sncyxcdEcg},</if>
+            <if test="xsyjbEcg != null">#{xsyjbEcg},</if>
+            <if test="yjzhzEcg != null">#{yjzhzEcg},</if>
+            <if test="zxffdEcg != null">#{zxffdEcg},</if>
+            <if test="zxsfdEcg != null">#{zxsfdEcg},</if>
+            <if test="yxffdEcg != null">#{yxffdEcg},</if>
+            <if test="yxsfdEcg != null">#{yxsfdEcg},</if>
+            <if test="stgbEcg != null">#{stgbEcg},</if>
+            <if test="stTgbEcg != null">#{stTgbEcg},</if>
+            <if test="tbycEcg != null">#{tbycEcg},</if>
+            <if test="qtjqycEcg != null">#{qtjqycEcg},</if>
+            <if test="qtcjqycEcg != null">#{qtcjqycEcg},</if>
+            <if test="kjubEcg != null">#{kjubEcg},</if>
+            <if test="zqfjEcg != null">#{zqfjEcg},</if>
+            <if test="qjbxjgsEcg != null">#{qjbxjgsEcg},</if>
+            <if test="qcbxjgsEcg != null">#{qcbxjgsEcg},</if>
+            <if test="qgfbxjgsEcg != null">#{qgfbxjgsEcg},</if>
+            <if test="qbxjgsEcg != null">#{qbxjgsEcg},</if>
+            <if test="xbxjgsEcg != null">#{xbxjgsEcg},</if>
+            <if test="xhbxjgsEcg != null">#{xhbxjgsEcg},</if>
+            <if test="hbxjgsEcg != null">#{hbxjgsEcg},</if>
+            <if test="xcbbxjgsEcg != null">#{xcbbxjgsEcg},</if>
+            <if test="gcbbxjgsEcg != null">#{gcbbxjgsEcg},</if>
+            <if test="cbbxjgsEcg != null">#{cbbxjgsEcg},</if>
+            <if test="xnmxxjgsEcg != null">#{xnmxxjgsEcg},</if>
+            <if test="ysxjgsEcg != null">#{ysxjgsEcg},</if>
+            <if test="fsttgxxjgsEcg != null">#{fsttgxxjgsEcg},</if>
+            <if test="xjbxjgsEcg != null">#{xjbxjgsEcg},</if>
+            <if test="jbxjgsEcg != null">#{jbxjgsEcg},</if>
+            <if test="yjxEcg != null">#{yjxEcg},</if>
+            <if test="jxEcg != null">#{jxEcg},</if>
+            <if test="cjxEcg != null">#{cjxEcg},</if>
+            <if test="xdtwjzEcg != null">#{xdtwjzEcg},</if>
+            <if test="grxhEcg != null">#{grxhEcg},</if>
+            <if test="crrjqEcg != null">#{crrjqEcg},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAlertLogCount" parameterType="AlertLogCount">
+        update alert_log_count
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logId != null">log_id = #{logId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="pId != null">p_id = #{pId},</if>
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="leadCount != null">lead_count = #{leadCount},</if>
+            <if test="zcxdtEcg != null">zcxdt_ecg = #{zcxdtEcg},</if>
+            <if test="dxxlEcg != null">dxxl_ecg = #{dxxlEcg},</if>
+            <if test="ywxlEcg != null">ywxl_ecg = #{ywxlEcg},</if>
+            <if test="fxxlEcg != null">fxxl_ecg = #{fxxlEcg},</if>
+            <if test="sxxlEcg != null">sxxl_ecg = #{sxxlEcg},</if>
+            <if test="jjxxlEcg != null">jjxxl_ecg = #{jjxxlEcg},</if>
+            <if test="qbxlEcg != null">qbxl_ecg = #{qbxlEcg},</if>
+            <if test="sxxdgsEcg != null">sxxdgs_ecg = #{sxxdgsEcg},</if>
+            <if test="ssxxdgsEcg != null">ssxxdgs_ecg = #{ssxxdgsEcg},</if>
+            <if test="jjxxdgsEcg != null">jjxxdgs_ecg = #{jjxxdgsEcg},</if>
+            <if test="fxxdgsEcg != null">fxxdgs_ecg = #{fxxdgsEcg},</if>
+            <if test="fxybEcg != null">fxyb_ecg = #{fxybEcg},</if>
+            <if test="fxzbEcg != null">fxzb_ecg = #{fxzbEcg},</if>
+            <if test="fxtbEcg != null">fxtb_ecg = #{fxtbEcg},</if>
+            <if test="sxybEcg != null">sxyb_ecg = #{sxybEcg},</if>
+            <if test="sxzbEcg != null">sxzb_ecg = #{sxzbEcg},</if>
+            <if test="jjxybEcg != null">jjxyb_ecg = #{jjxybEcg},</if>
+            <if test="jjxzbEcg != null">jjxzb_ecg = #{jjxzbEcg},</if>
+            <if test="jjxtbEcg != null">jjxtb_ecg = #{jjxtbEcg},</if>
+            <if test="dxtbEcg != null">dxtb_ecg = #{dxtbEcg},</if>
+            <if test="xstbEcg != null">xstb_ecg = #{xstbEcg},</if>
+            <if test="qxtbEcg != null">qxtb_ecg = #{qxtbEcg},</if>
+            <if test="xfcdEcg != null">xfcd_ecg = #{xfcdEcg},</if>
+            <if test="xfpdEcg != null">xfpd_ecg = #{xfpdEcg},</if>
+            <if test="xscdEcg != null">xscd_ecg = #{xscdEcg},</if>
+            <if test="xspdEcg != null">xspd_ecg = #{xspdEcg},</if>
+            <if test="ydfszdEcg != null">ydfszd_ecg = #{ydfszdEcg},</if>
+            <if test="edfszdEcg != null">edfszd_ecg = #{edfszdEcg},</if>
+            <if test="edixfszdEcg != null">edIxfszd_ecg = #{edixfszdEcg},</if>
+            <if test="ediixfszdEcg != null">edIIxfszd_ecg = #{ediixfszdEcg},</if>
+            <if test="sdfszdEcg != null">sdfszd_ecg = #{sdfszdEcg},</if>
+            <if test="dfzdEcg != null">dfzd_ecg = #{dfzdEcg},</if>
+            <if test="gdfszdEcg != null">gdfszd_ecg = #{gdfszdEcg},</if>
+            <if test="zqfzzdEcg != null">zqfzzd_ecg = #{zqfzzdEcg},</if>
+            <if test="zhfzzdEcg != null">zhfzzd_ecg = #{zhfzzdEcg},</if>
+            <if test="wqxzszzdEcg != null">wqxzszzd_ecg = #{wqxzszzdEcg},</if>
+            <if test="bwqxzszzdEcg != null">bwqxzszzd_ecg = #{bwqxzszzdEcg},</if>
+            <if test="wqxyszzdEcg != null">wqxyszzd_ecg = #{wqxyszzdEcg},</if>
+            <if test="bwqxyszzdEcg != null">bwqxyszzd_ecg = #{bwqxyszzdEcg},</if>
+            <if test="ftyxsnzdEcg != null">ftyxsnzd_ecg = #{ftyxsnzdEcg},</if>
+            <if test="sncyxcdEcg != null">sncyxcd_ecg = #{sncyxcdEcg},</if>
+            <if test="xsyjbEcg != null">xsyjb_ecg = #{xsyjbEcg},</if>
+            <if test="yjzhzEcg != null">yjzhz_ecg = #{yjzhzEcg},</if>
+            <if test="zxffdEcg != null">zxffd_ecg = #{zxffdEcg},</if>
+            <if test="zxsfdEcg != null">zxsfd_ecg = #{zxsfdEcg},</if>
+            <if test="yxffdEcg != null">yxffd_ecg = #{yxffdEcg},</if>
+            <if test="yxsfdEcg != null">yxsfd_ecg = #{yxsfdEcg},</if>
+            <if test="stgbEcg != null">stgb_ecg = #{stgbEcg},</if>
+            <if test="stTgbEcg != null">st_tgb_ecg = #{stTgbEcg},</if>
+            <if test="tbycEcg != null">tbyc_ecg = #{tbycEcg},</if>
+            <if test="qtjqycEcg != null">qtjqyc_ecg = #{qtjqycEcg},</if>
+            <if test="qtcjqycEcg != null">qtcjqyc_ecg = #{qtcjqycEcg},</if>
+            <if test="kjubEcg != null">kjub_ecg = #{kjubEcg},</if>
+            <if test="zqfjEcg != null">zqfj_ecg = #{zqfjEcg},</if>
+            <if test="qjbxjgsEcg != null">qjbxjgs_ecg = #{qjbxjgsEcg},</if>
+            <if test="qcbxjgsEcg != null">qcbxjgs_ecg = #{qcbxjgsEcg},</if>
+            <if test="qgfbxjgsEcg != null">qgfbxjgs_ecg = #{qgfbxjgsEcg},</if>
+            <if test="qbxjgsEcg != null">qbxjgs_ecg = #{qbxjgsEcg},</if>
+            <if test="xbxjgsEcg != null">xbxjgs_ecg = #{xbxjgsEcg},</if>
+            <if test="xhbxjgsEcg != null">xhbxjgs_ecg = #{xhbxjgsEcg},</if>
+            <if test="hbxjgsEcg != null">hbxjgs_ecg = #{hbxjgsEcg},</if>
+            <if test="xcbbxjgsEcg != null">xcbbxjgs_ecg = #{xcbbxjgsEcg},</if>
+            <if test="gcbbxjgsEcg != null">gcbbxjgs_ecg = #{gcbbxjgsEcg},</if>
+            <if test="cbbxjgsEcg != null">cbbxjgs_ecg = #{cbbxjgsEcg},</if>
+            <if test="xnmxxjgsEcg != null">xnmxxjgs_ecg = #{xnmxxjgsEcg},</if>
+            <if test="ysxjgsEcg != null">ysxjgs_ecg = #{ysxjgsEcg},</if>
+            <if test="fsttgxxjgsEcg != null">fsttgxxjgs_ecg = #{fsttgxxjgsEcg},</if>
+            <if test="xjbxjgsEcg != null">xjbxjgs_ecg = #{xjbxjgsEcg},</if>
+            <if test="jbxjgsEcg != null">jbxjgs_ecg = #{jbxjgsEcg},</if>
+            <if test="yjxEcg != null">yjx_ecg = #{yjxEcg},</if>
+            <if test="jxEcg != null">jx_ecg = #{jxEcg},</if>
+            <if test="cjxEcg != null">cjx_ecg = #{cjxEcg},</if>
+            <if test="xdtwjzEcg != null">xdtwjz_ecg = #{xdtwjzEcg},</if>
+            <if test="grxhEcg != null">grxh_ecg = #{grxhEcg},</if>
+            <if test="crrjqEcg != null">crrjq_ecg = #{crrjqEcg},</if>
+        </trim>
+        where count_id = #{countId}
+    </update>
+
+    <delete id="deleteAlertLogCountByCountId" parameterType="Long">
+        delete from alert_log_count where count_id = #{countId}
+    </delete>
+
+    <delete id="deleteAlertLogCountByCountIds" parameterType="String">
+        delete from alert_log_count where count_id in
+        <foreach item="countId" collection="array" open="(" separator="," close=")">
+            #{countId}
+        </foreach>
+    </delete>
+</mapper>
