@@ -1032,6 +1032,8 @@ export default {
         });
       }
     },
+
+    
     //获取心电数据
     getMessage() {
       var Iy = [];
