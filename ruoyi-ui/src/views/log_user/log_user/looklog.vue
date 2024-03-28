@@ -2808,7 +2808,7 @@ export default {
       console.log(this.message.user_id);
       console.log(this.options);
       var that = this;
-      return;
+      // return;
 
       $.ajax({
         cache: true,
