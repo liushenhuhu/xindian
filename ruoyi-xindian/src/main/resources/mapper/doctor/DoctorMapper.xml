@@ -49,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         doctor.is_doc,
         doctor.outpatient_id,
         doctor.special_id,
+        doctor.account_status,
         department.department_name,
         department.hospital_code,
         department.department_id
@@ -84,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 </foreach>
             </if>
         </where>
+        order by account_status asc,doctor_id desc
     </select>
 
     <select id="selectDoctorByDoctorId" parameterType="Long" resultMap="DoctorResult">
