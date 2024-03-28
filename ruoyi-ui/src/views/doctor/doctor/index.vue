@@ -105,6 +105,12 @@
       <el-table-column label="医院" align="center" prop="hospital" />
       <el-table-column label="科室" align="center" prop="departmentName" />
       <el-table-column label="职称" align="center" prop="professional" />
+      <el-table-column label="状态" align="center" prop="accountStatus" >
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.accountStatus === '0'" size="small">正常</el-tag>
+          <el-tag v-else-if="scope.row.accountStatus === '1'" size="small" type="danger">停用</el-tag>
+        </template>
+      </el-table-column>
 <!--      <el-table-column label="关联设备" align="center" prop="equipmentList" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
