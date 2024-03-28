@@ -25,18 +25,18 @@
         <el-button type="success" id="btn1" class="btn1" @click="submit()">
           提交
         </el-button>
-        <el-button class="btn2" id="btn2" @click="suspected"
+        <el-button class="btn2" id="btn2" @click="suspected()"
           >是否疑似病理</el-button
         >
         <el-button
           class="next"
           v-if="state"
-          @click="prev"
+          @click="prev()"
           type="primary"
           :loading="loading"
           >上一个</el-button
         >
-        <el-button class="next" v-if="state" @click="next" :loading="loading"
+        <el-button class="next" v-if="state" @click="next()" :loading="loading"
           >下一个</el-button
         >
       </div>
@@ -554,7 +554,7 @@
 
               <div class="duoxuan">
                 <div>
-                  <div v-for="group in options" :key="group.label">
+                  <div v-for="group in options" :key="index">
                     <div class="fenzuzhuti">
                       {{ group.label }}
                     </div>
@@ -566,12 +566,17 @@
                           :key="item.value"
                         >
                           <el-checkbox
+                            :checked="item.value == logUserList[index].logType"
                             v-model="item.xuanzhongzhuangtai"
                             :label="item.label"
                             border
                             size="mini"
+                            :true-label="1"
+                            :false-label="0"
                           >
-                            <!-- {{ item.label }} -->
+                            <!-- {{item.value}} -->
+                            <!-- {{item.value==logUserList[index].logType}} -->
+                            <!-- {{index}} -->
                           </el-checkbox>
                         </li>
                       </ul>
@@ -653,6 +658,9 @@ import {
   islabel,
   listLog_user,
 } from "@/api/log_user/log_user";
+
+//单导预警页面数据
+import { listAlert_log } from "@/api/alert_log/alert_log";
 import $ from "jquery";
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import de from "element-ui/src/locale/lang/de";
@@ -829,29 +837,30 @@ export default {
     },
   },
   created() {
+    // console.log(this.typeObj);
     // console.log('created')
-    console.log(this.$route.query.queryParams);
+    console.log("刚进查看标注页面时，路由上的值");
+    console.log(this.$route.query);
+    // console.log(this.$route.query.queryParams);
+
     if (this.$route.query.logId) {
-      console.log(this.$route.query.anoStatus);
-      this.anoStatus = this.$route.query.anoStatus;
-      this.message.logid = this.$route.query.logId;
+      // console.log(this.$route.query.anoStatus);//null
+      this.anoStatus = this.$route.query.anoStatus; //null
+      this.message.logid = this.$route.query.logId; //8eba952e-1a24-5598-ac8d-7f6ad47a0275
       // this.message.logType = this.$route.query.logType;
-      this.message.user_id = this.$route.query.userId;
+      this.message.user_id = this.$route.query.userId; //0
       // this.value=this.$route.query.logType;
-      this.query.logId = this.$route.query.logId;
-      this.query.userId = this.$route.query.userId;
-      this.pageNum = this.$route.query.pageNum;
-      this.pageSize = this.$route.query.pageSize;
-      this.typeObj = this.$route.query.queryParams;
+      this.query.logId = this.$route.query.logId; //8eba952e-1a24-5598-ac8d-7f6ad47a0275
+      this.query.userId = this.$route.query.userId; //0
+      this.pageNum = this.$route.query.pageNum; //1
+      this.pageSize = this.$route.query.pageSize; //10
+      this.typeObj = this.$route.query.queryParams; //{}
 
-      if (this.$route.query.state || this.$route.query.state == 1) {
-        this.state = false;
-      } else {
-        this.state = true;
-      }
-
-      this.getLogUserList();
+      // 获取预警类选项型表
       this.getSelectList();
+      // 获取数据患者列表 数据标注
+      this.getLogUserList();
+
       this.getLabel();
       // console.log("ttt"+this.options);
     }
@@ -865,39 +874,163 @@ export default {
     goTarget(href) {
       window.open(href, "_blank");
     },
+    // 获取预警类型表
     getSelectList() {
       selectList().then((res) => {
-        console.log(res);
         this.options = res.data;
+        console.log("这是获取预警类型表this.options");
+
+        //this.options[0].options[0].xuanzhongzhuangtai = true
         console.log(this.options);
       });
     },
-    async getLogUserList() {
-      this.typeObj = this.$route.query.queryParams;
-      let queryParams = this.typeObj;
-      let obj = {
-        logId: queryParams.logId ? queryParams.logId : "",
-        userId: queryParams.userId ? queryParams.userId : "",
-        pageNum: this.pageNum,
-        pageSize: this.pageSize,
-        anoStatus: this.anoStatus,
-        logTime: queryParams.logTime,
-        logType: queryParams.logType,
-        eventName: queryParams.eventName,
-        eventDescription: queryParams.eventDescription,
-        pId: queryParams.pId,
-        isSuspected: queryParams.isSuspected,
-      };
 
-      await listLog_user(obj).then((response) => {
-        this.logUserList = response.rows;
-        this.logUserListTotal = response.total;
-        this.logUserList.forEach((item, index) => {
-          if (this.message.logid == item.logId) {
-            this.index = index;
-          }
+    // 获取数据标注页面数据
+    async getLogUserList() {
+      // // console.log(this.typeObj);//undefined
+      // this.typeObj = this.$route.query.queryParams;
+      // let queryParams = this.typeObj;
+      // // console.log(this.typeObj);//undefined
+
+      // let obj = {
+      //   logId: queryParams.logId ? queryParams.logId : "",
+      //   // logId:userId,
+      //   userId: queryParams.userId ? queryParams.userId : "",
+      //   // userId:userId,
+
+      //   pageNum: this.pageNum,
+      //   pageSize: this.pageSize,
+      //   anoStatus: this.anoStatus,
+
+      //   logTime: queryParams.logTime,
+      //   logType: queryParams.logType,
+      //   eventName: queryParams.eventName,
+      //   eventDescription: queryParams.eventDescription,
+      //   pId: queryParams.pId,
+      //   isSuspected: queryParams.isSuspected,
+      // };
+      // console.log("查看标注页获取患者信息所需要的值");
+      // console.log(obj);
+
+      if (this.$route.query.state == 1) {
+        this.typeObj = this.$route.query.queryParams;
+        let queryParams = this.typeObj;
+        // console.log(this.typeObj);//undefined
+
+        let obj = {
+          logId: queryParams.logId ? queryParams.logId : "",
+          // logId:userId,
+          userId: queryParams.userId ? queryParams.userId : "",
+          // userId:userId,
+
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          anoStatus: this.anoStatus,
+
+          logTime: queryParams.logTime,
+          logType: queryParams.logType,
+          eventName: queryParams.eventName,
+          eventDescription: queryParams.eventDescription,
+          pId: queryParams.pId,
+          isSuspected: queryParams.isSuspected,
+        };
+
+        console.log("查看标注页获取患者信息所需要的值");
+        console.log(obj);
+        await listAlert_log(obj).then((response) => {
+          this.logUserList = response.rows;
+          console.log("这是从单导预警页面跳转到查看标注页面获取到的数据");
+          console.log(this.logUserList);
+
+          this.logUserListTotal = response.total;
+
+          this.logUserList.forEach((item, index) => {
+            // console.log(item);
+            if (this.message.logid == item.logId) {
+              this.index = index;
+            }
+          });
+          // console.log(this.logUserList);
         });
-      });
+      } else if (this.$route.query.state == 12) {
+        // console.log(this.typeObj);//undefined
+        this.typeObj = this.$route.query.queryParams;
+        let queryParams = this.typeObj;
+        // console.log(this.typeObj);//undefined
+
+        let obj = {
+          logId: queryParams.logId ? queryParams.logId : "",
+          // logId:userId,
+          userId: this.$route.query.userId ? this.$route.query.userId : "",
+          // userId:userId,
+          ecgType: this.$route.query.ecgType,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          anoStatus: this.anoStatus,
+
+          logTime: queryParams.logTime,
+          logType: queryParams.logType,
+          eventName: queryParams.eventName,
+          eventDescription: queryParams.eventDescription,
+          pId: queryParams.pId,
+          isSuspected: queryParams.isSuspected,
+        };
+        console.log("查看标注页获取患者信息所需要的值");
+        console.log(obj);
+        await listAlert_log(obj).then((response) => {
+          this.logUserList = response.rows;
+
+          console.log("这是从12导预警页面跳转到查看标注页面获取到的数据");
+          console.log(this.logUserList);
+
+          this.logUserListTotal = response.total;
+
+          this.logUserList.forEach((item, index) => {
+            // console.log(item);
+            if (this.message.logid == item.logId) {
+              this.index = index;
+            }
+          });
+          // console.log(this.logUserList);
+        });
+      } else {
+        // console.log(this.typeObj);//undefined
+        this.typeObj = this.$route.query.queryParams;
+        let queryParams = this.typeObj;
+        // console.log(this.typeObj);//undefined
+
+        let obj = {
+          logId: queryParams.logId ? queryParams.logId : "",
+          // logId:userId,
+          userId: this.$route.query.userId ? this.$route.query.userId : "",
+          // userId:userId,
+          ecgType: this.$route.query.ecgType,
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          anoStatus: this.anoStatus,
+
+          logTime: queryParams.logTime,
+          logType: queryParams.logType,
+          eventName: queryParams.eventName,
+          eventDescription: queryParams.eventDescription,
+          pId: queryParams.pId,
+          isSuspected: queryParams.isSuspected,
+        };
+        await listLog_user(obj).then((response) => {
+          this.logUserList = response.rows;
+          // 患者的数组
+          console.log("这是从数据标注页面跳转到查看标注页面获取到的数据");
+          console.log(this.logUserList);
+
+          this.logUserListTotal = response.total;
+          this.logUserList.forEach((item, index) => {
+            if (this.message.logid == item.logId) {
+              this.index = index;
+            }
+          });
+          // console.log(this.logUserList);
+        });
+      }
     },
     //获取心电数据
     getMessage() {
@@ -2369,8 +2502,11 @@ export default {
     },
     //获取标注数据
     getLabel() {
+      console.log("这是this.query");
+      console.log(this.query);
       getLabel(this.query)
         .then((res) => {
+          console.log("2400");
           console.log(res);
           if (res.data.waveLabel != null) {
             this.subData = JSON.parse(res.data.waveLabel);
@@ -2572,6 +2708,14 @@ export default {
       if (this.anoStatus != null) {
         anoStatus = `&anoStatus=${this.anoStatus}`;
       }
+
+      // 清空选中项2024.3.27 9.07
+      for (let i = 0; i < this.options.length; i++) {
+        let options = this.options[i].options;
+        for (let j = 0; j < options.length; j++) {
+          options[j].xuanzhongzhuangtai = 0; // 添加新的键值对
+        }
+      }
       var newUrl =
         this.$route.path +
         `?logId=${this.message.logid}&userId=${this.message.user_id}&pageNum=${this.pageNum}&pageSize=${this.pageSize}` +
@@ -2580,9 +2724,13 @@ export default {
       window.history.replaceState("", "", newUrl);
       this.getMessage();
     },
+    // 点击下一页触发事件
     async next() {
       this.loading = true;
       this.index++;
+
+      console.log(this.logUserList.length); //0
+
       if (this.index >= this.logUserList.length) {
         if (
           (this.pageNum - 1) * this.pageSize + this.logUserList.length >=
@@ -2593,17 +2741,38 @@ export default {
           this.loading = false;
           return;
         }
+        // console.log("已经进来了");
         this.pageNum++;
         await this.getLogUserList();
         this.index = 0;
       }
-      console.log(this.logUserList[this.index]);
+      console.log(
+        "点击下一页，触发获取getLogUserList函数，获得10条患者数据，下面是患者数据"
+      );
+      // console.log(this.logUserList[this.index]);
+      console.log(this.logUserList);
+
+      console.log("查看logUserList");
+      console.log(this.logUserList[this.index].logId);
+      console.log(this.logUserList[this.index].userId);
+      console.log("查看logUserList");
+
       this.message.logid = this.logUserList[this.index].logId;
       this.message.user_id = this.logUserList[this.index].userId;
       let anoStatus = "";
+
       if (this.anoStatus != null) {
         anoStatus = `&anoStatus=${this.anoStatus}`;
       }
+
+      // 清空选中项2024.3.27 9.07
+      for (let i = 0; i < this.options.length; i++) {
+        let options = this.options[i].options;
+        for (let j = 0; j < options.length; j++) {
+          options[j].xuanzhongzhuangtai = 0; // 添加新的键值对
+        }
+      }
+
       var newUrl =
         this.$route.path +
         `?logId=${this.message.logid}&userId=${this.message.user_id}&pageNum=${this.pageNum}&pageSize=${this.pageSize}` +
@@ -2612,26 +2781,35 @@ export default {
       window.history.replaceState("", "", newUrl);
       this.getMessage();
     },
+
+    // 点击提交
     submit() {
+      console.log("点击提交时的this.options");
+      console.log(this.options);
       let trueValues = [];
 
       for (let i = 0; i < this.options.length; i++) {
         let options = this.options[i].options;
         for (let j = 0; j < options.length; j++) {
-          if (options[j].xuanzhongzhuangtai === true) {
+          if (options[j].xuanzhongzhuangtai === 1) {
             trueValues.push(options[j].value);
           }
         }
       }
+
       this.value = trueValues.join();
       console.log("这是选中的值" + trueValues);
       console.log(this.message.logid);
       console.log(this.value);
       console.log(this.noise_list);
       console.log(this.noise_level);
+      // 数据标注中有
+      // 单导预警中没有
       console.log(this.message.user_id);
       console.log(this.options);
       var that = this;
+      return;
+
       $.ajax({
         cache: true,
         type: "POST",
@@ -2658,10 +2836,12 @@ export default {
       for (let i = 0; i < this.options.length; i++) {
         let options = this.options[i].options;
         for (let j = 0; j < options.length; j++) {
-          options[j].xuanzhongzhuangtai = false; // 添加新的键值对
+          options[j].xuanzhongzhuangtai = 0; // 添加新的键值对
         }
       }
       console.log(this.options);
+
+      // 标注成功
       islabel({
         logType: this.value,
         logId: this.message.logid,
@@ -2669,6 +2849,7 @@ export default {
         isSuspected: this.isSuspected ? 1 : 0,
       });
     },
+
     submitData() {
       this.query.waveLabel = JSON.stringify(this.subData);
       console.log(this.subData);
@@ -3220,7 +3401,7 @@ html {
     color: #136d87;
     border: 1px solid #136d87;
     width: 30%;
-    margin: 0 ;
+    margin: 0;
     margin-left: 0;
     padding: 10px 0;
   }
@@ -3537,7 +3718,7 @@ form input {
   box-shadow: 0 0px 0px #ccc;
 }
 .duoxuan {
-  border: 1px solid #136d87;
+  // border: 1px solid #136d87;
   width: 100%;
   // height: 100px;
   // text-align: center;
@@ -3563,7 +3744,6 @@ form input {
   overflow-y: auto;
   //  overflow: hidden;
   -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
-
 }
 /* 隐藏滚动条但仍可滚动 */
 .biaodan::-webkit-scrollbar {
@@ -3611,27 +3791,28 @@ form input {
   display: flex;
   margin-top: 1vh;
   // justify-content: space-around;
-  justify-content:flex-end;
+  justify-content: flex-end;
   align-items: center;
   // height: 10vh;
   // border: 1px solid red;
   // height: 9vh;
-  button{
+  button {
     margin-right: 1vw;
     // color: #b33939;
-  }:last-child{
+  }
+  :last-child {
     margin-right: 0;
   }
 }
 ::v-deep .btn2 {
-    background-color: rgba(255, 255, 255, 0);
-    color: #136d87;
-    border: 1px solid #136d87;
-    width: 8vw;
-    margin: 0 ;
-    margin-left: 0;
-    padding: 10px 0;
-  }
+  background-color: rgba(255, 255, 255, 0);
+  color: #136d87;
+  border: 1px solid #136d87;
+  width: 8vw;
+  margin: 0;
+  margin-left: 0;
+  padding: 10px 0;
+}
 </style>
 
 
