@@ -543,6 +543,7 @@ export default {
           isSuspected: this.queryParams.isSuspected,
           anoStatus: this.queryParams.anoStatus,
           queryParams: this.queryParams,
+          state: 12,
         },
       });
     },
