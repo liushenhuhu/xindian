@@ -553,27 +553,29 @@
               </el-select> -->
 
               <div class="duoxuan">
-                <div>
-                  <div v-for="group in options" :key="index">
+                <el-checkbox-group v-model="trueValues">
+                  <div v-for="(group,index) in options" :key="index">
                     <div class="fenzuzhuti">
                       {{ group.label }}
                     </div>
                     <div class="fenzuzhutizi">
                       <ul class="xiaoul">
                         <li
-                          v-for="item in group.options"
+                          v-for="(item,i) in group.options"
                           class="xiaoli"
-                          :key="item.value"
+                          :key="i"
                         >
                           <el-checkbox
-                            :checked="item.value == logUserList[index].logType"
-                            v-model="item.xuanzhongzhuangtai"
-                            :label="item.label"
+                            :checked="item.leixing"
+                            :label="item.value"
                             border
                             size="mini"
-                            :true-label="1"
-                            :false-label="0"
                           >
+                            {{ item.value }}
+                            <!-- {{item.leixing}}
+                            {{item.value == logUserList[index].logType}} -->
+                            <!-- v-model="item.xuanzhongzhuangtai" 选定之后的状态-->
+                            <!-- :checked="item.value == logUserList[index].logType" -->
                             <!-- {{item.value}} -->
                             <!-- {{item.value==logUserList[index].logType}} -->
                             <!-- {{index}} -->
@@ -583,7 +585,7 @@
                     </div>
                     <div class="xian"></div>
                   </div>
-                </div>
+                </el-checkbox-group>
               </div>
             </form>
             <!-- <div class="tijiao">
@@ -591,7 +593,7 @@
               提交
               </el-button>
               <el-button class="btn2" id="btn2" @click="suspected">是否疑似病理</el-button>
-              
+
                 <el-button
                   class="next"
                   v-if="state"
@@ -602,7 +604,7 @@
                 >
                 <el-button class="next" v-if="state" @click="next" :loading="loading"
                   >下一个</el-button>
-              
+
 
             </div> -->
           </div>
@@ -658,7 +660,7 @@ import {
   islabel,
   listLog_user,
 } from "@/api/log_user/log_user";
-
+import {addCount} from "@/api/alert_log_count/count"
 //单导预警页面数据
 import { listAlert_log } from "@/api/alert_log/alert_log";
 import $ from "jquery";
@@ -673,6 +675,8 @@ export default {
   },
   data() {
     return {
+      testArray:[],
+      trueValues:[],
       lead: false,
       tap: {
         P1: false,
@@ -860,9 +864,10 @@ export default {
       this.getSelectList();
       // 获取数据患者列表 数据标注
       this.getLogUserList();
-
+      // this.getSelectList();
       this.getLabel();
       // console.log("ttt"+this.options);
+      // this.xunhuan()
     }
   },
   mounted() {
@@ -871,10 +876,17 @@ export default {
     // console.log(this.options);
   },
   methods: {
+    clicktest(value){
+      if(this.testArray.includes(value)){
+        this.testArray.splice(this.testArray.indexOf(value),1)
+      }else{
+        this.testArray.push(value)
+      }
+    },
     goTarget(href) {
       window.open(href, "_blank");
     },
-    // 获取预警类型表
+    // 1获取预警类型表
     getSelectList() {
       selectList().then((res) => {
         this.options = res.data;
@@ -882,51 +894,45 @@ export default {
 
         //this.options[0].options[0].xuanzhongzhuangtai = true
         console.log(this.options);
+        // console.log(this.logUserList);
+
+        // for (let i = 0; i < this.options.length; i++) {
+        //   let options = this.options[i].options;
+        //   for (let j = 0; j < options.length; j++) {
+        //     options[j].xuanzhongzhuangtai = false; // 添加新的键值对
+        //   }
+        // }
+        
       });
     },
+    // xunhuan(){
+    //   for (let i = 0; i < this.options.length; i++) {
+    //       let options = this.options[i].options;
+    //       for (let j = 0; j < options.length; j++) {
+    //         if (this.logUserList[i].logType == options[j].value ) {
+    //           options[j].xuanzhongzhuangtai = true
+    //         } else {
+    //           options[j].xuanzhongzhuangtai = false
+    //         }
+    //       }
+    //     }
+    //     console.log(this.options);
+    // },
 
-    // 获取数据标注页面数据
+    // 2获取数据标注页面数据
     async getLogUserList() {
-      // // console.log(this.typeObj);//undefined
-      // this.typeObj = this.$route.query.queryParams;
-      // let queryParams = this.typeObj;
-      // // console.log(this.typeObj);//undefined
-
-      // let obj = {
-      //   logId: queryParams.logId ? queryParams.logId : "",
-      //   // logId:userId,
-      //   userId: queryParams.userId ? queryParams.userId : "",
-      //   // userId:userId,
-
-      //   pageNum: this.pageNum,
-      //   pageSize: this.pageSize,
-      //   anoStatus: this.anoStatus,
-
-      //   logTime: queryParams.logTime,
-      //   logType: queryParams.logType,
-      //   eventName: queryParams.eventName,
-      //   eventDescription: queryParams.eventDescription,
-      //   pId: queryParams.pId,
-      //   isSuspected: queryParams.isSuspected,
-      // };
-      // console.log("查看标注页获取患者信息所需要的值");
-      // console.log(obj);
-
+      // this.getSelectList();
       if (this.$route.query.state == 1) {
+
         this.typeObj = this.$route.query.queryParams;
         let queryParams = this.typeObj;
         // console.log(this.typeObj);//undefined
-
         let obj = {
           logId: queryParams.logId ? queryParams.logId : "",
-          // logId:userId,
           userId: queryParams.userId ? queryParams.userId : "",
-          // userId:userId,
-
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           anoStatus: this.anoStatus,
-
           logTime: queryParams.logTime,
           logType: queryParams.logType,
           eventName: queryParams.eventName,
@@ -941,16 +947,36 @@ export default {
           this.logUserList = response.rows;
           console.log("这是从单导预警页面跳转到查看标注页面获取到的数据");
           console.log(this.logUserList);
+          console.log(this.options);
 
+          // 遍历 logUserList 数组
+for (let i = 0; i < this.logUserList.length; i++) {
+    const logItem = this.logUserList[i];
+    // 遍历 options 数组
+    for (let j = 0; j < this.options.length; j++) {
+        const optionGroup = this.options[j];
+        // 遍历 options 中的选项
+        for (let k = 0; k < optionGroup.options.length; k++) {
+            const option = optionGroup.options[k];
+            // 检查是否匹配 logType 和 value
+            if (logItem.logType === option.value) {
+                // 添加 leixing 属性为 true
+                option.leixing = true;
+            } else {
+                // 如果没有匹配项，添加 leixing 属性为 false
+                option.leixing = false;
+            }
+        }
+    }
+}
+console.log(this.options);
           this.logUserListTotal = response.total;
 
           this.logUserList.forEach((item, index) => {
-            // console.log(item);
             if (this.message.logid == item.logId) {
               this.index = index;
             }
           });
-          // console.log(this.logUserList);
         });
       } else if (this.$route.query.state == 12) {
         // console.log(this.typeObj);//undefined
@@ -982,11 +1008,27 @@ export default {
 
           console.log("这是从12导预警页面跳转到查看标注页面获取到的数据");
           console.log(this.logUserList);
-
+          for (let i = 0; i < this.logUserList.length; i++) {
+    const logItem = this.logUserList[i];
+    // 遍历 options 数组
+    for (let j = 0; j < this.options.length; j++) {
+        const optionGroup = this.options[j];
+        // 遍历 options 中的选项
+        for (let k = 0; k < optionGroup.options.length; k++) {
+            const option = optionGroup.options[k];
+            // 检查是否匹配 logType 和 value
+            if (logItem.logType === option.value) {
+                // 添加 leixing 属性为 true
+                option.leixing = true;
+            } else {
+                // 如果没有匹配项，添加 leixing 属性为 false
+                option.leixing = false;
+            }
+        }
+    }
+}
           this.logUserListTotal = response.total;
-
           this.logUserList.forEach((item, index) => {
-            // console.log(item);
             if (this.message.logid == item.logId) {
               this.index = index;
             }
@@ -1021,7 +1063,25 @@ export default {
           // 患者的数组
           console.log("这是从数据标注页面跳转到查看标注页面获取到的数据");
           console.log(this.logUserList);
-
+for (let i = 0; i < this.logUserList.length; i++) {
+    const logItem = this.logUserList[i];
+    // 遍历 options 数组
+    for (let j = 0; j < this.options.length; j++) {
+        const optionGroup = this.options[j];
+        // 遍历 options 中的选项
+        for (let k = 0; k < optionGroup.options.length; k++) {
+            const option = optionGroup.options[k];
+            // 检查是否匹配 logType 和 value
+            if (logItem.logType === option.value) {
+                // 添加 leixing 属性为 true
+                option.leixing = true;
+            } else {
+                // 如果没有匹配项，添加 leixing 属性为 false
+                option.leixing = false;
+            }
+        }
+    }
+}
           this.logUserListTotal = response.total;
           this.logUserList.forEach((item, index) => {
             if (this.message.logid == item.logId) {
@@ -1033,7 +1093,6 @@ export default {
       }
     },
 
-    
     //获取心电数据
     getMessage() {
       var Iy = [];
@@ -2690,6 +2749,7 @@ export default {
     },
     async prev() {
       this.loading = true;
+      
       if (this.pageNum == 1 && this.index == 0) {
         this.$message.warning("已经是第一页！！！");
         this.loading = false;
@@ -2715,7 +2775,7 @@ export default {
       for (let i = 0; i < this.options.length; i++) {
         let options = this.options[i].options;
         for (let j = 0; j < options.length; j++) {
-          options[j].xuanzhongzhuangtai = 0; // 添加新的键值对
+          options[j].xuanzhongzhuangtai = false; // 添加新的键值对
         }
       }
       var newUrl =
@@ -2725,6 +2785,7 @@ export default {
         `&queryParams=${this.typeObj}`;
       window.history.replaceState("", "", newUrl);
       this.getMessage();
+      this.trueValues=[]
     },
     // 点击下一页触发事件
     async next() {
@@ -2771,7 +2832,7 @@ export default {
       for (let i = 0; i < this.options.length; i++) {
         let options = this.options[i].options;
         for (let j = 0; j < options.length; j++) {
-          options[j].xuanzhongzhuangtai = 0; // 添加新的键值对
+          options[j].xuanzhongzhuangtai = false; // 添加新的键值对
         }
       }
 
@@ -2782,74 +2843,107 @@ export default {
         `&queryParams=${this.typeObj}`;
       window.history.replaceState("", "", newUrl);
       this.getMessage();
+      this.trueValues=[]
     },
 
     // 点击提交
     submit() {
-      console.log("点击提交时的this.options");
+      console.log(this.trueValues);
+      console.log("点击提交时的this.options的值");
       console.log(this.options);
-      let trueValues = [];
+      // let trueValues = [];
 
       for (let i = 0; i < this.options.length; i++) {
         let options = this.options[i].options;
         for (let j = 0; j < options.length; j++) {
-          if (options[j].xuanzhongzhuangtai === 1) {
-            trueValues.push(options[j].value);
+          if (options[j].xuanzhongzhuangtai == true) {
+            this.trueValues.push(options[j].value);
           }
         }
       }
 
-      this.value = trueValues.join();
-      console.log("这是选中的值" + trueValues);
-      console.log(this.message.logid);
-      console.log(this.value);
-      console.log(this.noise_list);
-      console.log(this.noise_level);
+      this.value = this.trueValues.join();
+      console.log("这是选中的值" + this.trueValues);
+      console.log("this.message.logid"+this.message.logid);
+      console.log("this.message.pid"+this.message.pid);
+      console.log("this.$route.query.state"+this.$route.query.state);
+      console.log("this.value"+this.value);
+      console.log("this.noise_list"+this.noise_list);
+      console.log("this.noise_level"+this.noise_level);
       // 数据标注中有
       // 单导预警中没有
-      console.log(this.message.user_id);
+      console.log(this.message.user_id?this.message.user_id:0);
       console.log(this.options);
+
+
+
       var that = this;
       // return;
+      // $.ajax({
+      //   cache: true,
+      //   type: "POST",
+      //   dataType: "json",
+      //   contentType: "application/json",
+      //   url: "https://screen.mindyard.cn:84/write_logType",
+      //   data: JSON.stringify({
+      //     id: this.message.logid,
+      //     Type: this.value,//中文
+      //     list: this.noise_list,
+      //     lists: this.noise_level,
+      //     user_id: this.message.user_id,
+      //   }),
+      //   async: false,
+      //   success: function (data) {
+      //     console.log("success:", data);
+      //     that.$modal.msgSuccess("数据提交成功");
+      //   },
+      //   error: function (data) {
+      //     console.log("error:", data);
+      //     //            cocoMessage.error("提交失败", 3000);
+      //   },
+      // });
 
-      $.ajax({
-        cache: true,
-        type: "POST",
-        dataType: "json",
-        contentType: "application/json",
-        url: "https://screen.mindyard.cn:84/write_logType",
-        data: JSON.stringify({
-          id: this.message.logid,
-          Type: this.value,
-          list: this.noise_list,
-          lists: this.noise_level,
-          user_id: this.message.user_id,
-        }),
-        async: false,
-        success: function (data) {
-          console.log("success:", data);
-          that.$modal.msgSuccess("数据提交成功");
-        },
-        error: function (data) {
-          console.log("error:", data);
-          //            cocoMessage.error("提交失败", 3000);
-        },
+
+      console.log(this.value);
+      console.log(this.message.logid);
+      console.log(this.message.user_id?this.message.user_id:0);
+      console.log(this.isSuspected ? 1 : 0);
+      //标注成功
+      // islabel({
+      //   logType: this.value, //预警类型
+      //   logId: this.message.logid,//日志id
+      //   userId: this.message.user_id,
+      //   isSuspected: this.isSuspected ? 1 : 0, //是否是疑似病例 1
+      // });
+
+       let selectedValues = [];
+
+      // 遍历trueValues数组
+      this.trueValues.forEach((trueValue) => {
+        // 遍历options数组
+        this.options.forEach((option) => {
+          // 遍历当前option对象中的zhong数组
+          option.options.forEach((options) => {
+            // 如果当前zhongItem对象的label等于trueValue，则将其value添加到selectedValues数组中
+            if (options.value === trueValue) {
+              selectedValues.push(options.label + "Ecg");
+            }
+          });
+        });
       });
-      for (let i = 0; i < this.options.length; i++) {
-        let options = this.options[i].options;
-        for (let j = 0; j < options.length; j++) {
-          options[j].xuanzhongzhuangtai = 0; // 添加新的键值对
-        }
-      }
-      console.log(this.options);
-
-      // 标注成功
-      islabel({
-        logType: this.value,
+      let dataObject = {
+        pId:this.message.pid,
         logId: this.message.logid,
-        userId: this.message.user_id,
-        isSuspected: this.isSuspected ? 1 : 0,
-      });
+        leadCount:this.$route.query.state
+      };
+      for (let i = 0; i < selectedValues.length; i++) {
+        // 将数组中的每个字符串作为对象的键，值为1，并放入dataObject对象中
+        dataObject[selectedValues[i]] = 1;
+      }
+      // 接口
+      console.log(dataObject);
+      addCount(dataObject)
+      
     },
 
     submitData() {
