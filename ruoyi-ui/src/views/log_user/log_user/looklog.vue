@@ -986,14 +986,11 @@ console.log(this.options);
 
         let obj = {
           logId: queryParams.logId ? queryParams.logId : "",
-          // logId:userId,
           userId: this.$route.query.userId ? this.$route.query.userId : "",
-          // userId:userId,
           ecgType: this.$route.query.ecgType,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           anoStatus: this.anoStatus,
-
           logTime: queryParams.logTime,
           logType: queryParams.logType,
           eventName: queryParams.eventName,
@@ -1043,14 +1040,11 @@ console.log(this.options);
 
         let obj = {
           logId: queryParams.logId ? queryParams.logId : "",
-          // logId:userId,
           userId: this.$route.query.userId ? this.$route.query.userId : "",
-          // userId:userId,
           ecgType: this.$route.query.ecgType,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           anoStatus: this.anoStatus,
-
           logTime: queryParams.logTime,
           logType: queryParams.logType,
           eventName: queryParams.eventName,
@@ -2879,29 +2873,29 @@ for (let i = 0; i < this.logUserList.length; i++) {
 
       var that = this;
       // return;
-      // $.ajax({
-      //   cache: true,
-      //   type: "POST",
-      //   dataType: "json",
-      //   contentType: "application/json",
-      //   url: "https://screen.mindyard.cn:84/write_logType",
-      //   data: JSON.stringify({
-      //     id: this.message.logid,
-      //     Type: this.value,//中文
-      //     list: this.noise_list,
-      //     lists: this.noise_level,
-      //     user_id: this.message.user_id,
-      //   }),
-      //   async: false,
-      //   success: function (data) {
-      //     console.log("success:", data);
-      //     that.$modal.msgSuccess("数据提交成功");
-      //   },
-      //   error: function (data) {
-      //     console.log("error:", data);
-      //     //            cocoMessage.error("提交失败", 3000);
-      //   },
-      // });
+      $.ajax({
+        cache: true,
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        url: "https://screen.mindyard.cn:84/write_logType",
+        data: JSON.stringify({
+          id: this.message.logid,
+          Type: this.value,//中文
+          list: this.noise_list,
+          lists: this.noise_level,
+          user_id: this.message.user_id,
+        }),
+        async: false,
+        success: function (data) {
+          console.log("success:", data);
+          that.$modal.msgSuccess("数据提交成功");
+        },
+        error: function (data) {
+          console.log("error:", data);
+          //            cocoMessage.error("提交失败", 3000);
+        },
+      });
 
 
       console.log(this.value);
@@ -2909,12 +2903,12 @@ for (let i = 0; i < this.logUserList.length; i++) {
       console.log(this.message.user_id?this.message.user_id:0);
       console.log(this.isSuspected ? 1 : 0);
       //标注成功
-      // islabel({
-      //   logType: this.value, //预警类型
-      //   logId: this.message.logid,//日志id
-      //   userId: this.message.user_id,
-      //   isSuspected: this.isSuspected ? 1 : 0, //是否是疑似病例 1
-      // });
+      islabel({
+        logType: this.value, //预警类型
+        logId: this.message.logid,//日志id
+        userId: this.message.user_id,
+        isSuspected: this.isSuspected ? 1 : 0, //是否是疑似病例 1
+      });
 
        let selectedValues = [];
 
