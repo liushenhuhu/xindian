@@ -2227,7 +2227,7 @@ export default {
         return
       }
       console.log({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid,isSuspected:this.isSuspected?1:0})
-      return
+      // return
       if(this.status==0){
         addAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid,isSuspected:this.isSuspected?1:0}).then(res=>{
           this.$message.success("提交成功")
