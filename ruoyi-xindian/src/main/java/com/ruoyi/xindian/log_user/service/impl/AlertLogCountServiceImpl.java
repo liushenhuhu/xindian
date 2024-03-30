@@ -80,7 +80,7 @@ public class AlertLogCountServiceImpl extends ServiceImpl<AlertLogCountMapper, A
             Patient patient = patientMapper.selectPatientByPatientPhone(patientManagement.getPatientPhone());
             if (patient!=null){
                 alertLogCount.setGender(patient.getPatientSex());
-                if (StringUtils.isNotEmpty(patient.getPatientAge())){
+                if (StringUtils.isEmpty(patient.getPatientAge())){
                     patient.setPatientAge(DateUtil.getAge(patient.getBirthDay())+"");
                 }
                 alertLogCount.setAge(patient.getPatientAge());
