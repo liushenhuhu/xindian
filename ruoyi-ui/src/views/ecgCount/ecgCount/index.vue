@@ -1478,41 +1478,41 @@ export default {
         yxsfdEcg: null,
         stgbEcg: null,
         stTgbEcg: null,
-      tbycEcg: null,
-      qtjqycEcg: null,
-      qtcjqycEcg: null,
-      kjubEcg: null,
-      zqfjEcg: null,
-      qjbxjgsEcg: null,
-      qcbxjgsEcg: null,
-      qgfbxjgsEcg: null,
-      qbxjgsEcg: null,
-      xbxjgsEcg: null,
-      xhbxjgsEcg: null,
-      hbxjgsEcg: null,
-      xcbbxjgsEcg: null,
-      gcbbxjgsEcg: null,
-      cbbxjgsEcg: null,
-      xnmxxjgsEcg: null,
-      ysxjgsEcg: null,
-      fsttgxxjgsEcg: null,
-      xjbxjgsEcg: null,
-      jbxjgsEcg: null,
-      yjxEcg: null,
-      jxEcg: null,
-      cjxEcg: null,
-      xdtwjzEcg: null
-  },
-    // 表单参数
-    form: {},
-    // 表单校验
-    rules: {
-    }
+        tbycEcg: null,
+        qtjqycEcg: null,
+        qtcjqycEcg: null,
+        kjubEcg: null,
+        zqfjEcg: null,
+        qjbxjgsEcg: null,
+        qcbxjgsEcg: null,
+        qgfbxjgsEcg: null,
+        qbxjgsEcg: null,
+        xbxjgsEcg: null,
+        xhbxjgsEcg: null,
+        hbxjgsEcg: null,
+        xcbbxjgsEcg: null,
+        gcbbxjgsEcg: null,
+        cbbxjgsEcg: null,
+        xnmxxjgsEcg: null,
+        ysxjgsEcg: null,
+        fsttgxxjgsEcg: null,
+        xjbxjgsEcg: null,
+        jbxjgsEcg: null,
+        yjxEcg: null,
+        jxEcg: null,
+        cjxEcg: null,
+        xdtwjzEcg: null
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {}
   };
   },
   created() {
     getLogType().then(r=>{
       this.option = r.data
+      console.log("这是option"+this.option);
     })
     this.getList();
   },
@@ -1529,6 +1529,7 @@ export default {
         this.countList = response.rows;
         this.total = response.total;
         this.loading = false;
+        console.log(this.countList);
       });
     },
     // 取消按钮

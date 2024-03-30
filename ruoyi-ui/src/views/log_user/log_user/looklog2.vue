@@ -417,9 +417,13 @@ export default {
       selectUser2:false,
       userNoise1:[],
       userNoise2:[],
+      // 编号1
       user1:'',
+      // 编号2
       user2:'',
+      // 编号1类型
       userLogType1:'',
+      // 编号2类型
       userLogType2:'',
       selectType1:false,
       selectType2:false,
@@ -2222,7 +2226,8 @@ export default {
         this.$message.error('请填写完整')
         return
       }
-      console.log({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid})
+      console.log({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid,isSuspected:this.isSuspected?1:0})
+      return
       if(this.status==0){
         addAudit({logId:this.message.logid,logNoiseLevel:noise_level,logType: this.value,pId:this.message.pid,isSuspected:this.isSuspected?1:0}).then(res=>{
           this.$message.success("提交成功")
