@@ -248,7 +248,7 @@
                     <el-option
                       v-for="item in group.options"
                       :key="item.value"
-                      :label="item.label"
+                      :label="item.value"
                       :value="item.value">
                     </el-option>
                   </el-option-group>
@@ -476,6 +476,7 @@ export default {
         this.options=res.data
       })
     },
+    // 获取患者的信息
     async getlistAudit(){
       await listAudit({pageNum: this.pageNum, pageSize: 10,auditAnoStatus:this.auditAnoStatus}).then(response => {
         this.auditList = response.rows;
@@ -488,7 +489,7 @@ export default {
             this.index=index
           }
         })
-        // console.log(this.auditList)
+        console.log(this.auditList)
       });
     },
     async getLogTwoUser(){
