@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.log_user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.xindian.log_user.domain.AlertLogCount;
 import com.ruoyi.xindian.log_user.service.AlertLogCountService;
@@ -11,6 +12,7 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.DocVO;
 import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
+import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +80,9 @@ public class AlertLogCountServiceImpl extends ServiceImpl<AlertLogCountMapper, A
             Patient patient = patientMapper.selectPatientByPatientPhone(patientManagement.getPatientPhone());
             if (patient!=null){
                 alertLogCount.setGender(patient.getPatientSex());
+                if (StringUtils.isNotEmpty(patient.getPatientAge())){
+                    patient.setPatientAge(DateUtil.getAge(patient.getBirthDay())+"");
+                }
                 alertLogCount.setAge(patient.getPatientAge());
             }
         }else {
