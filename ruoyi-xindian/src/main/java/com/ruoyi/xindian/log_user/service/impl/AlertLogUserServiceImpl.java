@@ -106,6 +106,7 @@ public class AlertLogUserServiceImpl implements IAlertLogUserService
 
     @Override
     public int islabel(AlertLogUser alertLogUser) {
-        return alertLogUserMapper.islabel(alertLogUser);
+        alertLogUserMapper.islabel(alertLogUser);
+        return alertLogUserMapper.islabelLog(alertLogUser);
     }
 }

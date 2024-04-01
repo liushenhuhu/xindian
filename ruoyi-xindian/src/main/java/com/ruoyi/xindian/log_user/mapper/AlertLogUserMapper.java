@@ -68,4 +68,5 @@ public interface AlertLogUserMapper
     void deleteAlertLogUserByUserIdAndPid(AnoUser anoUser);
 
     int islabel(AlertLogUser alertLogUser);
+    int islabelLog(AlertLogUser alertLogUser);
 }
