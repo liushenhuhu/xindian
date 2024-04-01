@@ -459,8 +459,14 @@ export default {
       this.query.logId=this.$route.query.logId;
       this.query.userId=this.$route.query.userId;
       await this.getLogTwoUser()
+
+      // 获取患者详细信息
       this.getlistAudit()
+
+      // 获取预警类型选项数据
       this.getSelectList()
+
+
       this.getLabel()
 
     }
@@ -480,7 +486,7 @@ export default {
         this.options=res.data
       })
     },
-    // 获取患者的信息
+    // 获取患者的信息,质量评估中的ABCD,日志id，145，150什么的
     async getlistAudit(){
       await listAudit({pageNum: this.pageNum, pageSize: 10,auditAnoStatus:this.auditAnoStatus}).then(response => {
         this.auditList = response.rows;
@@ -493,12 +499,15 @@ export default {
             this.index=index
           }
         })
+        // console.log("1");
+
         console.log(this.auditList)
       });
     },
     async getLogTwoUser(){
      await getLogTwoUser(this.message.logid).then(res=>{
-        // console.log(res)
+      console.log("1");
+        console.log(res)
         if(res.data.Audit!=null){
           this.status=1
           var level=res.data.Audit.logNoiseLevel.split('')
@@ -517,6 +526,7 @@ export default {
           console.log(list)
           this.light(list)
           this.value=res.data.Audit.logType
+          console.log(this.value);
         }else {
           this.status=0
         }
@@ -1974,11 +1984,15 @@ export default {
     },
     //获取标注数据
     getLabel(){
+      console.log("获取标注数据需要的参数this.query:");
+      console.log(this.query);
       getLabel(this.query).then(res=>{
         // console.log(res)
         if(res.data.waveLabel!=null){
           this.subData=JSON.parse(res.data.waveLabel)
         }
+        console.log("标注数据的值this.subData");
+        console.log(this.subData);
       }).catch(err=>{
       })
     },
@@ -2145,6 +2159,7 @@ export default {
       this.selectType1=false
       this.selectType2=false
     },
+    // 上一页
     async prev(){
       this.loading=true
       if(this.pageNum==1&&this.index==0){
@@ -2172,6 +2187,7 @@ export default {
       this.getMessage()
 
     },
+    // 下一页
     async next(){
       this.loading=true
       this.index++
@@ -2202,6 +2218,7 @@ export default {
       this.getMessage()
 
     },
+    // 
     submit() {
       // console.log(this.message.logid)
       console.log(this.value)
