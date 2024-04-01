@@ -977,7 +977,7 @@ export default {
           pageSize: this.pageSize,
           anoStatus: queryParams.anoStatus,
           logTime: queryParams.logTime,
-          logType: queryParams.logType,
+          eventDescription: queryParams.eventDescription,
           eventName: queryParams.eventName,
           eventDescription: queryParams.eventDescription,
           pId: queryParams.pId,
@@ -1004,11 +1004,11 @@ export default {
         }
         console.log("这是this.index的值："+this.index);
         
-        console.log(this.logUserList[this.index].logType);
+        console.log(this.logUserList[this.index].eventDescription);
         // 假设 this.index 是你要访问的 logUserList 数组中的索引
-        if (this.logUserList[this.index].logType) {
+        if (this.logUserList[this.index].eventDescription) {
           // 拆分 logType 字符串为一个数组
-          let logTypesArray = this.logUserList[this.index].logType.split(',');
+          let logTypesArray = this.logUserList[this.index].eventDescription.split(',');
 
           // 将拆分后的数组中的每个值添加到 trueValues 数组中
           this.trueValues.push(...logTypesArray);
@@ -1028,7 +1028,7 @@ export default {
           pageSize: this.pageSize,
           anoStatus: this.anoStatus,
           logTime: queryParams.logTime,
-          logType: queryParams.logType,
+          eventDescription: queryParams.eventDescription,
           eventName: queryParams.eventName,
           eventDescription: queryParams.eventDescription,
           pId: queryParams.pId,
@@ -1055,11 +1055,11 @@ export default {
         }
         console.log("这是this.index的值："+this.index);
 
-        console.log(this.logUserList[this.index].logType);
+        console.log(this.logUserList[this.index].eventDescription);
         // 假设 this.index 是你要访问的 logUserList 数组中的索引
-        if (this.logUserList[this.index].logType) {
+        if (this.logUserList[this.index].eventDescription) {
           // 拆分 logType 字符串为一个数组
-          let logTypesArray = this.logUserList[this.index].logType.split(',');
+          let logTypesArray = this.logUserList[this.index].eventDescription.split(',');
 
           // 将拆分后的数组中的每个值添加到 trueValues 数组中
           this.trueValues.push(...logTypesArray);
@@ -1078,7 +1078,7 @@ export default {
           pageSize: this.pageSize,
           anoStatus: this.anoStatus,
           logTime: queryParams.logTime,
-          logType: queryParams.logType,
+          eventDescription: queryParams.eventDescription,
           eventName: queryParams.eventName,
           eventDescription: queryParams.eventDescription,
           pId: queryParams.pId,
@@ -1102,11 +1102,11 @@ export default {
         }
         console.log("这是this.index的值："+this.index);
 
-        console.log(this.logUserList[this.index].logType);
+        console.log(this.logUserList[this.index].eventDescription);
         // 假设 this.index 是你要访问的 logUserList 数组中的索引
-        if (this.logUserList[this.index].logType) {
+        if (this.logUserList[this.index].eventDescription) {
           // 拆分 logType 字符串为一个数组
-          let logTypesArray = this.logUserList[this.index].logType.split(',');
+          let logTypesArray = this.logUserList[this.index].eventDescription.split(',');
 
           // 将拆分后的数组中的每个值添加到 trueValues 数组中
           this.trueValues.push(...logTypesArray);
@@ -2793,10 +2793,9 @@ export default {
       }
       this.trueValues=[]
             // 假设 this.index 是你要访问的 logUserList 数组中的索引
-              if (this.logUserList[this.index].logType) {
+              if (this.logUserList[this.index].eventDescription) {
                 // 拆分 logType 字符串为一个数组
-                let logTypesArray = this.logUserList[this.index].logType.split(',');
-
+                let logTypesArray = this.logUserList[this.index].eventDescription.split(',');
                 // 将拆分后的数组中的每个值添加到 trueValues 数组中
                 this.trueValues.push(...logTypesArray);
               }
