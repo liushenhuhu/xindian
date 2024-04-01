@@ -572,8 +572,8 @@
                             size="mini"
                           >
                             {{ item.value }}
-                            <!-- {{item.leixing}}
-                            {{item.value == logUserList[index].logType}} -->
+                            <!-- {{item.leixing}} -->
+                            <!-- {{item.value == logUserList[index].logType}} -->
                             <!-- v-model="item.xuanzhongzhuangtai" 选定之后的状态-->
                             <!-- :checked="item.value == logUserList[index].logType" -->
                             <!-- {{item.value}} -->
