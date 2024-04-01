@@ -275,7 +275,7 @@ public class DoctorController extends BaseController
 
     @GetMapping("/docList")
     public AjaxResult docList(Doctor doctor) throws Exception {
-        List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+        List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
         for (Doctor value:doctors){
             if(!StringUtils.isEmpty(value.getDoctorName())){
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));

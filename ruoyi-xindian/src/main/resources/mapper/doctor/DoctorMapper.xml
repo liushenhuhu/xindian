@@ -95,7 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDoctorByDoctorPhone" parameterType="String" resultMap="DoctorResult">
         <include refid="selectDoctorVo"/>
-        where doctor_phone_aes = #{doctorPhone}
+        where doctor_phone_aes = #{doctorPhone} and account_status = '0'
     </select>
     <select id="selectDoc" resultType="com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO">
         SELECT hospital as label ,hospital as value
@@ -107,10 +107,66 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where is_doc = '1'
     </select>
     <select id="selectVisitDoc" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
-        <include refid="selectDoctorVo"/> where hospital = #{hospitalName} and  is_doc = '2'
+        <include refid="selectDoctorVo"/> where hospital = #{hospitalName} and  is_doc = '2' and account_status = '0'
     </select>
     <select id="selectXDDoc" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
         <include refid="selectDoctorVo"/> where hospital = #{hospitalName} and  is_doc = '1' and account_status = '0'
+    </select>
+    <select id="selectDoctorListNot" resultType="com.ruoyi.xindian.hospital.domain.Doctor">
+        SELECT
+        doctor.doctor_id,
+        doctor.doctor_name_aes as doctor_name,
+        doctor.doctor_phone_aes as doctor_phone,
+        doctor.department_code,
+        doctor.skill,
+        doctor.introduction,
+        doctor.service_content,
+        doctor.applicable_population,
+        doctor.charge_price,
+        doctor.hospital,
+        doctor.img,
+        doctor.professional,
+        doctor.is_doc,
+        doctor.outpatient_id,
+        doctor.special_id,
+        doctor.account_status,
+        department.department_name,
+        department.hospital_code,
+        department.department_id
+
+        FROM
+        department
+        INNER JOIN
+        doctor
+        ON
+        doctor.department_code = department.department_code
+        <where>
+            <if test="doctorName != null  and doctorName != ''"> and doctor_name_aes like concat('%', #{doctorName}, '%')</if>
+            <if test="outpatientId != null  and outpatientId != ''"> and outpatient_id =  #{outpatientId} </if>
+            <if test="specialId != null  and specialId != ''"> and special_id =  #{specialId} </if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes like concat('%', #{doctorPhone}, '%')</if>
+            <if test="departmentCode != null  and departmentCode != ''"> and doctor.department_code like concat('%', #{departmentCode}, '%')</if>
+            <if test="skill != null  and skill != ''"> and skill = #{skill}</if>
+            <if test="introduction != null  and introduction != ''"> and introduction = #{introduction}</if>
+            <if test="serviceContent != null  and serviceContent != ''"> and service_content = #{serviceContent}</if>
+            <if test="applicablePopulation != null  and applicablePopulation != ''"> and applicable_population = #{applicablePopulation}</if>
+            <if test="chargePrice != null  and chargePrice != ''"> and charge_price = #{chargePrice}</if>
+            <if test="onlineState != null  and onlineState != ''"> and online_state = #{onlineState}</if>
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+            <if test="professional != null  and professional != ''"> and professional = #{professional}</if>
+            <if test="isDoc!= null  and isDoc!= ''"> and is_doc = #{isDoc}</if>
+            <if test="accountStatus!= null  and accountStatus!= ''"> and account_status = #{accountStatus}</if>
+            <if test="equipmentList != null  and equipmentList != ''"> and equipment_list = #{equipmentList}</if>
+            <if test="accountStatus != null  and accountStatus != ''"> and account_status = #{accountStatus}</if>
+            <if test="hospitalNameList != null and hospitalNameList.size()>0">
+                and  hospital in
+                <foreach collection="hospitalNameList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        and doctor.account_status = '0'
+        </where>
+        order by account_status asc,doctor_id desc
     </select>
 
 
