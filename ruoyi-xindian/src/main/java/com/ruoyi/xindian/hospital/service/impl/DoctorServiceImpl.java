@@ -142,7 +142,7 @@ public class DoctorServiceImpl implements IDoctorService
         for (ListValueAndLabelVO c : listDocVOS){
             Doctor doctor = new Doctor();
             doctor.getHospitalNameList().add(c.getLabel());
-            List<Doctor> doctors = doctorMapper.selectDoctorList(doctor);
+            List<Doctor> doctors = doctorMapper.selectDoctorListNot(doctor);
             for (Doctor d : doctors){
                 DocVO listDocVO = new DocVO();
                 listDocVO.setLabel(aesUtils.decrypt(d.getDoctorName()));
@@ -158,6 +158,11 @@ public class DoctorServiceImpl implements IDoctorService
 
 
         return doctorMapper.selectDoctorList(doctor);
+    }
+
+    @Override
+    public List<Doctor> selectDoctorListNot(Doctor doctor) {
+        return doctorMapper.selectDoctorListNot(doctor);
     }
 
     @Override

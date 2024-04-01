@@ -35,6 +35,10 @@ public interface DoctorMapper
      */
     public List<Doctor> selectDoctorList(Doctor doctor);
 
+
+
+    public List<Doctor> selectDoctorListNot(Doctor doctor);
+
     /**
      * 新增医生
      * 
