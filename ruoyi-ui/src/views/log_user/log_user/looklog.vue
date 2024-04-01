@@ -976,7 +976,7 @@ export default {
           ecgType: this.$route.query.ecgType,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          anoStatus: queryParams.anoStatus,
+          anoStatus:this.anoStatus,
           logTime: queryParams.logTime,
           eventDescription: queryParams.eventDescription,
           eventName: queryParams.eventName,
@@ -1005,28 +1005,6 @@ export default {
                 if (this.index == this.logUserList.length ) {
                   this.index = 0
                 }
-
-
-        // if(typeof e !== 'undefined'){
-        //     console.log("这是e的值："+e);
-
-        // console.log(this.logUserList[e].eventDescription);
-        // // 假设 this.index 是你要访问的 logUserList 数组中的索引
-        // if (this.logUserList[e].eventDescription) {
-        //   // 拆分 logType 字符串为一个数组
-        //   let logTypesArray = this.logUserList[e].eventDescription.split(',');
-
-        //   // 将拆分后的数组中的每个值添加到 trueValues 数组中
-        //   this.trueValues.push(...logTypesArray);
-        // }
-
-
-
-
-          // }else{
-
-
-
 
             console.log("这是this.index的值："+this.index);
 
@@ -1091,7 +1069,7 @@ export default {
           let logTypesArray = this.logUserList[this.index].eventDescription.split(',');
 
           // 将拆分后的数组中的每个值添加到 trueValues 数组中
-          this.trueValues.push(...logTypesArray);
+          this.trueValues=logTypesArray
         }
       } else {
         // console.log(this.typeObj);//undefined
@@ -1138,7 +1116,7 @@ export default {
           let logTypesArray = this.logUserList[this.index].eventDescription.split(',');
 
           // 将拆分后的数组中的每个值添加到 trueValues 数组中
-          this.trueValues.push(...logTypesArray);
+          this.trueValues=logTypesArray
         }
       }
     },
