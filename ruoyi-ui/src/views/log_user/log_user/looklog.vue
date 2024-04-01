@@ -829,6 +829,7 @@ export default {
       anoStatus: null,
       typeObj: {},
       pageSize: 10,
+      obj:{}
     };
   },
   watch: {
@@ -959,7 +960,7 @@ export default {
       });
     },
     // 2获取数据标注页面数据
-    async getLogUserList() {
+    async getLogUserList(e) {
       console.log("执行了getLogUserList函数，获取患者数据");
       console.log("这是this.$route.query.state的值"+this.$route.query.state);
       // this.getSelectList();
@@ -969,7 +970,7 @@ export default {
         // this.typeObj = this.$route.query.queryParams;
         let queryParams = this.typeObj;
         // // console.log(this.typeObj);//undefined
-        let obj = {
+        this.obj = {
           logId: queryParams.logId ? queryParams.logId : "",
           userId: queryParams.userId ? queryParams.userId : "",
           ecgType: this.$route.query.ecgType,
@@ -985,8 +986,8 @@ export default {
         };
         
         console.log("查看标注页获取患者信息所需要的值");
-        console.log(obj);
-        await listAlert_log(obj).then((response) => {
+        console.log(this.obj);
+        await listAlert_log(this.obj).then((response) => {
           this.logUserList = response.rows;
           console.log("这是从单导预警页面跳转到查看标注页面获取到的数据");
           console.log(this.logUserList);
@@ -998,12 +999,37 @@ export default {
             }
           });
         })
+
+          
         console.log(this.logUserList.length);
-        if (this.index == this.logUserList.length ) {
-          this.index = 0
-        }
-        console.log("这是this.index的值："+this.index);
-        
+                if (this.index == this.logUserList.length ) {
+                  this.index = 0
+                }
+
+
+        // if(typeof e !== 'undefined'){
+        //     console.log("这是e的值："+e);
+
+        // console.log(this.logUserList[e].eventDescription);
+        // // 假设 this.index 是你要访问的 logUserList 数组中的索引
+        // if (this.logUserList[e].eventDescription) {
+        //   // 拆分 logType 字符串为一个数组
+        //   let logTypesArray = this.logUserList[e].eventDescription.split(',');
+
+        //   // 将拆分后的数组中的每个值添加到 trueValues 数组中
+        //   this.trueValues.push(...logTypesArray);
+        // }
+
+
+
+
+          // }else{
+
+
+
+
+            console.log("这是this.index的值："+this.index);
+
         console.log(this.logUserList[this.index].eventDescription);
         // 假设 this.index 是你要访问的 logUserList 数组中的索引
         if (this.logUserList[this.index].eventDescription) {
@@ -1011,8 +1037,11 @@ export default {
           let logTypesArray = this.logUserList[this.index].eventDescription.split(',');
 
           // 将拆分后的数组中的每个值添加到 trueValues 数组中
-          this.trueValues.push(...logTypesArray);
+          this.trueValues=logTypesArray
         }
+          // }
+        
+        
         
       } else if (this.$route.query.state == 12) {
         // console.log(this.typeObj);//undefined
@@ -1020,7 +1049,7 @@ export default {
         let queryParams = this.typeObj;
         // console.log(this.typeObj);//undefined
 
-        let obj = {
+        this.obj = {
           logId: queryParams.logId ? queryParams.logId : "",
           userId: this.$route.query.userId ? this.$route.query.userId : "",
           ecgType: this.$route.query.ecgType,
@@ -1035,8 +1064,8 @@ export default {
           isSuspected: queryParams.isSuspected,
         };
         console.log("查看标注页获取患者信息所需要的值");
-        console.log(obj);
-        await listAlert_log(obj).then((response) => {
+        console.log(this.obj);
+        await listAlert_log(this.obj).then((response) => {
           this.logUserList = response.rows;
 
           console.log("这是从12导预警页面跳转到查看标注页面获取到的数据");
@@ -1070,7 +1099,7 @@ export default {
         let queryParams = this.typeObj;
         // console.log(this.typeObj);//undefined
 
-        let obj = {
+        this.obj = {
           logId: queryParams.logId ? queryParams.logId : "",
           userId: this.$route.query.userId ? this.$route.query.userId : "",
           ecgType: this.$route.query.ecgType,
@@ -1084,7 +1113,7 @@ export default {
           pId: queryParams.pId,
           isSuspected: queryParams.isSuspected,
         };
-        await listLog_user(obj).then((response) => {
+        await listLog_user(this.obj).then((response) => {
           this.logUserList = response.rows;
           // 患者的数组
           console.log("这是从数据标注页面跳转到查看标注页面获取到的数据");
@@ -2835,6 +2864,7 @@ export default {
         await this.getLogUserList();
         this.index = 0;
       }
+      
       console.log(
         "点击下一页，触发获取getLogUserList函数，获得10条患者数据，下面是患者数据"
       );
@@ -2856,12 +2886,12 @@ export default {
 
       this.trueValues=[]
             // 假设 this.index 是你要访问的 logUserList 数组中的索引
-              if (this.logUserList[this.index].logType) {
+              if (this.logUserList[this.index].eventDescription) {
                 // 拆分 logType 字符串为一个数组
-                let logTypesArray = this.logUserList[this.index].logType.split(',');
+                let logTypesArray = this.logUserList[this.index].eventDescription.split(',');
 
                 // 将拆分后的数组中的每个值添加到 trueValues 数组中
-                this.trueValues.push(...logTypesArray);
+                this.trueValues=logTypesArray
               }
               // this.trueValues=["心房颤动","干扰信号"]
               console.log("logType中的值，经过处理后放到this.trueValues值为：");
@@ -2901,7 +2931,7 @@ export default {
     },
 
     // 点击提交
-    submit() {
+    async submit() {
       console.log(this.trueValues);
       console.log("点击提交时的this.options的值");
       console.log(this.options);
@@ -2997,7 +3027,9 @@ export default {
       // 接口
       console.log(dataObject);
       addCount(dataObject)
+      // this.trueValues=[]
       
+      await this.getLogUserList(this.index)
     },
 
     submitData() {

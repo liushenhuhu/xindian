@@ -306,6 +306,9 @@ export default {
     },
     skip(row){
       console.log(row)
+      console.log("row.auditAnoStatus==null?0:1");
+      console.log(this.queryParams);
+      // return
       this.$router.push({
         path: '/label/looklog2',
         query: {
