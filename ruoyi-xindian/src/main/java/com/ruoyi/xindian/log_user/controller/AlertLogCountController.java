@@ -89,7 +89,7 @@ public class AlertLogCountController extends BaseController
     /**
      * 新增预警类型统计
      */
-    @Log(title = "预警类型统计", businessType = BusinessType.INSERT)
+//    @Log(title = "预警类型统计", businessType = BusinessType.INSERT)
     @PostMapping("/addReport")
     public AjaxResult addReport(@RequestBody AlertLogCount alertLogCount)
     {
@@ -101,7 +101,7 @@ public class AlertLogCountController extends BaseController
     /**
      * 修改预警类型统计
      */
-    @PreAuthorize("@ss.hasPermi('alert_log_count:count:edit')")
+//    @PreAuthorize("@ss.hasPermi('alert_log_count:count:edit')")
     @Log(title = "预警类型统计", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody AlertLogCount alertLogCount)

@@ -46,7 +46,7 @@
         <result property="sxReportStatus"    column="sx_report_status"    />
         <result property="longitude"    column="longitude"    />
         <result property="latitude"    column="latitude"    />
-        <result property="logType"    column="log_type"    />
+        <result property="logDataType"    column="log_data_type"    />
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -105,7 +105,7 @@
 <!--        </if>-->
 <!--    </where>-->
     <sql id="selectPatientManagementVo">
-        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_type,
+        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_data_type,
             connection_time, bed_number, case_history_number,
                ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
                m.patient_phone_aes, family_phone,  monitoring_status,
@@ -650,7 +650,7 @@
         order by report_time desc
     </select>
     <select id="selectPatientManagementList12" resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">
-        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_type,
+        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_data_type,
         connection_time, bed_number, case_history_number,
         ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
         m.patient_phone_aes, family_phone,  monitoring_status,
@@ -739,7 +739,7 @@
             patient_management.end_time,
             patient_management.longitude,
             patient_management.latitude,
-            patient_management.log_type,
+            patient_management.log_data_type,
             patient_management.sampling_rate
         FROM
             patient_management
@@ -883,7 +883,7 @@
             <if test="patientPhone != null">patient_phone_aes,</if>
             <if test="ecgLevel != null">ecg_level,</if>
             <if test="doctorPhone != null">doctor_phone_aes,</if>
-            <if test="logType != null">log_type,</if>
+            <if test="logDataType != null">log_data_type,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
@@ -897,7 +897,7 @@
             <if test="patientPhone != null">#{patientPhone},</if>
             <if test="ecgLevel != null">#{ecgLevel},</if>
             <if test="doctorPhone != null">#{doctorPhone},</if>
-            <if test="logType != null">#{logType},</if>
+            <if test="logDataType != null">#{logDataType},</if>
         </trim>
     </insert>
 
@@ -917,7 +917,7 @@
             <if test="doctorPhone != null">doctor_phone_aes = #{doctorPhone},</if>
             <if test="detectionState != null">detection_state = #{detectionState},</if>
             <if test="sxReportStatus != null">sx_report_status = #{sxReportStatus},</if>
-            <if test="logType != null">log_type = #{logType},</if>
+            <if test="logDataType != null">log_data_type = #{logDataType},</if>
         </trim>
         where p_id = #{pId}
     </update>

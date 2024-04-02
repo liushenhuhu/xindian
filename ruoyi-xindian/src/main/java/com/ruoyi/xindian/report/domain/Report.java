@@ -102,7 +102,7 @@ public class Report extends BaseEntity
      */
     private String refuseText;
 
-    private String logType;
+    private String logDataType;
 
 
     /**
