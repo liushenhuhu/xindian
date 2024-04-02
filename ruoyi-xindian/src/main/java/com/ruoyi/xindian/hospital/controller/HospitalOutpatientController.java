@@ -136,7 +136,7 @@ public class HospitalOutpatientController extends BaseController
         for (Long id : ids){
             Doctor doctor = new Doctor();
             doctor.setOutpatientId(id);
-            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
             if (doctors!=null&&doctors.size()>0){
                 return AjaxResult.error("该门诊下绑定有医生，无法删除");
             }

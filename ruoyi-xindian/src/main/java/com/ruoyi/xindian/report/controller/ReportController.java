@@ -352,7 +352,7 @@ public class ReportController extends BaseController
             report.setDiagnosisDoctor(aesUtils.encrypt(report.getDiagnosisDoctor()));
             Doctor doctor = new Doctor();
             doctor.setDoctorName(report.getDiagnosisDoctor());
-            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
             if (doctors==null||doctors.size()==0){
                 return AjaxResult.error("当前医生不存在");
             }
@@ -400,7 +400,7 @@ public class ReportController extends BaseController
                 Doctor doctor = new Doctor();
                 doctor.getHospitalNameList().add(report.getHospital());
                 doctor.setAccountStatus("0");
-                doctors = doctorService.selectDoctorList(doctor);
+                doctors = doctorService.selectDoctorListNot(doctor);
                 if(doctors!=null && !doctors.isEmpty()){
                     //患者提交报告，通过微信公众号推送提醒消息
                     if (report.getpId()!=null&&!"".equals(report.getpId())){
@@ -874,7 +874,7 @@ public class ReportController extends BaseController
 
 //        Doctor doctor = new Doctor();
 //        doctor.getHospitalNameList().add(doctor1.getHospital());
-//        List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+//        List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
 //        //定时器, 30分钟无医生诊断, 换医生诊断.
 //        wxMsgRunConfig.redisDTStart(report.getpId(),doctors);
         WxUtil.send(aesUtils.decrypt(report.getdPhone()));
@@ -908,7 +908,7 @@ public class ReportController extends BaseController
 
         Doctor doctor = new Doctor();
         doctor.getHospitalNameList().add(doctor1.getHospital());
-        List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+        List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
         //定时器, 30分钟无医生诊断, 换医生诊断.
         wxMsgRunConfig.redisDTStart(report.getpId(),doctors);
         WxUtil.send(aesUtils.decrypt(report.getdPhone()));
@@ -964,7 +964,7 @@ public class ReportController extends BaseController
             report.setDiagnosisDoctor(aesUtils.encrypt(report.getDiagnosisDoctor()));
             Doctor doctor = new Doctor();
             doctor.setDoctorName(report.getDiagnosisDoctor());
-            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
             if (doctors==null||doctors.size()==0){
                 return AjaxResult.error("当前医生不存在");
             }
@@ -999,7 +999,7 @@ public class ReportController extends BaseController
             if(report.getHospital()!=null){
                 Doctor doctor = new Doctor();
                 doctor.getHospitalNameList().add(report.getHospital());
-                doctors = doctorService.selectDoctorList(doctor);
+                doctors = doctorService.selectDoctorListNot(doctor);
                 if(doctors!=null && doctors.size()!=0){
 
                     if (report.getpId()!=null&&!"".equals(report.getpId())){

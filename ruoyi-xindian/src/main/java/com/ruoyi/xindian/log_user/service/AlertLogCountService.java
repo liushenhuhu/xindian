@@ -61,4 +61,6 @@ public interface AlertLogCountService extends IService<AlertLogCount> {
     public int deleteAlertLogCountByCountId(Long countId);
 
     List<ListValueAndLabelVO> getLogType();
+
+    int insertAlertLogCountAndAddReport(AlertLogCount alertLogCount);
 }

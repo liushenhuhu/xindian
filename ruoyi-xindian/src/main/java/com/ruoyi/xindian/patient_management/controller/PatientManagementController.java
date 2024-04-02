@@ -196,7 +196,7 @@ public class PatientManagementController extends BaseController {
             }
             Doctor doctor = new Doctor();
             doctor.getHospitalNameList().add(hospital.getHospitalName());
-            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
             if (doctors!=null&& !doctors.isEmpty()){
                 for (Doctor doctor1:doctors){
                     patientManagement.getBindingDoctors().add(doctor1.getDoctorPhone());

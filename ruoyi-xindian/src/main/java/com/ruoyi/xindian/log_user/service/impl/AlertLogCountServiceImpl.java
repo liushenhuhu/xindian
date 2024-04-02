@@ -144,6 +144,33 @@ public class AlertLogCountServiceImpl extends ServiceImpl<AlertLogCountMapper, A
         }
         return logType;
     }
+
+    @Override
+    public int insertAlertLogCountAndAddReport(AlertLogCount alertLogCount) {
+        if (StringUtils.isEmpty(alertLogCount.getpId())){
+            return 0;
+        }
+        PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(alertLogCount.getpId());
+        if (patientManagement!=null){
+            Patient patient = patientMapper.selectPatientByPatientPhone(patientManagement.getPatientPhone());
+            if (patient!=null){
+                alertLogCount.setGender(patient.getPatientSex());
+                if (StringUtils.isEmpty(patient.getPatientAge())){
+                    patient.setPatientAge(DateUtil.getAge(patient.getBirthDay())+"");
+                }
+                alertLogCount.setAge(patient.getPatientAge());
+            }
+        }else {
+            alertLogCount.setGender("男");
+            alertLogCount.setAge("2");
+        }
+        PatientManagement patientManagement1 = new PatientManagement();
+        patientManagement1.setpId(alertLogCount.getpId());
+        patientManagement1.setLogType(alertLogCount.getLogType());
+        patientManagementService.updatePatientManagement(patientManagement1);
+        alertLogCount.setRecordDate(new Date());
+        return alertLogCountMapper.insertAlertLogCount(alertLogCount);
+    }
 }
 
 

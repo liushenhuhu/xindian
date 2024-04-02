@@ -102,6 +102,8 @@ public class Report extends BaseEntity
      */
     private String refuseText;
 
+    private String logType;
+
 
     /**
      * 预警消息

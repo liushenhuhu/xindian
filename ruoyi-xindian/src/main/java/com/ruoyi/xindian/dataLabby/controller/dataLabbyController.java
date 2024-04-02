@@ -258,7 +258,7 @@ public class dataLabbyController extends BaseController
             Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(phonenumber);
             Doctor doctor2 = new Doctor();
             doctor2.getHospitalNameList().add(doctor1.getHospital());
-            List<Doctor> doctors = doctorService.selectDoctorList(doctor2);
+            List<Doctor> doctors = doctorService.selectDoctorListNot(doctor2);
             wxMsgRunConfig.redisDTStart(pId,doctors);
         } catch (Exception e){
             return AjaxResult.error(String.valueOf(e));

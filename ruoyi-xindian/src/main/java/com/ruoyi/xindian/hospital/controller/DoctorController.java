@@ -333,7 +333,7 @@ public class DoctorController extends BaseController
         if (doctor.getHospital()==null){
 
             if (SysUser.isAdmin(loginUser.getUserId())){
-                doctors = doctorService.selectDoctorList(doctor);
+                doctors = doctorService.selectDoctorListNot(doctor);
             }else {
                 if (loginUser.getUser().getHospitalCode()!=null){
                     Hospital hospital = hospitalService.selectHospitalByHospitalCode(loginUser.getUser().getHospitalCode());
@@ -342,13 +342,13 @@ public class DoctorController extends BaseController
                     }else {
                         doctor.setDoctorPhone(loginUser.getUser().getUserName());
                         doctor.getHospitalNameList().add(hospital.getHospitalName());
-                        doctors = doctorService.selectDoctorList(doctor);
+                        doctors = doctorService.selectDoctorListNot(doctor);
 
                     }
                 }
             }
         }else {
-            doctors = doctorService.selectDoctorList(doctor);
+            doctors = doctorService.selectDoctorListNot(doctor);
         }
 
         for (Doctor value:doctors){

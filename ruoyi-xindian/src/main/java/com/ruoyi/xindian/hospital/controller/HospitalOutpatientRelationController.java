@@ -123,7 +123,7 @@ public class HospitalOutpatientRelationController extends BaseController
             Hospital hospital = hospitalService.selectHospitalByHospitalId(hospitalOutpatientRelation.getHospitalId());
             doctor.getHospitalNameList().add(hospital.getHospitalName());
             doctor.setOutpatientId(hospitalOutpatientRelation.getOutpatientId());
-            List<Doctor> doctors = doctorService.selectDoctorList(doctor);
+            List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
             if (doctors!=null&&doctors.size()>0){
                 return AjaxResult.error("该门诊下绑定有医生，无法删除");
             }

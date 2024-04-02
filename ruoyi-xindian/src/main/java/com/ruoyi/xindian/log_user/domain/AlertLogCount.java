@@ -25,6 +25,8 @@ public class AlertLogCount implements Serializable {
      */
     private String logId;
 
+
+
     /**
      * 账号id
      */
@@ -431,8 +433,17 @@ public class AlertLogCount implements Serializable {
     private Integer crrjqEcg;
 
     @TableField(exist = false)
+    private String logType;
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
+    public String getLogType() {
+        return logType;
+    }
+
+    public void setLogType(String logType) {
+        this.logType = logType;
+    }
 
     public Integer getCountId() {
         return countId;

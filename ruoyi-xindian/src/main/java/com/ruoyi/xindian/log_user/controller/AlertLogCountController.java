@@ -87,6 +87,18 @@ public class AlertLogCountController extends BaseController
     }
 
     /**
+     * 新增预警类型统计
+     */
+    @Log(title = "预警类型统计", businessType = BusinessType.INSERT)
+    @PostMapping("/addReport")
+    public AjaxResult addReport(@RequestBody AlertLogCount alertLogCount)
+    {
+        Long userId = getUserId();
+        alertLogCount.setUserId(userId);
+        return toAjax(alertLogCountService.insertAlertLogCountAndAddReport(alertLogCount));
+    }
+
+    /**
      * 修改预警类型统计
      */
     @PreAuthorize("@ss.hasPermi('alert_log_count:count:edit')")
