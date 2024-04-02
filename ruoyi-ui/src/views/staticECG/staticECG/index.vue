@@ -2,7 +2,7 @@
   <div>
     <div class="body">
       <div class="noleft">
-        <div class="box">
+        <div class="box" v-if="xuanzheyujing">
           <div class="box1">
             <div class="h11">
               <span></span>
@@ -41,6 +41,13 @@
             </div>
             <div class="result size mmargin">
               <div class="ml">{{ data.patientSymptom }}</div>
+            </div>
+            <div class="h11" v-if="!xuanzheyujing">
+              <span></span>
+              <p>预警类型</p>
+            </div>
+            <div class="result size mmargin" v-if="!xuanzheyujing">
+              <div class="ml">{{ xianshizifuchuan }}</div>
             </div>
           </div>
           <div class="box3">
@@ -131,9 +138,40 @@
             </div>
           </div>
         </div>
+        <div class="xuanzheyujing" v-else>
+          <form id="loginForm" name="loginForm" class="biaodan">
+              <div class="duoxuan">
+                <el-checkbox-group v-model="zhi" @change="zhong">
+                  <div v-for="(group,index) in yujingzhi" :key="index">
+                    <div class="fenzuzhuti">
+                      {{ group.label }}
+                    </div>
+                    <div class="fenzuzhutizi">
+                      <ul class="xiaoul">
+                        <li
+                          v-for="(item,i) in group.options"
+                          class="xiaoli"
+                          :key="i"
+                        >
+                          <el-checkbox
+                            :label="item.value"
+                            border
+                            size="mini"
+                          >
+                            {{ item.value }}
+                          </el-checkbox>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="xian"></div>
+                  </div>
+                </el-checkbox-group>
+              </div>
+            </form>
+        </div>
       </div>
       <div class="noright">
-          <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
+          <!--          <canvas id="grids" width="750px" height="750px"></canvas> -->
           <div>
             <div id="1" class="line" @dblclick="showChart1()"></div>
           </div>
@@ -216,6 +254,7 @@ import child from './child.vue'
 import CacheList from "@/views/monitor/cache/list.vue";
 import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
 import {selectDoctor} from "@/api/statistics/statistics";
+import {selectList,} from "@/api/log_user/log_user";
 
 export default {
   name: "index",
@@ -225,6 +264,9 @@ export default {
   },
   data() {
     return {
+      zhi:[],
+      xuanzheyujing:true,
+      yujingzhi:[],
       videoVisible: false,//echarts弹出框显示
       markdata: [
         {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},
@@ -240,6 +282,7 @@ export default {
       dialogVisibleTag:null,
       arr: [],
       options:[],
+      xianshizifuchuan:'',
       data: {
         name: "",
         gender: "",
@@ -308,7 +351,6 @@ export default {
   },
   created() {
     var pId = this.$route.query.pId;
-    console.log()
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
@@ -333,11 +375,18 @@ export default {
           this.data.patientSymptom = response.data.patientSymptom
  	      }
         console.log(this.data)
+        this.xianshizifuchuan = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
+        console.log(this.xianshizifuchuan);
+        this.zhi= this.xianshizifuchuan.split(/[,，]/).map(value => value.trim()); // 使用逗号或中文逗号分隔并去除空格
+        // const cleanedArray = removeEmptyStrings(arrayWithEmptyStrings);
+        console.log(this.zhi); // 输出结果
       });
       selectDoctor().then(response => {
         this.options = response;
       })
     }
+    this.getyujingleixing()
+
   },
   mounted() {
     this.get();
@@ -345,6 +394,16 @@ export default {
     // this.drawgrid();//canvas 画图
   },
   methods: {
+    getyujingleixing(){
+      selectList().then((res) => {
+        this.yujingzhi = res.data;
+        console.log(this.yujingzhi);
+      });
+    },
+    // 打印选中的值
+    zhong(data){
+      console.log(data);
+    },
     dialogVisible(){
       getTerm().then(r=>{
         if (r.rows.length>0){
@@ -2068,5 +2127,65 @@ export default {
   width: 90px;
   margin-left: 10px;
   vertical-align: bottom;
+}
+.xuanzheyujing{
+  width: 98%;
+  margin: 0 auto ;
+  margin-top: 1.5vh;
+    margin-bottom: 1.5vh;
+        border-radius: 2vh;
+    background-color: #e8e8e8;
+    align-items: center;
+    padding: 10px;
+    height: 37.5vh;
+}
+.xian {
+  border-bottom: 1px solid #000;
+}
+.xiaoli {
+  list-style: none;
+  // motion: 1px;
+  padding: 0 0 3.5px 3.5px;
+  width: 25%;
+  display: block;
+  float: left;
+}
+.xiaoul {
+  margin: 0.5vh 0 0 0;
+  padding: 0;
+  width: 100%;
+}
+.fenzuzhutizi {
+  display: flex;
+  // flex-wrap:noweap;
+  flex-wrap: wrap;
+}
+.fenzuzhuti {
+ font-size: 12px;
+  color: #909399;
+  font-weight: 700;
+  // font-style: 20px;
+  // font-size: 20px;
+  margin-left: 10px;
+}
+.duoxuan {
+  // border: 1px solid #136d87;
+  width: 100%;
+  // height: 100px;
+  // text-align: center;
+}
+.biaodan {
+  width: 100%;
+  height: 100%;
+  // border: 1px solid red;
+  overflow-y: auto;
+  //  overflow: hidden;
+  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
+   -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+/* 隐藏滚动条但仍可滚动 */
+.biaodan::-webkit-scrollbar {
+  display: none;
 }
 </style>

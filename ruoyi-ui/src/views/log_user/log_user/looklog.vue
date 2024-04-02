@@ -22,7 +22,7 @@
       </div>
 
       <div class="tijiao">
-        <el-button type="success" id="btn1" class="btn1" @click="submit()">
+        <el-button type="success" id="btn1" class="btn1" @click="submit()" v-hasPermi="['log_type_data:log_type_data:addLogType']">
           提交
         </el-button>
         <el-button class="btn2" id="btn2" @click="suspected()"
@@ -41,30 +41,6 @@
         >
       </div>
 
-      <!-- <form id="loginForm" name="loginForm" class="biaodan">
-              <el-select
-                v-model="value"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                placeholder="请选择啊"
-              >
-                <el-option-group
-                  v-for="group in options"
-                  :key="group.label"
-                  :label="group.label"
-                >
-                  <el-option
-                    v-for="item in group.options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-option-group>
-              </el-select>
-            </form> -->
     </div>
 
     <div class="showbox" id="jump" v-show="show" @contextmenu.prevent>
@@ -529,29 +505,6 @@
           <div class="warning">预警类型</div>
           <div class="warningDetail">
             <form id="loginForm" name="loginForm" class="biaodan">
-              <!-- <el-select
-                v-model="value"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                placeholder="请选择啊"
-              >
-                <el-option-group
-                  v-for="group in options"
-                  :key="group.label"
-                  :label="group.label"
-                >
-                  <el-option
-                    v-for="item in group.options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-option-group>
-              </el-select> -->
-
               <div class="duoxuan">
                 <el-checkbox-group v-model="trueValues">
                   <div v-for="(group,index) in options" :key="index">
@@ -572,13 +525,6 @@
                             size="mini"
                           >
                             {{ item.value }}
-                            <!-- {{item.leixing}} -->
-                            <!-- {{item.value == logUserList[index].logType}} -->
-                            <!-- v-model="item.xuanzhongzhuangtai" 选定之后的状态-->
-                            <!-- :checked="item.value == logUserList[index].logType" -->
-                            <!-- {{item.value}} -->
-                            <!-- {{item.value==logUserList[index].logType}} -->
-                            <!-- {{index}} -->
                           </el-checkbox>
                         </li>
                       </ul>
@@ -843,13 +789,6 @@ export default {
     },
   },
   created() {
-     // 检查 window.history.state 是否存在值
-     console.log(window.history);
-    const state = window.history.state;
-    if (state) {
-      console.log("回到查看标注页面");
-      console.log(state);
-    }
     // console.log(this.typeObj);
     // console.log('created')
     console.log("刚进查看标注页面时，路由上的值");
@@ -879,49 +818,6 @@ export default {
       // this.xunhuan()
     }
   },
-  beforeRouteLeave(to, from, next){
-    // 在离开页面 B 前保存当前状态
-    const currentState = {
-      pageNum: this.pageNum,
-      pageSize: this.pageSize,
-      typeObj: this.typeObj,
-      state:this.$route.query.state,
-      anoStatus:this.anoStatus,
-      queryParams:this.$route.query.queryParams,
-      userId: this.message.user_id,
-      logId:this.message.logid
-    };
-    console.log("离开查看标注页面时存的值：");
-    console.log(currentState);
-    
-
-    // 获取之前的文档标题
-    const previousTitle = document.title;
-     // 将当前状态存储到 window.history.state 中
-
-    window.history.replaceState(currentState,previousTitle);
-    console.log(document.title);
-    // 继续路由导航
-    next();
-  },
-
-
-
-
-//     beforeRouteEnter(to, from, next) {
-//   // 获取之前存入的 newUrl
-//   const newUrl = this.luyou?this.luyou:''
-
-//   // 进入页面 B 之后，将 URL 替换为 newUrl
-//   window.history.replaceState("", "", newUrl);
-
-//   // 在进入页面 B 之后，根据 newUrl 加载对应的页面内容
-//   // 这里你需要根据你的业务逻辑来加载页面内容，例如重新发起请求或者更新页面数据
-//   console.log('Loading content for newUrl:', newUrl);
-//   // 在这里你需要根据 newUrl 加载对应的页面内容，例如重新发起请求或者更新页面数据
-//   // 在这里你需要根据 newUrl 加载对应的页面内容，例如重新发起请求或者更新页面数据
-//   next();
-// },
 
 
   mounted() {
@@ -944,27 +840,15 @@ export default {
     getSelectList() {
       selectList().then((res) => {
         this.options = res.data;
-        console.log("这是获取预警类型表this.options");
-
-        //this.options[0].options[0].xuanzhongzhuangtai = true
-        console.log(this.options);
-        // console.log(this.logUserList);
-
-        // for (let i = 0; i < this.options.length; i++) {
-        //   let options = this.options[i].options;
-        //   for (let j = 0; j < options.length; j++) {
-        //     options[j].xuanzhongzhuangtai = false; // 添加新的键值对
-        //   }
-        // }
-        
       });
     },
     // 2获取数据标注页面数据
-    async getLogUserList(e) {
-      console.log("执行了getLogUserList函数，获取患者数据");
-      console.log("这是this.$route.query.state的值"+this.$route.query.state);
-      // this.getSelectList();
-      console.log(this.$route.query);
+    async getLogUserList() {
+
+      // console.log("执行了getLogUserList函数，获取患者数据");
+      // console.log("这是this.$route.query.state的值"+this.$route.query.state);
+      // // this.getSelectList();
+      // console.log(this.$route.query);
       if (this.$route.query.state == 1) {
 
         // this.typeObj = this.$route.query.queryParams;
@@ -978,20 +862,19 @@ export default {
           pageSize: this.pageSize,
           anoStatus:this.anoStatus,
           logTime: queryParams.logTime,
-          eventDescription: queryParams.eventDescription,
           eventName: queryParams.eventName,
           eventDescription: queryParams.eventDescription,
           pId: queryParams.pId,
           isSuspected: queryParams.isSuspected,
         };
-        
+
         console.log("查看标注页获取患者信息所需要的值");
         console.log(this.obj);
         await listAlert_log(this.obj).then((response) => {
           this.logUserList = response.rows;
           console.log("这是从单导预警页面跳转到查看标注页面获取到的数据");
           console.log(this.logUserList);
-          console.log(this.options);
+          // console.log(this.options);
           this.logUserListTotal = response.total;
           this.logUserList.forEach((item, index) => {
             if (this.message.logid == item.logId) {
@@ -1000,14 +883,12 @@ export default {
           });
         })
 
-          
         console.log(this.logUserList.length);
                 if (this.index == this.logUserList.length ) {
                   this.index = 0
                 }
 
             console.log("这是this.index的值："+this.index);
-
         console.log(this.logUserList[this.index].eventDescription);
         // 假设 this.index 是你要访问的 logUserList 数组中的索引
         if (this.logUserList[this.index].eventDescription) {
@@ -1018,9 +899,9 @@ export default {
           this.trueValues=logTypesArray
         }
           // }
-        
-        
-        
+
+
+
       } else if (this.$route.query.state == 12) {
         // console.log(this.typeObj);//undefined
         this.typeObj = this.$route.query.queryParams;
@@ -1048,7 +929,7 @@ export default {
 
           console.log("这是从12导预警页面跳转到查看标注页面获取到的数据");
           console.log(this.logUserList);
-         
+
           this.logUserListTotal = response.total;
           this.logUserList.forEach((item, index) => {
             if (this.message.logid == item.logId) {
@@ -1160,7 +1041,7 @@ export default {
         }),
         success: function (jsonResult) {
           _th.data = jsonResult.result;
-          console.log(jsonResult);
+          // console.log(jsonResult);
           _th.message.pid = jsonResult.result.patientid;
           _th.message.age = Number(jsonResult.result.age).toFixed(0);
           _th.message.sex = jsonResult.result.sex;
@@ -2591,12 +2472,8 @@ export default {
     },
     //获取标注数据
     getLabel() {
-      console.log("这是this.query");
-      console.log(this.query);
       getLabel(this.query)
         .then((res) => {
-          console.log("2400");
-          console.log(res);
           if (res.data.waveLabel != null) {
             this.subData = JSON.parse(res.data.waveLabel);
           }
@@ -2777,7 +2654,7 @@ export default {
     },
     async prev() {
       this.loading = true;
-      
+
       if (this.pageNum == 1 && this.index == 0) {
         this.$message.warning("已经是第一页！！！");
         this.loading = false;
@@ -2787,6 +2664,7 @@ export default {
       if (this.index < 0) {
         if (this.pageNum > 1) {
           this.pageNum--;
+          this.index = 9
         }
         await this.getLogUserList();
         this.index = this.pageSize - 1;
@@ -2816,7 +2694,7 @@ export default {
         `&queryParams=${this.typeObj}`;
       window.history.replaceState("", "", newUrl);
       this.getMessage();
-      
+      await this.getLogUserList()
     },
     // 点击下一页触发事件
     async next() {
@@ -2842,7 +2720,7 @@ export default {
         await this.getLogUserList();
         this.index = 0;
       }
-      
+
       console.log(
         "点击下一页，触发获取getLogUserList函数，获得10条患者数据，下面是患者数据"
       );
@@ -2895,7 +2773,7 @@ export default {
 //     };
 //     console.log("离开查看标注页面时存的值：");
 //     console.log(currentState);
-    
+
 
 //     // 获取之前的文档标题
 //     let previousTitle = document.title;
@@ -2905,33 +2783,20 @@ export default {
 
       window.history.replaceState("", "", newUrl);
       this.getMessage();
-      
+      await this.getLogUserList()
     },
 
     // 点击提交
     async submit() {
-      console.log(this.trueValues);
-      console.log("点击提交时的this.options的值");
-      console.log(this.options);
-      // let trueValues = [];
-
-      for (let i = 0; i < this.options.length; i++) {
-        let options = this.options[i].options;
-        for (let j = 0; j < options.length; j++) {
-          if (options[j].xuanzhongzhuangtai == true) {
-            this.trueValues.push(options[j].value);
-          }
-        }
-      }
 
       this.value = this.trueValues.join();
-      console.log("这是选中的值" + this.trueValues);
-      console.log("this.message.logid"+this.message.logid);
-      console.log("this.message.pid"+this.message.pid);
-      console.log("this.$route.query.state"+this.$route.query.state);
-      console.log("this.value"+this.value);
-      console.log("this.noise_list"+this.noise_list);
-      console.log("this.noise_level"+this.noise_level);
+      // console.log("这是选中的值：" + this.trueValues);
+      console.log("this.message.logid："+this.message.logid);
+      console.log("this.message.pid："+this.message.pid);
+      console.log("this.$route.query.state："+this.$route.query.state);
+      console.log("这是选中的值：this.value："+this.value);
+      console.log("this.noise_list："+this.noise_list);
+      console.log("this.noise_level："+this.noise_level);
       // 数据标注中有
       // 单导预警中没有
       console.log(this.message.user_id?this.message.user_id:0);
@@ -2966,9 +2831,9 @@ export default {
       });
 
 
-      console.log(this.value);
-      console.log(this.message.logid);
-      console.log(this.message.user_id?this.message.user_id:0);
+      // console.log(this.value);
+      // console.log(this.message.logid);
+      // console.log(this.message.user_id?this.message.user_id:0);
       console.log(this.isSuspected ? 1 : 0);
       //标注成功
       islabel({
@@ -3005,9 +2870,6 @@ export default {
       // 接口
       console.log(dataObject);
       addCount(dataObject)
-      // this.trueValues=[]
-      
-      await this.getLogUserList(this.index)
     },
 
     submitData() {
