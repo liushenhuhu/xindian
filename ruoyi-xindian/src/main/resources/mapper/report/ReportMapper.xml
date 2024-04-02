@@ -22,10 +22,11 @@
         <result property="loginUserPhone"    column="login_user_phone"    />
         <result property="refuseText"    column="refuse_text"    />
         <result property="reportNormal"    column="report_normal"    />
+        <result property="logDataType"    column="log_data_type"    />
     </resultMap>
 
     <sql id="selectReportVo">
-        select report_id, p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time,login_user_phone,refuse_text,report_normal from report
+        select report_id,p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time,login_user_phone,refuse_text,report_normal from report
     </sql>
 
     <select id="selectReportList" parameterType="Report" resultMap="ReportResult">
@@ -53,8 +54,9 @@
     </select>
 
     <select id="selectReportByPId" parameterType="string" resultMap="ReportResult">
-        <include refid="selectReportVo"/>
-        where p_id = #{pId}
+        select report_id, report.p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time,login_user_phone,refuse_text,report_normal,patient_management.log_data_type
+        from report inner join patient_management on report.p_id = patient_management.p_id
+        where report.p_id = #{pId}
     </select>
 
     <select id="groupByPatientPhone" parameterType="string" resultMap="ReportResult">

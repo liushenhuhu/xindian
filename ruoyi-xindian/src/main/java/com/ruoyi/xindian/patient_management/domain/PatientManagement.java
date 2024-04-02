@@ -242,6 +242,7 @@ public class PatientManagement extends BaseEntity {
 
 
 
+    private String logDataType;
 
     private Integer sxStatus;
 

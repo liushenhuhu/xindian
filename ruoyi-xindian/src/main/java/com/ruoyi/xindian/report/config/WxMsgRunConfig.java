@@ -199,7 +199,7 @@ public class WxMsgRunConfig {
                     Doctor doctor2 = doctorService.selectDoctorByDoctorPhone(report2.getdPhone());
                     Doctor doctor1 = new Doctor();
                     doctor1.getHospitalNameList().add(doctor2.getHospital());
-                    List<Doctor> doctors = doctorService.selectUserDoc(doctor1);
+                    List<Doctor> doctors = doctorService.selectDoctorListNot(doctor1);
                     int rand = StrUtil.randomInt(doctors.size());
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();

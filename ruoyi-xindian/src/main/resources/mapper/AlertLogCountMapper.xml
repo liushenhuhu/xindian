@@ -181,6 +181,7 @@
             <if test="grxhEcg != null "> and grxh_ecg = #{grxhEcg}</if>
             <if test="crrjqEcg != null "> and crrjq_ecg = #{crrjqEcg}</if>
         </where>
+        order by record_date desc
     </select>
 
     <select id="selectAlertLogCountByCountId" parameterType="Long" resultMap="AlertLogCountResult">
