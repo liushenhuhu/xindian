@@ -48,4 +48,11 @@ export function getLogType() {
     method: 'get'
   })
 }
+export function addReport(data) {
+  return request({
+    url: 'alert_log_count/count/addReport',
+    method: 'post',
+    data: data
+  })
+}
 

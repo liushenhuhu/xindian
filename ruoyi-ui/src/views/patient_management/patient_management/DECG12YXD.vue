@@ -708,7 +708,7 @@ export default {
     handleAlert(row) {
       this.$router.push({
         path: "log",
-        query: {pId: row.pId,type:null}});
+        query: {pId: row.pId,type:null,state:12}});
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {

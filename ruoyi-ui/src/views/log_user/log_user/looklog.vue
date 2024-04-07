@@ -775,7 +775,8 @@ export default {
       anoStatus: null,
       typeObj: {},
       pageSize: 10,
-      obj:{}
+      obj:{},
+      pId:'',
     };
   },
   watch: {
@@ -807,6 +808,7 @@ export default {
       this.pageNum = this.$route.query.pageNum; //1
       this.pageSize = this.$route.query.pageSize; //10
       this.typeObj = this.$route.query.queryParams; //{}
+      this.pId = this.$route.query.pId
 
       // 获取预警类选项型表
       this.getSelectList();
@@ -844,15 +846,22 @@ export default {
     },
     // 2获取数据标注页面数据
     async getLogUserList() {
-
+        console.log(this.typeObj);
       // console.log("执行了getLogUserList函数，获取患者数据");
       // console.log("这是this.$route.query.state的值"+this.$route.query.state);
       // // this.getSelectList();
       // console.log(this.$route.query);
       if (this.$route.query.state == 1) {
-
+        let queryParams = {}
+        if (this.typeObj) {
+          queryParams = this.typeObj;
+        } else {
+          queryParams = this.$route.query
+        }
         // this.typeObj = this.$route.query.queryParams;
-        let queryParams = this.typeObj;
+        
+
+
         // // console.log(this.typeObj);//undefined
         this.obj = {
           logId: queryParams.logId ? queryParams.logId : "",
@@ -861,16 +870,17 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           anoStatus:this.anoStatus,
-          logTime: queryParams.logTime,
-          eventName: queryParams.eventName,
-          eventDescription: queryParams.eventDescription,
-          pId: queryParams.pId,
-          isSuspected: queryParams.isSuspected,
+          logTime: queryParams.logTime ? queryParams.logTime:"",
+          eventName: queryParams.eventName ?queryParams.eventName:"" ,
+          eventDescription: queryParams.eventDescription ? queryParams.eventDescription:"",
+          pId: queryParams.pId ? queryParams.pId :"",
+          isSuspected: queryParams.isSuspected ? queryParams.isSuspected:"",
         };
 
         console.log("查看标注页获取患者信息所需要的值");
         console.log(this.obj);
         await listAlert_log(this.obj).then((response) => {
+          console.log(response);
           this.logUserList = response.rows;
           console.log("这是从单导预警页面跳转到查看标注页面获取到的数据");
           console.log(this.logUserList);
@@ -904,8 +914,13 @@ export default {
 
       } else if (this.$route.query.state == 12) {
         // console.log(this.typeObj);//undefined
-        this.typeObj = this.$route.query.queryParams;
-        let queryParams = this.typeObj;
+        // this.typeObj = this.$route.query.queryParams;
+        let queryParams = {}
+        if (this.typeObj) {
+          queryParams = this.typeObj;
+        } else {
+          queryParams = this.$route.query
+        }
         // console.log(this.typeObj);//undefined
 
         this.obj = {
@@ -915,12 +930,11 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           anoStatus: this.anoStatus,
-          logTime: queryParams.logTime,
-          eventDescription: queryParams.eventDescription,
-          eventName: queryParams.eventName,
-          eventDescription: queryParams.eventDescription,
-          pId: queryParams.pId,
-          isSuspected: queryParams.isSuspected,
+          logTime: queryParams.logTime?queryParams.logTime:"",
+          eventDescription: queryParams.eventDescription?queryParams.eventDescription:"",
+          eventName: queryParams.eventName?queryParams.eventName:"",
+          pId: queryParams.pId?queryParams.pId:"",
+          isSuspected: queryParams.isSuspected?queryParams.isSuspected:"",
         };
         console.log("查看标注页获取患者信息所需要的值");
         console.log(this.obj);
@@ -954,8 +968,13 @@ export default {
         }
       } else {
         // console.log(this.typeObj);//undefined
-        this.typeObj = this.$route.query.queryParams;
-        let queryParams = this.typeObj;
+        // this.typeObj = this.$route.query.queryParams;
+        let queryParams = {}
+        if (this.typeObj) {
+          queryParams = this.typeObj;
+        } else {
+          queryParams = this.$route.query
+        }
         // console.log(this.typeObj);//undefined
 
         this.obj = {
@@ -965,12 +984,11 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           anoStatus: this.anoStatus,
-          logTime: queryParams.logTime,
-          eventDescription: queryParams.eventDescription,
-          eventName: queryParams.eventName,
-          eventDescription: queryParams.eventDescription,
-          pId: queryParams.pId,
-          isSuspected: queryParams.isSuspected,
+          logTime: queryParams.logTime?queryParams.logTime:"",
+          eventDescription: queryParams.eventDescription?queryParams.eventDescription:"",
+          eventName: queryParams.eventName?queryParams.eventName:"",
+          pId: queryParams.pId?queryParams.pId:"",
+          isSuspected: queryParams.isSuspected?queryParams.isSuspected:"",
         };
         await listLog_user(this.obj).then((response) => {
           this.logUserList = response.rows;
@@ -2870,6 +2888,7 @@ export default {
       // 接口
       console.log(dataObject);
       addCount(dataObject)
+     
     },
 
     submitData() {

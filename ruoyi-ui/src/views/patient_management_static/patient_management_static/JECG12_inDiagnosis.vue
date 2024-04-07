@@ -892,7 +892,7 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/restingECG", query: {pId: row.pId,}});
+      this.$router.push({path: "/restingECG", query: {pId: row.pId,state:12}});
     },
     /** 生成报告*/
     handleInform(row) {

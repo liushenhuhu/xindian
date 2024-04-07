@@ -3,7 +3,7 @@
     <div id="pdfDom" style="padding: 10px;">
       <div id="app">
         <div class="page">
-          <div class="box">
+          <div class="box"  v-if="xuanzheyujingleixing">
             <div class="patientMessage">
               <div class="h11">
                 <span></span>
@@ -43,6 +43,21 @@
                 <div class="text">
                   <div class="ml">{{ data.patientSymptom }}</div>
                 </div>
+
+                <div class="h11" style="display: flex;justify-content:space-between;">
+              <div>
+                <span></span>
+                <p>预警类型</p></div>
+                <div>
+                  <el-button type="success" round size="mini" class="kangbian"  @click="xianshi">选择预警类型</el-button>
+                  <el-button type="success" round size="mini" class="kangbian" @click="tijiao()">提交</el-button>
+                </div>
+              </div>
+              <div class="text">
+                <div class="ml">{{ xianshizifuchuan }}</div>
+              </div>
+
+
             </div>
             <div class="result2 size mmargin">
               <div class="h11">
@@ -132,6 +147,43 @@
               </div>
             </div>
           </div>
+          
+          <!-- 预警类型弹窗 -->
+          <div class="xuanzheyujing" v-else >
+            <div class="wancheng">
+              <div>选中的值为：{{xianshizifuchuan}}</div>
+              <div><el-button type="success" round size="mini" class="kangbian" @click="xianshi">完成</el-button></div>
+            </div>
+            <form id="loginForm" name="loginForm" class="biaodan">
+                <div class="duoxuan">
+                  <el-checkbox-group v-model="zhi" @change="zhong">
+                    <div v-for="(group,index) in yujingzhi" :key="index">
+                      <div class="fenzuzhuti">
+                        {{ group.label }}
+                      </div>
+                      <div class="fenzuzhutizi">
+                        <ul class="xiaoul">
+                          <li
+                            v-for="(item,i) in group.options"
+                            class="xiaoli"
+                            :key="i"
+                          >
+                            <el-checkbox
+                              :label="item.value"
+                              border
+                              size="mini"
+                            >
+                              {{ item.value }}
+                            </el-checkbox>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="xian"></div>
+                    </div>
+                  </el-checkbox-group>
+                </div>
+              </form>
+          </div>
 
           <div style="padding-left: 2vw;font-size: 1vw">10mm/mV 25mm/s</div>
           <div class="body" id="body">
@@ -197,11 +249,26 @@ import {addLabel} from "@/api/log_user/log_user";
 import child from "@/views/staticECG/staticECG/child.vue";
 import {selectDoctor} from "@/api/statistics/statistics";
 var elementResizeDetectorMaker = require("element-resize-detector")
+
+// 获取预警类型选项
+import {selectList} from "@/api/log_user/log_user";
+// 存储选择的预警类型
+import {addReport as addReportyujing} from "@/api/alert_log_count/count";
+
 export default {
   name: "index",
   components: {child},
   data() {
     return {
+      // 原先提交过的预警类型
+      logDataType:'',
+      tijiaoshuju:{},
+      zhi:[],
+      xuanzheyujingleixing:true,
+      yujingzhi:[],
+      xianshizifuchuan:'',
+
+
       isSelected: false,//术语按钮没有被按下
       dialogFormVisible: false,
       items: [],//常用术语
@@ -397,6 +464,8 @@ export default {
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
         this.data.pId = response.data.pId
+        // 原先提交过的预警类型
+        this.logDataType =  response.data.logDataType
         if (!this.data.doctorName){
           const date = new Date();
           const year = date.getFullYear().toString().padStart(4, '0');
@@ -426,9 +495,108 @@ export default {
     if (show) {
       this.get();
     }
+    //预警的类型
+    this.getyujingleixing()
   },
   methods: {
+    getyujingleixing(){
+      selectList().then((res) => {
+        this.yujingzhi = res.data;
+        // console.log("这是预警值");
+        // console.log(this.yujingzhi);
+        
 
+        if (this.logDataType) {
+          this.xianshizifuchuan = this.logDataType
+          // 已逗号分隔，并去除每一项中的空格
+          this.zhi=this.logDataType.split(',').map(str => str.trim())
+          // console.log("如果有logDataType就放入zhi中");
+          // console.log(this.zhi);
+        } else {
+          console.log(this.data.result);
+          let zuanhua = ''
+          zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
+          // console.log("去掉括号的内容："+zuanhua);
+          let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
+          console.log("原先没有提交过预警类型，下面是智能判断的值，去掉括号总的，变成了数组");
+          console.log(a);
+          let matchedValues = [];
+
+            a.forEach(logValue => {
+              // 遍历yujingzhi数组中的每个对象
+              this.yujingzhi.forEach(item => {
+                // 在options中查找匹配项
+                item.options.forEach(options => {
+                  if (options.value == logValue) {
+                    // 如果找到匹配项，则将其加入matchedValues数组
+                    matchedValues.push(options.value);
+                  }
+                });
+              });
+            });
+
+          // console.log(matchedValues);
+          // this.zhi= zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== ""); // 使用逗号或中文逗号分隔并去除空格
+          // this.zhi=matchedValues
+          // console.log("去除空格的内容");
+          // console.log(this.zhi);
+          this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
+          this.zhi=matchedValues
+          console.log("智能推荐中的值，并且预警类型中的有的：");
+          console.log(this.zhi); // 输出结果
+        }
+      });
+    },
+    // 打印选中的值
+    zhong(data){
+      // console.log(data);
+      this.zhi=data
+      this.xianshizifuchuan = this.zhi.map(item => item.toString()).join(", ")
+    },
+    // 选择预警类型的开关
+    xianshi(){
+      this.xuanzheyujingleixing = !this.xuanzheyujingleixing;
+    },
+    // 提交预警类型
+    tijiao(){
+      console.log(this.zhi);
+      let selectedValues = [];
+
+      // 遍历trueValues数组
+      this.zhi.forEach((zhii) => {
+        // 遍历options数组
+        this.yujingzhi.forEach((yujingzhi) => {
+          // 遍历当前option对象中的zhong数组
+          yujingzhi.options.forEach((options) => {
+            // 如果当前zhongItem对象的label等于trueValue，则将其value添加到selectedValues数组中
+            if (options.value === zhii) {
+              selectedValues.push(options.label + "Ecg");
+            }
+          });
+        });
+      })
+      let dataObject = {
+        pId:this.data.pId,
+        logId: this.data.logid?this.data.logid:this.data.pId,
+        leadCount:this.$route.query.state,
+        logType:this.zhi.join(",")
+      };
+      for (let i = 0; i < selectedValues.length; i++) {
+        // 将数组中的每个字符串作为对象的键，值为1，并放入dataObject对象中
+        dataObject[selectedValues[i]] = 1;
+      }
+      this.tijiaoshuju = dataObject
+      console.log("这是要提交的值：")
+      console.log(this.tijiaoshuju)
+      // return
+      if (dataObject.logType != '') {
+        addReportyujing(this.tijiaoshuju)
+        this.$modal.msgSuccess("数据提交成功");
+      } else {
+        this.$modal.msgError("数据提交失败，请选择预警类型");
+      }
+      
+    },
     dialogVisible(){
       getTerm().then(r=>{
         if (r.rows.length>0){
@@ -2040,15 +2208,25 @@ export default {
     margin: 1.5vh 0 1.5vh 0;
     width: 35%;
     .info{
-      width: 90%;
+      // width: 90%;
+      // display: flex;
+      // flex-direction: row;
+      // flex-wrap: wrap;
+      // margin-left: 1.8vw;
+      // margin-top: 3vh;
+
+      flex: 1;
       display: flex;
-      flex-direction: row;
+      justify-content: space-between;
       flex-wrap: wrap;
-      margin-left: 1.8vw;
-      margin-top: 3vh;
+      //background-color: #e01806;
+      //height: 20vh;
+      padding: 1.5vh 0 1.5vh 0;
+      margin-left: 2vw;
+      width: 90%;
       .textbox{
         width:45%;
-        margin-bottom: 2vh;
+        margin-bottom: 1.5vh;
         font-size: 2.1vh;
       }
       .textBoxBottom{
@@ -2095,6 +2273,11 @@ export default {
     .text{
       height: 16vh;
       //border: 1px darkgray solid;
+      overflow: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
+      -ms-overflow-style: none;
+    scrollbar-width: none;
     }
   }
   .selected {
@@ -2377,5 +2560,74 @@ export default {
 }
 ::v-deep .el-select-dropdown__item {
   padding: 0 20px;
+}
+.xuanzheyujing{
+  width: 98%;
+  margin: 0 auto ;
+  margin-top: 1.5vh;
+  margin-bottom: 1.5vh;
+  border-radius: 2vh;
+  background-color: #e8e8e8;
+  align-items: center;
+  padding: 10px;
+  height: 62.5vh;
+  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
+   -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.xian {
+  border-bottom: 1px solid #000;
+}
+.xiaoli {
+  list-style: none;
+  // motion: 1px;
+  padding: 0 0 3.5px 3.5px;
+  width: 25%;
+  display: block;
+  float: left;
+}
+.xiaoul {
+  margin: 0.5vh 0 0 0;
+  padding: 0;
+  width: 100%;
+}
+.fenzuzhutizi {
+  display: flex;
+  // flex-wrap:noweap;
+  flex-wrap: wrap;
+}
+.fenzuzhuti {
+ font-size: 12px;
+  color: #909399;
+  font-weight: 700;
+  // font-style: 20px;
+  // font-size: 20px;
+  margin-left: 10px;
+}
+.duoxuan {
+  // border: 1px solid #136d87;
+  width: 100%;
+  // height: 100px;
+  // text-align: center;
+}
+.biaodan {
+  width: 100%;
+  // height: 85%;
+  // border: 1px solid red;
+  overflow-y: auto;
+  //  overflow: hidden;
+  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
+   -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+/* 隐藏滚动条但仍可滚动 */
+.biaodan::-webkit-scrollbar {
+  display: none;
+}
+.wancheng{
+  display: flex;
+  justify-content:space-between;
 }
 </style>

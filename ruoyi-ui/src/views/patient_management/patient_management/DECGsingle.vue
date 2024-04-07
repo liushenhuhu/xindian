@@ -735,7 +735,7 @@ export default {
       console.log(row)
       this.$router.push({
         path: "log",
-        query: {pId: row.pId}});
+        query: {pId: row.pId,state:1}});
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {

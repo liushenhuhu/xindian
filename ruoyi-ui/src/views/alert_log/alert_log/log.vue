@@ -329,7 +329,7 @@ export default {
       this.queryParams.pId = this.$route.query.pId
       this.queryParams.logType = this.$route.query.type
       this.queryParams.ecgType = this.$route.query.ecgType
-      console.log(this.queryParams)
+      // console.log(this.queryParams)
       this.loading = true;
       this.queryParams.params = {};
       if (null != this.daterangeLogTime && '' != this.daterangeLogTime) {
@@ -342,7 +342,10 @@ export default {
       if (this.queryParams.ecgType==='null'){
         this.queryParams.ecgType=null;
       }
+      console.log("为获取患者列表所放入的参数");
+      console.log(this.queryParams);
       listAlert_log(this.queryParams).then(response => {
+        console.log(response);
         this.alert_logList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -440,14 +443,48 @@ export default {
 
     /** 查看日志*/
     handleLook(row) {
+      console.log(row);
       console.log(row.logId);
       // this.$router.push({
       //   name: "lookLog",
       //   params: {logId: row.logId, logType: row.logType}
       // });
+      console.log(this.queryParams);
+      // return
       this.$router.push({
         path: "/lookLog1",// name: "lookLog"
-        query: {logId: row.logId, logType: row.logType,userId:0,state:1}
+        query: {
+          logId: row.logId,
+          // logType: row.logType,
+          userId:0,
+          state:this.$route.query.state,
+          // 隐藏上一页下一页
+          // kaiguan:false
+          ecgType: this.queryParams.ecgType,
+          pageNum: this.queryParams.pageNum,
+          pageSize: this.queryParams.pageSize,
+          isSuspected: this.queryParams.isSuspected,
+          anoStatus: this.queryParams.anoStatus,
+          queryParams: this.queryParams,
+          }
+
+        // query: {
+        //   logId: row.logId,
+        //   userId:0,
+        //   ecgType:this.queryParams.ecgType,
+
+
+        //   logType: this.queryParams.logType,
+        //   isSuspected:"",
+          
+        //   pId: this.queryParams.pId,
+        //   logTime:this.queryParams.logTime,
+          
+        //   eventDescription:this.queryParams.eventDescription,
+        //   eventName:this.queryParams.eventName,
+        //   logTime:this.queryParams.logTime,
+        //   state:1,
+        // }
       });
     },
   }
