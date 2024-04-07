@@ -386,13 +386,13 @@ export default {
         this.queryParams.params["beginLogTime"] = this.daterangeLogTime[0];
         this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
       }
-      console.log("12导预警获得患者数据所需要的值");
-      console.log(this.queryParams);
+      // console.log("12导预警获得患者数据所需要的值");
+      // console.log(this.queryParams);
       listAlert_log(this.queryParams).then(response => {
         this.alert_logList = response.rows;
         this.total = response.total;
-        console.log("12导预警获得的患者列表数据");
-        console.log(this.alert_logList);
+        // console.log("12导预警获得的患者列表数据");
+        // console.log(this.alert_logList);
         this.loading = false;
       });
     },
@@ -489,7 +489,7 @@ export default {
 
     /** 查看日志*/
     handleLook(row) {
-      console.log(row.logId);
+      // console.log(row.logId);
       // this.$router.push({
       //   name: "lookLog",
       //   params: {logId: row.logId, logType: row.logType, userId: 0}
@@ -497,8 +497,8 @@ export default {
       this.$router.push({
         path: "/lookLog1",// name: "lookLog"
         // query: {
-        //   logId: row.logId, 
-        //   logType: row.logType, 
+        //   logId: row.logId,
+        //   logType: row.logType,
         //   userId: 0,
         //   state:1,
         //   queryParams:this.queryParams

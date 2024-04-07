@@ -705,7 +705,7 @@ export default {
         this.queryParams.ecgType = this.ecgType
       }
       listPatient_management(this.queryParams).then(response => {
-        console.log(response)
+        // console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;

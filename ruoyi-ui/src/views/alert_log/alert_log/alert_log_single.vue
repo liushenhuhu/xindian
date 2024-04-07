@@ -843,9 +843,6 @@ export default {
       this.options = r.rows;
     });
     this.getList();
-    console.log("数据帆帆");
-
-    console.log(this.message);
   },
   /*  activated() {
     if (this.$route.query.pId) {
@@ -862,13 +859,13 @@ export default {
         this.queryParams.params["beginLogTime"] = this.daterangeLogTime[0];
         this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
       }
-      console.log("单导预警获得患者数据所需要的值");
-      console.log(this.queryParams);
+      // console.log("单导预警获得患者数据所需要的值");
+      // console.log(this.queryParams);
       listAlert_log(this.queryParams).then((response) => {
         this.alert_logList = response.rows;
         this.total = response.total;
-        console.log("单导预警获得的患者列表数据");
-        console.log(this.alert_logList);
+        // console.log("单导预警获得的患者列表数据");
+        // console.log(this.alert_logList);
         this.loading = false;
       });
     },
@@ -972,8 +969,8 @@ export default {
 
     /** 查看日志*/
     handleLook(row) {
-      console.log(row);
-      console.log(this.queryParams);
+      // console.log(row);
+      // console.log(this.queryParams);
       // console.log("点击这是查看日志时传的值" + row.logId);
 
       // this.$router.push({

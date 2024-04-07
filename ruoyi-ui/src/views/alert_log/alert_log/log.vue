@@ -342,10 +342,10 @@ export default {
       if (this.queryParams.ecgType==='null'){
         this.queryParams.ecgType=null;
       }
-      console.log("为获取患者列表所放入的参数");
-      console.log(this.queryParams);
+      // console.log("为获取患者列表所放入的参数");
+      // console.log(this.queryParams);
       listAlert_log(this.queryParams).then(response => {
-        console.log(response);
+        // console.log(response);
         this.alert_logList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -443,13 +443,13 @@ export default {
 
     /** 查看日志*/
     handleLook(row) {
-      console.log(row);
-      console.log(row.logId);
+      // console.log(row);
+      // console.log(row.logId);
       // this.$router.push({
       //   name: "lookLog",
       //   params: {logId: row.logId, logType: row.logType}
       // });
-      console.log(this.queryParams);
+      // console.log(this.queryParams);
       // return
       this.$router.push({
         path: "/lookLog1",// name: "lookLog"
