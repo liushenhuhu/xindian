@@ -732,7 +732,7 @@ export default {
     },
     /** 跳转到预警日志*/
     handleAlert(row) {
-      console.log(row)
+      // console.log(row)
       this.$router.push({
         path: "log",
         query: {pId: row.pId,state:1}});

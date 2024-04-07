@@ -47,7 +47,8 @@
             <div class="h11" style="display: flex;justify-content:space-between;">
               <div>
                 <span></span>
-                <p>预警类型</p></div>
+                <p>预警类型</p>
+              </div>
               <div>
                 <el-button type="success" round size="mini" class="kangbian"  @click="xianshi">选择预警类型</el-button>
                 <el-button type="success" round size="mini" class="kangbian" @click="tijiao()">提交</el-button>
@@ -56,6 +57,7 @@
             <div class="result size mmargin">
               <div class="ml">{{ xianshizifuchuan }}</div>
             </div>
+
           </div>
           <div class="box3">
             <div class="h11">
@@ -375,7 +377,7 @@ export default {
     if (pId) {
       this.pId = pId;
       getReportByPId(this.pId).then(response => {
-        console.log(response)
+        // console.log(response)
         this.data.result = response.data.intelligentDiagnosis
         this.data.resultByDoctor = response.data.diagnosisConclusion
         this.data.doctorName = response.data.diagnosisDoctor
@@ -398,16 +400,7 @@ export default {
         if (response.data.patientSymptom!=null) {
           this.data.patientSymptom = response.data.patientSymptom
  	      }
-        console.log(this.data)
-
-
-        
-        
-
-
-
-
-
+        // console.log(this.data)
       });
       selectDoctor().then(response => {
         this.options = response;
@@ -440,8 +433,8 @@ export default {
           zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
           // console.log("去掉括号的内容："+zuanhua);
           let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
-          console.log("原先没有提交过预警类型，下面是智能判断的值，去掉括号总的，变成了数组");
-          console.log(a);
+          // console.log("原先没有提交过预警类型，下面是智能判断的值，去掉括号总的，变成了数组");
+          // console.log(a);
           let matchedValues = [];
 
             a.forEach(logValue => {
@@ -464,8 +457,8 @@ export default {
           // console.log(this.zhi);
           this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
           this.zhi=matchedValues
-          console.log("智能推荐中的值，并且预警类型中的有的：");
-          console.log(this.zhi); // 输出结果
+          // console.log("智能推荐中的值，并且预警类型中的有的：");
+          // console.log(this.zhi); // 输出结果
         }
       });
     },
@@ -1928,7 +1921,7 @@ export default {
     },
     // 提交预警类型
     tijiao(){
-      console.log(this.zhi);
+      // console.log(this.zhi);
       let selectedValues = [];
 
       // 遍历trueValues数组
@@ -1955,8 +1948,8 @@ export default {
         dataObject[selectedValues[i]] = 1;
       }
       this.tijiaoshuju = dataObject
-      console.log("这是要提交的值：")
-      console.log(this.tijiaoshuju)
+      // console.log("这是要提交的值：")
+      // console.log(this.tijiaoshuju)
       if (dataObject.logType != '') {
         addReportyujing(this.tijiaoshuju)
         this.$modal.msgSuccess("数据提交成功");
