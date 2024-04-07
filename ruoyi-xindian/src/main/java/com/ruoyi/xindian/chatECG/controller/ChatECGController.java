@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.chatECG.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -20,17 +21,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,59 +49,44 @@ public class ChatECGController extends BaseController {
 
 
     @Resource
+    private RestTemplate restTemplate;
+
+    @Resource
     private ChatQuizService chatQuizService;
 
 
     @PostMapping("/proxyRequest")
-    public JSONObject proxyRequest(@RequestBody Chat chat) throws ParseException {
-        //System.out.println(new ArrayList());
+    public HashMap<String,Object> proxyRequest(@RequestBody Chat chat) throws ParseException {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         //定义发送数据
-        JSONObject param = new JSONObject();
-        param.put("prompt", chat.getText());
-        param.put("history", JSON.parseArray(chat.getHistory()));
-        /*if(StringUtils.isEmpty(chat.getHistory())){
-            param.put("history", new ArrayList());
+        HttpHeaders headers = new HttpHeaders(); //构建请求头
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("prompt", chat.getText());
+        JSONArray objects = JSON.parseArray(chat.getHistory());
+        if (objects!=null){
+            paramsMap.put("history", objects);
         }else {
-            param.put("history", JSON.parseArray(chat.getHistory()));
-        }*/
-
-        //定义接收数据
-        JSONObject result = new JSONObject ();
-
-        String url = "http://202.102.249.124:6025/";
-        //String url = "https://ecgdoctor.mindyard.cn/";
-        HttpPost httpPost = new HttpPost(url);
-        CloseableHttpClient client = HttpClients.createDefault();
-        //请求参数转JOSN字符串
-        StringEntity entity = new StringEntity(JSONObject.toJSONString(param), "UTF-8");
-        entity.setContentEncoding("UTF-8");
-        entity.setContentType("application/json");
-        httpPost.setEntity(entity);
-        try {
-            HttpResponse response = client.execute(httpPost);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                result = JSON.parseObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            result.put("error", "连接错误！");
+            paramsMap.put("history", new String[]{});
         }
-            //关闭连接
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "http://219.155.7.235:6025/";
+        HashMap<String,Object> sendMessageVo=new HashMap<>();
         try {
-            client.close();
-        } catch (Exception e) {
-            log.error(e.getMessage());
+            sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
+        }catch (Exception e){
+            sendMessageVo=new HashMap<>();
+            sendMessageVo.put("response","对不起，网络出小差了");
+            System.out.println(e);
         }
-        System.out.println(result.get("response"));
 
-
-        /*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parse = new Date();
-        result.put("responseTime",simpleDateFormat.format(parse));
+        sendMessageVo.put("responseTime",simpleDateFormat.format(parse));
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        JSONObject finalResult = result;
+        HashMap<String,Object> finalResult = sendMessageVo;
         CompletableFuture.runAsync(() ->{
             System.out.println("异步线程 =====> 保存数据 =====> " + new Date());
             try{
@@ -131,10 +118,38 @@ public class ChatECGController extends BaseController {
             }
             System.out.println("异步线程 =====> 结束保存数据 =====> " + new Date());
         },executorService);
-        executorService.shutdown(); // 回收线程池*/
-        return result;
+        executorService.shutdown(); // 回收线程池
+        return sendMessageVo;
     }
 
+
+    @PostMapping("/appProxyRequest")
+    public Map<String, Object> appProxyRequest(@RequestBody Chat chat) throws ParseException {
+        HttpHeaders headers = new HttpHeaders(); //构建请求头
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("prompt", chat.getText());
+        JSONArray objects = JSON.parseArray(chat.getHistory());
+        if (objects!=null){
+            paramsMap.put("history", objects);
+        }else {
+            paramsMap.put("history", new String[]{});
+        }
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+        String url = "http://219.155.7.235:6025/";
+        HashMap<String,Object> sendMessageVo=new HashMap<>();
+        try {
+            sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
+        }catch (Exception e){
+            sendMessageVo=new HashMap<>();
+            sendMessageVo.put("response","对不起，网络出小差了");
+            System.out.println(e);
+        }
+        System.out.println(sendMessageVo.get("response"));
+
+        return sendMessageVo;
+    }
 
     /**
      * 查询用户窗口
