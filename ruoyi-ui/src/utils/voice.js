@@ -3,8 +3,8 @@ let resultText = "";
 const CryptoJS = require('crypto-js');
 
 export class Voc {
-  appid = '571c7913'
-  api_key = '045b619501631628625c632f1f8de463'
+  appid = 'c8ab39fd'
+  api_key = '7c7d3c06870677ba74e678dbb637a299'
   openState = '0'
   timeOutObj = null;
   oneState = 1;
