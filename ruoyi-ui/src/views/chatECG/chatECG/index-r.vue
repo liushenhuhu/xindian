@@ -212,6 +212,8 @@ export default {
       resultState: 0,
       audioLock: null,
       msgOverLock: null,
+      newText:'',
+      textInterval:null
     };
   },
   computed: {
@@ -363,6 +365,7 @@ export default {
     },
     // 用户发送消息
     sentMsg() {
+      this.overTurn();
       let th = this;
       //console.log("queryParams: ====="+this.queryParams.history);
       this.audioPlayer.stopAudio()
@@ -399,6 +402,7 @@ export default {
             time: this.getTodayTime(),
             content: text,
           };
+          this.overTurn();
           this.info.push(obj);
           console.log(3)
           this.customerText = "";
@@ -489,6 +493,28 @@ export default {
         }
       }
     },
+
+    turnText(){
+      //info的最后一项
+      this.textInterval = setInterval(()=>{
+        if(this.newText.length === 0){
+          clearInterval(this.textInterval)
+          return
+        }
+        this.info[this.info.length - 1].content+= this.newText[0]
+        this.newText = this.newText.slice(1)
+        this.$nextTick(() => {
+          let contentHeight = document.getElementById("right");
+          contentHeight.scrollTop = contentHeight.scrollHeight;
+        });
+      },100)
+    },
+    overTurn(){
+      if(this.newText.length == 0) return;
+      clearInterval(this.textInterval)
+      this.info[this.info.length - 1].content += this.newText;
+      this.newText = ''
+    },
     // 机器人回答消息
     appendRobotMsg(text) {
       clearTimeout(this.timer);
@@ -509,9 +535,13 @@ export default {
           type: "leftinfo",
           time: text.responseTime,
           name: "robot",
-          content: answerText,
+          original:answerText,
+          content: "",
           question: [],
         };
+        this.overTurn();
+        this.newText = answerText;
+          this.turnText();
         this.info.push(obj);
       } /*else {
         answerText = "您可能想问：";
@@ -769,9 +799,7 @@ export default {
 
       this.isAddNewWin = true;
 
-      this.$refs[
-      "div-" + this.conversation[0].conversationId
-        ][0].classList.remove("bgc");
+      this.$refs["div-" + this.conversation[0].conversationId][0].classList.remove("bgc");
       this.conversation.forEach((i, index) => {
         this.$refs["div-" + i.conversationId][0].style.backgroundColor = "";
       });
@@ -860,7 +888,6 @@ export default {
 
       .info_r {
         display: flex;
-        align-items: center;
         margin-top: 1vh;
 
         .pic_ro {
