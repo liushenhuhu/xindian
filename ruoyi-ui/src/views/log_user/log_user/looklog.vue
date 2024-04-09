@@ -1,9 +1,9 @@
 <template>
   <div class="main">
     <!-- <div class="topMiddle">
-      <div class="warning">患者信息</div>
+      <div class="warning">用户信息</div>
       <div class="messageDetail">
-        <span id="pID">患者ID：{{ message.pid }}</span>
+        <span id="pID">用户ID：{{ message.pid }}</span>
         <span id="logID">日志ID：{{ message.logid }}</span>
         <span id="psex">性别：{{ message.sex }}</span>
         <span id="pAge">年龄：{{ message.age }}</span>
@@ -12,9 +12,9 @@
     </div> -->
 
     <div class="patientInformation">
-      <div class="patientInformation-biaoti">患者信息</div>
+      <div class="patientInformation-biaoti">用户信息</div>
       <div class="patientInformation-xiangxi">
-        <span id="">患者ID：{{ message.pid }}</span>
+        <span id="">用户ID：{{ message.pid }}</span>
         <span id="">日志ID：{{ message.logid }}</span>
         <span id="">性别：{{ message.sex }}</span>
         <span id="">年龄：{{ message.age }}</span>
@@ -812,7 +812,7 @@ export default {
 
       // 获取预警类选项型表
       this.getSelectList();
-      // 获取数据患者列表 数据标注
+      // 获取数据用户列表 数据标注
       this.getLogUserList();
       // this.getSelectList();
       this.getLabel();
@@ -820,8 +820,6 @@ export default {
       // this.xunhuan()
     }
   },
-
-
   mounted() {
     this.getMessage();
     this.chartjump = echarts.init(document.getElementById("chartjump"));
@@ -847,7 +845,7 @@ export default {
     // 2获取数据标注页面数据
     async getLogUserList() {
         console.log(this.typeObj);
-      // console.log("执行了getLogUserList函数，获取患者数据");
+      // console.log("执行了getLogUserList函数，获取用户数据");
       // console.log("这是this.$route.query.state的值"+this.$route.query.state);
       // // this.getSelectList();
       // console.log(this.$route.query);
@@ -877,7 +875,7 @@ export default {
           isSuspected: queryParams.isSuspected ? queryParams.isSuspected:"",
         };
 
-        // console.log("查看标注页获取患者信息所需要的值");
+        // console.log("查看标注页获取用户信息所需要的值");
         // console.log(this.obj);
         await listAlert_log(this.obj).then((response) => {
           // console.log(response);
@@ -936,7 +934,7 @@ export default {
           pId: queryParams.pId?queryParams.pId:"",
           isSuspected: queryParams.isSuspected?queryParams.isSuspected:"",
         };
-        // console.log("查看标注页获取患者信息所需要的值");
+        // console.log("查看标注页获取用户信息所需要的值");
         // console.log(this.obj);
         await listAlert_log(this.obj).then((response) => {
           this.logUserList = response.rows;
@@ -992,7 +990,7 @@ export default {
         };
         await listLog_user(this.obj).then((response) => {
           this.logUserList = response.rows;
-          // 患者的数组
+          // 用户的数组
           // console.log("这是从数据标注页面跳转到查看标注页面获取到的数据");
           // console.log(this.logUserList);
           this.logUserListTotal = response.total;
@@ -2723,7 +2721,7 @@ export default {
       // console.log(this.logUserList.length); //0
 
       if (this.index >= this.logUserList.length) {
-        // console.log("获取新的患者数据10");
+        // console.log("获取新的用户数据10");
         if (
           (this.pageNum - 1) * this.pageSize + this.logUserList.length >=
           this.logUserListTotal
@@ -2740,7 +2738,7 @@ export default {
       }
 
       // console.log(
-      //   "点击下一页，触发获取getLogUserList函数，获得10条患者数据，下面是患者数据"
+      //   "点击下一页，触发获取getLogUserList函数，获得10条用户数据，下面是用户数据"
       // );
       // console.log(this.logUserList[this.index]);
       // console.log(this.logUserList);
@@ -3297,7 +3295,7 @@ html {
   flex-wrap: nowrap;
   justify-content: flex-start;
 }
-// 患者信息
+// 用户信息
 .patientInformation {
   // border: 1px solid red;
   font-size: 1vw;

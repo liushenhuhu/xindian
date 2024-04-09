@@ -3,24 +3,24 @@
     <router-view v-if="isRouterAlive"></router-view>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
-      <el-form-item label="患者姓名" prop="patientName">
+      <el-form-item label="用户姓名" prop="patientName">
         <el-input
           v-model="queryParams.patientName"
-          placeholder="请输入患者姓名"
+          placeholder="请输入用户姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者性别" prop="patientSex">
+      <el-form-item label="用户性别" prop="patientSex">
         <el-select placeholder="请选择性别" v-model="queryParams.patientSex">
           <el-option label="男" value="男"></el-option>
           <el-option label="女" value="女"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="患者电话" prop="patientPhone">
+      <el-form-item label="用户电话" prop="patientPhone">
         <el-input
           v-model="queryParams.PatPhone"
-          placeholder="请输入患者电话"
+          placeholder="请输入用户电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -36,10 +36,10 @@
          </el-option>
        </el-select>
       </el-form-item>
-<!--      <el-form-item label="患者管理编号" prop="pId">
+<!--      <el-form-item label="用户管理编号" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入患者管理编号"
+          placeholder="请输入用户管理编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -137,10 +137,10 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="患者管理id" prop="pId">
+      <el-form-item label="用户管理id" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入患者管理id"
+          placeholder="请输入用户管理id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -226,17 +226,17 @@
         </template>
       </el-table-column>
 
-      <!--      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
-            <el-table-column label="患者姓名" align="center" prop="patientName"/>
-            <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
-            <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-            <el-table-column label="患者性别" align="center" prop="patientSex">
+      <!--      <el-table-column label="用户管理id" align="center" prop="pId" show-overflow-tooltip/>
+            <el-table-column label="用户姓名" align="center" prop="patientName"/>
+            <el-table-column label="用户身份证号" align="center" prop="patientCode"/>
+            <el-table-column label="用户年龄" align="center" prop="patientAge"/>
+            <el-table-column label="用户性别" align="center" prop="patientSex">
               <template slot-scope="scope">
                 <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
               </template>
             </el-table-column>
-            <el-table-column label="患者来源" align="center" prop="patientSource"/>
-            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+            <el-table-column label="用户来源" align="center" prop="patientSource"/>
+            <el-table-column label="用户电话" align="center" prop="patientPhone"/>
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>
             <el-table-column label="监测状态" align="center" prop="monitoringStatus">
               <template slot-scope="scope">
@@ -258,13 +258,13 @@
             </el-table-column>-->
       <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
 
-      <el-table-column label="患者名称" align="center" prop="patientName">
+      <el-table-column label="用户名称" align="center" prop="patientName">
         <template slot-scope="scope">
          <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
           <span v-else>***</span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
+<!--      <el-table-column label="用户症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
 <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
 <!--      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >-->
 <!--        <template slot-scope="scope">-->
@@ -288,7 +288,7 @@
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
-      <!--  隐藏的患者的个人信息    -->
+      <!--  隐藏的用户的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
@@ -299,25 +299,25 @@
             <el-form-item label="医院名称" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalName }}</span>
             </el-form-item>
-            <el-form-item label="患者管理id" width="200" style="padding-left: 40px">
+            <el-form-item label="用户管理id" width="200" style="padding-left: 40px">
               <span>{{ scope.row.pId }}</span>
             </el-form-item>
-<!--            <el-form-item label="患者姓名" width="200" style="padding-left: 40px">-->
+<!--            <el-form-item label="用户姓名" width="200" style="padding-left: 40px">-->
 <!--              <span>{{ scope.row.patientName }}</span>-->
 <!--            </el-form-item>-->
-            <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
+            <el-form-item label="用户身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
-            <el-form-item label="患者年龄" width="200" style="padding-left: 40px">
+            <el-form-item label="用户年龄" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientAge }}</span>
             </el-form-item>
-            <el-form-item label="患者性别" width="200" style="padding-left: 40px">
+            <el-form-item label="用户性别" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSex }}</span>
             </el-form-item>
-            <!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+            <!--            <el-form-item label="用户来源" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.patientSource }}</span>
                         </el-form-item>-->
-            <el-form-item label="患者电话" width="200" style="padding-left: 40px">
+            <el-form-item label="用户电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
@@ -413,11 +413,11 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改患者管理对话框 -->
+    <!-- 添加或修改用户管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="患者电话" prop="patientPhone">
-          <el-input v-model="form.patientPhone" placeholder="请输入患者电话"/>
+        <el-form-item label="用户电话" prop="patientPhone">
+          <el-input v-model="form.patientPhone" placeholder="请输入用户电话"/>
         </el-form-item>
         <el-form-item label="医院代号" prop="hospitalCode">
           <el-input v-model="form.hospitalCode" placeholder="请输入医院代号"/>
@@ -554,7 +554,7 @@ export default {
         password:null,
         status:false
       },
-      // 患者管理表格数据
+      // 用户管理表格数据
       patient_managementList: [],
       // 弹出层标题
       title: "",
@@ -592,7 +592,7 @@ export default {
       // 表单校验
       rules: {
         patientPhone: [
-          {required: true, message: "患者电话不能为空", trigger: "blur"}
+          {required: true, message: "用户电话不能为空", trigger: "blur"}
         ],
         hospitalCode: [
           {required: true, message: "医院代号不能为空", trigger: "blur"}
@@ -684,9 +684,9 @@ export default {
       var isPhoneNumberValid = reg.test(patientPhone);
       if(isPhoneNumberValid) {
         console.log(patientPhone)
-        console.log("患者电话: " + row.patientPhone)
-        console.log("患者姓名: " + row.patientName)
-        this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
+        console.log("用户电话: " + row.patientPhone)
+        console.log("用户姓名: " + row.patientName)
+        this.$confirm('向该用户发送短信提示采集存在较大干扰?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -705,7 +705,7 @@ export default {
         });
       }
       else{
-        this.$message.error('该患者手机号不合法！！！');
+        this.$message.error('该用户手机号不合法！！！');
       }
     },
 
@@ -717,7 +717,7 @@ export default {
     },
 
 
-    /** 查询患者管理列表 */
+    /** 查询用户管理列表 */
     getList() {
       this.loading = true;
       this.queryParams.params = {};
@@ -806,7 +806,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加患者管理";
+      this.title = "添加用户管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -815,7 +815,7 @@ export default {
       getPatient_management(pId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改患者管理";
+        this.title = "修改用户管理";
       });
     },
     /** 提交按钮 */
@@ -878,7 +878,7 @@ export default {
       let isShowName =  sessionStorage.getItem('isShowName')
       if (this.verifyForm.status || isShowName){
         const pIds = row.pId || this.ids;
-        this.$modal.confirm('是否确认删除患者管理编号为"' + pIds + '"的数据项？').then(function () {
+        this.$modal.confirm('是否确认删除用户管理编号为"' + pIds + '"的数据项？').then(function () {
           return delPatient_management(pIds);
         }).then(() => {
           this.getList();
@@ -912,7 +912,7 @@ export default {
       this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECGsingle"}});
     },
     lookHistoryData30(row){
-      this.$router.push({path: "/scatterPlot", query: {patientPhone: row.patientPhone,ecgType:1}});
+      this.$router.push({path: "/scatterPlot", query: {row:row,ecgType:1}});
     },
     /** 查看心电图*/
     lookECG(row) {

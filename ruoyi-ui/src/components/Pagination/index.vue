@@ -17,6 +17,7 @@
 
 <script>
 import { scrollTo } from '@/utils/scroll-to'
+import loginVue from '../../views/login.vue';
 
 export default {
   name: 'Pagination',

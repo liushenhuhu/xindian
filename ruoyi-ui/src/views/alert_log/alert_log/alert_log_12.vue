@@ -46,26 +46,26 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者管理编号" prop="pId">
+      <el-form-item label="用户管理编号" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入患者管理编号"
+          placeholder="请输入用户管理编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者姓名" prop="patientName">
+      <el-form-item label="用户姓名" prop="patientName">
         <el-input
           v-model="queryParams.patientName"
-          placeholder="请输入患者姓名"
+          placeholder="请输入用户姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="患者电话" prop="patientPhone">
+      <el-form-item label="用户电话" prop="patientPhone">
         <el-input
           v-model="queryParams.patientPhone"
-          placeholder="请输入患者电话"
+          placeholder="请输入用户电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -165,10 +165,10 @@
       <el-table-column label="预警类型" align="center" prop="logType"/>
       <el-table-column label="事件名称" align="center" prop="eventName"/>
       <el-table-column label="事件说明" align="center" prop="eventDescription"/>
-      <el-table-column label="患者管理编号" align="center" prop="pId" show-overflow-tooltip/>
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
-      <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
-            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+      <el-table-column label="用户管理编号" align="center" prop="pId" show-overflow-tooltip/>
+      <el-table-column label="用户姓名" align="center" prop="patientName"/>
+      <!--      <el-table-column label="用户身份证号" align="center" prop="patientCode"/>
+            <el-table-column label="用户电话" align="center" prop="patientPhone"/>
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
 <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
       <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
@@ -184,15 +184,15 @@
           </el-tag>
         </template>
       </el-table-column>
-      <!--  隐藏的患者的个人信息    -->
+      <!--  隐藏的用户的个人信息    -->
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
-            <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
+            <el-form-item label="用户身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
-            <el-form-item label="患者电话" width="200" style="padding-left: 40px">
+            <el-form-item label="用户电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
@@ -266,8 +266,8 @@
         <el-form-item label="事件说明" prop="eventDescription">
           <el-input v-model="form.eventDescription" placeholder="请输入事件说明"/>
         </el-form-item>
-        <el-form-item label="患者管理id" prop="pId">
-          <el-input v-model="form.pId" placeholder="请输入患者管理id"/>
+        <el-form-item label="用户管理id" prop="pId">
+          <el-input v-model="form.pId" placeholder="请输入用户管理id"/>
         </el-form-item>
         <el-form-item label="标注状态">
           <el-radio-group v-model="form.anoStatus">
@@ -343,7 +343,7 @@ export default {
           {required: true, message: "日志号不能为空", trigger: "blur"}
         ],
         pId: [
-          {required: true, message: "患者管理编号不能为空", trigger: "blur"}
+          {required: true, message: "用户管理编号不能为空", trigger: "blur"}
         ]
       },
       num:1
@@ -386,12 +386,12 @@ export default {
         this.queryParams.params["beginLogTime"] = this.daterangeLogTime[0];
         this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
       }
-      // console.log("12导预警获得患者数据所需要的值");
+      // console.log("12导预警获得用户数据所需要的值");
       // console.log(this.queryParams);
       listAlert_log(this.queryParams).then(response => {
         this.alert_logList = response.rows;
         this.total = response.total;
-        // console.log("12导预警获得的患者列表数据");
+        // console.log("12导预警获得的用户列表数据");
         // console.log(this.alert_logList);
         this.loading = false;
       });

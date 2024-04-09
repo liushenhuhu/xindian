@@ -13,7 +13,7 @@
           :total="1000">
         </el-pagination>
       </div>
-
+    <!-- <div class="name">所属医院:<span>{{data0.hospName && data0.hospName.includes('*') ? data0.hospName : '*'.repeat(Math.max(data0.hospName ? data0.hospName.length - 2 : 0, 0)) + (data0.hospName ? data0.hospName.slice(-2) : '')}}</span></div> -->
     <div class="mainbox" >
       <div class="container">
         <div class="event" v-if="data0!=null&&JSON.stringify(data0)!='{}'">
@@ -38,7 +38,8 @@
           <div class="name effect">姓名:<span>{{data0.patientName}}</span></div>
           <div class="name" >性别:<span>{{data0.gender}}</span></div>
           <div class="name" >年龄:<span>{{data0.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data0.hospName}}</span></div>
+          <div class="name">所属医院:<span>{{data0.hospName && data0.hospName.includes('*') ? data0.hospName : '*'.repeat(Math.max(data0.hospName ? data0.hospName.length - 2 : 0, 0)) + (data0.hospName ? data0.hospName.slice(-2) : '')}}</span></div>
+          <!-- <div class="name" >所属医院:<span>{{data0.hospName}}</span></div> -->
           <div class="name" >设备号:<span>{{data0.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -66,7 +67,7 @@
           <div class="name effect">姓名:<span>{{data1.patientName}}</span></div>
           <div class="name" >性别:<span>{{data1.gender}}</span></div>
           <div class="name" >年龄:<span>{{data1.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data1.hospName}}</span></div>
+          <div class="name" >所属医院:<span>{{data1.hospName && data1.hospName.includes('*') ? data1.hospName : '*'.repeat(Math.max(data1.hospName ? data1.hospName.length - 2 : 0, 0)) + (data1.hospName ? data1.hospName.slice(-2) : '')}}</span></div>
           <div class="name" >设备号:<span>{{data1.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -95,7 +96,7 @@
           <div class="name effect">姓名:<span>{{data2.patientName}}</span></div>
           <div class="name" >性别:<span>{{data2.gender}}</span></div>
           <div class="name" >年龄:<span>{{data2.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data2.hospName}}</span></div>
+          <div class="name" >所属医院:<span>{{data2.hospName && data2.hospName.includes('*') ? data2.hospName : '*'.repeat(Math.max(data2.hospName ? data2.hospName.length - 2 : 0, 0)) + (data2.hospName ? data2.hospName.slice(-2) : '')}}</span></div>
           <div class="name" >设备号:<span>{{data2.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -124,7 +125,7 @@
           <div class="name effect">姓名:<span>{{data3.patientName}}</span></div>
           <div class="name" >性别:<span>{{data3.gender}}</span></div>
           <div class="name" >年龄:<span>{{data3.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data3.hospName}}</span></div>
+          <div class="name" >所属医院:<span>{{data3.hospName && data3.hospName.includes('*') ? data3.hospName : '*'.repeat(Math.max(data3.hospName ? data3.hospName.length - 2 : 0, 0)) + (data3.hospName ? data3.hospName.slice(-2) : '')}}</span></div>
           <div class="name" >设备号:<span>{{data3.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -153,7 +154,7 @@
           <div class="name effect">姓名:<span>{{data4.patientName}}</span></div>
           <div class="name" >性别:<span>{{data4.gender}}</span></div>
           <div class="name" >年龄:<span>{{data4.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data4.hospName}}</span></div>
+          <div class="name" >所属医院:<span>{{data4.hospName && data4.hospName.includes('*') ? data4.hospName : '*'.repeat(Math.max(data4.hospName ? data4.hospName.length - 2 : 0, 0)) + (data4.hospName ? data4.hospName.slice(-2) : '')}}</span></div>
           <div class="name" >设备号:<span>{{data4.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -181,7 +182,7 @@
           <div class="name effect">姓名:<span>{{data5.patientName}}</span></div>
           <div class="name" >性别:<span>{{data5.gender}}</span></div>
           <div class="name" >年龄:<span>{{data5.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data5.hospName}}</span></div>
+          <div class="name" >所属医院:<span>{{data5.hospName && data5.hospName.includes('*') ? data5.hospName : '*'.repeat(Math.max(data5.hospName ? data5.hospName.length - 2 : 0, 0)) + (data5.hospName ? data5.hospName.slice(-2) : '')}}</span></div>
           <div class="name" >设备号:<span>{{data5.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -209,7 +210,7 @@
           <div class="name effect">姓名:<span>{{data6.patientName}}</span></div>
           <div class="name" >性别:<span>{{data6.gender}}</span></div>
           <div class="name" >年龄:<span>{{data6.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data6.hospName}}</span></div>
+          <div class="name" >所属医院:<span>{{data6.hospName && data6.hospName.includes('*') ? data6.hospName : '*'.repeat(Math.max(data6.hospName ? data6.hospName.length - 2 : 0, 0)) + (data6.hospName ? data6.hospName.slice(-2) : '')}}</span></div>
           <div class="name" >设备号:<span>{{data6.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -238,7 +239,7 @@
           <div class="name effect">姓名:<span>{{data7.patientName}}</span></div>
           <div class="name" >性别:<span>{{data7.gender}}</span></div>
           <div class="name" >年龄:<span>{{data7.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data7.hospName}}</span></div>
+          <div class="name" >所属医院:<span>{{data7.hospName && data7.hospName.includes('*') ? data7.hospName : '*'.repeat(Math.max(data7.hospName ? data7.hospName.length - 2 : 0, 0)) + (data7.hospName ? data7.hospName.slice(-2) : '')}}</span></div>
           <div class="name" >设备号:<span>{{data7.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -267,7 +268,7 @@
           <div class="name effect">姓名:<span>{{data8.patientName}}</span></div>
           <div class="name" >性别:<span>{{data8.gender}}</span></div>
           <div class="name" >年龄:<span>{{data8.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data8.hospName}}</span></div>
+          <div class="name" >所属医院:<span>{{data8.hospName && data8.hospName.includes('*') ? data8.hospName : '*'.repeat(Math.max(data8.hospName ? data8.hospName.length - 2 : 0, 0)) + (data8.hospName ? data8.hospName.slice(-2) : '')}}</span></div>
           <div class="name" >设备号:<span>{{data8.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>

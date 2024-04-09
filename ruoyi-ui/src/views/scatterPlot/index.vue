@@ -1,7 +1,20 @@
 <template>
   <div class="app-container">
-    <el-page-header @back="goBack" content="30天趋势图">  </el-page-header>
-    <el-form :model="queryParams" style="margin-top: 20px" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <div class="fanhuitiao">
+      <el-page-header @back="goBack" content="30天趋势图"></el-page-header>
+      <el-col :span="1.5">
+          <el-button
+            type="success"
+            plain
+            icon="el-icon-view"
+            size="mini"
+            @click="isShowNameClick"
+          >{{isShowName.name}}
+          </el-button>
+        </el-col>
+    </div>
+
+    <!-- <el-form :model="queryParams" style="margin-top: 20px" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="患者手机号" prop="patientPhone" label-width="80">
         <el-input
           v-model="queryParams.patientPhone"
@@ -30,9 +43,21 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-    </el-form>
+    </el-form> -->
+
+
+
+  <el-descriptions title="">$route.query.row.patientPhone.slice(0, -4) + '****'
+    <el-descriptions-item label="用户姓名">{{isShowName.status?$route.query.row.patientName:"***"}}</el-descriptions-item>
+    <el-descriptions-item label="手机号">{{isShowName.status?$route.query.row.patientPhone:$route.query.row.patientPhone.slice(0, -4) + '****'}}</el-descriptions-item>
+    <el-descriptions-item label="性别">{{$route.query.row.patientSex}}</el-descriptions-item>
+    <el-descriptions-item label="开始时间">{{queryParams.startTime}}</el-descriptions-item>
+    <el-descriptions-item label="结束时间">{{queryParams.endTime}}</el-descriptions-item>
+  </el-descriptions>
+
+
     <el-row :gutter="10" class="mb8">
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
+      <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar> -->
     </el-row>
     <div class="main-flex" id="main">
       <div class="row">
@@ -89,22 +114,35 @@
         </el-card>
       </div>
     </div>
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import * as echarts from "@/views/ECGScreen/detail/echarts.min"
 import {getHrCount} from "@/api/scatterPlot/scatterPlot";
+import {getVerify} from "@/api/verify/verify";
 
 export default {
   name: "",
   data() {
     return {
       queryParams:{
-        patientPhone:this.$route.query.patientPhone,
+        patientPhone:this.$route.query.row.patientPhone,
         startTime:null,
         endTime:null
       },
+      dialogFormVisibleVerifyAuthority:false,
       showSearch:true,
       chart1:null,
       chart2:null,
@@ -120,6 +158,20 @@ export default {
       chart12:null,
       chart13:null,
       ecgType:1,//1：静态单导  2：静态12导
+      isShowName:{
+        status:false,
+        name:"显示姓名"
+      },
+      verifyForm:{
+        password:null,
+        status:false
+      },
+      // 表单校验
+      rules: {
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
+        ]
+      }
     }
   },
   created() {
@@ -189,8 +241,42 @@ export default {
     this.getData()
   },
   methods: {
+    isShowNameClick(){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+
+          this.isShowName.name = "显示姓名"
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
+    dialogFormVisibleVerify(){
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd:this.verifyForm.password
+          }
+          getVerify(obj).then(r=>{
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status=true
+            sessionStorage.setItem('isShowName',true)
+            this.dialogFormVisibleVerifyAuthority = false
+            this.isShowName.status =!this.isShowName.status;
+            this.isShowName.name = "隐藏姓名"
+          })
+        }
+      })
+    },
     getData(){
-      this.queryParams.patientPhone = this.$route.query.patientPhone
+      this.queryParams.patientPhone = this.$route.query.row.patientPhone
       getHrCount(this.queryParams).then(res=>{
         this.setChart1(res.data.PR_interval)
         this.setChart2(res.data.P_time)
@@ -905,6 +991,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fanhuitiao{
+  display: flex;
+  justify-content:space-between;
+}
 .main-flex{
   display: flex;
   flex-direction: column;
