@@ -7,7 +7,7 @@
             <div class="patientMessage">
               <div class="h11">
                 <span></span>
-                <p>患者信息</p>
+                <p>用户信息</p>
               </div>
               <div class="info">
                 <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="h11">
                   <span></span>
-                  <p>患者症状</p>
+                  <p>用户症状</p>
                 </div>
                 <div class="text">
                   <div class="ml">{{ data.patientSymptom }}</div>
@@ -2086,8 +2086,8 @@ export default {
       }
       console.log(patientPhone)
       if (patientPhone) {
-        // console.log("患者姓名: " + row.patientName)
-        this.$confirm('向该患者发送短信提示采集存在较大干扰?', '提示', {
+        // console.log("用户姓名: " + row.patientName)
+        this.$confirm('向该用户发送短信提示采集存在较大干扰?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -2105,7 +2105,7 @@ export default {
           });
         });
       } else {
-        this.$message.error('该患者手机号不合法！！！');
+        this.$message.error('该用户手机号不合法！！！');
       }
     },
     //保存数据
