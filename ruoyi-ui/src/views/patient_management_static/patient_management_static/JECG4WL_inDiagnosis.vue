@@ -529,7 +529,7 @@ import {docList} from "@/api/doctor/doctor";
 import {getVerify} from "@/api/verify/verify";
 
 export default {
-  name: "JECG4WL_inDiagnosis",
+  name: "Centre_JECCG4",
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list'],
   data() {
     return {
