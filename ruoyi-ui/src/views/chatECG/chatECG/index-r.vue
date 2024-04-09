@@ -69,6 +69,16 @@
         <div class="right">
           <div class="right-title">
             <img class="xietong" src="@/assets/images/xietong.png"/>
+            <div class="right-title-button">
+              <span>静音<i class="el-icon-close-notification"/></span>&nbsp;
+              <span>
+                <el-switch
+                  v-model="audioPlayState"
+                  active-color="#13ce66"
+                  inactive-color="#ccc">
+                </el-switch>
+              </span>
+            </div>
           </div>
           <div class="message" id="right" ref="message">
             <div v-for="(item, index) in info" :key="index">
@@ -213,7 +223,8 @@ export default {
       audioLock: null,
       msgOverLock: null,
       newText:'',
-      textInterval:null
+      textInterval:null,
+      audioPlayState:false,
     };
   },
   computed: {
@@ -244,7 +255,13 @@ export default {
   deactivated() {
     console.log(456)
   },
-  watch: {},
+  watch: {
+    audioPlayState(newValue){
+      if(newValue){
+        this.audioPlayer.stopPlay()
+      }
+    }
+  },
 
   methods: {
     endAll() {
@@ -483,7 +500,10 @@ export default {
             console.log("这是++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + this.robotAnswer);
             this.appendRobotMsg(response);
             this.isLoading = false;
-            this.audioPlayer.send(response.response)
+            if(!this.audioPlayState){
+              console.log('还是走了这里？')
+              this.audioPlayer.send(response.response)
+            }
           });
           this.$nextTick(() => {
             var contentHeight = document.getElementById("right");
@@ -1250,6 +1270,7 @@ export default {
 
 .right .right-title {
   height: 12%;
+  position: relative;
 }
 
 .right .right-title .xietong {
@@ -1295,5 +1316,15 @@ export default {
 
 *:hover::-webkit-scrollbar-track {
   background: transparent;
+}
+.right-title-button{
+  z-index:10;
+  height:100%;
+  position:absolute;
+  right:0;
+  top:0;
+  padding-right: 16px;
+  display:flex;
+  align-items:center;
 }
 </style>
