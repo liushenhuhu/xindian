@@ -6,53 +6,29 @@
         <div class="left">
           <div class="new">
             <div class="img_box">
-              <img class="zhengda" src="@/assets/images/zhengda.png"/>
+              <img class="zhengda" src="@/assets/images/zhengda.png" />
             </div>
-            <div
-              class="new_his"
-              @click="conversationClickAdd"
-              style="cursor: pointer"
-            >
+            <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">
               +&emsp;&emsp;新建对话框
             </div>
           </div>
           <div class="his">
             <!-- 对话框 -->
-            <div
-              class="his_item"
-              style="cursor: pointer;"
-              v-for="(item, i) in conversation"
-              :ref="'div-' + item.conversationId"
-              :class="{ bgc: i === 0 }"
-              :key="item.conversationId"
-              @click="conversationClickCut(item.conversationId, 2)"
-
-            >
+            <div class="his_item" style="cursor: pointer;" v-for="(item, i) in conversation"
+              :ref="'div-' + item.conversationId" :class="{ bgc: i === 0 }" :key="item.conversationId"
+              @click="conversationClickCut(item.conversationId, 2)">
               <!-- <img class="mesimg2" src="@/assets/images/messge2.png"/> -->
               <div class="his_title">
                 <div class="tit" v-show="item.isCustom">{{ item.title }}</div>
-                <input
-                  :class="{ titUp: item.isHighlighted, tit: item.isCustom }"
-                  :ref="'input' + item.conversationId"
-                  type="hidden"
-                  :value="item.title"
-                  @blur="blurId(item.conversationId)"
-                />
+                <input :class="{ titUp: item.isHighlighted, tit: item.isCustom }" :ref="'input' + item.conversationId"
+                  type="hidden" :value="item.title" @blur="blurId(item.conversationId)" />
                 <div class="time">{{ item.createTime }}</div>
               </div>
               <div style="display: flex">
-                <img
-                  class="upimg"
-                  src="@/assets/images/updat.png"
-                  style="cursor: pointer"
-                  @click.stop="updatatit(item.conversationId, i)"
-                />
-                <img
-                  class="delimg"
-                  src="@/assets/images/delimg.png"
-                  style="cursor: pointer"
-                  @click.stop="conversationClickDel(item.conversationId)"
-                />
+                <img class="upimg" src="@/assets/images/updat.png" style="cursor: pointer"
+                  @click.stop="updatatit(item.conversationId, i)" />
+                <img class="delimg" src="@/assets/images/delimg.png" style="cursor: pointer"
+                  @click.stop="conversationClickDel(item.conversationId)" />
               </div>
             </div>
             <!--              <div class="his_item">-->
@@ -68,14 +44,11 @@
         <!--    right      -->
         <div class="right">
           <div class="right-title">
-            <img class="xietong" src="@/assets/images/xietong.png"/>
+            <img class="xietong" src="@/assets/images/xietong.png" />
             <div class="right-title-button">
-              <span>静音<i class="el-icon-close-notification"/></span>&nbsp;
+              <span>静音<i class="el-icon-close-notification" /></span>&nbsp;
               <span>
-                <el-switch
-                  v-model="audioPlayState"
-                  active-color="#13ce66"
-                  inactive-color="#ccc">
+                <el-switch v-model="audioPlayState" active-color="#13ce66" inactive-color="#ccc">
                 </el-switch>
               </span>
             </div>
@@ -84,15 +57,12 @@
             <div v-for="(item, index) in info" :key="index">
               <!-- AI回答 -->
               <div class="info_r" v-if="item.type == 'leftinfo'">
-                <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
+                <img src="@/assets/images/rotoimg.png" class="pic_ro" alt />
                 <div class="con_r">
                   <div class="time_r">{{ item.time }}</div>
                   <div class="con_text">{{ item.content }}</div>
                   <div v-for="(item2, index) in item.question" :key="index">
-                    <div
-                      class="con_que"
-                      @click="clickRobot(item2.content, item2.id)"
-                    >
+                    <div class="con_que" @click="clickRobot(item2.content, item2.id)">
                       <div class="czkj-question-msg">
                         {{ item2.index }}
                         {{ item2.content }}
@@ -106,24 +76,22 @@
                   <div class="time_l">{{ item.time }}</div>
                   <span class="con_text">{{ item.content }}</span>
                 </div>
-                <img src="@/assets/images/userimg.png" class="pic_l"/>
+                <img src="@/assets/images/userimg.png" class="pic_l" />
               </div>
             </div>
             <div class="info_r" v-if="isLoading">
-              <img src="@/assets/images/rotoimg.png" class="pic_ro" alt/>
+              <img src="@/assets/images/rotoimg.png" class="pic_ro" alt />
               <div class="con_r con_text">
                 <div style="display: flex; height: 35px; align-items: center">
-                  <loading/>
+                  <loading />
                 </div>
               </div>
             </div>
           </div>
           <div class="text-area">
             <div class="left-child">
-              <img class="mesimg1" src="@/assets/images/messge1.png"/>
-              <textarea
-                placeholder="请输入您的问题..."
-                style="
+              <img class="mesimg1" src="@/assets/images/messge1.png" />
+              <textarea placeholder="请输入您的问题..." style="
                   height: 100%;
                   width: 85%;
                   resize: none;
@@ -131,34 +99,18 @@
                   border: 0;
                   font-size: 1.3vw;
                   padding: 1vh;
-                "
-                id="text"
-                v-model="customerText"
-                @keyup.enter="sentMsg()"
-              ></textarea>
+                " id="text" v-model="customerText" @keyup.enter="sentMsg()"></textarea>
               <div class="right-child">
                 <div v-if="vocState == 0" class="mkf">
-                  <img
-                    class="mesimg3"
-                    src="@/assets/images/microphone-0.png"
-                    @click="recorderStart()"
-                  />
+                  <img class="mesimg3" src="@/assets/images/microphone-0.png" @click="recorderStart()" />
                 </div>
                 <div v-else-if="vocState == 1" class="mkf mkf-s">
-                  <img
-                    class="mesimg3"
-                    src="@/assets/images/microphone-1.png"
-                    @click="recorderStop()"
-                  />
+                  <img class="mesimg3" src="@/assets/images/microphone-1.png" @click="recorderStop()" />
                   <div class="mkftips" v-show="resultState">
                     倾听中...
                   </div>
                 </div>
-                <img
-                  class="mesimg3"
-                  src="@/assets/images/messge3.png"
-                  @click="sentMsg()"
-                />
+                <img class="mesimg3" src="@/assets/images/messge3.png" @click="sentMsg()" />
               </div>
             </div>
           </div>
@@ -176,9 +128,9 @@ import {
   updateConversation,
 } from "@/api/chatECG/chatECG";
 import loading from "./loading";
-import {delDoctor} from "@/api/doctor/doctor";
+import { delDoctor } from "@/api/doctor/doctor";
 import Recorder from "js-audio-recorder";
-import {Voc, PPlayer} from '@/utils/voice.js'
+import { Voc, PPlayer } from '@/utils/voice.js'
 
 export default {
   components: {
@@ -222,9 +174,9 @@ export default {
       resultState: 0,
       audioLock: null,
       msgOverLock: null,
-      newText:'',
-      textInterval:null,
-      audioPlayState:false,
+      newText: '',
+      textInterval: null,
+      audioPlayState: false,
     };
   },
   computed: {
@@ -256,9 +208,9 @@ export default {
     console.log(456)
   },
   watch: {
-    audioPlayState(newValue){
-      if(newValue){
-        this.audioPlayer.stopPlay()
+    audioPlayState(newValue) {
+      if (newValue) {
+        this.audioPlayer.stopAudio()
       }
     }
   },
@@ -316,7 +268,7 @@ export default {
         console.log('中间消息')
       })
       this.voc.setErrorFunc(() => {
-        this.$message.error('语音启动失败，请再次尝试')
+        this.$message.error('语音网络连接失败，请稍后重试或使用输入框手动输入')
         setTimeout(() => {
           this.recorderStop()
         }, 50)
@@ -356,6 +308,7 @@ export default {
       this.recorder.destroy().then(() => {
         th.recorder = null;
       })
+      this.$forceUpdate()
     },
     formatDateToCustomFormat(date) {
       const year = date.getFullYear();
@@ -382,7 +335,9 @@ export default {
     },
     // 用户发送消息
     sentMsg() {
+      console.log('----1----')
       this.overTurn();
+      console.log('----2----')
       let th = this;
       //console.log("queryParams: ====="+this.queryParams.history);
       this.audioPlayer.stopAudio()
@@ -419,7 +374,9 @@ export default {
             time: this.getTodayTime(),
             content: text,
           };
+          console.log('----3----')
           this.overTurn();
+          console.log('----4----')
           this.info.push(obj);
           console.log(3)
           this.customerText = "";
@@ -432,12 +389,16 @@ export default {
               content: response.response,
               index: 1,
             };
+            console.log('----5----')
             this.robotAnswer.push(obj);
             this.appendRobotMsg(response);
+            console.log('----6----')
             if (th.audioLock === lock) {
               this.isLoading = false;
-              if(th.msgOverLock === lock){
-                th.audioPlayer.send(response.response)
+              if (th.msgOverLock === lock) {
+                if (!this.audioPlayState) {
+                  this.audioPlayer.send(response.response)
+                }
               }
             }
           });
@@ -448,8 +409,8 @@ export default {
         }
         if (this.conversation.length > 0) {
           this.$refs[
-          "div-" + this.conversation[0].conversationId
-            ][0].classList.remove("bgc");
+            "div-" + this.conversation[0].conversationId
+          ][0].classList.remove("bgc");
           this.conversation.forEach((i, index) => {
             if (this.$refs["div-" + i.conversationId]) {
               this.$refs["div-" + i.conversationId][0].style.backgroundColor =
@@ -500,7 +461,7 @@ export default {
             console.log("这是++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + this.robotAnswer);
             this.appendRobotMsg(response);
             this.isLoading = false;
-            if(!this.audioPlayState){
+            if (!this.audioPlayState) {
               console.log('还是走了这里？')
               this.audioPlayer.send(response.response)
             }
@@ -514,23 +475,23 @@ export default {
       }
     },
 
-    turnText(){
+    turnText() {
       //info的最后一项
-      this.textInterval = setInterval(()=>{
-        if(this.newText.length === 0){
+      this.textInterval = setInterval(() => {
+        if (this.newText.length === 0) {
           clearInterval(this.textInterval)
           return
         }
-        this.info[this.info.length - 1].content+= this.newText[0]
+        this.info[this.info.length - 1].content += this.newText[0]
         this.newText = this.newText.slice(1)
         this.$nextTick(() => {
           let contentHeight = document.getElementById("right");
           contentHeight.scrollTop = contentHeight.scrollHeight;
         });
-      },100)
+      }, 100)
     },
-    overTurn(){
-      if(this.newText.length == 0) return;
+    overTurn() {
+      if (this.newText.length == 0) return;
       clearInterval(this.textInterval)
       this.info[this.info.length - 1].content += this.newText;
       this.newText = ''
@@ -555,13 +516,13 @@ export default {
           type: "leftinfo",
           time: text.responseTime,
           name: "robot",
-          original:answerText,
+          original: answerText,
           content: "",
           question: [],
         };
         this.overTurn();
         this.newText = answerText;
-          this.turnText();
+        this.turnText();
         this.info.push(obj);
       } /*else {
         answerText = "您可能想问：";
@@ -675,7 +636,7 @@ export default {
         console.log(r);
         this.conversation = r.data;
         this.conversation.forEach((item) => {
-          Object.assign(item, {show: false});
+          Object.assign(item, { show: false });
         });
         if (v === 1) {
           if (r.data.length > 0) {
@@ -743,8 +704,8 @@ export default {
       this.isAddNewWin = false;
       if (id === 2) {
         this.$refs[
-        "div-" + this.conversation[0].conversationId
-          ][0].classList.remove("bgc");
+          "div-" + this.conversation[0].conversationId
+        ][0].classList.remove("bgc");
       }
 
       this.conversation.forEach((i, index) => {
@@ -965,6 +926,7 @@ export default {
           margin-right: 5px;
           word-wrap: break-word;
           word-break: break-all;
+
           //overflow: hidden;/*这个参数根据需求来决定要不要*/
           .con_text {
             width: fit-content;
@@ -1161,8 +1123,10 @@ export default {
           cursor: pointer;
 
 
-          white-space: nowrap; /*超出的空白区域不换行*/
-          overflow: hidden; /*超出隐藏*/
+          white-space: nowrap;
+          /*超出的空白区域不换行*/
+          overflow: hidden;
+          /*超出隐藏*/
           text-overflow: ellipsis;
         }
 
@@ -1317,14 +1281,15 @@ export default {
 *:hover::-webkit-scrollbar-track {
   background: transparent;
 }
-.right-title-button{
-  z-index:10;
-  height:100%;
-  position:absolute;
-  right:0;
-  top:0;
+
+.right-title-button {
+  z-index: 10;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
   padding-right: 16px;
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
 }
 </style>

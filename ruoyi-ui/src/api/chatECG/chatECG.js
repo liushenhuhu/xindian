@@ -7,6 +7,7 @@ export function proxyRequest(data) {
     url: '/proxyRequest/proxyRequest',
     method: 'post',
     data: data,
+    timeout:60000,
   })
 }
 export function getConversation() {
