@@ -4,6 +4,7 @@
       <el-page-header @back="goBack" content="30天趋势图"></el-page-header>
       <el-col :span="1.5">
           <el-button
+            style="margin-right: 1vw;"
             type="success"
             plain
             icon="el-icon-view"
@@ -11,18 +12,12 @@
             @click="isShowNameClick"
           >{{isShowName.name}}
           </el-button>
-        </el-col>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
+      </el-col>
+      
     </div>
 
-    <!-- <el-form :model="queryParams" style="margin-top: 20px" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="患者手机号" prop="patientPhone" label-width="80">
-        <el-input
-          v-model="queryParams.patientPhone"
-          placeholder="请输入患者手机号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+    <el-form :model="queryParams" style="margin-top: 20px" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="开始时间" prop="startTime">
         <el-date-picker
                         v-model="queryParams.startTime"
@@ -43,7 +38,7 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-    </el-form> -->
+    </el-form>
 
 
 
@@ -51,14 +46,10 @@
     <el-descriptions-item label="用户姓名">{{isShowName.status?$route.query.row.patientName:"***"}}</el-descriptions-item>
     <el-descriptions-item label="手机号">{{isShowName.status?$route.query.row.patientPhone:$route.query.row.patientPhone.slice(0, -4) + '****'}}</el-descriptions-item>
     <el-descriptions-item label="性别">{{$route.query.row.patientSex}}</el-descriptions-item>
-    <el-descriptions-item label="开始时间">{{queryParams.startTime}}</el-descriptions-item>
-    <el-descriptions-item label="结束时间">{{queryParams.endTime}}</el-descriptions-item>
   </el-descriptions>
 
 
-    <el-row :gutter="10" class="mb8">
-      <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar> -->
-    </el-row>
+    
     <div class="main-flex" id="main">
       <div class="row">
         <el-card>
