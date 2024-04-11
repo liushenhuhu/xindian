@@ -181,9 +181,9 @@ export default {
     let luyou = '/' + pathName.split('/')[1];
     // console.log(luyou);
 
-
+  var getdata = JSON.parse(sessionStorage.getItem(luyou));
   if (getdata) {
-    var getdata = JSON.parse(sessionStorage.getItem(luyou));
+    
 
   const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
   let limitedNumber = limitTo11Digits(getdata.row.patientPhone);
