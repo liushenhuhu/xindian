@@ -14,7 +14,7 @@
           </el-button>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
       </el-col>
-      
+
     </div>
 
     <el-form :model="queryParams" style="margin-top: 20px" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
@@ -49,7 +49,7 @@
   </el-descriptions>
 
 
-    
+
     <div class="main-flex" id="main">
       <div class="row">
         <el-card>
@@ -179,26 +179,54 @@ export default {
 
     // 提取/restingECG字符串并在前面加上斜杠
     let luyou = '/' + pathName.split('/')[1];
-    console.log(luyou);
-	var getdata = JSON.parse(sessionStorage.getItem(luyou));
+    // console.log(luyou);
+
+
   if (getdata) {
+    var getdata = JSON.parse(sessionStorage.getItem(luyou));
+
+  const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
+  let limitedNumber = limitTo11Digits(getdata.row.patientPhone);
+
     this.ecgType=getdata.ecgType
-    this.queryParams.patientPhone = getdata.row.patientPhone
+    this.queryParams.patientPhone = limitedNumber
     this.queryParams.patientName = getdata.row.patientName
-    this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+
+    var tel = this.queryParams.patientPhone;
+    tel = "" + tel;
+    var ary = tel.split("");
+    ary.splice(3,4,"****");
+    var tel1=ary.join("");
+    // console.log(tel1);
+
+
+    // this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+    this.patientPhone = tel1
+
+
     this.patientName= '***'
   } else {
-    console.log("到了30天趋势图页面");
-    console.log(this.$route.query);
+    //永远不会到达这里
+    const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
+  let limitedNumber = limitTo11Digits(this.$route.query.row.patientPhone);
     this.ecgType=this.$route.query.ecgType
-    this.queryParams.patientPhone = this.$route.query.row.patientPhone
+    this.queryParams.patientPhone = limitedNumber
     this.queryParams.patientName = this.$route.query.row.patientName
-    this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+
+    var tel = this.queryParams.patientPhone;
+    tel = "" + tel;
+    var ary = tel.split("");
+    ary.splice(3,4,"****");
+    var tel1=ary.join("");
+    // this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+    this.patientPhone = tel1
+
     this.patientName= '***'
   }
-    
+
   },
   mounted() {
+    // this.getData()
     this.chart1 = echarts.init(document.getElementById('chart1'));
     this.chart2 = echarts.init(document.getElementById('chart2'));
     this.chart3 = echarts.init(document.getElementById('chart3'));
@@ -272,6 +300,7 @@ export default {
         }else {
           this.isShowName.status =!this.isShowName.status;
           this.isShowName.name = "隐藏姓名"
+
         }
       }else {
         this.verifyForm.password=''
@@ -297,7 +326,7 @@ export default {
       })
     },
     getData(){
-      this.queryParams.patientPhone = this.$route.query.row.patientPhone
+      // this.queryParams.patientPhone = this.$route.query.row.patientPhone
       getHrCount(this.queryParams).then(res=>{
         this.setChart1(res.data.PR_interval)
         this.setChart2(res.data.P_time)
@@ -970,13 +999,13 @@ export default {
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
             },
-          }
-        ],
-        tooltip: {
-            formatter: function (params) {
-              return 'X: ' + params.value[0] + '<br>Y: ' + params.value[1]; // 显示坐标信息
+            tooltip: {
+              formatter: function (params) {
+                return 'X: ' + params.value[0] + '<br>Y: ' + params.value[1]; // 显示坐标信息
+              }
             }
           }
+        ]
       };
       this.chart13.clear()
       this.chart13.setOption(option);
