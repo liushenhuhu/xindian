@@ -42,9 +42,9 @@
 
 
 
-  <el-descriptions title="">$route.query.row.patientPhone.slice(0, -4) + '****'
-    <el-descriptions-item label="用户姓名">{{isShowName.status?$route.query.row.patientName:"***"}}</el-descriptions-item>
-    <el-descriptions-item label="手机号">{{isShowName.status?$route.query.row.patientPhone:$route.query.row.patientPhone.slice(0, -4) + '****'}}</el-descriptions-item>
+  <el-descriptions title="">
+    <el-descriptions-item label="用户姓名">{{isShowName.status?this.queryParams.patientName:this.patientName}}</el-descriptions-item>
+    <el-descriptions-item label="手机号">{{isShowName.status?this.queryParams.patientPhone:this.patientPhone}}</el-descriptions-item>
     <el-descriptions-item label="性别">{{$route.query.row.patientSex}}</el-descriptions-item>
   </el-descriptions>
 
@@ -129,10 +129,13 @@ export default {
   data() {
     return {
       queryParams:{
-        patientPhone:this.$route.query.row.patientPhone,
+        patientPhone:null,
         startTime:null,
-        endTime:null
+        endTime:null,
+        patientName:null
       },
+      patientPhone:null,
+      patientName:null,
       dialogFormVisibleVerifyAuthority:false,
       showSearch:true,
       chart1:null,
@@ -166,7 +169,34 @@ export default {
     }
   },
   created() {
+    let currentURL = window.location.href;
+    console.log(currentURL);
+    // 使用URL对象解析URL
+    let urlObject = new URL(currentURL);
+
+    // 获取路径名部分
+    let pathName = urlObject.pathname;
+
+    // 提取/restingECG字符串并在前面加上斜杠
+    let luyou = '/' + pathName.split('/')[1];
+    console.log(luyou);
+	var getdata = JSON.parse(sessionStorage.getItem(luyou));
+  if (getdata) {
+    this.ecgType=getdata.ecgType
+    this.queryParams.patientPhone = getdata.row.patientPhone
+    this.queryParams.patientName = getdata.row.patientName
+    this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+    this.patientName= '***'
+  } else {
+    console.log("到了30天趋势图页面");
+    console.log(this.$route.query);
     this.ecgType=this.$route.query.ecgType
+    this.queryParams.patientPhone = this.$route.query.row.patientPhone
+    this.queryParams.patientName = this.$route.query.row.patientName
+    this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+    this.patientName= '***'
+  }
+    
   },
   mounted() {
     this.chart1 = echarts.init(document.getElementById('chart1'));
@@ -941,7 +971,12 @@ export default {
               color: "rgba(224, 67, 67, 1)"
             },
           }
-        ]
+        ],
+        tooltip: {
+            formatter: function (params) {
+              return 'X: ' + params.value[0] + '<br>Y: ' + params.value[1]; // 显示坐标信息
+            }
+          }
       };
       this.chart13.clear()
       this.chart13.setOption(option);

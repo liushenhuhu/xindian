@@ -155,6 +155,9 @@ export default {
       this.$tab.refreshPage(view);
     },
     closeSelectedTag(view) {
+      console.log("关闭页面");
+      console.log(view.path);
+      this.$cache.session.remove(view.path)
       this.$tab.closePage(view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           this.toLastView(visitedViews, view)
