@@ -47,6 +47,7 @@
         <result property="longitude"    column="longitude"    />
         <result property="latitude"    column="latitude"    />
         <result property="logDataType"    column="log_data_type"    />
+        <result property="ecgIsLabel"    column="ecg_is_label"    />
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -105,7 +106,7 @@
 <!--        </if>-->
 <!--    </where>-->
     <sql id="selectPatientManagementVo">
-        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_data_type,
+        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_data_type,m.ecg_is_label,
             connection_time, bed_number, case_history_number,
                ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
                m.patient_phone_aes, family_phone,  monitoring_status,
@@ -165,6 +166,7 @@
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="sxReportStatus != null">and sx_report_status = #{sxReportStatus}</if>
+            <if test="ecgIsLabel != null">and ecg_is_label = #{ecgIsLabel}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             and doctor_phone_aes is not null
         </where>
@@ -202,6 +204,7 @@
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
             <if test="sxReportStatus != null">and sx_report_status = #{sxReportStatus}</if>
+            <if test="ecgIsLabel != null">and ecg_is_label = #{ecgIsLabel}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
@@ -251,6 +254,7 @@
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes = #{doctorPhone}</if>
             <if test="pacemaker != null  and pacemaker != ''"> and pacemaker = #{pacemaker}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
+            <if test="ecgIsLabel != null">and ecg_is_label = #{ecgIsLabel}</if>
             <if test="guardianshipDuration != null "> and guardianship_duration = #{guardianshipDuration}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
@@ -341,6 +345,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="dPhone != null  and dPhone != ''"> and d_phone_aes = #{dPhone}</if>
+            <if test="ecgIsLabel != null">and ecg_is_label = #{ecgIsLabel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes = #{doctorPhone}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
@@ -379,6 +384,7 @@
             <if test="dPhone != null  and dPhone != ''"> and d_phone_aes = #{dPhone}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes = #{doctorPhone}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
+            <if test="ecgIsLabel != null">and ecg_is_label = #{ecgIsLabel}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="equipmentCodeList != null and equipmentCodeList.size()>0">
                 and  m.equipment_code in
@@ -419,6 +425,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="dPhone != null  and dPhone != ''"> and d_phone_aes = #{dPhone}</if>
+            <if test="ecgIsLabel != null">and ecg_is_label = #{ecgIsLabel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes = #{doctorPhone}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
@@ -461,6 +468,7 @@
             <if test="params.beginReportTime != null and params.beginReportTime != '' and params.endReportTime != null and params.endReportTime != ''"> and report_time between #{params.beginReportTime} and #{params.endReportTime}</if>
             <if test="ecgLevel != null "> and ecg_level = #{ecgLevel}</if>
             <if test="dPhone != null  and dPhone != ''"> and d_phone_aes = #{dPhone}</if>
+            <if test="ecgIsLabel != null">and ecg_is_label = #{ecgIsLabel}</if>
             <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes = #{doctorPhone}</if>
             <if test="endReportTime != null and endReportTime != ''"> and date_format(connection_time, '%Y-%m-%d') = #{endReportTime}</if>
             <if test="detectionState != null">and detection_state = #{detectionState}</if>
@@ -650,7 +658,7 @@
         order by report_time desc
     </select>
     <select id="selectPatientManagementList12" resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">
-        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_data_type,
+        select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_data_type,m.ecg_is_label,
         connection_time, bed_number, case_history_number,
         ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
         m.patient_phone_aes, family_phone,  monitoring_status,
@@ -675,6 +683,7 @@
             <if test="caseHistoryNumber != null  and caseHistoryNumber != ''">and case_history_number like concat('%', #{caseHistoryNumber}, '%')</if>
             <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
             <if test="ecgType != null  and ecgType != ''"> and ecg_type like concat(#{ecgType},'%')</if>
+            <if test="ecgIsLabel != null">and ecg_is_label = #{ecgIsLabel}</if>
             <if test="hospitalName != null  and hospitalName != ''"> and hospital_name = #{hospitalName}</if>
             <if test="PatPhone != null  and PatPhone != ''"> and m.patient_phone_aes like concat(#{PatPhone},'%') </if>
             <if test="patientPhone != null  and patientPhone != ''"> and m.patient_phone_aes = #{patientPhone}</if>
@@ -740,6 +749,7 @@
             patient_management.longitude,
             patient_management.latitude,
             patient_management.log_data_type,
+            patient_management.ecg_is_label,
             patient_management.sampling_rate
         FROM
             patient_management
@@ -918,6 +928,7 @@
             <if test="detectionState != null">detection_state = #{detectionState},</if>
             <if test="sxReportStatus != null">sx_report_status = #{sxReportStatus},</if>
             <if test="logDataType != null">log_data_type = #{logDataType},</if>
+            <if test=" ecgIsLabel!= null">ecg_is_label = #{ecgIsLabel},</if>
         </trim>
         where p_id = #{pId}
     </update>

@@ -220,6 +220,8 @@ public class PatientManagement extends BaseEntity {
 
     private String startTime;
 
+    private Integer ecgIsLabel;
+
 
     private Integer rushState = 1;
 
