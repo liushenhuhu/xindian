@@ -9,12 +9,12 @@
         <template>
           <el-row>
             <el-col offset="6">
-              <div class="patient-info-item basic-info">{{ patientInfo.patientName || '' }}</div>
+              <div class="patient-info-item info-basic">{{ patientInfo.patientName || '' }}</div>
             </el-col>
           </el-row>
           <el-row>
             <el-col offset="6">
-              <div class="patient-info-item basic-info info-minor">{{ patientInfo.patientSex || '' }}
+              <div class="patient-info-item info-basic info-minor">{{ patientInfo.patientSex || '' }}
                 {{ patientInfo.patientAge || '' }}岁
               </div>
             </el-col>
@@ -382,11 +382,11 @@ export default {
   margin-top: 8px;
 }
 
-.basic-info {
+.info-basic {
   font-size: 24px;
 }
 
-.basic-info:first-child {
+.info-basic:first-child {
   margin-top: 24px;
 }
 
