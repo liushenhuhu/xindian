@@ -580,7 +580,6 @@ export default {
       defaultHeight -= searchFormBox.offsetHeight;
       defaultHeight -= (40+135);
       this.tableHeight=defaultHeight;
-      console.log("表单高度是",defaultHeight)
       this.$forceUpdate();
     },
     unfoldSearchBox(){
@@ -776,10 +775,16 @@ export default {
     /** 跳转到预警日志*/
     handleAlert(row) {
       this.$router.push({
-        path: "log",
-        query: {pId: row.pId, type: null, state: 12}
+        path: "/alert_log/alert_patient",
+        query: {pId: row.pId, state: 12}
       });
     },
+    // handleAlert(row) {
+    //   this.$router.push({
+    //     path: "log",
+    //     query: {pId: row.pId, type: null, state: 12}
+    //   });
+    // },
     /** 跳转到心电图实时监测*/
     monitoring(row) {
       console.log("在线状态：", row.onlineStatus)
