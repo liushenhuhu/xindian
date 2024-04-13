@@ -300,7 +300,7 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
 
     @Override
     public Map<String, List<String[]>> selectPatientManagementCount(PatientManagement patientManagement) throws Exception {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return patientManagementCountApp(formatter, patientManagement);
     }
 

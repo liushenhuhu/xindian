@@ -125,7 +125,7 @@ import {getHrCount} from "@/api/scatterPlot/scatterPlot";
 import {getVerify} from "@/api/verify/verify";
 
 export default {
-  name: "",
+  name: "ScatterPlot",
   data() {
     return {
       queryParams:{
@@ -183,7 +183,7 @@ export default {
 
   var getdata = JSON.parse(sessionStorage.getItem(luyou));
   if (getdata) {
-    
+
 
   const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
   let limitedNumber = limitTo11Digits(getdata.row.patientPhone);
@@ -651,7 +651,7 @@ export default {
     setChart7(data){
       var option = {
         title:{
-          text:'P波振幅(ms)'
+          text:'P波振幅(mv)'
         },
         grid:{
           left:'2%',
@@ -698,7 +698,7 @@ export default {
     setChart8(data){
       var option = {
         title:{
-          text:'R波振幅(ms)'
+          text:'R波振幅(mv)'
         },
         grid:{
           left:'2%',
@@ -745,7 +745,7 @@ export default {
     setChart9(data){
       var option = {
         title:{
-          text:'T波振幅(ms)'
+          text:'T波振幅(mv)'
         },
         grid:{
           left:'2%',
