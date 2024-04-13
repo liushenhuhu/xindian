@@ -1,18 +1,10 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryParams" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="省份" prop="province">
         <el-input
           v-model="queryParams.province"
           placeholder="请输入省份"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName">
-        <el-input
-          v-model="queryParams.hospitalName"
-          placeholder="请输入医院名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -26,13 +18,21 @@
 <!--        />-->
 <!--      </el-form-item>-->
 
-      <el-form-item label="医院名称" prop="hospitalName">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+      <el-form-item label="医院代号" prop="hospitalCode">
+        <el-input
+          v-model="queryParams.hospitalCode"
+          placeholder="请输入医院代号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="医院" prop="hospitalName">
+        <el-select v-model="queryParams.hospitalName" placeholder="请选择医院" >
           <el-option
             v-for="item in options"
             :key="item.hospitalId"
             :label="item.hospitalName"
-            :value="item.hospitalId">
+            :value="item.hospitalName">
           </el-option>
         </el-select>
       </el-form-item>
@@ -65,25 +65,29 @@
 <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" />-->
 <!--      <el-table-column label="医院代号" align="center" prop="hospitalCode" />-->
       <el-table-column label="在线设备数量" align="center" prop="deviceOnlineNum" />
+
+      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+      <el-table-column label="医院名称" align="center" prop="hospitalName" />
+
       <el-table-column label="是否开通数据统计" align="center" prop="ifStatistics">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if" :value="scope.row.ifStatistics"/>
         </template>
       </el-table-column>
       <!--  隐藏的患者的个人信息    -->
-      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-divider content-position="left">其他信息</el-divider>
-            <el-form-item label="医院代号" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.hospitalCode }}</span>
-            </el-form-item>
-            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
+      <!--<el-table-column type="expand">-->
+      <!--  <template slot-scope="scope">-->
+      <!--    <el-form label-position="left" inline class="demo-table-expand">-->
+      <!--      <el-divider content-position="left">其他信息</el-divider>-->
+      <!--      <el-form-item label="医院代号" width="200" style="padding-left: 40px">-->
+      <!--        <span>{{ scope.row.hospitalCode }}</span>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="医院名称" width="200" style="padding-left: 40px">-->
+      <!--        <span>{{ scope.row.hospitalName }}</span>-->
+      <!--      </el-form-item>-->
+      <!--    </el-form>-->
+      <!--  </template>-->
+      <!--</el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -265,7 +269,8 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
+      // this.resetForm("queryParams");
+      this.$refs.queryParams.resetFields();
       this.handleQuery();
     },
     // 多选框选中数据
