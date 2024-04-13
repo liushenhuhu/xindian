@@ -20,25 +20,28 @@
             </el-col>
           </el-row>
           <el-row class="patient-info-item mg-top">
-            <el-col :span="6">患者管理ID:</el-col>
+            <el-col :span="6" class="patient-info-item-name">患者管理ID:</el-col>
             <el-col :span="18">{{ patientInfo.pId || '' }}</el-col>
           </el-row>
           <el-row class="patient-info-item">
-            <el-col :span="6">联系方式:</el-col>
-            <el-col :span="18">{{ patientInfo.patientPhone || '' }}</el-col>
+            <el-col :span="6" class="patient-info-item-name">联系方式:</el-col>
+            <el-col :span="18">{{ phoneEncrypt(patientInfo.patientPhone) || '' }}</el-col>
           </el-row>
           <el-row class="patient-info-item">
-            <el-col :span="6">身份证号:</el-col>
+            <el-col :span="6" class="patient-info-item-name">身份证号:</el-col>
             <el-col :span="18">{{ patientInfo.patientCode || '' }}</el-col>
           </el-row>
           <el-row class="patient-info-item">
-            <el-col :span="6">就诊医院:</el-col>
+            <el-col :span="6" class="patient-info-item-name">就诊医院:</el-col>
             <el-col :span="18">{{ patientInfo.hospitalName || '' }}</el-col>
           </el-row>
           <div class="title title-2">紧急联系人 联系电话</div>
-          <el-row class="patient-info-item">
+          <el-row class="patient-info-item" v-if="!!patientInfo.familyPhone">
             <el-col :span="5">{{ patientInfo.familyName || '未命名' }}</el-col>
             <el-col :span="18" :offset="1">{{ patientInfo.familyPhone || '' }}</el-col>
+          </el-row>
+          <el-row class="patient-info-item" v-else>
+            <el-col :offset="4">无</el-col>
           </el-row>
         </template>
       </el-skeleton>
@@ -183,6 +186,10 @@ export default {
 
       // this.loading=false;
       //r.data.alertLogList是数据
+    },
+    phoneEncrypt(phone){
+      //返回前三位和八个*
+      return phone.replace(/(\d{3})\d{8}(\d{0,3})/, '$1********$2')
     },
     /**
      * 更新表格高度
@@ -380,6 +387,9 @@ export default {
 
 .patient-info-item {
   margin-top: 8px;
+  &-name{
+    color: #818181;
+  }
 }
 
 .basic-info {
