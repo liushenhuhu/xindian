@@ -14,8 +14,8 @@
           </el-row>
           <el-row>
             <el-col offset="6">
-              <div class="patient-info-item info-basic info-minor">{{ patientInfo.patientSex || '' }}
-                {{ patientInfo.patientAge || '' }}岁
+              <div class="patient-info-item info-minor">{{ patientInfo.patientSex || '' }}
+                {{ patientInfo.patientAge?patientInfo.patientAge +'岁' : '' }}
               </div>
             </el-col>
           </el-row>
@@ -35,7 +35,7 @@
             <el-col :span="6" class="patient-info-item-name">就诊医院:</el-col>
             <el-col :span="18">{{ patientInfo.hospitalName || '' }}</el-col>
           </el-row>
-          <div class="title title-2">紧急联系人 联系电话</div>
+          <div class="title title-2">紧急联系人</div>
           <el-row class="patient-info-item" v-if="!!patientInfo.familyPhone">
             <el-col :span="5">{{ patientInfo.familyName || '未命名' }}</el-col>
             <el-col :span="18" :offset="1">{{ patientInfo.familyPhone || '' }}</el-col>
@@ -340,6 +340,7 @@ export default {
 }
 
 .title {
+  color:#525252;
   font-weight: bold;
   line-height: 24px;
   font-size: 16px;
@@ -394,22 +395,18 @@ export default {
 
 .info-basic {
   font-size: 24px;
+  margin-top: 65px;
 }
-
-.info-basic:first-child {
-  margin-top: 24px;
-}
-
 .info-minor {
   font-size: 20px;
   color: #666;
 }
 
 .mg-top{
-  margin-top:40px;
+  margin-top:58px;
 }
 
 .title-2 {
-  margin-top: 40px;
+  margin-top: 65px;
 }
 </style>
