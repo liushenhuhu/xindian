@@ -673,7 +673,15 @@ export default {
       })
     },
     lookHistoryData30(row){
-      this.$router.push({path: "/scatterPlot", query: {row:row}});
+      let data = {
+        row:row,
+        ecgType:2
+      }
+      //这样会使会话存储的东西越多，想用vuex但是不敢动。看到这里大哥别生气。
+      // 在30天趋势图标签中，点击x号会自动的将会话存储中的/scatterPlot删除
+      sessionStorage.setItem("/scatterPlot", JSON.stringify(data));
+      this.$router.push({path: "/scatterPlot", query: {row:row,ecgType:2}});
+      // this.$router.push({path: "/scatterPlot", query: {row:row}});
     },
     sendMsg(row){
       const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
