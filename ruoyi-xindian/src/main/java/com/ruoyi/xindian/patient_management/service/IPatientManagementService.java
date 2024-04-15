@@ -3,10 +3,7 @@ package com.ruoyi.xindian.patient_management.service;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
-import com.ruoyi.xindian.patient_management.vo.DateListVO;
-import com.ruoyi.xindian.patient_management.vo.DocVO;
-import com.ruoyi.xindian.patient_management.vo.Limit;
-import com.ruoyi.xindian.patient_management.vo.PInfoVO;
+import com.ruoyi.xindian.patient_management.vo.*;
 import com.ruoyi.xindian.report.domain.Report;
 
 import java.util.List;
@@ -123,4 +120,8 @@ public interface IPatientManagementService
     Map<String, List<List<Object>>> selectPatientManagementCountApp(PatientManagement patientManagement) throws Exception;
 
     Map<String,Integer> selectTodayCount(String patientPhone) throws Exception;
+
+
+
+    List<PatientManagementVO> getPatientManagementByCode(String equipmentCode) throws Exception;
 }

@@ -78,7 +78,6 @@ public class DoctorController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Doctor doctor, HttpServletRequest request) throws Exception {
         LoginUser loginUser = tokenService.getLoginUser(request);
-        Department department = new Department();
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
         if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
 
@@ -88,7 +87,7 @@ public class DoctorController extends BaseController
                 AssociatedHospital associatedHospital = new AssociatedHospital();
                 associatedHospital.setHospitalId(hospital.getHospitalId());
                 List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-                if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                if (associatedHospitals!=null&& !associatedHospitals.isEmpty()){
                     for (AssociatedHospital c:associatedHospitals){
                         Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                         doctor.getHospitalNameList().add(hospital1.getHospitalName());
@@ -110,8 +109,12 @@ public class DoctorController extends BaseController
             return getDataTable(null);
 
         }
+            if (StringUtils.isNotEmpty(doctor.getHospital())){
+                doctor.getHospitalNameList().add(doctor.getHospital());
+            }
             startPage();
             List<Doctor> list = doctorService.selectDoctorList(doctor);
+
             for (Doctor value : list) {
                 //解密
                 if(!StringUtils.isEmpty(value.getDoctorName())){

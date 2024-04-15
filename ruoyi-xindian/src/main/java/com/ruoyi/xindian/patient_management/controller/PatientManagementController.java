@@ -37,6 +37,7 @@ import com.ruoyi.xindian.patient.service.SingleHistoryDataService;
 import com.ruoyi.xindian.patient_management.domain.*;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.patient_management.vo.Limit;
+import com.ruoyi.xindian.patient_management.vo.PatientManagementVO;
 import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.PhoneCheckUtils;
 import com.ruoyi.xindian.util.WxUtil;
@@ -564,27 +565,27 @@ public class PatientManagementController extends BaseController {
     }
 
 
-    /**
-     * 导出患者管理列表
-     */
-    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:export')")
-    @Log(title = "患者管理", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, PatientManagement patientManagement) {
-
-        List<PatientManagement> list = new ArrayList<>();
-        if (getDeptId() == 200) {
-            SysUser sysUser = userService.selectUserById(getUserId());
-            String hospitalCode = sysUser.getHospitalCode();
-            patientManagement.setHospitalCode(hospitalCode);
-            list = patientManagementService.selectPatientManagementList(patientManagement);
-        } else {
-            list = patientManagementService.selectPatientManagementList(patientManagement);
-        }
-//        List<PatientManagement> list = patientManagementService.selectPatientManagementList(patientManagement);
-        ExcelUtil<PatientManagement> util = new ExcelUtil<PatientManagement>(PatientManagement.class);
-        util.exportExcel(response, list, "患者管理数据");
-    }
+//    /**
+//     * 导出患者管理列表
+//     */
+//    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:export')")
+//    @Log(title = "患者管理", businessType = BusinessType.EXPORT)
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, PatientManagement patientManagement) {
+//
+//        List<PatientManagement> list = new ArrayList<>();
+//        if (getDeptId() == 200) {
+//            SysUser sysUser = userService.selectUserById(getUserId());
+//            String hospitalCode = sysUser.getHospitalCode();
+//            patientManagement.setHospitalCode(hospitalCode);
+//            list = patientManagementService.selectPatientManagementList(patientManagement);
+//        } else {
+//            list = patientManagementService.selectPatientManagementList(patientManagement);
+//        }
+////        List<PatientManagement> list = patientManagementService.selectPatientManagementList(patientManagement);
+//        ExcelUtil<PatientManagement> util = new ExcelUtil<PatientManagement>(PatientManagement.class);
+//        util.exportExcel(response, list, "患者管理数据");
+//    }
 
     @GetMapping(value = "/sendMsg/{phone}")
     public AjaxResult sendMsg(@PathVariable("phone") String phone,HttpServletRequest request)
@@ -885,5 +886,12 @@ public class PatientManagementController extends BaseController {
         return AjaxResult.success(patientManagementService.selectTodayCount(patientPhone));
     }
 
+
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, PatientManagement patientManagement) throws Exception {
+        List<PatientManagementVO> list = patientManagementService.getPatientManagementByCode(null);
+        ExcelUtil<PatientManagementVO> util = new ExcelUtil<PatientManagementVO>(PatientManagementVO.class);
+        util.exportExcel(response, list, "患者管理数据");
+    }
 
 }

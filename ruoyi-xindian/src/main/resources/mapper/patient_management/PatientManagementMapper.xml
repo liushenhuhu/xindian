@@ -877,6 +877,23 @@
             </if>
         </where>
     </select>
+    <select id="selectPatientManagementByCode"
+            resultType="com.ruoyi.xindian.patient_management.vo.PatientManagementVO">
+        SELECT
+            patient_management.p_id as pId,
+            patient_management.equipment_code as equipmentCode,
+            patient_management.connection_time as connectionTime,
+            jecg_single.beat_label as beatLabel
+        FROM
+            patient_management
+                INNER JOIN
+            jecg_single
+            ON
+                patient_management.p_id = jecg_single.p_id
+
+
+        WHERE patient_management.equipment_code = '2306EC10011928'
+    </select>
 
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">

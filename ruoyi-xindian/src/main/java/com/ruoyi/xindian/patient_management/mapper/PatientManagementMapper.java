@@ -3,10 +3,7 @@ package com.ruoyi.xindian.patient_management.mapper;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
-import com.ruoyi.xindian.patient_management.vo.DateListVO;
-import com.ruoyi.xindian.patient_management.vo.DocVO;
-import com.ruoyi.xindian.patient_management.vo.Limit;
-import com.ruoyi.xindian.patient_management.vo.PInfoVO;
+import com.ruoyi.xindian.patient_management.vo.*;
 import com.ruoyi.xindian.report.domain.Report;
 import org.apache.ibatis.annotations.Param;
 
@@ -139,5 +136,7 @@ public interface PatientManagementMapper
 
 
     int selectPatientManagementCount(PatientManagement patientManagement);
+
+    List<PatientManagementVO> selectPatientManagementByCode(String equipmentCode);
 
 }

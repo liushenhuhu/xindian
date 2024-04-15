@@ -14,10 +14,7 @@ import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
 import com.ruoyi.xindian.patient_management.mapper.PatientManagementMapper;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
-import com.ruoyi.xindian.patient_management.vo.DateListVO;
-import com.ruoyi.xindian.patient_management.vo.DocVO;
-import com.ruoyi.xindian.patient_management.vo.Limit;
-import com.ruoyi.xindian.patient_management.vo.PInfoVO;
+import com.ruoyi.xindian.patient_management.vo.*;
 import com.ruoyi.xindian.pmEcgData.domain.PmEcgData;
 import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
 import com.ruoyi.xindian.report.domain.Report;
@@ -416,6 +413,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         int i1 = patientManagementMapper.selectPatientManagementCount(patientManagement);
         map.put("today",i1);
         return map;
+    }
+
+    @Override
+    public List<PatientManagementVO> getPatientManagementByCode(String equipmentCode) throws Exception {
+        return patientManagementMapper.selectPatientManagementByCode(null);
     }
 
     private Double getDouble(String str) {
