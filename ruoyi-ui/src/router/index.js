@@ -115,6 +115,12 @@ export const constantRoutes = [
         name: 'log',
         component: () => import('@/views/alert_log/alert_log/log'),
         meta: {title: '个人预警日志'}
+      },
+      {
+        path:'/alert_log/alert_patient',
+        name:'alert_patient',
+        component:()=> import("@/views/alert_log/alert_patient/index.vue"),
+        meta:{title:'个人预警信息'}
       }
     ]
   },
