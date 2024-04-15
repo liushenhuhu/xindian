@@ -45,7 +45,7 @@
   <el-descriptions title="">
     <el-descriptions-item label="用户姓名">{{isShowName.status?this.queryParams.patientName:this.patientName}}</el-descriptions-item>
     <el-descriptions-item label="手机号">{{isShowName.status?this.queryParams.patientPhone:this.patientPhone}}</el-descriptions-item>
-    <el-descriptions-item label="性别">{{$route.query.row.patientSex}}</el-descriptions-item>
+    <el-descriptions-item label="性别">{{patientSex}}</el-descriptions-item>
   </el-descriptions>
 
 
@@ -59,6 +59,9 @@
           <div class="chart" id="chart2" ></div>
         </el-card>
       </div>
+      <!-- <div class="row">
+        
+      </div> -->
       <div class="row">
         <el-card>
           <div class="chart" id="chart3"></div>
@@ -128,6 +131,7 @@ export default {
   name: "ScatterPlot",
   data() {
     return {
+      patientSex:'',
       queryParams:{
         patientPhone:null,
         startTime:null,
@@ -183,43 +187,65 @@ export default {
 
   var getdata = JSON.parse(sessionStorage.getItem(luyou));
   if (getdata) {
+    // console.log(getdata)
 
 
-  const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
-  let limitedNumber = limitTo11Digits(getdata.row.patientPhone);
-
-    this.ecgType=getdata.ecgType
-    this.queryParams.patientPhone = limitedNumber
-    this.queryParams.patientName = getdata.row.patientName
-
-    var tel = this.queryParams.patientPhone;
-    tel = "" + tel;
-    var ary = tel.split("");
-    ary.splice(3,4,"****");
-    var tel1=ary.join("");
-    // console.log(tel1);
+    // const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
+    // let limitedNumber = limitTo11Digits(getdata.row.patientPhone);
 
 
-    // this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
-    this.patientPhone = tel1
+    var tel = getdata.row.patientPhone; // 获取电话号码
+    let a = tel.toString().slice(0, 11); // 只保留前11位
+    var telPrefix = tel.slice(0, 3); // 获取前3位数字或字符串
+    var telHidden = telPrefix + '*'.repeat(Math.max(0, tel.length - 3)); // 用 * 代替剩余部分
+    this.patientPhone = telHidden;
+
+      this.ecgType=getdata.ecgType
+      this.queryParams.patientPhone = a
+      this.queryParams.patientName = getdata.row.patientName
+      this.patientSex = getdata.row.patientSex
+
+      // var tel = this.queryParams.patientPhone;
+      // tel = "" + tel;
+      // var ary = tel.split("");
+      // var telPrefix = ary.slice(0, 3); // 获取前3位数字或字符串
+      // var telHidden = telPrefix + '*'.repeat(Math.max(0, tel.length - 3)); // 用 * 代替剩余部分
+      // // ary.splice(3,"********");
+      // var tel1=telHidden.join("");
+      // // console.log(tel1);
 
 
-    this.patientName= '***'
+      // this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+      // this.patientPhone = tel1
+
+
+      this.patientName= '***'
   } else {
     //永远不会到达这里
-    const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
-  let limitedNumber = limitTo11Digits(this.$route.query.row.patientPhone);
-    this.ecgType=this.$route.query.ecgType
-    this.queryParams.patientPhone = limitedNumber
-    this.queryParams.patientName = this.$route.query.row.patientName
+    var tel = this.$route.query.row.patientPhone; // 获取电话号码
+    let a = tel.toString().slice(0, 11); // 只保留前11位
+    var telPrefix = tel.slice(0, 3); // 获取前3位数字或字符串
+    var telHidden = telPrefix + '*'.repeat(Math.max(0, tel.length - 3)); // 用 * 代替剩余部分
+    this.patientPhone = telHidden;
 
-    var tel = this.queryParams.patientPhone;
-    tel = "" + tel;
-    var ary = tel.split("");
-    ary.splice(3,4,"****");
-    var tel1=ary.join("");
+    
+    // const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
+    // let limitedNumber = limitTo11Digits(this.$route.query.row.patientPhone);
+    this.ecgType=this.$route.query.ecgType
+    this.queryParams.patientPhone = a
+    this.queryParams.patientName = this.$route.query.row.patientName
+    this.patientSex =this.$route.query.row.patientSex
+
+
+    
+
+    // var tel = this.queryParams.patientPhone;
+    // tel = "" + tel;
+    // var ary = tel.split("");
+    // ary.splice(3,4,"****");
+    // var tel1=ary.join("");
     // this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
-    this.patientPhone = tel1
+    // this.patientPhone = tel1
 
     this.patientName= '***'
   }
@@ -1058,7 +1084,7 @@ export default {
     justify-content: space-between;
     margin-bottom:25px;
     ::v-deep .el-card{
-      width: 49%;
+      width: 100%;
       min-height: 35vh;
       .el-card__body{
         height: 100%;

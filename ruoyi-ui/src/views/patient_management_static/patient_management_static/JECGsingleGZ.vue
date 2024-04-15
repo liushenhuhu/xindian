@@ -283,6 +283,14 @@
           </el-tag>
         </template>
       </el-table-column>
+
+
+      <el-table-column label="是否标注预警状态" align="center" prop="ecgIsLabel">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>
+        </template>
+      </el-table-column>
+
       <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
@@ -519,7 +527,7 @@ export default {
       reload: this.reload
     }
   },
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list','if_status'],
   data() {
     return {
       currentScrollPos: 0,
@@ -731,6 +739,7 @@ export default {
       listPatient_management(this.queryParams).then(response => {
         console.log(response)
         this.patient_managementList = response.rows;
+        // 原先提交过的预警类型response.rows[].logDataType
         this.total = response.total;
         this.loading = false;
         if ( this.queryParams.ecgType==='JECGsingle'){
@@ -785,7 +794,7 @@ export default {
           diagnosisConclusion: null,
           diagnosisDoctor: null,
           reportTime: null,
-        diagnosisStatus: null,
+          diagnosisStatus: null,
           ecgLevel: null,
           doctorPhone: null,
           patientSex:null,
@@ -923,7 +932,8 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/staticECG", query: {pId: row.pId,state:1}});
+      // console.log(this.queryParams);
+      this.$router.push({path: "/staticECG", query: {pId: row.pId,state:1,queryParams:this.queryParams,ecgType:"JECGsingle"}});
     },
     /** 生成报告*/
     handleInform(row) {

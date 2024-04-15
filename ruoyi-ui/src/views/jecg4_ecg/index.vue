@@ -148,6 +148,15 @@
               <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
               <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
             </div>
+            <div class="updown">
+              <el-button
+                class="next"
+                @click="prev()"
+                type="primary"
+                :loading="loading"
+              >上一个</el-button>
+              <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+            </div>
           </div>
         </div>
 
@@ -281,6 +290,8 @@ import {selectList} from "@/api/log_user/log_user";
 // 存储选择的预警类型
 import {addReport as addReportyujing} from "@/api/alert_log_count/count";
 
+import { listPatient_management} from "@/api/patient_management/patient_management";
+
 export default {
   name: "index",
   components: {
@@ -289,6 +300,30 @@ export default {
   },
   data() {
     return {
+      ecgType:'',
+      pageNum: 1,
+      anoStatus: null,
+      pageSize: 10,
+      queryParams:{},
+      loading: false,
+      index: 0,
+      message: {
+        devicesn: "",
+        user_id: "",
+        pid: "",
+        logid: "",
+        sex: "",
+        age: "",
+        time: "",
+        logType: "",
+      },
+      // 总条数
+      total: 0,
+      // 患者表格数据
+      patient_managementList: [],
+      // 时间范围
+      daterangeConnectionTime: [],
+      // ============================上面是上下页需要的数值
       // 原先提交过的预警类型
       logDataType:'',
       tijiaoshuju:{},
@@ -378,9 +413,52 @@ export default {
     window.removeEventListener('resize', this.resizeDraw);
   },
   created() {
-    var pId = this.$route.query.pId;
-    if (pId) {
-      this.pId = pId;
+    this.queryParams = this.$route.query.queryParams
+    this.ecgType = this.$route.query.ecgType
+    this.pId = this.$route.query.pId;
+    this.getList()
+
+
+  },
+  mounted() {
+    this.get();
+    // this.drawgrid();//canvas 画图
+    //预警的类型
+    // this.getyujingleixing()
+  },
+  methods: {
+    /** 查询用户管理列表 */
+   async getList() {
+      this.loading = true;
+      this.queryParams.params = {};
+      if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
+        this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
+        this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
+      }
+      if (this.queryParams.ecgType==null){
+        this.queryParams.ecgType = this.ecgType
+      }
+     await listPatient_management(this.queryParams).then(response => {
+        // console.log(response)
+        this.patient_managementList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+        if ( this.queryParams.ecgType==='JECG4'){
+          this.queryParams.ecgType=null
+        }
+        this.patient_managementList.forEach((item, index) => {
+            if (this.pId == item.pId) {
+              this.index = index;
+            }
+          })
+        if (this.index == this.patient_managementList.length ) {
+              this.index = 0
+        }
+      })
+      this.getPatientdetails()
+    },
+    // 患者用户信息
+    getPatientdetails(){
       getReportByPId(this.pId).then(response => {
         // console.log(response)
         this.data.result = response.data.intelligentDiagnosis
@@ -409,62 +487,117 @@ export default {
       selectDoctor().then(response => {
         this.options = response;
       })
-    }
-    
+      this.getyujingleixing()
+    },
+     // 上一个
+   async prev() {
+      this.loading = true;
+      if (this.queryParams.pageNum == 1 && this.index == 0) {
+        this.$message.warning("已经是第一页！！！");
+        this.loading = false;
+        return;
+      }
+      this.index--;
+      if (this.index < 0) {
+        if (this.queryParams.pageNum > 1) {
+          this.queryParams.pageNum--;
+          // this.index = 9
+        }
+       await this.getList();
+        this.index = this.queryParams.pageSize - 1;
+      }
+      // console.log(this.logUserList[this.index]);
+      this.pId = this.patient_managementList[this.index].pId;
+      let anoStatus = "";
+      if (this.anoStatus != null) {
+        anoStatus = `&anoStatus=${this.anoStatus}`;
+      }
+      var newUrl =
+        this.$route.path +
+        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}` +
+        anoStatus +
+        `&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
+      window.history.replaceState("", "", newUrl);
+      this.get();
+      // await this.getLogUserList()
+     await this.getList()
+    },
+    // 点击下一个触发事件
+    async next() {
+      this.loading = true;
+      this.index++;
 
-  },
-  mounted() {
-    this.get();
-    // this.drawgrid();//canvas 画图
-    //预警的类型
-    this.getyujingleixing()
-  },
-  methods: {
+      if (this.index >= this.patient_managementList.length) {
+        if (
+          (this.queryParams.pageNum - 1) * this.queryParams.pageSize + this.patient_managementList.length >=
+          this.total
+        ) {
+          this.$message.warning("已经是最后一页！！！");
+          this.index--;
+          this.loading = false;
+          return;
+        }
+        this.queryParams.pageNum++;
+        // this.index = 0;
+        await this.getList();
+        this.index = 0;
+      }
+      this.pId = this.patient_managementList[this.index].pId;
+      // console.log(this.patient_managementList);
+      // this.queryParams.pId = this.patient_managementList[this.index].pId;
+      let anoStatus = "";
+      if (this.anoStatus != null) {
+        anoStatus = `&anoStatus=${this.anoStatus}`;
+      }
+      var newUrl =
+        this.$route.path +
+        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}` +
+        anoStatus +
+        `&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
+      window.history.replaceState("", "", newUrl);
+      this.get();
+      // await this.getLogUserList()
+       await this.getList()
+      // this.loading = false;
+    },
+
+    // 获取预警类型
     getyujingleixing(){
       selectList().then((res) => {
         this.yujingzhi = res.data;
         // console.log("这是预警值");
         // console.log(this.yujingzhi);
-        
+
 
         if (this.logDataType) {
           this.xianshizifuchuan = this.logDataType
           // 已逗号分隔，并去除每一项中的空格
           this.zhi=this.logDataType.split(',').map(str => str.trim())
-          // console.log("如果有logDataType就放入zhi中");
-          // console.log(this.zhi);
-        } else {
-          // console.log(this.data.result);
-          let zuanhua = ''
-          zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
-          // console.log("去掉括号的内容："+zuanhua);
-          let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
-          // console.log("原先没有提交过预警类型，下面是智能判断的值，去掉括号总的，变成了数组");
-          // console.log(a);
-          let matchedValues = [];
+        }
 
-            a.forEach(logValue => {
-              // 遍历yujingzhi数组中的每个对象
-              this.yujingzhi.forEach(item => {
-                // 在options中查找匹配项
-                item.options.forEach(options => {
-                  if (options.value == logValue) {
-                    // 如果找到匹配项，则将其加入matchedValues数组
-                    matchedValues.push(options.value);
-                  }
-                });
-              });
-            });
+        else {
+          this.zhi = []
+          this.xianshizifuchuan = ''
+        //   let zuanhua = ''
+        //   zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
+        //   // console.log("去掉括号的内容："+zuanhua);
+        //   let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
+        //   let matchedValues = [];
 
-          // console.log(matchedValues);
-          // this.zhi= zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== ""); // 使用逗号或中文逗号分隔并去除空格
-          // this.zhi=matchedValues
-          // console.log("去除空格的内容");
-          // console.log(this.zhi);
-          this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
-          this.zhi=matchedValues
-          // console.log("智能推荐中的值，并且预警类型中的有的：");
-          // console.log(this.zhi); // 输出结果
+        //     a.forEach(logValue => {
+        //       // 遍历yujingzhi数组中的每个对象
+        //       this.yujingzhi.forEach(item => {
+        //         // 在options中查找匹配项
+        //         item.options.forEach(options => {
+        //           if (options.value == logValue) {
+        //             // 如果找到匹配项，则将其加入matchedValues数组
+        //             matchedValues.push(options.value);
+        //           }
+        //         });
+        //       });
+        //     });
+        //   this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
+        //   this.zhi=matchedValues
         }
       });
     },
@@ -516,7 +649,7 @@ export default {
       } else {
         this.$modal.msgError("数据提交失败，请选择预警类型");
       }
-      
+
     },
     dialogVisible() {
       getTerm().then(r => {
@@ -757,6 +890,7 @@ export default {
           _th.nArrV2 = _th.getNewArray(_th.data4.dataV2, 500)
           _th.nArrV4 = _th.getNewArray(_th.data4.dataV4, 500)
           _th.nArrV6 = _th.getNewArray(_th.data4.dataV6, 500)
+          _th.x = []
           for (var i = 0; i < 500; i++) {
             _th.x.push(i);
           }
@@ -1882,5 +2016,18 @@ export default {
 .wancheng{
   display: flex;
   justify-content:space-between;
+}
+::v-deep .next {
+  background-color: rgba(255, 255, 255, 0);
+  color: #136d87;
+  border: 1px solid #136d87;
+  width: 5vw;
+  margin: 0;
+  padding: 10px 0;
+}
+.updown{
+  width: 100%;
+  display: flex;
+  justify-content:space-around;
 }
 </style>

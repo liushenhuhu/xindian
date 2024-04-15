@@ -291,6 +291,11 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="是否标注预警状态" align="center" prop="ecgIsLabel">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>
+          </template>
+        </el-table-column>
       <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
@@ -527,7 +532,7 @@ export default {
       reload: this.reload
     }
   },
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list','if_status'],
   data() {
     return {
       currentScrollPos: 0,
@@ -920,7 +925,7 @@ export default {
       this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECG4"}});
     },
     lookHistoryData30(row){
-      console.log(row);
+      // console.log(row);
       // this.$router.push({path: "/scatterPlot", query: {row:row,ecgType:1}});
       let data = {
         row:row,
@@ -933,7 +938,7 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/JECG4_ECG", query: {pId: row.pId,state:4}});
+      this.$router.push({path: "/JECG4_ECG", query: {pId: row.pId,state:4,queryParams:this.queryParams,ecgType:"JECG4"}});
     },
     /** 生成报告*/
     handleInform(row) {

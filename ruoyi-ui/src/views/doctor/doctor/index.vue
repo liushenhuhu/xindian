@@ -9,6 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
       <el-form-item label="医生电话" prop="doctorPhone">
         <el-input
           v-model="queryParams.doctorPhone"
@@ -16,6 +17,17 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+
+      <el-form-item label="医院" prop="hospital">
+        <el-select v-model="queryParams.hospital" filterable placeholder="请选择医院名称" clearable>
+        <el-option
+          v-for="item in hospitaloptions"
+          :key="item.value"
+          :label="item.hospitalName"
+          :value="item.hospitalName">
+        </el-option>
+      </el-select>
       </el-form-item>
 <!--      <el-form-item label="科室" prop="departmentCode">-->
 <!--&lt;!&ndash;        <el-input&ndash;&gt;-->
@@ -260,6 +272,8 @@
 
 <script>
 import { listDoctor, getDoctor, delDoctor, addDoctor, updateDoctor ,hospitalCodeFind} from "@/api/doctor/doctor";
+// 在页面上新增了根据医院名称搜索
+import {listHospital as yiyuansousuo} from "@/api/hospital/hospital";
 import { listDepartment } from "@/api/department/department";
 import item from "@/layout/components/Sidebar/Item";
 import {listHospital, listHospitalId} from "@/api/hospital/hospital";
@@ -271,6 +285,8 @@ export default {
   dicts: ['hospital_name_list','docker_type'],
   data() {
     return {
+      hospitalvalue:null,
+      hospitaloptions:[],
       dialogImageUrl: '',
       dialogVisible: false,
       disabled: false,
@@ -355,6 +371,10 @@ export default {
   },
   created() {
     this.getList();
+    listHospitalId(null).then(r=>{
+      // console.log(r.rows);
+      this.hospitaloptions=r.rows
+    })
   },
   methods: {
 
@@ -408,11 +428,13 @@ export default {
     /** 查询医生列表 */
     getList() {
       this.loading = true;
-      listDoctor(this.queryParams).then(response => {
-        this.doctorList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+
+        listDoctor(this.queryParams).then(response => {
+          this.doctorList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+
     },
     historyId(val){
       if (val!==""){
@@ -487,7 +509,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-      console.log(this.state);
+      // console.log(this.state);
       if(typeof this.state  != 'string')
         this.queryParams.departmentCode=null
       this.getList();
