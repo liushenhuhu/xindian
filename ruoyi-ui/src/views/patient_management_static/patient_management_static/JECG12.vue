@@ -881,6 +881,14 @@ export default {
 
     },
     lookHistoryData30(row){
+      let data = {
+        row:row,
+        ecgType:2
+      }
+      //这样会使会话存储的东西越多，想用vuex但是不敢动。看到这里大哥别生气。
+      // 在30天趋势图标签中，点击x号会自动的将会话存储中的/scatterPlot删除
+      // 在src\layout\components\TagsView\index.vue中closeSelectedTag事件里删除
+      sessionStorage.setItem("/scatterPlot", JSON.stringify(data));
       this.$router.push({path: "/scatterPlot", query: {row:row,ecgType:2}});
     },
     //发送短信

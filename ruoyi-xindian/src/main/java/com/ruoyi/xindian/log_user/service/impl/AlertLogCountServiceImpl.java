@@ -167,6 +167,7 @@ public class AlertLogCountServiceImpl extends ServiceImpl<AlertLogCountMapper, A
         PatientManagement patientManagement1 = new PatientManagement();
         patientManagement1.setpId(alertLogCount.getpId());
         patientManagement1.setLogDataType(alertLogCount.getLogType());
+        patientManagement1.setEcgIsLabel(1);
         patientManagementService.updatePatientManagement(patientManagement1);
         alertLogCount.setRecordDate(new Date());
         return alertLogCountMapper.insertAlertLogCount(alertLogCount);

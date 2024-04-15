@@ -921,7 +921,14 @@ export default {
     },
     lookHistoryData30(row){
       console.log(row);
-      // row.patientPhone=row.patientPhone && row.patientPhone.length === 11 ? row.patientPhone.slice(0, -4) + '****' : row.patientPhone
+      // this.$router.push({path: "/scatterPlot", query: {row:row,ecgType:1}});
+      let data = {
+        row:row,
+        ecgType:1
+      }
+      //这样会使会话存储的东西越多，想用vuex但是不敢动。看到这里大哥别生气。
+      // 在30天趋势图标签中，点击x号会自动的将会话存储中的/scatterPlot删除
+      sessionStorage.setItem("/scatterPlot", JSON.stringify(data));
       this.$router.push({path: "/scatterPlot", query: {row:row,ecgType:1}});
     },
     /** 查看心电图*/

@@ -4,6 +4,7 @@
       <el-page-header @back="goBack" content="30天趋势图"></el-page-header>
       <el-col :span="1.5">
           <el-button
+            style="margin-right: 1vw;"
             type="success"
             plain
             icon="el-icon-view"
@@ -11,18 +12,12 @@
             @click="isShowNameClick"
           >{{isShowName.name}}
           </el-button>
-        </el-col>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
+      </el-col>
+
     </div>
 
-    <!-- <el-form :model="queryParams" style="margin-top: 20px" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="患者手机号" prop="patientPhone" label-width="80">
-        <el-input
-          v-model="queryParams.patientPhone"
-          placeholder="请输入患者手机号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+    <el-form :model="queryParams" style="margin-top: 20px" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="开始时间" prop="startTime">
         <el-date-picker
                         v-model="queryParams.startTime"
@@ -43,22 +38,18 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-    </el-form> -->
+    </el-form>
 
 
 
-  <el-descriptions title="">$route.query.row.patientPhone.slice(0, -4) + '****'
-    <el-descriptions-item label="用户姓名">{{isShowName.status?$route.query.row.patientName:"***"}}</el-descriptions-item>
-    <el-descriptions-item label="手机号">{{isShowName.status?$route.query.row.patientPhone:$route.query.row.patientPhone.slice(0, -4) + '****'}}</el-descriptions-item>
+  <el-descriptions title="">
+    <el-descriptions-item label="用户姓名">{{isShowName.status?this.queryParams.patientName:this.patientName}}</el-descriptions-item>
+    <el-descriptions-item label="手机号">{{isShowName.status?this.queryParams.patientPhone:this.patientPhone}}</el-descriptions-item>
     <el-descriptions-item label="性别">{{$route.query.row.patientSex}}</el-descriptions-item>
-    <el-descriptions-item label="开始时间">{{queryParams.startTime}}</el-descriptions-item>
-    <el-descriptions-item label="结束时间">{{queryParams.endTime}}</el-descriptions-item>
   </el-descriptions>
 
 
-    <el-row :gutter="10" class="mb8">
-      <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar> -->
-    </el-row>
+
     <div class="main-flex" id="main">
       <div class="row">
         <el-card>
@@ -134,14 +125,17 @@ import {getHrCount} from "@/api/scatterPlot/scatterPlot";
 import {getVerify} from "@/api/verify/verify";
 
 export default {
-  name: "",
+  name: "ScatterPlot",
   data() {
     return {
       queryParams:{
-        patientPhone:this.$route.query.row.patientPhone,
+        patientPhone:null,
         startTime:null,
-        endTime:null
+        endTime:null,
+        patientName:null
       },
+      patientPhone:null,
+      patientName:null,
       dialogFormVisibleVerifyAuthority:false,
       showSearch:true,
       chart1:null,
@@ -175,9 +169,64 @@ export default {
     }
   },
   created() {
+    let currentURL = window.location.href;
+    console.log(currentURL);
+    // 使用URL对象解析URL
+    let urlObject = new URL(currentURL);
+
+    // 获取路径名部分
+    let pathName = urlObject.pathname;
+
+    // 提取/restingECG字符串并在前面加上斜杠
+    let luyou = '/' + pathName.split('/')[1];
+    // console.log(luyou);
+
+  var getdata = JSON.parse(sessionStorage.getItem(luyou));
+  if (getdata) {
+
+
+  const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
+  let limitedNumber = limitTo11Digits(getdata.row.patientPhone);
+
+    this.ecgType=getdata.ecgType
+    this.queryParams.patientPhone = limitedNumber
+    this.queryParams.patientName = getdata.row.patientName
+
+    var tel = this.queryParams.patientPhone;
+    tel = "" + tel;
+    var ary = tel.split("");
+    ary.splice(3,4,"****");
+    var tel1=ary.join("");
+    // console.log(tel1);
+
+
+    // this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+    this.patientPhone = tel1
+
+
+    this.patientName= '***'
+  } else {
+    //永远不会到达这里
+    const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
+  let limitedNumber = limitTo11Digits(this.$route.query.row.patientPhone);
     this.ecgType=this.$route.query.ecgType
+    this.queryParams.patientPhone = limitedNumber
+    this.queryParams.patientName = this.$route.query.row.patientName
+
+    var tel = this.queryParams.patientPhone;
+    tel = "" + tel;
+    var ary = tel.split("");
+    ary.splice(3,4,"****");
+    var tel1=ary.join("");
+    // this.patientPhone = this.queryParams.patientPhone.slice(0, -4) + '****'
+    this.patientPhone = tel1
+
+    this.patientName= '***'
+  }
+
   },
   mounted() {
+    // this.getData()
     this.chart1 = echarts.init(document.getElementById('chart1'));
     this.chart2 = echarts.init(document.getElementById('chart2'));
     this.chart3 = echarts.init(document.getElementById('chart3'));
@@ -251,6 +300,7 @@ export default {
         }else {
           this.isShowName.status =!this.isShowName.status;
           this.isShowName.name = "隐藏姓名"
+
         }
       }else {
         this.verifyForm.password=''
@@ -276,7 +326,7 @@ export default {
       })
     },
     getData(){
-      this.queryParams.patientPhone = this.$route.query.row.patientPhone
+      // this.queryParams.patientPhone = this.$route.query.row.patientPhone
       getHrCount(this.queryParams).then(res=>{
         this.setChart1(res.data.PR_interval)
         this.setChart2(res.data.P_time)
@@ -601,7 +651,7 @@ export default {
     setChart7(data){
       var option = {
         title:{
-          text:'P波振幅(ms)'
+          text:'P波振幅(mv)'
         },
         grid:{
           left:'2%',
@@ -648,7 +698,7 @@ export default {
     setChart8(data){
       var option = {
         title:{
-          text:'R波振幅(ms)'
+          text:'R波振幅(mv)'
         },
         grid:{
           left:'2%',
@@ -695,7 +745,7 @@ export default {
     setChart9(data){
       var option = {
         title:{
-          text:'T波振幅(ms)'
+          text:'T波振幅(mv)'
         },
         grid:{
           left:'2%',
@@ -949,6 +999,11 @@ export default {
             itemStyle: {
               color: "rgba(224, 67, 67, 1)"
             },
+            tooltip: {
+              formatter: function (params) {
+                return 'X: ' + params.value[0] + '<br>Y: ' + params.value[1]; // 显示坐标信息
+              }
+            }
           }
         ]
       };
