@@ -145,9 +145,18 @@
                 <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
                 <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
               </div>
+              <div class="updown">
+              <el-button
+                class="next"
+                @click="prev()"
+                type="primary"
+                :loading="loading"
+              >上一个</el-button>
+              <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+            </div>
             </div>
           </div>
-          
+
           <!-- 预警类型弹窗 -->
           <div class="xuanzheyujing" v-else >
             <div class="wancheng">
@@ -255,11 +264,38 @@ import {selectList} from "@/api/log_user/log_user";
 // 存储选择的预警类型
 import {addReport as addReportyujing} from "@/api/alert_log_count/count";
 
+import {listPatient_management} from "@/api/patient_management/patient_management";
+
 export default {
   name: "index",
   components: {child},
   data() {
     return {
+      // 路由
+      luyou:'',
+      ecgType:'',
+      pageNum: 1,
+      pageSize: 10,
+      queryParams:{},
+      loading: false,
+      index: 0,
+      message: {
+        devicesn: "",
+        user_id: "",
+        pid: "",
+        logid: "",
+        sex: "",
+        age: "",
+        time: "",
+        logType: "",
+      },
+      // 总条数
+      total: 0,
+      // 患者表格数据
+      patient_managementList: [],
+      // 时间范围
+      daterangeConnectionTime: [],
+      // ===================================上面是上下页的数据
       // 原先提交过的预警类型
       logDataType:'',
       tijiaoshuju:{},
@@ -454,18 +490,107 @@ export default {
     };
   },
   created() {
-    var pId = this.$route.query.pId;
-    if (pId) {
-      this.pId = pId;
+  //   let currentURL = window.location.href;
+  //   // console.log(currentURL);
+  //   // 使用URL对象解析URL
+  //   let urlObject = new URL(currentURL);
+
+  //   // 获取路径名部分
+  //   let pathName = urlObject.pathname;
+
+  //   // 提取/restingECG字符串并在前面加上斜杠
+  //   let luyou = '/' + pathName.split('/')[1];
+  //   // console.log(luyou);
+
+  // var getdata = JSON.parse(sessionStorage.getItem(luyou));
+
+
+  if (false) {
+    let currentURL = window.location.href;
+    console.log(currentURL);
+    // 使用URL对象解析URL
+    let urlObject = new URL(currentURL);
+
+    // 获取路径名部分
+    let pathName = urlObject.pathname;
+
+    // 提取/restingECG字符串并在前面加上斜杠
+    this.luyou = '/' + pathName.split('/')[1];
+    console.log(this.luyou);
+    let adf =JSON.parse(sessionStorage.getItem(this.luyou))
+    console.log(adf);
+    this.queryParams = adf.queryParams
+    // this.ecgType = a.ecgType
+    this.pId = adf.pId
+    var newUrl =
+        this.$route.path +
+        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
+      window.history.replaceState("", "", newUrl);
+  } else {
+
+    this.queryParams = this.$route.query.queryParams
+    this.ecgType = this.$route.query.ecgType
+    this.pId = this.$route.query.pId;
+    }
+
+
+
+
+    this.getList()
+  },
+  mounted() {
+    // var show = sessionStorage.getItem(this.pId + "show");
+    // if (show) {
+      this.get();
+    // }
+    //预警的类型
+    // this.getyujingleixing()
+  },
+  methods: {
+     /** 查询用户管理列表 */
+   async getList() {
+      this.loading = true;
+      this.queryParams.params = {};
+      if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
+        this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
+        this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
+      }
+      if (this.queryParams.ecgType==null){
+        this.queryParams.ecgType = this.ecgType
+      }
+     await listPatient_management(this.queryParams).then(response => {
+        // console.log(response)
+        this.patient_managementList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+        if ( this.queryParams.ecgType==='JECG12'){
+          this.queryParams.ecgType=null
+        }
+         this.patient_managementList.forEach((item, index) => {
+            if (this.pId == item.pId) {
+              this.index = index;
+            }
+          })
+        if (this.index == this.patient_managementList.length ) {
+              this.index = 0
+        }
+      });
+      this.getPatientdetails()
+    },
+    // 患者用户信息
+    getPatientdetails(){
       getReportByPId(this.pId).then(response => {
+        // console.log(response.data);
         // console.log("请求成功：", response.data)
         this.data.resultByDoctor = response.data.diagnosisConclusion
         this.data.doctorName = response.data.diagnosisDoctor
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
         this.data.pId = response.data.pId
+        this.data.result = response.data.intelligentDiagnosis
         // 原先提交过的预警类型
         this.logDataType =  response.data.logDataType
+        // console.log("原先提交过的值："+this.logDataType);
         if (!this.data.doctorName){
           const date = new Date();
           const year = date.getFullYear().toString().padStart(4, '0');
@@ -479,32 +604,23 @@ export default {
         if(response.data.patientSymptom!=null){
           this.data.patientSymptom = response.data.patientSymptom
         }
-
       });
-      var show = sessionStorage.getItem(pId + "show");
-      if (!show) {
-        this.get();
-      }
+      // var show = sessionStorage.getItem(this.pId + "show");
+      // if (!show) {
+      //   this.get();
+      // }
       selectDoctor().then(response => {
         this.options = response;
       })
-    }
-  },
-  mounted() {
-    var show = sessionStorage.getItem(this.pId + "show");
-    if (show) {
-      this.get();
-    }
-    //预警的类型
-    this.getyujingleixing()
-  },
-  methods: {
+      this.getyujingleixing()
+    },
+    // 获取预警类型选项
     getyujingleixing(){
       selectList().then((res) => {
         this.yujingzhi = res.data;
         // console.log("这是预警值");
         // console.log(this.yujingzhi);
-        
+
 
         if (this.logDataType) {
           this.xianshizifuchuan = this.logDataType
@@ -512,40 +628,147 @@ export default {
           this.zhi=this.logDataType.split(',').map(str => str.trim())
           // console.log("如果有logDataType就放入zhi中");
           // console.log(this.zhi);
-        } else {
-          // console.log(this.data.result);
-          let zuanhua = ''
-          zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
-          // console.log("去掉括号的内容："+zuanhua);
-          let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
-          // console.log("原先没有提交过预警类型，下面是智能判断的值，去掉括号总的，变成了数组");
-          // console.log(a);
-          let matchedValues = [];
+        }
+        else {
+          this.xianshizifuchuan = ''
+          this.zhi = []
+          // // console.log(this.data.result);
+          // let zuanhua = ''
+          // zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
+          // // console.log("去掉括号的内容："+zuanhua);
+          // let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
+          // // console.log("原先没有提交过预警类型，下面是智能判断的值，去掉括号总的，变成了数组");
+          // // console.log(a);
+          // let matchedValues = [];
 
-            a.forEach(logValue => {
-              // 遍历yujingzhi数组中的每个对象
-              this.yujingzhi.forEach(item => {
-                // 在options中查找匹配项
-                item.options.forEach(options => {
-                  if (options.value == logValue) {
-                    // 如果找到匹配项，则将其加入matchedValues数组
-                    matchedValues.push(options.value);
-                  }
-                });
-              });
-            });
+          //   a.forEach(logValue => {
+          //     // 遍历yujingzhi数组中的每个对象
+          //     this.yujingzhi.forEach(item => {
+          //       // 在options中查找匹配项
+          //       item.options.forEach(options => {
+          //         if (options.value == logValue) {
+          //           // 如果找到匹配项，则将其加入matchedValues数组
+          //           matchedValues.push(options.value);
+          //         }
+          //       });
+          //     });
+          //   });
 
-          // console.log(matchedValues);
-          // this.zhi= zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== ""); // 使用逗号或中文逗号分隔并去除空格
+          // // console.log(matchedValues);
+          // // this.zhi= zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== ""); // 使用逗号或中文逗号分隔并去除空格
+          // // this.zhi=matchedValues
+          // // console.log("去除空格的内容");
+          // // console.log(this.zhi);
+          // this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
           // this.zhi=matchedValues
-          // console.log("去除空格的内容");
-          // console.log(this.zhi);
-          this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
-          this.zhi=matchedValues
-          // console.log("智能推荐中的值，并且预警类型中的有的：");
-          // console.log(this.zhi); // 输出结果
+          // // console.log("智能推荐中的值，并且预警类型中的有的：");
+          // // console.log(this.zhi); // 输出结果
         }
       });
+    },
+    // 上一个
+   async prev() {
+      this.loading = true;
+      if (this.queryParams.pageNum == 1 && this.index == 0) {
+        this.$message.warning("已经是第一页！！！");
+        this.loading = false;
+        return;
+      }
+      this.index--;
+      if (this.index < 0) {
+        if (this.queryParams.pageNum > 1) {
+          this.queryParams.pageNum--;
+          // this.index = 9
+        }
+       await this.getList();
+        this.index = this.queryParams.pageSize - 1;
+      }
+      // console.log(this.logUserList[this.index]);
+      this.pId = this.patient_managementList[this.index].pId;
+
+      var newUrl =
+        this.$route.path +
+        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
+      window.history.replaceState("", "", newUrl);
+      this.get();
+      // await this.getLogUserList()
+     await this.getList()
+    //  let currentURL = window.location.href;
+    // // console.log(currentURL);
+    // // 使用URL对象解析URL
+    // let urlObject = new URL(currentURL);
+
+    // // 获取路径名部分
+    // let pathName = urlObject.pathname;
+
+    // // 提取/restingECG字符串并在前面加上斜杠
+    // this.luyou = '/' + pathName.split('/')[1];
+
+    // console.log("进入页面时将静态12导心电图的值存入本地");
+
+    // let huancunshuju = {
+    //   pId: this.pId,
+    //   state:this.$route.query.state,
+    //   queryParams:this.queryParams,
+    //   ecgType:this.queryParams.ecgType
+    // }
+    // let jsonString = JSON.stringify(huancunshuju);
+    // console.log(jsonString);
+    // sessionStorage.setItem(this.luyou,jsonString);
+    },
+    // 点击下一个触发事件
+    async next() {
+      this.loading = true;
+      this.index++;
+
+      if (this.index >= this.patient_managementList.length) {
+        if (
+          (this.queryParams.pageNum - 1) * this.queryParams.pageSize + this.patient_managementList.length >=
+          this.total
+        ) {
+          this.$message.warning("已经是最后一页！！！");
+          this.index--;
+          this.loading = false;
+          return;
+        }
+        this.queryParams.pageNum++;
+        // this.index = 0;
+        await this.getList();
+        this.index = 0;
+      }
+      this.pId = this.patient_managementList[this.index].pId;
+      // console.log(this.patient_managementList);
+      // this.queryParams.pId = this.patient_managementList[this.index].pId;
+      var newUrl =
+        this.$route.path +
+        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
+      window.history.replaceState("", "", newUrl);
+      this.get();
+      // await this.getLogUserList()
+       await this.getList()
+      // this.loading = false;
+    //   let currentURL = window.location.href;
+    // console.log(currentURL);
+    // // 使用URL对象解析URL
+    // let urlObject = new URL(currentURL);
+
+    // // 获取路径名部分
+    // let pathName = urlObject.pathname;
+
+    // // 提取/restingECG字符串并在前面加上斜杠
+    // this.luyou = '/' + pathName.split('/')[1];
+
+    // console.log("进入页面时将静态12导心电图的值存入本地");
+
+    // let huancunshuju = {
+    //   pId: this.pId,
+    //   state:this.$route.query.state,
+    //   queryParams:this.queryParams,
+    //   ecgType:this.queryParams.ecgType
+    // }
+    // let jsonString = JSON.stringify(huancunshuju);
+    // console.log(jsonString);
+    // sessionStorage.setItem(this.luyou,jsonString);
     },
     // 打印选中的值
     zhong(data){
@@ -595,7 +818,7 @@ export default {
       } else {
         this.$modal.msgError("数据提交失败，请选择预警类型");
       }
-      
+
     },
     dialogVisible(){
       getTerm().then(r=>{
@@ -687,8 +910,8 @@ export default {
         target: document.querySelector('#table')//loadin覆盖的dom元素节点
       });
       var _th = this
-      console.log("请求数据了！")
-      console.log("pId", this.pId)
+      // console.log("请求数据了！")
+      // console.log("pId", this.pId)
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
@@ -696,7 +919,7 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pid: this.pId
+        pid: this.pId
         }),
         beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
@@ -704,7 +927,7 @@ export default {
           request.setRequestHeader("password", "zzu123");
         },
         success: function (data) {
-          console.log("请求成功：", data)
+          // console.log("请求成功：", data)
           loading.close()
           _th.data.resultByDoctor = data.result.diagnosis_conclusion
           _th.data.doctorName = data.result.diagnosis_doctor
@@ -756,6 +979,7 @@ export default {
           _th.nArrV6 = _th.getNewArray(_th.data12.dataV6, 1000);
           _th.datalabel.waveLabel=data.result.waveLabel
           _th.datalabel.beatLabel=data.result.beatLabel
+          _th.data12.x=[]
           for (var i = 0; i < _th.data12.dataII.length+1; i++) {
             _th.data12.x.push(i);
           }
@@ -2293,6 +2517,7 @@ export default {
     .oder{
       display: flex;
       justify-content: center;
+      margin-bottom: 1.5vh;
     }
   }
 }
@@ -2629,5 +2854,18 @@ export default {
 .wancheng{
   display: flex;
   justify-content:space-between;
+}
+::v-deep .next {
+  background-color: rgba(255, 255, 255, 0);
+  color: #136d87;
+  border: 1px solid #136d87;
+  width: 5vw;
+  margin: 0;
+  padding: 10px 0;
+}
+.updown{
+  width: 100%;
+  display: flex;
+  justify-content:space-around;
 }
 </style>

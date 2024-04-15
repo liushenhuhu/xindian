@@ -145,6 +145,16 @@
               <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
               <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
             </div>
+            <div class="updown">
+              <el-button
+                class="next"
+                @click="prev()"
+                type="primary"
+                :loading="loading"
+              >上一个</el-button>
+              <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+            </div>
+
           </div>
         </div>
 
@@ -274,7 +284,9 @@ import {selectDoctor} from "@/api/statistics/statistics";
 import {selectList} from "@/api/log_user/log_user";
 // 存储选择的预警类型
 import {addReport as addReportyujing} from "@/api/alert_log_count/count";
-
+import {
+  listPatient_management
+} from "@/api/patient_management/patient_management";
 export default {
   name: "index",
   components:{
@@ -283,6 +295,52 @@ export default {
   },
   data() {
     return {
+      // 上下页需要的信息
+      // 查询参数
+      // queryParams: {
+      //   pageNum: 1,
+      //   pageSize: 10,
+      //   pId: null,
+      //   patientCode: null,
+      //   hospitalCode: null,
+      //   equipmentCode: null,
+      //   connectionTime: null,
+      //   patientName: null,
+      //   ecgType: null,
+      //   PatPhone: null,
+      //   diagnosisStatus: null,
+      //   intelligentDiagnosis: null,
+      //   diagnosisConclusion: null,
+      //   diagnosisDoctor: null,
+      //   reportTime: null,
+      //   ecgLevel: null,
+      //   doctorPhone: null,
+      //   patientSex:null,
+      //   isSelect:'2'
+      // },
+      ecgType:'',
+      pageNum: 1,
+      anoStatus: null,
+      pageSize: 10,
+      queryParams:{},
+      loading: false,
+      index: 0,
+      message: {
+        devicesn: "",
+        user_id: "",
+        pid: "",
+        logid: "",
+        sex: "",
+        age: "",
+        time: "",
+        logType: "",
+      },
+      // 总条数
+      total: 0,
+      // 患者表格数据
+      patient_managementList: [],
+      // 时间范围
+      daterangeConnectionTime: [],
       // 原先提交过的预警类型
       logDataType:'',
       tijiaoshuju:{},
@@ -370,14 +428,130 @@ export default {
       chart1:null,
       chart2:null,
       chart3:null,
+
     };
   },
   created() {
-    var pId = this.$route.query.pId;
-    if (pId) {
-      this.pId = pId;
+    // console.log(this.$route.query.queryParams);
+    this.queryParams = this.$route.query.queryParams
+    this.ecgType = this.$route.query.ecgType
+    this.pId = this.$route.query.pId;
+    this.getList()
+    // this.getPatientdetails()
+    // this.getyujingleixing()
+  },
+  mounted() {
+    // 心电数据
+    this.get();
+
+    // this.drawgrid();//canvas 画图
+    //预警的类型
+    // this.getyujingleixing()
+  },
+  methods: {
+    /** 查询用户管理列表 */
+    async getList() {
+      this.loading = true;
+      this.queryParams.params = {};
+      if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
+        this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
+        this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
+      }
+      if (this.queryParams.ecgType==null){
+        this.queryParams.ecgType = this.ecgType
+      }
+      await listPatient_management(this.queryParams).then(response => {
+        this.patient_managementList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+        if ( this.queryParams.ecgType==='JECGsingle'){
+          this.queryParams.ecgType=null
+        }
+          this.patient_managementList.forEach((item, index) => {
+            if (this.pId == item.pId) {
+              this.index = index;
+            }
+          })
+        if (this.index == this.patient_managementList.length ) {
+              this.index = 0
+        }
+      })
+      this.getPatientdetails()
+    },
+    // 上一个
+   async prev() {
+      this.loading = true;
+      if (this.queryParams.pageNum == 1 && this.index == 0) {
+        this.$message.warning("已经是第一页！！！");
+        this.loading = false;
+        return;
+      }
+      this.index--;
+      if (this.index < 0) {
+        if (this.queryParams.pageNum > 1) {
+          this.queryParams.pageNum--;
+          // this.index = 9
+        }
+       await this.getList();
+        this.index = this.queryParams.pageSize - 1;
+      }
+      // console.log(this.logUserList[this.index]);
+      this.pId = this.patient_managementList[this.index].pId;
+      let anoStatus = "";
+      if (this.anoStatus != null) {
+        anoStatus = `&anoStatus=${this.anoStatus}`;
+      }
+      var newUrl =
+        this.$route.path +
+        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}` +
+        anoStatus +
+        `&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
+      window.history.replaceState("", "", newUrl);
+      this.get();
+      // await this.getLogUserList()
+     await this.getList()
+    },
+    // 点击下一个触发事件
+    async next() {
+      this.loading = true;
+      this.index++;
+
+      if (this.index >= this.patient_managementList.length) {
+        if (
+          (this.queryParams.pageNum - 1) * this.queryParams.pageSize + this.patient_managementList.length >=
+          this.total
+        ) {
+          this.$message.warning("已经是最后一页！！！");
+          this.index--;
+          this.loading = false;
+          return;
+        }
+        this.queryParams.pageNum++;
+        // this.index = 0;
+        await this.getList();
+        this.index = 0;
+      }
+      this.pId = this.patient_managementList[this.index].pId;
+      // console.log(this.patient_managementList);
+      // this.queryParams.pId = this.patient_managementList[this.index].pId;
+      let anoStatus = "";
+      if (this.anoStatus != null) {
+        anoStatus = `&anoStatus=${this.anoStatus}`;
+      }
+      var newUrl =
+        this.$route.path +
+        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}` +
+        anoStatus +
+        `&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
+      window.history.replaceState("", "", newUrl);
+      this.get();
+      // await this.getLogUserList()
+       await this.getList()
+      // this.loading = false;
+    },
+    // 患者用户信息
+    getPatientdetails(){
       getReportByPId(this.pId).then(response => {
-        // console.log(response)
         this.data.result = response.data.intelligentDiagnosis
         this.data.resultByDoctor = response.data.diagnosisConclusion
         this.data.doctorName = response.data.diagnosisDoctor
@@ -402,63 +576,46 @@ export default {
  	      }
         // console.log(this.data)
       });
+      // 医生的信息
       selectDoctor().then(response => {
         this.options = response;
       })
-    }
-    // this.getyujingleixing()
-  },
-  mounted() {
-    this.get();
-
-    // this.drawgrid();//canvas 画图
-    //预警的类型
-    this.getyujingleixing()
-  },
-  methods: {
+      this.getyujingleixing()
+    },
+    //预警类型
     getyujingleixing(){
       selectList().then((res) => {
         this.yujingzhi = res.data;
-        // console.log("这是预警值");
-        // console.log(this.yujingzhi);
-
         if (this.logDataType) {
           this.xianshizifuchuan = this.logDataType
           this.zhi=this.logDataType.split(',').map(str => str.trim())
-          // console.log("如果有logDataType就放入zhi中");
-          // console.log(this.zhi);
-        } else {
-          console.log( this.data.result)
-          let zuanhua = ''
-          zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
-          // console.log("去掉括号的内容："+zuanhua);
-          let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
-          // console.log("原先没有提交过预警类型，下面是智能判断的值，去掉括号总的，变成了数组");
-          // console.log(a);
-          let matchedValues = [];
+        }
+        // 如果没有原先提交过的值，就将自动分析的结果处理后放入预警类型中默认选中
+        else {
+          this.zhi = []
+          this.xianshizifuchuan = ''
+        //   let zuanhua = ''
+        //   zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
+        //   // console.log("去掉括号的内容："+zuanhua);
+        //   let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
 
-            a.forEach(logValue => {
-              // 遍历yujingzhi数组中的每个对象
-              this.yujingzhi.forEach(item => {
-                // 在options中查找匹配项
-                item.options.forEach(options => {
-                  if (options.value == logValue) {
-                    // 如果找到匹配项，则将其加入matchedValues数组
-                    matchedValues.push(options.value);
-                  }
-                });
-              });
-            });
+        //   let matchedValues = [];
 
-          // console.log(matchedValues);
-          // this.zhi= zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== ""); // 使用逗号或中文逗号分隔并去除空格
-          // this.zhi=matchedValues
-          // console.log("去除空格的内容");
-          // console.log(this.zhi);
-          this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
-          this.zhi=matchedValues
-          // console.log("智能推荐中的值，并且预警类型中的有的：");
-          // console.log(this.zhi); // 输出结果
+        //     a.forEach(logValue => {
+        //       // 遍历yujingzhi数组中的每个对象
+        //       this.yujingzhi.forEach(item => {
+        //         // 在options中查找匹配项
+        //         item.options.forEach(options => {
+        //           if (options.value == logValue) {
+        //             // 如果找到匹配项，则将其加入matchedValues数组
+        //             matchedValues.push(options.value);
+        //           }
+        //         });
+        //       });
+        //     });
+        //    处理后的值放入预警类型中
+        //   this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
+        //   this.zhi=matchedValues
         }
       });
     },
@@ -636,6 +793,8 @@ export default {
     },
     //请求数据
     get() {
+      // console.log("获得的是那个数据："+ this.pId);
+      // this.data =
       const loading = this.$loading({
         lock: true,//lock的修改符--默认是false
         text: '请勿刷新页面，正在获取数据，请耐心等待1-3分钟...',//显示在加载图标下方的加载文案
@@ -662,7 +821,7 @@ export default {
           request.setRequestHeader("password", "zzu123");
         },
         success: function (data) {
-          console.log("请求成功：", data)
+          // console.log("请求成功：", data)
           loading.close()
           _th.data.resultByDoctor = data.result.diagnosis_conclusion
           _th.data.doctorName = data.result.diagnosis_doctor
@@ -682,15 +841,19 @@ export default {
           _th.datalabel.beatLabel=data.result.beatLabel
           _th.data.p_xingeng = data.result.p_xingeng
           //console.log("获取到的导联数据", _th.data.datas)
-          console.log("获取到的导联数据长度", _th.data.datas.length)
+          // console.log("获取到的导联数据长度", _th.data.datas.length)
           _th.nArr = _th.getNewArray(_th.data.datas, 1000);
-          console.log("数据以1000一条分好组", _th.nArr)
+          // console.log("数据以1000一条分好组", _th.nArr)
+           _th.x = []
           for (var i = 0; i < 1001; i++) {
             _th.x.push(i);
           }
+          // console.log( _th.x);
+          // _th.markdata = []
           for (var i = 0; i < 1000; i+=20) {
             _th.markdata.push({xAxis: i})
           }
+          // console.log( _th.markdata);
           _th.chart1 = echarts.init(document.getElementById("1"));
           _th.chart2 = echarts.init(document.getElementById("2"));
           _th.chart3 = echarts.init(document.getElementById("3"));
@@ -1956,13 +2119,18 @@ export default {
       } else {
         this.$modal.msgError("数据提交失败，请选择预警类型");
       }
-      
+
     }
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.updown{
+  width: 100%;
+  display: flex;
+  justify-content:space-around;
+}
 .wancheng{
   display: flex;
   justify-content:space-between;
@@ -2309,5 +2477,13 @@ export default {
 /* 隐藏滚动条但仍可滚动 */
 .biaodan::-webkit-scrollbar {
   display: none;
+}
+::v-deep .next {
+  background-color: rgba(255, 255, 255, 0);
+  color: #136d87;
+  border: 1px solid #136d87;
+  width: 5vw;
+  margin: 0;
+  padding: 10px 0;
 }
 </style>

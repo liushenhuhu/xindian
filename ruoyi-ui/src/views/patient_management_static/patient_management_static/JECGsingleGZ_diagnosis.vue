@@ -295,6 +295,12 @@
           <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
         </template>
       </el-table-column>
+
+      <el-table-column label="是否标注预警状态" align="center" prop="ecgIsLabel">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>
+        </template>
+      </el-table-column>
 <!--      <el-table-column label="心电类型" align="center" prop="ecgType"/>-->
       <el-table-column label="心电种类" align="center" prop="ecgType" width="120">
         <template slot-scope="scope">
@@ -514,7 +520,7 @@ import {getVerify} from "@/api/verify/verify";
 
 export default {
   name: "JECGsingleGZ_diagnosis",
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list','if_status'],
   data() {
     return {
       currentScrollPos: 0,
@@ -866,7 +872,7 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/staticECG", query: {pId: row.pId,state:1}});
+      this.$router.push({path: "/staticECG", query: {pId: row.pId,state:1,queryParams:this.queryParams,ecgType:"JECGsingle"}});
     },
     /** 生成报告*/
     handleInform(row) {

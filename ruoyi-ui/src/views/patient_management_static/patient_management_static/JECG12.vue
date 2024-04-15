@@ -293,6 +293,8 @@
           <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
         </template>
       </el-table-column>
+
+
       <!--      <el-table-column label="心电类型" align="center" prop="ecgType"/>-->
       <el-table-column label="心电种类" align="center" prop="ecgType" width="140">
         <template slot-scope="scope" >
@@ -301,6 +303,14 @@
           </el-tag>
         </template>
       </el-table-column>
+
+      <el-table-column label="是否标注预警状态" align="center" prop="ecgIsLabel">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>
+        </template>
+      </el-table-column>
+
+
       <el-table-column label="诊断状态" align="center" prop="diagnosisStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
@@ -535,7 +545,7 @@ import {getVerify} from "@/api/verify/verify";
 
 export default {
   name: "JECG12",
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list','if_status'],
   data() {
     return {
       currentScrollPos: 0,
@@ -630,14 +640,18 @@ export default {
     // updateOnlineAll();
   },
   activated() {
+    // this.$tab.refreshPage();
     document.documentElement.scrollTop=this.currentScrollPos || 0
+    // console.log("一进入全部静态12导页面就获取离开12导心电图的值");
+    // let a =sessionStorage.getItem("/restingECG")
+    // console.log(a);
+
   },
 
   beforeRouteLeave(to,from,next) {
     this.currentScrollPos = document.documentElement.scrollTop || 0
     next()
   },
-
   created() {
     getEcgType(this.ecgType).then(r=>{
       this.ecgList = r.data
@@ -927,7 +941,17 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
-      this.$router.push({path: "/restingECG", query: {pId: row.pId,state:12}});
+      let data = {
+        pId:row.pId,
+       state:12,
+       queryParams:this.queryParams,
+       ecgType:"JECG12"
+      }
+      //这样会使会话存储的东西越多，想用vuex但是不敢动。看到这里大哥别生气。
+      // 在30天趋势图标签中，点击x号会自动的将会话存储中的/scatterPlot删除
+      // 在src\layout\components\TagsView\index.vue中closeSelectedTag事件里删除
+      // sessionStorage.setItem("/restingECG", JSON.stringify(data));
+      this.$router.push({path: "/restingECG", query: {pId:row.pId,state:12,queryParams:this.queryParams,ecgType:"JECG12",jinru:true}});
     },
     /** 生成报告*/
     handleInform(row) {

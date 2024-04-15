@@ -17,8 +17,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalCode">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+      <el-form-item label="医院" prop="hospitalCode">
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院" >
           <el-option
             v-for="item in options"
             :key="item.hospitalId"
@@ -83,7 +83,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="科室代号" align="center" prop="departmentCode" />
       <el-table-column label="科室名称" align="center" prop="departmentName" />
-      <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+      <el-table-column label="医院" align="center" prop="hospitalCode"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -121,8 +121,8 @@
         <el-form-item label="科室名称" prop="departmentName">
           <el-input v-model="form.departmentName" placeholder="请输入科室名称" />
         </el-form-item>
-        <el-form-item label="医院代号" prop="hospitalCode">
-          <el-select v-model="form.hospitalCode" placeholder="请选择医院代号">
+        <el-form-item label="医院" prop="hospitalCode">
+          <el-select v-model="form.hospitalCode" placeholder="请选择医院">
             <el-option
               v-for="item in options"
               :key="item.hospitalId"

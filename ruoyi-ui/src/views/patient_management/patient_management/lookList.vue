@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
-      <el-form-item label="患者姓名" prop="patientName">
+      <!-- <el-form-item label="患者姓名" prop="patientName">
         <el-input
           v-model="queryParams.patientName"
           placeholder="请输入患者姓名"
@@ -26,8 +26,8 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="患者id" prop="pId">
+      </el-form-item> -->
+      <el-form-item label="患者管理id" prop="pId">
         <el-input
           v-model="queryParams.pId"
           placeholder="请输入患者id"
@@ -175,6 +175,7 @@
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
         </template>
       </el-table-column>
+      <el-table-column label="医生电话" align="center" prop="doctorPhone"/>
 
       <!--  隐藏的患者的个人信息    -->
       <el-table-column type="expand">

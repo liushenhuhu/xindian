@@ -176,9 +176,9 @@
           <dict-tag :options="dict.type.binding_state" :value="scope.row.bindingState"/>
         </template>
       </el-table-column>
-
+      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
       <!--  隐藏的患者的个人信息    -->
-      <el-table-column type="expand">
+      <!-- <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
@@ -187,7 +187,7 @@
             </el-form-item>
           </el-form>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
