@@ -171,7 +171,7 @@ export default {
     async getDearlyList() {
       this.infoLoading = true;
       this.dRearlyQueryParams.pId = this.$route.query.pId;
-      this.dRearlyQueryParams.ecgType = this.$route.query.state;
+      this.dRearlyQueryParams.ecgType = this.$route.query.type;
       this.opName = this.dRearlyQueryParams.ecgType == 12 ? '单人12导预警' : '单人单导预警';
       let {data: res} = await list12Alert_log(this.dRearlyQueryParams);
       this.patientInfo = res;
@@ -205,7 +205,8 @@ export default {
     async getAlertLogList() {
       console.log("请求开始")
       this.logQueryParams.pId = this.$route.query.pId;
-      this.logQueryParams.logType = this.$route.query.type;
+      // this.logQueryParams.logType = this.$route.query.type;
+      this.logQueryParams.logType = null;
       this.logQueryParams.ecgType = this.$route.query.ecgType;
       // console.log(this.queryParams)
       this.tableLoading = true;

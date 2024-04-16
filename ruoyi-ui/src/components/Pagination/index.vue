@@ -1,6 +1,7 @@
 <template>
   <div :class="{'hidden':hidden}" class="pagination-container">
     <el-pagination
+      class="pagination-container-pagination"
       :background="background"
       :current-page.sync="currentPage"
       :page-size.sync="pageSize"
@@ -108,8 +109,13 @@ export default {
 .pagination-container {
   background: #fff;
   padding: 32px 16px;
+  position: relative;
 }
 .pagination-container.hidden {
   display: none;
+}
+.pagination-container-pagination{
+  top:50%;
+  transform: translate(0,-50%);
 }
 </style>

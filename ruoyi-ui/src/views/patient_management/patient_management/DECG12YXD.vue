@@ -181,192 +181,195 @@
           <el-button type="primary" size="mini" @click="isShowNameClick">{{ isShowName.name }}</el-button>
         </div>
       </div>
-      <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange"
-                :height="tableHeight">
-        <el-table-column type="selection" width="55" align="center"/>
+      <div class="table-content">
+        <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange"
+                  height="100%" class="table-content-table">
+          <el-table-column type="selection" width="55" align="center"/>
 
-        <el-table-column label="连接时间" align="center" prop="connectionTime" width="100">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="患者管理ID" align="center" prop="pId" min-width="200"></el-table-column>
-        <el-table-column label="患者姓名" align="center" prop="patientName" width="100">
-          <template slot-scope="scope">
-            <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
-            <span v-else>***</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="年龄" align="center" prop="patientAge" width="100"></el-table-column>
-        <el-table-column label="性别" align="center" prop="patientSex" width="100"></el-table-column>
-        <el-table-column label="医院" align="center" prop="hospitalName" width="150"></el-table-column>
-        <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>
-        <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
-                    <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-                    <el-table-column label="患者性别" align="center" prop="patientSex">
-                      <template slot-scope="scope">
-                        <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="患者来源" align="center" prop="patientSource"/>
-                    <el-table-column label="患者电话" align="center" prop="patientPhone"/>
-                    <el-table-column label="家属电话" align="center" prop="familyPhone"/>
-                    <el-table-column label="监测状态" align="center" prop="monitoringStatus">
-                      <template slot-scope="scope">
-                        <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
-        <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
-        <el-table-column label="设备号" align="center" width="170" prop="equipmentCode"/>
-        <el-table-column label="在线状态" align="center" width="100" prop="onlineStatus">
-          <template slot-scope="scope">
-            <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="心电种类" align="center" width="150" prop="ecgType">
-          <template slot-scope="scope">
-            <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150"></el-table-column>
-        <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150"></el-table-column>
-        <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
-        <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150"></el-table-column>
+          <el-table-column label="连接时间" align="center" prop="connectionTime" width="100">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="患者管理ID" align="center" prop="pId" min-width="200"></el-table-column>
+          <el-table-column label="患者姓名" align="center" prop="patientName" width="100">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
+              <span v-else>***</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="年龄" align="center" prop="patientAge" width="100"></el-table-column>
+          <el-table-column label="性别" align="center" prop="patientSex" width="100"></el-table-column>
+          <el-table-column label="医院" align="center" prop="hospitalName" width="150"></el-table-column>
+          <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>
+          <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
+                      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
+                      <el-table-column label="患者性别" align="center" prop="patientSex">
+                        <template slot-scope="scope">
+                          <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="患者来源" align="center" prop="patientSource"/>
+                      <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+                      <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+                      <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+                        <template slot-scope="scope">
+                          <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+          <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
+          <el-table-column label="设备号" align="center" width="170" prop="equipmentCode"/>
+          <el-table-column label="在线状态" align="center" width="100" prop="onlineStatus">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="心电种类" align="center" width="150" prop="ecgType">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150"></el-table-column>
+          <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150"></el-table-column>
+          <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
+          <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150"></el-table-column>
 
-        <!--  隐藏的患者的个人信息    -->
-        <!-- <el-table-column type="expand">
-          <template slot-scope="scope">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-divider content-position="left">其他信息</el-divider>
-              <el-form-item label="医院代号" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.hospitalCode }}</span>
-              </el-form-item>
-              <el-form-item label="医院" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.hospitalName }}</span>
-              </el-form-item>
-              <el-form-item label="患者管理Id" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.pId }}</span>
-              </el-form-item>
-              <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.patientCode }}</span>
-              </el-form-item>
-              <el-form-item label="患者年龄" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.patientAge }}</span>
-              </el-form-item>
-              <el-form-item label="患者性别" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.patientSex }}</span>
-              </el-form-item>
-                          <el-form-item label="患者来源" width="200" style="padding-left: 40px">
-                            <span>{{ scope.row.patientSource }}</span>
-                          </el-form-item>
-              <el-form-item label="患者电话" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.patientPhone }}</span>
-              </el-form-item>
-              <el-form-item label="家属电话" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.familyPhone }}</span>
-              </el-form-item>
-              <el-form-item label="医生电话" width="200" style="padding-left: 40px">
-                <span>{{ scope.row.doctorPhone }}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column> -->
+          <!--  隐藏的患者的个人信息    -->
+          <!-- <el-table-column type="expand">
+            <template slot-scope="scope">
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-divider content-position="left">其他信息</el-divider>
+                <el-form-item label="医院代号" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.hospitalCode }}</span>
+                </el-form-item>
+                <el-form-item label="医院" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.hospitalName }}</span>
+                </el-form-item>
+                <el-form-item label="患者管理Id" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.pId }}</span>
+                </el-form-item>
+                <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.patientCode }}</span>
+                </el-form-item>
+                <el-form-item label="患者年龄" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.patientAge }}</span>
+                </el-form-item>
+                <el-form-item label="患者性别" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.patientSex }}</span>
+                </el-form-item>
+                            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+                              <span>{{ scope.row.patientSource }}</span>
+                            </el-form-item>
+                <el-form-item label="患者电话" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.patientPhone }}</span>
+                </el-form-item>
+                <el-form-item label="家属电话" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.familyPhone }}</span>
+                </el-form-item>
+                <el-form-item label="医生电话" width="200" style="padding-left: 40px">
+                  <span>{{ scope.row.doctorPhone }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column> -->
 
 
-        <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
-          <template slot-scope="scope">
-            <el-button
-              size="small"
-              type="text"
-              @click="monitoring(scope.row);"
-              v-hasPermi="['patient:patient:monitoring']"
-            >实时监测
-            </el-button>
-            &nbsp;&nbsp;
-            <el-popover placement="left" width="50" trigger="click">
-              <el-button style="margin-left: 10px;" type="text" size="mini" @click="handleInform(scope.row)"
-                         v-hasPermi="['patient:patient:downloadInform']">生成报告
-              </el-button>
-              <el-button type="text" size="mini" @click="downloadInform(scope.row)"
-                         v-hasPermi="['patient_management:patient_management:inform']">查看报告
-              </el-button>
-              <el-button type="text" size="mini" @click="handleAlert(scope.row)" v-hasPermi="['patient:patient:alert']">
-                下载数据
-              </el-button>
-              <el-button type="text" size="mini" @click="handleAlert(scope.row)" v-hasPermi="['patient:patient:alert']">
-                预警信息
-              </el-button>
-              <el-button type="text" size="mini" @click="handleDelete(scope.row)"
-                         v-hasPermi="['patient_management:patient_management:export']">删除
-              </el-button>
+          <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
+            <template slot-scope="scope">
               <el-button
-                slot="reference"
                 size="small"
                 type="text"
-                v-hasPermi="['patient_management:patient_management:inform']"
-              >更多<i class="el-icon-arrow-down"/>
+                @click="monitoring(scope.row);"
+                v-hasPermi="['patient:patient:monitoring']"
+              >实时监测
               </el-button>
-            </el-popover>
+              &nbsp;&nbsp;
+              <el-popover placement="left" width="50" trigger="click">
+                <el-button style="margin-left: 10px;" type="text" size="mini" @click="handleInform(scope.row)"
+                           v-hasPermi="['patient:patient:downloadInform']">生成报告
+                </el-button>
+                <el-button type="text" size="mini" @click="downloadInform(scope.row)"
+                           v-hasPermi="['patient_management:patient_management:inform']">查看报告
+                </el-button>
+                <el-button type="text" size="mini" @click="handleAlert(scope.row)" v-hasPermi="['patient:patient:alert']">
+                  下载数据
+                </el-button>
+                <el-button type="text" size="mini" @click="handleAlert(scope.row)" v-hasPermi="['patient:patient:alert']">
+                  预警信息
+                </el-button>
+                <el-button type="text" size="mini" @click="handleDelete(scope.row)"
+                           v-hasPermi="['patient_management:patient_management:export']">删除
+                </el-button>
+                <el-button
+                  slot="reference"
+                  size="small"
+                  type="text"
+                  v-hasPermi="['patient_management:patient_management:inform']"
+                >更多<i class="el-icon-arrow-down"/>
+                </el-button>
+              </el-popover>
 
-            <!-- <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-loading"
-              @click="monitoring(scope.row);"
-              v-hasPermi="['patient:patient:monitoring']"
-            >实时监测
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-download"
-              @click="handleInform(scope.row)"
-              v-hasPermi="['patient:patient:downloadInform']"
-            >生成报告
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-magic-stick"
-              @click="downloadInform(scope.row)"
-              v-hasPermi="['patient_management:patient_management:inform']"
-            >查看报告
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-download"
-              @click="downloadData(scope.row)"
-              v-hasPermi="['patient:patient:inform']"
-            >下载数据</el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-s-order"
-              @click="handleAlert(scope.row)"
-              v-hasPermi="['patient:patient:alert']"
-            >预警日志
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-s-data"
-              @click="DRyujing(scope.row)"
-              v-hasPermi="['patient:patient:alert']"
-            >预警统计
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-              v-hasPermi="['patient_management:patient_management:export']"
-            >删除
-            </el-button> -->
-          </template>
-        </el-table-column>
-      </el-table>
+              <!-- <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-loading"
+                @click="monitoring(scope.row);"
+                v-hasPermi="['patient:patient:monitoring']"
+              >实时监测
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-download"
+                @click="handleInform(scope.row)"
+                v-hasPermi="['patient:patient:downloadInform']"
+              >生成报告
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-magic-stick"
+                @click="downloadInform(scope.row)"
+                v-hasPermi="['patient_management:patient_management:inform']"
+              >查看报告
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-download"
+                @click="downloadData(scope.row)"
+                v-hasPermi="['patient:patient:inform']"
+              >下载数据</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-s-order"
+                @click="handleAlert(scope.row)"
+                v-hasPermi="['patient:patient:alert']"
+              >预警日志
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-s-data"
+                @click="DRyujing(scope.row)"
+                v-hasPermi="['patient:patient:alert']"
+              >预警统计
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['patient_management:patient_management:export']"
+              >删除
+              </el-button> -->
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
 
       <pagination
         :total="total"
@@ -776,7 +779,7 @@ export default {
     handleAlert(row) {
       this.$router.push({
         path: "/alert_log/alert_patient",
-        query: {pId: row.pId, state: 12}
+        query: {pId: row.pId, state: 12,type:12}
       });
     },
     // handleAlert(row) {
@@ -910,6 +913,8 @@ export default {
   background-color: #fff;
   flex:1;
   padding: 0 16px;
+  display:flex;
+  flex-direction: column;
 }
 
 .table-hand {
@@ -921,6 +926,13 @@ export default {
 
   }
   &-right{
+  }
+}
+.table-content {
+  flex: 1;
+
+  &-table {
+    height: 100%;
   }
 }
 </style>
