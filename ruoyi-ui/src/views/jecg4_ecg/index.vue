@@ -3,14 +3,15 @@
     <div class="body">
       <div class="noleft">
         <div class="box"  v-if="xuanzheyujingleixing">
-          <div class="box1">
+
+          <!-- <div class="box1">
             <div class="h11">
               <span></span>
               <p>用户信息</p>
             </div>
             <div class="patientMessage">
               <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
-              <!--              <div class="textbox "><strong>姓名:</strong>{{ data.name }}</div>-->
+              <div class="textbox "><strong>姓名:</strong>{{ data.name }}</div>
               <div class="textbox "><strong>性别:</strong>{{ data.gender }}</div>
               <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
               <div class="textbox"><strong>送检科室:</strong> -</div>
@@ -27,6 +28,7 @@
               <div class="textbox"><strong>心梗机率:</strong>{{ data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险' }}</div>
             </div>
           </div>
+
           <div class="box2">
             <div class="h11">
               <span></span>
@@ -56,8 +58,113 @@
               <div class="ml">{{ xianshizifuchuan }}</div>
             </div>
 
+          </div> -->
+
+        <div class="touzuo">
+            <div class="touzuobiaoti">患者信息</div>
+            <table class="tablex">
+              <tr>
+                <td>报告编码</td>
+                <td>{{ data.pId }}</td>
+                <td>性别</td>
+                <td>{{ data.gender }}</td>
+                <td>p波</td>
+                <td>{{ data.p }}ms</td>
+                <td>Qtc</td>
+                <td>{{ data.qtc }}ms</td>
+              </tr>
+              <tr>
+                <td>患者编码</td>
+                <td>{{ data.pId }}</td>
+                <td>门诊号</td>
+                <td>-</td>
+                <td>QRS区间</td>
+                <td>{{ data.qrs }}ms</td>
+                <td>HRV</td>
+                <td>{{ data.hrv }}ms</td>
+              </tr>
+              <tr>
+                <td>申请单号</td></td>
+                <td>-</td>
+                <td>住院号</td>
+                <td>-</td>
+                <td>AI分析结果</td>
+                <td colspan="3">{{ data.result }}</td>
+                
+              </tr>
+              <tr>
+                <td>年龄</td>
+                <td>{{ data.age }}岁</td>
+                <td>心律</td>
+                <td>{{ data.hr }}bpm</td>
+                <td>患者症状</td>
+                <td>{{ data.patientSymptom }}</td>
+                <td>心梗机率:</td>
+                <td>{{data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险'}}</td>
+              </tr>
+            </table>
+            <div class="touzuoxia">
+              <div class="touzuoyujing">
+                <div class="touzuoyujing-left">预警类型：</div>
+                <div style="" class="touzuoyujingzhi">{{ xianshizifuchuan }}</div>
+              </div>
+              <div class="touzuoanniu">
+                <el-button type="success" round  class="anNiu"  @click="xianshi">选择预警类型</el-button>
+                <el-button type="success" round  class="anNiu" @click="tijiao()">提交</el-button>
+              </div>
+            </div>
           </div>
-          <div class="box3">
+
+          <div class="touyou">
+              <div class="touzuobiaoti">医师诊断</div>
+              <div class="mt">
+                <el-input
+                  type="textarea"
+                  v-model="data.resultByDoctor"
+                  placeholder="请输入"
+                  data-value="1111"
+                  :rows="5"
+                  class="font">{{ data.resultByDoctor }}
+                </el-input>
+              </div>
+
+              <div class="doctor">
+                <div class="input yishi">
+                  <strong>医师:</strong>
+                    <el-select v-model="data.doctorName" clearable>
+                      <el-option
+                        v-for="item in options"
+                        :label="item.doctorName"
+                        :value="item.doctorName">
+                      </el-option>
+                    </el-select>
+                </div>
+                <div class="input">
+                  <strong>日期:</strong>
+                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 57%"></el-input>
+                  <el-input v-else v-model="data.dataTime" clearable style="width: 36%"></el-input>
+                </div>
+              </div>
+
+              <div class="oder">
+                <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
+                  <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
+                    <i class="el-icon-question"></i>
+                  </el-tooltip>
+                  发送预警</el-button>
+                <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
+                <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
+
+                <el-button
+                  class="next"
+                  @click="prev()"
+                  :loading="loading"
+                >上一个</el-button>
+                <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+              </div>
+            </div>
+
+          <!-- <div class="box3">
             <div class="h11">
               <span></span>
               <div class="between">
@@ -157,7 +264,8 @@
               >上一个</el-button>
               <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
             </div>
-          </div>
+          </div> -->
+        
         </div>
 
         <!-- 预警类型弹窗 -->
@@ -200,36 +308,41 @@
 
 
       </div>
-      <div class="noright">
-        <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
-        <div>
-          <div id="II" class="line" @dblclick="clicktrue('I',data4.dataII)"></div>
+
+      <div class="shangbianju">
+        <div style="padding: 15px ;font-size: 1vw;font-weight: 700;">患者心电图</div>
+        <div class="noright">
+          <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
+          <div>
+            <div id="II" class="line" @dblclick="clicktrue('I',data4.dataII)"></div>
+          </div>
+          <div>
+            <div id="V2" class="line" @dblclick="clicktrue('V2',data4.dataV2)"></div>
+          </div>
+          <div>
+            <div id="V4" class="line" @dblclick="clicktrue('V4',data4.dataV4)"></div>
+          </div>
+          <div>
+            <div id="V6" class="line" @dblclick="clicktrue('V6',data4.dataV6)"></div>
+          </div>
+          <!--          <div>-->
+          <!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="6" class="line" @dblclick="showChart6()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="7" class="line" @dblclick="showChart7()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="8" class="line" @dblclick="showChart8()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="9" class="line" @dblclick="showChart9()"></div>-->
+          <!--          </div>-->
         </div>
-        <div>
-          <div id="V2" class="line" @dblclick="clicktrue('V2',data4.dataV2)"></div>
-        </div>
-        <div>
-          <div id="V4" class="line" @dblclick="clicktrue('V4',data4.dataV4)"></div>
-        </div>
-        <div>
-          <div id="V6" class="line" @dblclick="clicktrue('V6',data4.dataV6)"></div>
-        </div>
-        <!--          <div>-->
-        <!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
-        <!--          </div>-->
-        <!--          <div>-->
-        <!--            <div id="6" class="line" @dblclick="showChart6()"></div>-->
-        <!--          </div>-->
-        <!--          <div>-->
-        <!--            <div id="7" class="line" @dblclick="showChart7()"></div>-->
-        <!--          </div>-->
-        <!--          <div>-->
-        <!--            <div id="8" class="line" @dblclick="showChart8()"></div>-->
-        <!--          </div>-->
-        <!--          <div>-->
-        <!--            <div id="9" class="line" @dblclick="showChart9()"></div>-->
-        <!--          </div>-->
       </div>
+      
     </div>
     <div class="nobottom"></div>
 
@@ -1649,6 +1762,10 @@ export default {
 .body {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  padding: 10px;
+    background-color: #e8e8e8;
+
 }
 
 ::v-deep el-button {
@@ -1665,14 +1782,16 @@ export default {
   //background: linear-gradient(to left,#ffffff, rgba(158, 173, 189, 0.98));
   .box {
     overflow: hidden;
-    width: 98%;
+    width: 100%;
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    justify-content:space-between;
     margin-top: 1.5vh;
     margin-bottom: 1.5vh;
     border-radius: 2vh;
-    background-color: #e8e8e8;
+    background-color: #ffffff;
+    padding: 15px;
     //opacity: 0.6;
     .box1 {
       width: 35%;
@@ -1797,6 +1916,7 @@ export default {
 }
 
 .doctor {
+  margin: 2vh 0 2vh 0;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -1806,7 +1926,7 @@ export default {
     display: flex;
     flex-direction: row;
     margin-top: 1vh;
-    margin-left: 2vw;
+    //margin-left: 2vw;
 
     strong {
       white-space: nowrap;
@@ -1853,11 +1973,12 @@ export default {
 }
 
 .anNiu {
-  height: 3vw;
-  width: 8vw;
+  height: 30px;
+  // width: 8vw;
   //font-size: 1.5vw;
   line-height: 1vw;
   text-align: center;
+  padding: 0 3px;
 }
 
 .bigDiv {
@@ -1949,12 +2070,12 @@ export default {
   vertical-align: bottom;
 }
 .xuanzheyujing{
-  width: 98%;
+  width: 100%;
   margin: 0 auto ;
   margin-top: 1.5vh;
   margin-bottom: 1.5vh;
   border-radius: 2vh;
-  background-color: #e8e8e8;
+  background-color: #ffffff;
   align-items: center;
   padding: 10px;
   height: 62.5vh;
@@ -2021,13 +2142,145 @@ export default {
   background-color: rgba(255, 255, 255, 0);
   color: #136d87;
   border: 1px solid #136d87;
-  width: 5vw;
-  margin: 0;
-  padding: 10px 0;
+  // margin: 0;
+  padding:0 2px ;
+  height: 30px;
 }
 .updown{
   width: 100%;
   display: flex;
   justify-content:space-around;
+}
+
+
+
+
+
+
+
+
+// 表格
+.tablex {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  width: 100%;
+  height: 60%;
+  text-align: center;
+}
+.tablex th,
+.tablex td {
+  border: 1px solid #ccc;
+  // padding: 10px;
+}
+
+/* 选择父元素中的基数子元素 */
+.tablex tr > :nth-child(odd) {
+  /* 样式设置 */
+  background-color: #f2f6fe;
+}
+.tablex td {
+  height: 8vh;
+  width: 90px;
+}
+/* 选择父元素中的偶数子元素 */
+.parentElement > :nth-child(even) {
+  /* 样式设置 */
+}
+.wrap {
+  background-color: #f4f4f4;
+}
+.box {
+  background-color: #ffffff;
+}
+.touzuo{
+  width: 66%;
+}
+.touzuobiaoti{
+  font-size:16px ;
+  font-weight: 700;
+  margin-bottom: 1.5vh;
+}
+.touzuoxia{
+  // border: 1px solid red;
+  margin: 2vh 0;
+  display: flex;
+  justify-content:space-between;
+  width: 100%;
+}
+.touzuoanniu{
+  display: flex;
+  align-items: center;
+  // width: 100%;
+}
+.touzuoyujing{
+  display: flex;
+  width: 75%;
+  .touzuoyujing-left{
+    // font-size:100% ;
+    font-weight: 700;
+    display: flex;
+    align-items:center;
+    // width: 22%;
+    // background-color: #00afff;
+  }
+}
+.touzuoyujingzhi{
+  display: flex; 
+  align-items: center; 
+  // border:1px solid red;
+  width: 78%;
+  overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+  max-height: 80px; 
+  overflow-y: scroll;
+  text-overflow:ellipsis;
+}
+.touzuoyujingzhi::-webkit-scrollbar {
+  	display: none;
+}
+::v-deep .el-button--success{
+  background-color: #517AFC;
+}
+::v-deep .el-button{
+  border-radius: 5px;
+}
+::v-deep .el-button--success{
+color:#ffffff;
+}
+.touyou{
+  width: 32%;
+}
+// ::v-deep .el-select-dropdown__list{
+//   text-align: center;
+//   border: 1px soild red;
+// }
+.yishi{
+  margin-left: 0;
+}
+.font{
+  background-color: #f4f4f4;
+}
+::v-deep .el-textarea__inner{
+  background-color:  #f4f4f4;
+}
+::v-deep .el-button--primary{
+   background-color: #517AFC;
+   color:#ffffff;
+}
+.shangbianju{
+  margin-top: 1vh;
+  overflow: hidden;
+}
+.shangbianju{
+  background-color: #ffffff;
+  
+}
+::v-deep .el-textarea__inner{
+  height: 100%;
+}
+.mt{
+    height: 43%;
+}
+.font{
+  height: 100%;
 }
 </style>
