@@ -168,10 +168,11 @@
       <el-table-column label="用户管理编号" align="center" prop="pId" width="180" />
       <el-table-column label="用户姓名" align="center" prop="patientName"/>
       <!--  <el-table-column label="用户身份证号" align="center" prop="patientCode"/>
+      <el-table-column label="用户管理编号" align="center" prop="pId"show-overflow-tooltip />
             <el-table-column label="用户电话" align="center" prop="patientPhone"/>
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>
-            <el-table-column label="医院名称" align="center" prop="hospitalName"/>
             <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+      <el-table-column label="医院" align="center" prop="hospitalName" width="180"  show-overflow-tooltip/>
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if_status" :value="scope.row.anoStatus"/>
@@ -184,9 +185,9 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="用户身份证号" align="center" prop="patientCode" width="180"/>
       <el-table-column label="用户电话" align="center" prop="patientPhone" width="180"/>
       <el-table-column label="家属电话" align="center" prop="familyPhone" width="180"/>
+      <el-table-column label="用户身份证号" align="center" prop="patientCode" width="180"/>
 
       <!--  隐藏的用户的个人信息    -->
       <!-- <el-table-column type="expand">
