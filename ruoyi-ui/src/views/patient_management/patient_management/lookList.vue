@@ -176,12 +176,6 @@
         </template>
       </el-table-column>
       <el-table-column label="医生电话" align="center" prop="doctorPhone" width="180"/>
-      <el-table-column label="患者身份证号" align="center" prop="patientCode" width="180"/>
-      <el-table-column label="患者年龄" align="center" prop="patientAge"/>
-      <el-table-column label="患者性别" align="center" prop="patientSex"/>
-      <el-table-column label="患者电话" align="center" prop="patientPhone" width="180"/>
-      <el-table-column label="家属电话" align="center" prop="familyPhone" width="180"/>
-      <el-table-column label="医生电话" align="center" prop="doctorPhone" width="180"/>
 
 
 
