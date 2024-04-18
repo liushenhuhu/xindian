@@ -112,65 +112,65 @@
     </div>
 
 
-    <!--<el-row :gutter="10" class="mb8">-->
-    <!--        <el-col :span="1.5">-->
-    <!--          <el-button-->
-    <!--            type="primary"-->
-    <!--            plain-->
-    <!--            icon="el-icon-plus"-->
-    <!--            size="mini"-->
-    <!--            @click="handleAdd"-->
-    <!--            v-hasPermi="['patient_management:patient_management:add']"-->
-    <!--          >新增-->
-    <!--          </el-button>-->
-    <!--        </el-col>-->
-    <!--        <el-col :span="1.5">-->
-    <!--          <el-button-->
-    <!--            type="success"-->
-    <!--            plain-->
-    <!--            icon="el-icon-edit"-->
-    <!--            size="mini"-->
-    <!--            :disabled="single"-->
-    <!--            @click="handleUpdate"-->
-    <!--            v-hasPermi="['patient_management:patient_management:edit']"-->
-    <!--          >修改-->
-    <!--          </el-button>-->
-    <!--        </el-col>-->
-    <!--  <el-col :span="1.5">-->
-    <!--    <el-button-->
-    <!--      type="danger"-->
-    <!--      plain-->
-    <!--      icon="el-icon-delete"-->
-    <!--      size="mini"-->
-    <!--      :disabled="multiple"-->
-    <!--      @click="handleDelete"-->
-    <!--      v-hasPermi="['patient_management:patient_management:export']"-->
-    <!--    >删除-->
-    <!--    </el-button>-->
-    <!--  </el-col>-->
-    <!--  <el-col :span="1.5">-->
-    <!--    <el-button-->
-    <!--      type="warning"-->
-    <!--      plain-->
-    <!--      icon="el-icon-download"-->
-    <!--      size="mini"-->
-    <!--      @click="handleExport"-->
-    <!--      v-hasPermi="['patient_management:patient_management:export']"-->
-    <!--    >导出-->
-    <!--    </el-button>-->
-    <!--  </el-col>-->
-    <!--  <el-col :span="1.5">-->
-    <!--    <el-button-->
-    <!--      type="success"-->
-    <!--      plain-->
-    <!--      icon="el-icon-view"-->
-    <!--      size="mini"-->
-    <!--      @click="isShowNameClick"-->
-    <!--    >{{ isShowName.name }}-->
-    <!--    </el-button>-->
-    <!--  </el-col>-->
-    <!--  <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>-->
-    <!--</el-row>-->
+    <!--<el-row :gutter="10" class="mb8">
+            <el-col :span="1.5">
+              <el-button
+                type="primary"
+                plain
+                icon="el-icon-plus"
+                size="mini"
+                @click="handleAdd"
+                v-hasPermi="['patient_management:patient_management:add']"
+              >新增
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button
+                type="success"
+                plain
+                icon="el-icon-edit"
+                size="mini"
+                :disabled="single"
+                @click="handleUpdate"
+                v-hasPermi="['patient_management:patient_management:edit']"
+              >修改
+              </el-button>
+            </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['patient_management:patient_management:export']"
+        >删除
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['patient_management:patient_management:export']"
+        >导出
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-view"
+          size="mini"
+          @click="isShowNameClick"
+        >{{ isShowName.name }}
+        </el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
+    </el-row>-->
 
     <div class="tablebox">
       <div class="table-hand">
@@ -369,8 +369,6 @@
           </el-table-column>
         </el-table>
       </div>
-
-
       <pagination
         :total="total"
         :page.sync="queryParams.pageNum"
@@ -877,6 +875,7 @@ export default {
   display:flex;
   flex-direction: column;
   padding:16px;
+  overflow-y:scroll;
 }
 
 .searchForm {

@@ -903,6 +903,7 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 16px;
+  overflow-y:scroll;
 }
 
 .searchForm {
