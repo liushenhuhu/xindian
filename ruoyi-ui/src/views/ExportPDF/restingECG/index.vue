@@ -4,15 +4,15 @@
       <div id="app">
         <div class="page">
           <div class="box"  v-if="xuanzheyujingleixing">
-            <div class="patientMessage">
+            <!-- <div class="patientMessage">
               <div class="h11">
                 <span></span>
                 <p>用户信息</p>
               </div>
               <div class="info">
-                <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
-<!--                <div class="textbox"><strong>姓名:</strong>{{ data.name }}</div>-->
-                <div class="textbox"><strong>性别:</strong>{{ data.gender }}</div>
+                <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div> -->
+                <!-- <div class="textbox"><strong>姓名:</strong>{{ data.name }}</div> -->
+                <!-- <div class="textbox"><strong>性别:</strong>{{ data.gender }}</div>
                 <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
                 <div class="textbox"><strong>送检科室:</strong> -</div>
                 <div class="textbox"><strong>申请单号:</strong> -</div>
@@ -55,11 +55,66 @@
               </div>
               <div class="text">
                 <div class="ml">{{ xianshizifuchuan }}</div>
+              </div> -->
+
+
+            <!-- </div> -->
+
+             <div class="touzuo">
+              <div class="touzuobiaoti">患者信息</div>
+              <table class="tablex">
+                <tr>
+                  <td>报告编码</td>
+                  <td>{{ data.pId }}</td>
+                  <td>性别</td>
+                  <td>{{ data.gender }}</td>
+                  <td>p波</td>
+                  <td>{{ data.p }}ms</td>
+                  <td>Qtc</td>
+                  <td>{{ data.qtc }}ms</td>
+                </tr>
+                <tr>
+                  <td>患者编码</td>
+                  <td>{{ data.pId }}</td>
+                  <td>门诊号</td>
+                  <td>-</td>
+                  <td>QRS区间</td>
+                  <td>{{ data.qrs }}ms</td>
+                  <td>HRV</td>
+                  <td>{{ data.hrv }}ms</td>
+                </tr>
+                <tr>
+                  <td>申请单号</td>
+                  <td>-</td>
+                  <td>住院号</td>
+                  <td>-</td>
+                  <td>AI分析结果</td>
+                  <td colspan="3">{{ data.result }}</td>
+
+                </tr>
+                <tr>
+                  <td>年龄</td>
+                  <td>{{ data.age }}岁</td>
+                  <td>心律</td>
+                  <td>{{ data.hr }}bpm</td>
+                  <td>患者症状</td>
+                  <td colspan="3">{{ data.patientSymptom }}</td>
+
+                </tr>
+              </table>
+              <div class="touzuoxia">
+                <div class="touzuoyujing">
+                  <div class="touzuoyujing-left">预警类型：</div>
+                  <div style="" class="touzuoyujingzhi">{{ xianshizifuchuan }}</div>
+                </div>
+                <div class="touzuoanniu">
+                  <el-button type="success" round  class="anNiu"  @click="xianshi">选择预警类型</el-button>
+                  <el-button type="success" round  class="anNiu" @click="tijiao()">提交</el-button>
+                </div>
               </div>
+             </div>
 
-
-            </div>
-            <div class="result2 size mmargin">
+            <!-- <div class="result2 size mmargin">
               <div class="h11">
                 <span></span>
                 <div class="between">
@@ -146,16 +201,84 @@
                 <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
               </div>
               <div class="updown">
-              <el-button
-                class="next"
-                @click="prev()"
-                type="primary"
-                :loading="loading"
-              >上一个</el-button>
-              <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+                <el-button
+                  class="next"
+                  @click="prev()"
+                  type="primary"
+                  :loading="loading"
+                >上一个</el-button>
+                <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+              </div>
+            </div> -->
+
+
+
+
+
+            <div class="touyou">
+              <div class="touzuobiaoti">医师诊断</div>
+              <div class="mt">
+                <el-input
+                  type="textarea"
+                  v-model="data.resultByDoctor"
+                  placeholder="请输入"
+                  data-value="1111"
+                  :rows="5"
+                  class="font">{{ data.resultByDoctor }}
+                </el-input>
+              </div>
+
+              <div class="doctor">
+                <div class="input yishi">
+                  <strong>医师:</strong>
+                    <el-select v-model="data.doctorName" clearable>
+                      <el-option
+                        v-for="item in options"
+                        :label="item.doctorName"
+                        :value="item.doctorName">
+                      </el-option>
+                    </el-select>
+                </div>
+                <div class="input">
+                  <strong>日期:</strong>
+                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 57%"></el-input>
+                  <el-input v-else v-model="data.dataTime" clearable style="width: 36%"></el-input>
+                </div>
+              </div>
+
+              <div class="oder">
+                <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
+                  <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
+                    <i class="el-icon-question"></i>
+                  </el-tooltip>
+                  发送预警</el-button>
+                <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
+                <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
+
+                <el-button
+                  class="next"
+                  @click="prev()"
+                  :loading="loading"
+                >上一个</el-button>
+                <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+              </div>
+
+
+              <!-- <div class="updown shangbianju">
+                <el-button
+                  class="next"
+                  @click="prev()"
+                  :loading="loading"
+                >上一个</el-button>
+                <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+              </div> -->
+
+
             </div>
-            </div>
+
           </div>
+
+
 
           <!-- 预警类型弹窗 -->
           <div class="xuanzheyujing" v-else >
@@ -194,52 +317,95 @@
               </form>
           </div>
 
-          <div style="padding-left: 2vw;font-size: 1vw">10mm/mV 25mm/s</div>
-          <div class="body" id="body">
-          <!--            <div class="demo-image__preview">-->
-          <!--              <el-image :src="baseImage"></el-image>-->
-          <!--            </div>-->
-          <div class="body-1">
-            <div>
-              <div id="I" class="line" @dblclick="clicktrue('I',data12.dataI)"></div>
-            </div>
-            <div>
-              <div id="II" class="line" @dblclick="clicktrue('II',data12.dataII)"></div>
-            </div>
-            <div>
-              <div id="III" class="line" @dblclick="clicktrue('III',data12.dataIII)"></div>
-            </div>
-            <div>
-              <div id="aVR" class="line" @dblclick="clicktrue('aVR',data12.dataaVR)"></div>
-            </div>
-            <div>
-              <div id="aVL" class="line" @dblclick="clicktrue('aVL',data12.dataaVL)"></div>
-            </div>
-            <div>
-              <div id="aVF" class="line" @dblclick="clicktrue('aVF',data12.dataaVF)"></div>
+          <!-- <table class="tablex">
+            <tr>
+              <td>报告编码</td>
+              <td>{{ data.pId }}</td>
+              <td>性别</td>
+              <td>{{ data.gender }}</td>
+              <td>p波</td>
+              <td>{{ data.p }}ms</td>
+              <td>Qtc</td>
+              <td>{{ data.qtc }}ms</td>
+            </tr>
+            <tr>
+              <td>患者编码</td>
+              <td>{{ data.pId }}</td>
+              <td>门诊号</td>
+              <td>-</td>
+              <td>QRS区间</td>
+              <td>{{ data.qrs }}ms</td>
+              <td>HRV</td>
+              <td>{{ data.hrv }}ms</td>
+            </tr>
+            <tr>
+              <td>申请单号</td></td>
+              <td>-</td>
+              <td>住院号</td>
+              <td>-</td>
+              <td>AI分析结果</td>
+              <td colspan="3">{{ data.result }}</td>
+
+            </tr>
+            <tr>
+              <td>年龄</td>
+              <td>{{ data.age }}岁</td>
+              <td>心律</td>
+              <td>{{ data.hr }}bpm</td>
+              <td>患者症状</td>
+              <td colspan="3">{{ data.patientSymptom }}</td>
+
+            </tr>
+          </table> -->
+          <div class="shangbianju">
+            <div style="padding: 15px ;font-size: 1vw;font-weight: 700;">患者心电图</div>
+              <div class="body" id="body">
+              <!--            <div class="demo-image__preview">-->
+              <!--              <el-image :src="baseImage"></el-image>-->
+              <!--            </div>-->
+              <div class="body-1">
+                <div>
+                  <div id="I" class="line" @dblclick="clicktrue('I',data12.dataI)"></div>
+                </div>
+                <div>
+                  <div id="II" class="line" @dblclick="clicktrue('II',data12.dataII)"></div>
+                </div>
+                <div>
+                  <div id="III" class="line" @dblclick="clicktrue('III',data12.dataIII)"></div>
+                </div>
+                <div>
+                  <div id="aVR" class="line" @dblclick="clicktrue('aVR',data12.dataaVR)"></div>
+                </div>
+                <div>
+                  <div id="aVL" class="line" @dblclick="clicktrue('aVL',data12.dataaVL)"></div>
+                </div>
+                <div>
+                  <div id="aVF" class="line" @dblclick="clicktrue('aVF',data12.dataaVF)"></div>
+                </div>
+              </div>
+              <div class="body-1">
+                <div>
+                  <div id="V1" class="line" @dblclick="clicktrue('V1',data12.dataV1)"></div>
+                </div>
+                <div>
+                  <div id="V2" class="line" @dblclick="clicktrue('V2',data12.dataV2)"></div>
+                </div>
+                <div>
+                  <div id="V3" class="line" @dblclick="clicktrue('V3',data12.dataV3)"></div>
+                </div>
+                <div>
+                  <div id="V4" class="line" @dblclick="clicktrue('V4',data12.dataV4)"></div>
+                </div>
+                <div>
+                  <div id="V5" class="line" @dblclick="clicktrue('V5',data12.dataV5)"></div>
+                </div>
+                <div>
+                  <div id="V6" class="line" @dblclick="clicktrue('V6',data12.dataV6)"></div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="body-1">
-            <div>
-              <div id="V1" class="line" @dblclick="clicktrue('V1',data12.dataV1)"></div>
-            </div>
-            <div>
-              <div id="V2" class="line" @dblclick="clicktrue('V2',data12.dataV2)"></div>
-            </div>
-            <div>
-              <div id="V3" class="line" @dblclick="clicktrue('V3',data12.dataV3)"></div>
-            </div>
-            <div>
-              <div id="V4" class="line" @dblclick="clicktrue('V4',data12.dataV4)"></div>
-            </div>
-            <div>
-              <div id="V5" class="line" @dblclick="clicktrue('V5',data12.dataV5)"></div>
-            </div>
-            <div>
-              <div id="V6" class="line" @dblclick="clicktrue('V6',data12.dataV6)"></div>
-            </div>
-          </div>
-        </div>
+
         </div>
       </div>
       <child ref="drawShow" @closeMain="closeMain"></child>
@@ -248,35 +414,41 @@
 </template>
 
 <script>
-import * as echarts from '@/views/ECGScreen/detail/echarts.min'
-import $ from 'jquery';
-import {getCommonTerms, addReport, getReportByPId, updateReport, reportEarlyWarningMsg} from "@/api/report/report";
-import {sendMsgToPatient} from "@/api/patient_management/patient_management";
+import * as echarts from "@/views/ECGScreen/detail/echarts.min";
+import $ from "jquery";
+import {
+  getCommonTerms,
+  addReport,
+  getReportByPId,
+  updateReport,
+  reportEarlyWarningMsg,
+} from "@/api/report/report";
+import { sendMsgToPatient } from "@/api/patient_management/patient_management";
 import html2canvas from "html2canvas";
-import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
-import {addLabel} from "@/api/log_user/log_user";
+import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
+import { addLabel } from "@/api/log_user/log_user";
 import child from "@/views/staticECG/staticECG/child.vue";
-import {selectDoctor} from "@/api/statistics/statistics";
-var elementResizeDetectorMaker = require("element-resize-detector")
+import { selectDoctor } from "@/api/statistics/statistics";
+var elementResizeDetectorMaker = require("element-resize-detector");
 
 // 获取预警类型选项
-import {selectList} from "@/api/log_user/log_user";
+import { selectList } from "@/api/log_user/log_user";
 // 存储选择的预警类型
-import {addReport as addReportyujing} from "@/api/alert_log_count/count";
+import { addReport as addReportyujing } from "@/api/alert_log_count/count";
 
-import {listPatient_management} from "@/api/patient_management/patient_management";
+import { listPatient_management } from "@/api/patient_management/patient_management";
 
 export default {
   name: "index",
-  components: {child},
+  components: { child },
   data() {
     return {
       // 路由
-      luyou:'',
-      ecgType:'',
+      luyou: "",
+      ecgType: "",
       pageNum: 1,
       pageSize: 10,
-      queryParams:{},
+      queryParams: {},
       loading: false,
       index: 0,
       message: {
@@ -297,23 +469,22 @@ export default {
       daterangeConnectionTime: [],
       // ===================================上面是上下页的数据
       // 原先提交过的预警类型
-      logDataType:'',
-      tijiaoshuju:{},
-      zhi:[],
-      xuanzheyujingleixing:true,
-      yujingzhi:[],
-      xianshizifuchuan:'',
+      logDataType: "",
+      tijiaoshuju: {},
+      zhi: [],
+      xuanzheyujingleixing: true,
+      yujingzhi: [],
+      xianshizifuchuan: "",
 
-
-      isSelected: false,//术语按钮没有被按下
+      isSelected: false, //术语按钮没有被按下
       dialogFormVisible: false,
-      items: [],//常用术语
+      items: [], //常用术语
       checkButton: [],
       pId: null,
-      dynamicTags: ['标签一', '标签二', '标签三'],
+      dynamicTags: ["标签一", "标签二", "标签三"],
       inputVisible: false,
-      inputValue: '',
-      dialogVisibleTag:null,
+      inputValue: "",
+      dialogVisibleTag: null,
       options: [],
       data: {
         name: "",
@@ -332,119 +503,119 @@ export default {
         diagnosisData: null,
         bSuggest: "",
         cSuggest: "",
-        patientSymptom:"无",
-        hr:'',
-        p:'',
-        pr:'',
-        qrs:'',
-        qtc:'',
-        hrv:'',
-        p_xingeng:''//心梗率
+        patientSymptom: "无",
+        hr: "",
+        p: "",
+        pr: "",
+        qrs: "",
+        qtc: "",
+        hrv: "",
+        p_xingeng: "", //心梗率
       },
       markData: [
-        {xAxis: 0},
-        {xAxis: 25},
-        {xAxis: 50},
-        {xAxis: 75},
-        {xAxis: 100},
-        {xAxis: 125},
-        {xAxis: 150},
-        {xAxis: 175},
-        {xAxis: 200},
-        {xAxis: 225},
-        {xAxis: 250},
-        {xAxis: 275},
-        {xAxis: 300},
-        {xAxis: 325},
-        {xAxis: 350},
-        {xAxis: 375},
-        {xAxis: 400},
-        {xAxis: 425},
-        {xAxis: 450},
-        {xAxis: 475},
-        {xAxis: 500},
-        {xAxis: 525},
-        {xAxis: 550},
-        {xAxis: 575},
-        {xAxis: 600},
-        {xAxis: 625},
-        {xAxis: 650},
-        {xAxis: 675},
-        {xAxis: 700},
-        {xAxis: 725},
-        {xAxis: 750},
-        {xAxis: 775},
-        {xAxis: 800},
-        {xAxis: 825},
-        {xAxis: 850},
-        {xAxis: 875},
-        {xAxis: 900},
-        {xAxis: 925},
-        {xAxis: 950},
-        {xAxis: 975},
-        {xAxis: 1000},
-        {xAxis: 1000},
-        {xAxis: 1025},
-        {xAxis: 1050},
-        {xAxis: 1075},
-        {xAxis: 1100},
-        {xAxis: 1125},
-        {xAxis: 1150},
-        {xAxis: 1175},
-        {xAxis: 1200},
-        {xAxis: 1225},
-        {xAxis: 1250},
-        {xAxis: 1275},
-        {xAxis: 1300},
-        {xAxis: 1325},
-        {xAxis: 1350},
-        {xAxis: 1375},
-        {xAxis: 1400},
-        {xAxis: 1425},
-        {xAxis: 1450},
-        {xAxis: 1475},
-        {xAxis: 1500},
-        {xAxis: 1525},
-        {xAxis: 1550},
-        {xAxis: 1575},
-        {xAxis: 1600},
-        {xAxis: 1625},
-        {xAxis: 1650},
-        {xAxis: 1675},
-        {xAxis: 1700},
-        {xAxis: 1725},
-        {xAxis: 1750},
-        {xAxis: 1775},
-        {xAxis: 1800},
-        {xAxis: 1825},
-        {xAxis: 1850},
-        {xAxis: 1875},
-        {xAxis: 1900},
-        {xAxis: 1925},
-        {xAxis: 1950},
-        {xAxis: 1975},
-        {xAxis: 2000},
-        {yAxis: -3},
-        {yAxis: -2.5},
-        {yAxis: -2},
-        {yAxis: -1.5},
-        {yAxis: -1},
-        {yAxis: -0.5},
-        {yAxis: 0},
-        {yAxis: 0.5},
-        {yAxis: 1},
-        {yAxis: 1.5},
-        {yAxis: 2},
-        {yAxis: 2.5},
-        {yAxis: 3},
-      ],//放大之后标记线
+        { xAxis: 0 },
+        { xAxis: 25 },
+        { xAxis: 50 },
+        { xAxis: 75 },
+        { xAxis: 100 },
+        { xAxis: 125 },
+        { xAxis: 150 },
+        { xAxis: 175 },
+        { xAxis: 200 },
+        { xAxis: 225 },
+        { xAxis: 250 },
+        { xAxis: 275 },
+        { xAxis: 300 },
+        { xAxis: 325 },
+        { xAxis: 350 },
+        { xAxis: 375 },
+        { xAxis: 400 },
+        { xAxis: 425 },
+        { xAxis: 450 },
+        { xAxis: 475 },
+        { xAxis: 500 },
+        { xAxis: 525 },
+        { xAxis: 550 },
+        { xAxis: 575 },
+        { xAxis: 600 },
+        { xAxis: 625 },
+        { xAxis: 650 },
+        { xAxis: 675 },
+        { xAxis: 700 },
+        { xAxis: 725 },
+        { xAxis: 750 },
+        { xAxis: 775 },
+        { xAxis: 800 },
+        { xAxis: 825 },
+        { xAxis: 850 },
+        { xAxis: 875 },
+        { xAxis: 900 },
+        { xAxis: 925 },
+        { xAxis: 950 },
+        { xAxis: 975 },
+        { xAxis: 1000 },
+        { xAxis: 1000 },
+        { xAxis: 1025 },
+        { xAxis: 1050 },
+        { xAxis: 1075 },
+        { xAxis: 1100 },
+        { xAxis: 1125 },
+        { xAxis: 1150 },
+        { xAxis: 1175 },
+        { xAxis: 1200 },
+        { xAxis: 1225 },
+        { xAxis: 1250 },
+        { xAxis: 1275 },
+        { xAxis: 1300 },
+        { xAxis: 1325 },
+        { xAxis: 1350 },
+        { xAxis: 1375 },
+        { xAxis: 1400 },
+        { xAxis: 1425 },
+        { xAxis: 1450 },
+        { xAxis: 1475 },
+        { xAxis: 1500 },
+        { xAxis: 1525 },
+        { xAxis: 1550 },
+        { xAxis: 1575 },
+        { xAxis: 1600 },
+        { xAxis: 1625 },
+        { xAxis: 1650 },
+        { xAxis: 1675 },
+        { xAxis: 1700 },
+        { xAxis: 1725 },
+        { xAxis: 1750 },
+        { xAxis: 1775 },
+        { xAxis: 1800 },
+        { xAxis: 1825 },
+        { xAxis: 1850 },
+        { xAxis: 1875 },
+        { xAxis: 1900 },
+        { xAxis: 1925 },
+        { xAxis: 1950 },
+        { xAxis: 1975 },
+        { xAxis: 2000 },
+        { yAxis: -3 },
+        { yAxis: -2.5 },
+        { yAxis: -2 },
+        { yAxis: -1.5 },
+        { yAxis: -1 },
+        { yAxis: -0.5 },
+        { yAxis: 0 },
+        { yAxis: 0.5 },
+        { yAxis: 1 },
+        { yAxis: 1.5 },
+        { yAxis: 2 },
+        { yAxis: 2.5 },
+        { yAxis: 3 },
+      ], //放大之后标记线
       markdata: [
-        {yAxis: -1},
-        {yAxis: -0.5},
-        {yAxis: 0},
-        {yAxis: 0.5},
-        {yAxis: 1},
-      ],//没放大标记线
+        { yAxis: -1 },
+        { yAxis: -0.5 },
+        { yAxis: 0 },
+        { yAxis: 0.5 },
+        { yAxis: 1 },
+      ], //没放大标记线
       data12: {
         x: [],
         dataI: [],
@@ -463,13 +634,13 @@ export default {
       open: false,
       pphone: "",
       baseImage: "",
-      arr:[],
-      datalabel:{
-        waveLabel:"",
-        beatLabel:""
+      arr: [],
+      datalabel: {
+        waveLabel: "",
+        beatLabel: "",
       },
-      graphic2:[],
-      chartII:null,
+      graphic2: [],
+      chartII: null,
       // lead:false,
       // radio:'',
       // xIndex:null,
@@ -490,148 +661,146 @@ export default {
     };
   },
   created() {
-  //   let currentURL = window.location.href;
-  //   // console.log(currentURL);
-  //   // 使用URL对象解析URL
-  //   let urlObject = new URL(currentURL);
+    //   let currentURL = window.location.href;
+    //   // console.log(currentURL);
+    //   // 使用URL对象解析URL
+    //   let urlObject = new URL(currentURL);
 
-  //   // 获取路径名部分
-  //   let pathName = urlObject.pathname;
+    //   // 获取路径名部分
+    //   let pathName = urlObject.pathname;
 
-  //   // 提取/restingECG字符串并在前面加上斜杠
-  //   let luyou = '/' + pathName.split('/')[1];
-  //   // console.log(luyou);
+    //   // 提取/restingECG字符串并在前面加上斜杠
+    //   let luyou = '/' + pathName.split('/')[1];
+    //   // console.log(luyou);
 
-  // var getdata = JSON.parse(sessionStorage.getItem(luyou));
+    // var getdata = JSON.parse(sessionStorage.getItem(luyou));
 
+    if (false) {
+      let currentURL = window.location.href;
+      console.log(currentURL);
+      // 使用URL对象解析URL
+      let urlObject = new URL(currentURL);
 
-  if (false) {
-    let currentURL = window.location.href;
-    console.log(currentURL);
-    // 使用URL对象解析URL
-    let urlObject = new URL(currentURL);
+      // 获取路径名部分
+      let pathName = urlObject.pathname;
 
-    // 获取路径名部分
-    let pathName = urlObject.pathname;
-
-    // 提取/restingECG字符串并在前面加上斜杠
-    this.luyou = '/' + pathName.split('/')[1];
-    console.log(this.luyou);
-    let adf =JSON.parse(sessionStorage.getItem(this.luyou))
-    console.log(adf);
-    this.queryParams = adf.queryParams
-    // this.ecgType = a.ecgType
-    this.pId = adf.pId
-    var newUrl =
+      // 提取/restingECG字符串并在前面加上斜杠
+      this.luyou = "/" + pathName.split("/")[1];
+      console.log(this.luyou);
+      let adf = JSON.parse(sessionStorage.getItem(this.luyou));
+      console.log(adf);
+      this.queryParams = adf.queryParams;
+      // this.ecgType = a.ecgType
+      this.pId = adf.pId;
+      var newUrl =
         this.$route.path +
         `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
       window.history.replaceState("", "", newUrl);
-  } else {
-
-    this.queryParams = this.$route.query.queryParams
-    this.ecgType = this.$route.query.ecgType
-    this.pId = this.$route.query.pId;
+    } else {
+      this.queryParams = this.$route.query.queryParams;
+      this.ecgType = this.$route.query.ecgType;
+      this.pId = this.$route.query.pId;
     }
 
-
-
-
-    this.getList()
+    this.getList();
   },
   mounted() {
     // var show = sessionStorage.getItem(this.pId + "show");
     // if (show) {
-      this.get();
+    this.get();
     // }
     //预警的类型
     // this.getyujingleixing()
   },
   methods: {
-     /** 查询用户管理列表 */
-   async getList() {
+    /** 查询用户管理列表 */
+    async getList() {
       this.loading = true;
       this.queryParams.params = {};
-      if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
-        this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
-        this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
+      if (
+        null != this.daterangeConnectionTime &&
+        "" != this.daterangeConnectionTime
+      ) {
+        this.queryParams.params["beginConnectionTime"] =
+          this.daterangeConnectionTime[0];
+        this.queryParams.params["endConnectionTime"] =
+          this.daterangeConnectionTime[1];
       }
-      if (this.queryParams.ecgType==null){
-        this.queryParams.ecgType = this.ecgType
+      if (this.queryParams.ecgType == null) {
+        this.queryParams.ecgType = this.ecgType;
       }
-     await listPatient_management(this.queryParams).then(response => {
+      await listPatient_management(this.queryParams).then((response) => {
         // console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
-        if ( this.queryParams.ecgType==='JECG12'){
-          this.queryParams.ecgType=null
+        if (this.queryParams.ecgType === "JECG12") {
+          this.queryParams.ecgType = null;
         }
-         this.patient_managementList.forEach((item, index) => {
-            if (this.pId == item.pId) {
-              this.index = index;
-            }
-          })
-        if (this.index == this.patient_managementList.length ) {
-              this.index = 0
+        this.patient_managementList.forEach((item, index) => {
+          if (this.pId == item.pId) {
+            this.index = index;
+          }
+        });
+        if (this.index == this.patient_managementList.length) {
+          this.index = 0;
         }
       });
-      this.getPatientdetails()
+      this.getPatientdetails();
     },
     // 患者用户信息
-    getPatientdetails(){
-      getReportByPId(this.pId).then(response => {
+    getPatientdetails() {
+      getReportByPId(this.pId).then((response) => {
         // console.log(response.data);
         // console.log("请求成功：", response.data)
-        this.data.resultByDoctor = response.data.diagnosisConclusion
-        this.data.doctorName = response.data.diagnosisDoctor
-        this.data.diagnosisData = response.data.reportTime
-        this.data.pphone = response.data.pphone
-        this.data.pId = response.data.pId
-        this.data.result = response.data.intelligentDiagnosis
+        this.data.resultByDoctor = response.data.diagnosisConclusion;
+        this.data.doctorName = response.data.diagnosisDoctor;
+        this.data.diagnosisData = response.data.reportTime;
+        this.data.pphone = response.data.pphone;
+        this.data.pId = response.data.pId;
+        this.data.result = response.data.intelligentDiagnosis;
         // 原先提交过的预警类型
-        this.logDataType =  response.data.logDataType
+        this.logDataType = response.data.logDataType;
         // console.log("原先提交过的值："+this.logDataType);
-        if (!this.data.doctorName){
+        if (!this.data.doctorName) {
           const date = new Date();
-          const year = date.getFullYear().toString().padStart(4, '0');
-          const month = (date.getMonth() + 1).toString().padStart(2, '0');
-          const day = date.getDate().toString().padStart(2, '0');
-          const hour = date.getHours().toString().padStart(2, '0');
-          const minute = date.getMinutes().toString().padStart(2, '0');
-          const second = date.getSeconds().toString().padStart(2, '0');
-          this.data.diagnosisData=`${year}-${month}-${day} ${hour}:${minute}:${second}`
+          const year = date.getFullYear().toString().padStart(4, "0");
+          const month = (date.getMonth() + 1).toString().padStart(2, "0");
+          const day = date.getDate().toString().padStart(2, "0");
+          const hour = date.getHours().toString().padStart(2, "0");
+          const minute = date.getMinutes().toString().padStart(2, "0");
+          const second = date.getSeconds().toString().padStart(2, "0");
+          this.data.diagnosisData = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
         }
-        if(response.data.patientSymptom!=null){
-          this.data.patientSymptom = response.data.patientSymptom
+        if (response.data.patientSymptom != null) {
+          this.data.patientSymptom = response.data.patientSymptom;
         }
       });
-      // var show = sessionStorage.getItem(this.pId + "show");
-      // if (!show) {
-      //   this.get();
-      // }
-      selectDoctor().then(response => {
+      var show = sessionStorage.getItem(this.pId + "show");
+      if (!show) {
+        this.get();
+      }
+      selectDoctor().then((response) => {
         this.options = response;
-      })
-      this.getyujingleixing()
+      });
+      this.getyujingleixing();
     },
     // 获取预警类型选项
-    getyujingleixing(){
+    getyujingleixing() {
       selectList().then((res) => {
         this.yujingzhi = res.data;
         // console.log("这是预警值");
         // console.log(this.yujingzhi);
 
-
         if (this.logDataType) {
-          this.xianshizifuchuan = this.logDataType
+          this.xianshizifuchuan = this.logDataType;
           // 已逗号分隔，并去除每一项中的空格
-          this.zhi=this.logDataType.split(',').map(str => str.trim())
+          this.zhi = this.logDataType.split(",").map((str) => str.trim());
           // console.log("如果有logDataType就放入zhi中");
           // console.log(this.zhi);
-        }
-        else {
-          this.xianshizifuchuan = ''
-          this.zhi = []
+        } else {
+          this.xianshizifuchuan = "";
+          this.zhi = [];
           // // console.log(this.data.result);
           // let zuanhua = ''
           // zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
@@ -667,7 +836,7 @@ export default {
       });
     },
     // 上一个
-   async prev() {
+    async prev() {
       this.loading = true;
       if (this.queryParams.pageNum == 1 && this.index == 0) {
         this.$message.warning("已经是第一页！！！");
@@ -680,7 +849,7 @@ export default {
           this.queryParams.pageNum--;
           // this.index = 9
         }
-       await this.getList();
+        await this.getList();
         this.index = this.queryParams.pageSize - 1;
       }
       // console.log(this.logUserList[this.index]);
@@ -692,29 +861,29 @@ export default {
       window.history.replaceState("", "", newUrl);
       this.get();
       // await this.getLogUserList()
-     await this.getList()
-    //  let currentURL = window.location.href;
-    // // console.log(currentURL);
-    // // 使用URL对象解析URL
-    // let urlObject = new URL(currentURL);
+      await this.getList();
+      //  let currentURL = window.location.href;
+      // // console.log(currentURL);
+      // // 使用URL对象解析URL
+      // let urlObject = new URL(currentURL);
 
-    // // 获取路径名部分
-    // let pathName = urlObject.pathname;
+      // // 获取路径名部分
+      // let pathName = urlObject.pathname;
 
-    // // 提取/restingECG字符串并在前面加上斜杠
-    // this.luyou = '/' + pathName.split('/')[1];
+      // // 提取/restingECG字符串并在前面加上斜杠
+      // this.luyou = '/' + pathName.split('/')[1];
 
-    // console.log("进入页面时将静态12导心电图的值存入本地");
+      // console.log("进入页面时将静态12导心电图的值存入本地");
 
-    // let huancunshuju = {
-    //   pId: this.pId,
-    //   state:this.$route.query.state,
-    //   queryParams:this.queryParams,
-    //   ecgType:this.queryParams.ecgType
-    // }
-    // let jsonString = JSON.stringify(huancunshuju);
-    // console.log(jsonString);
-    // sessionStorage.setItem(this.luyou,jsonString);
+      // let huancunshuju = {
+      //   pId: this.pId,
+      //   state:this.$route.query.state,
+      //   queryParams:this.queryParams,
+      //   ecgType:this.queryParams.ecgType
+      // }
+      // let jsonString = JSON.stringify(huancunshuju);
+      // console.log(jsonString);
+      // sessionStorage.setItem(this.luyou,jsonString);
     },
     // 点击下一个触发事件
     async next() {
@@ -723,7 +892,8 @@ export default {
 
       if (this.index >= this.patient_managementList.length) {
         if (
-          (this.queryParams.pageNum - 1) * this.queryParams.pageSize + this.patient_managementList.length >=
+          (this.queryParams.pageNum - 1) * this.queryParams.pageSize +
+            this.patient_managementList.length >=
           this.total
         ) {
           this.$message.warning("已经是最后一页！！！");
@@ -745,43 +915,45 @@ export default {
       window.history.replaceState("", "", newUrl);
       this.get();
       // await this.getLogUserList()
-       await this.getList()
+      await this.getList();
       // this.loading = false;
-    //   let currentURL = window.location.href;
-    // console.log(currentURL);
-    // // 使用URL对象解析URL
-    // let urlObject = new URL(currentURL);
+      //   let currentURL = window.location.href;
+      // console.log(currentURL);
+      // // 使用URL对象解析URL
+      // let urlObject = new URL(currentURL);
 
-    // // 获取路径名部分
-    // let pathName = urlObject.pathname;
+      // // 获取路径名部分
+      // let pathName = urlObject.pathname;
 
-    // // 提取/restingECG字符串并在前面加上斜杠
-    // this.luyou = '/' + pathName.split('/')[1];
+      // // 提取/restingECG字符串并在前面加上斜杠
+      // this.luyou = '/' + pathName.split('/')[1];
 
-    // console.log("进入页面时将静态12导心电图的值存入本地");
+      // console.log("进入页面时将静态12导心电图的值存入本地");
 
-    // let huancunshuju = {
-    //   pId: this.pId,
-    //   state:this.$route.query.state,
-    //   queryParams:this.queryParams,
-    //   ecgType:this.queryParams.ecgType
-    // }
-    // let jsonString = JSON.stringify(huancunshuju);
-    // console.log(jsonString);
-    // sessionStorage.setItem(this.luyou,jsonString);
+      // let huancunshuju = {
+      //   pId: this.pId,
+      //   state:this.$route.query.state,
+      //   queryParams:this.queryParams,
+      //   ecgType:this.queryParams.ecgType
+      // }
+      // let jsonString = JSON.stringify(huancunshuju);
+      // console.log(jsonString);
+      // sessionStorage.setItem(this.luyou,jsonString);
     },
     // 打印选中的值
-    zhong(data){
+    zhong(data) {
       // console.log(data);
-      this.zhi=data
-      this.xianshizifuchuan = this.zhi.map(item => item.toString()).join(", ")
+      this.zhi = data;
+      this.xianshizifuchuan = this.zhi
+        .map((item) => item.toString())
+        .join(", ");
     },
     // 选择预警类型的开关
-    xianshi(){
+    xianshi() {
       this.xuanzheyujingleixing = !this.xuanzheyujingleixing;
     },
     // 提交预警类型
-    tijiao(){
+    tijiao() {
       // console.log(this.zhi);
       let selectedValues = [];
 
@@ -797,46 +969,44 @@ export default {
             }
           });
         });
-      })
+      });
       let dataObject = {
-        pId:this.data.pId,
-        logId: this.data.logid?this.data.logid:this.data.pId,
-        leadCount:this.$route.query.state,
-        logType:this.zhi.join(",")
+        pId: this.data.pId,
+        logId: this.data.logid ? this.data.logid : this.data.pId,
+        leadCount: this.$route.query.state,
+        logType: this.zhi.join(","),
       };
       for (let i = 0; i < selectedValues.length; i++) {
         // 将数组中的每个字符串作为对象的键，值为1，并放入dataObject对象中
         dataObject[selectedValues[i]] = 1;
       }
-      this.tijiaoshuju = dataObject
+      this.tijiaoshuju = dataObject;
       // console.log("这是要提交的值：")
       // console.log(this.tijiaoshuju)
       // return
-      if (dataObject.logType != '') {
-        addReportyujing(this.tijiaoshuju)
+      if (dataObject.logType != "") {
+        addReportyujing(this.tijiaoshuju);
         this.$modal.msgSuccess("数据提交成功");
       } else {
         this.$modal.msgError("数据提交失败，请选择预警类型");
       }
-
     },
-    dialogVisible(){
-      getTerm().then(r=>{
-        if (r.rows.length>0){
-          this.dynamicTags = JSON.parse(r.rows[0].termText)
+    dialogVisible() {
+      getTerm().then((r) => {
+        if (r.rows.length > 0) {
+          this.dynamicTags = JSON.parse(r.rows[0].termText);
         }
-        this.dialogVisibleTag = true
-      })
+        this.dialogVisibleTag = true;
+      });
     },
-    termTag(){
+    termTag() {
       let obj = {
-        "termText": JSON.stringify(this.dynamicTags)
-      }
-      addOrUpdateTerm(obj).then(r=>{
+        termText: JSON.stringify(this.dynamicTags),
+      };
+      addOrUpdateTerm(obj).then((r) => {
         this.$modal.msgSuccess("添加成功");
-        this.dialogVisibleTag = false
-      })
-
+        this.dialogVisibleTag = false;
+      });
     },
     handleCloseTag(tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
@@ -844,7 +1014,7 @@ export default {
 
     showInput() {
       this.inputVisible = true;
-      this.$nextTick(_ => {
+      this.$nextTick((_) => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
@@ -855,7 +1025,7 @@ export default {
         this.dynamicTags.push(inputValue);
       }
       this.inputVisible = false;
-      this.inputValue = '';
+      this.inputValue = "";
     },
 
     //截断数据（一条数据现在2000）
@@ -863,53 +1033,61 @@ export default {
       let i = 0;
       let newArray = [];
       while (i < array.length) {
-        newArray.push(array.slice(i, i += subGroupLength));
+        newArray.push(array.slice(i, (i += subGroupLength)));
       }
       return newArray;
     },
 
     //展开框
-    clicktrue(title,data){
-      console.log(this.datalabel)
-      this.$refs.drawShow.getchart(data,this.pId,1,title,12,this.datalabel);
+    clicktrue(title, data) {
+      console.log(this.datalabel);
+      this.$refs.drawShow.getchart(
+        data,
+        this.pId,
+        1,
+        title,
+        12,
+        this.datalabel
+      );
     },
 
     //按下常用术语按钮
-    putDown(key,event) {
+    putDown(key, event) {
       // console.log(event.currentTarget.classList.toggle('selected'))
-      event.currentTarget.classList.toggle('selected')
-      console.log(this.arr)
-        let index = this.arr.indexOf(key);
-        //console.log(index)
-        if(index !== -1){
-          this.arr.splice(index,1);
-        }else {
-          this.arr.push(key);
-        }
+      event.currentTarget.classList.toggle("selected");
+      console.log(this.arr);
+      let index = this.arr.indexOf(key);
+      //console.log(index)
+      if (index !== -1) {
+        this.arr.splice(index, 1);
+      } else {
+        this.arr.push(key);
+      }
     },
 
-    clickitem(e){
-      e === this.radio ? this.radio = '' : this.radio = e
+    clickitem(e) {
+      e === this.radio ? (this.radio = "") : (this.radio = e);
     },
-    dialogForm(){
-      if (this.data.resultByDoctor){
-        this.data.resultByDoctor = this.data.resultByDoctor+','+this.arr.toString()
-      }else {
-        this.data.resultByDoctor =this.arr.toString()
+    dialogForm() {
+      if (this.data.resultByDoctor) {
+        this.data.resultByDoctor =
+          this.data.resultByDoctor + "," + this.arr.toString();
+      } else {
+        this.data.resultByDoctor = this.arr.toString();
       }
 
-      this.dialogFormVisible=false;
+      this.dialogFormVisible = false;
     },
     //请求数据
     get() {
       const loading = this.$loading({
-        lock: true,//lock的修改符--默认是false
-        text: '请勿刷新页面，正在获取数据，请耐心等待1-3分钟...',//显示在加载图标下方的加载文案
-        spinner: 'el-icon-loading',//自定义加载图标类名
-        background: 'rgba(0, 0, 0, 0.7)',//遮罩层颜色
-        target: document.querySelector('#table')//loadin覆盖的dom元素节点
+        lock: true, //lock的修改符--默认是false
+        text: "请勿刷新页面，正在获取数据，请耐心等待1-3分钟...", //显示在加载图标下方的加载文案
+        spinner: "el-icon-loading", //自定义加载图标类名
+        background: "rgba(0, 0, 0, 0.7)", //遮罩层颜色
+        target: document.querySelector("#table"), //loadin覆盖的dom元素节点
       });
-      var _th = this
+      var _th = this;
       // console.log("请求数据了！")
       // console.log("pId", this.pId)
       this.data.dataTime = this.$options.methods.getData();
@@ -919,7 +1097,7 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-        pid: this.pId
+          pid: this.pId,
         }),
         beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
@@ -928,79 +1106,79 @@ export default {
         },
         success: function (data) {
           // console.log("请求成功：", data)
-          loading.close()
-          _th.data.resultByDoctor = data.result.diagnosis_conclusion
-          _th.data.doctorName = data.result.diagnosis_doctor
-          _th.data.age = data.result.age
-          _th.data.gender = data.result.gender
-          _th.data.name = data.result.patientName
-          _th.data.result = data.result.intelligent_diagnosis
-          _th.data.hr=data.result.ecg_analysis_data["平均心率"]
-          _th.data.p=data.result.ecg_analysis_data["P波时限"]
-          _th.data.pr=data.result.ecg_analysis_data["PR间期"]
-          _th.data.qrs=data.result.ecg_analysis_data["QRS波时限"]
-          _th.data.qtc=data.result.ecg_analysis_data["QTc"]
-          _th.data.hrv=data.result.ecg_analysis_data["RMSSD"]
-          _th.data.hr = data.result.ecg_analysis_data["平均心率"]
-          _th.data.pr = data.result.ecg_analysis_data["PR_dis_avg"]
-          _th.data.qrs = data.result.ecg_analysis_data["QRS_dis_avg"]
-          _th.data.qt = data.result.ecg_analysis_data["QT_dis_avg"]
-          _th.data.qtc = data.result.ecg_analysis_data["QTc2"]
-          _th.data.p = data.result.ecg_analysis_data["P_deg"]
-          _th.data.qrs_deg = data.result.ecg_analysis_data["QRS_deg"]
-          _th.data.t = data.result.ecg_analysis_data["T_deg"]
-          _th.data.pv5 = data.result.ecg_analysis_data["PV5_mv"]
-          _th.data.sv1 = data.result.ecg_analysis_data["SV1_mv"]
-          _th.data.rv5_sv1 = data.result.ecg_analysis_data["RV5_SV1"]
-          _th.data.p_xingeng = data.result.p_xingeng
-          _th.data12.dataI = data.result.I
+          loading.close();
+          _th.data.resultByDoctor = data.result.diagnosis_conclusion;
+          _th.data.doctorName = data.result.diagnosis_doctor;
+          _th.data.age = data.result.age;
+          _th.data.gender = data.result.gender;
+          _th.data.name = data.result.patientName;
+          _th.data.result = data.result.intelligent_diagnosis;
+          _th.data.hr = data.result.ecg_analysis_data["平均心率"];
+          _th.data.p = data.result.ecg_analysis_data["P波时限"];
+          _th.data.pr = data.result.ecg_analysis_data["PR间期"];
+          _th.data.qrs = data.result.ecg_analysis_data["QRS波时限"];
+          _th.data.qtc = data.result.ecg_analysis_data["QTc"];
+          _th.data.hrv = data.result.ecg_analysis_data["RMSSD"];
+          _th.data.hr = data.result.ecg_analysis_data["平均心率"];
+          _th.data.pr = data.result.ecg_analysis_data["PR_dis_avg"];
+          _th.data.qrs = data.result.ecg_analysis_data["QRS_dis_avg"];
+          _th.data.qt = data.result.ecg_analysis_data["QT_dis_avg"];
+          _th.data.qtc = data.result.ecg_analysis_data["QTc2"];
+          _th.data.p = data.result.ecg_analysis_data["P_deg"];
+          _th.data.qrs_deg = data.result.ecg_analysis_data["QRS_deg"];
+          _th.data.t = data.result.ecg_analysis_data["T_deg"];
+          _th.data.pv5 = data.result.ecg_analysis_data["PV5_mv"];
+          _th.data.sv1 = data.result.ecg_analysis_data["SV1_mv"];
+          _th.data.rv5_sv1 = data.result.ecg_analysis_data["RV5_SV1"];
+          _th.data.p_xingeng = data.result.p_xingeng;
+          _th.data12.dataI = data.result.I;
           _th.nArrI = _th.getNewArray(_th.data12.dataI, 1000);
-          _th.data12.dataII = data.result.II
+          _th.data12.dataII = data.result.II;
           _th.nArrII = _th.getNewArray(_th.data12.dataII, 1000);
-          _th.data12.dataIII = data.result.III
+          _th.data12.dataIII = data.result.III;
           _th.nArrIII = _th.getNewArray(_th.data12.dataIII, 1000);
-          _th.data12.dataaVR = data.result.aVR
+          _th.data12.dataaVR = data.result.aVR;
           _th.nArraVR = _th.getNewArray(_th.data12.dataaVR, 1000);
-          _th.data12.dataaVL = data.result.aVL
+          _th.data12.dataaVL = data.result.aVL;
           _th.nArraVL = _th.getNewArray(_th.data12.dataaVL, 1000);
-          _th.data12.dataaVF = data.result.aVF
+          _th.data12.dataaVF = data.result.aVF;
           _th.nArraVF = _th.getNewArray(_th.data12.dataaVF, 1000);
-          _th.data12.dataV1 = data.result.V1
+          _th.data12.dataV1 = data.result.V1;
           _th.nArrV1 = _th.getNewArray(_th.data12.dataV1, 1000);
-          _th.data12.dataV2 = data.result.V2
+          _th.data12.dataV2 = data.result.V2;
           _th.nArrV2 = _th.getNewArray(_th.data12.dataV2, 1000);
-          _th.data12.dataV3 = data.result.V3
+          _th.data12.dataV3 = data.result.V3;
           _th.nArrV3 = _th.getNewArray(_th.data12.dataV3, 1000);
-          _th.data12.dataV4 = data.result.V4
+          _th.data12.dataV4 = data.result.V4;
           _th.nArrV4 = _th.getNewArray(_th.data12.dataV4, 1000);
-          _th.data12.dataV5 = data.result.V5
+          _th.data12.dataV5 = data.result.V5;
           _th.nArrV5 = _th.getNewArray(_th.data12.dataV5, 1000);
-          _th.data12.dataV6 = data.result.V6
+          _th.data12.dataV6 = data.result.V6;
           _th.nArrV6 = _th.getNewArray(_th.data12.dataV6, 1000);
-          _th.datalabel.waveLabel=data.result.waveLabel
-          _th.datalabel.beatLabel=data.result.beatLabel
-          _th.data12.x=[]
-          for (var i = 0; i < _th.data12.dataII.length+1; i++) {
+          _th.datalabel.waveLabel = data.result.waveLabel;
+          _th.datalabel.beatLabel = data.result.beatLabel;
+          _th.data12.x = [];
+          for (var i = 0; i < _th.data12.dataII.length + 1; i++) {
             _th.data12.x.push(i);
           }
-          if(_th.data12.dataII.length==1000){
-            $('.line').css({
-              height:'15.5vh'
+          if (_th.data12.dataII.length == 1000) {
+            $(".line").css({
+              height: "15.5vh",
             });
-          }else if(_th.data12.dataII.length==2000){
-            $('.line').css({
-              height:'7.6vh'
+          } else if (_th.data12.dataII.length == 2000) {
+            $(".line").css({
+              height: "7.6vh",
             });
-          }else if(_th.data12.dataII.length==3000){
-            $('.line').css({
-              height:'7.6vh'
+          } else if (_th.data12.dataII.length == 3000) {
+            $(".line").css({
+              height: "7.6vh",
             });
           }
-          for (var i = 0; i < 2000; i+=20) {
-            _th.markdata.push({xAxis: i})
+          for (var i = 0; i < 2000; i += 20) {
+            _th.markdata.push({ xAxis: i });
           }
           var chartI = echarts.init(document.getElementById("I"));
-          chartI.clear()
+          chartI.clear();
           chartI.setOption({
             title: {
               text: "I",
@@ -1008,185 +1186,188 @@ export default {
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitNumber: 51, // 横线数
               minInterval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataI,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
           });
-          chartI.resize()
+          chartI.resize();
           $(window).resize(function () {
             chartI.resize();
           });
           _th.chartII = echarts.init(document.getElementById("II"));
-          _th.chartII.clear()
+          _th.chartII.clear();
           _th.chartII.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "II",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataII,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
           });
           //绘制文本
@@ -1196,990 +1377,996 @@ export default {
             // _th.addtext()
           });
           var chartIII = echarts.init(document.getElementById("III"));
-          chartIII.clear()
+          chartIII.clear();
           chartIII.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "III",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }, max: 1,
-              min: -1
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
+              max: 1,
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataIII,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
-
           });
           $(window).resize(function () {
             chartIII.resize();
           });
           var chartaVR = echarts.init(document.getElementById("aVR"));
-          chartaVR.clear()
+          chartaVR.clear();
           chartaVR.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "aVR",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataaVR,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
-
           });
           $(window).resize(function () {
             chartaVR.resize();
           });
           var chartaVL = echarts.init(document.getElementById("aVL"));
-          chartaVL.clear()
+          chartaVL.clear();
           chartaVL.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "aVL",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataaVL,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
-
           });
           $(window).resize(function () {
             chartaVL.resize();
           });
           var chartaVF = echarts.init(document.getElementById("aVF"));
-          chartaVF.clear()
+          chartaVF.clear();
           chartaVF.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "aVF",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataaVF,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
-
           });
           $(window).resize(function () {
             chartaVF.resize();
           });
           var chartV1 = echarts.init(document.getElementById("V1"));
-          chartV1.clear()
+          chartV1.clear();
           chartV1.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "V1",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV1,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
           });
           $(window).resize(function () {
             chartV1.resize();
           });
           var chartV2 = echarts.init(document.getElementById("V2"));
-          chartV2.clear()
+          chartV2.clear();
           chartV2.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "V2",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV2,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
           });
           $(window).resize(function () {
             chartV2.resize();
           });
           var chartV3 = echarts.init(document.getElementById("V3"));
-          chartV3.clear()
+          chartV3.clear();
           chartV3.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "V3",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV3,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
           });
           $(window).resize(function () {
             chartV3.resize();
           });
           var chartV4 = echarts.init(document.getElementById("V4"));
-          chartV4.clear()
+          chartV4.clear();
           chartV4.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "V4",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV4,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
           });
           $(window).resize(function () {
             chartV4.resize();
           });
           var chartV5 = echarts.init(document.getElementById("V5"));
-          chartV5.clear()
+          chartV5.clear();
           chartV5.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "V5",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV5,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
           });
           $(window).resize(function () {
             chartV5.resize();
           });
           var chartV6 = echarts.init(document.getElementById("V6"));
-          chartV6.clear()
+          chartV6.clear();
           chartV6.setOption({
-            animation:false,
+            animation: false,
             title: {
               text: "V6",
               top: 5,
               left: 5,
             },
             grid: {
-              left: '1',
-              right: '2',
-              top: '1',
-              bottom: '1',
-              containLabel: false
+              left: "1",
+              right: "2",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
             },
             xAxis: {
-              type: 'category',
+              type: "category",
               data: _th.data12.x,
               axisLabel: {
                 show: false,
                 interval: 3,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
-              }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
+              },
             },
             yAxis: {
-              type: 'value',
+              type: "value",
               axisLabel: {
                 show: false,
               },
               axisTick: {
-                show: false
+                show: false,
               },
               axisLine: {
-                show: false
+                show: false,
               },
               //  splitNumber: 3, // 横线数
               interval: 0.1, // 刻度间隔
               splitLine: {
                 show: true, //让网格显示
-                lineStyle: {//网格样式
+                lineStyle: {
+                  //网格样式
                   color: "#f8bfbf", //网格的颜色
                   width: 0.5, //网格的宽度
-                  type: 'solid' //网格是实实线，可以修改成虚线以及其他的类型
-                }
+                  type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+                },
               },
               max: 1,
-              min: -1
+              min: -1,
             },
 
             series: [
               {
-                type: 'line',
+                type: "line",
                 smooth: true,
                 showSymbol: false,
                 data: _th.data12.dataV6,
-                zlevel:99,
+                zlevel: 99,
                 lineStyle: {
                   normal: {
                     color: "#000000",
-                    width: 1.5
-                  }
+                    width: 1.5,
+                  },
                 },
                 markLine: {
                   symbol: "none",
                   silent: true,
                   lineStyle: {
                     type: "solid",
-                    color: '#df8989',
-                    width: 1
+                    color: "#df8989",
+                    width: 1,
                   },
                   label: {
-
-                    position: 'start', // 表现内容展示的位置
-                    color: '#df8989'  // 展示内容颜色
+                    position: "start", // 表现内容展示的位置
+                    color: "#df8989", // 展示内容颜色
                   },
 
-                  data: _th.markdata
-                }
-              }
+                  data: _th.markdata,
+                },
+              },
             ],
-
           });
           $(window).resize(function () {
             chartV6.resize();
           });
-          var erd = elementResizeDetectorMaker()
+          var erd = elementResizeDetectorMaker();
           erd.listenTo(document.getElementById("body"), function (element) {
             _th.$nextTick(function () {
               chartI.resize();
@@ -2195,16 +2382,15 @@ export default {
               chartV4.resize();
               chartV5.resize();
               chartV6.resize();
-            })
-          })
-
+            });
+          });
         },
         error: function (data) {
-          alert("数据请求错误,请刷新页面或联系管理员")
-          loading.close()
-          console.log("请求失败：", data)
-        }
-      })
+          alert("数据请求错误,请刷新页面或联系管理员");
+          loading.close();
+          console.log("请求失败：", data);
+        },
+      });
     },
     //重绘所有点之间的文本
     // addtext(){
@@ -2271,133 +2457,148 @@ export default {
     //
     //   // console.log(this.graphic2)
     // },
-    closeMain(val){
-      console.log(val)
+    closeMain(val) {
+      console.log(val);
       // this.datalabel.beatLabel=val
       // this.addtext()
     },
     //获取当前时间
     getData() {
       var str = new Date();
-      var nowTime = str.getFullYear() + "-"
-        + (str.getMonth() + 1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes() + ":" + str.getSeconds();
+      var nowTime =
+        str.getFullYear() +
+        "-" +
+        (str.getMonth() + 1) +
+        "-" +
+        str.getDate() +
+        " " +
+        str.getHours() +
+        ":" +
+        str.getMinutes() +
+        ":" +
+        str.getSeconds();
       return nowTime;
     },
-    sendWarnMsg(){
-      if(this.data.resultByDoctor==''||this.data.resultByDoctor==null||this.data.resultByDoctor.length>20){
+    sendWarnMsg() {
+      if (
+        this.data.resultByDoctor == "" ||
+        this.data.resultByDoctor == null ||
+        this.data.resultByDoctor.length > 20
+      ) {
         this.$message({
-          type: 'error',
-          message: '预警消息不能为空或长度最多20个字'
+          type: "error",
+          message: "预警消息不能为空或长度最多20个字",
         });
-        return
+        return;
       }
       let obj = {
-        pId : this.data.pId,
-        warningText: this.data.resultByDoctor
-      }
-      reportEarlyWarningMsg(obj).then(r=>{
+        pId: this.data.pId,
+        warningText: this.data.resultByDoctor,
+      };
+      reportEarlyWarningMsg(obj).then((r) => {
         this.$message({
-          type: 'success',
-          message: '发送成功!'
+          type: "success",
+          message: "发送成功!",
         });
-      })
+      });
     },
     //发送短信
     sendMsg() {
-      let patientPhone = this.data.pphone
-      if (patientPhone.length===14||patientPhone.length===15){
-        patientPhone=patientPhone.substring(0,11)
+      let patientPhone = this.data.pphone;
+      if (patientPhone.length === 14 || patientPhone.length === 15) {
+        patientPhone = patientPhone.substring(0, 11);
       }
-      console.log(patientPhone)
+      console.log(patientPhone);
       if (patientPhone) {
         // console.log("用户姓名: " + row.patientName)
-        this.$confirm('向该用户发送短信提示采集存在较大干扰?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          sendMsgToPatient(patientPhone).then(response => {
+        this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            sendMsgToPatient(patientPhone).then((response) => {
+              this.$message({
+                type: "success",
+                message: "发送成功!",
+              });
+            });
+          })
+          .catch(() => {
             this.$message({
-              type: 'success',
-              message: '发送成功!'
+              type: "info",
+              message: "已取消",
             });
           });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
       } else {
-        this.$message.error('该用户手机号不合法！！！');
+        this.$message.error("该用户手机号不合法！！！");
       }
     },
     //保存数据
     btnUpload() {
-      if(this.data.resultByDoctor==''||this.data.resultByDoctor==null){
+      if (this.data.resultByDoctor == "" || this.data.resultByDoctor == null) {
         this.$message({
-          type: 'error',
-          message: '诊断结果不能为空!'
+          type: "error",
+          message: "诊断结果不能为空!",
         });
-        return
+        return;
       }
-      if (this.data.doctorName==''||this.data.doctorName==null){
+      if (this.data.doctorName == "" || this.data.doctorName == null) {
         this.$message({
-          type: 'error',
-          message: '诊断医生不能为空!'
+          type: "error",
+          message: "诊断医生不能为空!",
         });
-        return
+        return;
       }
       const date = new Date();
-      const year = date.getFullYear().toString().padStart(4, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hour = date.getHours().toString().padStart(2, '0');
-      const minute = date.getMinutes().toString().padStart(2, '0');
-      const second = date.getSeconds().toString().padStart(2, '0');
+      const year = date.getFullYear().toString().padStart(4, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const hour = date.getHours().toString().padStart(2, "0");
+      const minute = date.getMinutes().toString().padStart(2, "0");
+      const second = date.getSeconds().toString().padStart(2, "0");
       var form = {
         pId: this.pId,
-        diagnosisStatus: '1',
+        diagnosisStatus: "1",
         startDateTime: `${year}-${month}-${day} ${hour}:${minute}:${second}`,
         diagnosisConclusion: this.data.resultByDoctor,
         reportTime: this.data.dataTime,
         diagnosisDoctor: this.data.doctorName,
-      }
-      getReportByPId(this.pId).then(res => {
+      };
+      getReportByPId(this.pId).then((res) => {
         if (res.data == null) {
-          addReport(form).then(response => {
+          addReport(form).then((response) => {
             this.$modal.msgSuccess("新增成功");
             // this.getList();
-            console.log("新增成功！")
+            console.log("新增成功！");
           });
         } else {
-          form["reportId"] = res.data.reportId
-          console.log("保存的数据：", form)
-          updateReport(form).then(response => {
+          form["reportId"] = res.data.reportId;
+          console.log("保存的数据：", form);
+          updateReport(form).then((response) => {
             this.$modal.msgSuccess("修改成功");
             // this.getList();
-            console.log("修改成功！")
-          })
+            console.log("修改成功！");
+          });
         }
-      })
+      });
     },
     //常用术语
     Camera() {
-      var _th = this
-      getCommonTerms().then(response => {
-        console.log("常用术语：", response.data)
+      var _th = this;
+      getCommonTerms().then((response) => {
+        console.log("常用术语：", response.data);
         const result = Object.entries(response.data).map(([name, label]) => ({
           name,
-          label
+          label,
         }));
-        _th.items = result
-        _th.dialogFormVisible=true
+        _th.items = result;
+        _th.dialogFormVisible = true;
         console.log(_th.items);
-      })
+      });
     },
-
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -2412,16 +2613,18 @@ export default {
   //height: 100vh;
   //border: 3px solid #0000ff;
 }
-.box{
+.box {
   overflow: hidden;
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  margin-top:1.5vh;
+  justify-content:space-between;
+  // justify-content: space-around;
+  margin-top: 1.5vh;
   margin-bottom: 1.5vh;
   border-radius: 2vh;
   background-color: #e8e8e8;
+  padding: 15px;
   //opacity: 0.6;
   .patientMessage {
     display: flex;
@@ -2431,7 +2634,7 @@ export default {
     //height: 20vh;
     margin: 1.5vh 0 1.5vh 0;
     width: 35%;
-    .info{
+    .info {
       // width: 90%;
       // display: flex;
       // flex-direction: row;
@@ -2448,38 +2651,38 @@ export default {
       padding: 1.5vh 0 1.5vh 0;
       margin-left: 2vw;
       width: 90%;
-      .textbox{
-        width:45%;
+      .textbox {
+        width: 45%;
         margin-bottom: 1.5vh;
         font-size: 2.1vh;
       }
-      .textBoxBottom{
+      .textBoxBottom {
         margin-bottom: 10px;
         font-size: 2.1vh;
       }
     }
   }
-  .h11{
+  .h11 {
     width: 100%;
     font-size: 2.5vh;
     background-color: #dcdcdc;
     font-weight: 700;
     height: 4vh;
     display: flex;
-    span{
+    span {
       width: 6px;
       height: 100%;
       background-color: #00afff;
     }
-    p{
+    p {
       margin-left: 1vw;
       line-height: 4vh;
     }
-    .between{
+    .between {
       width: 100%;
       display: flex;
       justify-content: space-between;
-      p{
+      p {
         line-height: 4vh;
       }
     }
@@ -2491,67 +2694,68 @@ export default {
   //  height: 100%;
   //  background-color: #00afff;
   //}
-  .result1{
+  .result1 {
     width: 32%;
     //height: 12vh;
-    .text{
+    .text {
       height: 16vh;
       //border: 1px darkgray solid;
       overflow: hidden;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
       -ms-overflow-style: none;
-    scrollbar-width: none;
+      scrollbar-width: none;
     }
   }
   .selected {
     background-color: #435bf7;
     color: #fff !important;
   }
-  .result2{
+  .result2 {
     width: 32.5%;
     //height: 12vh;
-    .text{
+    .text {
       height: 15vh;
     }
-    .oder{
+    .oder {
       display: flex;
       justify-content: center;
       margin-bottom: 1.5vh;
     }
   }
 }
-.size{
+.size {
   font-size: 2.3vh;
 }
-.mmargin{
+.mmargin {
   margin: 1.5vh 0 1.5vh 0;
 }
-.margin{
+.margin {
   width: 100%;
 }
-.mt{
+.mt {
   //margin-top: 2vh;
-  height: 13vh;
+  height: 40%;
 }
 .doctor {
-  margin:6vh 0 4vh 0 ;
-  display: flex;
+  margin: 2vh 0 2vh 0;
+  // display: flex;
   width: 100%;
-  flex-direction: column;
-  .input{
+  // flex-direction: column;
+  justify-content:space-between;
+  .input {
     display: flex;
     flex-direction: row;
     margin-top: 1vh;
-    margin-left: 2vw;
-    ::v-deep .el-input--medium .el-input__inner{
+    // margin-left: 2vw;
+    ::v-deep .el-input--medium .el-input__inner {
       //width: 80%;
     }
     //margin-left: 1vw;
-    strong{
+    strong {
       white-space: nowrap;
       line-height: 36px;
-      margin-right: .5vw;
+      margin-right: 0.5vw;
       font-size: 1.8vh;
     }
   }
@@ -2560,16 +2764,15 @@ export default {
   width: 60%;
   height: 100%;
   display: flex;
-  flex-wrap: nowrap
+  flex-wrap: nowrap;
 }
-
 
 .font {
   font-size: 1vw;
   font-weight: 700;
   color: #6f0600;
   background-color: #fff;
-  height: 13vh;
+  height: 100%;
 }
 
 .body {
@@ -2581,24 +2784,24 @@ export default {
 }
 .showbox {
   //display: none;
-  user-select:none;
+  user-select: none;
   position: absolute;
   width: 100%;
-  height:82vh;
-  border: 1px solid #6EDDF1;
+  height: 82vh;
+  border: 1px solid #6eddf1;
   top: 54vh;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2000;
   background-color: rgb(255, 255, 255);
-  span{
+  span {
     display: inline-block;
   }
 }
-.icon{
+.icon {
   font-size: 2vw;
 }
-.menu{
+.menu {
   /*这个样式不写，右键弹框会一直显示在画布的左下角*/
   position: absolute;
   background: rgba(255, 255, 255);
@@ -2607,7 +2810,7 @@ export default {
   padding: 0.1vw;
   border-radius: 0.5vw;
 }
-.button{
+.button {
   height: 3vh;
   width: 2.5vw;
   display: inline-flex;
@@ -2619,8 +2822,8 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.button:hover{
-  color: #FFFFFF;
+.button:hover {
+  color: #ffffff;
   background-color: #df0202;
 }
 #charts {
@@ -2633,24 +2836,23 @@ export default {
   //border: 1px solid #000000;
   /*background-color: #06732b;*/
 }
-.noName{
+.noName {
   //display: inline-flex;
 
   //width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
-::v-deep .noName .el-radio-group{
+::v-deep .noName .el-radio-group {
   display: block;
   //width: 98%;
 }
 .btn3 {
   color: #b33939;
   border: 1px solid #b33939;
-  border-radius: .5em;
+  border-radius: 0.5em;
   background-color: transparent;
   text-transform: uppercase;
   font-weight: 500;
@@ -2682,7 +2884,7 @@ export default {
   background-color: #4cc9f0;
 }
 
-.el-radio-group{
+.el-radio-group {
   display: flex;
   justify-content: space-around;
 }
@@ -2696,7 +2898,7 @@ export default {
   width: 99.5%;
 }
 
-.ml{
+.ml {
   margin-left: 1vw;
   margin-right: 2vw;
 }
@@ -2705,15 +2907,15 @@ export default {
 //  //flex-direction: row;
 //}
 
-
 .anNiu {
-  height: 3vw;
-  width: 8vw;
-  font-size: 1vw;
+  height: 30px;
+  // width: 5vw;
+  // font-size: 1vw;
   line-height: 1vw;
   text-align: center;
-}
+      padding: 0 3px;
 
+}
 
 .line {
   height: 5vw;
@@ -2722,13 +2924,9 @@ export default {
   padding: 0;
 }
 
-
-
-.doctordata{
+.doctordata {
   width: 58vw;
 }
-
-
 
 .chartsBig {
   position: absolute;
@@ -2742,8 +2940,6 @@ export default {
   background-color: #00afff;
   //display: none;
 }
-
-
 
 .commentLabelBtn {
   width: auto;
@@ -2768,7 +2964,7 @@ export default {
   margin-left: 10px;
   vertical-align: bottom;
 }
-.tag-button-panging{
+.tag-button-panging {
   ::v-deep .commentLabelBtn {
     padding: 10px 20px !important;
     line-height: 8px;
@@ -2780,27 +2976,27 @@ export default {
     line-height: 10px;
   }
   ::v-deep .el-tag {
-  padding: 0 10px !important;
-}
+    padding: 0 10px !important;
+  }
 }
 ::v-deep .el-select-dropdown__item {
   padding: 0 20px;
 }
-.xuanzheyujing{
-  width: 98%;
-  margin: 0 auto ;
+.xuanzheyujing {
+  width: 100%;
+  margin: 0 auto;
   margin-top: 1.5vh;
   margin-bottom: 1.5vh;
   border-radius: 2vh;
-  background-color: #e8e8e8;
+  background-color: #ffffff;
   align-items: center;
   padding: 10px;
   height: 62.5vh;
   overflow: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
-   -ms-overflow-style: none;
-    scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 .xian {
   border-bottom: 1px solid #000;
@@ -2824,7 +3020,7 @@ export default {
   flex-wrap: wrap;
 }
 .fenzuzhuti {
- font-size: 12px;
+  font-size: 12px;
   color: #909399;
   font-weight: 700;
   // font-style: 20px;
@@ -2844,28 +3040,157 @@ export default {
   overflow-y: auto;
   //  overflow: hidden;
   -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
-   -ms-overflow-style: none;
-    scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 /* 隐藏滚动条但仍可滚动 */
 .biaodan::-webkit-scrollbar {
   display: none;
 }
-.wancheng{
+.wancheng {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
 }
 ::v-deep .next {
   background-color: rgba(255, 255, 255, 0);
   color: #136d87;
   border: 1px solid #136d87;
-  width: 5vw;
-  margin: 0;
-  padding: 10px 0;
+  // margin: 0;
+  padding:0 2px ;
+  height: 30px;
 }
-.updown{
+.updown {
   width: 100%;
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
+}
+
+
+
+
+
+
+
+// 表格
+.tablex {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  width: 100%;
+  height: 60%;
+  text-align: center;
+}
+.tablex th,
+.tablex td {
+  border: 1px solid #ccc;
+  // padding: 10px;
+}
+
+/* 选择父元素中的基数子元素 */
+.tablex tr > :nth-child(odd) {
+  /* 样式设置 */
+  background-color: #f2f6fe;
+}
+.tablex td {
+  height: 8vh;
+  width: 90px;
+}
+/* 选择父元素中的偶数子元素 */
+.parentElement > :nth-child(even) {
+  /* 样式设置 */
+}
+.wrap {
+  background-color: #f4f4f4;
+}
+.box {
+  background-color: #ffffff;
+}
+.touzuo{
+  width: 66%;
+}
+.touzuobiaoti{
+  font-size:16px ;
+  font-weight: 700;
+  margin-bottom: 1.5vh;
+}
+.touzuoxia{
+  // border: 1px solid red;
+  margin: 2vh 0;
+  display: flex;
+  justify-content:space-between;
+  width: 100%;
+}
+.touzuoanniu{
+  display: flex;
+  // width: 100%;
+}
+.touzuoyujing{
+  display: flex;
+  width: 75%;
+  .touzuoyujing-left{
+    // font-size:100% ;
+    font-weight: 700;
+    display: flex;
+    align-items:center;
+    // width: 22%;
+    // background-color: #00afff;
+  }
+}
+.touzuoyujingzhi{
+  display: flex;
+  align-items: center;
+  // border:1px solid red;
+  width: 78%;
+  overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+  max-height: 80px;
+  overflow-y: scroll;
+  text-overflow:ellipsis;
+}
+.touzuoyujingzhi::-webkit-scrollbar {
+  	display: none;
+}
+::v-deep .el-button--success{
+  background-color: #517AFC;
+}
+::v-deep .el-button{
+  border-radius: 5px;
+}
+::v-deep .el-button--success{
+color:#ffffff;
+}
+.touyou{
+  width: 32%;
+}
+// ::v-deep .el-select-dropdown__list{
+//   text-align: center;
+//   border: 1px soild red;
+// }
+.yishi{
+  margin-left: 0;
+}
+.font{
+  background-color: #f4f4f4;
+}
+::v-deep .el-textarea__inner{
+  background-color:  #f4f4f4;
+}
+::v-deep .el-button--primary{
+   background-color: #517AFC;
+   color:#ffffff;
+}
+.shangbianju{
+  margin-top: 1vh;
+}
+.shangbianju{
+  background-color: #ffffff;
+
+}
+::v-deep .el-textarea__inner{
+  height: 100%;
+}
+.mt{
+    height: 43%;
+}
+.font{
+  height: 100%;
 }
 </style>

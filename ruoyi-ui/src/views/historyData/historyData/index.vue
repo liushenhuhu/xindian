@@ -42,8 +42,8 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>-->
-      <el-form-item label="医院名称" prop="hospitalName">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+      <el-form-item label="医院" prop="hospitalName">
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院" >
           <el-option
             v-for="item in options"
             :key="item.hospitalId"
@@ -199,7 +199,7 @@
       </el-table-column>
       <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
       <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
-      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+      <el-table-column label="医院" align="center" prop="hospitalName"/>
       <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -217,8 +217,9 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
       <!--  隐藏的患者的个人信息    -->
-      <el-table-column type="expand">
+      <!-- <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
@@ -239,21 +240,21 @@
             </el-form-item>
             <el-form-item label="患者性别" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSex }}</span>
-            </el-form-item>
+            </el-form-item> -->
             <!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.patientSource }}</span>
                         </el-form-item>-->
-            <el-form-item label="患者电话" width="200" style="padding-left: 40px">
+            <!-- <el-form-item label="患者电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.familyPhone }}</span>
-            </el-form-item>
+            </el-form-item> -->
 
             <!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.hospitalName }}</span>
                         </el-form-item>-->
-            <el-form-item label="设备号" width="200" style="padding-left: 40px">
+            <!-- <el-form-item label="设备号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.equipmentCode }}</span>
             </el-form-item>
             <el-form-item label="医生电话" width="200" style="padding-left: 40px">
@@ -262,7 +263,7 @@
 
           </el-form>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

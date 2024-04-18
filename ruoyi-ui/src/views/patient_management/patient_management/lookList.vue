@@ -145,7 +145,7 @@
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
+      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip width="180"/>
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
       <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
                   <el-table-column label="患者年龄" align="center" prop="patientAge"/>
@@ -164,21 +164,26 @@
                   </el-table-column>
                   <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+      <el-table-column label="设备号" align="center" prop="equipmentCode" width="180"/>
       <el-table-column label="在线状态" align="center" prop="onlineStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="心电种类" align="center" prop="ecgType">
+      <el-table-column label="心电种类" align="center" prop="ecgType" width="180">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
         </template>
       </el-table-column>
-      <el-table-column label="医生电话" align="center" prop="doctorPhone"/>
+      <el-table-column label="医生电话" align="center" prop="doctorPhone" width="180"/>
+
+
+
+
+
 
       <!--  隐藏的患者的个人信息    -->
-      <el-table-column type="expand">
+      <!-- <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
@@ -191,9 +196,9 @@
             <el-form-item label="患者性别" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSex }}</span>
             </el-form-item>
-<!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSource }}</span>
-            </el-form-item>-->
+            </el-form-item>
             <el-form-item label="患者电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
@@ -203,16 +208,15 @@
             <el-form-item label="医生电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.doctorPhone }}</span>
             </el-form-item>
-<!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>-->
-
+            </el-form-item>
           </el-form>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="200">
         <template slot-scope="scope">
           <el-button
             size="mini"

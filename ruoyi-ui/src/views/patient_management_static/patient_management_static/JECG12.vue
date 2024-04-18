@@ -42,16 +42,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="用户管理编号" prop="pId">
+      <el-form-item label="用户管理ID" prop="pId">
         <el-input
           v-model="queryParams.pId"
-          placeholder="请输入用户管理编号"
+          placeholder="请输入用户管理ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院名称" >
+      <el-form-item label="医院" prop="hospitalName">
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院" >
           <el-option
             v-for="item in options"
             :key="item.hospitalId"
@@ -233,7 +233,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getUpdateList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" style="width:100%">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="上传时间" align="center" prop="connectionTime" width="100">
         <template slot-scope="scope">
@@ -273,14 +273,19 @@
             </el-table-column>-->
 
 
-      <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>
+      <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip width="150"/>
 
-      <el-table-column label="用户名称" align="center" prop="patientName">
+      <el-table-column label="用户管理ID" align="center" prop="pId" show-overflow-tooltip width="230"/>
+
+      <el-table-column label="用户姓名" align="center" prop="patientName">
         <template slot-scope="scope">
           <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
           <span v-else>***</span>
         </template>
       </el-table-column>
+      <el-table-column label="年龄" align="center" prop="patientAge" show-overflow-tooltip/>
+      <el-table-column label="性别" align="center" prop="patientSex" show-overflow-tooltip/>
+      <el-table-column label="医院" align="center" prop="hospitalName" show-overflow-tooltip/>
 <!--      <el-table-column label="用户症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
 <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
 <!--      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >-->
@@ -316,9 +321,14 @@
           <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
         </template>
       </el-table-column>
+      <el-table-column label="设备号" align="center" prop="equipmentCode" show-overflow-tooltip width="150"/>
+      <el-table-column label="用户电话" align="center" prop="patientPhone" show-overflow-tooltip/>
+      <el-table-column label="家属电话" align="center" prop="familyPhone" show-overflow-tooltip/>
+      <el-table-column label="医生电话" align="center" prop="doctorPhone" show-overflow-tooltip/>
+      <el-table-column label="用户身份证号" align="center" prop="patientCode" show-overflow-tooltip/>
 
       <!--  隐藏的用户的个人信息    -->
-      <el-table-column type="expand">
+      <!-- <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
@@ -330,11 +340,11 @@
             </el-form-item>
             <el-form-item label="用户管理id" width="200" style="padding-left: 40px">
               <span>{{ scope.row.pId }}</span>
-            </el-form-item>
+            </el-form-item> -->
 <!--            <el-form-item label="用户姓名" width="200" style="padding-left: 40px">-->
 <!--              <span>{{ scope.row.patientName }}</span>-->
 <!--            </el-form-item>-->
-            <el-form-item label="用户身份证号" width="200" style="padding-left: 40px">
+            <!-- <el-form-item label="用户身份证号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientCode }}</span>
             </el-form-item>
             <el-form-item label="用户年龄" width="200" style="padding-left: 40px">
@@ -342,21 +352,21 @@
             </el-form-item>
             <el-form-item label="用户性别" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSex }}</span>
-            </el-form-item>
+            </el-form-item> -->
             <!--            <el-form-item label="用户来源" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.patientSource }}</span>
                         </el-form-item>-->
-            <el-form-item label="用户电话" width="200" style="padding-left: 40px">
+            <!-- <el-form-item label="用户电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
             <el-form-item label="家属电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.familyPhone }}</span>
-            </el-form-item>
+            </el-form-item> -->
 
             <!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
                           <span>{{ scope.row.hospitalName }}</span>
                         </el-form-item>-->
-            <el-form-item label="设备号" width="200" style="padding-left: 40px">
+            <!-- <el-form-item label="设备号" width="200" style="padding-left: 40px">
               <span>{{ scope.row.equipmentCode }}</span>
             </el-form-item>
             <el-form-item label="医生电话" width="200" style="padding-left: 40px">
@@ -365,10 +375,10 @@
 
           </el-form>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width"  fixed="right" width="200">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -503,13 +513,15 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="选择医生诊断" :visible.sync="dialogFormVisible" width="300px">
-      <el-cascader :options="option" clearable v-model="value"></el-cascader>
+
+    <el-dialog title="选择医生诊断" :visible.sync="dialogFormVisible" width="30%">
+      <el-cascader :options="option" clearable v-model="value" class="tangkuang"></el-cascader>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogForm">确 定</el-button>
       </div>
     </el-dialog>
+
     <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
       <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
         <el-form-item label="验证密码" prop="password">
@@ -676,13 +688,13 @@ export default {
   methods: {
 
     refreshList() {
-      console.log("refresh======")
+      // console.log("refresh======")
       updateOnlineAll().then(res => {
         this.getList();
       })
     },
     lookHistoryData(val){
-      console.log(val)
+      // console.log(val)
       this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone,ecgType:"JECG12"}});
     },
     selectECG(row){
@@ -695,7 +707,7 @@ export default {
     dialogForm(){
       this.reportList.dPhone = this.value[1]
       this.reportList.hospital = this.value[0]
-      console.log(this.reportList)
+      // console.log(this.reportList)
       docUpdate(this.reportList).then(r =>{
         this.getList();
         this.$modal.msgSuccess("修改成功");
@@ -970,3 +982,8 @@ export default {
   }
 };
 </script>
+<style  lang="scss" scoped>
+::v-deep .el-cascader--medium{
+    width: 100%;
+  }
+</style>
