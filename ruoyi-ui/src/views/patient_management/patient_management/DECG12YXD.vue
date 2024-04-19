@@ -4,8 +4,7 @@
       <div class="title">信息查询</div>
       <div>
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px" class="elformbox">
-          <div class="form-left">
-            <div class="form-surface">
+          <div class="form-left" :class="{'form-left-hide':!showSearch}">
               <el-form-item label="患者姓名" prop="patientName">
                 <el-input
                   v-model="queryParams.patientName"
@@ -42,8 +41,6 @@
                   />
                 </el-select>
               </el-form-item>
-            </div>
-            <div class="form-hide" v-show="showSearch">
               <el-form-item label="患者性别" prop="patientSex">
                 <el-select placeholder="请选择性别" v-model="queryParams.patientSex">
                   <el-option label="男" value="男"></el-option>
@@ -95,7 +92,6 @@
                   end-placeholder="结束日期"
                 ></el-date-picker>
               </el-form-item>
-            </div>
           </div>
           <div class="form-right">
             <el-form-item>
@@ -901,6 +897,11 @@ export default {
 
 .form-left {
   width: 80%;
+}
+
+.form-left-hide{
+  height:51px;
+  overflow:hidden;
 }
 
 .form-right {
