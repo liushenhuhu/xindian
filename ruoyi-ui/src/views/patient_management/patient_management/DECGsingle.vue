@@ -4,8 +4,7 @@
       <div class="title">信息查询</div>
       <div>
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px" class="elformbox">
-          <div class="form-left">
-            <div class="form-surface">
+          <div class="form-left" :class="{'form-left-hide':!showSearch}">
               <el-form-item label="患者姓名" prop="patientName">
                 <el-input
                   v-model="queryParams.patientName"
@@ -42,8 +41,6 @@
                   />
                 </el-select>
               </el-form-item>
-            </div>
-            <div class="form-hide" v-show="showSearch">
               <el-form-item label="患者性别" prop="patientSex">
                 <el-select placeholder="请选择性别" v-model="queryParams.patientSex">
                   <el-option label="男" value="男"></el-option>
@@ -95,7 +92,6 @@
                   end-placeholder="结束日期"
                 ></el-date-picker>
               </el-form-item>
-            </div>
           </div>
           <div class="form-right">
             <el-form-item>
@@ -110,127 +106,127 @@
         </el-form>
       </div>
     </div>
-    <!--    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">-->
+       <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
-    <!--      <el-form-item label="患者姓名" prop="patientName">-->
-    <!--        <el-input-->
-    <!--          v-model="queryParams.patientName"-->
-    <!--          placeholder="请输入患者姓名"-->
-    <!--          clearable-->
-    <!--          @keyup.enter.native="handleQuery"-->
-    <!--        />-->
-    <!--      </el-form-item>-->
-    <!--      <el-form-item label="患者性别" prop="patientSex">-->
-    <!--        <el-select placeholder="请选择性别" v-model="queryParams.patientSex">-->
-    <!--          <el-option label="男" value="男"></el-option>-->
-    <!--          <el-option label="女" value="女"></el-option>-->
-    <!--        </el-select>-->
-    <!--      </el-form-item>-->
-    <!--      <el-form-item label="患者电话" prop="patientPhone">-->
-    <!--        <el-input-->
-    <!--          v-model="queryParams.patientPhone"-->
-    <!--          placeholder="请输入患者电话"-->
-    <!--          clearable-->
-    <!--          @keyup.enter.native="handleQuery"-->
-    <!--        />-->
-    <!--      </el-form-item>-->
-    <!--      <el-form-item label="患者身份证号" prop="patientCode">-->
-    <!--        <el-input-->
-    <!--          v-model="queryParams.patientCode"-->
-    <!--          placeholder="请输入患者身份证号"-->
-    <!--          clearable-->
-    <!--          @keyup.enter.native="handleQuery"-->
-    <!--        />-->
-    <!--      </el-form-item>-->
+          <el-form-item label="患者姓名" prop="patientName">
+            <el-input
+              v-model="queryParams.patientName"
+              placeholder="请输入患者姓名"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="患者性别" prop="patientSex">
+            <el-select placeholder="请选择性别" v-model="queryParams.patientSex">
+              <el-option label="男" value="男"></el-option>
+              <el-option label="女" value="女"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="患者电话" prop="patientPhone">
+            <el-input
+              v-model="queryParams.patientPhone"
+              placeholder="请输入患者电话"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="患者身份证号" prop="patientCode">
+            <el-input
+              v-model="queryParams.patientCode"
+              placeholder="请输入患者身份证号"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
 
-    <!--      <el-form-item label="设备类型" prop="patientCode">-->
-    <!--        <el-select v-model="queryParams.ecgType" placeholder="请选择设备类型" >-->
-    <!--          <el-option-->
-    <!--            v-for="item in ecgList"-->
-    <!--            :key="item.label"-->
-    <!--            :label="item.label"-->
-    <!--            :value="item.value">-->
-    <!--          </el-option>-->
-    <!--        </el-select>-->
-    <!--      </el-form-item>-->
-    <!--      <el-form-item label="患者管理id" prop="pId">-->
-    <!--        <el-input-->
-    <!--          v-model="queryParams.pId"-->
-    <!--          placeholder="请输入患者管理id"-->
-    <!--          clearable-->
-    <!--          @keyup.enter.native="handleQuery"-->
-    <!--        />-->
-    <!--      </el-form-item>-->
-    <!--      <el-form-item label="医院名称" prop="hospitalName">-->
-    <!--&lt;!&ndash;        <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>&ndash;&gt;-->
-    <!--&lt;!&ndash;          <el-option&ndash;&gt;-->
-    <!--&lt;!&ndash;            v-for="dict in dict.type.hospital_name_name_list"&ndash;&gt;-->
-    <!--&lt;!&ndash;            :key="dict.value"&ndash;&gt;-->
-    <!--&lt;!&ndash;            :label="dict.label"&ndash;&gt;-->
-    <!--&lt;!&ndash;            :value="dict.value"&ndash;&gt;-->
-    <!--&lt;!&ndash;          />&ndash;&gt;-->
-    <!--&lt;!&ndash;        </el-select>&ndash;&gt;-->
-    <!--        <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>-->
-    <!--          <el-option-->
-    <!--            v-for="item in options"-->
-    <!--            :key="item.hospitalId"-->
-    <!--            :label="item.hospitalName"-->
-    <!--            :value="item.hospitalName">-->
-    <!--          </el-option>-->
-    <!--        </el-select>-->
-    <!--      </el-form-item>-->
-    <!--    <el-form-item label="设备号" prop="equipmentCode">-->
-    <!--        <el-input-->
-    <!--          v-model="queryParams.equipmentCode"-->
-    <!--          placeholder="请输入设备号"-->
-    <!--          clearable-->
-    <!--          @keyup.enter.native="handleQuery"-->
-    <!--        />-->
-    <!--      </el-form-item>-->
-    <!--&lt;!&ndash;      <el-form-item label="连接时间">-->
-    <!--        <el-date-picker-->
-    <!--          v-model="daterangeConnectionTime"-->
-    <!--          style="width: 240px"-->
-    <!--          value-format="yyyy-MM-dd HH:mm:ss"-->
-    <!--          type="datetimerange"-->
-    <!--          range-separator="-"-->
-    <!--          start-placeholder="开始日期"-->
-    <!--          end-placeholder="结束日期"-->
-    <!--        ></el-date-picker>-->
-    <!--      </el-form-item>&ndash;&gt;-->
-    <!--      <el-form-item label="在线状态" prop="onlineStatus">-->
-    <!--        <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>-->
-    <!--          <el-option-->
-    <!--            v-for="dict in dict.type.monitoring_status"-->
-    <!--            :key="dict.value"-->
-    <!--            :label="dict.label"-->
-    <!--            :value="dict.value"-->
-    <!--          />-->
-    <!--        </el-select>-->
-    <!--      </el-form-item>-->
-    <!--      <el-form-item label="医生电话" prop="dPhone">-->
-    <!--        <el-input-->
-    <!--          v-model="queryParams.dPhone"-->
-    <!--          placeholder="请输入医生电话"-->
-    <!--          clearable-->
-    <!--          @keyup.enter.native="handleQuery"-->
-    <!--        />-->
-    <!--      </el-form-item>-->
-    <!--      <el-form-item label="社区医生" prop="doctorPhone">-->
-    <!--        <el-select v-model="queryParams.doctorPhone" placeholder="请选择社区医生" >-->
-    <!--          <el-option-->
-    <!--            v-for="item in option2"-->
-    <!--            :key="item.doctorId"-->
-    <!--            :label="item.doctorName"-->
-    <!--            :value="item.doctorPhone">-->
-    <!--          </el-option>-->
-    <!--        </el-select>-->
-    <!--      </el-form-item>-->
-    <!--      <el-form-item>-->
-    <!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
-    <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
-    <!--      </el-form-item>-->
-    <!--    </el-form>-->
+          <el-form-item label="设备类型" prop="patientCode">
+            <el-select v-model="queryParams.ecgType" placeholder="请选择设备类型" >
+              <el-option
+                v-for="item in ecgList"
+                :key="item.label"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="患者管理id" prop="pId">
+            <el-input
+              v-model="queryParams.pId"
+              placeholder="请输入患者管理id"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="医院名称" prop="hospitalName">
+            <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>
+              <el-option
+                v-for="dict in dict.type.hospital_name_name_list"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+            <el-select v-model="queryParams.hospitalName" placeholder="请选择医院名称" clearable>
+              <el-option
+                v-for="item in options"
+                :key="item.hospitalId"
+                :label="item.hospitalName"
+                :value="item.hospitalName">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        <el-form-item label="设备号" prop="equipmentCode">
+            <el-input
+              v-model="queryParams.equipmentCode"
+              placeholder="请输入设备号"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="连接时间">
+            <el-date-picker
+              v-model="daterangeConnectionTime"
+              style="width: 240px"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="在线状态" prop="onlineStatus">
+            <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
+              <el-option
+                v-for="dict in dict.type.monitoring_status"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="医生电话" prop="dPhone">
+            <el-input
+              v-model="queryParams.dPhone"
+              placeholder="请输入医生电话"
+              clearable
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="社区医生" prop="doctorPhone">
+            <el-select v-model="queryParams.doctorPhone" placeholder="请选择社区医生" >
+              <el-option
+                v-for="item in option2"
+                :key="item.doctorId"
+                :label="item.doctorName"
+                :value="item.doctorPhone">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>-->
     <div class="tablebox">
       <div class="table-hand">
         <div class="table-hand-left"></div>
@@ -928,7 +924,10 @@ export default {
 .form-left {
   width: 80%;
 }
-
+.form-left-hide{
+  height:51px;
+  overflow:hidden;
+}
 .form-right {
   width: 20%;
   display: flex;
