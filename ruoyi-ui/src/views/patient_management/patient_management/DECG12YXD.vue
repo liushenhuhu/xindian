@@ -183,7 +183,7 @@
       </div>
       <div class="table-content">
         <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange"
-                  height="100%" class="table-content-table">
+                  class="table-content-table">
           <el-table-column type="selection" width="55" align="center"/>
 
           <el-table-column label="连接时间" align="center" prop="connectionTime" width="100">
@@ -877,6 +877,7 @@ export default {
   display:flex;
   flex-direction: column;
   padding:16px;
+  overflow-y: scroll;
 }
 
 .searchForm {
