@@ -1096,6 +1096,19 @@ export default {
     },
     /** 查看心电图*/
     lookECG(row) {
+      if(row.ecgType.includes('JECGsingle')){
+        this.$router.push({
+          path: "/staticECG",
+          query: {pId: row.pId, state: 1, queryParams: this.queryParams, ecgType: "JECGsingle"}
+        });
+      }
+      else if(row.ecgType.includes('JECG4')){
+        this.$router.push({path: "/JECG4_ECG", query: {pId: row.pId,state:4,queryParams:this.queryParams,ecgType:"JECG4"}});
+      }
+      else if(row.ecgType.includes('JECG12')){
+        this.$router.push({path: "/restingECG", query: {pId:row.pId,state:12,queryParams:this.queryParams,ecgType:"JECG12"}});}
+      else{this.$message.warning('未知类型，请联系管理员')}
+      return
       // console.log(this.queryParams);
       this.$router.push({
         path: "/staticECG",
