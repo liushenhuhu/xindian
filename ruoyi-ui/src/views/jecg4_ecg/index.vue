@@ -131,7 +131,7 @@
               <div class="doctor">
                 <div class="input yishi">
                   <strong>医师:</strong>
-                    <el-select v-model="data.doctorName" clearable>
+                    <el-select v-model="data.doctorName" clearable style="width: 66%">
                       <el-option
                         v-for="item in options"
                         :label="item.doctorName"
@@ -141,8 +141,8 @@
                 </div>
                 <div class="input">
                   <strong>日期:</strong>
-                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 57%"></el-input>
-                  <el-input v-else v-model="data.dataTime" clearable style="width: 36%"></el-input>
+                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 66%"></el-input>
+                  <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
                 </div>
               </div>
 
@@ -1916,7 +1916,8 @@ export default {
 }
 
 .doctor {
-  margin: 2vh 0 2vh 0;
+  height: 29%;
+  // margin: 2vh 0 2vh 0;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -1931,7 +1932,8 @@ export default {
     strong {
       white-space: nowrap;
       line-height: 36px;
-      margin-right: .5vw;
+      margin-right: 0.5vw;
+      font-size: 1vw;
     }
 
     ::v-deep .el-input--medium .el-input__inner {
@@ -1972,14 +1974,14 @@ export default {
   margin-bottom: 1.5vh;
 }
 
-.anNiu {
-  height: 30px;
-  // width: 8vw;
-  //font-size: 1.5vw;
-  line-height: 1vw;
-  text-align: center;
-  padding: 0 3px;
-}
+// .anNiu {
+//   height: 30px;
+//   // width: 8vw;
+//   //font-size: 1.5vw;
+//   line-height: 1vw;
+//   text-align: center;
+//   padding: 0 3px;
+// }
 
 .bigDiv {
   border: 1px solid #157a0c;
@@ -2138,14 +2140,7 @@ export default {
   display: flex;
   justify-content:space-between;
 }
-::v-deep .next {
-  background-color: rgba(255, 255, 255, 0);
-  color: #136d87;
-  border: 1px solid #136d87;
-  // margin: 0;
-  padding:0 2px ;
-  height: 30px;
-}
+
 .updown{
   width: 100%;
   display: flex;
@@ -2178,10 +2173,10 @@ export default {
   /* 样式设置 */
   background-color: #f2f6fe;
 }
-.tablex td {
-  height: 8vh;
-  width: 90px;
-}
+// .tablex td {
+//   height: 8vh;
+//   width: 90px;
+// }
 /* 选择父元素中的偶数子元素 */
 .parentElement > :nth-child(even) {
   /* 样式设置 */
@@ -2196,7 +2191,7 @@ export default {
   width: 66%;
 }
 .touzuobiaoti{
-  font-size:16px ;
+  font-size:1vw ;
   font-weight: 700;
   margin-bottom: 1.5vh;
 }
@@ -2278,9 +2273,32 @@ color:#ffffff;
   height: 100%;
 }
 .mt{
-    height: 43%;
+    height: 31%;
 }
 .font{
   height: 100%;
+}
+
+.oder{
+  display: flex;
+  justify-content:space-around;
+  margin: 2vh 0;
+}
+::v-deep .el-input--medium .el-input__inner{
+  font-size: 1vw;
+}
+.oder ::v-deep .el-button--success{
+  padding: 10px 7px;
+}
+.oder ::v-deep .next{
+   padding-left: 7px;
+   padding-right: 7px;
+}
+::v-deep .el-button--success {
+  color: #ffffff;
+  font-size: 1vw;
+}
+::v-deep .el-select-dropdown__item {
+  padding: 0 20px;
 }
 </style>

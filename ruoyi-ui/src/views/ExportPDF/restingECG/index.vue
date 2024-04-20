@@ -231,7 +231,7 @@
               <div class="doctor">
                 <div class="input yishi">
                   <strong>医师:</strong>
-                    <el-select v-model="data.doctorName" clearable>
+                    <el-select v-model="data.doctorName" clearable style="width: 66%">
                       <el-option
                         v-for="item in options"
                         :label="item.doctorName"
@@ -241,8 +241,8 @@
                 </div>
                 <div class="input">
                   <strong>日期:</strong>
-                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 57%"></el-input>
-                  <el-input v-else v-model="data.dataTime" clearable style="width: 36%"></el-input>
+                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 66%"></el-input>
+                  <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
                 </div>
               </div>
 
@@ -2602,11 +2602,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+// * {
+//   margin: 0;
+//   padding: 0;
+//   box-sizing: border-box;
+// }
 
 .page {
   width: 100%;
@@ -2717,11 +2717,6 @@ export default {
     .text {
       height: 15vh;
     }
-    .oder {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1.5vh;
-    }
   }
 }
 .size {
@@ -2738,11 +2733,12 @@ export default {
   height: 40%;
 }
 .doctor {
-  margin: 2vh 0 2vh 0;
-  // display: flex;
+  // margin: 2vh 0 2vh 0;
+  height: 29%;
+  display: flex;
   width: 100%;
-  // flex-direction: column;
-  justify-content:space-between;
+  flex-direction: column;
+  justify-content:centern;
   .input {
     display: flex;
     flex-direction: row;
@@ -2756,7 +2752,7 @@ export default {
       white-space: nowrap;
       line-height: 36px;
       margin-right: 0.5vw;
-      font-size: 1.8vh;
+      font-size: 1vw;
     }
   }
 }
@@ -2907,15 +2903,15 @@ export default {
 //  //flex-direction: row;
 //}
 
-.anNiu {
-  height: 30px;
-  // width: 5vw;
-  // font-size: 1vw;
-  line-height: 1vw;
-  text-align: center;
-      padding: 0 3px;
+// .anNiu {
+//   height: 30px;
+//   // width: 5vw;
+//   // font-size: 1vw;
+//   line-height: 1vw;
+//   text-align: center;
+//       padding: 0 3px;
 
-}
+// }
 
 .line {
   height: 5vw;
@@ -2978,9 +2974,6 @@ export default {
   ::v-deep .el-tag {
     padding: 0 10px !important;
   }
-}
-::v-deep .el-select-dropdown__item {
-  padding: 0 20px;
 }
 .xuanzheyujing {
   width: 100%;
@@ -3051,14 +3044,7 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-::v-deep .next {
-  background-color: rgba(255, 255, 255, 0);
-  color: #136d87;
-  border: 1px solid #136d87;
-  // margin: 0;
-  padding:0 2px ;
-  height: 30px;
-}
+
 .updown {
   width: 100%;
   display: flex;
@@ -3090,10 +3076,10 @@ export default {
   /* 样式设置 */
   background-color: #f2f6fe;
 }
-.tablex td {
-  height: 8vh;
-  width: 90px;
-}
+// .tablex td {
+  // height: 8vh;
+  // width: 90px;
+// }
 /* 选择父元素中的偶数子元素 */
 .parentElement > :nth-child(even) {
   /* 样式设置 */
@@ -3108,7 +3094,7 @@ export default {
   width: 66%;
 }
 .touzuobiaoti{
-  font-size:16px ;
+  font-size:1vw ;
   font-weight: 700;
   margin-bottom: 1.5vh;
 }
@@ -3120,6 +3106,7 @@ export default {
   width: 100%;
 }
 .touzuoanniu{
+  align-items: center;
   display: flex;
   // width: 100%;
 }
@@ -3156,6 +3143,7 @@ export default {
 }
 ::v-deep .el-button--success{
 color:#ffffff;
+font-size: 1vw;
 }
 .touyou{
   width: 32%;
@@ -3188,9 +3176,32 @@ color:#ffffff;
   height: 100%;
 }
 .mt{
-    height: 43%;
+    height: 31%;
 }
 .font{
   height: 100%;
+}
+
+.oder{
+  display: flex;
+  justify-content:space-around;
+  margin: 2vh 0;
+}
+::v-deep .el-input--medium .el-input__inner{
+  font-size: 1vw;
+}
+
+.oder ::v-deep .el-button--success{
+  padding:10px 7px;
+}
+.oder ::v-deep .next{
+   padding-left: 7px;
+   padding-right: 7px;
+}
+::v-deep .el-select-dropdown__item {
+  padding: 0 20px !important;
+}
+::v-deep .el-select-dropdown__list{
+  padding: 0 20px !important;
 }
 </style>

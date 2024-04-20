@@ -85,7 +85,7 @@
                   <td>{{ data.hrv }}ms</td>
                 </tr>
                 <tr>
-                  <td>申请单号</td></td>
+                  <td>申请单号</td>
                   <td>-</td>
                   <td>住院号</td>
                   <td>-</td>
@@ -2774,7 +2774,7 @@ export default {
 }
 ::v-deep .el-button--success {
   color: #ffffff;
-  // font-size: 1vw;
+  font-size: 1vw;
 }
 .touyou {
   width: 32%;
@@ -2821,5 +2821,18 @@ export default {
 ::v-deep .el-input--medium .el-input__inner{
   font-size: 1vw;
 }
+.oder ::v-deep .el-button--success{
+  padding: 1px;
+}
+.oder ::v-deep .el-button--success{
+  padding: 7px;
+}
+.oder ::v-deep .next{
+   padding-left: 7px;
+   padding-right: 7px;
+}
 
+::v-deep .el-select-dropdown__item {
+  padding: 0 20px;
+}
 </style>

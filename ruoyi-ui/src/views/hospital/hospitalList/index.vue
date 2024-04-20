@@ -55,7 +55,9 @@
             :value="item.hospitalId">
           </el-option>
         </el-select>
+
         <el-button v-if="isQb" plain style="margin-left:20px" type="primary" icon="el-icon-edit" size="mini" @click="findXDBYOne">查看选中医院心电大屏</el-button>
+
         <el-button
             type="success"
             plain
@@ -64,6 +66,10 @@
             @click="isShowNameClick"
           >{{isShowName.name}}
         </el-button>
+
+
+
+
       </el-col>
       <div class="texta">总在线设备数：{{num}}</div>
 
@@ -149,6 +155,7 @@
 import {listHospital, getHospital, delHospital, addHospital, updateHospital, addDict,onlineNum} from "@/api/hospital/hospitalList";
 import {updateOnline1, updateOnlineAll} from "@/api/online/online"
 import {listHospitalId} from "@/api/hospital/hospital";
+import { getVerify } from "@/api/verify/verify";
 export default {
   name: "HospitalList",
   dicts: ['if'],
@@ -167,7 +174,7 @@ export default {
       dialogFormVisibleVerifyAuthority:false,
       isShowName:{
         status:false,
-        name:"显示姓名"
+        name:"显示医院名称"
       },
       // 遮罩层
       loading: true,
@@ -247,7 +254,7 @@ export default {
             this.dialogFormVisibleVerifyAuthority = false
             sessionStorage.setItem('isShowName',true)
             this.isShowName.status =!this.isShowName.status;
-            this.isShowName.name = "隐藏姓名"
+            this.isShowName.name = "隐藏医院名称"
           })
         }
       })
@@ -258,11 +265,11 @@ export default {
       if (this.verifyForm.status || isShowName){
         if (this.isShowName.status){
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "显示姓名"
+          this.isShowName.name = "显示医院名称"
 
         }else {
           this.isShowName.status =!this.isShowName.status;
-          this.isShowName.name = "隐藏姓名"
+          this.isShowName.name = "隐藏医院名称"
         }
       }else {
         this.verifyForm.password=''
