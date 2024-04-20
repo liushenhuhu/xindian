@@ -20,7 +20,7 @@
         ) c INNER JOIN patient_management p ON c.p_id = p.p_id
         <where>
             <if test="ecgType!= null  and ecgType!= ''">and p.ecg_type like concat('%', #{ecgType}, '%')</if>
-            <if test="pId!= null ">and c.p_id = #{pId}</if>
+            <if test="pId!= null ">and c.p_id like concat('%', #{pId}, '%')</if>
         </where>
     </select>
     <select id="selectAnoAdminByAnoAdminId" parameterType="Long" resultMap="AnoAdminResult">
