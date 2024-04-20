@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    
     <router-view v-if="isRouterAlive"></router-view>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
@@ -498,6 +499,7 @@
         <el-button type="primary" @click="dialogForm">确 定</el-button>
       </div>
     </el-dialog>
+
     <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
       <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
         <el-form-item label="验证密码" prop="password">
@@ -509,6 +511,7 @@
         <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
       </div>
     </el-dialog>
+    
   </div>
 </template>
 
@@ -961,7 +964,7 @@ export default {
   }
 };
 </script>
-<style>
+<style >
 .el-table .warning-row {
   background: #ffe7cf;
 }
@@ -969,4 +972,5 @@ export default {
 .el-table .success-row {
   background: rgba(250, 250, 250, 0.47);
 }
+
 </style>

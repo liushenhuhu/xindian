@@ -56,9 +56,23 @@
           </el-option>
         </el-select>
         <el-button v-if="isQb" plain style="margin-left:20px" type="primary" icon="el-icon-edit" size="mini" @click="findXDBYOne">查看选中医院心电大屏</el-button>
+        <el-button
+            type="success"
+            plain
+            icon="el-icon-view"
+            size="mini"
+            @click="isShowNameClick"
+          >{{isShowName.name}}
+        </el-button>
       </el-col>
       <div class="texta">总在线设备数：{{num}}</div>
+
+      
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refresh"></right-toolbar>
+    
+      
+      
     </el-row>
     <el-table v-loading="loading" :data="hospitalList" @selection-change="handleSelectionChange">
       <el-table-column label="省份" align="center" prop="province" />
@@ -67,7 +81,14 @@
       <el-table-column label="在线设备数量" align="center" prop="deviceOnlineNum" />
 
       <el-table-column label="医院代号" align="center" prop="hospitalCode" />
-      <el-table-column label="医院名称" align="center" prop="hospitalName" />
+      <!-- <el-table-column label="医院名称" align="center" prop="hospitalName" /> -->
+
+      <el-table-column label="医院名称" align="center" prop="hospitalName">
+        <template slot-scope="scope">
+         <span v-if="isShowName.status===true">{{scope.row.hospitalName}}</span>
+          <span v-else>****************</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="是否开通数据统计" align="center" prop="ifStatistics">
         <template slot-scope="scope">
@@ -108,6 +129,17 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
 
 
   </div>
@@ -122,6 +154,21 @@ export default {
   dicts: ['if'],
   data() {
     return {
+      // 表单校验
+      rules: {
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
+        ],
+      },
+      verifyForm:{
+        password:null,
+        status:false
+      },
+      dialogFormVisibleVerifyAuthority:false,
+      isShowName:{
+        status:false,
+        name:"显示姓名"
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -188,6 +235,41 @@ export default {
     }
   },
   methods: {
+    dialogFormVisibleVerify(){
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd:this.verifyForm.password
+          }
+          getVerify(obj).then(r=>{
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status=true
+            this.dialogFormVisibleVerifyAuthority = false
+            sessionStorage.setItem('isShowName',true)
+            this.isShowName.status =!this.isShowName.status;
+            this.isShowName.name = "隐藏姓名"
+          })
+        }
+      })
+    },
+    // 显示姓名
+    isShowNameClick(){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示姓名"
+
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
     findXD(){
       const hospitalId = '1'
       console.log(hospitalId)
