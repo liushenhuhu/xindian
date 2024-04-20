@@ -963,7 +963,7 @@ export default {
       // 在30天趋势图标签中，点击x号会自动的将会话存储中的/scatterPlot删除
       // 在src\layout\components\TagsView\index.vue中closeSelectedTag事件里删除
       // sessionStorage.setItem("/restingECG", JSON.stringify(data));
-      this.$router.push({path: "/restingECG", query: {pId:row.pId,state:12,queryParams:this.queryParams,ecgType:"JECG12",jinru:true}});
+      this.$router.push({path: "/restingECG", query: {pId:row.pId,state:12,queryParams:this.queryParams,ecgType:"JECG12"}});
     },
     /** 生成报告*/
     handleInform(row) {
