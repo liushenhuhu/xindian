@@ -84,13 +84,12 @@
                 <td>{{ data.hrv }}ms</td>
               </tr>
               <tr>
-                <td>申请单号</td></td>
+                <td>申请单号</td>
                 <td>-</td>
                 <td>住院号</td>
                 <td>-</td>
                 <td>AI分析结果</td>
                 <td colspan="3">{{ data.result }}</td>
-                
               </tr>
               <tr>
                 <td>年龄</td>
@@ -100,7 +99,7 @@
                 <td>患者症状</td>
                 <td>{{ data.patientSymptom }}</td>
                 <td>心梗机率:</td>
-                <td>{{data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险'}}</td>
+                <td>{{(data.p_xingeng*100).toFixed(1)+'%'}}</td>
               </tr>
             </table>
             <div class="touzuoxia">
