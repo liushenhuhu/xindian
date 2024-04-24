@@ -60,7 +60,7 @@
 
           </div> -->
 
-        <div class="touzuo">
+        <!--<div class="touzuo">
             <div class="touzuobiaoti">患者信息</div>
             <table class="tablex">
               <tr>
@@ -84,12 +84,13 @@
                 <td>{{ data.hrv }}ms</td>
               </tr>
               <tr>
-                <td>申请单号</td>
+                <td>申请单号</td></td>
                 <td>-</td>
                 <td>住院号</td>
                 <td>-</td>
                 <td>AI分析结果</td>
                 <td colspan="3">{{ data.result }}</td>
+
               </tr>
               <tr>
                 <td>年龄</td>
@@ -99,7 +100,7 @@
                 <td>患者症状</td>
                 <td>{{ data.patientSymptom }}</td>
                 <td>心梗机率:</td>
-                <td>{{(data.p_xingeng*100).toFixed(1)+'%'}}</td>
+                <td>{{data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险'}}</td>
               </tr>
             </table>
             <div class="touzuoxia">
@@ -112,6 +113,95 @@
                 <el-button type="success" round  class="anNiu" @click="tijiao()">提交</el-button>
               </div>
             </div>
+          </div> -->
+          <div class="touzuo">
+            <div class="touzuo-top">
+              <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs">
+                <el-tab-pane label="基本信息" name="userInfo">
+                  <div class="tabBox">
+                    <table>
+                      <tr>
+                        <td>姓名</td>
+                        <td>{{ data.name }}</td>
+                        <td>性别</td>
+                        <td>{{ data.gender }}</td>
+                        <td>住院号</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>报告编码</td>
+                        <td>{{ data.pId }}</td>
+                        <td>年龄</td>
+                        <td>{{ data.age }}岁</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>申请单号</td>
+                        <td></td>
+                        <td>门诊</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane label="心电参数" name="ecgInfo">
+                  <div class="tabBox">
+                    <table>
+                      <tr>
+                        <td>心律</td>
+                        <td>{{ data.hr }}</td>
+                        <td>Qtc</td>
+                        <td>{{ data.qtc }}</td>
+                        <td>患者症状</td>
+                        <td>{{ data.patientSymptom }}</td>
+                      </tr>
+                      <tr>
+                        <td>p波</td>
+                        <td>{{ data.p }}</td>
+                        <td>HRV</td>
+                        <td>{{ data.hrv }}ms</td>
+                        <td>心梗几率</td>
+                        <td>{{ (data.p_xingeng*100).toFixed(1)+'%' }}</td>
+                      </tr>
+                      <tr>
+                        <td>QRS区间</td>
+                        <td>{{ data.qrs }}ms</td>
+                        <td>AI分析结果</td>
+                        <td>{{ data.result }}</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+            <div class="touzuo-btm">
+              <table>
+                <tr>
+                  <td>预警类型:</td>
+                  <td style="flex:1;overflow: hidden;" :title="xianshizifuchuan">{{ xianshizifuchuan }}</td>
+                  <td>
+                    <el-button type="success" round @click="xianshi">选择预警类型</el-button>
+                  </td>
+                  <td>
+                    <el-button type="success" round @click="tijiao()">提交</el-button>
+                  </td>
+                </tr>
+              </table>
+              <!--<div class="touzuo-right-title">-->
+              <!--  预警类型-->
+              <!--</div>-->
+              <!--<div>-->
+              <!--  {{xianshizifuchuan}}-->
+              <!--</div>-->
+              <!--<div class="rouzuo-right-content">-->
+              <!--</div>-->
+            </div>
+
           </div>
 
           <div class="touyou">
@@ -130,13 +220,16 @@
               <div class="doctor">
                 <div class="input yishi">
                   <strong>医师:</strong>
-                    <el-select v-model="data.doctorName" clearable style="width: 66%">
-                      <el-option
-                        v-for="item in options"
-                        :label="item.doctorName"
-                        :value="item.doctorName">
-                      </el-option>
-                    </el-select>
+                    <!--<el-select v-model="data.doctorName" clearable style="width: 66%">-->
+                    <!--  <el-option-->
+                    <!--    v-for="item in options"-->
+                    <!--    :label="item.doctorName"-->
+                    <!--    :value="item.doctorName">-->
+                    <!--  </el-option>-->
+                    <!--</el-select>-->
+                  <el-cascader v-model="selectDoctor" :options="doctorList" @change="selectDoctorChange"
+                               :show-all-levels="false">
+                  </el-cascader>
                 </div>
                 <div class="input">
                   <strong>日期:</strong>
@@ -406,7 +499,7 @@ import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 // import child from './child.vue'
 // import CacheList from "@/views/monitor/cache/list.vue";
 import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
-import {selectDoctor} from "@/api/statistics/statistics";
+import {selectDoctor,getDoctorList} from "@/api/statistics/statistics";
 import child from "@/views/staticECG/staticECG/child.vue";
 // 获取预警类型选项
 import {selectList} from "@/api/log_user/log_user";
@@ -425,6 +518,10 @@ export default {
   },
   data() {
     return {
+      selectDoctor:[],
+      tabsStatus: "userInfo",
+      doctorList: [],
+
       // 输入密码弹窗
       dialogFormVisibleVerifyAuthority: false,
       verifyForm: {
@@ -564,6 +661,10 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    /** 切换顶部tabs **/
+    switchTabs(value) {
+      console.log(value)
+    },
     // 密码弹出框点击确认时
     dialogFormVisibleVerify() {
       this.$refs["verifyForm"].validate(valid => {
@@ -640,7 +741,31 @@ export default {
       selectDoctor().then(response => {
         this.options = response;
       })
+      getDoctorList().then(res => {
+        let options = []
+        let data = res.data.options
+        data.forEach(e => {
+          if (e.doctorList.length != 0) {
+            let hospital = {
+              value: e.hospitalCode,
+              label: e.hospitalName,
+              children: []
+            }
+            e.doctorList.forEach(doctorInfo => {
+              hospital.children.push({label: doctorInfo.doctorName, value: doctorInfo.doctorName})
+            })
+            options.push(hospital)
+          }
+        })
+        this.doctorList = options;
+        console.log('医生信息')
+        console.log(this.doctorList)
+      })
       this.getyujingleixing()
+    },
+    //选择医生
+    selectDoctorChange(e){
+      this.data.doctorName = e[1]
     },
      // 上一个
    async prev() {
@@ -2238,6 +2363,34 @@ export default {
 .touzuo{
   width: 66%;
 }
+.touzuo-top {
+  height: 85%;
+  width: 100%;
+}
+
+.touzuo-btm {
+  height: 15%;
+  width: 100%;
+
+  table {
+    width: 100%;
+
+    tr {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      td {
+        white-space: nowrap;
+        flex: 0;
+        align-items: center;
+      }
+    }
+  }
+}
+
 .touzuobiaoti{
   font-size:1vw ;
   font-weight: 700;
@@ -2348,5 +2501,49 @@ color:#ffffff;
 }
 ::v-deep .el-select-dropdown__item {
   padding: 0 20px;
+}
+
+::v-deep .el-tabs {
+  display: flex;
+  //上下布局
+  flex-direction: column;
+
+  .el-tabs__content {
+    flex: 1;
+  }
+
+  .el-tab-pane {
+    height: 100%;
+  }
+}
+
+.tabBox {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  table {
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+
+    tr {
+      min-height: 20%;
+
+      td {
+        border: 1px solid black;
+        text-align: center;
+      }
+
+      td:nth-child(odd) {
+        width: 10%;
+        background-color: rgb(234, 234, 253);
+      }
+
+      td:nth-child(even) {
+        width: 22%;
+      }
+    }
+  }
 }
 </style>
