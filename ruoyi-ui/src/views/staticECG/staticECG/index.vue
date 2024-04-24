@@ -192,16 +192,7 @@
                   </td>
                 </tr>
               </table>
-              <!--<div class="touzuo-right-title">-->
-              <!--  预警类型-->
-              <!--</div>-->
-              <!--<div>-->
-              <!--  {{xianshizifuchuan}}-->
-              <!--</div>-->
-              <!--<div class="rouzuo-right-content">-->
-              <!--</div>-->
             </div>
-
           </div>
 
 
@@ -318,13 +309,16 @@
             <div class="doctor">
               <div class="input yishi">
                 <strong>医师:</strong>
-                <el-select v-model="data.doctorName" clearable style="width: 66%">
+                <!--<el-select v-model="data.doctorName" clearable style="width: 66%">
                   <el-option
                     v-for="item in options"
                     :label="item.doctorName"
                     :value="item.doctorName">
                   </el-option>
-                </el-select>
+                </el-select>-->
+                <el-cascader v-model="selectDoctor" :options="doctorList" @change="selectDoctorChange"
+                :show-all-levels="false">
+                </el-cascader>
               </div>
               <div class="input">
                 <strong>日期:</strong>
@@ -509,6 +503,7 @@ export default {
   },
   data() {
     return {
+      selectDoctor:[],
       tabsStatus: "userInfo",
       doctorList: [],
       // 上下页需要的信息
@@ -655,11 +650,13 @@ export default {
     this.queryParams = this.$route.query.queryParams;
     this.ecgType = this.$route.query.ecgType;
     this.pId = this.$route.query.pId;
+    console.log('created')
     this.getList();
     // this.getPatientdetails()
     // this.getyujingleixing()
   },
   mounted() {
+    console.log('mounted')
     // 心电数据
     this.get();
 
@@ -675,6 +672,9 @@ export default {
     /** 查询用户管理列表 */
     async getList() {
       this.loading = true;
+      console.log('-----------')
+      console.log(this.$route.query)
+      console.log(this.queryParams)
       this.queryParams.params = {};
       if (
         null != this.daterangeConnectionTime &&
@@ -778,6 +778,10 @@ export default {
       await this.getList();
       // this.loading = false;
     },
+    //选择医生
+    selectDoctorChange(e){
+      this.data.doctorName = e[1]
+    },
     // 患者用户信息
     getPatientdetails() {
       getReportByPId(this.pId).then((response) => {
@@ -811,15 +815,16 @@ export default {
       });
       getDoctorList().then(res => {
         let options = []
+        let data = res.data.options
         data.forEach(e => {
           if (e.doctorList.length != 0) {
             let hospital = {
               value: e.hospitalCode,
-              name: e.hospitalName,
+              label: e.hospitalName,
               children: []
             }
             e.doctorList.forEach(doctorInfo => {
-              hospital.children.push({value: doctorInfo.doctorName, label: doctorInfo.doctorPhone})
+              hospital.children.push({label: doctorInfo.doctorName, value: doctorInfo.doctorName})
             })
             options.push(hospital)
           }
