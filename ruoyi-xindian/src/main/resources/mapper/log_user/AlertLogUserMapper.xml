@@ -130,11 +130,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where log_id = #{logId} and user_id=#{userId}
     </update>
     <update id="islabel">
-        update alert_log_user set event_description=#{logType},ano_status=1,is_suspected=#{isSuspected}
+        update alert_log_user set event_description=#{logType},ano_status=1,is_suspected=#{isSuspected},myocardium_type = #{myocardiumType}
                               where log_id=#{logId} and user_id=#{userId}
     </update>
     <update id="islabelLog">
-        update alert_log set event_description=#{logType},ano_status=1
+        update alert_log set event_description=#{logType},ano_status=1,myocardium_type = #{myocardiumType}
         where log_id=#{logId}
     </update>
 
