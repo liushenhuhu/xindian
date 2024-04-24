@@ -409,7 +409,7 @@
       </div>
       <div class="table-content">
         <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange"
-                  height="100%" class="table-content-table">
+                  highlight-current-row @current-change="handleCurrentChange" height="100%" class="table-content-table">
           <el-table-column type="selection" width="55" align="center"/>
           <el-table-column label="上传时间" align="center" prop="connectionTime" width="100">
             <template slot-scope="scope">
@@ -458,7 +458,7 @@
           </el-table-column>
           <el-table-column label="年龄" align="center" prop="patientAge" min-width="50"></el-table-column>
           <el-table-column label="性别" align="center" prop="patientSex" min-width="50"></el-table-column>
-          <el-table-column label="医院" align="center" prop="hospitalName" min-width="100"></el-table-column>
+          <el-table-column label="医院" align="center" prop="hospitalName" min-width="200"></el-table-column>
           <!--      <el-table-column label="用户症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
           <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
           <!--      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >-->
@@ -478,6 +478,11 @@
               </el-tag>
             </template>
           </el-table-column>
+          <el-table-column label="是否标注预警状态" width="150" align="center" prop="ecgIsLabel">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>
+            </template>
+          </el-table-column>
           <!--
           <el-table-column label="是否标注预警状态" align="center" prop="ecgIsLabel">
             <template slot-scope="scope">
@@ -489,6 +494,8 @@
             <template slot-scope="scope">
               <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
             </template>
+          </el-table-column>
+          <el-table-column label="诊断医生" align="center" width="100" prop="diagnosisDoctor">
           </el-table-column>
           <el-table-column label="设备号" align="center" prop="equipmentCode" min-width="150"></el-table-column>
           <el-table-column label="用户电话" align="center" prop="patientPhone" min-width="150"></el-table-column>
@@ -513,6 +520,7 @@
                   icon="el-icon-s-operation"
                   @click="selectECG(scope.row)"
                   v-hasPermi="['patient_management:patient_management:diagnose']"
+                  v-if="!scope.row.diagnosisStatus"
                 >选择医生诊断
                 </el-button>
                 <el-button
@@ -680,7 +688,7 @@ import {getVerify} from "@/api/verify/verify";
 import {docList} from "@/api/doctor/doctor";
 
 export default {
-  name: "JECG",
+  name: "Patient_management_static/jecg",
   provide() {    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
     return {
       reload: this.reload
@@ -689,6 +697,7 @@ export default {
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list', 'if_status'],
   data() {
     return {
+      currentRow:null,
       currentScrollPos: 0,
       isRouterAlive: true,
       // 遮罩层
@@ -776,8 +785,10 @@ export default {
 
   beforeCreate() {
     // updateOnlineAll();
+    console.log('beforeCreate')
   },
   activated() {
+    console.log('activated')
     document.documentElement.scrollTop = this.currentScrollPos || 0
   },
 
@@ -798,7 +809,14 @@ export default {
     })
     this.getList();
   },
+  mounted() {
+    console.log('mounted')
+  },
   methods: {
+    //表格选中事件
+    handleCurrentChange(val) {
+      this.currentRow = val;
+    },
     unfoldSearchBox() {
       this.showSearch = !this.showSearch;
       this.$nextTick(() => {
