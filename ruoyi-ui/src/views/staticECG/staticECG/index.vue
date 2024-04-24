@@ -61,7 +61,7 @@
             </div>
           </div> -->
 
-          <div class="touzuo">
+          <!-- <div class="touzuo">
               <div class="touzuobiaoti">患者信息</div>
               <table class="tablex">
                 <tr>
@@ -91,7 +91,7 @@
                   <td>-</td>
                   <td>AI分析结果</td>
                   <td colspan="3">{{ data.result }}</td>
-                  
+
                 </tr>
                 <tr>
                   <td>年龄</td>
@@ -100,7 +100,7 @@
                   <td>{{ data.hr }}bpm</td>
                   <td>患者症状</td>
                   <td colspan="3">{{ data.patientSymptom }}</td>
-                  
+
                 </tr>
               </table>
               <div class="touzuoxia">
@@ -109,11 +109,100 @@
                   <div style="" class="touzuoyujingzhi">{{ xianshizifuchuan }}</div>
                 </div>
                 <div class="touzuoanniu">
-                  <el-button type="success" round  class="anNiu"  @click="xianshi">选择预警类型</el-button>
-                  <el-button type="success" round  class="anNiu" @click="tijiao()">提交</el-button>
+                    <el-button type="success" round @click="xianshi">选择预警类型</el-button>
+                    <el-button type="success" round @click="tijiao()">提交</el-button>
                 </div>
               </div>
-             </div>
+             </div> -->
+          <div class="touzuo">
+            <div class="touzuo-top">
+              <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs">
+                <el-tab-pane label="基本信息" name="userInfo">
+                  <div class="tabBox">
+                    <table>
+                      <tr>
+                        <td>姓名</td>
+                        <td>{{ data.name }}</td>
+                        <td>性别</td>
+                        <td>{{ data.gender }}</td>
+                        <td>住院号</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>报告编码</td>
+                        <td>{{ data.pId }}</td>
+                        <td>年龄</td>
+                        <td>{{ data.age }}岁</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>申请单号</td>
+                        <td></td>
+                        <td>门诊</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane label="心电参数" name="ecgInfo">
+                  <div class="tabBox">
+                    <table>
+                      <tr>
+                        <td>心律</td>
+                        <td>{{ data.hr }}</td>
+                        <td>Qtc</td>
+                        <td>{{ data.qtc }}</td>
+                        <td>患者症状</td>
+                        <td>{{ data.patientSymptom }}</td>
+                      </tr>
+                      <tr>
+                        <td>p波</td>
+                        <td>{{ data.p }}</td>
+                        <td>HRV</td>
+                        <td>{{ data.hrv }}ms</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>QRS区间</td>
+                        <td>{{ data.qrs }}ms</td>
+                        <td>AI分析结果</td>
+                        <td>{{ data.result }}</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+            <div class="touzuo-btm">
+              <table>
+                <tr>
+                  <td>预警类型:</td>
+                  <td style="flex:1;overflow: hidden;" :title="xianshizifuchuan">{{xianshizifuchuan}}</td>
+                  <td>
+                    <el-button type="success" round @click="xianshi">选择预警类型</el-button>
+                  </td>
+                  <td>
+                    <el-button type="success" round @click="tijiao()">提交</el-button>
+                  </td>
+                </tr>
+              </table>
+              <!--<div class="touzuo-right-title">-->
+              <!--  预警类型-->
+              <!--</div>-->
+              <!--<div>-->
+              <!--  {{xianshizifuchuan}}-->
+              <!--</div>-->
+              <!--<div class="rouzuo-right-content">-->
+              <!--</div>-->
+            </div>
+
+          </div>
 
 
           <!-- <div class="box3">
@@ -214,176 +303,179 @@
           </div> -->
 
           <div class="touyou">
-              <div class="touzuobiaoti">医师诊断</div>
-              <div class="mt">
-                <el-input
-                  type="textarea"
-                  v-model="data.resultByDoctor"
-                  placeholder="请输入"
-                  data-value="1111"
-                  :rows="5"
-                  class="font">{{ data.resultByDoctor }}
-                </el-input>
-              </div>
-
-              <div class="doctor">
-                <div class="input yishi">
-                  <strong>医师:</strong>
-                    <el-select v-model="data.doctorName" clearable style="width: 66%">
-                      <el-option
-                        v-for="item in options"
-                        :label="item.doctorName"
-                        :value="item.doctorName">
-                      </el-option>
-                    </el-select>
-                </div>
-                <div class="input">
-                  <strong>日期:</strong>
-                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 66%"></el-input>
-                  <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
-                </div>
-              </div>
-
-              <div class="oder">
-
-              
-                  <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
-                  <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
-                    <i class="el-icon-question"></i>
-                  </el-tooltip>
-                  发送预警</el-button>
-                  <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
-                  <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
-                  <el-button class="next" @click="prev()" :loading="loading" >上一个</el-button>
-                  <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
-                  
-                
-                
-              </div>
-              <!-- <div class="updown shangbianju">
-                <el-button
-                  class="next"
-                  @click="prev()"
-                  :loading="loading"
-                >上一个</el-button>
-                <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
-              </div> -->
+            <div class="touzuobiaoti">医师诊断</div>
+            <div class="mt">
+              <el-input
+                type="textarea"
+                v-model="data.resultByDoctor"
+                placeholder="请输入"
+                data-value="1111"
+                :rows="5"
+                class="font">{{ data.resultByDoctor }}
+              </el-input>
             </div>
+
+            <div class="doctor">
+              <div class="input yishi">
+                <strong>医师:</strong>
+                <el-select v-model="data.doctorName" clearable style="width: 66%">
+                  <el-option
+                    v-for="item in options"
+                    :label="item.doctorName"
+                    :value="item.doctorName">
+                  </el-option>
+                </el-select>
+              </div>
+              <div class="input">
+                <strong>日期:</strong>
+                <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
+                          style="width: 66%"></el-input>
+                <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
+              </div>
+            </div>
+
+            <div class="oder">
+
+
+              <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
+                <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+                发送预警
+              </el-button>
+              <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
+              <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
+              <el-button class="next" @click="prev()" :loading="loading">上一个</el-button>
+              <el-button class="next" @click="next()" :loading="loading">下一个</el-button>
+
+
+            </div>
+            <!-- <div class="updown shangbianju">
+              <el-button
+                class="next"
+                @click="prev()"
+                :loading="loading"
+              >上一个</el-button>
+              <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+            </div> -->
+          </div>
 
         </div>
 
 
         <!-- 预警类型弹窗 -->
-        <div class="xuanzheyujing" v-else >
+        <div class="xuanzheyujing" v-else>
           <div class="wancheng">
-            <div>选中的值为：{{xianshizifuchuan}}</div>
-            <div><el-button type="success" round size="mini" class="kangbian" @click="xianshi">完成</el-button></div>
+            <div>选中的值为：{{ xianshizifuchuan }}</div>
+            <div>
+              <el-button type="success" round size="mini" class="kangbian" @click="xianshi">完成</el-button>
+            </div>
           </div>
           <form id="loginForm" name="loginForm" class="biaodan">
-              <div class="duoxuan">
-                <el-checkbox-group v-model="zhi" @change="zhong">
-                  <div v-for="(group,index) in yujingzhi" :key="index">
-                    <div class="fenzuzhuti">
-                      {{ group.label }}
-                    </div>
-                    <div class="fenzuzhutizi">
-                      <ul class="xiaoul">
-                        <li
-                          v-for="(item,i) in group.options"
-                          class="xiaoli"
-                          :key="i"
-                        >
-                          <el-checkbox
-                            :label="item.value"
-                            border
-                            size="mini"
-                          >
-                            {{ item.value }}
-                          </el-checkbox>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="xian"></div>
+            <div class="duoxuan">
+              <el-checkbox-group v-model="zhi" @change="zhong">
+                <div v-for="(group,index) in yujingzhi" :key="index">
+                  <div class="fenzuzhuti">
+                    {{ group.label }}
                   </div>
-                </el-checkbox-group>
-              </div>
-            </form>
+                  <div class="fenzuzhutizi">
+                    <ul class="xiaoul">
+                      <li
+                        v-for="(item,i) in group.options"
+                        class="xiaoli"
+                        :key="i"
+                      >
+                        <el-checkbox
+                          :label="item.value"
+                          border
+                          size="mini"
+                        >
+                          {{ item.value }}
+                        </el-checkbox>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="xian"></div>
+                </div>
+              </el-checkbox-group>
+            </div>
+          </form>
         </div>
       </div>
 
       <div class="shangbianju">
         <div>
           <div style="padding: 15px ;font-size: 1vw;font-weight: 700;">患者心电图</div>
-            <div>
-              <div id="1" class="line" @dblclick="showChart1()"></div>
-            </div>
-            <div>
-              <div id="2" class="line" @dblclick="showChart2()"></div>
-            </div>
-            <div>
-              <div id="3" class="line" @dblclick="showChart3()"></div>
-            </div>
-            <div>
-              <div id="4" class="line" @dblclick="showChart4()"></div>
-            </div>
-          <!-- <div>-->
-  <!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
-  <!--          </div>-->
-  <!--          <div>-->
-  <!--            <div id="6" class="line" @dblclick="showChart6()"></div>-->
-  <!--          </div>-->
-  <!--          <div>-->
-  <!--            <div id="7" class="line" @dblclick="showChart7()"></div>-->
-  <!--          </div>-->
-  <!--          <div>-->
-  <!--            <div id="8" class="line" @dblclick="showChart8()"></div>-->
-  <!--          </div>-->
-  <!--          <div>-->
-  <!--            <div id="9" class="line" @dblclick="showChart9()"></div>-->
-  <!--          </div> -->
+          <div>
+            <div id="1" class="line" @dblclick="showChart1()"></div>
           </div>
+          <div>
+            <div id="2" class="line" @dblclick="showChart2()"></div>
+          </div>
+          <div>
+            <div id="3" class="line" @dblclick="showChart3()"></div>
+          </div>
+          <div>
+            <div id="4" class="line" @dblclick="showChart4()"></div>
+          </div>
+          <!-- <div>-->
+          <!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="6" class="line" @dblclick="showChart6()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="7" class="line" @dblclick="showChart7()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="8" class="line" @dblclick="showChart8()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="9" class="line" @dblclick="showChart9()"></div>-->
+          <!--          </div> -->
         </div>
+      </div>
     </div>
     <div class="nobottom"></div>
 
-<!--    <div>-->
-<!--      <div class="lineI" v-show="open1">-->
-<!--        <div id="I1" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open2">-->
-<!--        <div id="I2" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open3">-->
-<!--        <div id="I3" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open4">-->
-<!--        <div id="I4" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open5">-->
-<!--        <div id="I5" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open6">-->
-<!--        <div id="I6" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open7">-->
-<!--        <div id="I7" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open8">-->
-<!--        <div id="I8" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--      <div class="lineI" v-show="open9">-->
-<!--        <div id="I9" class="lineshow"></div>-->
-<!--        <button @click="clickClose" class="noName">关闭</button>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div>-->
+    <!--      <div class="lineI" v-show="open1">-->
+    <!--        <div id="I1" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open2">-->
+    <!--        <div id="I2" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open3">-->
+    <!--        <div id="I3" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open4">-->
+    <!--        <div id="I4" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open5">-->
+    <!--        <div id="I5" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open6">-->
+    <!--        <div id="I6" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open7">-->
+    <!--        <div id="I7" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open8">-->
+    <!--        <div id="I8" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--      <div class="lineI" v-show="open9">-->
+    <!--        <div id="I9" class="lineshow"></div>-->
+    <!--        <button @click="clickClose" class="noName">关闭</button>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <child ref="drawShow" @closeMain="closeMain"></child>
   </div>
 </template>
@@ -398,16 +490,17 @@ import {
   updateReport,
   reportEarlyWarningMsg,
 } from "@/api/report/report";
-import { sendMsgToPatient } from "@/api/patient_management/patient_management";
+import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 import child from "./child.vue";
 import CacheList from "@/views/monitor/cache/list.vue";
-import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
-import { selectDoctor } from "@/api/statistics/statistics";
+import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
+import {selectDoctor} from "@/api/statistics/statistics";
 // 获取预警类型选项
-import { selectList } from "@/api/log_user/log_user";
+import {selectList} from "@/api/log_user/log_user";
 // 存储选择的预警类型
-import { addReport as addReportyujing } from "@/api/alert_log_count/count";
-import { listPatient_management } from "@/api/patient_management/patient_management";
+import {addReport as addReportyujing} from "@/api/alert_log_count/count";
+import {listPatient_management} from "@/api/patient_management/patient_management";
+
 export default {
   name: "index",
   components: {
@@ -416,6 +509,7 @@ export default {
   },
   data() {
     return {
+      tabsStatus: "userInfo",
       // 上下页需要的信息
       // 查询参数
       // queryParams: {
@@ -470,11 +564,11 @@ export default {
       yujingzhi: [],
       videoVisible: false, //echarts弹出框显示
       markdata: [
-        { yAxis: -1 },
-        { yAxis: -0.5 },
-        { yAxis: 0 },
-        { yAxis: 0.5 },
-        { yAxis: 1 },
+        {yAxis: -1},
+        {yAxis: -0.5},
+        {yAxis: 0},
+        {yAxis: 0.5},
+        {yAxis: 1},
       ], //没放大之前标记线
       dialogFormVisible: false, //弹出框
       items: "", //常用术语
@@ -573,6 +667,10 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    /** 切换顶部tabs **/
+    switchTabs(value) {
+      console.log(value)
+    },
     /** 查询用户管理列表 */
     async getList() {
       this.loading = true;
@@ -648,7 +746,7 @@ export default {
       if (this.index >= this.patient_managementList.length) {
         if (
           (this.queryParams.pageNum - 1) * this.queryParams.pageSize +
-            this.patient_managementList.length >=
+          this.patient_managementList.length >=
           this.total
         ) {
           this.$message.warning("已经是最后一页！！！");
@@ -708,6 +806,8 @@ export default {
       });
       // 医生的信息
       selectDoctor().then((response) => {
+        console.log('医生信息')
+        console.log(response)
         this.options = response;
       });
       this.getyujingleixing();
@@ -1011,7 +1111,7 @@ export default {
           // console.log( _th.x);
           // _th.markdata = []
           for (var i = 0; i < 1000; i += 20) {
-            _th.markdata.push({ xAxis: i });
+            _th.markdata.push({xAxis: i});
           }
           // console.log( _th.markdata);
           _th.chart1 = echarts.init(document.getElementById("1"));
@@ -1942,7 +2042,7 @@ export default {
       var length1 = beat1.length;
       //刻度线
       for (let i = 0; i < length1; i++) {
-        var point1 = this.chart1.convertToPixel({ seriesIndex: 0 }, [
+        var point1 = this.chart1.convertToPixel({seriesIndex: 0}, [
           beat1[i],
           3,
         ]);
@@ -1972,7 +2072,7 @@ export default {
         var heart = (60 / time).toFixed(1); //心率
         time = (time * 1000).toFixed(0);
         //文本值
-        var point2 = this.chart1.convertToPixel({ seriesIndex: 0 }, [
+        var point2 = this.chart1.convertToPixel({seriesIndex: 0}, [
           (x2 - x1) / 2 + x1,
           3,
         ]);
@@ -1998,7 +2098,7 @@ export default {
       var length2 = beat2.length;
       //刻度线
       for (let i = 0; i < length2; i++) {
-        var point1 = this.chart2.convertToPixel({ seriesIndex: 0 }, [
+        var point1 = this.chart2.convertToPixel({seriesIndex: 0}, [
           beat2[i],
           3,
         ]);
@@ -2028,7 +2128,7 @@ export default {
         var heart = (60 / time).toFixed(1); //心率
         time = (time * 1000).toFixed(0);
         //文本值
-        var point2 = this.chart2.convertToPixel({ seriesIndex: 0 }, [
+        var point2 = this.chart2.convertToPixel({seriesIndex: 0}, [
           (x2 - x1) / 2 + x1,
           3,
         ]);
@@ -2054,7 +2154,7 @@ export default {
       var length3 = beat3.length;
       //刻度线
       for (let i = 0; i < length3; i++) {
-        var point1 = this.chart3.convertToPixel({ seriesIndex: 0 }, [
+        var point1 = this.chart3.convertToPixel({seriesIndex: 0}, [
           beat3[i],
           3,
         ]);
@@ -2084,7 +2184,7 @@ export default {
         var heart = (60 / time).toFixed(1); //心率
         time = (time * 1000).toFixed(0);
         //文本值
-        var point2 = this.chart3.convertToPixel({ seriesIndex: 0 }, [
+        var point2 = this.chart3.convertToPixel({seriesIndex: 0}, [
           (x2 - x1) / 2 + x1,
           3,
         ]);
@@ -2266,7 +2366,8 @@ export default {
         .then((_) => {
           done();
         })
-        .catch((_) => {});
+        .catch((_) => {
+        });
     },
     //截断数据（一条数据现在2000）
     getNewArray(array, subGroupLength) {
@@ -2325,6 +2426,7 @@ export default {
   display: flex;
   justify-content: space-around;
 }
+
 .wancheng {
   display: flex;
   justify-content: space-between;
@@ -2336,9 +2438,11 @@ export default {
   padding: 10px;
   background-color: #e8e8e8;
 }
+
 ::v-deep el-button {
   background-color: #1890ff;
 }
+
 .noleft {
   flex: 1;
   display: flex;
@@ -2366,14 +2470,17 @@ export default {
       display: flex;
       flex-direction: column;
     }
+
     .box2 {
       width: 32.5%;
       height: 100%;
     }
+
     .box3 {
       width: 32.5%;
       height: 100%;
     }
+
     .h11 {
       width: 100%;
       font-size: 2.5vh;
@@ -2382,21 +2489,25 @@ export default {
       height: 4vh;
       display: flex;
       margin-top: 1vh;
+
       span {
         width: 6px;
         height: 100%;
         background-color: #00afff;
       }
+
       p {
         height: 40px;
         line-height: 4vh;
         margin: 0;
         margin-left: 1vw;
       }
+
       .between {
         width: 100%;
         display: flex;
         justify-content: space-between;
+
         p {
           height: 4vh;
           line-height: 4vh;
@@ -2405,15 +2516,18 @@ export default {
         }
       }
     }
+
     .result {
       height: 13.5vh;
       width: 100%;
     }
   }
 }
+
 .size {
   font-size: 2.3vh;
 }
+
 .mmargin {
   margin: 1.5vh 0 1.5vh 0;
   overflow: hidden;
@@ -2422,16 +2536,19 @@ export default {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .margin {
   width: 100%;
   display: flex;
   justify-content: center;
   margin-top: 1vw;
 }
+
 .ml {
   margin-left: 2vw;
   margin-right: 2vw;
 }
+
 .patientMessage {
   flex: 1;
   display: flex;
@@ -2442,11 +2559,13 @@ export default {
   padding: 1.5vh 0 1.5vh 0;
   margin-left: 2vw;
   width: 90%;
+
   .textbox {
     width: 50%;
     margin-bottom: 1.5vh;
     font-size: 2.1vh;
   }
+
   .textBoxBottom {
     margin-bottom: 10px;
     font-size: 2.1vh;
@@ -2473,11 +2592,12 @@ export default {
   flex-direction: column;
   width: 100%;
   justify-content: center;
+
   .input {
     display: flex;
     flex-direction: row;
     margin-top: 1vh;
-    
+
     // margin-left: 2vw;
     strong {
       white-space: nowrap;
@@ -2485,6 +2605,7 @@ export default {
       margin-right: 0.5vw;
       font-size: 1vw;
     }
+
     ::v-deep .el-input--medium .el-input__inner {
       //width: 60%;
     }
@@ -2507,6 +2628,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .line {
   height: 15.5vh;
   width: 100%;
@@ -2557,12 +2679,14 @@ export default {
   background-color: #435bf7;
   color: #fff !important;
 }
+
 .font {
   font-size: 1vw;
   font-weight: 700;
   color: #6f0600;
   background-color: #fff;
 }
+
 .lineI {
   position: absolute;
   display: inline-block;
@@ -2576,6 +2700,7 @@ export default {
   border: 1px solid black;
   z-index: 3;
 }
+
 .noName {
   position: absolute;
   top: 0;
@@ -2598,9 +2723,11 @@ export default {
   transform: translate(-50%, -50%);
   border: 1px solid #fff;
 }
+
 .el-tag + .el-tag {
   margin-left: 10px;
 }
+
 .button-new-tag {
   margin-left: 10px;
   height: 32px;
@@ -2608,11 +2735,13 @@ export default {
   padding-top: 0;
   padding-bottom: 0;
 }
+
 .input-new-tag {
   width: 90px;
   margin-left: 10px;
   vertical-align: bottom;
 }
+
 .xuanzheyujing {
   margin: 0 auto;
   margin-top: 1.5vh;
@@ -2628,9 +2757,11 @@ export default {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .xian {
   border-bottom: 1px solid #000;
 }
+
 .xiaoli {
   list-style: none;
   // motion: 1px;
@@ -2639,16 +2770,19 @@ export default {
   display: block;
   float: left;
 }
+
 .xiaoul {
   margin: 0.5vh 0 0 0;
   padding: 0;
   width: 100%;
 }
+
 .fenzuzhutizi {
   display: flex;
   // flex-wrap:noweap;
   flex-wrap: wrap;
 }
+
 .fenzuzhuti {
   font-size: 12px;
   color: #909399;
@@ -2657,12 +2791,14 @@ export default {
   // font-size: 20px;
   margin-left: 10px;
 }
+
 .duoxuan {
   // border: 1px solid #136d87;
   width: 100%;
   // height: 100px;
   // text-align: center;
 }
+
 .biaodan {
   width: 100%;
   // height: 85%;
@@ -2673,10 +2809,12 @@ export default {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 /* 隐藏滚动条但仍可滚动 */
 .biaodan::-webkit-scrollbar {
   display: none;
 }
+
 // ::v-deep .next {
 //   background-color: rgba(255, 255, 255, 0);
 //   color: #136d87;
@@ -2694,6 +2832,7 @@ export default {
   height: 60%;
   text-align: center;
 }
+
 .tablex th,
 .tablex td {
   border: 1px solid #ccc;
@@ -2705,6 +2844,7 @@ export default {
   /* 样式设置 */
   background-color: #f2f6fe;
 }
+
 // .tablex td {
 //   height: 8vh;
 //   width: 90px;
@@ -2713,20 +2853,50 @@ export default {
 .parentElement > :nth-child(even) {
   /* 样式设置 */
 }
+
 .wrap {
   background-color: #f4f4f4;
 }
+
 .box {
   background-color: #ffffff;
 }
+
 .touzuo {
   width: 66%;
 }
+
+.touzuo-top {
+  height: 85%;
+  width: 100%;
+}
+
+.touzuo-btm {
+  height: 15%;
+  width: 100%;
+table{
+  width:100%;
+  tr{
+    width:100%;
+    height:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    td{
+      white-space: nowrap;
+      flex:0;
+      align-items: center;
+    }
+  }
+}
+}
+
 .touzuobiaoti {
   font-size: 1vw;
   font-weight: 700;
   margin-bottom: 1.5vh;
 }
+
 .touzuoxia {
   // border: 1px solid red;
   margin: 2vh 0;
@@ -2734,14 +2904,17 @@ export default {
   justify-content: space-between;
   width: 100%;
 }
+
 .touzuoanniu {
   display: flex;
   align-items: center;
   // width: 100%;
 }
+
 .touzuoyujing {
   display: flex;
   width: 75%;
+
   .touzuoyujing-left {
     // font-size:100% ;
     font-weight: 700;
@@ -2751,6 +2924,7 @@ export default {
     // background-color: #00afff;
   }
 }
+
 .touzuoyujingzhi {
   display: flex;
   align-items: center;
@@ -2762,23 +2936,29 @@ export default {
   overflow-y: scroll;
   text-overflow: ellipsis;
 }
+
 .touzuoyujingzhi::-webkit-scrollbar {
   display: none;
 }
+
 ::v-deep .el-button--success {
   background-color: #517afc;
 }
+
 ::v-deep .el-button {
   border-radius: 5px;
   // font-size: 1vw;
 }
+
 ::v-deep .el-button--success {
   color: #ffffff;
   font-size: 1vw;
 }
+
 .touyou {
   width: 32%;
 }
+
 // ::v-deep .el-select-dropdown__list{
 //   text-align: center;
 //   border: 1px soild red;
@@ -2786,53 +2966,110 @@ export default {
 .yishi {
   margin-left: 0;
 }
+
 .font {
   background-color: #f4f4f4;
 }
+
 ::v-deep .el-textarea__inner {
   background-color: #f4f4f4;
 }
+
 ::v-deep .el-button--primary {
   background-color: #517afc;
   color: #ffffff;
 }
+
 .shangbianju {
   margin-top: 1vh;
 }
+
 .shangbianju {
   background-color: #ffffff;
   overflow: hidden;
 }
+
 ::v-deep .el-textarea__inner {
   height: 100%;
 }
+
 .mt {
   height: 31%;
 }
+
 .font {
   height: 100%;
 }
 
-.oder{
+.oder {
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
   margin: 2vh 0;
 }
-::v-deep .el-input--medium .el-input__inner{
+
+::v-deep .el-input--medium .el-input__inner {
   font-size: 1vw;
 }
-.oder ::v-deep .el-button--success{
+
+.oder ::v-deep .el-button--success {
   padding: 1px;
 }
-.oder ::v-deep .el-button--success{
+
+.oder ::v-deep .el-button--success {
   padding: 7px;
 }
-.oder ::v-deep .next{
-   padding-left: 7px;
-   padding-right: 7px;
+
+.oder ::v-deep .next {
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 ::v-deep .el-select-dropdown__item {
   padding: 0 20px;
 }
+
+::v-deep .el-tabs {
+  display: flex;
+  //上下布局
+  flex-direction: column;
+
+  .el-tabs__content {
+    flex: 1;
+  }
+
+  .el-tab-pane {
+    height: 100%;
+  }
+}
+
+.tabBox {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  table {
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+
+    tr {
+      min-height: 20%;
+
+      td {
+        border: 1px solid black;
+        text-align: center;
+      }
+
+      td:nth-child(odd) {
+        width: 10%;
+        background-color: rgb(234, 234, 253);
+      }
+
+      td:nth-child(even) {
+        width: 22%;
+      }
+    }
+  }
+}
+
 </style>
