@@ -503,11 +503,13 @@ import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
 import {selectDoctor, getDoctorList} from "@/api/statistics/statistics";
 // 获取预警类型选项
 import {selectList} from "@/api/log_user/log_user";
+import {checkPassword} from "@/utils/verify.js"
 // 存储选择的预警类型
 import {addReport as addReportyujing} from "@/api/alert_log_count/count";
 import {listPatient_management} from "@/api/patient_management/patient_management";
 
 import {getVerify} from "@/api/verify/verify";
+import {checkPassword} from "@/utils/verify.js";
 
 export default {
   name: "index",
@@ -707,6 +709,11 @@ export default {
     },
     /** 切换顶部tabs **/
     switchTabs(value) {
+      console.log(value)
+    },
+    yanzheng(value){
+      //todo 将函数当作实参传递
+      //checkPassword('abcd',this.yanzheng)
       console.log(value)
     },
     /** 查询用户管理列表 */
