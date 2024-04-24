@@ -1,12 +1,17 @@
 package com.ruoyi.xindian.hospital.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.xindian.equipment.domain.Equipment;
-import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
+import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
+import com.ruoyi.xindian.hospital.mapper.DoctorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
@@ -29,6 +34,12 @@ public class HospitalServiceImpl implements IHospitalService
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private DoctorMapper doctorMapper;
+
+    @Resource
+    private AesUtils aesUtils;
 
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
@@ -132,6 +143,31 @@ public class HospitalServiceImpl implements IHospitalService
     @Override
     public Hospital selectCode(String hospitalName) {
         return hospitalMapper.selectHospitalCodeHospital(hospitalName);
+    }
+
+    // 查询医院及医院下的医生
+    @Override
+    public AjaxResult getDocInHospital() throws Exception {
+        Map<String, Object> retMap = new HashMap<>();
+        Hospital hospitalQ = new Hospital();
+        List<Hospital> hospitalList = hospitalMapper.selectHospitalList(hospitalQ);
+        Doctor doctorQ = new Doctor();
+        for (Hospital hospital : hospitalList) {
+            doctorQ.setHospital(hospital.getHospitalName());
+            List<Doctor> doctorsList = doctorMapper.selectDoctorList(doctorQ);
+            for (Doctor doctor : doctorsList) {
+                //解密
+                if(!StringUtils.isEmpty(doctor.getDoctorName())){
+                    doctor.setDoctorName(aesUtils.decrypt(doctor.getDoctorName()));
+                }
+                if(!StringUtils.isEmpty(doctor.getDoctorPhone())){
+                    doctor.setDoctorPhone(aesUtils.decrypt(doctor.getDoctorPhone()));
+                }
+            }
+            hospital.setDoctorList(doctorsList);
+        }
+        retMap.put("options",hospitalList);
+        return AjaxResult.success(retMap);
     }
 
 

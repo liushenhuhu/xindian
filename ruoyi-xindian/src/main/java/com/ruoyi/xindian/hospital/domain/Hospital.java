@@ -107,6 +107,15 @@ public class Hospital extends BaseEntity
     @Excel(name = "省份id")
     private Integer provinceId;
 
+    private List<Doctor> doctorList;
+
+    public List<Doctor> getDoctorList() {
+        return doctorList;
+    }
+    public void setDoctorList(List<Doctor> doctorList) {
+        this.doctorList = doctorList;
+    }
+
     public Integer getCityId() {
         return cityId;
     }
