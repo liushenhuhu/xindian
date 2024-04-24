@@ -183,7 +183,7 @@
               <table>
                 <tr>
                   <td>预警类型:</td>
-                  <td style="flex:1;overflow: hidden;" :title="xianshizifuchuan">{{xianshizifuchuan}}</td>
+                  <td style="flex:1;overflow: hidden;" :title="xianshizifuchuan">{{ xianshizifuchuan }}</td>
                   <td>
                     <el-button type="success" round @click="xianshi">选择预警类型</el-button>
                   </td>
@@ -494,7 +494,7 @@ import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 import child from "./child.vue";
 import CacheList from "@/views/monitor/cache/list.vue";
 import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
-import {selectDoctor} from "@/api/statistics/statistics";
+import {selectDoctor, getDoctorList} from "@/api/statistics/statistics";
 // 获取预警类型选项
 import {selectList} from "@/api/log_user/log_user";
 // 存储选择的预警类型
@@ -510,6 +510,7 @@ export default {
   data() {
     return {
       tabsStatus: "userInfo",
+      doctorList: [],
       // 上下页需要的信息
       // 查询参数
       // queryParams: {
@@ -806,10 +807,27 @@ export default {
       });
       // 医生的信息
       selectDoctor().then((response) => {
-        console.log('医生信息')
-        console.log(response)
         this.options = response;
       });
+      getDoctorList().then(res => {
+        let options = []
+        data.forEach(e => {
+          if (e.doctorList.length != 0) {
+            let hospital = {
+              value: e.hospitalCode,
+              name: e.hospitalName,
+              children: []
+            }
+            e.doctorList.forEach(doctorInfo => {
+              hospital.children.push({value: doctorInfo.doctorName, label: doctorInfo.doctorPhone})
+            })
+            options.push(hospital)
+          }
+        })
+        this.doctorList = options;
+        console.log('医生信息')
+        console.log(this.doctorList)
+      })
       this.getyujingleixing();
     },
     //预警类型
@@ -2874,21 +2892,24 @@ export default {
 .touzuo-btm {
   height: 15%;
   width: 100%;
-table{
-  width:100%;
-  tr{
-    width:100%;
-    height:100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    td{
-      white-space: nowrap;
-      flex:0;
+
+  table {
+    width: 100%;
+
+    tr {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
       align-items: center;
+
+      td {
+        white-space: nowrap;
+        flex: 0;
+        align-items: center;
+      }
     }
   }
-}
 }
 
 .touzuobiaoti {
