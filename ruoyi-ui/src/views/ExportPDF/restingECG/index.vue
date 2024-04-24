@@ -410,6 +410,17 @@
       </div>
       <child ref="drawShow" @closeMain="closeMain"></child>
     </div>
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -438,11 +449,19 @@ import { addReport as addReportyujing } from "@/api/alert_log_count/count";
 
 import { listPatient_management } from "@/api/patient_management/patient_management";
 
+import {getVerify} from "@/api/verify/verify";
+
 export default {
   name: "index",
   components: { child },
   data() {
     return {
+      // 输入密码弹窗
+      dialogFormVisibleVerifyAuthority: false,
+      verifyForm: {
+        password: null,
+        status: false
+      },
       // 路由
       luyou: "",
       ecgType: "",
@@ -641,6 +660,12 @@ export default {
       },
       graphic2: [],
       chartII: null,
+      // 表单校验
+      rules: {
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
+        ],
+      }
       // lead:false,
       // radio:'',
       // xIndex:null,
@@ -713,6 +738,22 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    // 密码弹出框点击确认时
+    dialogFormVisibleVerify() {
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd: this.verifyForm.password
+          }
+          getVerify(obj).then(r => {
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status = true
+            this.dialogFormVisibleVerifyAuthority = false
+            sessionStorage.setItem('isShowName', true)
+          })
+        }
+      })
+    },
     /** 查询用户管理列表 */
     async getList() {
       this.loading = true;
@@ -2504,34 +2545,42 @@ export default {
     },
     //发送短信
     sendMsg() {
+      // console.log("用户电话: " + this.data.pphone);
       let patientPhone = this.data.pphone;
       if (patientPhone.length === 14 || patientPhone.length === 15) {
         patientPhone = patientPhone.substring(0, 11);
       }
-      console.log(patientPhone);
-      if (patientPhone) {
-        // console.log("用户姓名: " + row.patientName)
-        this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-          .then(() => {
-            sendMsgToPatient(patientPhone).then((response) => {
+      // console.log(patientPhone);
+      let isShowName = sessionStorage.getItem('isShowName')
+
+      if (this.verifyForm.status || isShowName) {
+        if (patientPhone) {
+          // console.log("用户姓名: " + row.patientName)
+          this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+            .then(() => {
+              sendMsgToPatient(patientPhone).then((response) => {
+                this.$message({
+                  type: "success",
+                  message: "发送成功!",
+                });
+              });
+            })
+            .catch(() => {
               this.$message({
-                type: "success",
-                message: "发送成功!",
+                type: "info",
+                message: "已取消",
               });
             });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消",
-            });
-          });
+        } else {
+          this.$message.error("该用户手机号不合法！！！");
+        }
       } else {
-        this.$message.error("该用户手机号不合法！！！");
+        this.verifyForm.password = ''
+        this.dialogFormVisibleVerifyAuthority = true
       }
     },
     //保存数据

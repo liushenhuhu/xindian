@@ -226,46 +226,60 @@
             v-hasPermi="['patient:patient:monitoring']"
           >实时监测
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-download"
-            @click="isRed2=!isRed2;handleInform(scope.row)"
-            v-hasPermi="['patient:patient:downloadInform']"
-          >生成报告
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-magic-stick"
-            @click="isRed3=!isRed3;downloadInform(scope.row)"
-            v-hasPermi="['patient:patient:inform']"
-          >查看报告
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-order"
-            @click="handleAlert(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
-          >预警日志
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['patient_management:patient_management:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['patient_management:patient_management:remove']"
-          >删除
-          </el-button>
+
+          &nbsp;&nbsp;
+          <el-popover placement="left" width="50" trigger="click">
+            <el-button
+              style="margin-left: 10px;"
+              size="mini"
+              type="text"
+              icon="el-icon-download"
+              @click="isRed2=!isRed2;handleInform(scope.row)"
+              v-hasPermi="['patient:patient:downloadInform']"
+            >生成报告
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-magic-stick"
+              @click="isRed3=!isRed3;downloadInform(scope.row)"
+              v-hasPermi="['patient:patient:inform']"
+            >查看报告
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-s-order"
+              @click="handleAlert(scope.row)"
+              v-hasPermi="['patient:patient:alert']"
+            >预警信息
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['patient_management:patient_management:edit']"
+            >修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['patient_management:patient_management:remove']"
+            >删除
+            </el-button>
+
+
+            <el-button
+              slot="reference"
+              size="small"
+              type="text"
+              v-hasPermi="['patient_management:patient_management:inform']"
+            >更多<i class="el-icon-arrow-down"/>
+            </el-button>
+          </el-popover>
         </template>
       </el-table-column>
     </el-table>
@@ -530,9 +544,37 @@ export default {
     },
     /** 跳转到预警日志*/
     handleAlert(row) {
+      // console.log(row);
+      let Ecgtype = row.ecgType
+      let state =''
+      let type = ''
+      if (Ecgtype.includes("single")) {
+        state =1
+        type = 1
+      } else if(Ecgtype.includes("4")) {
+        state =4
+        type = 4
+      }else if(Ecgtype.includes("12")){
+        state =12
+        type = 12
+      }else{
+        this.$message({
+          type: 'info',
+          message: '没有此心电种类'
+        });
+        return
+      }
+      // return
       this.$router.push({
         path: "log",
-        query: {pId: row.pId,type:null}});
+        query: {
+          pId: row.pId,
+          state,
+          type,
+          ecgType:row.ecgType
+        }
+      });
+        // query: {pId: row.pId,type:null}});
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {

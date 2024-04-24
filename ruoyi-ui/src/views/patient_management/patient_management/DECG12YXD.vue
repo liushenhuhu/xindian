@@ -280,6 +280,7 @@
                 v-hasPermi="['patient:patient:monitoring']"
               >实时监测
               </el-button>
+
               &nbsp;&nbsp;
               <el-popover placement="left" width="50" trigger="click">
                 <el-button style="margin-left: 10px;" type="text" size="mini" @click="handleInform(scope.row)"
@@ -297,6 +298,7 @@
                 <el-button type="text" size="mini" @click="handleDelete(scope.row)"
                            v-hasPermi="['patient_management:patient_management:export']">删除
                 </el-button>
+                
                 <el-button
                   slot="reference"
                   size="small"
