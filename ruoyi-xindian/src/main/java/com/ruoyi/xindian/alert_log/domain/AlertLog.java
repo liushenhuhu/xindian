@@ -103,6 +103,8 @@ public class AlertLog extends BaseEntity
     private String doctorPhone;
 
 
+    private String myocardiumType;
+
     private Integer value;
 
     private String name;

@@ -77,6 +77,9 @@ public class AlertLogUser extends BaseEntity
 
     private Integer isSuspected;
 
+
+    private String myocardiumType;
+
     public Integer getIsSuspected() {
         return isSuspected;
     }

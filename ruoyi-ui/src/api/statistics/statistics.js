@@ -8,6 +8,13 @@ export function selectDoctor() {
   })
 }
 
+export function getDoctorList(){
+  return request({
+    url:"/hospital/hospital/getDocInHospital",
+    method:"GET"
+  })
+}
+
 // 查询
 export function listStatistics(query) {
   return request({

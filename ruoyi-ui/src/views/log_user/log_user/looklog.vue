@@ -502,96 +502,92 @@
       <!-- 要修改的部分 -->
       <div class="topLeft">
         <div class="topMiddle">
-          <div class="warning">预警类型</div>
-          <div class="warningDetail">
-            <form id="loginForm" name="loginForm" class="biaodan">
-              <div class="duoxuan">
-                <el-checkbox-group v-model="trueValues">
-                  <div v-for="(group,index) in options" :key="index">
-                    <div class="fenzuzhuti">
-                      {{ group.label }}
-                    </div>
-                    <div class="fenzuzhutizi">
-                      <ul class="xiaoul">
-                        <li
-                          v-for="(item,i) in group.options"
-                          class="xiaoli"
-                          :key="i"
-                        >
-                          <el-checkbox
-                            :checked="item.leixing"
-                            :label="item.value"
-                            border
-                            size="mini"
-                          >
-                            {{ item.value }}
-                          </el-checkbox>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="xian"></div>
+          <div class="warning">
+            <!-- 预警类型 -->
+            <!-- <div>预警类型</div>
+            <div>心肌炎</div> -->
+            <template>
+              <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="预警类型" name="first">
+                  <div class="warningDetail">
+                    <form id="loginForm" name="loginForm" class="biaodan">
+                      <div class="duoxuan">
+                        <el-checkbox-group v-model="trueValues">
+                          <div v-for="(group,index) in options" :key="index">
+                            <div class="fenzuzhuti">
+                              {{ group.label }}
+                            </div>
+                            <div class="fenzuzhutizi">
+                              <ul class="xiaoul">
+                                <li
+                                  v-for="(item,i) in group.options"
+                                  class="xiaoli"
+                                  :key="i"
+                                >
+                                  <el-checkbox
+                                    :checked="item.leixing"
+                                    :label="item.value"
+                                    border
+                                    size="mini"
+                                  >
+                                    {{ item.value }}
+                                  </el-checkbox>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="xian"></div>
+                          </div>
+                        </el-checkbox-group>
+                      </div>
+                    </form>
                   </div>
-                </el-checkbox-group>
-              </div>
-            </form>
-            <!-- <div class="tijiao">
-              <el-button type="success" id="btn1" class="btn1" @click="submit()">
-              提交
-              </el-button>
-              <el-button class="btn2" id="btn2" @click="suspected">是否疑似病理</el-button>
-
-                <el-button
-                  class="next"
-                  v-if="state"
-                  @click="prev"
-                  type="primary"
-                  :loading="loading"
-                  >上一个</el-button
-                >
-                <el-button class="next" v-if="state" @click="next" :loading="loading"
-                  >下一个</el-button>
+                </el-tab-pane>
 
 
-            </div> -->
+                <el-tab-pane label="心肌炎" name="second">
+                   <div class="warningDetail">
+                    <form id="loginForm" name="loginForm" class="biaodan">
+                      <div class="duoxuan">
+                        <el-checkbox-group v-model="myocarditiszhi" @change="zhong">
+                          <div v-for="(group,index) in myocarditis" :key="index">
+                            <div class="fenzuzhuti">
+                              {{ group.label }}
+                            </div>
+                            <div class="fenzuzhutizi">
+                              <ul class="xiaoul">
+                                <li
+                                  v-for="(item,i) in group.options"
+                                  class="xiaoli"
+                                  :key="i"
+                                >
+                                  <el-checkbox
+                                    :checked="item.leixing"
+                                    :label="item.value"
+                                    border
+                                    size="mini"
+                                  >
+                                    {{ item.value}}
+                                  </el-checkbox>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="xian"></div>
+                          </div>
+                        </el-checkbox-group>
+                        <div class="others">
+                          <div class="others-word ">其他：</div>
+                          <div class="others-inputbox"><el-input v-model="others" placeholder="请输入内容" clearable @change="qitazhi"></el-input></div>
+                        </div>
+                        <div class="xian"></div>
+                      </div>
+                    </form>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </template>
           </div>
         </div>
-        <!-- <div class="page">
-          <el-button
-            class="next"
-            v-if="state"
-            @click="prev"
-            type="primary"
-            :loading="loading"
-            >上一个</el-button
-          >
-          <el-button class="next" v-if="state" @click="next" :loading="loading"
-            >下一个</el-button
-          >
-        </div> -->
       </div>
-
-      <!-- <div class="duoxuan">
-          <div>
-            <div v-for="group in options" :key="group.label">
-              <div class="fenzuzhuti">
-                {{ group.label }}
-              </div>
-              <div class="fenzuzhutizi">
-                <el-checkbox
-                  v-for="item in group.options"
-                  :key="item.value"
-                  v-model="checked1"
-                  :label="item.label"
-                  border
-                  size="mini"
-                >
-                  {{ item.label }}
-                </el-checkbox>
-              </div>
-              <div class="xian"></div>
-            </div>
-          </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -621,9 +617,28 @@ export default {
   },
   data() {
     return {
+      //其他原因
+      others:'',
+      myocarditis:[
+        {
+          label:'ST-T',
+          options:[{value:'ST-T显著改变',label:'ST-Txzgb'},{value:'ST-T轻微改变',label:'ST-Tqwgb'}]
+        },
+        {
+          label:'期前收缩',
+          options:[{value:'无联律',label:'wll'},{value:'二联律',label:'ell'},{value:'三联律',label:'sll'},{value:'成对',label:'cd'}]
+        },
+        {
+          label:'其他',
+          options:[{value:'异常Q波',label:'ycQb'},{value:'窦性心律不齐',label:'dxxlbq'}]
+        }
+      ],
+      activeName: 'first',
       luyou:'',
       testArray:[],
       trueValues:[],
+      // 心机炎的值
+      myocarditiszhi:[],
       lead: false,
       tap: {
         P1: false,
@@ -826,6 +841,23 @@ export default {
     // console.log(this.options);
   },
   methods: {
+    // 心肌炎中其他的值
+    qitazhi(data){
+      // console.log(data);
+     console.log(this.others);
+      
+    },
+    // 心肌炎选中的值
+    zhong(data){
+      // console.log(data);
+      // let qitazhi = data.toString()
+      // console.log(qitazhi);
+      console.log(this.myocarditiszhi);
+    },
+    // 切换预警类型触发事件
+    handleClick(tab, event) {
+        console.log(tab, event);
+      },
     clicktest(value){
       if(this.testArray.includes(value)){
         this.testArray.splice(this.testArray.indexOf(value),1)
@@ -840,6 +872,7 @@ export default {
     getSelectList() {
       selectList().then((res) => {
         this.options = res.data;
+        // console.log(res.data);
       });
     },
     // 2获取数据标注页面数据
@@ -878,7 +911,7 @@ export default {
         // console.log("查看标注页获取用户信息所需要的值");
         // console.log(this.obj);
         await listAlert_log(this.obj).then((response) => {
-          // console.log(response);
+          console.log(response);
           this.logUserList = response.rows;
           // console.log("这是从单导预警页面跳转到查看标注页面获取到的数据");
           // console.log(this.logUserList);
@@ -937,6 +970,8 @@ export default {
         // console.log("查看标注页获取用户信息所需要的值");
         // console.log(this.obj);
         await listAlert_log(this.obj).then((response) => {
+          // console.log("12导预警");
+          // console.log(response)
           this.logUserList = response.rows;
 
           // console.log("这是从12导预警页面跳转到查看标注页面获取到的数据");
@@ -963,6 +998,11 @@ export default {
 
           // 将拆分后的数组中的每个值添加到 trueValues 数组中
           this.trueValues=logTypesArray
+        }
+        if (this.logUserList[this.index].myocardiumType) {
+          let xinjiyan = JSON.parse(this.logUserList[this.index].myocardiumType)
+          this.myocarditiszhi = xinjiyan.myocarditiszhi.split(',')
+          this.others = xinjiyan.others
         }
       } else {
         // console.log(this.typeObj);//undefined
@@ -2677,6 +2717,8 @@ export default {
         return;
       }
       this.index--;
+      this.myocarditiszhi =[]
+      this.others =''
       if (this.index < 0) {
         if (this.pageNum > 1) {
           this.pageNum--;
@@ -2687,7 +2729,8 @@ export default {
       }
       // console.log(this.logUserList[this.index]);
       this.message.logid = this.logUserList[this.index].logId;
-      this.message.user_id = this.logUserList[this.index].userId;
+      //this.logUserList[this.index].userId中的值为null
+      this.message.user_id =this.$route.query.userId;
       let anoStatus = "";
       if (this.anoStatus != null) {
         anoStatus = `&anoStatus=${this.anoStatus}`;
@@ -2714,7 +2757,10 @@ export default {
     },
     // 点击下一页触发事件
     async next() {
+      
       this.loading = true;
+      this.myocarditiszhi =[]
+      this.others =''
       this.index++;
       // console.log("点击了下一页1");
       // console.log(this.index);
@@ -2749,7 +2795,8 @@ export default {
       // console.log("查看logUserList");
 
       this.message.logid = this.logUserList[this.index].logId;
-      this.message.user_id = this.logUserList[this.index].userId;
+      //this.logUserList[this.index].userId中的值为null
+      this.message.user_id =this.$route.query.userId;
       let anoStatus = "";
 
       if (this.anoStatus != null) {
@@ -2804,6 +2851,15 @@ export default {
 
     // 点击提交
     async submit() {
+      // // let a = this.myocarditiszhi.toString()
+
+      // let myocardiumTypezhi = {
+      //     myocarditiszhi:this.myocarditiszhi.toString(),
+      //     others:this.others
+      // }
+      // console.log(JSON.stringify(myocardiumTypezhi));
+      // return
+
 
       this.value = this.trueValues.join();
       // console.log("这是选中的值：" + this.trueValues);
@@ -2851,12 +2907,26 @@ export default {
       // console.log(this.message.logid);
       // console.log(this.message.user_id?this.message.user_id:0);
       // console.log(this.isSuspected ? 1 : 0);
+      // let a = this.myocarditiszhi.toString()
+
+      // let myocardiumTypezhi = {
+      //     a,
+      //     b:this.others
+      // }
+      // console.log(JSON.stringify(myocardiumTypezhi));
       //标注成功
+      let myocarditiszhiString = this.myocarditiszhi.length > 0 ? this.myocarditiszhi.toString() : '';
+      let myocardiumTypezhi = {
+          myocarditiszhi:myocarditiszhiString,
+          others:this.others
+      }
+      // console.log(JSON.stringify(myocardiumTypezhi));
       islabel({
         logType: this.value, //预警类型
         logId: this.message.logid,//日志id
         userId: this.message.user_id,
         isSuspected: this.isSuspected ? 1 : 0, //是否是疑似病例 1
+        myocardiumType:JSON.stringify(myocardiumTypezhi)
       });
 
        let selectedValues = [];
@@ -3419,10 +3489,12 @@ html {
   font-size: 1vw;
   font-weight: 700;
   color: #136d87;
-  text-align: center;
-  padding: 0.8vw 0;
+  // text-align: center;
+  padding: 4px 0;
   border-bottom: 1px solid #000000;
   //border-top: 1px solid #000000;
+  // display: flex;
+  // justify-content:space-around;
 }
 
 .warningDetail {
@@ -3851,6 +3923,34 @@ form input {
   margin: 0;
   margin-left: 0;
   padding: 10px 0;
+}
+::v-deep #tab-second.el-tabs__item.is-top{
+  color: #000;
+}
+::v-deep #tab-first.el-tabs__item.is-top{
+  color: #000;
+}
+::v-deep .el-tabs__nav-wrap{
+  display: flex;
+  justify-content: center;
+}
+::v-deep .el-tabs__nav-wrap::after{
+  height: 1px;
+  background-color: #136d87;
+}
+.others{
+  box-sizing: border-box;
+  padding: 10px ;
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+}
+.others-inputbox{
+  flex-grow: 1;
+}
+::v-deep .el-tabs__active-ba{
+  height: 4px;
 }
 </style>
 

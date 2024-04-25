@@ -130,7 +130,6 @@ public class AlertLogUserController extends BaseController
     //标注成功
     @GetMapping("/islabel")
     public AjaxResult islabel(AlertLogUser alertLogUser) {
-
         return toAjax(alertLogUserService.islabel(alertLogUser));
     }
 }
