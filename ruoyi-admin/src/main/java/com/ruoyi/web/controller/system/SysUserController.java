@@ -1,11 +1,14 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.utils.sign.AesUtils;
@@ -41,7 +44,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 用户信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -333,5 +336,24 @@ public class SysUserController extends BaseController
         userService.checkUserDataScope(userId);
         userService.insertUserAuth(userId, roleIds);
         return success();
+    }
+
+
+    /**
+     * 导出/医生就诊等功能需要验证当前操作人的密码
+     * @param params
+     * @return
+     */
+    @PostMapping("/VerifyPassword")
+    public AjaxResult insertAuthRole(@RequestBody Map<String,Object> params)
+    {
+        String passwordDb = SecurityUtils.getLoginUser().getPassword();
+        if(ObjectUtil.isEmpty(params.get("password"))){
+            return AjaxResult.error("密码不能为空!");
+        }
+        if (!SecurityUtils.matchesPassword((String) params.get("password"),passwordDb)) {
+            return AjaxResult.error("密码输入错误!");
+        }
+        return AjaxResult.success();
     }
 }
