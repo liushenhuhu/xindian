@@ -5,8 +5,8 @@ export const checkPassword = (pwd,callback)=>{
     url:"",
     method:"post",
     data:{
-      user:Cookie.get(''),
-      pwd:pwd
+      // user:Cookie.get(''),
+      password:pwd
     }
   }).then(res=>{
     // todo 密码验证

@@ -517,6 +517,8 @@ import {
 import { sendMsgToPatient } from "@/api/patient_management/patient_management";
 import html2canvas from "html2canvas";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
+// 发送信息时获取密码
+import {getlogin_password} from '@/api/jecg4_ecg/jecg4_ecg'
 import { addLabel } from "@/api/log_user/log_user";
 import child from "@/views/staticECG/staticECG/child.vue";
 import { selectDoctor,getDoctorList } from "@/api/statistics/statistics";
@@ -829,14 +831,19 @@ export default {
     dialogFormVisibleVerify() {
       this.$refs["verifyForm"].validate(valid => {
         if (valid) {
-          let obj = {
-            accountPwd: this.verifyForm.password
+          let objj = {
+            password: this.verifyForm.password
           }
-          getVerify(obj).then(r => {
-            this.$modal.msgSuccess("密码正确");
-            this.verifyForm.status = true
-            this.dialogFormVisibleVerifyAuthority = false
-            sessionStorage.setItem('isShowName', true)
+          getlogin_password(objj).then(res=>{
+            if(res.code == 200){
+              this.$modal.msgSuccess("密码正确");
+              this.verifyForm.status = true
+              this.dialogFormVisibleVerifyAuthority = false
+              sessionStorage.setItem('SMSverification',true)
+              
+            }else{
+              this.$modal.msgSuccess("密码错误请重试");
+            }
           })
         }
       })
@@ -2662,9 +2669,9 @@ export default {
         patientPhone = patientPhone.substring(0, 11);
       }
       // console.log(patientPhone);
-      let isShowName = sessionStorage.getItem('isShowName')
+      let SMSverification = sessionStorage.getItem('SMSverification')
 
-      if (this.verifyForm.status || isShowName) {
+      if (this.verifyForm.status || SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
           this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {

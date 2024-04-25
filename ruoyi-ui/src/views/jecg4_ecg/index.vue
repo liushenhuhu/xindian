@@ -477,6 +477,9 @@
     <!--      </div>-->
     <!--    </div>-->
     <child ref="drawShow" @closeMain="closeMain"></child>
+
+
+
     <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
       <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
         <el-form-item label="验证密码" prop="password">
@@ -488,6 +491,9 @@
         <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
       </div>
     </el-dialog>
+
+
+
   </div>
 </template>
 
@@ -500,6 +506,8 @@ import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 // import CacheList from "@/views/monitor/cache/list.vue";
 import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
 import {selectDoctor,getDoctorList} from "@/api/statistics/statistics";
+// 发送信息时获取密码
+import {getlogin_password} from '@/api/jecg4_ecg/jecg4_ecg'
 import child from "@/views/staticECG/staticECG/child.vue";
 // 获取预警类型选项
 import {selectList} from "@/api/log_user/log_user";
@@ -509,6 +517,7 @@ import {addReport as addReportyujing} from "@/api/alert_log_count/count";
 import { listPatient_management} from "@/api/patient_management/patient_management";
 
 import {getVerify} from "@/api/verify/verify";
+import { createLogger } from 'vuex';
 
 export default {
   name: "index",
@@ -669,14 +678,18 @@ export default {
     dialogFormVisibleVerify() {
       this.$refs["verifyForm"].validate(valid => {
         if (valid) {
-          let obj = {
-            accountPwd: this.verifyForm.password
+          let objj = {
+            password: this.verifyForm.password
           }
-          getVerify(obj).then(r => {
-            this.$modal.msgSuccess("密码正确");
-            this.verifyForm.status = true
-            this.dialogFormVisibleVerifyAuthority = false
-            sessionStorage.setItem('isShowName', true)
+          getlogin_password(objj).then(res=>{
+            if(res.code == 200){
+              this.$modal.msgSuccess("密码正确");
+              this.verifyForm.status = true
+              this.dialogFormVisibleVerifyAuthority = false
+              sessionStorage.setItem('SMSverification', true)
+            }else{
+              this.$modal.msgSuccess("密码错误请重试");
+            }
           })
         }
       })
@@ -1789,8 +1802,9 @@ export default {
       }
       // console.log(patientPhone);
       let isShowName = sessionStorage.getItem('isShowName')
+      let SMSverification = sessionStorage.getItem('SMSverification')
 
-      if (this.verifyForm.status || isShowName) {
+      if (this.verifyForm.status || SMSverification ) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
           this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {

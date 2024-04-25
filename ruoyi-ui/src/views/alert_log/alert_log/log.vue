@@ -1,135 +1,296 @@
 <template>
   <div class="app-container">
-    <div class="patient-info">
-      <div class="title">基本信息</div>
-      <el-skeleton :loading="infoLoading">
-        <template slot="template">
-          <el-skeleton-item></el-skeleton-item>
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="日志id" prop="logId">
+        <el-input
+          v-model="queryParams.logId"
+          placeholder="请输入日志id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="发生时间" prop="logTime">
+        <el-form-item >
+          <el-date-picker
+            v-model="daterangeLogTime"
+            style="width: 240px"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetimerange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
+      </el-form-item>
+      <el-form-item label="预警类型" prop="logType">
+        <el-input
+          v-model="queryParams.logType"
+          placeholder="请输入预警类型"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="事件名称" prop="eventName">
+        <el-input
+          v-model="queryParams.eventName"
+          placeholder="请输入事件名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="事件说明" prop="eventDescription">
+        <el-input
+          v-model="queryParams.eventDescription"
+          placeholder="请输入事件说明"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="患者id" prop="pId">
+        <el-input
+          v-model="queryParams.pId"
+          placeholder="请输入患者id"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="患者姓名" prop="patientName">
+        <el-input
+          v-model="queryParams.patientName"
+          placeholder="请输入患者姓名"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="医院名称" prop="hospitalName">
+        <el-input
+          v-model="queryParams.hospitalName"
+          placeholder="请输入医院名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="是否标注" prop="anoStatus">
+        <el-select v-model="queryParams.anoStatus" placeholder="请选择是否标注" clearable>
+          <el-option
+            v-for="dict in dict.type.if_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-row :gutter="10" class="mb8">
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['alert_log:alert_log:add']"-->
+<!--        >新增-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['alert_log:alert_log:edit']"-->
+<!--        >修改-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['alert_log:alert_log:remove']"-->
+<!--        >删除-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['alert_log:alert_log:export']"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
+    <el-table v-loading="loading" :data="alert_logList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center"/>
+      <!--      <el-table-column label="日志id" align="center" prop="logId" />-->
+      <el-table-column label="发生时间" align="center" prop="logTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
-        <template>
-          <el-row>
-            <el-col offset="6">
-              <div class="patient-info-item info-basic">{{ patientInfo.patientName || '' }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col offset="6">
-              <div class="patient-info-item info-minor">{{ patientInfo.patientSex || '' }}
-                {{ patientInfo.patientAge?patientInfo.patientAge +'岁' : '' }}
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="patient-info-item mg-top">
-            <el-col :span="6" class="patient-info-item-name">患者管理ID:</el-col>
-            <el-col :span="18">{{ patientInfo.pId || '' }}</el-col>
-          </el-row>
-          <el-row class="patient-info-item">
-            <el-col :span="6" class="patient-info-item-name">联系方式:</el-col>
-            <el-col :span="18">{{ phoneEncrypt(patientInfo.patientPhone) || '' }}</el-col>
-          </el-row>
-          <el-row class="patient-info-item">
-            <el-col :span="6" class="patient-info-item-name">身份证号:</el-col>
-            <el-col :span="18">{{ patientInfo.patientCode || '' }}</el-col>
-          </el-row>
-          <el-row class="patient-info-item">
-            <el-col :span="6" class="patient-info-item-name">就诊医院:</el-col>
-            <el-col :span="18">{{ patientInfo.hospitalName || '' }}</el-col>
-          </el-row>
-          <div class="title title-2">紧急联系人</div>
-          <el-row class="patient-info-item" v-if="!!patientInfo.familyPhone">
-            <el-col :span="5">{{ patientInfo.familyName || '未命名' }}</el-col>
-            <el-col :span="18" :offset="1">{{ patientInfo.familyPhone || '' }}</el-col>
-          </el-row>
-          <el-row class="patient-info-item" v-else>
-            <el-col :offset="4">无</el-col>
-          </el-row>
+      </el-table-column>
+      <el-table-column label="预警类型" align="center" prop="logType"/>
+      <el-table-column label="事件名称" align="center" prop="eventName"/>
+      <el-table-column label="事件说明" align="center" prop="eventDescription"/>
+      <el-table-column label="患者id" align="center" prop="pId" show-overflow-tooltip/>
+      <el-table-column label="患者姓名" align="center" prop="patientName"/>
+      <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
+            <el-table-column label="患者电话" align="center" prop="patientPhone"/>
+            <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
+      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+      <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+      <el-table-column label="是否标注" align="center" prop="anoStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.if_status" :value="scope.row.anoStatus"/>
         </template>
-      </el-skeleton>
-    </div>
+      </el-table-column>
+      <!--  隐藏的患者的个人信息    -->
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-divider content-position="left">其他信息</el-divider>
+            <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.patientCode }}</span>
+            </el-form-item>
+            <el-form-item label="患者电话" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.patientPhone }}</span>
+            </el-form-item>
+            <el-form-item label="家属电话" width="200" style="padding-left: 40px">
+              <span>{{ scope.row.familyPhone }}</span>
+            </el-form-item>
+            <br>
+            <!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+                          <span>{{ scope.row.hospitalName }}</span>
+                        </el-form-item>-->
+          </el-form>
+        </template>
+      </el-table-column>
 
-    <div class="patient-data">
-      <div class="patient-data-above">
-        <div class="title">预警统计图</div>
-        <div class="patient-data-above-cvs">
-        </div>
+
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleLook(scope.row)"
+          >查看日志
+          </el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['alert_log:alert_log:edit']"-->
+<!--          >修改-->
+<!--          </el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['alert_log:alert_log:remove']"-->
+<!--          >删除-->
+<!--          </el-button>-->
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 添加或修改预警日志对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+
+        <el-form-item label="发生时间" prop="logTime">
+          <el-date-picker clearable
+                          v-model="form.logTime"
+                          type="datetime"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          placeholder="请选择发生时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="预警类型" prop="logType">
+          <el-input v-model="form.logType" placeholder="请输入预警类型"/>
+        </el-form-item>
+        <el-form-item label="事件名称" prop="eventName">
+          <el-input v-model="form.eventName" placeholder="请输入事件名称"/>
+        </el-form-item>
+        <el-form-item label="事件说明" prop="eventDescription">
+          <el-input v-model="form.eventDescription" placeholder="请输入事件说明"/>
+        </el-form-item>
+        <el-form-item label="患者管理id" prop="pId">
+          <el-input v-model="form.pId" placeholder="请输入患者管理id"/>
+        </el-form-item>
+        <el-form-item label="标注状态">
+          <el-radio-group v-model="form.anoStatus">
+            <el-radio
+              v-for="dict in dict.type.if_status"
+              :key="dict.value"
+              :label="parseInt(dict.value)"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
       </div>
-
-      <div class="patient-data-below">
-        <div class="patient-data-below-hand">
-          <div class="title">预警日志
-            <el-date-picker
-              v-model="daterangeLogTime"
-              style="width: 240px;margin-left:8px;"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              @change="getAlertLogList"
-            ></el-date-picker>
-          </div>
-          <div>
-            <el-select style="width:100px;" v-model="logQueryParams.anoStatus" placeholder="是否标注" clearable
-                       @change="getAlertLogList">
-              <el-option :key="2" label="全部" :value="null"/>
-              <el-option :key="1" label="是" :value="1"/>
-              <el-option :key="0" label="否" :value="0"/>
-            </el-select>
-          </div>
-        </div>
-        <div class="patient-data-below-table">
-          <el-table v-loading="tableLoading" :data="alertLogList" height="tableHeight" style="height: 100%">
-            <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column label="发生时间" align="center" prop="logTime" width="180">
-              <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.logTime, '{y}--{m}--{d} {h}:{i}:{s}') }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="预警类型" align="center" min-width="150" prop="logType"/>
-            <el-table-column label="事件名称" align="center" min-width="150" prop="eventName"/>
-            <el-table-column label="事件说明" align="center" min-width="150" prop="eventDescription"/>
-            <el-table-column label="是否标注" align="center" min-width="150" prop="anoStatus">
-              <template slot-scope="scope">
-                <!--<dict-tag :options="dict.type.if_status" :value="scope.row.anoStatus"/>-->
-                <el-tag :type="scope.row.anoStatus?'':'info'">{{ scope.row.anoStatus ? '是' : '否' }}</el-tag>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width"
-                             fixed="right">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="handleLook(scope.row)"
-                >查看日志
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-
-      </div>
-    </div>
+    </el-dialog>
   </div>
 </template>
+
 <script>
-import {list12Alert_log} from "@/api/DRearly/DRearly";
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
 
 export default {
-  name: "alert_patient",
+  name: "log",
+  dicts: ['sex', 'if_status'],
   data() {
     return {
-      infoLoading: true,
-      tableLoading: true,
-      tableHeight: 0,
-      dRearlyQueryParams: {
-        pId: null,
-        ecgType: null,
-      },
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: false,
+      // 总条数
+      total: 0,
+      // 预警日志表格数据
+      alert_logList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 时间范围
       daterangeLogTime: [],
-      logQueryParams: {
+      // 查询参数
+      queryParams: {
         pageNum: 1,
         pageSize: 10,
         logId: null,
@@ -143,171 +304,144 @@ export default {
         anoStatus: null,
         ecgType: null,
       },
-      opName: '',
-      patientInfo: null,
-      alertLogList: [],
-      alertLogTotal: 0,
-    }
-  },
-  async created() {
-    await this.getDearlyList()
-    await this.getAlertLogList()
-    console.log('mounted')
-
-    window.onresize = function () {
-      this.echartsDraw();
-    }
-  },
-  activated() {
-    this.getDearlyList()
-    this.getAlertLogList()
-    this.updateTableHeight()
-  },
-  async mounted() {
-    await this.getDearlyList()
-    await this.getAlertLogList()
-    console.log('mounted')
-    this.updateTableHeight()
-  },
-  methods: {
-    async getDearlyList() {
-      this.infoLoading = true;
-      this.dRearlyQueryParams.pId = this.$route.query.pId;
-      this.dRearlyQueryParams.ecgType = this.$route.query.type;
-      this.opName = this.dRearlyQueryParams.ecgType == 12 ? '单人12导预警' : '单人单导预警';
-      // console.log("请求总体数据所需的值");
-      // console.log(this.dRearlyQueryParams);
-      let {data: res} = await list12Alert_log(this.dRearlyQueryParams);
-      this.patientInfo = res;
-      // console.log("请回来的值");
-      // console.log(this.patientInfo);
-      this.infoLoading = false;
-      if (res.alertLogList.length == 0) {
-        this.patientInfo.alertLogList = null;
-        this.echartsDraw();
-
-      } else {
-        this.echartsDraw();
-      }
-
-      // this.loading=false;
-      //r.data.alertLogList是数据
-    },
-    phoneEncrypt(phone){
-      //返回前三位和八个*
-      return phone.replace(/(\d{3})\d{8}(\d{0,3})/, '$1********$2')
-    },
-    /**
-     * 更新表格高度
-     */
-    updateTableHeight() {
-      let appContainerBox = document.querySelector('.patient-data-below');
-      let defaultHeight = appContainerBox.offsetHeight;
-      defaultHeight -= (16 + 16);
-      this.tableHeight = defaultHeight;
-      console.log('高度', this.tableHeight)
-      this.$forceUpdate();
-    },
-    async getAlertLogList() {
-      // console.log("请求开始")
-      this.logQueryParams.pId = this.$route.query.pId;
-      // this.logQueryParams.logType = this.$route.query.type;
-      this.logQueryParams.logType = null;
-      this.logQueryParams.ecgType = this.$route.query.ecgType;
-      // console.log(this.queryParams)
-      this.tableLoading = true;
-      this.logQueryParams.params = {};
-      if (null != this.daterangeLogTime && '' != this.daterangeLogTime) {
-        this.logQueryParams.params["beginLogTime"] = this.daterangeLogTime[0];
-        this.logQueryParams.params["endLogTime"] = this.daterangeLogTime[1];
-      }
-      if (this.logQueryParams.logType === 'null') {
-        this.logQueryParams.logType = null;
-      }
-      if (this.logQueryParams.ecgType === 'null') {
-        this.logQueryParams.ecgType = null;
-      }
-
-      let res = await listAlert_log(this.logQueryParams)
-      // console.log('请求成功')
-      // console.log(res)
-      this.alertLogList = res.rows;
-      this.alertLogTotal = res.total;
-      this.tableLoading = false;
-    },
-    // 圆型图
-    echartsDraw() {
-      // console.log("圆形图数据");
-      // console.log(this.patientInfo.alertLogList);
-      let cvsDom = document.querySelector('.patient-data-above-cvs')
-      let cvs = this.$echarts.init(cvsDom)
-      let option = {
-        // 标题
-        title: {
-          show: !this.patientInfo.alertLogList,
-          textStyle: {
-            color: 'black',
-            fontSize: 24,
-          },
-          text: '暂无数据',
-          left: "center",
-          top: "center"
-        },
-        tooltip: {
-          trigger: 'item'
-        },
-        // 小类型模块
-        legend: {
-          show: !!this.patientInfo.alertLogList,
-          orient: "vertical",
-          icon: 'inherit',
-          left: "right",
-          top: "middle",
-          padding: [5, 30, 5, 5],
-          itemWidth: 36,
-          itemHeight: 18,
-          textStyle: {
-            fontSize: 18
-          },
-        },
-        // 
-        series: [
-          {
-            name: this.opName,
-            type: 'pie',
-            center: ["30%", "50%"],
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            label: {
-              show: true,
-              position: 'outside',
-              fontSize: 24,
-              borderWidth: 0,
-              padding: [5, 5, 5, 5],
-              // formatter: function (arg) {
-              //   return arg.name + '：预警' + arg.value + "次"
-              // }
-            },
-            emphasis: {},
-            labelLine: {
-              show: false
-            },
-            data: this.patientInfo.alertLogList,
-          }
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        logNumber: [
+          {required: true, message: "日志号不能为空", trigger: "blur"}
+        ],
+        pId: [
+          {required: true, message: "患者id不能为空", trigger: "blur"}
         ]
       }
-      cvs.off('click')
-      cvs.setOption(option)
-      cvs.on('click', function (params) {
-        th.$router.push({
-          path: "log",
-          query: {pId: this.dRearlyQueryParams.pId, type: params.name, ecgType: this.$route.query.state}
-        });
+    };
+  },
+  created() {
+    this.getList();
+  },
+  activated() {
+    this.getList();
+  },
+  methods: {
+    /** 查询预警日志列表 */
+    getList() {
+      this.queryParams.pId = this.$route.query.pId
+      // this.queryParams.logType = this.$route.query.type
+      // this.queryParams.ecgType = this.$route.query.ecgType
+      // console.log(this.queryParams)
+      this.loading = true;
+      this.queryParams.params = {};
+      if (null != this.daterangeLogTime && '' != this.daterangeLogTime) {
+        this.queryParams.params["beginLogTime"] = this.daterangeLogTime[0];
+        this.queryParams.params["endLogTime"] = this.daterangeLogTime[1];
+      }
+      if (this.queryParams.logType==='null'){
+        this.queryParams.logType=null;
+      }
+      if (this.queryParams.ecgType==='null'){
+        this.queryParams.ecgType=null;
+      }
+      console.log("为获取患者列表所放入的参数");
+      console.log(this.queryParams);
+      listAlert_log(this.queryParams).then(response => {
+        // console.log(response);z
+        this.alert_logList = response.rows;
+        this.total = response.total;
+        this.loading = false;
       });
     },
-    /**
-     * 查看日志
-     */
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        logId: null,
+        logTime: null,
+        logType: null,
+        eventName: null,
+        eventDescription: null,
+        pId: null,
+        patientName: null,
+        hospitalName: null,
+        anoStatus: null
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.logId)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加预警日志";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const logId = row.logId || this.ids
+      getAlert_log(logId).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改预警日志";
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.logId != null) {
+            updateAlert_log(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addAlert_log(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const logIds = row.logId || this.ids;
+      this.$modal.confirm('是否确认删除预警日志编号为"' + logIds + '"的数据项？').then(function () {
+        return delAlert_log(logIds);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {
+      });
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('alert_log/alert_log/export', {
+        ...this.queryParams
+      }, `alert_log_${new Date().getTime()}.xlsx`)
+    },
+
+    /** 查看日志*/
     handleLook(row) {
       // console.log(row);
       // console.log(row.logId);
@@ -322,104 +456,37 @@ export default {
         query: {
           logId: row.logId,
           // logType: row.logType,
-          userId: 0,
-          state: this.$route.query.state,
-          ecgType: this.logQueryParams.ecgType,
-          pageNum: this.logQueryParams.pageNum,
-          pageSize: this.logQueryParams.pageSize,
-          isSuspected: this.logQueryParams.isSuspected,
-          anoStatus: this.logQueryParams.anoStatus,
-          queryParams: this.logQueryParams,
-        }
+          userId:0,
+          state:this.$route.query.state,
+          // 隐藏上一页下一页
+          // kaiguan:false
+          ecgType: this.queryParams.ecgType,
+          pageNum: this.queryParams.pageNum,
+          pageSize: this.queryParams.pageSize,
+          isSuspected: this.queryParams.isSuspected,
+          anoStatus: this.queryParams.anoStatus,
+          queryParams: this.queryParams,
+          }
+
+        // query: {
+        //   logId: row.logId,
+        //   userId:0,
+        //   ecgType:this.queryParams.ecgType,
+
+
+        //   logType: this.queryParams.logType,
+        //   isSuspected:"",
+          
+        //   pId: this.queryParams.pId,
+        //   logTime:this.queryParams.logTime,
+          
+        //   eventDescription:this.queryParams.eventDescription,
+        //   eventName:this.queryParams.eventName,
+        //   logTime:this.queryParams.logTime,
+        //   state:1,
+        // }
       });
     },
-  },
-}
+  }
+};
 </script>
-<style scoped lang="scss">
-.app-container {
-  background-color: #F4F4F4FF;
-  height: calc(100vh - 86px);
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 24px;
-}
-
-.patient-info {
-  padding: 16px;
-  background-color: #fff;
-  height: 100%;
-  width: 24%;
-}
-
-.title {
-  color:#525252;
-  font-weight: bold;
-  line-height: 24px;
-  font-size: 16px;
-  font-family: "PingFang SC";
-  text-align: left;
-  margin: 0;
-}
-
-.patient-data {
-  height: 100%;
-  width: 74%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  &-above {
-    height: 44%;
-    background-color: #fff;
-    padding: 16px 20px;
-
-    &-cvs {
-      height: calc(100% - 24px);
-    }
-  }
-
-  &-below {
-    height: 54%;
-    background-color: #fff;
-    padding: 16px 8px 16px 20px;
-    display: flex;
-    flex-direction: column;
-
-    &-hand {
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    &-table {
-      flex: 1;
-    }
-  }
-}
-
-.patient-info-item {
-  margin-top: 8px;
-  &-name{
-    color: #818181;
-  }
-}
-
-.info-basic {
-  font-size: 24px;
-  margin-top: 65px;
-}
-.info-minor {
-  font-size: 20px;
-  color: #666;
-}
-
-.mg-top{
-  margin-top:58px;
-}
-
-.title-2 {
-  margin-top: 65px;
-}
-</style>
