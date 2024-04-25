@@ -538,6 +538,7 @@ export default {
   components: { child },
   data() {
     return {
+      on_off:false,
       selectDoctor:[],
       tabsStatus: "userInfo",
       doctorList: [],
@@ -840,13 +841,16 @@ export default {
               this.verifyForm.status = true
               this.dialogFormVisibleVerifyAuthority = false
               sessionStorage.setItem('SMSverification',true)
-              
+              if (this.on_off) {
+                this.sendMsg();
+              } 
             }else{
               this.$modal.msgSuccess("密码错误请重试");
             }
           })
         }
       })
+      
     },
     /** 查询用户管理列表 */
     async getList() {
@@ -2670,7 +2674,7 @@ export default {
       }
       // console.log(patientPhone);
       let SMSverification = sessionStorage.getItem('SMSverification')
-
+      this.on_off = true
       if (this.verifyForm.status || SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)

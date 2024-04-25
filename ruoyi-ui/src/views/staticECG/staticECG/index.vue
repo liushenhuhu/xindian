@@ -521,6 +521,7 @@ export default {
   },
   data() {
     return {
+      on_off:false,
       dialogFormVisibleVerifyAuthority: false,
       verifyForm: {
         password: null,
@@ -706,6 +707,9 @@ export default {
               this.verifyForm.status = true
               this.dialogFormVisibleVerifyAuthority = false
               sessionStorage.setItem('SMSverification',true)
+              if (this.on_off) {
+                this.sendMsg();
+              } 
             }else{
               this.$modal.msgSuccess("密码错误请重试");
             }
@@ -2322,7 +2326,7 @@ export default {
       }
       // console.log(patientPhone);
       let SMSverification = sessionStorage.getItem('SMSverification')
-
+      this.on_off = true
       if (this.verifyForm.status || SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
