@@ -571,7 +571,7 @@ export default {
           pId: row.pId,
           state,
           type,
-          ecgType:row.ecgType
+          // ecgType:row.ecgType
         }
       });
         // query: {pId: row.pId,type:null}});

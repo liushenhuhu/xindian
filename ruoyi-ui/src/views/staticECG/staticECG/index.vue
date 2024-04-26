@@ -192,16 +192,7 @@
                   </td>
                 </tr>
               </table>
-              <!--<div class="touzuo-right-title">-->
-              <!--  预警类型-->
-              <!--</div>-->
-              <!--<div>-->
-              <!--  {{xianshizifuchuan}}-->
-              <!--</div>-->
-              <!--<div class="rouzuo-right-content">-->
-              <!--</div>-->
             </div>
-
           </div>
 
 
@@ -318,13 +309,16 @@
             <div class="doctor">
               <div class="input yishi">
                 <strong>医师:</strong>
-                <el-select v-model="data.doctorName" clearable style="width: 66%">
+                <!--<el-select v-model="data.doctorName" clearable style="width: 66%">
                   <el-option
                     v-for="item in options"
                     :label="item.doctorName"
                     :value="item.doctorName">
                   </el-option>
-                </el-select>
+                </el-select>-->
+                <el-cascader v-model="selectDoctor" :options="doctorList" @change="selectDoctorChange"
+                :show-all-levels="false">
+                </el-cascader>
               </div>
               <div class="input">
                 <strong>日期:</strong>
@@ -506,14 +500,18 @@ import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 import child from "./child.vue";
 import CacheList from "@/views/monitor/cache/list.vue";
 import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
-import {selectDoctor} from "@/api/statistics/statistics";
+import {selectDoctor, getDoctorList} from "@/api/statistics/statistics";
+// 发送信息时获取密码
+import {getlogin_password} from '@/api/jecg4_ecg/jecg4_ecg'
 // 获取预警类型选项
 import {selectList} from "@/api/log_user/log_user";
+import {checkPassword} from "@/utils/verify.js"
 // 存储选择的预警类型
 import {addReport as addReportyujing} from "@/api/alert_log_count/count";
 import {listPatient_management} from "@/api/patient_management/patient_management";
 
 import {getVerify} from "@/api/verify/verify";
+// import {checkPassword} from "@/utils/verify.js";
 
 export default {
   name: "index",
@@ -523,13 +521,16 @@ export default {
   },
   data() {
     return {
+      on_off:false,
       dialogFormVisibleVerifyAuthority: false,
       verifyForm: {
         password: null,
         status: false
       },
 
+      selectDoctor:[],
       tabsStatus: "userInfo",
+      doctorList: [],
       // 上下页需要的信息
       // 查询参数
       // queryParams: {
@@ -697,20 +698,32 @@ export default {
     dialogFormVisibleVerify() {
       this.$refs["verifyForm"].validate(valid => {
         if (valid) {
-          let obj = {
-            accountPwd: this.verifyForm.password
+          let objj = {
+            password: this.verifyForm.password
           }
-          getVerify(obj).then(r => {
-            this.$modal.msgSuccess("密码正确");
-            this.verifyForm.status = true
-            this.dialogFormVisibleVerifyAuthority = false
-            sessionStorage.setItem('isShowName', true)
+          getlogin_password(objj).then(res=>{
+            if(res.code == 200){
+              this.$modal.msgSuccess("密码正确");
+              this.verifyForm.status = true
+              this.dialogFormVisibleVerifyAuthority = false
+              sessionStorage.setItem('SMSverification',true)
+              if (this.on_off) {
+                this.sendMsg();
+              } 
+            }else{
+              this.$modal.msgSuccess("密码错误请重试");
+            }
           })
         }
       })
     },
     /** 切换顶部tabs **/
     switchTabs(value) {
+      console.log(value)
+    },
+    yanzheng(value){
+      //todo 将函数当作实参传递
+      //checkPassword('abcd',this.yanzheng)
       console.log(value)
     },
     /** 查询用户管理列表 */
@@ -819,6 +832,10 @@ export default {
       await this.getList();
       // this.loading = false;
     },
+    //选择医生
+    selectDoctorChange(e){
+      this.data.doctorName = e[1]
+    },
     // 患者用户信息
     getPatientdetails() {
       getReportByPId(this.pId).then((response) => {
@@ -848,10 +865,28 @@ export default {
       });
       // 医生的信息
       selectDoctor().then((response) => {
-        console.log('医生信息')
-        console.log(response)
         this.options = response;
       });
+      getDoctorList().then(res => {
+        let options = []
+        let data = res.data.options
+        data.forEach(e => {
+          if (e.doctorList.length != 0) {
+            let hospital = {
+              value: e.hospitalCode,
+              label: e.hospitalName,
+              children: []
+            }
+            e.doctorList.forEach(doctorInfo => {
+              hospital.children.push({label: doctorInfo.doctorName, value: doctorInfo.doctorName})
+            })
+            options.push(hospital)
+          }
+        })
+        this.doctorList = options;
+        console.log('医生信息')
+        console.log(this.doctorList)
+      })
       this.getyujingleixing();
     },
     //预警类型
@@ -2290,9 +2325,9 @@ export default {
         patientPhone = patientPhone.substring(0, 11);
       }
       // console.log(patientPhone);
-      let isShowName = sessionStorage.getItem('isShowName')
-
-      if (this.verifyForm.status || isShowName) {
+      let SMSverification = sessionStorage.getItem('SMSverification')
+      this.on_off = true
+      if (this.verifyForm.status || SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
           this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
@@ -2923,21 +2958,24 @@ export default {
 .touzuo-btm {
   height: 15%;
   width: 100%;
-table{
-  width:100%;
-  tr{
-    width:100%;
-    height:100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    td{
-      white-space: nowrap;
-      flex:0;
+
+  table {
+    width: 100%;
+
+    tr {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
       align-items: center;
+
+      td {
+        white-space: nowrap;
+        flex: 0;
+        align-items: center;
+      }
     }
   }
-}
 }
 
 .touzuobiaoti {
