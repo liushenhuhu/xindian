@@ -327,8 +327,8 @@ export default {
     /** 查询预警日志列表 */
     getList() {
       this.queryParams.pId = this.$route.query.pId
-      this.queryParams.logType = this.$route.query.type
-      this.queryParams.ecgType = this.$route.query.ecgType
+      // this.queryParams.logType = this.$route.query.type
+      // this.queryParams.ecgType = this.$route.query.ecgType
       // console.log(this.queryParams)
       this.loading = true;
       this.queryParams.params = {};
@@ -342,10 +342,10 @@ export default {
       if (this.queryParams.ecgType==='null'){
         this.queryParams.ecgType=null;
       }
-      // console.log("为获取患者列表所放入的参数");
-      // console.log(this.queryParams);
+      console.log("为获取患者列表所放入的参数");
+      console.log(this.queryParams);
       listAlert_log(this.queryParams).then(response => {
-        // console.log(response);
+        // console.log(response);z
         this.alert_logList = response.rows;
         this.total = response.total;
         this.loading = false;

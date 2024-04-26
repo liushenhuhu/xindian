@@ -3,14 +3,15 @@
     <div class="body">
       <div class="noleft">
         <div class="box"  v-if="xuanzheyujingleixing">
-          <div class="box1">
+
+          <!-- <div class="box1">
             <div class="h11">
               <span></span>
               <p>用户信息</p>
             </div>
             <div class="patientMessage">
               <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
-              <!--              <div class="textbox "><strong>姓名:</strong>{{ data.name }}</div>-->
+              <div class="textbox "><strong>姓名:</strong>{{ data.name }}</div>
               <div class="textbox "><strong>性别:</strong>{{ data.gender }}</div>
               <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
               <div class="textbox"><strong>送检科室:</strong> -</div>
@@ -27,6 +28,7 @@
               <div class="textbox"><strong>心梗机率:</strong>{{ data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险' }}</div>
             </div>
           </div>
+
           <div class="box2">
             <div class="h11">
               <span></span>
@@ -56,8 +58,205 @@
               <div class="ml">{{ xianshizifuchuan }}</div>
             </div>
 
+          </div> -->
+
+        <!--<div class="touzuo">
+            <div class="touzuobiaoti">患者信息</div>
+            <table class="tablex">
+              <tr>
+                <td>报告编码</td>
+                <td>{{ data.pId }}</td>
+                <td>性别</td>
+                <td>{{ data.gender }}</td>
+                <td>p波</td>
+                <td>{{ data.p }}ms</td>
+                <td>Qtc</td>
+                <td>{{ data.qtc }}ms</td>
+              </tr>
+              <tr>
+                <td>患者编码</td>
+                <td>{{ data.pId }}</td>
+                <td>门诊号</td>
+                <td>-</td>
+                <td>QRS区间</td>
+                <td>{{ data.qrs }}ms</td>
+                <td>HRV</td>
+                <td>{{ data.hrv }}ms</td>
+              </tr>
+              <tr>
+                <td>申请单号</td></td>
+                <td>-</td>
+                <td>住院号</td>
+                <td>-</td>
+                <td>AI分析结果</td>
+                <td colspan="3">{{ data.result }}</td>
+
+              </tr>
+              <tr>
+                <td>年龄</td>
+                <td>{{ data.age }}岁</td>
+                <td>心律</td>
+                <td>{{ data.hr }}bpm</td>
+                <td>患者症状</td>
+                <td>{{ data.patientSymptom }}</td>
+                <td>心梗机率:</td>
+                <td>{{data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险'}}</td>
+              </tr>
+            </table>
+            <div class="touzuoxia">
+              <div class="touzuoyujing">
+                <div class="touzuoyujing-left">预警类型：</div>
+                <div style="" class="touzuoyujingzhi">{{ xianshizifuchuan }}</div>
+              </div>
+              <div class="touzuoanniu">
+                <el-button type="success" round  class="anNiu"  @click="xianshi">选择预警类型</el-button>
+                <el-button type="success" round  class="anNiu" @click="tijiao()">提交</el-button>
+              </div>
+            </div>
+          </div> -->
+          <div class="touzuo">
+            <div class="touzuo-top">
+              <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs">
+                <el-tab-pane label="基本信息" name="userInfo">
+                  <div class="tabBox">
+                    <table>
+                      <tr>
+                        <td>姓名</td>
+                        <td>{{ data.name }}</td>
+                        <td>性别</td>
+                        <td>{{ data.gender }}</td>
+                        <td>住院号</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>报告编码</td>
+                        <td>{{ data.pId }}</td>
+                        <td>年龄</td>
+                        <td>{{ data.age }}岁</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>申请单号</td>
+                        <td></td>
+                        <td>门诊</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane label="心电参数" name="ecgInfo">
+                  <div class="tabBox">
+                    <table>
+                      <tr>
+                        <td>心律</td>
+                        <td>{{ data.hr }}</td>
+                        <td>Qtc</td>
+                        <td>{{ data.qtc }}</td>
+                        <td>患者症状</td>
+                        <td>{{ data.patientSymptom }}</td>
+                      </tr>
+                      <tr>
+                        <td>p波</td>
+                        <td>{{ data.p }}</td>
+                        <td>HRV</td>
+                        <td>{{ data.hrv }}ms</td>
+                        <td>心梗几率</td>
+                        <td>{{ (data.p_xingeng*100).toFixed(1)+'%' }}</td>
+                      </tr>
+                      <tr>
+                        <td>QRS区间</td>
+                        <td>{{ data.qrs }}ms</td>
+                        <td>AI分析结果</td>
+                        <td>{{ data.result }}</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+            <div class="touzuo-btm">
+              <table>
+                <tr>
+                  <td>预警类型:</td>
+                  <td style="flex:1;overflow: hidden;" :title="xianshizifuchuan">{{ xianshizifuchuan }}</td>
+                  <td>
+                    <el-button type="success" round @click="xianshi">选择预警类型</el-button>
+                  </td>
+                  <td>
+                    <el-button type="success" round @click="tijiao()">提交</el-button>
+                  </td>
+                </tr>
+              </table>
+              <!--<div class="touzuo-right-title">-->
+              <!--  预警类型-->
+              <!--</div>-->
+              <!--<div>-->
+              <!--  {{xianshizifuchuan}}-->
+              <!--</div>-->
+              <!--<div class="rouzuo-right-content">-->
+              <!--</div>-->
+            </div>
+
           </div>
-          <div class="box3">
+
+          <div class="touyou">
+              <div class="touzuobiaoti">医师诊断</div>
+              <div class="mt">
+                <el-input
+                  type="textarea"
+                  v-model="data.resultByDoctor"
+                  placeholder="请输入"
+                  data-value="1111"
+                  :rows="5"
+                  class="font">{{ data.resultByDoctor }}
+                </el-input>
+              </div>
+
+              <div class="doctor">
+                <div class="input yishi">
+                  <strong>医师:</strong>
+                    <!--<el-select v-model="data.doctorName" clearable style="width: 66%">-->
+                    <!--  <el-option-->
+                    <!--    v-for="item in options"-->
+                    <!--    :label="item.doctorName"-->
+                    <!--    :value="item.doctorName">-->
+                    <!--  </el-option>-->
+                    <!--</el-select>-->
+                  <el-cascader v-model="selectDoctor" :options="doctorList" @change="selectDoctorChange"
+                               :show-all-levels="false">
+                  </el-cascader>
+                </div>
+                <div class="input">
+                  <strong>日期:</strong>
+                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 66%"></el-input>
+                  <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
+                </div>
+              </div>
+
+              <div class="oder">
+                <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
+                  <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
+                    <i class="el-icon-question"></i>
+                  </el-tooltip>
+                  发送预警</el-button>
+                <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
+                <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
+
+                <el-button
+                  class="next"
+                  @click="prev()"
+                  :loading="loading"
+                >上一个</el-button>
+                <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+              </div>
+            </div>
+
+          <!-- <div class="box3">
             <div class="h11">
               <span></span>
               <div class="between">
@@ -157,7 +356,8 @@
               >上一个</el-button>
               <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
             </div>
-          </div>
+          </div> -->
+
         </div>
 
         <!-- 预警类型弹窗 -->
@@ -200,36 +400,41 @@
 
 
       </div>
-      <div class="noright">
-        <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
-        <div>
-          <div id="II" class="line" @dblclick="clicktrue('I',data4.dataII)"></div>
+
+      <div class="shangbianju">
+        <div style="padding: 15px ;font-size: 1vw;font-weight: 700;">患者心电图</div>
+        <div class="noright">
+          <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
+          <div>
+            <div id="II" class="line" @dblclick="clicktrue('I',data4.dataII)"></div>
+          </div>
+          <div>
+            <div id="V2" class="line" @dblclick="clicktrue('V2',data4.dataV2)"></div>
+          </div>
+          <div>
+            <div id="V4" class="line" @dblclick="clicktrue('V4',data4.dataV4)"></div>
+          </div>
+          <div>
+            <div id="V6" class="line" @dblclick="clicktrue('V6',data4.dataV6)"></div>
+          </div>
+          <!--          <div>-->
+          <!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="6" class="line" @dblclick="showChart6()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="7" class="line" @dblclick="showChart7()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="8" class="line" @dblclick="showChart8()"></div>-->
+          <!--          </div>-->
+          <!--          <div>-->
+          <!--            <div id="9" class="line" @dblclick="showChart9()"></div>-->
+          <!--          </div>-->
         </div>
-        <div>
-          <div id="V2" class="line" @dblclick="clicktrue('V2',data4.dataV2)"></div>
-        </div>
-        <div>
-          <div id="V4" class="line" @dblclick="clicktrue('V4',data4.dataV4)"></div>
-        </div>
-        <div>
-          <div id="V6" class="line" @dblclick="clicktrue('V6',data4.dataV6)"></div>
-        </div>
-        <!--          <div>-->
-        <!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
-        <!--          </div>-->
-        <!--          <div>-->
-        <!--            <div id="6" class="line" @dblclick="showChart6()"></div>-->
-        <!--          </div>-->
-        <!--          <div>-->
-        <!--            <div id="7" class="line" @dblclick="showChart7()"></div>-->
-        <!--          </div>-->
-        <!--          <div>-->
-        <!--            <div id="8" class="line" @dblclick="showChart8()"></div>-->
-        <!--          </div>-->
-        <!--          <div>-->
-        <!--            <div id="9" class="line" @dblclick="showChart9()"></div>-->
-        <!--          </div>-->
       </div>
+
     </div>
     <div class="nobottom"></div>
 
@@ -272,6 +477,23 @@
     <!--      </div>-->
     <!--    </div>-->
     <child ref="drawShow" @closeMain="closeMain"></child>
+
+
+
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
+
   </div>
 </template>
 
@@ -283,7 +505,9 @@ import {sendMsgToPatient} from "@/api/patient_management/patient_management";
 // import child from './child.vue'
 // import CacheList from "@/views/monitor/cache/list.vue";
 import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
-import {selectDoctor} from "@/api/statistics/statistics";
+import {selectDoctor,getDoctorList} from "@/api/statistics/statistics";
+// 发送信息时获取密码
+import {getlogin_password} from '@/api/jecg4_ecg/jecg4_ecg'
 import child from "@/views/staticECG/staticECG/child.vue";
 // 获取预警类型选项
 import {selectList} from "@/api/log_user/log_user";
@@ -291,6 +515,9 @@ import {selectList} from "@/api/log_user/log_user";
 import {addReport as addReportyujing} from "@/api/alert_log_count/count";
 
 import { listPatient_management} from "@/api/patient_management/patient_management";
+
+import {getVerify} from "@/api/verify/verify";
+import { createLogger } from 'vuex';
 
 export default {
   name: "index",
@@ -300,6 +527,17 @@ export default {
   },
   data() {
     return {
+      on_off:false,
+      selectDoctor:[],
+      tabsStatus: "userInfo",
+      doctorList: [],
+
+      // 输入密码弹窗
+      dialogFormVisibleVerifyAuthority: false,
+      verifyForm: {
+        password: null,
+        status: false
+      },
       ecgType:'',
       pageNum: 1,
       anoStatus: null,
@@ -405,6 +643,12 @@ export default {
       chart1: null,
       chart2: null,
       chart3: null,
+      // 表单校验
+      rules: {
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
+        ],
+      }
     };
   },
   beforeDestroy() {
@@ -427,6 +671,33 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    /** 切换顶部tabs **/
+    switchTabs(value) {
+      console.log(value)
+    },
+    // 密码弹出框点击确认时
+    dialogFormVisibleVerify() {
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let objj = {
+            password: this.verifyForm.password
+          }
+          getlogin_password(objj).then(res=>{
+            if(res.code == 200){
+              this.$modal.msgSuccess("密码正确");
+              this.verifyForm.status = true
+              this.dialogFormVisibleVerifyAuthority = false
+              sessionStorage.setItem('SMSverification', true)
+              if (this.on_off) {
+                this.sendMsg();
+              } 
+            }else{
+              this.$modal.msgSuccess("密码错误请重试");
+            }
+          })
+        }
+      })
+    },
     /** 查询用户管理列表 */
    async getList() {
       this.loading = true;
@@ -487,7 +758,31 @@ export default {
       selectDoctor().then(response => {
         this.options = response;
       })
+      getDoctorList().then(res => {
+        let options = []
+        let data = res.data.options
+        data.forEach(e => {
+          if (e.doctorList.length != 0) {
+            let hospital = {
+              value: e.hospitalCode,
+              label: e.hospitalName,
+              children: []
+            }
+            e.doctorList.forEach(doctorInfo => {
+              hospital.children.push({label: doctorInfo.doctorName, value: doctorInfo.doctorName})
+            })
+            options.push(hospital)
+          }
+        })
+        this.doctorList = options;
+        console.log('医生信息')
+        console.log(this.doctorList)
+      })
       this.getyujingleixing()
+    },
+    //选择医生
+    selectDoctorChange(e){
+      this.data.doctorName = e[1]
     },
      // 上一个
    async prev() {
@@ -1502,38 +1797,46 @@ export default {
       this.dialogFormVisible = false;
       this.arr = [];
     },*/
-//发送短信
+    //发送短信
     sendMsg() {
-      console.log("用户电话: " + this.data.pphone)
-      let patientPhone = this.data.pphone
+      // console.log("用户电话: " + this.data.pphone);
+      let patientPhone = this.data.pphone;
       if (patientPhone.length === 14 || patientPhone.length === 15) {
-        patientPhone = patientPhone.substring(0, 11)
+        patientPhone = patientPhone.substring(0, 11);
       }
-      console.log(patientPhone)
-      if (patientPhone) {
-        // console.log("用户姓名: " + row.patientName)
-        this.$confirm('向该用户发送短信提示采集存在较大干扰?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          sendMsgToPatient(patientPhone).then(response => {
-            this.$message({
-              type: 'success',
-              message: '发送成功!'
+      // console.log(patientPhone);
+      let SMSverification = sessionStorage.getItem('SMSverification')
+      this.on_off = true
+      if (this.verifyForm.status || SMSverification ) {
+        if (patientPhone) {
+          // console.log("用户姓名: " + row.patientName)
+          this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+            .then(() => {
+              sendMsgToPatient(patientPhone).then((response) => {
+                this.$message({
+                  type: "success",
+                  message: "发送成功!",
+                });
+              });
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
             });
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
+        } else {
+          this.$message.error("该用户手机号不合法！！！");
+        }
       } else {
-        this.$message.error('该用户手机号不合法！！！');
+        this.verifyForm.password = ''
+        this.dialogFormVisibleVerifyAuthority = true
       }
-    }
-    ,
+    },
     sendWarnMsg() {
       if (this.data.resultByDoctor == '' || this.data.resultByDoctor == null || this.data.resultByDoctor.length > 20) {
         this.$message({
@@ -1649,6 +1952,10 @@ export default {
 .body {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  padding: 10px;
+    background-color: #e8e8e8;
+
 }
 
 ::v-deep el-button {
@@ -1665,14 +1972,16 @@ export default {
   //background: linear-gradient(to left,#ffffff, rgba(158, 173, 189, 0.98));
   .box {
     overflow: hidden;
-    width: 98%;
+    width: 100%;
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    justify-content:space-between;
     margin-top: 1.5vh;
     margin-bottom: 1.5vh;
     border-radius: 2vh;
-    background-color: #e8e8e8;
+    background-color: #ffffff;
+    padding: 15px;
     //opacity: 0.6;
     .box1 {
       width: 35%;
@@ -1797,6 +2106,8 @@ export default {
 }
 
 .doctor {
+  height: 29%;
+  // margin: 2vh 0 2vh 0;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -1806,12 +2117,13 @@ export default {
     display: flex;
     flex-direction: row;
     margin-top: 1vh;
-    margin-left: 2vw;
+    //margin-left: 2vw;
 
     strong {
       white-space: nowrap;
       line-height: 36px;
-      margin-right: .5vw;
+      margin-right: 0.5vw;
+      font-size: 1vw;
     }
 
     ::v-deep .el-input--medium .el-input__inner {
@@ -1852,13 +2164,14 @@ export default {
   margin-bottom: 1.5vh;
 }
 
-.anNiu {
-  height: 3vw;
-  width: 8vw;
-  //font-size: 1.5vw;
-  line-height: 1vw;
-  text-align: center;
-}
+// .anNiu {
+//   height: 30px;
+//   // width: 8vw;
+//   //font-size: 1.5vw;
+//   line-height: 1vw;
+//   text-align: center;
+//   padding: 0 3px;
+// }
 
 .bigDiv {
   border: 1px solid #157a0c;
@@ -1949,12 +2262,12 @@ export default {
   vertical-align: bottom;
 }
 .xuanzheyujing{
-  width: 98%;
+  width: 100%;
   margin: 0 auto ;
   margin-top: 1.5vh;
   margin-bottom: 1.5vh;
   border-radius: 2vh;
-  background-color: #e8e8e8;
+  background-color: #ffffff;
   align-items: center;
   padding: 10px;
   height: 62.5vh;
@@ -2017,17 +2330,237 @@ export default {
   display: flex;
   justify-content:space-between;
 }
-::v-deep .next {
-  background-color: rgba(255, 255, 255, 0);
-  color: #136d87;
-  border: 1px solid #136d87;
-  width: 5vw;
-  margin: 0;
-  padding: 10px 0;
-}
+
 .updown{
   width: 100%;
   display: flex;
   justify-content:space-around;
+}
+
+
+
+
+
+
+
+
+// 表格
+.tablex {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  width: 100%;
+  height: 60%;
+  text-align: center;
+}
+.tablex th,
+.tablex td {
+  border: 1px solid #ccc;
+  // padding: 10px;
+}
+
+/* 选择父元素中的基数子元素 */
+.tablex tr > :nth-child(odd) {
+  /* 样式设置 */
+  background-color: #f2f6fe;
+}
+// .tablex td {
+//   height: 8vh;
+//   width: 90px;
+// }
+/* 选择父元素中的偶数子元素 */
+.parentElement > :nth-child(even) {
+  /* 样式设置 */
+}
+.wrap {
+  background-color: #f4f4f4;
+}
+.box {
+  background-color: #ffffff;
+}
+.touzuo{
+  width: 66%;
+}
+.touzuo-top {
+  height: 85%;
+  width: 100%;
+}
+
+.touzuo-btm {
+  height: 15%;
+  width: 100%;
+
+  table {
+    width: 100%;
+
+    tr {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      td {
+        white-space: nowrap;
+        flex: 0;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.touzuobiaoti{
+  font-size:1vw ;
+  font-weight: 700;
+  margin-bottom: 1.5vh;
+}
+.touzuoxia{
+  // border: 1px solid red;
+  margin: 2vh 0;
+  display: flex;
+  justify-content:space-between;
+  width: 100%;
+}
+.touzuoanniu{
+  display: flex;
+  align-items: center;
+  // width: 100%;
+}
+.touzuoyujing{
+  display: flex;
+  width: 75%;
+  .touzuoyujing-left{
+    // font-size:100% ;
+    font-weight: 700;
+    display: flex;
+    align-items:center;
+    // width: 22%;
+    // background-color: #00afff;
+  }
+}
+.touzuoyujingzhi{
+  display: flex;
+  align-items: center;
+  // border:1px solid red;
+  width: 78%;
+  overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+  max-height: 80px;
+  overflow-y: scroll;
+  text-overflow:ellipsis;
+}
+.touzuoyujingzhi::-webkit-scrollbar {
+  	display: none;
+}
+::v-deep .el-button--success{
+  background-color: #517AFC;
+}
+::v-deep .el-button{
+  border-radius: 5px;
+}
+::v-deep .el-button--success{
+color:#ffffff;
+}
+.touyou{
+  width: 32%;
+}
+// ::v-deep .el-select-dropdown__list{
+//   text-align: center;
+//   border: 1px soild red;
+// }
+.yishi{
+  margin-left: 0;
+}
+.font{
+  background-color: #f4f4f4;
+}
+::v-deep .el-textarea__inner{
+  background-color:  #f4f4f4;
+}
+::v-deep .el-button--primary{
+   background-color: #517AFC;
+   color:#ffffff;
+}
+.shangbianju{
+  margin-top: 1vh;
+  overflow: hidden;
+}
+.shangbianju{
+  background-color: #ffffff;
+
+}
+::v-deep .el-textarea__inner{
+  height: 100%;
+}
+.mt{
+    height: 31%;
+}
+.font{
+  height: 100%;
+}
+
+.oder{
+  display: flex;
+  justify-content:space-around;
+  margin: 2vh 0;
+}
+::v-deep .el-input--medium .el-input__inner{
+  font-size: 1vw;
+}
+.oder ::v-deep .el-button--success{
+  padding: 10px 7px;
+}
+.oder ::v-deep .next{
+   padding-left: 7px;
+   padding-right: 7px;
+}
+::v-deep .el-button--success {
+  color: #ffffff;
+  font-size: 1vw;
+}
+::v-deep .el-select-dropdown__item {
+  padding: 0 20px;
+}
+
+::v-deep .el-tabs {
+  display: flex;
+  //上下布局
+  flex-direction: column;
+
+  .el-tabs__content {
+    flex: 1;
+  }
+
+  .el-tab-pane {
+    height: 100%;
+  }
+}
+
+.tabBox {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  table {
+    height: 100%;
+    width: 100%;
+    border-collapse: collapse;
+
+    tr {
+      min-height: 20%;
+
+      td {
+        border: 1px solid black;
+        text-align: center;
+      }
+
+      td:nth-child(odd) {
+        width: 10%;
+        background-color: rgb(234, 234, 253);
+      }
+
+      td:nth-child(even) {
+        width: 22%;
+      }
+    }
+  }
 }
 </style>

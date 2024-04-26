@@ -25,6 +25,7 @@
         <result property="userId" column="user_id"/>
         <result property="ecgType" column="ecg_type"/>
         <result property="doctorPhone" column="doctor_phone_aes"/>
+        <result property="myocardiumType" column="myocardium_type"/>
     </resultMap>
 
 
@@ -45,6 +46,7 @@
                patient_age,
                patient_sex,
                ecg_type,
+               myocardium_type,
                doctor_phone_aes
         from alert_log al
                  inner join patient_management pm on al.p_id = pm.p_id

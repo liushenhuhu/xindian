@@ -38,14 +38,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="事件说明" prop="eventDescription">
+      <!-- <el-form-item label="事件说明" prop="eventDescription">
         <el-input
           v-model="queryParams.eventDescription"
           placeholder="请输入事件说明"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="用户管理编号" prop="pId">
         <el-input
           v-model="queryParams.pId"
@@ -70,8 +70,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalCode">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" >
+      <el-form-item label="医院" prop="hospitalCode">
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院" >
           <el-option
             v-for="item in options"
             :key="item.hospitalId"
@@ -80,10 +80,10 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="心电类型" prop="type">
+      <el-form-item label="心电种类" prop="type">
         <el-input
           v-model="queryParams.type"
-          placeholder="请输入心电类型"
+          placeholder="请输入心电种类"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -164,14 +164,15 @@
       </el-table-column>
       <el-table-column label="预警类型" align="center" prop="logType"/>
       <el-table-column label="事件名称" align="center" prop="eventName"/>
-      <el-table-column label="事件说明" align="center" prop="eventDescription"/>
-      <el-table-column label="用户管理编号" align="center" prop="pId" show-overflow-tooltip/>
+      <!-- <el-table-column label="事件说明" align="center" prop="eventDescription"/> -->
+      <el-table-column label="用户管理编号" align="center" prop="pId" width="180" />
       <el-table-column label="用户姓名" align="center" prop="patientName"/>
-      <!--      <el-table-column label="用户身份证号" align="center" prop="patientCode"/>
+      <!--  <el-table-column label="用户身份证号" align="center" prop="patientCode"/>
+      <el-table-column label="用户管理编号" align="center" prop="pId"show-overflow-tooltip />
             <el-table-column label="用户电话" align="center" prop="patientPhone"/>
-            <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
-<!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
-      <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+            <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+            <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
+      <el-table-column label="医院" align="center" prop="hospitalName" width="180"  show-overflow-tooltip/>
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.if_status" :value="scope.row.anoStatus"/>
@@ -184,8 +185,12 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="用户电话" align="center" prop="patientPhone" width="180"/>
+      <el-table-column label="家属电话" align="center" prop="familyPhone" width="180"/>
+      <el-table-column label="用户身份证号" align="center" prop="patientCode" width="180"/>
+
       <!--  隐藏的用户的个人信息    -->
-      <el-table-column type="expand">
+      <!-- <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
@@ -199,15 +204,15 @@
               <span>{{ scope.row.familyPhone }}</span>
             </el-form-item>
             <br>
-<!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>-->
+            </el-form-item>
           </el-form>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width"  fixed="right" width="100">
         <template slot-scope="scope">
           <el-button
             size="mini"

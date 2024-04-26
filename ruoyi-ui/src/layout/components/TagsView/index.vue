@@ -157,6 +157,9 @@ export default {
     closeSelectedTag(view) {
       console.log("关闭页面");
       console.log(view.path);
+      if(view.path == '/restingECG' || view.path == '/JECG4_ECG' || view.path == '/staticECG' ){
+        sessionStorage.removeItem('SMSverification');
+      }
       this.$cache.session.remove(view.path)
       this.$tab.closePage(view).then(({ visitedViews }) => {
         if (this.isActive(view)) {

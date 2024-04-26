@@ -145,7 +145,7 @@
           <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip/>
+      <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip width="180"/>
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
       <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
                   <el-table-column label="患者年龄" align="center" prop="patientAge"/>
@@ -164,21 +164,26 @@
                   </el-table-column>
                   <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
-      <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+      <el-table-column label="设备号" align="center" prop="equipmentCode" width="180"/>
       <el-table-column label="在线状态" align="center" prop="onlineStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="心电种类" align="center" prop="ecgType">
+      <el-table-column label="心电种类" align="center" prop="ecgType" width="180">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
         </template>
       </el-table-column>
-      <el-table-column label="医生电话" align="center" prop="doctorPhone"/>
+      <el-table-column label="医生电话" align="center" prop="doctorPhone" width="180"/>
+
+
+
+
+
 
       <!--  隐藏的患者的个人信息    -->
-      <el-table-column type="expand">
+      <!-- <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-divider content-position="left">其他信息</el-divider>
@@ -191,9 +196,9 @@
             <el-form-item label="患者性别" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSex }}</span>
             </el-form-item>
-<!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
+            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientSource }}</span>
-            </el-form-item>-->
+            </el-form-item>
             <el-form-item label="患者电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.patientPhone }}</span>
             </el-form-item>
@@ -203,16 +208,15 @@
             <el-form-item label="医生电话" width="200" style="padding-left: 40px">
               <span>{{ scope.row.doctorPhone }}</span>
             </el-form-item>
-<!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
+            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
               <span>{{ scope.row.hospitalName }}</span>
-            </el-form-item>-->
-
+            </el-form-item>
           </el-form>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="200">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -222,46 +226,60 @@
             v-hasPermi="['patient:patient:monitoring']"
           >实时监测
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-download"
-            @click="isRed2=!isRed2;handleInform(scope.row)"
-            v-hasPermi="['patient:patient:downloadInform']"
-          >生成报告
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-magic-stick"
-            @click="isRed3=!isRed3;downloadInform(scope.row)"
-            v-hasPermi="['patient:patient:inform']"
-          >查看报告
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-s-order"
-            @click="handleAlert(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
-          >预警日志
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['patient_management:patient_management:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['patient_management:patient_management:remove']"
-          >删除
-          </el-button>
+
+          &nbsp;&nbsp;
+          <el-popover placement="left" width="50" trigger="click">
+            <el-button
+              style="margin-left: 10px;"
+              size="mini"
+              type="text"
+              icon="el-icon-download"
+              @click="isRed2=!isRed2;handleInform(scope.row)"
+              v-hasPermi="['patient:patient:downloadInform']"
+            >生成报告
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-magic-stick"
+              @click="isRed3=!isRed3;downloadInform(scope.row)"
+              v-hasPermi="['patient:patient:inform']"
+            >查看报告
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-s-order"
+              @click="handleAlert(scope.row)"
+              v-hasPermi="['patient:patient:alert']"
+            >预警信息
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['patient_management:patient_management:edit']"
+            >修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['patient_management:patient_management:remove']"
+            >删除
+            </el-button>
+
+
+            <el-button
+              slot="reference"
+              size="small"
+              type="text"
+              v-hasPermi="['patient_management:patient_management:inform']"
+            >更多<i class="el-icon-arrow-down"/>
+            </el-button>
+          </el-popover>
         </template>
       </el-table-column>
     </el-table>
@@ -526,9 +544,37 @@ export default {
     },
     /** 跳转到预警日志*/
     handleAlert(row) {
+      // console.log(row);
+      let Ecgtype = row.ecgType
+      let state =''
+      let type = ''
+      if (Ecgtype.includes("single")) {
+        state =1
+        type = 1
+      } else if(Ecgtype.includes("4")) {
+        state =4
+        type = 4
+      }else if(Ecgtype.includes("12")){
+        state =12
+        type = 12
+      }else{
+        this.$message({
+          type: 'info',
+          message: '没有此心电种类'
+        });
+        return
+      }
+      // return
       this.$router.push({
         path: "log",
-        query: {pId: row.pId,type:null}});
+        query: {
+          pId: row.pId,
+          state,
+          type,
+          // ecgType:row.ecgType
+        }
+      });
+        // query: {pId: row.pId,type:null}});
     },
     /** 跳转到心电图实时监测*/
     monitoring(row) {

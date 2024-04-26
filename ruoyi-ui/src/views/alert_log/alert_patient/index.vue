@@ -46,12 +46,14 @@
         </template>
       </el-skeleton>
     </div>
+
     <div class="patient-data">
       <div class="patient-data-above">
         <div class="title">预警统计图</div>
         <div class="patient-data-above-cvs">
         </div>
       </div>
+
       <div class="patient-data-below">
         <div class="patient-data-below-hand">
           <div class="title">预警日志
@@ -173,8 +175,12 @@ export default {
       this.dRearlyQueryParams.pId = this.$route.query.pId;
       this.dRearlyQueryParams.ecgType = this.$route.query.type;
       this.opName = this.dRearlyQueryParams.ecgType == 12 ? '单人12导预警' : '单人单导预警';
+      console.log("请求总体数据所需的值");
+      console.log(this.dRearlyQueryParams);
       let {data: res} = await list12Alert_log(this.dRearlyQueryParams);
       this.patientInfo = res;
+      console.log("请回来的值");
+      console.log(this.patientInfo);
       this.infoLoading = false;
       if (res.alertLogList.length == 0) {
         this.patientInfo.alertLogList = null;
@@ -229,10 +235,14 @@ export default {
       this.alertLogTotal = res.total;
       this.tableLoading = false;
     },
+    // 圆型图
     echartsDraw() {
+      console.log("圆形图数据");
+      console.log(this.patientInfo.alertLogList);
       let cvsDom = document.querySelector('.patient-data-above-cvs')
       let cvs = this.$echarts.init(cvsDom)
       let option = {
+        // 标题
         title: {
           show: !this.patientInfo.alertLogList,
           textStyle: {
@@ -246,6 +256,7 @@ export default {
         tooltip: {
           trigger: 'item'
         },
+        // 小类型模块
         legend: {
           show: !!this.patientInfo.alertLogList,
           orient: "vertical",
@@ -259,6 +270,7 @@ export default {
             fontSize: 18
           },
         },
+        // 
         series: [
           {
             name: this.opName,

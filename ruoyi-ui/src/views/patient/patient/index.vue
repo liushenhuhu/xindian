@@ -151,7 +151,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="patientList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="patientList" @selection-change="handleSelectionChange" ref="singleTable" highlight-current-row  >
       <el-table-column type="selection" width="55" align="center"/>
       <!--      <el-table-column label="患者id" align="center" prop="patientId"/>-->
       <el-table-column label="患者姓名" align="center" prop="patientName"/>
@@ -402,7 +402,13 @@ export default {
   },
 
   methods: {
-    refreshList() {
+    // setCurrent(row) {
+    //     this.$refs.singleTable.setCurrentRow(row);
+    //   },
+      // handleCurrentChange(val) {
+      //   this.currentRow = val;
+      // },
+    reshList() {
       getPatientOnlineStatus().then(res => {
         this.getList();
       })
@@ -525,3 +531,7 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+
+</style>

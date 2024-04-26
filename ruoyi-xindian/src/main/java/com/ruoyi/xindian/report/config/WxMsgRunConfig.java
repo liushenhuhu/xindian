@@ -254,6 +254,9 @@ public class WxMsgRunConfig {
      */
     public void redisDTStart(String pId, List<Doctor> doctorList){
         List<Doctor> doctors = new ArrayList<>(doctorList);
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("DocList"+pId))){
+            redisTemplate.delete("DocList"+pId);
+        }
         redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
         redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
     }
@@ -315,7 +318,7 @@ public class WxMsgRunConfig {
 
         if (patientManagements1!=null&&patientManagements1.size()>0){
             for (PatientManagement c:patientManagements1){
-                Report report = reportService.selectReportByPId("DocList"+c.getpId());
+                Report report = reportService.selectReportByPId(c.getpId());
                 if (Boolean.TRUE.equals(redisTemplate.hasKey("reportDT"+report.getpId()))){
                     redisTemplate.delete("reportDT"+report.getpId());
                 }

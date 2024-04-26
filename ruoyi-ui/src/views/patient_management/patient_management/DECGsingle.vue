@@ -925,7 +925,7 @@ export default {
   width: 80%;
 }
 .form-left-hide{
-  height:51px;
+  height:49px;
   overflow:hidden;
 }
 .form-right {
