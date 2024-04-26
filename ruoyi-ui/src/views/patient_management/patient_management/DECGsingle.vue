@@ -289,9 +289,12 @@
                 <el-button type="text" size="mini" @click="downloadInform(scope.row)"
                            v-hasPermi="['patient_management:patient_management:inform']">查看报告
                 </el-button>
-                <el-button type="text" size="mini" @click="handleAlert(scope.row)"
-                           v-hasPermi="['patient:patient:alert']">
-                  下载数据
+                <el-button
+                    size="mini"
+                    type="text"
+                    @click="downloadData(scope.row)"
+                    v-hasPermi="['DECGsingle:download:report']"
+                  >下载数据 
                 </el-button>
                 <el-button type="text" size="mini" @click="handleAlert(scope.row)"
                            v-hasPermi="['patient:patient:alert']">
