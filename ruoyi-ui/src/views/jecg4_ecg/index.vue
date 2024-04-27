@@ -122,7 +122,8 @@
                     <table>
                       <tr>
                         <td>姓名</td>
-                        <td>{{ data.name }}</td>
+                        <td v-if="isShowName.status===true">{{ data.name }}</td>
+                        <td v-else>***</td>
                         <td>性别</td>
                         <td>{{ data.gender }}</td>
                         <td>住院号</td>
@@ -132,7 +133,8 @@
                         <td>报告编码</td>
                         <td>{{ data.pId }}</td>
                         <td>年龄</td>
-                        <td>{{ data.age }}岁</td>
+                        <td v-if="isShowName.status===true">{{ data.age }}岁</td>
+                        <td v-else>**岁</td>
                         <td></td>
                         <td></td>
                       </tr>
@@ -205,7 +207,20 @@
           </div>
 
           <div class="touyou">
-              <div class="touzuobiaoti">医师诊断</div>
+              <div class="touzuobiaoti">
+                <div>医师诊断</div>
+                <div>
+                  <el-button
+                    type="success"
+                    plain
+                    icon="el-icon-view"
+                    size="mini"
+                    @click="isShowNameClick"
+                    v-if="false"
+                  >{{isShowName.name}}
+                  </el-button>
+                </div>
+              </div>
               <div class="mt">
                 <el-input
                   type="textarea"
@@ -527,6 +542,11 @@ export default {
   },
   data() {
     return {
+      name:null,
+      isShowName:{
+        status:false,
+        name:"显示姓名"
+      },
       on_off:false,
       selectDoctor:[],
       tabsStatus: "userInfo",
@@ -671,6 +691,24 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    isShowNameClick(){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (isShowName){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示姓名"
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.name = true
+        
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
     /** 切换顶部tabs **/
     switchTabs(value) {
       console.log(value)
@@ -679,22 +717,40 @@ export default {
     dialogFormVisibleVerify() {
       this.$refs["verifyForm"].validate(valid => {
         if (valid) {
-          let objj = {
-            password: this.verifyForm.password
-          }
-          getlogin_password(objj).then(res=>{
-            if(res.code == 200){
-              this.$modal.msgSuccess("密码正确");
-              this.verifyForm.status = true
-              this.dialogFormVisibleVerifyAuthority = false
-              sessionStorage.setItem('SMSverification', true)
-              if (this.on_off) {
-                this.sendMsg();
-              } 
-            }else{
-              this.$modal.msgSuccess("密码错误请重试");
+          if (this.name) {
+            // 显示姓名
+            let obj = {
+              accountPwd:this.verifyForm.password
             }
-          })
+            getVerify(obj).then(r=>{
+              this.$modal.msgSuccess("密码正确");
+              this.verifyForm.status=true
+              sessionStorage.setItem('isShowName',true)
+              this.dialogFormVisibleVerifyAuthority = false
+              this.isShowName.status =!this.isShowName.status;
+              this.isShowName.name = "隐藏姓名"
+              this.name = false
+            })
+            
+          } else {
+            let objj = {
+              password: this.verifyForm.password
+            }
+            getlogin_password(objj).then(res=>{
+              if(res.code == 200){
+                this.$modal.msgSuccess("密码正确");
+                this.verifyForm.status = true
+                this.dialogFormVisibleVerifyAuthority = false
+                sessionStorage.setItem('SMSverification', true)
+                if (this.on_off) {
+                  this.sendMsg();
+                } 
+              }else{
+                this.$modal.msgSuccess("密码错误请重试");
+              }
+            })
+          }
+          
         }
       })
     },
@@ -1807,7 +1863,7 @@ export default {
       // console.log(patientPhone);
       let SMSverification = sessionStorage.getItem('SMSverification')
       this.on_off = true
-      if (this.verifyForm.status || SMSverification ) {
+      if (SMSverification ) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
           this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
@@ -2412,6 +2468,8 @@ export default {
   font-size:1vw ;
   font-weight: 700;
   margin-bottom: 1.5vh;
+  display: flex;
+  justify-content:space-between;
 }
 .touzuoxia{
   // border: 1px solid red;

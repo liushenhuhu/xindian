@@ -174,6 +174,16 @@
           >导出
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-view"
+          size="mini"
+          @click="isShowNameClick"
+        >{{isShowName.name}}
+        </el-button>
+      </el-col>
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -212,8 +222,18 @@
         prop="pId"
         width="180"
       />
-      <el-table-column label="用户姓名" align="center" prop="patientName" />
-      <el-table-column label="医院" align="center" prop="hospitalName" width="180"  show-overflow-tooltip/>
+      <el-table-column label="用户姓名" align="center" prop="patientName" >
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
+          <span v-else>***</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="医院" align="center" prop="hospitalName" width="180"  show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{scope.row.hospitalName}}</span>
+          <span v-else>**************</span>
+        </template>
+      </el-table-column>
             <!-- <el-table-column label="用户身份证号" align="center" prop="patientCode"/>
             <el-table-column label="用户电话" align="center" prop="patientPhone"/>
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>
@@ -239,9 +259,24 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="用户电话" align="center" prop="patientPhone" width="180"/>
-      <el-table-column label="家属电话" align="center" prop="familyPhone" width="180"/>
-      <el-table-column label="用户身份证号" align="center" prop="patientCode" width="180"/>
+      <el-table-column label="用户电话" align="center" prop="patientPhone" width="180">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{scope.row.patientPhone}}</span>
+          <span v-else>***********</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="家属电话" align="center" prop="familyPhone" width="180">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{scope.row.familyPhone}}</span>
+          <span v-else>***********</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户身份证号" align="center" prop="patientCode" width="180">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{scope.row.patientCode}}</span>
+          <span v-else>******************</span>
+        </template>
+      </el-table-column>
       <!--  隐藏的用户的个人信息    -->
       <!-- <el-table-column type="expand">
         <template slot-scope="scope">
@@ -302,6 +337,7 @@
             v-hasPermi="['alert_log_s:alert_log:remove']"
             >删除
           </el-button>
+          
         </template>
       </el-table-column>
     </el-table>
@@ -359,6 +395,17 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -372,12 +419,22 @@ import {
 } from "@/api/alert_log/alert_log";
 import { listHospitalId } from "@/api/hospital/hospital";
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
+import {getVerify} from "@/api/verify/verify";
 import $ from "jquery";
 export default {
   name: "Alert_log_single",
   dicts: ["sex", "if_status", "hospital_name_list"],
   data() {
     return {
+      verifyForm:{
+        password:null,
+        status:false
+      },
+      isShowName:{
+        status:false,
+        name:"显示姓名"
+      },
+      dialogFormVisibleVerifyAuthority:false,
       currentScrollPos: 0,
       // 遮罩层
       loading: true,
@@ -625,6 +682,40 @@ export default {
     this.getList();
   },*/
   methods: {
+    dialogFormVisibleVerify(){
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd:this.verifyForm.password
+          }
+          getVerify(obj).then(r=>{
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status=true
+            sessionStorage.setItem('isShowName',true)
+            this.dialogFormVisibleVerifyAuthority = false
+            this.isShowName.status =!this.isShowName.status;
+            this.isShowName.name = "隐藏姓名"
+          })
+        }
+      })
+    },
+    isShowNameClick(){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示姓名"
+
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
     /** 查询预警日志列表 */
     getList() {
       this.loading = true;

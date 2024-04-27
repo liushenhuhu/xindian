@@ -116,13 +116,14 @@
              </div> -->
           <div class="touzuo">
             <div class="touzuo-top">
-              <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs">
+              <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs"  @click="handleButtonClick">
                 <el-tab-pane label="基本信息" name="userInfo">
                   <div class="tabBox">
                     <table>
                       <tr>
                         <td>姓名</td>
-                        <td>{{ data.name }}</td>
+                        <td v-if="isShowName.status===true">{{ data.name }}</td>
+                        <td v-else>***</td>
                         <td>性别</td>
                         <td>{{ data.gender }}</td>
                         <td>住院号</td>
@@ -132,7 +133,8 @@
                         <td>报告编码</td>
                         <td>{{ data.pId }}</td>
                         <td>年龄</td>
-                        <td>{{ data.age }}岁</td>
+                        <td v-if="isShowName.status===true">{{ data.age }}岁</td>
+                        <td v-else>**岁</td>
                         <td></td>
                         <td></td>
                       </tr>
@@ -294,7 +296,20 @@
           </div> -->
 
           <div class="touyou">
-            <div class="touzuobiaoti">医师诊断</div>
+            <div class="touzuobiaoti">
+              <div>医师诊断</div>
+              <div>
+                <el-button
+                  type="success"
+                  plain
+                  icon="el-icon-view"
+                  size="mini"
+                  @click="isShowNameClick"
+                  v-if="false"
+                >{{isShowName.name}}
+                </el-button>
+              </div>
+            </div>
             <div class="mt">
               <el-input
                 type="textarea"
@@ -344,14 +359,6 @@
 
 
             </div>
-            <!-- <div class="updown shangbianju">
-              <el-button
-                class="next"
-                @click="prev()"
-                :loading="loading"
-              >上一个</el-button>
-              <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
-            </div> -->
           </div>
 
         </div>
@@ -431,45 +438,6 @@
       </div>
     </div>
     <div class="nobottom"></div>
-
-    <!--    <div>-->
-    <!--      <div class="lineI" v-show="open1">-->
-    <!--        <div id="I1" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--      <div class="lineI" v-show="open2">-->
-    <!--        <div id="I2" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--      <div class="lineI" v-show="open3">-->
-    <!--        <div id="I3" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--      <div class="lineI" v-show="open4">-->
-    <!--        <div id="I4" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--      <div class="lineI" v-show="open5">-->
-    <!--        <div id="I5" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--      <div class="lineI" v-show="open6">-->
-    <!--        <div id="I6" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--      <div class="lineI" v-show="open7">-->
-    <!--        <div id="I7" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--      <div class="lineI" v-show="open8">-->
-    <!--        <div id="I8" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--      <div class="lineI" v-show="open9">-->
-    <!--        <div id="I9" class="lineshow"></div>-->
-    <!--        <button @click="clickClose" class="noName">关闭</button>-->
-    <!--      </div>-->
-    <!--    </div>-->
     <child ref="drawShow" @closeMain="closeMain"></child>
 
     <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
@@ -521,6 +489,11 @@ export default {
   },
   data() {
     return {
+      name:null,
+      isShowName:{
+        status:false,
+        name:"显示姓名"
+      },
       on_off:false,
       dialogFormVisibleVerifyAuthority: false,
       verifyForm: {
@@ -694,26 +667,68 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    isShowNameClick(){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (isShowName){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示姓名"
+
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.name = true
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
+     handleButtonClick() {
+      // Your button click logic here
+      console.log("触发了事件");
+    },
     // 密码弹出框点击确认时
     dialogFormVisibleVerify() {
       this.$refs["verifyForm"].validate(valid => {
         if (valid) {
-          let objj = {
-            password: this.verifyForm.password
-          }
-          getlogin_password(objj).then(res=>{
-            if(res.code == 200){
-              this.$modal.msgSuccess("密码正确");
-              this.verifyForm.status = true
-              this.dialogFormVisibleVerifyAuthority = false
-              sessionStorage.setItem('SMSverification',true)
-              if (this.on_off) {
-                this.sendMsg();
-              } 
-            }else{
-              this.$modal.msgSuccess("密码错误请重试");
+          if (this.name) {
+            
+            // 显示姓名
+            let obj = {
+              accountPwd:this.verifyForm.password
             }
-          })
+            getVerify(obj).then(r=>{
+              this.$modal.msgSuccess("密码正确");
+              this.verifyForm.status=true
+              sessionStorage.setItem('isShowName',true)
+              this.dialogFormVisibleVerifyAuthority = false
+              this.isShowName.status =!this.isShowName.status;
+              this.isShowName.name = "隐藏姓名"
+              this.name = false
+            })
+            
+          }else{
+            
+            // 发送短信
+            let objj = {
+              password: this.verifyForm.password
+            }
+            getlogin_password(objj).then(res=>{
+              if(res.code == 200){
+                this.$modal.msgSuccess("密码正确");
+                this.verifyForm.status = true
+                this.dialogFormVisibleVerifyAuthority = false
+                sessionStorage.setItem('SMSverification',true)
+                if (this.on_off) {
+                  this.sendMsg();
+                } 
+              }else{
+                this.$modal.msgSuccess("密码错误请重试");
+              }
+            })
+          }
         }
       })
     },
@@ -2319,7 +2334,7 @@ export default {
     },*/
     //发送短信
     sendMsg() {
-      console.log("用户电话: " + this.data.pphone);
+      // console.log("用户电话: " + this.data.pphone);
       let patientPhone = this.data.pphone;
       if (patientPhone.length === 14 || patientPhone.length === 15) {
         patientPhone = patientPhone.substring(0, 11);
@@ -2327,7 +2342,7 @@ export default {
       // console.log(patientPhone);
       let SMSverification = sessionStorage.getItem('SMSverification')
       this.on_off = true
-      if (this.verifyForm.status || SMSverification) {
+      if ( SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
           this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
@@ -2982,6 +2997,8 @@ export default {
   font-size: 1vw;
   font-weight: 700;
   margin-bottom: 1.5vh;
+  display: flex;
+  justify-content:space-between;
 }
 
 .touzuoxia {
@@ -3158,5 +3175,14 @@ export default {
     }
   }
 }
+// ::v-deep .el-tabs__nav-scroll::after {
+//        content: 'aafaf';
+//       //  width: 30px;
+//        height: 100%;
+//        background-color: red;
+//        display: inline-block;
+//       padding: 10px;
+//       cursor: pointer;
+//     }
 
 </style>
