@@ -188,15 +188,26 @@
             </template>
           </el-table-column>
           <el-table-column label="患者管理ID" align="center" prop="pId" min-width="200"></el-table-column>
+
           <el-table-column label="患者姓名" align="center" prop="patientName" width="100">
             <template slot-scope="scope">
               <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
               <span v-else>***</span>
             </template>
           </el-table-column>
+
           <el-table-column label="年龄" align="center" prop="patientAge" width="100"></el-table-column>
           <el-table-column label="性别" align="center" prop="patientSex" width="100"></el-table-column>
-          <el-table-column label="医院" align="center" prop="hospitalName" width="150"></el-table-column>
+
+
+          <el-table-column label="医院" align="center" prop="hospitalName" width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
+              <span v-else>************</span>
+            </template>
+          </el-table-column>
+
+
           <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>
           <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
                       <el-table-column label="患者年龄" align="center" prop="patientAge"/>
@@ -226,10 +237,21 @@
               <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
             </template>
           </el-table-column>
-          <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150"></el-table-column>
+          <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.patientPhone }}</span>
+              <span v-else>***********</span>
+            </template>
+          </el-table-column>
           <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150"></el-table-column>
           <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
-          <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150"></el-table-column>
+          <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>
+              <span v-else>********************</span>
+            </template>
+            
+          </el-table-column>
 
           <!--  隐藏的患者的个人信息    -->
           <!-- <el-table-column type="expand">
