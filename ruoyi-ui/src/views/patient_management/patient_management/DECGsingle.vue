@@ -252,9 +252,19 @@
               <span v-else>***</span>
             </template>
           </el-table-column>
-          <el-table-column label="年龄" align="center" prop="patientAge" width="100"></el-table-column>
+          <el-table-column label="年龄" align="center" prop="patientAge" width="100">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.patientAge }}</span>
+              <span v-else>**</span>
+            </template>
+          </el-table-column>
           <el-table-column label="性别" align="center" prop="patientSex" width="100"></el-table-column>
-          <el-table-column label="医院" align="center" prop="hospitalName" width="200"></el-table-column>
+          <el-table-column label="医院" align="center" prop="hospitalName" width="200">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
+              <span v-else>*****************</span>
+            </template>
+          </el-table-column>
           <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>
           <el-table-column label="设备号" align="center" width="170" prop="equipmentCode"/>
           <el-table-column label="在线状态" align="center" width="100" prop="onlineStatus">
@@ -267,10 +277,25 @@
               <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
             </template>
           </el-table-column>
-          <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150"></el-table-column>
-          <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150"></el-table-column>
+          <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.patientPhone }}</span>
+              <span v-else>***********</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>
+              <span v-else>***********</span>
+            </template>
+          </el-table-column>
           <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
-          <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150"></el-table-column>
+          <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>
+              <span v-else>******************</span>
+            </template>
+          </el-table-column>
           <!--todo 更多操作内容需要更新-->
           <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
             <template slot-scope="scope">
@@ -289,9 +314,12 @@
                 <el-button type="text" size="mini" @click="downloadInform(scope.row)"
                            v-hasPermi="['patient_management:patient_management:inform']">查看报告
                 </el-button>
-                <el-button type="text" size="mini" @click="handleAlert(scope.row)"
-                           v-hasPermi="['patient:patient:alert']">
-                  下载数据
+                <el-button
+                    size="mini"
+                    type="text"
+                    @click="downloadData(scope.row)"
+                    v-hasPermi="['DECGsingle:download:report']"
+                  >下载数据 
                 </el-button>
                 <el-button type="text" size="mini" @click="handleAlert(scope.row)"
                            v-hasPermi="['patient:patient:alert']">
