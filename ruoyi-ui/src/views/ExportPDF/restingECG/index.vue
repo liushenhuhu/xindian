@@ -884,7 +884,7 @@ export default {
               this.isShowName.name = "隐藏姓名"
               this.name = false
             })
-            
+
           } else {
             let objj = {
               password: this.verifyForm.password
@@ -897,16 +897,16 @@ export default {
                 sessionStorage.setItem('SMSverification',true)
                 if (this.on_off) {
                   this.sendMsg();
-                } 
+                }
               }else{
                 this.$modal.msgSuccess("密码错误请重试");
               }
             })
           }
-          
+
         }
       })
-      
+
     },
     /** 查询用户管理列表 */
     async getList() {

@@ -298,7 +298,7 @@
 
 
 
-    
+
   </div>
 </template>
 
@@ -542,7 +542,7 @@ export default {
       this.$refs["verifyForm"].validate(valid => {
         if (valid) {
           if (this.name) {
-            
+
             // 显示姓名
             let obj = {
               accountPwd:this.verifyForm.password
@@ -556,9 +556,9 @@ export default {
               this.isShowName.name = "隐藏姓名"
               this.name = false
             })
-            
+
           }else{
-            
+
             // 发送短信
             let objj = {
               password: this.verifyForm.password
@@ -571,7 +571,7 @@ export default {
                 sessionStorage.setItem('SMSverification',true)
                 if (this.on_off) {
                   this.sendMsg();
-                } 
+                }
               }else{
                 this.$modal.msgSuccess("密码错误请重试");
               }
@@ -2375,12 +2375,12 @@ export default {
 // .chongxie{
 //   margin-top: 10px;
 //   display: flex;
-  
+
 //   .chongxie_left{
 //     width: 30%;
 //     margin-right: 25px;
 //     border-radius: 5px;
-    
+
 //     .chongxie_left_top{
 //       padding: 10px;
 //       border-radius: 5px;
