@@ -71,7 +71,8 @@ public class ChatECGController extends BaseController {
         }
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
-        String url = "http://219.155.7.235:6025/";
+//        String url = "http://219.155.7.235:6025/";
+        String url = "http://202.102.249.124:6025/";
         HashMap<String,Object> sendMessageVo=new HashMap<>();
         try {
             sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
@@ -137,7 +138,8 @@ public class ChatECGController extends BaseController {
         }
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
-        String url = "http://219.155.7.235:6025/";
+//        String url = "http://219.155.7.235:6025/";
+        String url = "http://202.102.249.124:6025/";
         HashMap<String,Object> sendMessageVo=new HashMap<>();
         try {
             sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
