@@ -3,117 +3,6 @@
     <div class="body">
       <div class="noleft">
         <div class="box" v-if="xuanzheyujingleixing">
-
-          <!-- <div class="box1">
-            <div class="h11">
-              <span></span>
-              <p>用户信息</p>
-            </div>
-            <div class="patientMessage">
-              <div class="textBoxBottom"><strong>报告编号:</strong>{{ data.pId }}</div>
-             <div class="textbox "><strong>姓名:</strong>{{ data.name }}</div>
-              <div class="textbox "><strong>性别:</strong>{{ data.gender }}</div>
-              <div class="textbox"><strong>年龄:</strong>{{ data.age }}岁</div>
-              <div class="textbox"><strong>送检科室:</strong> -</div>
-              <div class="textbox"><strong>申请单号:</strong> -</div>
-              <div class="textbox"><strong>门诊号:</strong> -</div>
-              <div class="textbox"><strong>住院号:</strong> -</div>
-              <div class="textbox"><strong>病人编号:</strong> -</div>
-              <div class="textbox"><strong>心率:</strong>{{ data.hr }}bpm</div>
-              <div class="textbox"><strong>P波:</strong>{{ data.p }}ms</div>
-              <div class="textbox"><strong>PR间期:</strong>{{ data.pr }}ms</div>
-              <div class="textbox"><strong>QRS波群:</strong>{{ data.qrs }}ms</div>
-              <div class="textbox"><strong>QTc:</strong>{{ data.qtc }}ms</div>
-              <div class="textbox"><strong>HRV:</strong>{{ data.hrv }}ms</div>
-              <div class="textbox" v-if="false"><strong>心梗机率:</strong>{{ data.p_xingeng>0.7?(data.p_xingeng*100).toFixed(1)+'%':'暂无风险' }}</div>
-            </div>
-          </div>
-           上面中心
-          <div class="box2">
-            <div class="h11">
-              <span></span>
-              <p>自动分析结果，仅供参考</p>
-            </div>
-            <div class="result size mmargin">
-              <div class="ml">{{ data.result }}</div>
-            </div>
-            <div class="h11">
-              <span></span>
-              <p>用户症状</p>
-            </div>
-            <div class="result size mmargin">
-              <div class="ml">{{ data.patientSymptom }}</div>
-            </div>
-
-
-            <div class="h11" style="display: flex;justify-content:space-between;">
-              <div>
-                <span></span>
-                <p>预警类型</p>
-              </div>
-              <div>
-                <el-button type="success" round size="mini" class="kangbian"  @click="xianshi">选择预警类型</el-button>
-                <el-button type="success" round size="mini" class="kangbian" @click="tijiao()">提交</el-button>
-              </div>
-            </div>
-            <div class="result size mmargin">
-              <div class="ml">{{ xianshizifuchuan }}</div>
-            </div>
-          </div> -->
-
-          <!-- <div class="touzuo">
-              <div class="touzuobiaoti">患者信息</div>
-              <table class="tablex">
-                <tr>
-                  <td>报告编码</td>
-                  <td>{{ data.pId }}</td>
-                  <td>性别</td>
-                  <td>{{ data.gender }}</td>
-                  <td>p波</td>
-                  <td>{{ data.p }}ms</td>
-                  <td>Qtc</td>
-                  <td>{{ data.qtc }}ms</td>
-                </tr>
-                <tr>
-                  <td>患者编码</td>
-                  <td>{{ data.pId }}</td>
-                  <td>门诊号</td>
-                  <td>-</td>
-                  <td>QRS区间</td>
-                  <td>{{ data.qrs }}ms</td>
-                  <td>HRV</td>
-                  <td>{{ data.hrv }}ms</td>
-                </tr>
-                <tr>
-                  <td>申请单号</td>
-                  <td>-</td>
-                  <td>住院号</td>
-                  <td>-</td>
-                  <td>AI分析结果</td>
-                  <td colspan="3">{{ data.result }}</td>
-
-                </tr>
-                <tr>
-                  <td>年龄</td>
-                  <td>{{ data.age }}岁</td>
-                  <td>心律</td>
-                  <td>{{ data.hr }}bpm</td>
-                  <td>患者症状</td>
-                  <td colspan="3">{{ data.patientSymptom }}</td>
-
-                </tr>
-              </table>
-              <div class="touzuoxia">
-                <div class="touzuoyujing">
-                  <div class="touzuoyujing-left">预警类型：</div>
-                  <div style="" class="touzuoyujingzhi">{{ xianshizifuchuan }}</div>
-                </div>
-                <div class="touzuoanniu">
-                    <el-button type="success" round @click="xianshi">选择预警类型</el-button>
-                    <el-button type="success" round @click="tijiao()">提交</el-button>
-                </div>
-              </div>
-             </div> -->
           <div class="touzuo">
             <div class="touzuo-top">
               <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs"  @click="handleButtonClick">
@@ -153,15 +42,15 @@
                   <div class="tabBox">
                     <table>
                       <tr>
-                        <td>心律</td>
+                        <td>心率</td>
                         <td>{{ data.hr }}</td>
-                        <td>Qtc</td>
+                        <td>QTc</td>
                         <td>{{ data.qtc }}</td>
                         <td>患者症状</td>
                         <td>{{ data.patientSymptom }}</td>
                       </tr>
                       <tr>
-                        <td>p波</td>
+                        <td>P波</td>
                         <td>{{ data.p }}</td>
                         <td>HRV</td>
                         <td>{{ data.hrv }}ms</td>
@@ -196,104 +85,6 @@
               </table>
             </div>
           </div>
-
-
-          <!-- <div class="box3">
-            <div class="h11">
-              <span></span>
-              <div class="between">
-                <p>医师诊断</p>
-                <el-button type="text" @click="dialogVisible" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语</el-button>
-                <el-button type="text" @click="Camera" style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语</el-button>
-              </div>
-            </div>
-            <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-              <div v-for="(item) in items">
-                <div>{{ item.name }}</div>
-                <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
-                        v-for="itemc in item.label"
-                        :key="itemc"
-                        @click="putDown(itemc,$event)">{{ itemc }}
-                </button>
-              </div>
-              <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogForm">确 定</el-button>
-              </div>
-            </el-dialog>
-            <el-dialog title="新增术语" :visible.sync="dialogVisibleTag">
-              <el-tag
-                :key="tag"
-                v-for="tag in dynamicTags"
-                closable
-                :disable-transitions="false"
-                @close="handleCloseTag(tag)">
-                {{tag}}
-              </el-tag>
-              <el-input
-                class="input-new-tag"
-                v-if="inputVisible"
-                v-model="inputValue"
-                ref="saveTagInput"
-                size="small"
-                @keyup.enter.native="handleInputConfirm"
-                @blur="handleInputConfirm"
-              >
-              </el-input>
-              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
-              <div slot="footer" class="dialog-footer">
-                <el-button  @click="dialogVisibleTag=false">取 消</el-button>
-                <el-button type="primary" @click="termTag">确 定</el-button>
-              </div>
-            </el-dialog>
-            <div class="margin">
-              <el-input
-                style="width: 90%;"
-                type="textarea"
-                placeholder="请在这里输入医生诊断结果"
-                data-value="1111"
-                :rows="6"
-                class="font"
-                v-model="data.resultByDoctor"
-              >
-              </el-input>
-            </div>
-            <div class="doctor">
-              <div class="input">
-                <strong>医师:</strong>
-                <el-select v-model="data.doctorName" clearable>
-                  <el-option
-                    v-for="item in options"
-                    :label="item.doctorName"
-                    :value="item.doctorName">
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="input">
-                <strong>日期:</strong>
-                <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 80%"></el-input>
-                <el-input v-else v-model="data.dataTime" clearable style="width: 80%"></el-input>
-              </div>
-            </div>
-            <div class="upload">
-              <el-button class="anNiu" type="success" plain @click="sendWarnMsg()">
-                <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
-                  <i class="el-icon-question"></i>
-                </el-tooltip>
-                发送预警
-              </el-button>
-              <el-button class="anNiu" type="success" plain @click="sendMsg()">发送短信</el-button>
-              <el-button class="anNiu" type="success" plain @click="btnUpload">医生诊断</el-button>
-            </div>
-            <div class="updown">
-              <el-button
-                class="next"
-                @click="prev()"
-                type="primary"
-                :loading="loading"
-              >上一个</el-button>
-              <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
-            </div>
-          </div> -->
 
           <div class="touyou">
             <div class="touzuobiaoti">
@@ -436,7 +227,60 @@
           <!--          </div> -->
         </div>
       </div>
+
+
+
+      <!-- <div class="chongxie">
+        <div class="chongxie_left">
+          <div class="chongxie_left_top">
+            基本类型
+            <el-tabs v-model="tabsStatus" type="card" @tab-click="switchTabs"  @click="handleButtonClick">
+                <el-tab-pane label="基本信息" name="userInfo">
+                  <el-descriptions title="患者信息" :column="3" >
+                  <el-descriptions-item label="姓名">kooriookam</el-descriptions-item>
+                  <el-descriptions-item label="年龄">25岁</el-descriptions-item>
+                  <el-descriptions-item label="性别">女</el-descriptions-item>
+                </el-descriptions>
+                <el-descriptions :column="1" >
+                  <el-descriptions-item label="报告编码">20230917121751922969</el-descriptions-item>
+                </el-descriptions>
+                </el-tab-pane>
+                <el-tab-pane label="心电参数" name="ecgInfo">
+                  <el-descriptions title="心电参数" :column="3" >
+                    <el-descriptions-item label="心率">71</el-descriptions-item>
+                    <el-descriptions-item label="Qtc">330.94</el-descriptions-item>
+                    <el-descriptions-item label="p波">83.71</el-descriptions-item>
+                    <el-descriptions-item label="HRV">16.9ms</el-descriptions-item>
+                    <el-descriptions-item label="QRS区间">81.49ms</el-descriptions-item>
+                  </el-descriptions>
+                </el-tab-pane>
+              </el-tabs>
+              <el-descriptions :column="1" >
+                <el-descriptions-item label="智能分析">20230917121751922969撒发顺丰撒旦发生发生发撒</el-descriptions-item>
+              </el-descriptions>
+              <el-descriptions :column="1" >
+                <el-descriptions-item label="患者症状">暂无症状</el-descriptions-item>
+              </el-descriptions>
+          </div>
+          <div class="chongxie_left_botton">
+            <div class="chongxie_left_botton_yujingleixing">
+              <div class="chongxie_left_botton_yujingleixing_title">预警类型</div>
+              <div class="chongxie_left_botton_yujingleixing_zhi">
+                {{xianshizifuchuan}}
+              </div>
+              <div class="chongxie_left_botton_yujingleixing_anniu"></div>
+            </div>
+            <div class="chongxie_left_botton_yishizenduan">医师诊断</div>
+          </div>
+        </div>
+        <div class="chongxie_right">患者心电图</div>
+      </div> -->
     </div>
+
+
+
+
+
     <div class="nobottom"></div>
     <child ref="drawShow" @closeMain="closeMain"></child>
 
@@ -451,6 +295,10 @@
         <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
       </div>
     </el-dialog>
+
+
+
+    
   </div>
 </template>
 
@@ -2520,6 +2368,53 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// ::v-deep .el-descriptions-item__content{
+//     background-color: #f8f8f8;
+//     // text-align: center;
+// }
+// .chongxie{
+//   margin-top: 10px;
+//   display: flex;
+  
+//   .chongxie_left{
+//     width: 30%;
+//     margin-right: 25px;
+//     border-radius: 5px;
+    
+//     .chongxie_left_top{
+//       padding: 10px;
+//       border-radius: 5px;
+//       background-color: #ffffff;
+//     }
+//     .chongxie_left_botton{
+//       background-color: #ffffff;
+//       border-radius: 5px;
+//       margin-top: 10px;
+//       padding: 10px;
+//       .chongxie_left_botton_yujingleixing_zhi{
+//         margin: 10px;
+//         background-color: #f4f4f4;
+//         font-size: 1vw;
+//         border-radius: 5px;
+//         padding: 10px;
+//         height: 10vh;
+//         overflow-y: hidden; /* y 轴溢出隐藏 */
+//         overflow-y: scroll; /* 允许向下滚动 */
+//        ::-webkit-scrollbar {
+//           display: none; /* Chrome Safari */
+//         }
+//         -ms-overflow-style: none;
+//         scrollbar-width: none;
+//       }
+//     }
+//   }
+//   .chongxie_right{
+//     background-color: #ffffff;
+//     border-radius: 5px;
+//     padding: 10px;
+//   }
+// }
+
 .updown {
   width: 100%;
   display: flex;

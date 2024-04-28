@@ -250,15 +250,15 @@
                     <div class="tabBox">
                       <table>
                         <tr>
-                          <td>心律</td>
+                          <td>心率</td>
                           <td>{{ data.hr }}</td>
-                          <td>Qtc</td>
+                          <td>QTc</td>
                           <td>{{ data.qtc }}</td>
                           <td>患者症状</td>
                           <td>{{ data.patientSymptom }}</td>
                         </tr>
                         <tr>
-                          <td>p波</td>
+                          <td>P波</td>
                           <td>{{ data.p }}</td>
                           <td>HRV</td>
                           <td>{{ data.hrv }}ms</td>
