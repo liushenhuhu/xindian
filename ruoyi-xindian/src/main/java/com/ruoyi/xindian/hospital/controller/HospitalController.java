@@ -187,7 +187,6 @@ public class HospitalController extends BaseController
     }
 
     // 查询医院及医院下的医生
-    @Anonymous
     @GetMapping("/getDocInHospital")
     public AjaxResult getDocInHospital() throws Exception {
         return hospitalService.getDocInHospital();
