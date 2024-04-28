@@ -2,6 +2,7 @@ package com.ruoyi.xindian.hospital.service;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 
@@ -82,4 +83,5 @@ public interface IHospitalService
 
     Hospital selectCode(String hospitalName);
 
+    AjaxResult getDocInHospital() throws Exception;
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -183,6 +184,12 @@ public class HospitalController extends BaseController
             i = i +1;
         }
         return AjaxResult.success("down");
+    }
+
+    // 查询医院及医院下的医生
+    @GetMapping("/getDocInHospital")
+    public AjaxResult getDocInHospital() throws Exception {
+        return hospitalService.getDocInHospital();
     }
 
 }

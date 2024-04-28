@@ -78,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="accountStatus!= null  and accountStatus!= ''"> and account_status = #{accountStatus}</if>
             <if test="equipmentList != null  and equipmentList != ''"> and equipment_list = #{equipmentList}</if>
             <if test="accountStatus != null  and accountStatus != ''"> and account_status = #{accountStatus}</if>
+            <if test="hospital != null  and hospital != ''"> and hospital = #{hospital}</if>
             <if test="hospitalNameList != null and hospitalNameList.size()>0">
                 and  hospital in
                 <foreach collection="hospitalNameList" index="index" item="item" separator="," open="(" close=")">
