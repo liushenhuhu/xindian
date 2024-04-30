@@ -453,14 +453,14 @@
           <el-table-column label="用户姓名" align="center" prop="patientName" min-width="100">
             <template slot-scope="scope">
               <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
-              <span v-else>***</span>
+              <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
             </template>
           </el-table-column>
           <el-table-column label="年龄" align="center" prop="patientAge" min-width="50">
-            <template slot-scope="scope">
+            <!-- <template slot-scope="scope">
               <span v-if="isShowName.status===true">{{ scope.row.patientAge }}</span>
               <span v-else>**</span>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column label="性别" align="center" prop="patientSex" min-width="50"></el-table-column>
           <el-table-column label="医院" align="center" prop="hospitalName" min-width="200">
@@ -738,7 +738,7 @@ export default {
       },
       isShowName: {
         status: false,
-        name: "显示姓名"
+        name: "显示信息"
       },
       option: [],
       value: [],
@@ -838,6 +838,16 @@ export default {
     console.log('mounted')
   },
   methods: {
+    hideMiddleName(patientName) {
+      if (patientName.length <= 1) {
+        return "*"; // 一个字的则用一个 * 代替
+      } else if (patientName.length === 2) {
+        return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
+      } else {
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
+      }
+    },
     //表格选中事件
     handleCurrentChange(val) {
       this.currentRow = val;
@@ -1066,7 +1076,7 @@ export default {
             this.dialogFormVisibleVerifyAuthority = false
             sessionStorage.setItem('isShowName', true)
             this.isShowName.status = !this.isShowName.status;
-            this.isShowName.name = "隐藏姓名"
+            this.isShowName.name = "隐藏信息"
           })
         }
       })
@@ -1077,11 +1087,11 @@ export default {
       if (this.verifyForm.status || isShowName) {
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "显示姓名"
+          this.isShowName.name = "显示信息"
 
         } else {
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "隐藏姓名"
+          this.isShowName.name = "隐藏信息"
         }
       } else {
         this.verifyForm.password = ''

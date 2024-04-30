@@ -179,7 +179,7 @@
       <el-table-column label="用户姓名" align="center" prop="patientName">
         <template slot-scope="scope">
           <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
-          <span v-else>***</span>
+          <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
         </template>
       </el-table-column>
       <!--  <el-table-column label="用户身份证号" align="center" prop="patientCode"/>
@@ -354,7 +354,7 @@ export default {
       },
       isShowName:{
         status:false,
-        name:"显示姓名"
+        name:"显示信息"
       },
       dialogFormVisibleVerifyAuthority:false,
       currentScrollPos:0,
@@ -441,6 +441,16 @@ export default {
     this.getList();
   },*/
   methods: {
+    hideMiddleName(patientName) {
+      if (patientName.length <= 1) {
+        return "*"; // 一个字的则用一个 * 代替
+      } else if (patientName.length === 2) {
+        return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
+      } else {
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
+      }
+    },
     dialogFormVisibleVerify(){
       this.$refs["verifyForm"].validate(valid => {
         if (valid) {
@@ -453,7 +463,7 @@ export default {
             sessionStorage.setItem('isShowName',true)
             this.dialogFormVisibleVerifyAuthority = false
             this.isShowName.status =!this.isShowName.status;
-            this.isShowName.name = "隐藏姓名"
+            this.isShowName.name = "隐藏信息"
           })
         }
       })
@@ -463,11 +473,11 @@ export default {
       if (this.verifyForm.status || isShowName){
         if (this.isShowName.status){
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "显示姓名"
+          this.isShowName.name = "显示信息"
 
         }else {
           this.isShowName.status =!this.isShowName.status;
-          this.isShowName.name = "隐藏姓名"
+          this.isShowName.name = "隐藏信息"
         }
       }else {
         this.verifyForm.password=''
