@@ -1773,6 +1773,7 @@ export default {
     background-color: #ffffff;
     padding: 15px;
     //opacity: 0.6;
+    padding-bottom: 0;
     .box1 {
       width: 35%;
       height: 100%;
@@ -2292,7 +2293,8 @@ color:#ffffff;
 .oder{
   display: flex;
   justify-content:space-around;
-  margin: 2vh 0;
+  margin: 3vh 0;
+  margin-bottom: 0;
 }
 ::v-deep .el-input--medium .el-input__inner{
   font-size: 1vw;
@@ -2361,7 +2363,7 @@ color:#ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2vh;
+  margin-top: 3vh;
   font-weight: 700;
   .yujinclass_tou{
     margin-right: 5px;
