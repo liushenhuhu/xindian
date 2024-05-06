@@ -178,7 +178,12 @@
           <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="医院" align="center" prop="patientSource"/>
+      <el-table-column label="医院" align="center" prop="patientSource">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{ scope.row.patientSource }}</span>
+          <span v-else>***********</span>
+        </template>
+      </el-table-column>
       <el-table-column label="患者电话" align="center" prop="patientPhone">
         <template slot-scope="scope">
               <span v-if="isShowName.status===true">{{ scope.row.patientPhone }}</span>
