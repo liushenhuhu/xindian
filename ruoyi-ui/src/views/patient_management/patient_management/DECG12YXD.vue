@@ -243,7 +243,12 @@
               <span v-else>***********</span>
             </template>
           </el-table-column>
-          <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150"></el-table-column>
+          <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>
+              <span v-else>***********</span>
+            </template>
+          </el-table-column>
           <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
           <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150">
             <template slot-scope="scope">

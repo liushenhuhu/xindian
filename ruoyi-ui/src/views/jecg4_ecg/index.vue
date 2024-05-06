@@ -2366,6 +2366,7 @@ color:#ffffff;
   margin-top: 3vh;
   font-weight: 700;
   .yujinclass_tou{
+    font-size: 1vw;
     margin-right: 5px;
   }
   .yujinclass_zhi{
