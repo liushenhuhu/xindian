@@ -133,6 +133,16 @@
         >导出
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-view"
+          size="mini"
+          @click="isShowNameClick"
+        >{{isShowName.name}}
+        </el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
     </el-row>
 
@@ -146,7 +156,12 @@
         </template>
       </el-table-column>
       <el-table-column label="患者管理id" align="center" prop="pId" show-overflow-tooltip width="180"/>
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
+      <el-table-column label="患者姓名" align="center" prop="patientName">
+        <template slot-scope="scope">
+         <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
+         <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
+        </template>
+      </el-table-column>
       <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
                   <el-table-column label="患者年龄" align="center" prop="patientAge"/>
                   <el-table-column label="患者性别" align="center" prop="patientSex">
@@ -341,6 +356,17 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -358,12 +384,22 @@ import {getToken} from "@/utils/auth";
 import {updateMonitoringStatus} from "@/api/patient/patient";
 import {listEquipment, updateEquipmentStatus} from "@/api/equipment/equipment";
 import {updateOnlineAll} from "@/api/online/online";
+import {getVerify} from "@/api/verify/verify";
 
 export default {
   name: "lookList",
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type'],
   data() {
     return {
+      isShowName:{
+        status:false,
+        name:"显示姓名"
+      },
+      dialogFormVisibleVerifyAuthority:false,
+      verifyForm:{
+        password:null,
+        status:false
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -411,6 +447,9 @@ export default {
         equipmentCode: [
           {required: true, message: "设备号不能为空", trigger: "blur"}
         ],
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
+        ],
       }
     };
   },
@@ -432,6 +471,51 @@ export default {
     this.getList();
   },
   methods: {
+    hideMiddleName(patientName) {
+      if (patientName.length <= 1) {
+        return "*"; // 一个字的则用一个 * 代替
+      } else if (patientName.length === 2) {
+        return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
+      } else {
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
+      }
+    },
+    dialogFormVisibleVerify(){
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd:this.verifyForm.password
+          }
+          getVerify(obj).then(r=>{
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status=true
+            this.dialogFormVisibleVerifyAuthority = false
+            sessionStorage.setItem('isShowName',true)
+            this.isShowName.status =!this.isShowName.status;
+            this.isShowName.name = "隐藏姓名"
+          })
+        }
+      })
+    },
+
+    isShowNameClick(){
+      let isShowName =  sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
+        if (this.isShowName.status){
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示姓名"
+
+        }else {
+          this.isShowName.status =!this.isShowName.status;
+          this.isShowName.name = "隐藏姓名"
+        }
+      }else {
+        this.verifyForm.password=''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
     refreshList() {
       console.log("refresh======")
       updateOnlineAll().then(res => {

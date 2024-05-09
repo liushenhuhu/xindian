@@ -249,12 +249,19 @@
           <el-table-column label="患者姓名" align="center" prop="patientName" width="100">
             <template slot-scope="scope">
               <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
-              <span v-else>***</span>
+              <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="年龄" align="center" prop="patientAge" width="100"></el-table-column>
+          <el-table-column label="年龄" align="center" prop="patientAge" width="100">
+            
+          </el-table-column>
           <el-table-column label="性别" align="center" prop="patientSex" width="100"></el-table-column>
-          <el-table-column label="医院" align="center" prop="hospitalName" width="200"></el-table-column>
+          <el-table-column label="医院" align="center" prop="hospitalName" width="200">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
+              <span v-else>*****************</span>
+            </template>
+          </el-table-column>
           <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>
           <el-table-column label="设备号" align="center" width="170" prop="equipmentCode"/>
           <el-table-column label="在线状态" align="center" width="100" prop="onlineStatus">
@@ -267,10 +274,25 @@
               <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
             </template>
           </el-table-column>
-          <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150"></el-table-column>
-          <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150"></el-table-column>
+          <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.patientPhone }}</span>
+              <span v-else>***********</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>
+              <span v-else>***********</span>
+            </template>
+          </el-table-column>
           <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
-          <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150"></el-table-column>
+          <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>
+              <span v-else>******************</span>
+            </template>
+          </el-table-column>
           <!--todo 更多操作内容需要更新-->
           <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
             <template slot-scope="scope">
@@ -289,9 +311,12 @@
                 <el-button type="text" size="mini" @click="downloadInform(scope.row)"
                            v-hasPermi="['patient_management:patient_management:inform']">查看报告
                 </el-button>
-                <el-button type="text" size="mini" @click="handleAlert(scope.row)"
-                           v-hasPermi="['patient:patient:alert']">
-                  下载数据
+                <el-button
+                    size="mini"
+                    type="text"
+                    @click="downloadData(scope.row)"
+                    v-hasPermi="['DECGsingle:download:report']"
+                  >下载数据 
                 </el-button>
                 <el-button type="text" size="mini" @click="handleAlert(scope.row)"
                            v-hasPermi="['patient:patient:alert']">
@@ -504,7 +529,7 @@ export default {
       open: false,
       isShowName: {
         status: false,
-        name: "显示姓名"
+        name: "显示信息"
       },
       // 时间范围
       daterangeConnectionTime: [],
@@ -592,6 +617,16 @@ export default {
   //   this.getList();
   // },
   methods: {
+    hideMiddleName(patientName) {
+      if (patientName.length <= 1) {
+        return "*"; // 一个字的则用一个 * 代替
+      } else if (patientName.length === 2) {
+        return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
+      } else {
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
+      }
+    },
     /** 展开收起查询菜单 **/
     unfoldSearchBox() {
       this.showSearch = !this.showSearch;
@@ -725,7 +760,7 @@ export default {
             this.dialogFormVisibleVerifyAuthority = false
             sessionStorage.setItem('isShowName', true)
             this.isShowName.status = !this.isShowName.status;
-            this.isShowName.name = "隐藏姓名"
+            this.isShowName.name = "隐藏信息"
           })
         }
       })
@@ -740,11 +775,11 @@ export default {
       if (this.verifyForm.status || isShowName) {
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "显示姓名"
+          this.isShowName.name = "显示信息"
 
         } else {
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "隐藏姓名"
+          this.isShowName.name = "隐藏信息"
         }
       } else {
         this.verifyForm.password = ''

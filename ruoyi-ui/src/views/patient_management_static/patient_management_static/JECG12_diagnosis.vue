@@ -275,7 +275,7 @@
       <el-table-column label="用户名称" align="center" prop="patientName">
         <template slot-scope="scope">
           <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
-          <span v-else>***</span>
+          <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
@@ -630,7 +630,16 @@ export default {
     this.getList();
   },
   methods: {
-
+    hideMiddleName(patientName) {
+      if (patientName.length <= 1) {
+        return "*"; // 一个字的则用一个 * 代替
+      } else if (patientName.length === 2) {
+        return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
+      } else {
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
+      }
+    },
     refreshList() {
       console.log("refresh======")
       updateOnlineAll().then(res => {
