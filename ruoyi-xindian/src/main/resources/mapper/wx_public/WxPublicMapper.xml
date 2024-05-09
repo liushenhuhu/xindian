@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.wx_public.mapper.WxPublicMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.wx_public.domain.WxPublic">
+            <id property="wxId" column="wx_id" jdbcType="INTEGER"/>
+            <result property="openId" column="open_id" jdbcType="VARCHAR"/>
+            <result property="unionId" column="union_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="selectWxPublicVo">
+        select
+            wx_id,open_id,union_id
+        from wx_public
+    </sql>
+    <select id="selectAllOpenids" resultType="string">
+        select open_id poenId from wx_public
+    </select>
+
+    <insert id="insert">
+        insert into wx_public (open_id,union_id) values (#{openid},#{unionid})
+    </insert>
+
+</mapper>

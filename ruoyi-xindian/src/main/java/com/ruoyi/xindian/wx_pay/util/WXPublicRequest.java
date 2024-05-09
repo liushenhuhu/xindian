@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.wx_pay.util;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +10,7 @@ import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.order.mapper.InvoiceMapper;
 import com.ruoyi.xindian.patient_management.domain.DocReportMsg;
 import com.ruoyi.xindian.patient_management.mapper.DocReportMsgMapper;
+import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.wx_pay.VO.BizField;
 import com.ruoyi.xindian.wx_pay.VO.UserField;
@@ -16,7 +18,7 @@ import com.ruoyi.xindian.wx_pay.VO.WxCardInvoiceAuthurlVO;
 import com.ruoyi.xindian.wx_pay.VO.invoiceVO;
 import com.ruoyi.xindian.wx_pay.domain.*;
 import com.ruoyi.xindian.wx_pay.mapper.OrderInfoMapper;
-import lombok.Data;
+import com.ruoyi.xindian.wx_public.mapper.WxPublicMapper;
 import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -70,6 +72,11 @@ public class WXPublicRequest {
     @Resource
     private AesUtils aesUtils;
 
+    @Resource
+    private WxPublicMapper wxPublicMapper;
+
+    @Resource
+    private PatientRelationshipMapper patientRelationshipMapper;
 
     /**
      * 发送给医生的公众号消息推送
@@ -1254,5 +1261,127 @@ public class WXPublicRequest {
     }
 
 
+    /**
+     * 获取所有的关注公众号的openid
+     * @param accessToken
+     * @return
+     * @throws Exception
+     */
+    public Set<String> getAllGzhopenid(String accessToken)throws Exception{
 
+        redisTemplate.delete("WXGZOpenIDList");
+
+        String usersGetUrl="https://api.weixin.qq.com/cgi-bin/user/get?access_token="
+                +accessToken;
+        Set<String> openIds =new HashSet<String>();
+        boolean flag = true;
+        String nextOpenid = "";
+        while(flag) {
+            if (ObjectUtil.isNotEmpty(nextOpenid)){
+                usersGetUrl="https://api.weixin.qq.com/cgi-bin/user/get?access_token="
+                        +accessToken+"&next_openid="+nextOpenid;
+            }
+
+            JSONObject jsonObject = getResponse(usersGetUrl);
+            Integer total=(Integer) jsonObject.get("total");
+            Integer count=(Integer) jsonObject.get("count");
+            if (count > 0) {
+                JSONObject openIdDdta = (JSONObject)jsonObject.get("data");
+                List<String> openIdList= (List<String>) openIdDdta.get("openid");
+                openIds.addAll(openIdList);
+                nextOpenid = (String) jsonObject.get("next_openid");
+            }else {
+                flag = false;
+            }
+        }
+        List<String> list = new ArrayList<>(openIds);
+        redisTemplate.opsForList().leftPushAll("WXGZOpenIDList", list);
+        redisTemplate.expire("WXGZOpenIDList",60,TimeUnit.MINUTES);
+        return openIds;
+
+
+
+    }
+
+    public void insertGzxOpenidMapUnionid() throws Exception {
+        // 0、获取accessToken
+        String accessToken = getAccessToken();
+        // 1、获取所有的关注公众号的openid
+        Set<String> allGzhopenid = getAllGzhopenid(accessToken);
+        // 2、查询表wx_public的数据
+        List<String> wxPublicOpenids = wxPublicMapper.selectAllOpenids();
+        // 3、去重
+        allGzhopenid.removeAll(wxPublicOpenids);
+
+        // 4、调用根据openid获取详细信息的微信接口
+        if (ObjectUtil.isNotEmpty(allGzhopenid)){
+            for (String openid : allGzhopenid) {
+                Map<String, Object> gzhDetailInfoMap = getGzhDetailInfo(openid, accessToken);
+                if (ObjectUtil.isNotEmpty(gzhDetailInfoMap) && ObjectUtil.isEmpty(gzhDetailInfoMap.get("errcode"))){
+                    String unionid = (String)gzhDetailInfoMap.get("unionid");
+                    // 5、插入到wx_public表中
+                    wxPublicMapper.insert(openid,unionid);
+                }
+            }
+        }
+    }
+
+    public Map<String,Object> getGzhDetailInfo(String openid,String accessToken) {
+        String usersGetUrl="https://api.weixin.qq.com/cgi-bin/user/info?access_token="+accessToken+"&openid="+openid+"&lang=zh_CN";
+        try {
+            return getResponse(usersGetUrl);
+        }catch (Exception e) {
+            log.error("根据openid查询详细信息失败，openid={}",openid);
+        }
+        return new HashMap<>();
+    }
+
+    /**
+     * 出现预警时，根据传递的fatherPhone向添加的用户发送公众号通知
+     * @param fatherPhone
+     */
+    public void alertInfoToOfficialAccount(String fatherPhone, String info,String username) throws ParseException {
+        // 查询需要发送通知的openid
+        List<String> toAllertOpenids = patientRelationshipMapper.selectToAlertOpenids(fatherPhone);
+        for (String openid : toAllertOpenids) {
+            sendAllertMsg(openid,username,info);
+        }
+
+    }
+
+    /**
+     * 心电检测传异常时候，提醒跟添加的用户组人员
+     * @param openid
+     * @param username
+     * @param info
+     * @throws ParseException
+     */
+    public  void sendAllertMsg(String openid, String username, String info) throws ParseException {
+        String msgTemplateId = ""; // TODO
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy-MM-dd HH:mm");
+        String timeNow = sdf.format(new Date());
+        WxMpInMemoryConfigStorage wxStorage = new WxMpInMemoryConfigStorage();
+        wxStorage.setAppId(WXPayConstants.WX_PUBLIC_ID);
+        wxStorage.setSecret(WXPayConstants.WX_PUBLIC_SECRET);
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(wxStorage);
+        // 此处的 key/value 需和模板消息对应
+        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+                new WxMpTemplateData("thing14", username), // TODO
+                new WxMpTemplateData("thing15", info),// TODO
+                new WxMpTemplateData("time3", timeNow)
+        );
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                .toUser(openid)
+                .templateId(msgTemplateId)
+                .data(wxMpTemplateDataList)
+                .build();
+        try {
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        } catch (Exception e) {
+            System.out.println("心电检测传异常时候，提醒给添加的用户组人员信息推送失败：" + e.getMessage());
+        }
+
+    }
 }
