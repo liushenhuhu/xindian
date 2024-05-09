@@ -3284,6 +3284,7 @@ font-size: 1vw;
   font-weight: 700;
   .yujinclass_tou{
     margin-right: 5px;
+    font-size: 1vw;
   }
   .yujinclass_zhi{
     // background-color: red;

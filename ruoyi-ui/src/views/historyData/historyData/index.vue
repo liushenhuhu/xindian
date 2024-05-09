@@ -194,12 +194,17 @@
       <el-table-column label="患者名称" align="center" prop="patientName">
         <template slot-scope="scope">
           <span v-if="isShowName.status===true">{{scope.row.patientName}}</span>
-          <span v-else>***</span>
+          <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="患者症状" align="center" prop="patientSymptom" show-overflow-tooltip/>
       <el-table-column label="诊断结论" align="center" prop="diagnosisConclusion" show-overflow-tooltip/>
-      <el-table-column label="医院" align="center" prop="hospitalName"/>
+      <el-table-column label="医院" align="center" prop="hospitalName">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{scope.row.hospitalName}}</span>
+          <span v-else>************</span>
+        </template>
+      </el-table-column>
       <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.reportTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -449,7 +454,7 @@ export default {
       dialogFormVisibleVerifyAuthority:false,
       isShowName:{
         status:false,
-        name:"显示姓名"
+        name:"显示信息"
       },
       option:[],
       value:[],
@@ -543,6 +548,16 @@ export default {
     this.getList();
   },
   methods: {
+    hideMiddleName(patientName) {
+      if (patientName.length <= 1) {
+        return "*"; // 一个字的则用一个 * 代替
+      } else if (patientName.length === 2) {
+        return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
+      } else {
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
+      }
+    },
     tableRowClassName({row, rowIndex}){
       /*console.log(row.ecgLevel)
       if (row.ecgLevel === 2) {
@@ -582,19 +597,21 @@ export default {
             this.$modal.msgSuccess("密码正确");
             this.verifyForm.status=true
             this.dialogFormVisibleVerifyAuthority = false
+            sessionStorage.setItem('isShowName', true)
           })
         }
       })
     },
     isShowNameClick(){
-      if (this.verifyForm.status){
+      let isShowName = sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName){
         if (this.isShowName.status){
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "显示姓名"
+          this.isShowName.name = "显示信息"
 
         }else {
           this.isShowName.status =!this.isShowName.status;
-          this.isShowName.name = "隐藏姓名"
+          this.isShowName.name = "隐藏信息"
         }
       }else {
         this.verifyForm.password=''
@@ -810,11 +827,11 @@ export default {
     /** 查看心电图*/
     lookECG(row) {
       if (this.$route.query.ecgType && this.$route.query.ecgType==='JECG12'){
-        this.$router.push({path: "/restingECG", query: {pId: row.pId}});
+        this.$router.push({path: "/restingECG", query: {pId: row.pId,state:12,queryParams:this.queryParams,ecgType:"JECG12"}});
       }else if (this.$route.query.ecgType && this.$route.query.ecgType==='JECGsingle') {
-        this.$router.push({path: "/staticECG", query: {pId: row.pId,}});
+        this.$router.push({path: "/staticECG", query: {pId: row.pId,state: 1, queryParams: this.queryParams, ecgType: "JECGsingle"}});
       }else if (this.$route.query.ecgType&&this.$route.query.ecgType==="JECG4"){
-        this.$router.push({path: "/JECG4_ECG", query: {pId: row.pId,}})
+        this.$router.push({path: "/JECG4_ECG", query: {pId: row.pId,state:4,queryParams:this.queryParams,ecgType:"JECG4"}})
       }else {
         this.$modal.msgError("类型不匹配，请稍后再试");
       }

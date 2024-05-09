@@ -133,6 +133,13 @@
 <!--        >导出-->
 <!--        </el-button>-->
 <!--      </el-col>-->
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-view"
+          size="mini"
+          @click="isShowNameClick">{{isShowName.name}}
+        </el-button>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -148,11 +155,21 @@
       <el-table-column label="事件名称" align="center" prop="eventName"/>
       <el-table-column label="事件说明" align="center" prop="eventDescription"/>
       <el-table-column label="患者id" align="center" prop="pId" show-overflow-tooltip/>
-      <el-table-column label="患者姓名" align="center" prop="patientName"/>
+      <el-table-column label="患者姓名 " align="center" prop="patientName">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
+          <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
+        </template>
+      </el-table-column>
       <!--      <el-table-column label="患者身份证号" align="center" prop="patientCode"/>
             <el-table-column label="患者电话" align="center" prop="patientPhone"/>
             <el-table-column label="家属电话" align="center" prop="familyPhone"/>-->
-      <el-table-column label="医院名称" align="center" prop="hospitalName"/>
+      <el-table-column label="医院名称" align="center" prop="hospitalName">
+        <template slot-scope="scope">
+              <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
+              <span v-else>***************</span>
+            </template>
+      </el-table-column>
       <!--      <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
       <el-table-column label="是否标注" align="center" prop="anoStatus">
         <template slot-scope="scope">
@@ -258,17 +275,38 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+      <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
+        <el-form-item label="验证密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
+import {getVerify} from "@/api/verify/verify";
 
 export default {
   name: "log",
   dicts: ['sex', 'if_status'],
   data() {
     return {
+      verifyForm: {
+        password: null,
+        status: false
+      },
+      isShowName: {
+        status: false,
+        name: "显示信息"
+      },
+      dialogFormVisibleVerifyAuthority: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -313,7 +351,10 @@ export default {
         ],
         pId: [
           {required: true, message: "患者id不能为空", trigger: "blur"}
-        ]
+        ],
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
+        ],
       }
     };
   },
@@ -324,6 +365,51 @@ export default {
     this.getList();
   },
   methods: {
+    hideMiddleName(patientName) {
+      if (patientName.length <= 1) {
+        return "*"; // 一个字的则用一个 * 代替
+      } else if (patientName.length === 2) {
+        return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
+      } else {
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
+      }
+    },
+    dialogFormVisibleVerify() {
+      this.$refs["verifyForm"].validate(valid => {
+        if (valid) {
+          let obj = {
+            accountPwd: this.verifyForm.password
+          }
+          getVerify(obj).then(r => {
+            this.$modal.msgSuccess("密码正确");
+            this.verifyForm.status = true
+            this.dialogFormVisibleVerifyAuthority = false
+            sessionStorage.setItem('isShowName', true)
+            this.isShowName.status = !this.isShowName.status;
+            this.isShowName.name = "隐藏信息"
+          })
+        }
+      })
+    },
+
+    isShowNameClick() {
+      let isShowName = sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName) {
+        if (this.isShowName.status) {
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "显示信息"
+
+        } else {
+          this.isShowName.status = !this.isShowName.status;
+          this.isShowName.name = "隐藏信息"
+        }
+      } else {
+        this.verifyForm.password = ''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
+
+    },
     /** 查询预警日志列表 */
     getList() {
       this.queryParams.pId = this.$route.query.pId
