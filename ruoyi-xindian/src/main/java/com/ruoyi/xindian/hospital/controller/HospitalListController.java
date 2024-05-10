@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -116,7 +117,7 @@ public class HospitalListController extends BaseController
     public TableDataInfo listId(Hospital hospital, HttpServletRequest request)
     {
         LoginUser loginUser = tokenService.getLoginUser(request);
-        List<Hospital> list = null;
+        List<Hospital> list = new ArrayList<>();
         //判断是否为管理员
         if (SysUser.isAdmin(loginUser.getUserId()))
         {
@@ -127,22 +128,23 @@ public class HospitalListController extends BaseController
             SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
             if (sysUser.getHospitalCode()!=null&&!"".equals(sysUser.getHospitalCode())){
                 hospital.getHospitalCodeList().add(sysUser.getHospitalCode());
-            }
 
-            Hospital hospital2 = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
-            if (hospital2!=null){
-                AssociatedHospital associatedHospital = new AssociatedHospital();
-                associatedHospital.setHospitalId(hospital2.getHospitalId());
-                List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-                if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                    for (AssociatedHospital c:associatedHospitals){
-                        Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
-                        hospital.getHospitalCodeList().add(hospital1.getHospitalCode());
+                Hospital hospital2 = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+                if (hospital2!=null){
+                    AssociatedHospital associatedHospital = new AssociatedHospital();
+                    associatedHospital.setHospitalId(hospital2.getHospitalId());
+                    List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+                    if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                        for (AssociatedHospital c:associatedHospitals){
+                            Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                            hospital.getHospitalCodeList().add(hospital1.getHospitalCode());
+                        }
                     }
+                    list = hospitalService.selectUserId(hospital);
                 }
-
-                list = hospitalService.selectUserId(hospital);
             }
+
+
 
         }
         return getDataTable(list);

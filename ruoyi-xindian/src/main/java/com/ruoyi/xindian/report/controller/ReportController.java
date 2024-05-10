@@ -270,6 +270,9 @@ public class ReportController extends BaseController
     @GetMapping(value = "/{reportId}")
     public AjaxResult getInfo(@PathVariable("reportId") Long reportId) throws Exception {
         Report report = reportService.selectReportByReportId(reportId);
+        if (report==null){
+            return AjaxResult.error("报告不存在");
+        }
         if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
             report.setPPhone(aesUtils.decrypt(report.getPPhone()));
         }
@@ -283,6 +286,9 @@ public class ReportController extends BaseController
     @GetMapping(value = "/getInfoByPid/{pId}")
     public AjaxResult getInfoByPid(@PathVariable("pId") String pId) throws Exception {
         Report report = reportService.selectReportByPId(pId);
+        if (report==null){
+            return AjaxResult.error("报告不存在");
+        }
         if (report.getPPhone()!=null&&!"".equals(report.getPPhone())){
             report.setPPhone(aesUtils.decrypt(report.getPPhone()));
         }
