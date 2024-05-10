@@ -2182,7 +2182,7 @@ body,html{
 .tag-title{
   font-size: 1vw;
   width: 100%;
-  position: absolute;
+  position: sticky;
   top: 0;
   display: flex;
   justify-content: space-around;

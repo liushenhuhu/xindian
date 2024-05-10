@@ -66,5 +66,5 @@ public interface PatientRelationshipMapper
     PatientRelationship selectFatherPhonePatientRelationship(@Param("phone") String phone);
 
 
-
+    List<String> selectToAlertOpenids(@Param("fatherPhone") String fatherPhone);
 }

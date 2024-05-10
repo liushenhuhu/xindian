@@ -3,6 +3,7 @@ package com.ruoyi.xindian.wx_pay.controller;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.wx_pay.VO.WxCardInvoiceAuthurlVO;
 import com.ruoyi.xindian.wx_pay.util.AjaxResult;
@@ -89,5 +90,15 @@ public class WXMsgPushController {
         return AjaxResult.success(encrypt);
     }
 
-
+    /**
+     * 出现预警时，根据传递的fatherPhone向添加的用户发送公众号通知
+     * @param fatherPhone
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/alertInfoToOfficialAccount")
+    public AjaxResult alertInfoToOfficialAccount(String fatherPhone,String info,String username) throws Exception {
+        wxPublicRequest.alertInfoToOfficialAccount(fatherPhone,info,username);
+        return AjaxResult.success();
+    }
 }

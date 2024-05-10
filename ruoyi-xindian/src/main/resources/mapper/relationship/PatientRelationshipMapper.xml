@@ -38,6 +38,14 @@
             resultType="com.ruoyi.xindian.relationship.domain.PatientRelationship">
         select * from patient_relationship limit #{start},#{end}
     </select>
+    <select id="selectToAlertOpenids" resultType="java.lang.String">
+        SELECT
+            wp.open_id
+        from patient_relationship  pr
+             join sys_user  su on pr.son_phone_aes = su.phonenumber_aes
+             join wx_public wp on su.union_id = wp.union_id
+        where pr.father_phone_aes = #{fatherPhone}
+    </select>
 
     <insert id="insertPatientRelationship" parameterType="PatientRelationship" useGeneratedKeys="true" keyProperty="id">
         insert into patient_relationship

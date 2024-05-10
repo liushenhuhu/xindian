@@ -199,12 +199,13 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 alertLog.setRedisKey("earlyLogTest04");
                 alertLogService.redisEarly(alertLog);
             }
+            if (expiredKey.equals("WXGZOpenIDList")) {
+                wxPublicRequest.insertGzxOpenidMapUnionid();
+            }
         }catch (Exception e){
             System.out.println(e);
         }finally {
             lock.unlock();
         }
-
-
     }
 }
