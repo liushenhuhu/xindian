@@ -282,7 +282,7 @@ export default {
             fontSize: 18
           },
         },
-        // 
+        //
         series: [
           {
             name: this.opName,
@@ -432,6 +432,6 @@ export default {
 }
 
 .title-2 {
-  margin-top: 65px;
+  margin-top: 25px;
 }
 </style>
