@@ -9,7 +9,7 @@
         <template>
           <el-row>
             <el-col offset="6">
-              <div class="patient-info-item info-basic">{{ patientInfo.patientName || '' }}</div>
+              <div class="patient-info-item info-basic">{{ hideMiddleName(patientInfo.patientName) }}</div>
             </el-col>
           </el-row>
           <el-row>
@@ -20,25 +20,25 @@
             </el-col>
           </el-row>
           <el-row class="patient-info-item mg-top">
-            <el-col :span="6" class="patient-info-item-name">患者管理ID:</el-col>
-            <el-col :span="18">{{ patientInfo.pId || '' }}</el-col>
+            <el-col :span="8" class="patient-info-item-name">患者管理ID:</el-col>
+            <el-col :span="19">{{ patientInfo.pId || '' }}</el-col>
           </el-row>
           <el-row class="patient-info-item">
-            <el-col :span="6" class="patient-info-item-name">联系方式:</el-col>
-            <el-col :span="18">{{ phoneEncrypt(patientInfo.patientPhone) || '' }}</el-col>
+            <el-col :span="8" class="patient-info-item-name">联系方式:</el-col>
+            <el-col :span="19">{{ phoneEncrypt(patientInfo.patientPhone) || '' }}</el-col>
           </el-row>
           <el-row class="patient-info-item">
-            <el-col :span="6" class="patient-info-item-name">身份证号:</el-col>
-            <el-col :span="18">{{ patientInfo.patientCode || '' }}</el-col>
+            <el-col :span="8" class="patient-info-item-name">身份证号:</el-col>
+            <el-col :span="19">{{ patientInfo.patientCode || '' }}</el-col>
           </el-row>
           <el-row class="patient-info-item">
-            <el-col :span="6" class="patient-info-item-name">就诊医院:</el-col>
-            <el-col :span="18">{{ patientInfo.hospitalName || '' }}</el-col>
+            <el-col :span="8" class="patient-info-item-name">就诊医院:</el-col>
+            <el-col :span="19">{{ patientInfo.hospitalName || '' }}</el-col>
           </el-row>
           <div class="title title-2">紧急联系人</div>
           <el-row class="patient-info-item" v-if="!!patientInfo.familyPhone">
-            <el-col :span="5">{{ patientInfo.familyName || '未命名' }}</el-col>
-            <el-col :span="18" :offset="1">{{ patientInfo.familyPhone || '' }}</el-col>
+            <el-col :span="8">{{ patientInfo.familyName || '未命名' }}</el-col>
+            <el-col :span="19" :offset="1">{{ patientInfo.familyPhone || '' }}</el-col>
           </el-row>
           <el-row class="patient-info-item" v-else>
             <el-col :offset="4">无</el-col>
@@ -170,6 +170,18 @@ export default {
     this.updateTableHeight()
   },
   methods: {
+    hideMiddleName(patientName) {
+      console.log(patientName);
+      if (patientName.length <= 1) {
+        return "*"; // 一个字的则用一个 * 代替
+      } else if (patientName.length === 2) {
+        return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
+      } else {
+        // let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 1);
+        return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
+      }
+    },
     async getDearlyList() {
       this.infoLoading = true;
       this.dRearlyQueryParams.pId = this.$route.query.pId;

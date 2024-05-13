@@ -603,7 +603,8 @@ export default {
       } else if (patientName.length === 2) {
         return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
       } else {
-        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        // let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
+        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 1);
         return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
       }
     },

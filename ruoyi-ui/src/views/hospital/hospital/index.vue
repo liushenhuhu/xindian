@@ -1,23 +1,34 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="省份" prop="province"  label-width="100px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" class="biaodan">
+      <el-form-item label="省份" prop="province" class="shengfen">
         <el-input
           v-model="queryParams.province"
           placeholder="请输入省份"
           clearable
           @keyup.enter.native="handleQuery"
+          class="kuangdu"
         />
       </el-form-item>
-      <el-form-item label="医院名称" prop="hospitalName"  label-width="100px">
+      <!-- <el-form-item label="医院名称" prop="hospitalName"  label-width="100px">
         <el-input
           v-model="queryParams.hospitalName"
           placeholder="请输入医院名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item> -->
+      <el-form-item label="医院名称" prop="hospitalCode">
+        <el-select v-model="queryParams.hospitalCode" filterable clearable   placeholder="请选择医院" >
+          <el-option
+            v-for="item in yiyuan"
+            :key="item.hospitalId"
+            :label="item.hospitalName"
+            :value="item.hospitalCode">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="医院代号" prop="hospitalCode"  label-width="100px">
+      <el-form-item label="医院代号" prop="hospitalCode" class="daihao" >
         <el-input
           v-model="queryParams.hospitalCode"
           placeholder="请输入医院代号"
@@ -25,6 +36,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      
 <!--      <el-form-item label="医院代号" prop="hospitalCode"  label-width="100px">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.hospitalCode"-->
@@ -89,7 +101,7 @@
 <!--                        placeholder="请选择首次收到心电数据时间">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
-      <el-form-item label="是否开通数据统计" prop="ifStatistics"  label-width="140px">
+      <el-form-item label="是否开通数据统计" prop="ifStatistics" >
         <el-select v-model="queryParams.ifStatistics" placeholder="请选择是否开通数据统计" clearable>
           <el-option
             v-for="dict in dict.type.if"
@@ -99,7 +111,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="kaoyou">
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
@@ -307,12 +319,14 @@
 <script>
 import {listHospital, getHospital, delHospital, addHospital, updateHospital, addDict} from "@/api/hospital/hospital";
 import {address} from "@/api/payOrder/payOrder";
-
+import {listHospitalId} from "@/api/hospital/hospital";
 export default {
   name: "Hospital",
   dicts: ['if'],
   data() {
     return {
+      // 医院
+      yiyuan:[],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -402,6 +416,11 @@ export default {
     };
   },
   created() {
+    // 医院列表
+    listHospitalId(null).then(r=>{
+      this.yiyuan=r.rows
+      console.log(this.yiyuan);
+    }),
     address(null,1).then(response => {
       console.log(response)
       this.states = response.data
@@ -415,6 +434,7 @@ export default {
       this.loading = true;
       listHospital(this.queryParams).then(response => {
         this.hospitalList = response.rows;
+        console.log(this.hospitalList);
         this.total = response.total;
         this.loading = false;
       });
@@ -562,3 +582,23 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .kuangdu{
+  // width: 75%;
+}
+.shengfen ::v-deep .el-form-item__content{
+  width: 113px;
+}
+.daihao ::v-deep  .el-form-item__content{
+  width: 140px;
+}
+::v-deep .kaoyou{
+  // width: 156px !important;
+  // display: block;
+  margin-left: auto !important;
+}
+::v-deep .biaodan {
+  display: flex;
+}
+</style>
+px

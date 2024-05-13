@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" class="biaodan" label-width="68px">
       <el-form-item label="科室代号" prop="departmentCode">
         <el-input
           v-model="queryParams.departmentCode"
@@ -27,7 +27,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="kaoyou">
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
@@ -132,7 +132,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer ">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -292,3 +292,13 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .biaodan{
+  display: flex;
+}
+::v-deep .kaoyou{
+  // width: 156px !important;
+  // display: block;
+  margin-left: auto !important;
+}
+</style>
