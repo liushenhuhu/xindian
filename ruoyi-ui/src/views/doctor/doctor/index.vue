@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" class="biaodan">
       <el-form-item label="医生姓名" prop="doctorName">
         <el-input
           v-model="queryParams.doctorName"
@@ -58,7 +58,7 @@
 <!--          </template>-->
 <!--        </el-autocomplete>-->
 <!--      </el-form-item>-->
-      <el-form-item>
+      <el-form-item class="kaoyou">
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
@@ -163,7 +163,7 @@
         </el-form-item>
         <el-form-item label="医院" prop="hospital">
 <!--          <el-input v-model="form.hospital" placeholder="请输入医院" />-->
-          <el-select v-model="form.hospital" placeholder="请选择医院名称" clearable @change="historyId(form.hospital)">
+          <el-select v-model="form.hospital" placeholder="请选择医院名称" filterable clearable @change="historyId(form.hospital)">
             <el-option
               v-for="item in options"
               :key="item.hospitalId"
@@ -610,5 +610,13 @@ export default {
   width: 160px;
   height: 150px;
   display: flex;
+}
+</style>
+<style lang="scss" scoped>
+::v-deep .biaodan{
+  display: flex;
+}
+::v-deep .kaoyou{
+  margin-left: auto;
 }
 </style>

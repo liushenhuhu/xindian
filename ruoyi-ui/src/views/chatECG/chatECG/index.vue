@@ -95,7 +95,7 @@ export default {
           time: this.getTodayTime(),
           name: "robot",
           content:
-            "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
+            "您好，我是智能AI医生小郑，请问有什么问题可以帮助您 ？",
           question: [],
         },
       ],

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" class="biaodan" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" class="biaodan" >
       <el-form-item label="科室代号" prop="departmentCode">
         <el-input
           v-model="queryParams.departmentCode"
@@ -18,7 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="医院" prop="hospitalCode">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院" >
+        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院" filterable >
           <el-option
             v-for="item in options"
             :key="item.hospitalId"
@@ -122,7 +122,7 @@
           <el-input v-model="form.departmentName" placeholder="请输入科室名称" />
         </el-form-item>
         <el-form-item label="医院" prop="hospitalCode">
-          <el-select v-model="form.hospitalCode" placeholder="请选择医院">
+          <el-select filterable v-model="form.hospitalCode" placeholder="请选择医院">
             <el-option
               v-for="item in options"
               :key="item.hospitalId"

@@ -5,6 +5,7 @@
       <div>
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px" class="elformbox">
           <div class="form-left" :class="{'form-left-hide':!showSearch}">
+            
               <el-form-item label="患者姓名" prop="patientName">
                 <el-input
                   v-model="queryParams.patientName"
@@ -31,6 +32,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
+
               <el-form-item label="在线状态" prop="onlineStatus">
                 <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
                   <el-option

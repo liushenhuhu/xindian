@@ -1,184 +1,192 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="设备号" prop="equipmentCode">
-        <el-input
-          v-model="queryParams.equipmentCode"
-          placeholder="请输入设备号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-<!--      <el-form-item label="设备版本号" prop="equipmentVersion">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.equipmentVersion"-->
-<!--          placeholder="请输入设备版本号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-      <el-form-item label="设备状态" prop="equipmentStatus">
-        <el-select v-model="queryParams.equipmentStatus" placeholder="请选择设备状态" clearable>
-          <el-option
-            v-for="dict in dict.type.equipment_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="医院" prop="hospitalCode">
-        <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院" clearable>
-          <el-option
-            v-for="item in options"
-            :key="item.hospitalId"
-            :label="item.hospitalName"
-            :value="item.hospitalName">
-          </el-option>
-        </el-select>
-      </el-form-item>
-<!--      <el-form-item label="科室代号" prop="departmentCode">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.departmentCode"-->
-<!--          placeholder="请输入医院代号"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-      <el-form-item label="科室" prop="departmentCode">
-<!--        <el-cascader :options="option" clearable v-model="queryParams.departmentCode"></el-cascader>-->
-        <el-select v-model="queryParams.departmentName" placeholder="请选择科室" clearable>
-          <el-option
-            v-for="item in option"
-            :key="item.label"
-            :label="item.label"
-            :value="item.label">
-          </el-option>
-        </el-select>
-      </el-form-item>
+    <!-- 收索框 -->
+    <div class="searchForm">
+      <div class="title">信息查询</div>
+      <div>
+        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true"  label-width="100px" class="elformbox">
+          <div class="form-left" :class="{'form-left-hide':!showSearch}">
 
-      <el-form-item label="设备种类" prop="equipmentType">
-        <el-select v-model="queryParams.equipmentType" placeholder="请选择设备种类" clearable>
-          <el-option
-            v-for="dict in dict.type.ecg_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-<!--      <el-form-item label="患者电话" prop="patientPhone">
-        <el-input
-          v-model="queryParams.patientPhone"
-          placeholder="请输入患者电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+              <el-form-item label="设备号" prop="equipmentCode">
+                <el-input
+                  v-model="queryParams.equipmentCode"
+                  placeholder="请输入设备号"
+                  clearable
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['equipment:equipment:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['equipment:equipment:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['equipment:equipment:remove']"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['equipment:equipment:export']"
-        >导出
-        </el-button>
-      </el-col>
+              <el-form-item label="设备状态" prop="equipmentStatus">
+                <el-select v-model="queryParams.equipmentStatus" placeholder="请选择设备状态" clearable>
+                  <el-option
+                    v-for="dict in dict.type.equipment_status"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
+                  />
+                </el-select>
+              </el-form-item>
 
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="refreshList"></right-toolbar>
-    </el-row>
+              <el-form-item label="医院" prop="hospitalCode">
+                <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院" clearable>
+                  <el-option
+                    v-for="item in options"
+                    :key="item.hospitalId"
+                    :label="item.hospitalName"
+                    :value="item.hospitalName">
+                  </el-option>
+                </el-select>
+              </el-form-item>
 
-    <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="设备号" align="center" prop="equipmentCode"/>
-      <el-table-column label="设备状态" align="center" prop="equipmentStatus">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="医院" align="center" prop="hospitalCode"/>
-      <el-table-column label="科室" align="center" prop="equipmentName"/>
-      <el-table-column label="设备种类" align="center" prop="equipmentType">
-        <template slot-scope="scope">
-          <el-tag >
-            {{scope.row.equipmentType}}
-          </el-tag>
-        </template>
-      </el-table-column>
-<!--      <el-table-column label="患者电话" align="center" prop="patientPhone"/>-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+              <el-form-item label="科室" prop="departmentCode">
+      <!--        <el-cascader :options="option" clearable v-model="queryParams.departmentCode"></el-cascader>-->
+              <el-select v-model="queryParams.departmentName" placeholder="请选择科室" clearable>
+                <el-option
+                  v-for="item in option"
+                  :key="item.label"
+                  :label="item.label"
+                  :value="item.label">
+                </el-option>
+              </el-select>
+              </el-form-item>
+
+              <el-form-item label="设备种类" prop="equipmentType">
+                <el-select v-model="queryParams.equipmentType" placeholder="请选择设备种类" clearable>
+                  <el-option
+                    v-for="dict in dict.type.ecg_type"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
+                  />
+                </el-select>
+              </el-form-item>
+
+              
+          </div>
+          <div class="form-right">
+            <el-form-item>
+              <el-button type="text" size="small" v-show="!showSearch" @click="unfoldSearchBox">展开<i
+                class="el-icon-arrow-down"/></el-button>
+              <el-button type="text" size="small" v-show="showSearch" @click="unfoldSearchBox">收起<i
+                class="el-icon-arrow-up"/></el-button>
+              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </div>
+        </el-form>
+      </div>
+    </div>
+    <div class="tablebox">
+      <div class="table-hand">
+        <div class="table-hand-left">
+          <el-row :gutter="10" class="mb8">
+            <el-col :span="1.5">
+              <el-button
+                type="primary"
+                plain
+                icon="el-icon-plus"
+                size="mini"
+                @click="handleAdd"
+                v-hasPermi="['equipment:equipment:add']"
+              >新增
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button
+                type="success"
+                plain
+                icon="el-icon-edit"
+                size="mini"
+                :disabled="single"
+                @click="handleUpdate"
+                v-hasPermi="['equipment:equipment:edit']"
+              >修改
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button
+                type="danger"
+                plain
+                icon="el-icon-delete"
+                size="mini"
+                :disabled="multiple"
+                @click="handleDelete"
+                v-hasPermi="['equipment:equipment:remove']"
+              >删除
+              </el-button>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="table-hand-right">
+          <el-button
+            type="text"
+            size="small"
+            icon="el-icon-refresh"
+            @click="refreshList"
+            >刷新</el-button
+          >
           <el-button
             size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['equipment:equipment:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['equipment:equipment:remove']"
-          >删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+            @click="handleExport"
+            v-hasPermi="['patient_management:patient_management:export']"
+            >导出</el-button
+          >
+          <!-- <el-button type="primary" size="mini" @click="isShowNameClick">{{
+            isShowName.name
+          }}</el-button> -->
+        </div>
+      </div>
+      <div class="table-content">
+        <!-- 表格 -->
+        <el-table v-loading="loading" :data="equipmentList" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+          <el-table-column label="设备状态" align="center" prop="equipmentStatus">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.equipment_status" :value="scope.row.equipmentStatus"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="医院" align="center" prop="hospitalCode"/>
+          <el-table-column label="科室" align="center" prop="equipmentName"/>
+          <el-table-column label="设备种类" align="center" prop="equipmentType">
+            <template slot-scope="scope">
+              <el-tag >
+                {{scope.row.equipmentType}}
+              </el-tag>
+            </template>
+          </el-table-column>
+    <!--      <el-table-column label="患者电话" align="center" prop="patientPhone"/>-->
+          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+                v-hasPermi="['equipment:equipment:edit']"
+              >修改
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['equipment:equipment:remove']"
+              >删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <!-- 分页组件 -->
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+    </div>
 
     <!-- 添加或修改设备对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -268,6 +276,8 @@ export default {
   dicts: ['equipment_status', 'ecg_type', 'hospital_name_list'],
   data() {
     return {
+      // 显示搜索条件
+      showSearch: false,
       //科室
       departmentDir: {},
 
@@ -352,6 +362,13 @@ export default {
     this.loadAll();
   },
   methods: {
+    // 展开
+    unfoldSearchBox() {
+      this.showSearch = !this.showSearch;
+      this.$nextTick(() => {
+        this.updateTableHeight();
+      });
+    },
     querySearch(queryString, cb) {
       var restaurants = this.restaurants;
       var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
@@ -520,3 +537,53 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.app-container {
+  background-color: #f4f4f4;
+}
+.searchForm {
+  background-color: #fff;
+  width: 100%;
+}
+.title {
+  font-size: 24px;
+  font-weight: 900;
+  padding-top: 12px;
+  padding-left: 24px;
+  text-align: left;
+  color: #000;
+}
+.elformbox {
+  display: flex;
+}
+.form-left-hide {
+  height: 49px;
+  overflow: hidden;
+}
+.form-right {
+  width: 20%;
+  display: flex;
+  justify-content: flex-end;
+}
+.form-left {
+  width: 80%;
+}
+.tablebox {
+  margin-top: 16px;
+  background-color: #fff;
+  flex: 1;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+}
+.table-hand {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &-left {
+  }
+  &-right {
+  }
+}
+</style>

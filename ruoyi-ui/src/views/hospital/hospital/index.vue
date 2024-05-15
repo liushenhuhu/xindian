@@ -18,13 +18,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item> -->
-      <el-form-item label="医院名称" prop="hospitalCode">
-        <el-select v-model="queryParams.hospitalCode" filterable clearable   placeholder="请选择医院" >
+      <el-form-item label="医院名称" prop="hospitalName">
+        <el-select v-model="queryParams.hospitalName" filterable clearable   placeholder="请选择医院" >
           <el-option
             v-for="item in yiyuan"
             :key="item.hospitalId"
             :label="item.hospitalName"
-            :value="item.hospitalCode">
+            :value="item.hospitalName">
           </el-option>
         </el-select>
       </el-form-item>

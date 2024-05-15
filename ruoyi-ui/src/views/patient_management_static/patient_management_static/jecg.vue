@@ -409,7 +409,8 @@
       </div>
       <div class="table-content">
         <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange"
-                  highlight-current-row @current-change="handleCurrentChange" height="100%" class="table-content-table">
+                  highlight-current-row @current-change="handleCurrentChange"  class="table-content-table">
+
           <el-table-column type="selection" width="55" align="center"/>
           <el-table-column label="上传时间" align="center" prop="connectionTime" width="100">
             <template slot-scope="scope">
