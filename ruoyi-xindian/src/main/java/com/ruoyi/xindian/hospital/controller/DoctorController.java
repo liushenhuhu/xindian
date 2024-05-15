@@ -184,15 +184,19 @@ public class DoctorController extends BaseController
     @GetMapping(value = "/{doctorId}")
     public AjaxResult getInfo(@PathVariable("doctorId") Long doctorId) throws Exception {
         Doctor doctor = doctorService.selectDoctorByDoctorId(doctorId);
-        doctor.setDoctorPhone(aesUtils.decrypt(doctor.getDoctorPhone()));
-        doctor.setDoctorName(aesUtils.decrypt(doctor.getDoctorName()));
-        Department department = new Department();
-        department.setDepartmentCode(doctor.getDepartmentCode());
-        List<Department> departments = departmentService.selectDepartmentList(department);
-        doctor.setDepartmentName(departments.get(0).getDepartmentName());
-        Hospital hospital = hospitalService.selectCode(doctor.getHospital());
-        doctor.setHospitalCode(hospital.getHospitalCode());
-        return AjaxResult.success(doctor);
+        if (doctor!=null){
+            doctor.setDoctorPhone(aesUtils.decrypt(doctor.getDoctorPhone()));
+            doctor.setDoctorName(aesUtils.decrypt(doctor.getDoctorName()));
+            Department department = new Department();
+            department.setDepartmentCode(doctor.getDepartmentCode());
+            List<Department> departments = departmentService.selectDepartmentList(department);
+            doctor.setDepartmentName(departments.get(0).getDepartmentName());
+            Hospital hospital = hospitalService.selectCode(doctor.getHospital());
+            doctor.setHospitalCode(hospital.getHospitalCode());
+            return AjaxResult.success(doctor);
+        }
+
+        return AjaxResult.success(new Doctor());
     }
 
     @GetMapping(value = "/getInfoByDoctorPhone/{doctorPhone}")
