@@ -91,6 +91,8 @@ public class Report extends BaseEntity
 
     private String loginUserPhone;
 
+
+    private String pastMedicalHistory;
     /**
      * 报告状态
      */

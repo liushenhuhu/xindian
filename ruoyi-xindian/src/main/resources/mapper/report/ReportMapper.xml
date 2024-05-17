@@ -23,6 +23,7 @@
         <result property="refuseText"    column="refuse_text"    />
         <result property="reportNormal"    column="report_normal"    />
         <result property="logDataType"    column="log_data_type"    />
+        <result property="pastMedicalHistory" column="past_medical_history"/>
     </resultMap>
 
     <sql id="selectReportVo">
@@ -54,8 +55,8 @@
     </select>
 
     <select id="selectReportByPId" parameterType="string" resultMap="ReportResult">
-        select report_id, report.p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time,login_user_phone,refuse_text,report_normal,patient_management.log_data_type
-        from report inner join patient_management on report.p_id = patient_management.p_id
+        select report_id, report.p_id, diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, report_type, intelligent_diagnosis, d_phone_aes, handling_suggestion, health_advice, p_phone_aes,patient_symptom,start_time,login_user_phone,refuse_text,report_normal,patient_management.log_data_type,past_medical_history
+        from report inner join patient_management on report.p_id = patient_management.p_id  left join medical_history mh on report.p_phone_aes = mh.patient_phone_aes
         where report.p_id = #{pId}
     </select>
 
