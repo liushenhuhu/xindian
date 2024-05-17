@@ -1183,7 +1183,21 @@ export default {
 
     },
     downloadData(row) {
-      window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG_single/save/${row.pId}.dat`)
+      console.log(row)
+      let dizhi = row.ecgType.substring(0,5)
+      // console.log(dizhi)
+      // return
+      if (dizhi == 'JECGs' ){
+        window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG_single/save/${row.pId}.dat`)
+      }else if (dizhi == "JECG1"){
+        window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG/save/${row.pId}.dat`)
+      }else if(dizhi == "JECG4"){
+        window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG4Lead/save/${row.pId}.dat`)
+      }else {
+        // this.$modal.msgError("没有此类型");
+        this.$modal.msgSuccess("没有此类型");
+      }
+      // window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG/save/${row.pId}.dat`)
     },
   }
 };

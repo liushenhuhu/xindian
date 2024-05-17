@@ -238,6 +238,9 @@ public class PatientController extends BaseController
     @GetMapping(value = "/{patientId}")
     public AjaxResult getInfo(@PathVariable("patientId") Long patientId) throws Exception {
         Patient patient = patientService.selectPatientByPatientId(patientId);
+        if (patient==null){
+            return AjaxResult.error("用户不存在");
+        }
         if(patient.getPatientPhone() != null){
             patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
         }
@@ -260,6 +263,9 @@ public class PatientController extends BaseController
     public AjaxResult getInfoByPhone(@PathVariable("patientPhone") String patientPhone) throws Exception {
 
         Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(patientPhone));
+        if (patient==null){
+            return AjaxResult.error("用户不存在");
+        }
         Date birthDay = patient.getBirthDay();
         if(birthDay != null){
             patient.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
@@ -287,6 +293,10 @@ public class PatientController extends BaseController
     @GetMapping(value = "/getInfoByPatientName/{patientName}")
     public AjaxResult getInfoByPatientName(@PathVariable("patientName") String patientName) throws Exception {
         Patient patient = patientService.selectPatientByPatientName(patientName);
+
+        if (patient==null){
+            return AjaxResult.error("用户不存在");
+        }
         System.out.println(patient);
         Date birthDay = patient.getBirthDay();
         if(birthDay != null){
