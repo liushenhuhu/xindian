@@ -29,7 +29,9 @@
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
-                        <td colspan="5">{{ data.result }}</td>
+                        <td colspan="3">{{ data.result }}</td>
+                        <td>患者病史</td>
+                        <td>{{getMH(dict.type.medical_history)}}</td>
                       </tr>
                     </table>
                     </div>
@@ -108,7 +110,7 @@
                     <!--    :value="item.doctorName">-->
                     <!--  </el-option>-->
                     <!--</el-select>-->
-                  <el-cascader v-model="selectDoctor" :options="doctorList" @change="selectDoctorChange"
+                  <el-cascader v-model="data.doctorName" :options="doctorList" @change="selectDoctorChange"
                                :show-all-levels="false">
                   </el-cascader>
                 </div>
@@ -285,6 +287,7 @@ import {getVerify} from "@/api/verify/verify";
 export default {
   name: "index",
   components: { child },
+  dicts: ['medical_history'],
   data() {
     return {
       tanchuang: false,
@@ -347,6 +350,7 @@ export default {
       dialogVisibleTag: null,
       options: [],
       data: {
+        pastMedicalHistory:"",
         name: "",
         gender: "",
         age: "",
@@ -579,9 +583,36 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    // 病史
+    getMH(zdList , ecgType = this.data.pastMedicalHistory){
+      let str = ''
+      if (ecgType){
+        ecgType.split(",").forEach(item => {
+          if (this.canConvertToInt(item)){
+            zdList.forEach(zd => {
+              if (zd.value == item) {
+                str += zd.label + ','
+              }
+            })
+          }else {
+            str += item + ','
+          }
+        })
+        if (str.endsWith(",")){
+          str = str.substring(0, str.length - 1)
+        }
+      }
+      return str;
+    },
+    canConvertToInt(value) {
+      // 尝试将值转换为整数
+      const parsedInt = Number(value);
+      // 判断转换后的值是否为整数且不为NaN
+      return Number.isInteger(parsedInt);
+    },
     // 选择预警类型弹窗按钮 取消
     quxiao(){
-      
+
       if (this.logDataType) {
           this.xianshizifuchuan = this.logDataType;
           this.zhi = this.logDataType.split(",").map((str) => str.trim());
@@ -718,6 +749,7 @@ export default {
         this.data.pphone = response.data.pphone;
         this.data.pId = response.data.pId;
         this.data.result = response.data.intelligentDiagnosis;
+        this.data.pastMedicalHistory = response.data.pastMedicalHistory;
         // 原先提交过的预警类型
         this.logDataType = response.data.logDataType;
         // console.log("原先提交过的值："+this.logDataType);
@@ -3298,7 +3330,7 @@ font-size: 1vw;
     padding: 0 10px;
     font-size: 0.9vw;
     color: #8c8c8e;
-    
+
   }
 
 }

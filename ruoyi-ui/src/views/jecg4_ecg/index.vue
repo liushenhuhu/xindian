@@ -28,7 +28,9 @@
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
-                        <td colspan="3">{{ data.result }}</td>
+                        <td >{{ data.result }}</td>
+                        <td>患者病史</td>
+                        <td>{{getMH(dict.type.medical_history)}}</td>
                         <td>心梗机率</td>
                         <td>{{ (data.p_xingeng*100).toFixed(1)+'%' }}</td>
                       </tr>
@@ -103,7 +105,7 @@
               <div class="doctor">
                 <div class="input yishi">
                   <strong>医师:</strong>
-                  <el-cascader v-model="selectDoctor" :options="doctorList" @change="selectDoctorChange"
+                  <el-cascader v-model="data.doctorName"  :options="doctorList" @change="selectDoctorChange"
                                :show-all-levels="false">
                   </el-cascader>
                 </div>
@@ -244,6 +246,7 @@ export default {
     // CacheList,
     child
   },
+  dicts: ['medical_history'],
   data() {
     return {
       tanchuang: false,
@@ -291,7 +294,7 @@ export default {
       logDataType:'',
       tijiaoshuju:{},
       zhi:[],
-  
+
       yujingzhi:[],
       xianshizifuchuan:'',
       videoVisible: false,//echarts弹出框显示
@@ -310,6 +313,7 @@ export default {
       arr: [],
       options: [],
       data: {
+        pastMedicalHistory:"",
         name: "",
         gender: "",
         age: "",
@@ -396,9 +400,36 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    // 病史
+    getMH(zdList , ecgType = this.data.pastMedicalHistory){
+      let str = ''
+      if (ecgType){
+        ecgType.split(",").forEach(item => {
+          if (this.canConvertToInt(item)){
+            zdList.forEach(zd => {
+              if (zd.value == item) {
+                str += zd.label + ','
+              }
+            })
+          }else {
+            str += item + ','
+          }
+        })
+        if (str.endsWith(",")){
+          str = str.substring(0, str.length - 1)
+        }
+      }
+      return str;
+    },
+    canConvertToInt(value) {
+      // 尝试将值转换为整数
+      const parsedInt = Number(value);
+      // 判断转换后的值是否为整数且不为NaN
+      return Number.isInteger(parsedInt);
+    },
     // 选择预警类型弹窗按钮 取消
     quxiao(){
-      
+
       if (this.logDataType) {
           this.xianshizifuchuan = this.logDataType;
           this.zhi = this.logDataType.split(",").map((str) => str.trim());
@@ -528,6 +559,8 @@ export default {
         this.data.diagnosisData = response.data.reportTime
         this.data.pphone = response.data.pphone
         this.data.pId = response.data.pId
+        // 病史
+        this.data.pastMedicalHistory = response.data.pastMedicalHistory;
         // 原先提交过的预警类型
         this.logDataType =  response.data.logDataType
         if (!this.data.doctorName) {
@@ -2381,7 +2414,7 @@ color:#ffffff;
     padding: 0 10px;
     font-size: 0.9vw;
     color: #8c8c8e;
-    
+
   }
 
 }

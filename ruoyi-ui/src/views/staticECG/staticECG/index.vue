@@ -28,8 +28,12 @@
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
-                        <td colspan="5">{{ data.result }}</td>
+                        <td colspan="3">{{data.result}}</td>
+<!--                        <td colspan="3" class="wubiankuang"><el-input v-model="data.result" placeholder="请输入内容"></el-input></td>-->
+                        <td>患者病史</td>
+                        <td>{{getMH(dict.type.medical_history)}}</td>
                       </tr>
+
                     </table>
                   </div>
                 </el-tab-pane>
@@ -107,7 +111,7 @@
                     :value="item.doctorName">
                   </el-option>
                 </el-select>-->
-                <el-cascader v-model="selectDoctor" :options="doctorList" @change="selectDoctorChange"
+                <el-cascader v-model="data.doctorName" :options="doctorList" @change="selectDoctorChange"
                 :show-all-levels="false">
                 </el-cascader>
               </div>
@@ -135,7 +139,7 @@
 
         </div>
 
-        
+
         <!-- 预警类型弹窗 -->
         <!-- <div class="xuanzheyujing" v-else>
           <div class="wancheng">
@@ -300,6 +304,7 @@ export default {
     CacheList,
     child,
   },
+  dicts: ['medical_history'],
   data() {
     return {
       tanchuang: false,
@@ -391,6 +396,7 @@ export default {
       options: [],
       xianshizifuchuan: "",
       data: {
+        pastMedicalHistory:"",
         name: "",
         gender: "",
         age: "",
@@ -455,6 +461,7 @@ export default {
       chart1: null,
       chart2: null,
       chart3: null,
+      zidianzhi:[],
       // 表单校验
       rules: {
         password: [
@@ -473,6 +480,7 @@ export default {
     // this.getyujingleixing()
   },
   mounted() {
+    this.zidian()
     // 心电数据
     this.get();
 
@@ -481,9 +489,43 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    zidian(){
+      console.log("字典")
+      // console.log(this.dicts.type.medical_history)
+      this.getDicts("medical_history").then((res) =>{
+        console.log(res.data)
+        this.zidianzhi = res.data
+      })
+    },
+    getMH(zdList , ecgType = this.data.pastMedicalHistory){
+      let str = ''
+      if (ecgType){
+        ecgType.split(",").forEach(item => {
+          if (this.canConvertToInt(item)){
+            zdList.forEach(zd => {
+              if (zd.value == item) {
+                str += zd.label + ','
+              }
+            })
+          }else {
+            str += item + ','
+          }
+        })
+        if (str.endsWith(",")){
+          str = str.substring(0, str.length - 1)
+        }
+      }
+      return str;
+    },
+    canConvertToInt(value) {
+      // 尝试将值转换为整数
+      const parsedInt = Number(value);
+      // 判断转换后的值是否为整数且不为NaN
+      return Number.isInteger(parsedInt);
+    },
     // 选择预警类型弹窗按钮 取消
     quxiao(){
-      
+
       if (this.logDataType) {
           this.xianshizifuchuan = this.logDataType;
           this.zhi = this.logDataType.split(",").map((str) => str.trim());
@@ -703,6 +745,7 @@ export default {
         this.data.diagnosisData = response.data.reportTime;
         this.data.pphone = response.data.pphone;
         this.data.pId = response.data.pId;
+        this.data.pastMedicalHistory = response.data.pastMedicalHistory;
         // 原先提交过的预警类型
         this.logDataType = response.data.logDataType;
 
@@ -2408,7 +2451,7 @@ export default {
           justify-content:flex-end;
         }
       }
-      
+
       .chongxie_left_botton_yishizenduan{
         .chongxie_left_botton_yishizenduan_input{
           padding: 10px;
@@ -3124,7 +3167,7 @@ export default {
     padding: 0 10px;
     font-size: 0.9vw;
     color: #8c8c8e;
-    
+
   }
 
 }
@@ -3170,5 +3213,8 @@ export default {
 .biaodananniu{
   display: flex;
   justify-content:flex-end;
+}
+.wubiankuang ::v-deep .el-input__inner{
+  border: 0 solid #dcdfe6;
 }
 </style>
