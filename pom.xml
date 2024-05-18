@@ -38,7 +38,12 @@
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
-
+            <!--用于jfreechart生成图片  -->
+            <dependency>
+                <groupId>org.jfree</groupId>
+                <artifactId>jfreechart</artifactId>
+                <version>1.5.3</version>
+            </dependency>
 
             <!-- rabbitmq -->
 <!--            <dependency>-->

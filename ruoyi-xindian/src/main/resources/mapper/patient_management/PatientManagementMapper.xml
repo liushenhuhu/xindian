@@ -48,6 +48,10 @@
         <result property="latitude"    column="latitude"    />
         <result property="logDataType"    column="log_data_type"    />
         <result property="ecgIsLabel"    column="ecg_is_label"    />
+        <result property="height" column="height"/>
+        <result property="weight" column="weight"/>
+        <result property="pastMedicalHistory" column="past_medical_history"/>
+        <result property="livingHabit" column="living_habit"/>
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -113,12 +117,13 @@
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
                diagnosis_status, diagnosis_conclusion, diagnosis_doctor_aes, report_time, ecg_level, doctor_phone_aes,
                birth_day, pacemaker, upload_time, guardianship_duration, sampling_rate, detection_state,
-               end_time, time_duration, d_phone_aes, report_state,patient_symptom,report_normal,refuse_text,sx_report_status
+               end_time, time_duration, d_phone_aes, report_state,patient_symptom,report_normal,refuse_text,sx_report_status, height, weight, past_medical_history, living_habit
         from patient_management m
                  inner join patient p on p.patient_phone_aes = m.patient_phone_aes
                  inner join equipment e on m.equipment_code = e.equipment_code
                  left join hospital h on m.hospital_code = h.hospital_code
                  left join report r on m.p_id = r.p_id
+                left join medical_history mh on m.patient_phone_aes = mh.patient_phone_aes
     </sql>
 
     <sql id="selectPatientManagementCount">

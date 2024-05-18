@@ -160,6 +160,10 @@ public class PatientManagement extends BaseEntity {
     @Excel(name = "诊断医生电话")
     private String dPhone;
 
+
+    private String pastMedicalHistory;
+
+    private String livingHabit;
     /**
      * 报告时间
      */

@@ -528,6 +528,14 @@
               <span v-else>***************</span>
             </template>
           </el-table-column>
+          <el-table-column label="用户过往病史" align="center" prop="patientCode" min-width="200">
+            <template slot-scope="scope">
+              <span v-if="isShowName.status===true">
+                {{getMH(dict.type.medical_history, scope.row.pastMedicalHistory)}}
+              </span>
+              <span v-else>***************</span>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
             <template slot-scope="scope">
               <el-button
@@ -546,7 +554,7 @@
                   icon="el-icon-s-operation"
                   @click="selectECG(scope.row)"
                   v-hasPermi="['patient_management:patient_management:diagnose']"
-                  v-if="!scope.row.diagnosisStatus"
+                  v-if="scope.row.diagnosisStatus!=1"
                 >选择医生诊断
                 </el-button>
                 <el-button
@@ -720,7 +728,7 @@ export default {
       reload: this.reload
     }
   },
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list', 'if_status'],
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list', 'if_status',"medical_history"],
   data() {
     return {
       currentRow:null,
@@ -1139,6 +1147,33 @@ export default {
       console.log(val)
       this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECGsingle"}});
     },
+
+    getMH(zdList , ecgType){
+      let str = ''
+      if (ecgType){
+        ecgType.split(",").forEach(item => {
+          if (this.canConvertToInt(item)){
+            zdList.forEach(zd => {
+              if (zd.value == item) {
+                str += zd.label + ','
+              }
+            })
+          }else {
+            str += item + ','
+          }
+        })
+        if (str.endsWith(",")){
+          str = str.substring(0, str.length - 1)
+        }
+      }
+      return str;
+    },
+    canConvertToInt(value) {
+    // 尝试将值转换为整数
+    const parsedInt = Number(value);
+    // 判断转换后的值是否为整数且不为NaN
+    return Number.isInteger(parsedInt);
+  },
     lookHistoryData30(row) {
       let data = {
         row: row,

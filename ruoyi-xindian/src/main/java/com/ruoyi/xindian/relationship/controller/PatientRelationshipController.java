@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.Instant;
 import java.util.List;
 import java.util.Random;
 
@@ -145,10 +146,9 @@ public class PatientRelationshipController extends BaseController
         PatientRelationship relationship = new PatientRelationship();
         if (patientRelationship.getSonPhone()==null||"".equals(patientRelationship.getSonPhone())||patientRelationship.getSonPhone().equals(patientRelationship.getFatherPhone())){
             StringBuilder fatherPhone = new StringBuilder(patientRelationship.getFatherPhone()+"-");
-            Random random = new Random();
-            for (int i = 0; i < 3; i++) {
-                fatherPhone.append(random.nextInt(10));
-            }
+            Instant instant = Instant.now();
+            long timestamp = instant.toEpochMilli();
+            fatherPhone.append(timestamp);
             relationship.setSonPhone(fatherPhone.toString());
         }else {
             relationship.setSonPhone(patientRelationship.getSonPhone());
