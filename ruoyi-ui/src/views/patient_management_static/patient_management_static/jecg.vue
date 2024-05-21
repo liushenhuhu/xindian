@@ -1145,7 +1145,21 @@ export default {
      */
     lookHistoryData(val) {
       console.log(val)
-      this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECGsingle"}});
+
+      let daolian = val.ecgType.substring(0,5)
+      console.log(daolian)
+      // return
+      if (daolian == 'JECGs' ){
+        this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECGsingle"}});
+      }else if (daolian == "JECG1"){
+        this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECG12"}});
+      }else if(daolian == "JECG4"){
+        this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECG4"}});
+      }else {
+        // this.$modal.msgError("没有此类型");
+        this.$modal.msgSuccess("没有此类型");
+      }
+      // this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECGsingle"}});
     },
 
     getMH(zdList , ecgType){
