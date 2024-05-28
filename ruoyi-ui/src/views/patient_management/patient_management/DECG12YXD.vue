@@ -5,7 +5,7 @@
       <div>
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px" class="elformbox">
           <div class="form-left" :class="{'form-left-hide':!showSearch}">
-            
+
               <el-form-item label="患者姓名" prop="patientName">
                 <el-input
                   v-model="queryParams.patientName"
@@ -257,7 +257,7 @@
               <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>
               <span v-else>********************</span>
             </template>
-            
+
           </el-table-column>
 
           <!--  隐藏的患者的个人信息    -->
@@ -327,7 +327,12 @@
                 <el-button type="text" size="mini" @click="handleDelete(scope.row)"
                            v-hasPermi="['patient_management:patient_management:export']">删除
                 </el-button>
-                
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="lookHistoryData(scope.row)"
+                >查看历史数据
+                </el-button>
                 <el-button
                   slot="reference"
                   size="small"
@@ -886,15 +891,13 @@ export default {
     },
     /** 下载报告*/
     downloadInform(row) {
-      // let routeUrl = this.$router.resolve({
-      //   path: "/ExportPDF",
-      //   query: {pId: row.pId, hospitalName: row.hospitalName, ecg_type: row.ecgType, patientName: row.patientName}
-      // });
-      // window.open(routeUrl.href, '_blank');
       console.log(row)
       this.$router.push({path: "/lookPdf", query: {pId: row.pId, ecgType: "DECG", sxStatus: row.sxStatus}});
 
-    }
+    },
+    lookHistoryData(val) {
+      this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "DECG12"}});
+    },
   }
 }
 ;

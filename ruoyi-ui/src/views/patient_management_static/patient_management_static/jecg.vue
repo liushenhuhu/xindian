@@ -560,6 +560,14 @@
                 <el-button
                   size="mini"
                   type="text"
+                  icon="el-icon-star-off"
+                  v-hasPermi="['jecg:report:find']"
+                  @click="findJEcgReport(scope.row)"
+                >查看静态报告
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
                   icon="el-icon-s-order"
                   @click="lookHistoryData(scope.row)"
                 >查看历史数据
@@ -1160,6 +1168,9 @@ export default {
         this.$modal.msgSuccess("没有此类型");
       }
       // this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECGsingle"}});
+    },
+    findJEcgReport(row){
+      this.$router.push({path: "/jecg_report", query: {pId: row.pId}});
     },
 
     getMH(zdList , ecgType){

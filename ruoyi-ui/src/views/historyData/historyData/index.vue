@@ -178,7 +178,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" :row-class-name="tableRowClassName">
+    <el-table v-if="queryParams.ecgType.substring(0,1)=='J'" v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" :row-class-name="tableRowClassName">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="上传时间" align="center" prop="connectionTime" width="100" >
         <template slot-scope="scope">
@@ -223,65 +223,8 @@
         </template>
       </el-table-column>
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
-      <!--  隐藏的患者的个人信息    -->
-      <!-- <el-table-column type="expand">
+      <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-divider content-position="left">其他信息</el-divider>
-            <el-form-item label="医院代号" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.hospitalCode }}</span>
-            </el-form-item>
-            <el-form-item label="患者管理id" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.pId }}</span>
-            </el-form-item>
-            <el-form-item label="患者姓名" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientName }}</span>
-            </el-form-item>
-            <el-form-item label="患者身份证号" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientCode }}</span>
-            </el-form-item>
-            <el-form-item label="患者年龄" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientAge }}</span>
-            </el-form-item>
-            <el-form-item label="患者性别" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientSex }}</span>
-            </el-form-item> -->
-            <!--            <el-form-item label="患者来源" width="200" style="padding-left: 40px">
-                          <span>{{ scope.row.patientSource }}</span>
-                        </el-form-item>-->
-            <!-- <el-form-item label="患者电话" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.patientPhone }}</span>
-            </el-form-item>
-            <el-form-item label="家属电话" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.familyPhone }}</span>
-            </el-form-item> -->
-
-            <!--            <el-form-item label="医院名称" width="200" style="padding-left: 40px">
-                          <span>{{ scope.row.hospitalName }}</span>
-                        </el-form-item>-->
-            <!-- <el-form-item label="设备号" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.equipmentCode }}</span>
-            </el-form-item>
-            <el-form-item label="医生电话" width="200" style="padding-left: 40px">
-              <span>{{ scope.row.doctorPhone }}</span>
-            </el-form-item>
-
-          </el-form>
-        </template>
-      </el-table-column> -->
-
-
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            v-if="scope.row.diagnosisStatus!==1"
-            size="mini"
-            type="text"
-            icon="el-icon-s-order"
-            @click="selectECG(scope.row)"
-            v-hasPermi="['patient_management:patient_management:diagnose']"
-          >选择医生诊断
-          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -290,33 +233,159 @@
             v-hasPermi="['patient:patient:alert']"
           >查看报告
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-position"
-            @click="sendMsg(scope.row)"
-          >发送短信
-          </el-button>
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['patient_management:patient_management:edit']"-->
-<!--          >修改-->
-<!--          </el-button>-->
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['patient_management:patient_management:remove']"
-          >删除
-          </el-button>
+          <el-popover placement="left" width="50" trigger="click" style="margin-left:8px">
+            <el-button
+              style="margin-left: 10px;"
+              size="mini"
+              type="text"
+              icon="el-icon-s-operation"
+              @click="selectECG(scope.row)"
+              v-hasPermi="['patient_management:patient_management:diagnose']"
+              v-if="scope.row.diagnosisStatus!=1"
+            >选择医生诊断
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-eleme"
+              @click="lookHistoryData30(scope.row)"
+            >30天趋势图
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-download"
+              @click="downloadData(scope.row)"
+              v-hasPermi="['patient:patient:inform']"
+            >下载数据
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-position"
+              @click="sendMsg(scope.row)"
+            >发送短信
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['patient_management:patient_management:export']"
+            >删除
+            </el-button>
+            <el-button
+              slot="reference"
+              size="small"
+              type="text"
+              v-hasPermi="['patient_management:patient_management:inform']">
+              更多<i class="el-icon-arrow-down"/>
+            </el-button>
+          </el-popover>
+
         </template>
       </el-table-column>
     </el-table>
+    <el-table v-if="queryParams.ecgType.substring(0,1)=='D'" v-loading="loading" :data="patient_managementList" @selection-change="handleSelectionChange" class="table-content-table">
+      <el-table-column type="selection" width="55" align="center"/>
 
+      <el-table-column label="连接时间" align="center" prop="connectionTime" width="100">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.connectionTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="患者管理ID" align="center" prop="pId" min-width="200"></el-table-column>
+
+      <el-table-column label="患者姓名" align="center" prop="patientName" width="100">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
+          <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="年龄" align="center" prop="patientAge" width="100"></el-table-column>
+      <el-table-column label="性别" align="center" prop="patientSex" width="100"></el-table-column>
+
+
+      <el-table-column label="医院" align="center" prop="hospitalName" width="150">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
+          <span v-else>************</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>
+      <el-table-column label="设备号" align="center" width="170" prop="equipmentCode"/>
+      <el-table-column label="在线状态" align="center" width="100" prop="onlineStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="心电种类" align="center" width="150" prop="ecgType">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{ scope.row.patientPhone }}</span>
+          <span v-else>***********</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>
+          <span v-else>***********</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
+      <el-table-column label="患者身份证号" align="center" prop="patientCode" min-width="150">
+        <template slot-scope="scope">
+          <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>
+          <span v-else>********************</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
+        <template slot-scope="scope">
+          <el-button
+            size="small"
+            type="text"
+            @click="monitoring(scope.row);"
+            v-hasPermi="['patient:patient:monitoring']"
+          >实时监测
+          </el-button>
+
+          &nbsp;&nbsp;
+          <el-popover placement="left" width="50" trigger="click">
+            <el-button style="margin-left: 10px;" type="text" size="mini" @click="handleInform(scope.row)"
+                       v-hasPermi="['patient:patient:downloadInform']">生成报告
+            </el-button>
+            <el-button type="text" size="mini" @click="downloadInform(scope.row)"
+                       v-hasPermi="['patient_management:patient_management:inform']">查看报告
+            </el-button>
+            <el-button size="mini" type="text"  @click="downloadData(scope.row)" v-hasPermi="['patient:patient:inform']">
+              下载数据
+            </el-button>
+            <el-button type="text" size="mini" @click="handleAlert(scope.row)" v-hasPermi="['patient:patient:alert']">
+              预警信息
+            </el-button>
+            <el-button type="text" size="mini" @click="handleDelete(scope.row)"
+                       v-hasPermi="['patient_management:patient_management:export']">删除
+            </el-button>
+            <el-button
+              slot="reference"
+              size="small"
+              type="text"
+              v-hasPermi="['patient_management:patient_management:inform']"
+            >更多<i class="el-icon-arrow-down"/>
+            </el-button>
+          </el-popover>
+
+
+        </template>
+      </el-table-column>
+    </el-table>
     <pagination
       v-show="total>0"
       :total="total"
@@ -588,6 +657,16 @@ export default {
         this.option = r.data
       })
     },
+    lookHistoryData30(row) {
+      let data = {
+        row: row,
+        ecgType: 1
+      }
+      //这样会使会话存储的东西越多，想用vuex但是不敢动。看到这里大哥别生气。
+      // 在30天趋势图标签中，点击x号会自动的将会话存储中的/scatterPlot删除
+      sessionStorage.setItem("/scatterPlot", JSON.stringify(data));
+      this.$router.push({path: "/scatterPlot", query: {row: row, ecgType: 1}});
+    },
     dialogFormVisibleVerify(){
       this.$refs["verifyForm"].validate(valid => {
         if (valid) {
@@ -813,6 +892,24 @@ export default {
       }
 
     },
+    /** 跳转到心电图实时监测*/
+    monitoring(row) {
+      console.log("在线状态：", row.onlineStatus)
+      if (row.onlineStatus == 0) {
+        this.$modal.msgError("设备不在线！");
+      } else {
+        this.$router.push(
+          {
+            //添加需要传值到那个页面的路径
+            path: '/Screen/detail',
+            //携带需要传递的参数
+            query: {deviceSn: row.equipmentCode}
+          })
+        // this.$router.push({
+        //   path: "/monitoring",
+        //   query: {equipmentCode: row.equipmentCode}});
+      }
+    },
     /** 导出按钮操作 */
     handleExport() {
       if (this.verifyForm.status){
@@ -839,16 +936,88 @@ export default {
     },
     /** 生成报告*/
     handleInform(row) {
-      let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
-      window.open(routeUrl.href, '_blank');
+      var name = row.patientName
+      this.$confirm('是否生成' + name + '的报告', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        $.ajax({
+          type: "post",
+          url: "https://server.mindyard.cn:84/analysis_decg",
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify({
+            pId: row.pId,
+            ecg_type: row.ecgType
+          }),
+          beforeSend: function (request) {
+            request.setRequestHeader("user", "zzu");
+            request.setRequestHeader("password", "zzu123");
+          },
 
+          success: function (data) {
+            console.log(data)
+          },
+          error: function (data) {
+            console.log(name + "动态心电报告生成出错,请重新请求或联系管理员")
+          }
+        })
+        this.$message({
+          type: 'info',
+          message: '正在生成中, 稍后将通过消息提醒您。'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     },
     /** 下载报告*/
     downloadInform(row) {
-      let routeUrl = this.$router.resolve({path: "/restingECG", query: {pId: row.pId, hospitalName: row.hospitalName}});
-      window.open(routeUrl.href, '_blank');
+      console.log(row)
+      let  type = row.ecgType.substring(0,6)
+      if (type=='DECG12'){
+        this.$router.push({path: "/lookPdf", query: {pId: row.pId, ecgType: "DECG", sxStatus: row.sxStatus}});
+      }else {
+        this.$router.push({path: "/lookPdf", query: {pId: row.pId, ecgType: "DECG_single"}});
+      }
+    },
+    downloadData(row) {
+      let dizhi = row.ecgType.substring(0,5)
+      if (dizhi == 'JECGs' ){
+        window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG_single/save/${row.pId}.dat`)
+      }else if (dizhi == "JECG1"){
+        window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG/save/${row.pId}.dat`)
+      }else if(dizhi == "JECG4"){
+        window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG4Lead/save/${row.pId}.dat`)
+      }else if (dizhi == "DECG1"){
+        window.open(`https://ecg.mindyard.cn:84/DECGReport/DECG/save/${row.pId}.dat`)
 
-    }
+      }else if (dizhi == "DECGs"){
+        window.open(`https://ecg.mindyard.cn:84/DECGReport/DECG_single/save/${row.pId}.dat`)
+      }else {
+        this.$modal.msgSuccess("没有此类型");
+      }
+
+    },
+    /** 跳转到预警日志*/
+    handleAlert(row) {
+      let  type = row.ecgType+"".substring(0,6)
+      if (type=='DECG12'){
+        this.$router.push({
+          path: "/alert_log/alert_patient",
+          query: {pId: row.pId, state: 12,type:12}
+        });
+      }else {
+        this.$router.push({
+          path: "/alert_log/alert_patient",
+          query: {pId: row.pId, state: 1,type:'single'}
+        });
+      }
+
+    },
   }
 };
 </script>

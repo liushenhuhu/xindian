@@ -253,7 +253,7 @@
             </template>
           </el-table-column>
           <el-table-column label="年龄" align="center" prop="patientAge" width="100">
-            
+
           </el-table-column>
           <el-table-column label="性别" align="center" prop="patientSex" width="100"></el-table-column>
           <el-table-column label="医院" align="center" prop="hospitalName" width="200">
@@ -316,7 +316,7 @@
                     type="text"
                     @click="downloadData(scope.row)"
                     v-hasPermi="['DECGsingle:download:report']"
-                  >下载数据 
+                  >下载数据
                 </el-button>
                 <el-button type="text" size="mini" @click="handleAlert(scope.row)"
                            v-hasPermi="['patient:patient:alert']">
@@ -324,6 +324,12 @@
                 </el-button>
                 <el-button type="text" size="mini" @click="handleDelete(scope.row)"
                            v-hasPermi="['patient_management:patient_management:export']">删除
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="lookHistoryData(scope.row)"
+                >查看历史数据
                 </el-button>
                 <el-button
                   slot="reference"
@@ -908,14 +914,11 @@ export default {
     },
     /** 查看报告*/
     downloadInform(row) {
-      // let routeUrl = this.$router.resolve({path: "/ExportPDF", query: {pId: row.pId, hospitalName: row.hospitalName ,ecg_type:row.ecgType, patientName:row.patientName}});
-      // window.open(routeUrl.href, '_blank');
-      // row.pId="ZHIZIsingle_D29987E8555A-1678663291710";
-      // let routeUrl = this.$router.resolve({path: "/DECGReport/DECG_single/report/"+row.pId+"/"+row.pId+".pdf"});
-      // window.open(routeUrl.href, '_blank');
-      // // this.$router.push("/DECGReport/DECG_single/"+row.pId+"/"+row.pId+".pdf");
       this.$router.push({path: "/lookPdf", query: {pId: row.pId, ecgType: "DECG_single"}});
-    }
+    },
+    lookHistoryData(val) {
+      this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "DECGsingle"}});
+    },
   }
 };
 </script>

@@ -86,6 +86,13 @@ export function getSX_PDFByPId(pId) {
     method: 'get'
   })
 }
+export function getPdf(data) {
+  return request({
+    url: '/pdf/jecgReport/getPdf',
+    method: 'post',
+    data: data,
+  })
+}
 export function listDoc() {
   return request({
     url: '/patient_management/patient_management/listDoc',
