@@ -58,46 +58,54 @@ public class ChatECGController extends BaseController {
     @PostMapping("/proxyRequest")
     public HashMap<String,Object> proxyRequest(@RequestBody Chat chat) throws ParseException {
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        //定义发送数据
-        HttpHeaders headers = new HttpHeaders(); //构建请求头
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("prompt", chat.getText());
-        JSONArray objects = JSON.parseArray(chat.getHistory());
-        if (objects!=null){
-            paramsMap.put("history", objects);
-        }else {
-            paramsMap.put("history", new String[]{});
-        }
-
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
-//        String url = "http://219.155.7.235:6025/";
-        String url = "http://202.102.249.124:6025/";
+//        //定义发送数据
+//        HttpHeaders headers = new HttpHeaders(); //构建请求头
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        Map<String, Object> paramsMap = new HashMap<>();
+//        paramsMap.put("query", chat.getText());
+//        paramsMap.put("stream", false);
+//        paramsMap.put("knowledge_base_name", "samples");
+//        paramsMap.put("top_k", 5);
+//        paramsMap.put("score_threshold", 0.5);
+//        paramsMap.put("model_name","Qwen-14B-Chat");
+//        paramsMap.put("temperature",0.8);
+//        paramsMap.put("max_tokens",0);
+//        paramsMap.put("prompt_name","default");
+//        JSONArray objects = JSON.parseArray(chat.getHistory());
+//        if (objects!=null){
+//            paramsMap.put("history", objects);
+//        }else {
+//            paramsMap.put("history", new String[]{});
+//        }
+//
+//        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+////        String url = "http://219.155.7.235:6025/";
+//        String url = "https://ecg.mindyard.cn/chat/knowledge_base_chat";
         HashMap<String,Object> sendMessageVo=new HashMap<>();
-        try {
-            sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
-        }catch (Exception e){
-            sendMessageVo=new HashMap<>();
-            sendMessageVo.put("response","对不起，网络出小差了");
-            System.out.println(e);
-        }
+//        try {
+//            sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
+//        }catch (Exception e){
+//            sendMessageVo=new HashMap<>();
+//            sendMessageVo.put("response","对不起，网络出小差了");
+//            System.out.println(e);
+//        }
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parse = new Date();
-        sendMessageVo.put("responseTime",simpleDateFormat.format(parse));
+//        sendMessageVo.put("responseTime",simpleDateFormat.format(parse));
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        HashMap<String,Object> finalResult = sendMessageVo;
+//        HashMap<String,Object> finalResult = sendMessageVo;
         CompletableFuture.runAsync(() ->{
             System.out.println("异步线程 =====> 保存数据 =====> " + new Date());
             try{
                 DocVO docVO = new DocVO();
-                docVO.setValue(finalResult.get("response").toString());
+                docVO.setValue(chat.getHistory());
                 docVO.setLabel(chat.getText());
                 String jsonString = JSONObject.toJSONString(docVO);
                 ChatQuiz chatQuiz = new ChatQuiz();
                 chatQuiz.setUserId(loginUser.getUserId());
-                chatQuiz.setCreateTime(chat.getCreateTime());
+                chatQuiz.setCreateTime(new Date());
                 chatQuiz.setConversationId(chat.getConversationId());
                 chatQuiz.setMessageContent(jsonString);
                 chatQuiz.setMessageType("text");
@@ -106,14 +114,12 @@ public class ChatECGController extends BaseController {
                     chatQuiz.setTitle(chat.getTitle());
                 }
                 List<ChatQuiz> chatQuizListIsNotTet = chatQuizService.getChatQuizListIsNotTet(chatQuiz);
-                if (chatQuizListIsNotTet==null||chatQuizListIsNotTet.size()==0){
+                if (chatQuizListIsNotTet==null|| chatQuizListIsNotTet.isEmpty()){
                     chatQuizService.insertChatQuiz(chatQuiz);
                 }else {
                     chatQuiz.setTitle(null);
                     chatQuizService.insertChatQuiz(chatQuiz);
                 }
-
-
             }catch (Exception e){
                 System.out.println(e);
             }
@@ -122,7 +128,6 @@ public class ChatECGController extends BaseController {
         executorService.shutdown(); // 回收线程池
         return sendMessageVo;
     }
-
 
     @PostMapping("/appProxyRequest")
     public Map<String, Object> appProxyRequest(@RequestBody Chat chat) throws ParseException {

@@ -131,8 +131,9 @@ import loading from "./loading";
 import { delDoctor } from "@/api/doctor/doctor";
 import Recorder from "js-audio-recorder";
 import { Voc, PPlayer } from '@/utils/voice.js'
-
+import $ from "jquery";
 export default {
+  name: 'chatECG',
   components: {
     loading,
   },
@@ -194,7 +195,11 @@ export default {
     this.showTimer();
   },
   mounted() {
+    // this.getStream()
+    console.log('process.env.port: ', process.env.VUE_APP_BASE_API);
+
     this.audioPlayer = new PPlayer()
+    this.getMsg()
   },
   beforeDestroy() {
     console.log('即将销毁')
@@ -216,6 +221,174 @@ export default {
   },
 
   methods: {
+    // console.log('process.env.port: ', process.env.VUE_APP_CHAT);
+    async getStream(data, lock, th) {
+      try {
+        var params = {
+          query: data.text,
+          history: data.history != "" ? JSON.parse(data.history) : []
+        }
+        let response = await fetch(process.env.VUE_APP_CHAT + '/knowledge_base_chat', {
+          method: 'post',
+          headers: { 'content-type': 'application/json' },
+          mode: 'cors',
+          credentials: 'include',
+          body: JSON.stringify({
+            ...params,
+            knowledge_base_name: "samples",
+            top_k: 5,
+            score_threshold: 0.5,
+
+            stream: true,
+            model_name: "Qwen-14B-Chat",
+            temperature: 0.8,
+            max_tokens: 0,
+            prompt_name: "default"
+          }),
+        });
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const reader = response.body.getReader();
+        const textDecoder = new TextDecoder();
+        let result = true;
+        let output = ''
+
+
+        let obj = {
+          type: "leftinfo",
+          time: "",
+          name: "robot",
+          original: "",
+          content: "",
+          question: [],
+        };
+        this.isLoading = false;
+        this.info.push(obj);
+
+
+        while (result) {
+          const { done, value } = await reader.read();
+          // console.log('value: ', value);
+
+          if (done) {
+            console.log('Stream ended');
+            result = false;
+            break;
+          }
+
+          const chunkText = textDecoder.decode(value);
+
+          let txtVal = chunkText.split(":")[2].split("}")[0].replace(/"/g, '').replace(/\\n/g, '').replace(/\[<span style='color/g, "");
+          // console.log('chunkText: ', txtVal);
+          this.appendRobotMsg(txtVal)
+
+          output += txtVal;
+          this.newText += txtVal.trim();
+        }
+        this.audioPlayer.send(output)
+        this.info[this.info.length - 1].original += output
+        console.log('Received chunk:', output);
+
+        proxyRequest({
+          history: output.trim(),
+          conversationId: this.queryParams.conversationId,
+          text: this.queryParams.text,
+          title: this.queryParams.title
+        })
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    getMsg(data, lock, th) {
+      console.log('data: ', data);
+      this.getStream(data)
+      var params = {
+        prompt: data.text,
+        history: data.history != "" ? JSON.parse(data.history) : []
+      }
+
+      console.log('params: ', JSON.stringify(params));
+
+      $.ajax({
+        type: "post",
+        url: "/api",
+        // asynsc: false,
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(params),
+        // {
+        //   prompt: '你好',
+        //   history: [{ role: "user", content: "你好" }, { role: "assistant", content: "你好，我是心电AI医生问答模型，一个由郑州大学互联网医疗与健康服务河南省协同创新中心开发的人工智能助手。很高兴为您服务。" }]
+        // }
+        success: function (response) {
+          console.log('response: ', response);
+          th.queryParams.history = JSON.stringify(response.history);
+          th.customerText = "";
+          let obj = {
+            id: 1,
+            content: response.response,
+            index: 1,
+          };
+          console.log('----5----')
+          th.robotAnswer.push(obj);
+          // th.appendRobotMsg(response);
+          console.log('----6----')
+          if (th.audioLock === lock) {
+            th.isLoading = false;
+            if (th.msgOverLock === lock) {
+              if (!th.audioPlayState) {
+                th.audioPlayer.send(response.response)
+              }
+            }
+          }
+
+        }
+      })
+    },
+    getMsg1(data, th) {
+      this.getStream(data)
+      var params = {
+        prompt: data.text,
+        history: data.history != "" ? JSON.parse(data.history) : []
+      }
+      console.log('----------params----: ', JSON.stringify(params));
+
+      $.ajax({
+        type: "post",
+        url: "/api",
+        // asynsc: false,
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(params),
+        // {
+        //   prompt: '你好',
+        //   history: [{ role: "user", content: "你好" }, { role: "assistant", content: "你好，我是心电AI医生问答模型，一个由郑州大学互联网医疗与健康服务河南省协同创新中心开发的人工智能助手。很高兴为您服务。" }]
+        // }
+        success: function (response) {
+          console.log(response);
+          th.queryParams.history = JSON.stringify(response.history);
+          th.customerText = "";
+          let obj = {
+            id: 1,
+            content: response.response,
+            index: 1,
+          };
+          th.robotAnswer.push(obj);
+          console.log("这是++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + this.robotAnswer);
+          // th.appendRobotMsg(response);
+          th.isLoading = false;
+          if (!th.audioPlayState) {
+            console.log('还是走了这里？')
+            th.audioPlayer.send(response.response)
+          }
+        }
+      })
+    },
     endAll() {
       let th = this;
       try {
@@ -339,7 +512,7 @@ export default {
       this.overTurn();
       console.log('----2----')
       let th = this;
-      //console.log("queryParams: ====="+this.queryParams.history);
+      console.log("queryParams: =====", this.queryParams.history);
       this.audioPlayer.stopAudio()
       clearTimeout(this.timer);
       this.showTimer();
@@ -360,14 +533,14 @@ export default {
       this.queryParams.createTime = this.formatDateToCustomFormat(new Date());
       if (this.isAddNewWin || this.conversation.length === 0) {
         let is = this.findMaxIdObject(this.conversation);
-        console.log(is);
+        console.log('--------------1-----------', is);
         if (is !== null) {
           this.queryParams.conversationId = is.conversationId + 1;
         } else {
           this.queryParams.conversationId = 1;
         }
 
-        this.queryParams.title = text;
+
         if (text !== "") {
           var obj = {
             type: "rightinfo",
@@ -379,29 +552,14 @@ export default {
           console.log('----4----')
           this.info.push(obj);
           console.log(3)
+          this.queryParams.title = this.customerText;
+          this.queryParams.text = this.customerText
           this.customerText = "";
           this.isLoading = true;
-          proxyRequest(this.queryParams).then((response) => {
-            this.queryParams.history = JSON.stringify(response.history);
-            this.customerText = "";
-            let obj = {
-              id: 1,
-              content: response.response,
-              index: 1,
-            };
-            console.log('----5----')
-            this.robotAnswer.push(obj);
-            this.appendRobotMsg(response);
-            console.log('----6----')
-            if (th.audioLock === lock) {
-              this.isLoading = false;
-              if (th.msgOverLock === lock) {
-                if (!this.audioPlayState) {
-                  this.audioPlayer.send(response.response)
-                }
-              }
-            }
-          });
+          console.log('this.queryParams: ', this.queryParams);
+          this.getStream(this.queryParams)
+
+
           this.$nextTick(() => {
             var contentHeight = document.getElementById("right");
             contentHeight.scrollTop = contentHeight.scrollHeight;
@@ -428,7 +586,7 @@ export default {
           isCustom: true,
         };
 
-        this.queryParams.title = null;
+        // this.queryParams.title = null;
         this.conversation.unshift(chat);
         this.isAddNewWin = false;
 
@@ -441,31 +599,13 @@ export default {
             content: text,
           };
           this.info.push(obj);
+
+          this.queryParams.text = this.customerText
+          this.queryParams.title = null
           this.customerText = "";
           this.isLoading = true;
-          proxyRequest(this.queryParams).then((response) => {
-            //console.log(response);
-            /*if(this.queryParams.history !== "" && this.queryParams.history !== null){
+          this.getStream(this.queryParams)
 
-            }*/
-            //console.log("history:  ===="+JSON.stringify(response.history));
-            console.log(response);
-            this.queryParams.history = JSON.stringify(response.history);
-            this.customerText = "";
-            let obj = {
-              id: 1,
-              content: response.response,
-              index: 1,
-            };
-            this.robotAnswer.push(obj);
-            console.log("这是++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + this.robotAnswer);
-            this.appendRobotMsg(response);
-            this.isLoading = false;
-            if (!this.audioPlayState) {
-              console.log('还是走了这里？')
-              this.audioPlayer.send(response.response)
-            }
-          });
           this.$nextTick(() => {
             var contentHeight = document.getElementById("right");
             contentHeight.scrollTop = contentHeight.scrollHeight;
@@ -497,49 +637,29 @@ export default {
       this.newText = ''
     },
     // 机器人回答消息
+
     appendRobotMsg(text) {
+
       clearTimeout(this.timer);
       this.showTimer();
-      text.response = text.response.trim();
-      let answerText = "";
-      let flag;
-      for (let i = 0; i < this.robotAnswer.length; i++) {
-        //console.log(this.robotAnswer[i].content)
-        if (this.robotAnswer[i].content.indexOf(text.response) != -1) {
-          flag = true;
-          answerText = this.robotAnswer[i].content;
-          break;
-        }
-      }
-      if (flag) {
-        let obj = {
-          type: "leftinfo",
-          time: text.responseTime,
-          name: "robot",
-          original: answerText,
-          content: "",
-          question: [],
-        };
-        this.overTurn();
-        this.newText = answerText;
-        this.turnText();
-        this.info.push(obj);
-      } /*else {
-        answerText = "您可能想问：";
-        let obj = {
-          type: "leftinfo",
-          time: this.getTodayTime(),
-          name: "robot",
-          content: answerText,
-          question: this.robotQuestion,
-        };
-        this.info.push(obj);
-      }*/
-      this.$nextTick(() => {
-        var contentHeight = document.getElementById("right");
-        contentHeight.scrollTop = contentHeight.scrollHeight;
-      });
+      text = text.trim();
+      console.log('text: ', text);
+      // console.log('this.robotAnswer: ', this.robotAnswer);
+      // this.info[this.info.length - 1].original += text
+      this.turnText();
+      this.overTurn();
+
+
+
+
+      // } 
+      // this.$nextTick(() => {
+      //   var contentHeight = document.getElementById("right");
+      //   contentHeight.scrollTop = contentHeight.scrollHeight;
+      // });
     },
+
+
     sentMsgById(val, id) {
       clearTimeout(this.timer);
       this.showTimer();

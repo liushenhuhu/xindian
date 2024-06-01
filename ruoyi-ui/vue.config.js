@@ -33,6 +33,13 @@ module.exports = {
     port: port,
     open: true,
     proxy: {
+      "/chatAapi": {
+        target: "https://ecg.mindyard.cn/chat",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/chatAapi": ""
+        }
+      },
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
         target: `https://ecg.mindyard.cn:84/prod-api`,
@@ -102,7 +109,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()
@@ -132,8 +139,8 @@ module.exports = {
             })
           config.optimization.runtimeChunk('single'),
           {
-             from: path.resolve(__dirname, './public/robots.txt'), //防爬虫文件
-             to: './' //到根目录下
+            from: path.resolve(__dirname, './public/robots.txt'), //防爬虫文件
+            to: './' //到根目录下
           }
         }
       )
