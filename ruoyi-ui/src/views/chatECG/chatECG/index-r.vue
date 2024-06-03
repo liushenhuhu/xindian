@@ -91,7 +91,7 @@
           <div class="text-area">
             <div class="left-child">
               <img class="mesimg1" src="@/assets/images/messge1.png" />
-              <textarea placeholder="请输入您的问题..." style="
+              <textarea :disabled="iptDisabled" placeholder="请输入您的问题..." style="
                   height: 100%;
                   width: 85%;
                   resize: none;
@@ -99,6 +99,7 @@
                   border: 0;
                   font-size: 1.3vw;
                   padding: 1vh;
+                 
                 " id="text" v-model="customerText" @keyup.enter="sentMsg()"></textarea>
               <div class="right-child">
                 <div v-if="vocState == 0" class="mkf">
@@ -139,6 +140,7 @@ export default {
   },
   data() {
     return {
+      iptDisabled: false,
       isLoading: false,
       customerText: "",
       info: [
@@ -199,6 +201,7 @@ export default {
     console.log('process.env.port: ', process.env.VUE_APP_BASE_API);
 
     this.audioPlayer = new PPlayer()
+    console.log('this.audioPlayer: ', this.audioPlayer);
     this.getMsg()
   },
   beforeDestroy() {
@@ -289,6 +292,7 @@ export default {
           output += txtVal;
           this.newText += txtVal.trim();
         }
+        this.iptDisabled = false
         this.audioPlayer.send(output)
         this.info[this.info.length - 1].original += output
         console.log('Received chunk:', output);
@@ -420,7 +424,7 @@ export default {
       this.voc.onOverMsg(() => {
         th.sentMsg()
         th.resultState = 0;
-        console.log('结束消息')
+        console.log('结束消息111')
         let audio = new Audio()
         audio.src = require('@/assets/audio/msgEnd.mp3')
         audio.play()
@@ -508,6 +512,7 @@ export default {
     },
     // 用户发送消息
     sentMsg() {
+      this.iptDisabled = true
       console.log('----1----')
       this.overTurn();
       console.log('----2----')
@@ -643,7 +648,6 @@ export default {
       clearTimeout(this.timer);
       this.showTimer();
       text = text.trim();
-      console.log('text: ', text);
       // console.log('this.robotAnswer: ', this.robotAnswer);
       // this.info[this.info.length - 1].original += text
       this.turnText();
