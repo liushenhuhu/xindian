@@ -289,7 +289,7 @@ export default {
           // console.log('chunkText: ', txtVal);
           this.appendRobotMsg(txtVal)
 
-          output += txtVal;
+          output += txtVal.trim();
           this.newText += txtVal.trim();
         }
         this.iptDisabled = false
@@ -298,7 +298,7 @@ export default {
         console.log('Received chunk:', output);
 
         proxyRequest({
-          history: output.trim(),
+          history: output,
           conversationId: this.queryParams.conversationId,
           text: this.queryParams.text,
           title: this.queryParams.title
@@ -413,6 +413,7 @@ export default {
       this.voc = new Voc();
       this.voc.init(ts);
       this.voc.onmessage((text) => {
+        console.log('text: ', text);
         th.customerText += text;
         th.resultTextTemp = '';
         const arr = ['，', '。', '？', '！', '；',]
@@ -430,6 +431,7 @@ export default {
         audio.play()
       })
       this.voc.onmiddlemessage((text) => {
+        console.log('text11: ', text);
         th.resultTextTemp = text;
         if (!th.resultState) {
           //首次且仅触发一次
