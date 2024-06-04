@@ -180,6 +180,12 @@ export default {
       newText: '',
       textInterval: null,
       audioPlayState: false,
+      currentTime: 10000,
+      isRead: false,//是否读完
+      timeOut: null,
+      readText: "",
+      resultXun: false,//是否循环完
+      audioDom: null
     };
   },
   computed: {
@@ -196,16 +202,44 @@ export default {
     this.conversationClickAdd()
     this.showTimer();
   },
+
   mounted() {
+    var that = this
     // this.getStream()
-    console.log('process.env.port: ', process.env.VUE_APP_BASE_API);
+    // console.log('process.env.port: ', process.env.VUE_APP_BASE_API);
 
     this.audioPlayer = new PPlayer()
-    console.log('this.audioPlayer: ', this.audioPlayer);
+    // console.log('this.audioPlayer: ', this.audioPlayer);
+
+    this.audioDom = document.querySelector('audio')
+    // var audioDomAll = document.querySelectorAll('audio')
+    // console.log('audioDom: ', audioDomAll);
+
+
+    this.audioDom.addEventListener('timeupdate', function () {
+      // 当前播放时间发生改变时的操作
+      // console.log('音频正在播放，当前播放时间：' + that.currentTime);
+      if (that.currentTime == that.audioDom.currentTime) {
+        console.log("播放结束")
+        that.isRead = true
+      } else {
+        that.currentTime = that.audioDom.currentTime
+        that.isRead = false
+      }
+
+    });
+
+
+
+
     this.getMsg()
+
   },
   beforeDestroy() {
+    var th = this
     console.log('即将销毁')
+    clearInterval(th.timeOut)
+    this.audioDom.remove();
     this.endAll()
   },
   //keep-alive生命周期
@@ -224,6 +258,9 @@ export default {
   },
 
   methods: {
+    domFUn() {
+
+    },
     // console.log('process.env.port: ', process.env.VUE_APP_CHAT);
     async getStream(data, lock, th) {
       try {
@@ -259,8 +296,6 @@ export default {
         const textDecoder = new TextDecoder();
         let result = true;
         let output = ''
-
-
         let obj = {
           type: "leftinfo",
           time: "",
@@ -271,8 +306,8 @@ export default {
         };
         this.isLoading = false;
         this.info.push(obj);
-
-
+        var flag = true
+        var readText = ""
         while (result) {
           const { done, value } = await reader.read();
           // console.log('value: ', value);
@@ -280,6 +315,7 @@ export default {
           if (done) {
             console.log('Stream ended');
             result = false;
+            this.resultXun = true
             break;
           }
 
@@ -290,12 +326,43 @@ export default {
           this.appendRobotMsg(txtVal)
 
           output += txtVal.trim();
+          // readText += txtVal.trim();
           this.newText += txtVal.trim();
+          if (output.length > 10 && flag) {
+            this.audioPlayer.send(output)
+            flag = false
+            readText = output
+            this.readText = readText
+            // console.log('readText: ', readText);
+          } else if (this.isRead) {
+            let read = readText
+            // console.log('read: ', read);
+            this.audioPlayer.send(output.substring(read.length, output.length))
+            readText += output.substring(read.length, output.length)
+            this.readText = readText
+            // this.resultXun=false
+          }
         }
         this.iptDisabled = false
-        this.audioPlayer.send(output)
+        var that = this
         this.info[this.info.length - 1].original += output
         console.log('Received chunk:', output);
+        this.resultXun = true
+        if (readText.length == output.length) {
+
+        } else {
+          this.timeOut = setInterval(() => {
+            // console.log("--123---", that.isRead)
+            if (that.isRead) {
+              // console.log('output.substring(readText.length, output.length): ', output.substring(readText.length, output.length));
+              clearInterval(that.timeOut)
+              that.timeOut = null
+              this.audioPlayer.send(output.substring(readText.length, output.length))
+
+
+            }
+          }, 10)
+        }
 
         proxyRequest({
           history: output,
