@@ -91,6 +91,7 @@
           <div class="text-area">
             <div class="left-child">
               <img class="mesimg1" src="@/assets/images/messge1.png" />
+              <!--  -->
               <textarea :disabled="iptDisabled" placeholder="请输入您的问题..." style="
                   height: 100%;
                   width: 85%;
@@ -103,7 +104,8 @@
                 " id="text" v-model="customerText" @keyup.enter="sentMsg()"></textarea>
               <div class="right-child">
                 <div v-if="vocState == 0" class="mkf">
-                  <img class="mesimg3" src="@/assets/images/microphone-0.png" @click="recorderStart()" />
+                  <img v-if="iptDisabled" class="mesimg3" src="@/assets/images/microphone-0.png" />
+                  <img v-else class="mesimg3" src="@/assets/images/microphone-0.png" @click="recorderStart()" />
                 </div>
                 <div v-else-if="vocState == 1" class="mkf mkf-s">
                   <img class="mesimg3" src="@/assets/images/microphone-1.png" @click="recorderStop()" />
@@ -582,6 +584,7 @@ export default {
     // 用户发送消息
     sentMsg() {
       this.iptDisabled = true
+      this.recorderStop()
       console.log('----1----')
       this.overTurn();
       console.log('----2----')
