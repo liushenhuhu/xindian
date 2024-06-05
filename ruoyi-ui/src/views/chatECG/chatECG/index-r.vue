@@ -260,9 +260,6 @@ export default {
   },
 
   methods: {
-    domFUn() {
-
-    },
     // console.log('process.env.port: ', process.env.VUE_APP_CHAT);
     async getStream(data, lock, th) {
       try {
@@ -587,7 +584,7 @@ export default {
       if (this.recorder) {
         this.recorderStop()
       }
-
+      clearInterval(this.timeOut)
       console.log('----1----')
       this.overTurn();
       console.log('----2----')
