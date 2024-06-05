@@ -584,7 +584,10 @@ export default {
     // 用户发送消息
     sentMsg() {
       this.iptDisabled = true
-      this.recorderStop()
+      if (this.recorder) {
+        this.recorderStop()
+      }
+
       console.log('----1----')
       this.overTurn();
       console.log('----2----')
