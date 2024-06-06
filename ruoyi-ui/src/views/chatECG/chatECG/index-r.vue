@@ -150,7 +150,7 @@ export default {
           type: "leftinfo",
           time: this.getTodayTime(),
           name: "robot",
-          content: "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？",
+          content: "您好，我是智能AI医生小雅，请问有什么问题可以帮助您？",
           question: [],
         },
       ],
@@ -849,7 +849,7 @@ export default {
                 text: "1",
               },
             ];
-            let text = "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？";
+            let text = "您好，我是智能AI医生小雅，请问有什么问题可以帮助您？";
             let index = 0;
             const interval = setInterval(() => {
               if (index < text.length && this.info[0].text === "1") {
@@ -961,7 +961,7 @@ export default {
           text: "1",
         },
       ];
-      let text = "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？";
+      let text = "您好，我是智能AI医生小雅，请问有什么问题可以帮助您？";
       let index = 0;
       const interval = setInterval(() => {
         if (index < text.length && this.info[0].text === "1") {
