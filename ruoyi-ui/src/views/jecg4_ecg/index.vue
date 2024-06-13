@@ -9,10 +9,10 @@
                 <el-tab-pane label="基本信息" name="userInfo">
                   <div class="tabBox">
                     <table>
-                     <tr>
+                      <tr>
                         <td>姓名</td>
-                        <td v-if="isShowName.status===true">{{ data.name }}</td>
-                        <td v-else>{{hideMiddleName(data.name)}}</td>
+                        <td v-if="isShowName.status === true">{{ data.name }}</td>
+                        <td v-else>{{ hideMiddleName(data.name) }}</td>
                         <td>性别</td>
                         <td>{{ data.gender }}</td>
                         <td>心率</td>
@@ -28,11 +28,11 @@
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
-                        <td >{{ data.result }}</td>
+                        <td>{{ data.result }}</td>
                         <td>患者病史</td>
-                        <td>{{getMH(dict.type.medical_history)}}</td>
+                        <td>{{ getMH(dict.type.medical_history) }}</td>
                         <td>心梗机率</td>
-                        <td>{{ (data.p_xingeng*100).toFixed(1)+'%' }}</td>
+                        <td>{{ (data.p_xingeng * 100).toFixed(1) + '%' }}</td>
                       </tr>
                     </table>
                   </div>
@@ -65,7 +65,7 @@
               <div class="yujinclass">
                 <div class="yujinclass_tou">预警类型:</div>
                 <div class="yujinclass_zhi">
-                   {{xianshizifuchuan}}
+                  {{ xianshizifuchuan }}
                 </div>
                 <div>
                   <el-button type="success" round @click="xianshi">选择预警类型</el-button>
@@ -77,62 +77,48 @@
           </div>
 
           <div class="touyou">
-              <div class="touzuobiaoti">
-                <div>医师诊断</div>
-                <div>
-                  <el-button
-                    type="success"
-                    plain
-                    icon="el-icon-view"
-                    size="mini"
-                    @click="isShowNameClick"
-                    v-if="true"
-                  >{{isShowName.name}}
-                  </el-button>
-                </div>
-              </div>
-              <div class="mt">
-                <el-input
-                  type="textarea"
-                  v-model="data.resultByDoctor"
-                  placeholder="请输入"
-                  data-value="1111"
-                  :rows="5"
-                  class="font">{{ data.resultByDoctor }}
-                </el-input>
-              </div>
-
-              <div class="doctor">
-                <div class="input yishi">
-                  <strong>医师:</strong>
-                  <el-cascader v-model="data.doctorName"  :options="doctorList" @change="selectDoctorChange"
-                               :show-all-levels="false">
-                  </el-cascader>
-                </div>
-                <div class="input">
-                  <strong>日期:</strong>
-                  <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable style="width: 66%"></el-input>
-                  <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
-                </div>
-              </div>
-
-              <div class="oder">
-                <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
-                  <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
-                    <i class="el-icon-question"></i>
-                  </el-tooltip>
-                  发送预警</el-button>
-                <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
-                <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
-
-                <el-button
-                  class="next"
-                  @click="prev()"
-                  :loading="loading"
-                >上一个</el-button>
-                <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
+            <div class="touzuobiaoti">
+              <div>医师诊断</div>
+              <div>
+                <el-button type="success" plain icon="el-icon-view" size="mini" @click="isShowNameClick"
+                  v-if="true">{{ isShowName.name }}
+                </el-button>
               </div>
             </div>
+            <div class="mt">
+              <el-input type="textarea" v-model="data.resultByDoctor" placeholder="请输入" data-value="1111" :rows="5"
+                class="font">{{ data.resultByDoctor }}
+              </el-input>
+            </div>
+
+            <div class="doctor">
+              <div class="input yishi">
+                <strong>医师:</strong>
+                <el-cascader v-model="data.doctorName" :options="doctorList" @change="selectDoctorChange"
+                  :show-all-levels="false">
+                </el-cascader>
+              </div>
+              <div class="input">
+                <strong>日期:</strong>
+                <el-input v-if="data.diagnosisData != null" v-model="data.diagnosisData" clearable
+                  style="width: 66%"></el-input>
+                <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
+              </div>
+            </div>
+
+            <div class="oder">
+              <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
+                <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+                发送预警</el-button>
+              <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
+              <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
+
+              <el-button class="next" @click="prev()" :loading="loading">上一个</el-button>
+              <el-button class="next" @click="next()" :loading="loading">下一个</el-button>
+            </div>
+          </div>
 
         </div>
 
@@ -146,16 +132,16 @@
         <div class="noright">
           <!--          <canvas id="grids" width="750px" height="750px"></canvas>-->
           <div>
-            <div id="II" class="line" @dblclick="clicktrue('I',data4.dataII)"></div>
+            <div id="II" class="line" @dblclick="clicktrue('I', data4.dataII)"></div>
           </div>
           <div>
-            <div id="V2" class="line" @dblclick="clicktrue('V2',data4.dataV2)"></div>
+            <div id="V2" class="line" @dblclick="clicktrue('V2', data4.dataV2)"></div>
           </div>
           <div>
-            <div id="V4" class="line" @dblclick="clicktrue('V4',data4.dataV4)"></div>
+            <div id="V4" class="line" @dblclick="clicktrue('V4', data4.dataV4)"></div>
           </div>
           <div>
-            <div id="V6" class="line" @dblclick="clicktrue('V6',data4.dataV6)"></div>
+            <div id="V6" class="line" @dblclick="clicktrue('V6', data4.dataV6)"></div>
           </div>
         </div>
       </div>
@@ -182,22 +168,14 @@
       <form id="loginForm" name="loginForm" class="biaodan">
         <div class="duoxuan">
           <el-checkbox-group v-model="zhi" @change="zhong">
-            <div v-for="(group,index) in yujingzhi" :key="index">
+            <div v-for="(group, index) in yujingzhi" :key="index">
               <div class="fenzuzhuti">
                 {{ group.label }}
               </div>
               <div class="fenzuzhutizi">
                 <ul class="xiaoul">
-                  <li
-                    v-for="(item,i) in group.options"
-                    class="xiaoli"
-                    :key="i"
-                  >
-                    <el-checkbox
-                      :label="item.value"
-                      border
-                      size="mini"
-                    >
+                  <li v-for="(item, i) in group.options" class="xiaoli" :key="i">
+                    <el-checkbox :label="item.value" border size="mini">
                       {{ item.value }}
                     </el-checkbox>
                   </li>
@@ -221,23 +199,23 @@
 <script>
 import * as echarts from "@/views/ECGScreen/detail/echarts.min";
 import $ from 'jquery';
-import {getCommonTerms, addReport, getReportByPId, updateReport, reportEarlyWarningMsg} from "@/api/report/report";
-import {sendMsgToPatient} from "@/api/patient_management/patient_management";
+import { getCommonTerms, addReport, getReportByPId, updateReport, reportEarlyWarningMsg } from "@/api/report/report";
+import { sendMsgToPatient } from "@/api/patient_management/patient_management";
 // import child from './child.vue'
 // import CacheList from "@/views/monitor/cache/list.vue";
-import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
-import {selectDoctor,getDoctorList} from "@/api/statistics/statistics";
+import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
+import { selectDoctor, getDoctorList } from "@/api/statistics/statistics";
 // 发送信息时获取密码
-import {getlogin_password} from '@/api/jecg4_ecg/jecg4_ecg'
+import { getlogin_password } from '@/api/jecg4_ecg/jecg4_ecg'
 import child from "@/views/staticECG/staticECG/child.vue";
 // 获取预警类型选项
-import {selectList} from "@/api/log_user/log_user";
+import { selectList } from "@/api/log_user/log_user";
 // 存储选择的预警类型
-import {addReport as addReportyujing} from "@/api/alert_log_count/count";
+import { addReport as addReportyujing } from "@/api/alert_log_count/count";
 
-import { listPatient_management} from "@/api/patient_management/patient_management";
+import { listPatient_management } from "@/api/patient_management/patient_management";
 
-import {getVerify} from "@/api/verify/verify";
+import { getVerify } from "@/api/verify/verify";
 import { createLogger } from 'vuex';
 
 export default {
@@ -250,13 +228,13 @@ export default {
   data() {
     return {
       tanchuang: false,
-      name:null,
-      isShowName:{
-        status:false,
-        name:"显示姓名"
+      name: null,
+      isShowName: {
+        status: false,
+        name: "显示姓名"
       },
-      on_off:false,
-      selectDoctor:[],
+      on_off: false,
+      selectDoctor: [],
       tabsStatus: "userInfo",
       doctorList: [],
 
@@ -266,11 +244,11 @@ export default {
         password: null,
         status: false
       },
-      ecgType:'',
+      ecgType: '',
       pageNum: 1,
       anoStatus: null,
       pageSize: 10,
-      queryParams:{},
+      queryParams: {},
       loading: false,
       index: 0,
       message: {
@@ -291,15 +269,15 @@ export default {
       daterangeConnectionTime: [],
       // ============================上面是上下页需要的数值
       // 原先提交过的预警类型
-      logDataType:'',
-      tijiaoshuju:{},
-      zhi:[],
+      logDataType: '',
+      tijiaoshuju: {},
+      zhi: [],
 
-      yujingzhi:[],
-      xianshizifuchuan:'',
+      yujingzhi: [],
+      xianshizifuchuan: '',
       videoVisible: false,//echarts弹出框显示
       markdata: [
-        {yAxis: -1}, {yAxis: -0.5}, {yAxis: 0}, {yAxis: 0.5}, {yAxis: 1},
+        { yAxis: -1 }, { yAxis: -0.5 }, { yAxis: 0 }, { yAxis: 0.5 }, { yAxis: 1 },
       ],//没放大之前标记线
       dialogFormVisible: false,//弹出框
       items: "",//常用术语
@@ -313,7 +291,7 @@ export default {
       arr: [],
       options: [],
       data: {
-        pastMedicalHistory:"",
+        pastMedicalHistory: "",
         name: "",
         gender: "",
         age: "",
@@ -337,8 +315,8 @@ export default {
         qtc: '',
         hrv: '',
         pId: '',
-        patientSymptom:'暂无症状',
-        p_xingeng:''//心梗率
+        patientSymptom: '暂无症状',
+        p_xingeng: ''//心梗率
       },
       data4: {
         x: [],
@@ -375,7 +353,7 @@ export default {
       // 表单校验
       rules: {
         password: [
-          {required: true, message: "密码不能为空", trigger: "blur"}
+          { required: true, message: "密码不能为空", trigger: "blur" }
         ],
       }
     };
@@ -401,21 +379,21 @@ export default {
   },
   methods: {
     // 病史
-    getMH(zdList , ecgType = this.data.pastMedicalHistory){
+    getMH(zdList, ecgType = this.data.pastMedicalHistory) {
       let str = ''
-      if (ecgType){
+      if (ecgType) {
         ecgType.split(",").forEach(item => {
-          if (this.canConvertToInt(item)){
+          if (this.canConvertToInt(item)) {
             zdList.forEach(zd => {
               if (zd.value == item) {
                 str += zd.label + ','
               }
             })
-          }else {
+          } else {
             str += item + ','
           }
         })
-        if (str.endsWith(",")){
+        if (str.endsWith(",")) {
           str = str.substring(0, str.length - 1)
         }
       }
@@ -428,21 +406,21 @@ export default {
       return Number.isInteger(parsedInt);
     },
     // 选择预警类型弹窗按钮 取消
-    quxiao(){
+    quxiao() {
 
       if (this.logDataType) {
-          this.xianshizifuchuan = this.logDataType;
-          this.zhi = this.logDataType.split(",").map((str) => str.trim());
-        }
-        // 如果没有原先提交过的值，就将自动分析的结果处理后放入预警类型中默认选中
-        else {
-          this.zhi = [];
-          this.xianshizifuchuan = "";
-        }
-        this.tanchuang = false
+        this.xianshizifuchuan = this.logDataType;
+        this.zhi = this.logDataType.split(",").map((str) => str.trim());
+      }
+      // 如果没有原先提交过的值，就将自动分析的结果处理后放入预警类型中默认选中
+      else {
+        this.zhi = [];
+        this.xianshizifuchuan = "";
+      }
+      this.tanchuang = false
     },
     // 选择预警类型弹窗按钮 完成
-    queren(){
+    queren() {
       this.tanchuang = false
     },
     hideMiddleName(patientName) {
@@ -456,20 +434,20 @@ export default {
         return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
       }
     },
-    isShowNameClick(){
-      let isShowName =  sessionStorage.getItem('isShowName')
-      if (isShowName){
-        if (this.isShowName.status){
+    isShowNameClick() {
+      let isShowName = sessionStorage.getItem('isShowName')
+      if (isShowName) {
+        if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示姓名"
-        }else {
-          this.isShowName.status =!this.isShowName.status;
+        } else {
+          this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "隐藏姓名"
         }
-      }else {
+      } else {
         this.name = true
 
-        this.verifyForm.password=''
+        this.verifyForm.password = ''
         this.dialogFormVisibleVerifyAuthority = true
       }
 
@@ -485,14 +463,14 @@ export default {
           if (this.name) {
             // 显示姓名
             let obj = {
-              accountPwd:this.verifyForm.password
+              accountPwd: this.verifyForm.password
             }
-            getVerify(obj).then(r=>{
+            getVerify(obj).then(r => {
               this.$modal.msgSuccess("密码正确");
-              this.verifyForm.status=true
-              sessionStorage.setItem('isShowName',true)
+              this.verifyForm.status = true
+              sessionStorage.setItem('isShowName', true)
               this.dialogFormVisibleVerifyAuthority = false
-              this.isShowName.status =!this.isShowName.status;
+              this.isShowName.status = !this.isShowName.status;
               this.isShowName.name = "隐藏姓名"
               this.name = false
             })
@@ -501,8 +479,8 @@ export default {
             let objj = {
               password: this.verifyForm.password
             }
-            getlogin_password(objj).then(res=>{
-              if(res.code == 200){
+            getlogin_password(objj).then(res => {
+              if (res.code == 200) {
                 this.$modal.msgSuccess("密码正确");
                 this.verifyForm.status = true
                 this.dialogFormVisibleVerifyAuthority = false
@@ -510,7 +488,7 @@ export default {
                 if (this.on_off) {
                   this.sendMsg();
                 }
-              }else{
+              } else {
                 this.$modal.msgSuccess("密码错误请重试");
               }
             })
@@ -520,37 +498,37 @@ export default {
       })
     },
     /** 查询用户管理列表 */
-   async getList() {
+    async getList() {
       this.loading = true;
       this.queryParams.params = {};
       if (null != this.daterangeConnectionTime && '' != this.daterangeConnectionTime) {
         this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
         this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
       }
-      if (this.queryParams.ecgType==null){
+      if (this.queryParams.ecgType == null) {
         this.queryParams.ecgType = this.ecgType
       }
-     await listPatient_management(this.queryParams).then(response => {
+      await listPatient_management(this.queryParams).then(response => {
         // console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
-        if ( this.queryParams.ecgType==='JECG4'){
-          this.queryParams.ecgType=null
+        if (this.queryParams.ecgType === 'JECG4') {
+          this.queryParams.ecgType = null
         }
         this.patient_managementList.forEach((item, index) => {
-            if (this.pId == item.pId) {
-              this.index = index;
-            }
-          })
-        if (this.index == this.patient_managementList.length ) {
-              this.index = 0
+          if (this.pId == item.pId) {
+            this.index = index;
+          }
+        })
+        if (this.index == this.patient_managementList.length) {
+          this.index = 0
         }
       })
       this.getPatientdetails()
     },
     // 患者用户信息
-    getPatientdetails(){
+    getPatientdetails() {
       getReportByPId(this.pId).then(response => {
         // console.log(response)
         this.data.result = response.data.intelligentDiagnosis
@@ -562,7 +540,7 @@ export default {
         // 病史
         this.data.pastMedicalHistory = response.data.pastMedicalHistory;
         // 原先提交过的预警类型
-        this.logDataType =  response.data.logDataType
+        this.logDataType = response.data.logDataType
         if (!this.data.doctorName) {
           const date = new Date();
           const year = date.getFullYear().toString().padStart(4, '0');
@@ -573,9 +551,9 @@ export default {
           const second = date.getSeconds().toString().padStart(2, '0');
           this.data.diagnosisData = `${year}-${month}-${day} ${hour}:${minute}:${second}`
         }
-        if (response.data.patientSymptom!=null) {
+        if (response.data.patientSymptom != null) {
           this.data.patientSymptom = response.data.patientSymptom
- 			  }
+        }
         // console.log(this.data)
       });
       selectDoctor().then(response => {
@@ -592,7 +570,7 @@ export default {
               children: []
             }
             e.doctorList.forEach(doctorInfo => {
-              hospital.children.push({label: doctorInfo.doctorName, value: doctorInfo.doctorName})
+              hospital.children.push({ label: doctorInfo.doctorName, value: doctorInfo.doctorName })
             })
             options.push(hospital)
           }
@@ -604,11 +582,11 @@ export default {
       this.getyujingleixing()
     },
     //选择医生
-    selectDoctorChange(e){
+    selectDoctorChange(e) {
       this.data.doctorName = e[1]
     },
-     // 上一个
-   async prev() {
+    // 上一个
+    async prev() {
       this.loading = true;
       if (this.queryParams.pageNum == 1 && this.index == 0) {
         this.$message.warning("已经是第一页！！！");
@@ -621,7 +599,7 @@ export default {
           this.queryParams.pageNum--;
           // this.index = 9
         }
-       await this.getList();
+        await this.getList();
         this.index = this.queryParams.pageSize - 1;
       }
       // console.log(this.logUserList[this.index]);
@@ -638,7 +616,7 @@ export default {
       window.history.replaceState("", "", newUrl);
       this.get();
       // await this.getLogUserList()
-     await this.getList()
+      await this.getList()
     },
     // 点击下一个触发事件
     async next() {
@@ -675,12 +653,12 @@ export default {
       window.history.replaceState("", "", newUrl);
       this.get();
       // await this.getLogUserList()
-       await this.getList()
+      await this.getList()
       // this.loading = false;
     },
 
     // 获取预警类型
-    getyujingleixing(){
+    getyujingleixing() {
       selectList().then((res) => {
         this.yujingzhi = res.data;
         // console.log("这是预警值");
@@ -690,48 +668,48 @@ export default {
         if (this.logDataType) {
           this.xianshizifuchuan = this.logDataType
           // 已逗号分隔，并去除每一项中的空格
-          this.zhi=this.logDataType.split(',').map(str => str.trim())
+          this.zhi = this.logDataType.split(',').map(str => str.trim())
         }
 
         else {
           this.zhi = []
           this.xianshizifuchuan = ''
-        //   let zuanhua = ''
-        //   zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
-        //   // console.log("去掉括号的内容："+zuanhua);
-        //   let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
-        //   let matchedValues = [];
+          //   let zuanhua = ''
+          //   zuanhua = this.data.result.replace(/\([^()]*\)/g, ""); // 去掉括号及其内容
+          //   // console.log("去掉括号的内容："+zuanhua);
+          //   let a =zuanhua.split(/[,]/).map(value => value.trim()).filter(item => item !== "");
+          //   let matchedValues = [];
 
-        //     a.forEach(logValue => {
-        //       // 遍历yujingzhi数组中的每个对象
-        //       this.yujingzhi.forEach(item => {
-        //         // 在options中查找匹配项
-        //         item.options.forEach(options => {
-        //           if (options.value == logValue) {
-        //             // 如果找到匹配项，则将其加入matchedValues数组
-        //             matchedValues.push(options.value);
-        //           }
-        //         });
-        //       });
-        //     });
-        //   this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
-        //   this.zhi=matchedValues
+          //     a.forEach(logValue => {
+          //       // 遍历yujingzhi数组中的每个对象
+          //       this.yujingzhi.forEach(item => {
+          //         // 在options中查找匹配项
+          //         item.options.forEach(options => {
+          //           if (options.value == logValue) {
+          //             // 如果找到匹配项，则将其加入matchedValues数组
+          //             matchedValues.push(options.value);
+          //           }
+          //         });
+          //       });
+          //     });
+          //   this.xianshizifuchuan = matchedValues.map(item => item.toString()).join(",")
+          //   this.zhi=matchedValues
         }
       });
     },
     // 打印选中的值
-    zhong(data){
+    zhong(data) {
       // console.log(data);
-      this.zhi=data
+      this.zhi = data
       this.xianshizifuchuan = this.zhi.map(item => item.toString()).join(", ")
     },
     // 选择预警类型的开关
-    xianshi(){
+    xianshi() {
       this.tanchuang = true
       // this.xuanzheyujingleixing = !this.xuanzheyujingleixing;
     },
     // 提交预警类型
-    tijiao(){
+    tijiao() {
       // console.log(this.zhi);
       let selectedValues = [];
 
@@ -749,10 +727,10 @@ export default {
         });
       })
       let dataObject = {
-        pId:this.data.pId,
-        logId: this.data.logid?this.data.logid:this.data.pId,
-        leadCount:this.$route.query.state,
-        logType:this.zhi.join(",")
+        pId: this.data.pId,
+        logId: this.data.logid ? this.data.logid : this.data.pId,
+        leadCount: this.$route.query.state,
+        logType: this.zhi.join(",")
       };
       for (let i = 0; i < selectedValues.length; i++) {
         // 将数组中的每个字符串作为对象的键，值为1，并放入dataObject对象中
@@ -951,7 +929,7 @@ export default {
       _th.addtext()
       console.log(1111111)
     },
-//请求数据
+    //请求数据
     get() {
       // console.log('开始查询')
       const loading = this.$loading({
@@ -1014,7 +992,7 @@ export default {
             _th.x.push(i);
           }
           for (var i = 0; i < 1000; i += 20) {
-            _th.markdata.push({xAxis: i})
+            _th.markdata.push({ xAxis: i })
           }
           $('.line').css({
             height: $('#II').width() * 0.17 + 'px'
@@ -1090,36 +1068,36 @@ export default {
               min: -1
             },
             series:
-              {
-                type: 'line',
-                smooth: true,
-                showSymbol: true,
-                data: _th.data4.dataII,
-                z: 5,
-                lineStyle: {
-                  normal: {
-                    color: "#000000",
-                    width: 1.5,
-                    // //opacity: 1,
-                  }
-                },
-                markLine: {
-                  z: 1,
-                  symbol: "none",
-                  silent: true,
-                  lineStyle: {
-                    type: "solid",
-                    color: '#d77a7a',
-                    width: 1,
-                    ////opacity: 0.5,
-                  },
-                  label: {
-                    position: 'start', // 表现内容展示的位置
-                    color: '#d77a7a'  // 展示内容颜色
-                  },
-                  data: _th.markdata
+            {
+              type: 'line',
+              smooth: true,
+              showSymbol: true,
+              data: _th.data4.dataII,
+              z: 5,
+              lineStyle: {
+                normal: {
+                  color: "#000000",
+                  width: 1.5,
+                  // //opacity: 1,
                 }
+              },
+              markLine: {
+                z: 1,
+                symbol: "none",
+                silent: true,
+                lineStyle: {
+                  type: "solid",
+                  color: '#d77a7a',
+                  width: 1,
+                  ////opacity: 0.5,
+                },
+                label: {
+                  position: 'start', // 表现内容展示的位置
+                  color: '#d77a7a'  // 展示内容颜色
+                },
+                data: _th.markdata
               }
+            }
 
           });
 
@@ -1421,7 +1399,7 @@ export default {
       })
     }
     ,
-//重绘所有点之间的文本
+    //重绘所有点之间的文本
     addtext() {
       return
       this.graphic1.length = 0
@@ -1444,7 +1422,7 @@ export default {
       var length1 = beat1.length
       //刻度线
       for (let i = 0; i < length1; i++) {
-        var point1 = this.chart1.convertToPixel({seriesIndex: 0}, [beat1[i], 3])
+        var point1 = this.chart1.convertToPixel({ seriesIndex: 0 }, [beat1[i], 3])
         let text1 = {
           type: 'line',
           style: {
@@ -1471,7 +1449,7 @@ export default {
         var heart = (60 / time).toFixed(1) //心率
         time = (time * 1000).toFixed(0)
         //文本值
-        var point2 = this.chart1.convertToPixel({seriesIndex: 0}, [(x2 - x1) / 2 + x1, 3])
+        var point2 = this.chart1.convertToPixel({ seriesIndex: 0 }, [(x2 - x1) / 2 + x1, 3])
         // console.log(x)
         let text2 = {
           type: 'text',
@@ -1495,7 +1473,7 @@ export default {
       var length2 = beat2.length
       //刻度线
       for (let i = 0; i < length2; i++) {
-        var point1 = this.chart2.convertToPixel({seriesIndex: 0}, [beat2[i], 3])
+        var point1 = this.chart2.convertToPixel({ seriesIndex: 0 }, [beat2[i], 3])
         let text1 = {
           type: 'line',
           style: {
@@ -1522,7 +1500,7 @@ export default {
         var heart = (60 / time).toFixed(1) //心率
         time = (time * 1000).toFixed(0)
         //文本值
-        var point2 = this.chart2.convertToPixel({seriesIndex: 0}, [(x2 - x1) / 2 + x1, 3])
+        var point2 = this.chart2.convertToPixel({ seriesIndex: 0 }, [(x2 - x1) / 2 + x1, 3])
         // console.log(x)
         let text2 = {
           type: 'text',
@@ -1546,7 +1524,7 @@ export default {
       var length3 = beat3.length
       //刻度线
       for (let i = 0; i < length3; i++) {
-        var point1 = this.chart3.convertToPixel({seriesIndex: 0}, [beat3[i], 3])
+        var point1 = this.chart3.convertToPixel({ seriesIndex: 0 }, [beat3[i], 3])
         let text1 = {
           type: 'line',
           style: {
@@ -1573,7 +1551,7 @@ export default {
         var heart = (60 / time).toFixed(1) //心率
         time = (time * 1000).toFixed(0)
         //文本值
-        var point2 = this.chart3.convertToPixel({seriesIndex: 0}, [(x2 - x1) / 2 + x1, 3])
+        var point2 = this.chart3.convertToPixel({ seriesIndex: 0 }, [(x2 - x1) / 2 + x1, 3])
         // console.log(x)
         let text2 = {
           type: 'text',
@@ -1596,7 +1574,7 @@ export default {
       // console.log(this.graphic1,this.graphic2,this.graphic3)
     }
     ,
-//获取修改后的标注数据
+    //获取修改后的标注数据
     closeMain(val) {
       console.log()
       return
@@ -1609,7 +1587,7 @@ export default {
       this.addtext()
     }
     ,
-//获取当前时间
+    //获取当前时间
     getData() {
       var str = new Date();
       var nowTime = str.getFullYear() + "-"
@@ -1631,7 +1609,7 @@ export default {
       // console.log(patientPhone);
       let SMSverification = sessionStorage.getItem('SMSverification')
       this.on_off = true
-      if (SMSverification ) {
+      if (SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
           this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
@@ -1681,7 +1659,7 @@ export default {
       })
     }
     ,
-//医生诊断
+    //医生诊断
     btnUpload() {
       if (this.data.resultByDoctor == '' || this.data.resultByDoctor == null) {
         this.$message({
@@ -1734,7 +1712,7 @@ export default {
       })
     }
     ,
-//常用术语
+    //常用术语
     Camera() {
       var _th = this
       getCommonTerms().then(response => {
@@ -1758,7 +1736,7 @@ export default {
         });
     }
     ,
-//截断数据（一条数据现在2000）
+    //截断数据（一条数据现在2000）
     getNewArray(array, subGroupLength) {
       let i = 0;
       let newArray = [];
@@ -1773,12 +1751,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .el-tabs__nav {
+  z-index: 1;
+}
+
 .body {
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 10px;
-    background-color: #e8e8e8;
+  background-color: #e8e8e8;
 
 }
 
@@ -1792,6 +1774,7 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   color: #000000;
+
   //background-color: rgba(108, 176, 245, 0.98);
   //background: linear-gradient(to left,#ffffff, rgba(158, 173, 189, 0.98));
   .box {
@@ -1800,7 +1783,7 @@ export default {
     margin: 0 auto;
     display: flex;
     flex-direction: row;
-    justify-content:space-between;
+    justify-content: space-between;
     margin-top: 1.5vh;
     margin-bottom: 1.5vh;
     border-radius: 2vh;
@@ -1808,6 +1791,7 @@ export default {
     padding: 15px;
     //opacity: 0.6;
     padding-bottom: 0;
+
     .box1 {
       width: 35%;
       height: 100%;
@@ -1876,9 +1860,10 @@ export default {
   margin: 1.5vh 0 1.5vh 0;
   overflow: hidden;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
-   -ms-overflow-style: none;
-    scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* 提高移动设备上的滚动性能 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .margin {
@@ -1954,7 +1939,8 @@ export default {
     ::v-deep .el-input--medium .el-input__inner {
       //width: 60%;
     }
-  ;
+
+    ;
   }
 }
 
@@ -2069,7 +2055,7 @@ export default {
   border: 1px solid #fff;
 }
 
-.el-tag + .el-tag {
+.el-tag+.el-tag {
   margin-left: 10px;
 }
 
@@ -2086,9 +2072,10 @@ export default {
   margin-left: 10px;
   vertical-align: bottom;
 }
-.xuanzheyujing{
+
+.xuanzheyujing {
   width: 100%;
-  margin: 0 auto ;
+  margin: 0 auto;
   margin-top: 1.5vh;
   margin-bottom: 1.5vh;
   border-radius: 2vh;
@@ -2098,13 +2085,16 @@ export default {
   height: 62.5vh;
   overflow: hidden;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
-   -ms-overflow-style: none;
-    scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* 提高移动设备上的滚动性能 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+
 .xian {
   border-bottom: 1px solid #000;
 }
+
 .xiaoli {
   list-style: none;
   // motion: 1px;
@@ -2113,53 +2103,61 @@ export default {
   display: block;
   float: left;
 }
+
 .xiaoul {
   margin: 0.5vh 0 0 0;
   padding: 0;
   width: 100%;
 }
+
 .fenzuzhutizi {
   display: flex;
   // flex-wrap:noweap;
   flex-wrap: wrap;
 }
+
 .fenzuzhuti {
- font-size: 12px;
+  font-size: 12px;
   color: #909399;
   font-weight: 700;
   // font-style: 20px;
   // font-size: 20px;
   margin-left: 10px;
 }
+
 .duoxuan {
   // border: 1px solid #136d87;
   width: 100%;
   // height: 100px;
   // text-align: center;
 }
+
 .biaodan {
   width: 100%;
   // height: 85%;
   // border: 1px solid red;
   overflow-y: auto;
   //  overflow: hidden;
-  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
-   -ms-overflow-style: none;
-    scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* 提高移动设备上的滚动性能 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+
 /* 隐藏滚动条但仍可滚动 */
 .biaodan::-webkit-scrollbar {
   display: none;
 }
-.wancheng{
+
+.wancheng {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
 }
 
-.updown{
+.updown {
   width: 100%;
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
 }
 
 
@@ -2177,6 +2175,7 @@ export default {
   height: 60%;
   text-align: center;
 }
+
 .tablex th,
 .tablex td {
   border: 1px solid #ccc;
@@ -2184,27 +2183,32 @@ export default {
 }
 
 /* 选择父元素中的基数子元素 */
-.tablex tr > :nth-child(odd) {
+.tablex tr> :nth-child(odd) {
   /* 样式设置 */
   background-color: #f2f6fe;
 }
+
 // .tablex td {
 //   height: 8vh;
 //   width: 90px;
 // }
 /* 选择父元素中的偶数子元素 */
-.parentElement > :nth-child(even) {
+.parentElement> :nth-child(even) {
   /* 样式设置 */
 }
+
 .wrap {
   background-color: #f4f4f4;
 }
+
 .box {
   background-color: #ffffff;
 }
-.touzuo{
+
+.touzuo {
   width: 66%;
 }
+
 .touzuo-top {
   height: 73%;
   width: 100%;
@@ -2233,117 +2237,142 @@ export default {
   }
 }
 
-.touzuobiaoti{
-  font-size:1vw ;
+.touzuobiaoti {
+  font-size: 1vw;
   font-weight: 700;
   margin-bottom: 1.5vh;
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
 }
-.touzuoxia{
+
+.touzuoxia {
   // border: 1px solid red;
   margin: 2vh 0;
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   width: 100%;
 }
-.touzuoanniu{
+
+.touzuoanniu {
   display: flex;
   align-items: center;
   // width: 100%;
 }
-.touzuoyujing{
+
+.touzuoyujing {
   display: flex;
   width: 75%;
-  .touzuoyujing-left{
+
+  .touzuoyujing-left {
     // font-size:100% ;
     font-weight: 700;
     display: flex;
-    align-items:center;
+    align-items: center;
     // width: 22%;
     // background-color: #00afff;
   }
 }
-.touzuoyujingzhi{
+
+.touzuoyujingzhi {
   display: flex;
   align-items: center;
   // border:1px solid red;
   width: 78%;
-  overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+  overflow: hidden;
+  /* 内容超出宽度时隐藏超出部分的内容 */
   max-height: 80px;
   overflow-y: scroll;
-  text-overflow:ellipsis;
+  text-overflow: ellipsis;
 }
+
 .touzuoyujingzhi::-webkit-scrollbar {
-  	display: none;
+  display: none;
 }
-::v-deep .el-button--success{
+
+::v-deep .el-button--success {
   background-color: #517AFC;
 }
-::v-deep .el-button{
+
+::v-deep .el-button {
   border-radius: 5px;
 }
-::v-deep .el-button--success{
-color:#ffffff;
+
+::v-deep .el-button--success {
+  color: #ffffff;
 }
-.touyou{
+
+.touyou {
   width: 32%;
 }
+
 // ::v-deep .el-select-dropdown__list{
 //   text-align: center;
 //   border: 1px soild red;
 // }
-.yishi{
+.yishi {
   margin-left: 0;
 }
-.font{
+
+.font {
   background-color: #f4f4f4;
 }
-::v-deep .el-textarea__inner{
-  background-color:  #f4f4f4;
+
+::v-deep .el-textarea__inner {
+  background-color: #f4f4f4;
 }
-::v-deep .el-button--primary{
-   background-color: #517AFC;
-   color:#ffffff;
+
+::v-deep .el-button--primary {
+  background-color: #517AFC;
+  color: #ffffff;
 }
-.shangbianju{
+
+.shangbianju {
   margin-top: 1vh;
   overflow: hidden;
 }
-.shangbianju{
+
+.shangbianju {
   background-color: #ffffff;
 
 }
-::v-deep .el-textarea__inner{
-  height: 100%;
-}
-.mt{
-    height: 31%;
-}
-.font{
+
+::v-deep .el-textarea__inner {
   height: 100%;
 }
 
-.oder{
+.mt {
+  height: 31%;
+}
+
+.font {
+  height: 100%;
+}
+
+.oder {
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
   margin: 3vh 0;
   margin-bottom: 0;
 }
-::v-deep .el-input--medium .el-input__inner{
+
+::v-deep .el-input--medium .el-input__inner {
   font-size: 1vw;
 }
-.oder ::v-deep .el-button--success{
+
+.oder ::v-deep .el-button--success {
   padding: 10px 7px;
 }
-.oder ::v-deep .next{
-   padding-left: 7px;
-   padding-right: 7px;
+
+.oder ::v-deep .next {
+  padding-left: 7px;
+  padding-right: 7px;
 }
+
 ::v-deep .el-button--success {
   color: #ffffff;
   font-size: 1vw;
 }
+
 ::v-deep .el-select-dropdown__item {
   padding: 0 20px;
 }
@@ -2393,23 +2422,28 @@ color:#ffffff;
 }
 
 
-.yujinclass{
+.yujinclass {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 3vh;
   font-weight: 700;
-  .yujinclass_tou{
+
+  .yujinclass_tou {
     font-size: 1vw;
     margin-right: 5px;
   }
-  .yujinclass_zhi{
+
+  .yujinclass_zhi {
     // background-color: red;
     // margin-top: 3px;
     flex-grow: 1;
-    white-space: nowrap; /* 不允许换行 */
-    overflow: hidden; /* 隐藏溢出部分 */
-    text-overflow: ellipsis; /* 显示省略号 */
+    white-space: nowrap;
+    /* 不允许换行 */
+    overflow: hidden;
+    /* 隐藏溢出部分 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
     width: 62%;
     padding: 0 10px;
     font-size: 0.9vw;
@@ -2418,44 +2452,51 @@ color:#ffffff;
   }
 
 }
-.yujinclass_zhi ::v-deep .el-popover__reference-wrapper button{
-    width: 95%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-::v-deep .el-dialog__body{
+
+.yujinclass_zhi ::v-deep .el-popover__reference-wrapper button {
+  width: 95%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::v-deep .el-dialog__body {
   padding: 20px 20px;
   background-color: #eff6fb;
 }
-.biaodan{
+
+.biaodan {
   height: 60vh;
 
 }
-::v-deep .el-dialog__body::-webkit-scrollbar-button{
+
+::v-deep .el-dialog__body::-webkit-scrollbar-button {
   display: none;
 }
-::v-deep .el-dialog{
+
+::v-deep .el-dialog {
   width: 73%;
 }
-.xiaoli ::v-deep .el-checkbox.is-bordered{
-   border: none
-}
-.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium .el-checkbox__label {
-      line-height: 17px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    color: #8c8c8e;
+
+.xiaoli ::v-deep .el-checkbox.is-bordered {
+  border: none
 }
 
-.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium{
+.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium .el-checkbox__label {
+  line-height: 17px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  color: #8c8c8e;
+}
+
+.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium {
   display: flex;
   align-items: center;
 }
 
-.biaodananniu{
+.biaodananniu {
   display: flex;
-  justify-content:flex-end;
+  justify-content: flex-end;
 }
 </style>
