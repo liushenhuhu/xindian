@@ -2,17 +2,18 @@
   <div>
     <div class="body">
       <div class="noleft">
-        <div class="box" >
+        <div class="box">
           <div class="touzuo">
             <div class="touzuo-top">
-              <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs"  @click="handleButtonClick">
+              <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs"
+                @click="handleButtonClick">
                 <el-tab-pane label="基本信息" name="userInfo">
                   <div class="tabBox">
                     <table>
                       <tr>
                         <td>姓名</td>
-                        <td v-if="isShowName.status===true">{{ data.name }}</td>
-                        <td v-else>{{hideMiddleName(data.name)}}</td>
+                        <td v-if="isShowName.status === true">{{ data.name }}</td>
+                        <td v-else>{{ hideMiddleName(data.name) }}</td>
                         <td>性别</td>
                         <td>{{ data.gender }}</td>
                         <td>心率</td>
@@ -28,10 +29,10 @@
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
-                        <td colspan="3">{{data.result}}</td>
-<!--                        <td colspan="3" class="wubiankuang"><el-input v-model="data.result" placeholder="请输入内容"></el-input></td>-->
+                        <td colspan="3">{{ data.result }}</td>
+                        <!--                        <td colspan="3" class="wubiankuang"><el-input v-model="data.result" placeholder="请输入内容"></el-input></td>-->
                         <td>患者病史</td>
-                        <td>{{getMH(dict.type.medical_history)}}</td>
+                        <td>{{ getMH(dict.type.medical_history) }}</td>
                       </tr>
 
                     </table>
@@ -65,7 +66,7 @@
               <div class="yujinclass">
                 <div class="yujinclass_tou">预警类型:</div>
                 <div class="yujinclass_zhi">
-                   {{xianshizifuchuan}}
+                  {{ xianshizifuchuan }}
                 </div>
                 <div>
                   <el-button type="success" round @click="xianshi">选择预警类型</el-button>
@@ -79,24 +80,13 @@
             <div class="touzuobiaoti">
               <div>医师诊断</div>
               <div>
-                <el-button
-                  type="success"
-                  plain
-                  icon="el-icon-view"
-                  size="mini"
-                  @click="isShowNameClick"
-                  v-if="true"
-                >{{isShowName.name}}
+                <el-button type="success" plain icon="el-icon-view" size="mini" @click="isShowNameClick"
+                  v-if="true">{{ isShowName.name }}
                 </el-button>
               </div>
             </div>
             <div class="mt">
-              <el-input
-                type="textarea"
-                v-model="data.resultByDoctor"
-                placeholder="请输入"
-                data-value="1111"
-                :rows="5"
+              <el-input type="textarea" v-model="data.resultByDoctor" placeholder="请输入" data-value="1111" :rows="5"
                 class="font">{{ data.resultByDoctor }}
               </el-input>
             </div>
@@ -112,13 +102,13 @@
                   </el-option>
                 </el-select>-->
                 <el-cascader v-model="data.doctorName" :options="doctorList" @change="selectDoctorChange"
-                :show-all-levels="false">
+                  :show-all-levels="false">
                 </el-cascader>
               </div>
               <div class="input">
                 <strong>日期:</strong>
-                <el-input v-if="data.diagnosisData!=null" v-model="data.diagnosisData" clearable
-                          style="width: 66%"></el-input>
+                <el-input v-if="data.diagnosisData != null" v-model="data.diagnosisData" clearable
+                  style="width: 66%"></el-input>
                 <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
               </div>
             </div>
@@ -235,22 +225,14 @@
       <form id="loginForm" name="loginForm" class="biaodan">
         <div class="duoxuan">
           <el-checkbox-group v-model="zhi" @change="zhong">
-            <div v-for="(group,index) in yujingzhi" :key="index">
+            <div v-for="(group, index) in yujingzhi" :key="index">
               <div class="fenzuzhuti">
                 {{ group.label }}
               </div>
               <div class="fenzuzhutizi">
                 <ul class="xiaoul">
-                  <li
-                    v-for="(item,i) in group.options"
-                    class="xiaoli"
-                    :key="i"
-                  >
-                    <el-checkbox
-                      :label="item.value"
-                      border
-                      size="mini"
-                    >
+                  <li v-for="(item, i) in group.options" class="xiaoli" :key="i">
+                    <el-checkbox :label="item.value" border size="mini">
                       {{ item.value }}
                     </el-checkbox>
                   </li>
@@ -281,21 +263,21 @@ import {
   updateReport,
   reportEarlyWarningMsg,
 } from "@/api/report/report";
-import {sendMsgToPatient} from "@/api/patient_management/patient_management";
+import { sendMsgToPatient } from "@/api/patient_management/patient_management";
 import child from "./child.vue";
 import CacheList from "@/views/monitor/cache/list.vue";
-import {addOrUpdateTerm, getTerm} from "@/api/staticECG/staticECG";
-import {selectDoctor, getDoctorList} from "@/api/statistics/statistics";
+import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
+import { selectDoctor, getDoctorList } from "@/api/statistics/statistics";
 // 发送信息时获取密码
-import {getlogin_password} from '@/api/jecg4_ecg/jecg4_ecg'
+import { getlogin_password } from '@/api/jecg4_ecg/jecg4_ecg'
 // 获取预警类型选项
-import {selectList} from "@/api/log_user/log_user";
-import {checkPassword} from "@/utils/verify.js"
+import { selectList } from "@/api/log_user/log_user";
+import { checkPassword } from "@/utils/verify.js"
 // 存储选择的预警类型
-import {addReport as addReportyujing} from "@/api/alert_log_count/count";
-import {listPatient_management} from "@/api/patient_management/patient_management";
+import { addReport as addReportyujing } from "@/api/alert_log_count/count";
+import { listPatient_management } from "@/api/patient_management/patient_management";
 
-import {getVerify} from "@/api/verify/verify";
+import { getVerify } from "@/api/verify/verify";
 // import {checkPassword} from "@/utils/verify.js";
 
 export default {
@@ -308,19 +290,19 @@ export default {
   data() {
     return {
       tanchuang: false,
-      name:null,
-      isShowName:{
-        status:false,
-        name:"显示姓名"
+      name: null,
+      isShowName: {
+        status: false,
+        name: "显示姓名"
       },
-      on_off:false,
+      on_off: false,
       dialogFormVisibleVerifyAuthority: false,
       verifyForm: {
         password: null,
         status: false
       },
 
-      selectDoctor:[],
+      selectDoctor: [],
       tabsStatus: "userInfo",
       doctorList: [],
       // 上下页需要的信息
@@ -377,11 +359,11 @@ export default {
       yujingzhi: [],
       videoVisible: false, //echarts弹出框显示
       markdata: [
-        {yAxis: -1},
-        {yAxis: -0.5},
-        {yAxis: 0},
-        {yAxis: 0.5},
-        {yAxis: 1},
+        { yAxis: -1 },
+        { yAxis: -0.5 },
+        { yAxis: 0 },
+        { yAxis: 0.5 },
+        { yAxis: 1 },
       ], //没放大之前标记线
       dialogFormVisible: false, //弹出框
       items: "", //常用术语
@@ -396,7 +378,7 @@ export default {
       options: [],
       xianshizifuchuan: "",
       data: {
-        pastMedicalHistory:"",
+        pastMedicalHistory: "",
         name: "",
         gender: "",
         age: "",
@@ -461,11 +443,11 @@ export default {
       chart1: null,
       chart2: null,
       chart3: null,
-      zidianzhi:[],
+      zidianzhi: [],
       // 表单校验
       rules: {
         password: [
-          {required: true, message: "密码不能为空", trigger: "blur"}
+          { required: true, message: "密码不能为空", trigger: "blur" }
         ],
       }
     };
@@ -489,29 +471,29 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
-    zidian(){
+    zidian() {
       console.log("字典")
       // console.log(this.dicts.type.medical_history)
-      this.getDicts("medical_history").then((res) =>{
+      this.getDicts("medical_history").then((res) => {
         console.log(res.data)
         this.zidianzhi = res.data
       })
     },
-    getMH(zdList , ecgType = this.data.pastMedicalHistory){
+    getMH(zdList, ecgType = this.data.pastMedicalHistory) {
       let str = ''
-      if (ecgType){
+      if (ecgType) {
         ecgType.split(",").forEach(item => {
-          if (this.canConvertToInt(item)){
+          if (this.canConvertToInt(item)) {
             zdList.forEach(zd => {
               if (zd.value == item) {
                 str += zd.label + ','
               }
             })
-          }else {
+          } else {
             str += item + ','
           }
         })
-        if (str.endsWith(",")){
+        if (str.endsWith(",")) {
           str = str.substring(0, str.length - 1)
         }
       }
@@ -524,21 +506,21 @@ export default {
       return Number.isInteger(parsedInt);
     },
     // 选择预警类型弹窗按钮 取消
-    quxiao(){
+    quxiao() {
 
       if (this.logDataType) {
-          this.xianshizifuchuan = this.logDataType;
-          this.zhi = this.logDataType.split(",").map((str) => str.trim());
-        }
-        // 如果没有原先提交过的值，就将自动分析的结果处理后放入预警类型中默认选中
-        else {
-          this.zhi = [];
-          this.xianshizifuchuan = "";
-        }
-        this.tanchuang = false
+        this.xianshizifuchuan = this.logDataType;
+        this.zhi = this.logDataType.split(",").map((str) => str.trim());
+      }
+      // 如果没有原先提交过的值，就将自动分析的结果处理后放入预警类型中默认选中
+      else {
+        this.zhi = [];
+        this.xianshizifuchuan = "";
+      }
+      this.tanchuang = false
     },
     // 选择预警类型弹窗按钮 完成
-    queren(){
+    queren() {
       this.tanchuang = false
     },
     hideMiddleName(patientName) {
@@ -552,25 +534,25 @@ export default {
         return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
       }
     },
-    isShowNameClick(){
-      let isShowName =  sessionStorage.getItem('isShowName')
-      if (isShowName){
-        if (this.isShowName.status){
+    isShowNameClick() {
+      let isShowName = sessionStorage.getItem('isShowName')
+      if (isShowName) {
+        if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示姓名"
 
-        }else {
-          this.isShowName.status =!this.isShowName.status;
+        } else {
+          this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "隐藏姓名"
         }
-      }else {
+      } else {
         this.name = true
-        this.verifyForm.password=''
+        this.verifyForm.password = ''
         this.dialogFormVisibleVerifyAuthority = true
       }
 
     },
-     handleButtonClick() {
+    handleButtonClick() {
       // Your button click logic here
       console.log("触发了事件");
     },
@@ -582,34 +564,34 @@ export default {
 
             // 显示姓名
             let obj = {
-              accountPwd:this.verifyForm.password
+              accountPwd: this.verifyForm.password
             }
-            getVerify(obj).then(r=>{
+            getVerify(obj).then(r => {
               this.$modal.msgSuccess("密码正确");
-              this.verifyForm.status=true
-              sessionStorage.setItem('isShowName',true)
+              this.verifyForm.status = true
+              sessionStorage.setItem('isShowName', true)
               this.dialogFormVisibleVerifyAuthority = false
-              this.isShowName.status =!this.isShowName.status;
+              this.isShowName.status = !this.isShowName.status;
               this.isShowName.name = "隐藏姓名"
               this.name = false
             })
 
-          }else{
+          } else {
 
             // 发送短信
             let objj = {
               password: this.verifyForm.password
             }
-            getlogin_password(objj).then(res=>{
-              if(res.code == 200){
+            getlogin_password(objj).then(res => {
+              if (res.code == 200) {
                 this.$modal.msgSuccess("密码正确");
                 this.verifyForm.status = true
                 this.dialogFormVisibleVerifyAuthority = false
-                sessionStorage.setItem('SMSverification',true)
+                sessionStorage.setItem('SMSverification', true)
                 if (this.on_off) {
                   this.sendMsg();
                 }
-              }else{
+              } else {
                 this.$modal.msgSuccess("密码错误请重试");
               }
             })
@@ -621,7 +603,7 @@ export default {
     switchTabs(value) {
       console.log(value)
     },
-    yanzheng(value){
+    yanzheng(value) {
       //todo 将函数当作实参传递
       //checkPassword('abcd',this.yanzheng)
       console.log(value)
@@ -733,7 +715,7 @@ export default {
       // this.loading = false;
     },
     //选择医生
-    selectDoctorChange(e){
+    selectDoctorChange(e) {
       this.data.doctorName = e[1]
     },
     // 患者用户信息
@@ -779,7 +761,7 @@ export default {
               children: []
             }
             e.doctorList.forEach(doctorInfo => {
-              hospital.children.push({label: doctorInfo.doctorName, value: doctorInfo.doctorName})
+              hospital.children.push({ label: doctorInfo.doctorName, value: doctorInfo.doctorName })
             })
             options.push(hospital)
           }
@@ -1090,7 +1072,7 @@ export default {
           // console.log( _th.x);
           // _th.markdata = []
           for (var i = 0; i < 1000; i += 20) {
-            _th.markdata.push({xAxis: i});
+            _th.markdata.push({ xAxis: i });
           }
           // console.log( _th.markdata);
           _th.chart1 = echarts.init(document.getElementById("1"));
@@ -2021,7 +2003,7 @@ export default {
       var length1 = beat1.length;
       //刻度线
       for (let i = 0; i < length1; i++) {
-        var point1 = this.chart1.convertToPixel({seriesIndex: 0}, [
+        var point1 = this.chart1.convertToPixel({ seriesIndex: 0 }, [
           beat1[i],
           3,
         ]);
@@ -2051,7 +2033,7 @@ export default {
         var heart = (60 / time).toFixed(1); //心率
         time = (time * 1000).toFixed(0);
         //文本值
-        var point2 = this.chart1.convertToPixel({seriesIndex: 0}, [
+        var point2 = this.chart1.convertToPixel({ seriesIndex: 0 }, [
           (x2 - x1) / 2 + x1,
           3,
         ]);
@@ -2077,7 +2059,7 @@ export default {
       var length2 = beat2.length;
       //刻度线
       for (let i = 0; i < length2; i++) {
-        var point1 = this.chart2.convertToPixel({seriesIndex: 0}, [
+        var point1 = this.chart2.convertToPixel({ seriesIndex: 0 }, [
           beat2[i],
           3,
         ]);
@@ -2107,7 +2089,7 @@ export default {
         var heart = (60 / time).toFixed(1); //心率
         time = (time * 1000).toFixed(0);
         //文本值
-        var point2 = this.chart2.convertToPixel({seriesIndex: 0}, [
+        var point2 = this.chart2.convertToPixel({ seriesIndex: 0 }, [
           (x2 - x1) / 2 + x1,
           3,
         ]);
@@ -2133,7 +2115,7 @@ export default {
       var length3 = beat3.length;
       //刻度线
       for (let i = 0; i < length3; i++) {
-        var point1 = this.chart3.convertToPixel({seriesIndex: 0}, [
+        var point1 = this.chart3.convertToPixel({ seriesIndex: 0 }, [
           beat3[i],
           3,
         ]);
@@ -2163,7 +2145,7 @@ export default {
         var heart = (60 / time).toFixed(1); //心率
         time = (time * 1000).toFixed(0);
         //文本值
-        var point2 = this.chart3.convertToPixel({seriesIndex: 0}, [
+        var point2 = this.chart3.convertToPixel({ seriesIndex: 0 }, [
           (x2 - x1) / 2 + x1,
           3,
         ]);
@@ -2229,7 +2211,7 @@ export default {
       // console.log(patientPhone);
       let SMSverification = sessionStorage.getItem('SMSverification')
       this.on_off = true
-      if ( SMSverification) {
+      if (SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
           this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
@@ -2407,71 +2389,86 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .el-descriptions-item__content{
-    background-color: #f8f8f8;
-    // text-align: center;
+::v-deep .el-descriptions-item__content {
+  background-color: #f8f8f8;
+  // text-align: center;
 }
-.chongxie{
+
+.chongxie {
   margin-top: 10px;
   display: flex;
 
-  .chongxie_left{
+  .chongxie_left {
     width: 30%;
     margin-right: 25px;
     border-radius: 5px;
 
-    .chongxie_left_top{
+    .chongxie_left_top {
       padding: 10px;
       border-radius: 5px;
       background-color: #ffffff;
     }
-    .chongxie_left_botton{
+
+    .chongxie_left_botton {
       background-color: #ffffff;
       border-radius: 5px;
       margin-top: 10px;
       padding: 10px;
-      .chongxie_left_botton_yujingleixing{
-        .chongxie_left_botton_yujingleixing_zhi{
+
+      .chongxie_left_botton_yujingleixing {
+        .chongxie_left_botton_yujingleixing_zhi {
           margin: 10px;
           background-color: #f4f4f4;
           font-size: 1vw;
           border-radius: 5px;
           padding: 10px;
           height: 10vh;
-          overflow-y: hidden; /* y 轴溢出隐藏 */
-          overflow-y: scroll; /* 允许向下滚动 */
+          overflow-y: hidden;
+          /* y 轴溢出隐藏 */
+          overflow-y: scroll;
+
+          /* 允许向下滚动 */
           ::-webkit-scrollbar {
-              display: none; /* Chrome Safari */
-            }
+            display: none;
+            /* Chrome Safari */
+          }
+
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-        .chongxie_left_botton_yujingleixing_anniu{
+
+        .chongxie_left_botton_yujingleixing_anniu {
           display: flex;
-          justify-content:flex-end;
+          justify-content: flex-end;
         }
       }
 
-      .chongxie_left_botton_yishizenduan{
-        .chongxie_left_botton_yishizenduan_input{
+      .chongxie_left_botton_yishizenduan {
+        .chongxie_left_botton_yishizenduan_input {
           padding: 10px;
         }
-        .chongxie_left_botton_yishizenduan_fasong{
+
+        .chongxie_left_botton_yishizenduan_fasong {
           font-size: 15px;
         }
       }
     }
   }
-  .chongxie_right{
+
+  .chongxie_right {
     background-color: #ffffff;
     border-radius: 5px;
     padding: 10px;
   }
 }
-::v-deep .cc{
-  white-space: nowrap; /* 禁止换行 */
-  overflow: hidden; /* 设置溢出隐藏 */
-  text-overflow: ellipsis; /* 显示省略号 */
+
+::v-deep .cc {
+  white-space: nowrap;
+  /* 禁止换行 */
+  overflow: hidden;
+  /* 设置溢出隐藏 */
+  text-overflow: ellipsis;
+  /* 显示省略号 */
   width: 20px;
 }
 
@@ -2508,6 +2505,7 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   color: #000000;
+
   //background-color: rgba(108, 176, 245, 0.98);
   //background: linear-gradient(to left,#ffffff, rgba(158, 173, 189, 0.98));
   .box {
@@ -2522,6 +2520,7 @@ export default {
     justify-content: space-between;
     padding: 15px;
     padding-bottom: 0px;
+
     //opacity: 0.6;
     .box1 {
       width: 35%;
@@ -2591,7 +2590,8 @@ export default {
   margin: 1.5vh 0 1.5vh 0;
   overflow: hidden;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
+  -webkit-overflow-scrolling: touch;
+  /* 提高移动设备上的滚动性能 */
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -2783,7 +2783,7 @@ export default {
   border: 1px solid #fff;
 }
 
-.el-tag + .el-tag {
+.el-tag+.el-tag {
   margin-left: 10px;
 }
 
@@ -2812,7 +2812,8 @@ export default {
   height: 62.5vh;
   overflow: hidden;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
+  -webkit-overflow-scrolling: touch;
+  /* 提高移动设备上的滚动性能 */
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -2845,7 +2846,7 @@ export default {
 
 .fenzuzhuti {
   font-size: 15px;
-  color:#3f4042;
+  color: #3f4042;
   // font-weight: 700;
   // font-style: 20px;
   // font-size: 20px;
@@ -2865,7 +2866,8 @@ export default {
   // border: 1px solid red;
   overflow-y: auto;
   //  overflow: hidden;
-  -webkit-overflow-scrolling: touch; /* 提高移动设备上的滚动性能 */
+  -webkit-overflow-scrolling: touch;
+  /* 提高移动设备上的滚动性能 */
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -2900,7 +2902,7 @@ export default {
 }
 
 /* 选择父元素中的基数子元素 */
-.tablex tr > :nth-child(odd) {
+.tablex tr> :nth-child(odd) {
   /* 样式设置 */
   background-color: #f2f6fe;
 }
@@ -2910,7 +2912,7 @@ export default {
 //   width: 90px;
 // }
 /* 选择父元素中的偶数子元素 */
-.parentElement > :nth-child(even) {
+.parentElement> :nth-child(even) {
   /* 样式设置 */
 }
 
@@ -2959,7 +2961,7 @@ export default {
   font-weight: 700;
   margin-bottom: 1.5vh;
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
 }
 
 .touzuoxia {
@@ -2997,7 +2999,8 @@ export default {
   width: 78%;
   max-height: 80px;
 
-  overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
+  overflow: hidden;
+  /* 内容超出宽度时隐藏超出部分的内容 */
   overflow-y: scroll;
   text-overflow: ellipsis;
 }
@@ -3137,6 +3140,7 @@ export default {
     }
   }
 }
+
 // ::v-deep .el-tabs__nav-scroll::after {
 //        content: 'aafaf';
 //       //  width: 30px;
@@ -3146,23 +3150,32 @@ export default {
 //       padding: 10px;
 //       cursor: pointer;
 //     }
-.yujinclass{
+::v-deep .el-tabs__nav {
+  z-index: 1;
+}
+
+.yujinclass {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 3vh;
   font-weight: 700;
-  .yujinclass_tou{
+
+  .yujinclass_tou {
     margin-right: 5px;
     font-size: 1vw;
   }
-  .yujinclass_zhi{
+
+  .yujinclass_zhi {
     // background-color: red;
     // margin-top: 3px;
     flex-grow: 1;
-    white-space: nowrap; /* 不允许换行 */
-    overflow: hidden; /* 隐藏溢出部分 */
-    text-overflow: ellipsis; /* 显示省略号 */
+    white-space: nowrap;
+    /* 不允许换行 */
+    overflow: hidden;
+    /* 隐藏溢出部分 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
     width: 62%;
     padding: 0 10px;
     font-size: 0.9vw;
@@ -3171,38 +3184,45 @@ export default {
   }
 
 }
-.yujinclass_zhi ::v-deep .el-popover__reference-wrapper button{
-    width: 95%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-::v-deep .el-dialog__body{
+
+.yujinclass_zhi ::v-deep .el-popover__reference-wrapper button {
+  width: 95%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::v-deep .el-dialog__body {
   padding: 20px 20px;
   background-color: #eff6fb;
 }
-.biaodan{
+
+.biaodan {
   height: 60vh;
 
 }
-::v-deep .el-dialog__body::-webkit-scrollbar-button{
+
+::v-deep .el-dialog__body::-webkit-scrollbar-button {
   display: none;
 }
-::v-deep .el-dialog{
+
+::v-deep .el-dialog {
   width: 73%;
 }
-.xiaoli ::v-deep .el-checkbox.is-bordered{
-   border: none
-}
-.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium .el-checkbox__label {
-      line-height: 17px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    color: #8c8c8e;
+
+.xiaoli ::v-deep .el-checkbox.is-bordered {
+  border: none
 }
 
-.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium{
+.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium .el-checkbox__label {
+  line-height: 17px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  color: #8c8c8e;
+}
+
+.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium {
   display: flex;
   align-items: center;
 }
@@ -3210,11 +3230,12 @@ export default {
 
 
 
-.biaodananniu{
+.biaodananniu {
   display: flex;
-  justify-content:flex-end;
+  justify-content: flex-end;
 }
-.wubiankuang ::v-deep .el-input__inner{
+
+.wubiankuang ::v-deep .el-input__inner {
   border: 0 solid #dcdfe6;
 }
 </style>
