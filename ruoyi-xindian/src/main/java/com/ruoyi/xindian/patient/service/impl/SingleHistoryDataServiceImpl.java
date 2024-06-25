@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.xindian.patient.domain.SingleHistoryData;
 import com.ruoyi.xindian.patient.service.SingleHistoryDataService;
 import com.ruoyi.xindian.patient.mapper.SingleHistoryDataMapper;
+import com.ruoyi.xindian.patient_management.domain.WeeklyCount;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
 * @author 13401
@@ -25,6 +27,11 @@ public class SingleHistoryDataServiceImpl extends ServiceImpl<SingleHistoryDataM
     @Override
     public SingleHistoryData selectSingleHistoryDataByHisId(SingleHistoryData singleHistoryData) throws Exception {
         return singleHistoryDataMapper.selectSingleHistoryData(singleHistoryData);
+    }
+
+    @Override
+    public List<SingleHistoryData> countDataByPhone(SingleHistoryData info) {
+        return singleHistoryDataMapper.countDataByPhone(info);
     }
 }
 

@@ -2,6 +2,9 @@ package com.ruoyi.xindian.patient.mapper;
 
 import com.ruoyi.xindian.patient.domain.SingleHistoryData;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.xindian.patient_management.domain.WeeklyCount;
+
+import java.util.List;
 
 /**
 * @author 13401
@@ -14,6 +17,7 @@ public interface SingleHistoryDataMapper extends BaseMapper<SingleHistoryData> {
 
     SingleHistoryData selectSingleHistoryData(SingleHistoryData singleHistoryData);
 
+    List<SingleHistoryData> countDataByPhone(SingleHistoryData info);
 }
 
 

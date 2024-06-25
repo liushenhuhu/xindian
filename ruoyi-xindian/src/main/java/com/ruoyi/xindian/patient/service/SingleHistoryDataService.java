@@ -2,6 +2,9 @@ package com.ruoyi.xindian.patient.service;
 
 import com.ruoyi.xindian.patient.domain.SingleHistoryData;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.xindian.patient_management.domain.WeeklyCount;
+
+import java.util.List;
 
 /**
 * @author 13401
@@ -13,4 +16,5 @@ public interface SingleHistoryDataService extends IService<SingleHistoryData> {
 
     SingleHistoryData selectSingleHistoryDataByHisId(SingleHistoryData singleHistoryData) throws Exception;
 
+    List<SingleHistoryData> countDataByPhone(SingleHistoryData info);
 }

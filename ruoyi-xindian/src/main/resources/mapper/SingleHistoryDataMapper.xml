@@ -5,19 +5,19 @@
 <mapper namespace="com.ruoyi.xindian.patient.mapper.SingleHistoryDataMapper">
 
     <resultMap id="BaseResultMap" type="com.ruoyi.xindian.patient.domain.SingleHistoryData">
-            <id property="ecgId" column="ecg_id" jdbcType="INTEGER"/>
-            <result property="pId" column="p_id" jdbcType="VARCHAR"/>
-            <result property="patientPhone" column="patient_phone_aes" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="normalEcg" column="normal_ecg" jdbcType="TINYINT"/>
-            <result property="apBeat" column="ap_beat" jdbcType="TINYINT"/>
-            <result property="pvBeat" column="pv_beat" jdbcType="TINYINT"/>
-            <result property="atrialFibrillation" column="atrial_fibrillation" jdbcType="TINYINT"/>
-            <result property="atrialFlutter" column="atrial_flutter" jdbcType="TINYINT"/>
-            <result property="leftBlock" column="left_block" jdbcType="TINYINT"/>
-            <result property="rightBlock" column="right_block" jdbcType="TINYINT"/>
-            <result property="bradycardia" column="bradycardia" jdbcType="TINYINT"/>
-            <result property="tachycardia" column="tachycardia" jdbcType="TINYINT"/>
+        <id property="ecgId" column="ecg_id" jdbcType="INTEGER"/>
+        <result property="pId" column="p_id" jdbcType="VARCHAR"/>
+        <result property="patientPhone" column="patient_phone_aes" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="normalEcg" column="normal_ecg" jdbcType="TINYINT"/>
+        <result property="apBeat" column="ap_beat" jdbcType="TINYINT"/>
+        <result property="pvBeat" column="pv_beat" jdbcType="TINYINT"/>
+        <result property="atrialFibrillation" column="atrial_fibrillation" jdbcType="TINYINT"/>
+        <result property="atrialFlutter" column="atrial_flutter" jdbcType="TINYINT"/>
+        <result property="leftBlock" column="left_block" jdbcType="TINYINT"/>
+        <result property="rightBlock" column="right_block" jdbcType="TINYINT"/>
+        <result property="bradycardia" column="bradycardia" jdbcType="TINYINT"/>
+        <result property="tachycardia" column="tachycardia" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -27,19 +27,37 @@
         left_block,right_block,bradycardia,
         tachycardia
     </sql>
-    <select id="selectSingleHistoryData" resultType="com.ruoyi.xindian.patient.domain.SingleHistoryData" resultMap="BaseResultMap">
-        SELECT
-            COUNT(CASE WHEN normal_ecg = 1 THEN 1 END) AS normal_ecg,
-            COUNT(CASE WHEN ap_beat = 1 THEN 1 END) AS ap_beat,
-            COUNT(CASE WHEN pv_beat = 1 THEN 1 END) AS pv_beat,
-            COUNT(CASE WHEN atrial_fibrillation = 1 THEN 1 END) AS atrial_fibrillation,
-            COUNT(CASE WHEN atrial_flutter = 1 THEN 1 END) AS atrial_flutter,
-            COUNT(CASE WHEN left_block = 1 THEN 1 END) AS left_block,
-            COUNT(CASE WHEN right_block = 1 THEN 1 END) AS right_block,
-            COUNT(CASE WHEN bradycardia = 1 THEN 1 END) AS bradycardia,
-            COUNT(CASE WHEN tachycardia = 1 THEN 1 END) AS tachycardia
+    <select id="selectSingleHistoryData" resultType="com.ruoyi.xindian.patient.domain.SingleHistoryData"
+            resultMap="BaseResultMap">
+        SELECT COUNT(CASE WHEN normal_ecg = 1 THEN 1 END)          AS normal_ecg,
+               COUNT(CASE WHEN ap_beat = 1 THEN 1 END)             AS ap_beat,
+               COUNT(CASE WHEN pv_beat = 1 THEN 1 END)             AS pv_beat,
+               COUNT(CASE WHEN atrial_fibrillation = 1 THEN 1 END) AS atrial_fibrillation,
+               COUNT(CASE WHEN atrial_flutter = 1 THEN 1 END)      AS atrial_flutter,
+               COUNT(CASE WHEN left_block = 1 THEN 1 END)          AS left_block,
+               COUNT(CASE WHEN right_block = 1 THEN 1 END)         AS right_block,
+               COUNT(CASE WHEN bradycardia = 1 THEN 1 END)         AS bradycardia,
+               COUNT(CASE WHEN tachycardia = 1 THEN 1 END)         AS tachycardia
         FROM single_history_data
-        WHERE patient_phone_aes = #{patientPhone} and  DATE_FORMAT(create_time,'%Y-%m-%d') between #{startTime} and DATE_ADD(#{endTime},INTERVAL 1 DAY)
+        WHERE patient_phone_aes = #{patientPhone}
+          and DATE_FORMAT(create_time, '%Y-%m-%d') between #{startTime} and DATE_ADD(#{endTime}, INTERVAL 1 DAY)
         GROUP BY patient_phone_aes;
+    </select>
+    <select id="countDataByPhone" resultType="com.ruoyi.xindian.patient.domain.SingleHistoryData"
+            resultMap="BaseResultMap">
+        select p_id,
+               patient_phone_aes,
+               create_time,
+               normal_ecg,
+               ap_beat,
+               pv_beat,
+               atrial_fibrillation,
+               atrial_flutter,
+               left_block,
+               right_block,
+               bradycardia,
+               tachycardia
+        FROM single_history_data
+        WHERE DATE_FORMAT(create_time, '%Y-%m-%d') BETWEEN #{startTime} AND DATE_ADD(#{endTime}, INTERVAL 1 DAY)
     </select>
 </mapper>
