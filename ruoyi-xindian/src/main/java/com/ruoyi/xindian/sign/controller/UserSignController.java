@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.sign.dto.UserSignDTO;
 import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class UserSignController extends BaseController {
     @Autowired
     private IUserSignService userSignService;
+
+    @Autowired
+    private IPatientManagementService patientManagementService;
 
     @Autowired
     private AesUtils aesUtils;
@@ -97,6 +102,7 @@ public class UserSignController extends BaseController {
             sign.setLastSign(new Date());
             sign.setSeriesDays(1L);
             sign.setContinuityDays(1L);
+            sign.setPatientPhone(phone);
             userSignService.insertUserSign(sign);
         } else{
             sign.setLastSign(new Date());
@@ -130,7 +136,15 @@ public class UserSignController extends BaseController {
             userSign.setSeriesDays(0L);
             userSign.setContinuityDays(0L);
         }
-        return AjaxResult.success(userSign);
+        UserSignDTO userSignDTO = new UserSignDTO();
+        userSignDTO.setSeriesDays(userSign.getSeriesDays());
+        userSignDTO.setContinuityDays(userSign.getContinuityDays());
+        userSignDTO.setLastSign(userSign.getLastSign());
+        Long countAll = patientManagementService.getDetectinCountAll(patientPhone);
+        Long countToday = patientManagementService.getDetectinCountToday(patientPhone);
+        userSignDTO.setCountAll(countAll);
+        userSignDTO.setCountToday(countToday);
+        return AjaxResult.success(userSignDTO);
     }
 
 }

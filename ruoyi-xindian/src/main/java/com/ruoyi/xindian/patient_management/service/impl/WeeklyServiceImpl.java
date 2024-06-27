@@ -224,7 +224,6 @@ public class WeeklyServiceImpl implements IWeeklyService {
         res.put("increase", tb * 100);
         res.put("detectionTime", thisWeek.getSignalCount() * 30 * 1.0 / 60);
         res.put("weekTimeList", weekTimeList);
-//        res.put("weekTimeList",weekTimeList);
         return res;
     }
 
@@ -253,51 +252,58 @@ public class WeeklyServiceImpl implements IWeeklyService {
             default:
                 day = weeklyCount.getSaturday();
         }
-        if(day == null)
+        if (day == null)
             day = new ECGTendency();
         day.setCount(day.getCount() + 1);
-
-        List<Double> p = day.getP();
-        if (p == null)
-            p = new LinkedList<>();
-        p.add(P);
-        day.setP(p);
-
-        List<Double> Hr = day.getHr();
-        if (Hr == null)
-            Hr = new LinkedList<>();
-        Hr.add(hr);
-        day.setHr(Hr);
-
-        List<Double> pr = day.getPR();
-        if (pr == null)
-            pr = new LinkedList<>();
-        pr.add(PR);
-        day.setPR(pr);
-
-        List<Double> qrs = day.getQRS();
-        if (qrs == null)
-            qrs = new LinkedList<>();
-        qrs.add(QRS);
-        day.setQRS(qrs);
-
-        List<Double> qtc = day.getQTC();
-        if (qtc == null)
-            qtc = new LinkedList<>();
-        qtc.add(QTC);
-        day.setQTC(qtc);
-
-        List<Double> sdnn = day.getSDNN();
-        if (sdnn == null)
-            sdnn = new LinkedList<>();
-        sdnn.add(SDNN);
-        day.setSDNN(sdnn);
-
-        List<Double> rmssd = day.getRMSSD();
-        if (rmssd == null)
-            rmssd = new LinkedList<>();
-        rmssd.add(RMSSD);
-        day.setRMSSD(rmssd);
+        if (P != 0) {
+            List<Double> p = day.getP();
+            if (p == null)
+                p = new LinkedList<>();
+            p.add(P);
+            day.setP(p);
+        }
+        if (hr != 0) {
+            List<Double> Hr = day.getHr();
+            if (Hr == null)
+                Hr = new LinkedList<>();
+            Hr.add(hr);
+            day.setHr(Hr);
+        }
+        if (PR != 0) {
+            List<Double> pr = day.getPR();
+            if (pr == null)
+                pr = new LinkedList<>();
+            pr.add(PR);
+            day.setPR(pr);
+        }
+        if (QRS != 0) {
+            List<Double> qrs = day.getQRS();
+            if (qrs == null)
+                qrs = new LinkedList<>();
+            qrs.add(QRS);
+            day.setQRS(qrs);
+        }
+        if (QTC != 0) {
+            List<Double> qtc = day.getQTC();
+            if (qtc == null)
+                qtc = new LinkedList<>();
+            qtc.add(QTC);
+            day.setQTC(qtc);
+        }
+        if (SDNN != 0) {
+            List<Double> sdnn = day.getSDNN();
+            if (sdnn == null)
+                sdnn = new LinkedList<>();
+            sdnn.add(SDNN);
+            day.setSDNN(sdnn);
+        }
+        if (RMSSD != 0) {
+            List<Double> rmssd = day.getRMSSD();
+            if (rmssd == null)
+                rmssd = new LinkedList<>();
+            rmssd.add(RMSSD);
+            day.setRMSSD(rmssd);
+        }
         switch (week) {
             case 1:
                 weeklyCount.setSunday(day);

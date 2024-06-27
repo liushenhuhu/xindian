@@ -124,4 +124,8 @@ public interface IPatientManagementService
 
 
     List<PatientManagementVO> getPatientManagementByCode(String equipmentCode) throws Exception;
+
+    Long getDetectinCountAll(String patientPhone);
+
+    Long getDetectinCountToday(String patientPhone);
 }

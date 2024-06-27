@@ -420,6 +420,16 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         return patientManagementMapper.selectPatientManagementByCode(null);
     }
 
+    @Override
+    public Long getDetectinCountAll(String patientPhone) {
+        return patientManagementMapper.getDetectinCountAll(patientPhone);
+    }
+
+    @Override
+    public Long getDetectinCountToday(String patientPhone) {
+        return patientManagementMapper.getDetectinCountToday(patientPhone);
+    }
+
     private Double getDouble(String str) {
         try {
             return Double.parseDouble(str);
