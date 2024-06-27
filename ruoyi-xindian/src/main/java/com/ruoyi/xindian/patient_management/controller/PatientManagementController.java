@@ -920,7 +920,7 @@ public class PatientManagementController extends BaseController {
         return AjaxResult.success(res);
     }
     @GetMapping("/refreshWeekly")
-    public AjaxResult getDTest(SingleHistoryData Info) {
+    public AjaxResult getDTest(SingleHistoryData Info) throws Exception {
         weeklyService.getWeekly(Info);
         return AjaxResult.success();
     }

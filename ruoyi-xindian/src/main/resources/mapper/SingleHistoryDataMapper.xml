@@ -58,6 +58,6 @@
                bradycardia,
                tachycardia
         FROM single_history_data
-        WHERE DATE_FORMAT(create_time, '%Y-%m-%d') BETWEEN #{startTime} AND DATE_ADD(#{endTime}, INTERVAL 1 DAY)
+        WHERE DATE_FORMAT(create_time, '%Y-%m-%d') BETWEEN #{startTime} AND #{endTime}
     </select>
 </mapper>

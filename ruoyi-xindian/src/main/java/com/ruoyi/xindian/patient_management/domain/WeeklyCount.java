@@ -14,20 +14,12 @@ public class WeeklyCount extends SingleHistoryData implements Serializable {
     //多导联检测次数
     //检测为正常心电图次数
     private int normalCount;
-    //每周每天检测次数
-    private int monday;
-    private int tuesday;
-    private int wednesday;
-    private int thursday;
-    private int friday;
-    private int saturday;
-    private int sunday;
-    //每天检测的心率
-    private List<Integer> monday_hr;
-    private List<Integer> tuesday_hr;
-    private List<Integer> wednesday_hr;
-    private List<Integer> thursday_hr;
-    private List<Integer> friday_hr;
-    private List<Integer> saturday_hr;
-    private List<Integer> sunday_hr;
+    //每天的统计
+    private ECGTendency monday;
+    private ECGTendency tuesday;
+    private ECGTendency wednesday;
+    private ECGTendency thursday;
+    private ECGTendency friday;
+    private ECGTendency saturday;
+    private ECGTendency sunday;
 }

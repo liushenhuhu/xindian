@@ -1,15 +1,18 @@
 package com.ruoyi.xindian.patient_management.service.impl;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ruoyi.xindian.patient.domain.SingleHistoryData;
 import com.ruoyi.xindian.patient.service.SingleHistoryDataService;
+import com.ruoyi.xindian.patient_management.domain.ECGTendency;
 import com.ruoyi.xindian.patient_management.domain.WeeklyCount;
 import com.ruoyi.xindian.patient_management.service.IWeeklyService;
 import com.ruoyi.xindian.pmEcgData.domain.PmEcgData;
 import com.ruoyi.xindian.pmEcgData.mapper.PmEcgDataMapper;
 import com.ruoyi.xindian.pmEcgData.service.IPmEcgDataService;
 import com.ruoyi.xindian.util.DateUtil;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -49,20 +52,21 @@ public class WeeklyServiceImpl implements IWeeklyService {
 
     @Override
     public WeeklyCount SingleHistoryDataToweeklyCount(WeeklyCount weeklyCount, SingleHistoryData singleHistoryData) {
-        weeklyCount.setMonday(0);
-        weeklyCount.setTuesday(0);
-        weeklyCount.setWednesday(0);
-        weeklyCount.setThursday(0);
-        weeklyCount.setFriday(0);
-        weeklyCount.setSaturday(0);
-        weeklyCount.setSaturday(0);
-//        weeklyCount.setMonday_hr(new LinkedList<>());
-//        weeklyCount.setTuesday_hr(new LinkedList<>());
-//        weeklyCount.setWednesday_hr(new LinkedList<>());
-//        weeklyCount.setThursday_hr(new LinkedList<>());
-//        weeklyCount.setFriday_hr(new LinkedList<>());
-//        weeklyCount.setSaturday_hr(new LinkedList<>());
-//        weeklyCount.setSaturday_hr(new LinkedList<>());
+        ECGTendency mon = new ECGTendency();
+        ECGTendency Tus = new ECGTendency();
+        ECGTendency Wed = new ECGTendency();
+        ECGTendency Thur = new ECGTendency();
+        ECGTendency Fri = new ECGTendency();
+        ECGTendency Sat = new ECGTendency();
+        ECGTendency Sun = new ECGTendency();
+        weeklyCount.setMonday(mon);
+        weeklyCount.setTuesday(Tus);
+        weeklyCount.setWednesday(Wed);
+        weeklyCount.setThursday(Thur);
+        weeklyCount.setFriday(Fri);
+        weeklyCount.setSaturday(Sat);
+        weeklyCount.setSaturday(Sun);
+
         weeklyCount.setPatientPhone(singleHistoryData.getPatientPhone());
         weeklyCount.setNormalEcg(singleHistoryData.getNormalEcg());
         weeklyCount.setApBeat(singleHistoryData.getApBeat());
@@ -90,6 +94,7 @@ public class WeeklyServiceImpl implements IWeeklyService {
         return weeklyCount;
     }
 
+
     @Override
     public void getWeekly(SingleHistoryData info) {
         HashMap<String, WeeklyCount> weeklyCountHashMap = new HashMap<>();
@@ -116,7 +121,9 @@ public class WeeklyServiceImpl implements IWeeklyService {
         //总数据概括
         List<SingleHistoryData> weeklyCountList = singleHistoryDataService.countDataByPhone(info);
         WeeklyCount weeklyCount;
+
         for (SingleHistoryData singleHistoryData : weeklyCountList) {
+            flag = 1;
             if (!singleHistoryData.getNormalEcg().equals(0) || allZero(singleHistoryData)) {
                 flag = 0;
             }
@@ -136,72 +143,22 @@ public class WeeklyServiceImpl implements IWeeklyService {
                 weeklyCount.setSignalCount(1);
                 weeklyCount = SingleHistoryDataToweeklyCount(weeklyCount, singleHistoryData);
             }
-            //获取心率数据
+            //获取心率，P波，QRS等信息
             PmEcgData pmEcgData = pmEcgDataService.selectPmEcgDataByPId(singleHistoryData.getPId());
             String ecgAnalysisData = pmEcgData.getEcgAnalysisData();
             JsonObject ecgData = JsonParser.parseString(ecgAnalysisData).getAsJsonObject();
-            int hr = ecgData.get("平均心率").getAsInt();
+
+            double hr = ecgData.get("平均心率").getAsString().equals("nan") ? 0 : ecgData.get("平均心率").getAsDouble();
+            double P = ecgData.get("P波时限").getAsString().equals("nan") ? 0 : ecgData.get("P波时限").getAsDouble();
+            double PR = ecgData.get("PR间期").getAsString().equals("nan") ? 0 : ecgData.get("PR间期").getAsDouble();
+            double QRS = ecgData.get("QRS波时限").getAsString().equals("nan") ? 0 : ecgData.get("QRS波时限").getAsDouble();
+            double QTC = ecgData.get("QTc").getAsString().equals("nan") ? 0 : ecgData.get("QTc").getAsDouble();
+            double SDNN = ecgData.get("SDNN").getAsString().equals("nan") ? 0 : ecgData.get("SDNN").getAsDouble();
+            double RMSSD = ecgData.get("RMSSD").getAsString().equals("nan") ? 0 : ecgData.get("RMSSD").getAsDouble();
+
             //计算当时是第几天做的
-            List<Integer> weekday_hr;
             int week = DateUtil.getWeek(singleHistoryData.getCreateTime());
-            switch (week) {
-                case 1:
-                    weeklyCount.setSunday(weeklyCount.getSunday() + 1);
-                    weekday_hr = weeklyCount.getSunday_hr();
-                    if (weekday_hr == null)
-                        weekday_hr = new LinkedList<>();
-                    weekday_hr.add(hr);
-                    weeklyCount.setSaturday_hr(weekday_hr);
-                    break;
-                case 2:
-                    weeklyCount.setMonday(weeklyCount.getMonday() + 1);
-                    weekday_hr = weeklyCount.getMonday_hr();
-                    if (weekday_hr == null)
-                        weekday_hr = new LinkedList<>();
-                    weekday_hr.add(hr);
-                    weeklyCount.setMonday_hr(weekday_hr);
-                    break;
-                case 3:
-                    weeklyCount.setTuesday(weeklyCount.getTuesday() + 1);
-                    weekday_hr = weeklyCount.getThursday_hr();
-                    if (weekday_hr == null)
-                        weekday_hr = new LinkedList<>();
-                    weekday_hr.add(hr);
-                    weeklyCount.setThursday_hr(weekday_hr);
-                    break;
-                case 4:
-                    weeklyCount.setWednesday(weeklyCount.getWednesday() + 1);
-                    weekday_hr = weeklyCount.getWednesday_hr();
-                    if (weekday_hr == null)
-                        weekday_hr = new LinkedList<>();
-                    weekday_hr.add(hr);
-                    weeklyCount.setWednesday_hr(weekday_hr);
-                    break;
-                case 5:
-                    weeklyCount.setThursday(weeklyCount.getThursday() + 1);
-                    weekday_hr = weeklyCount.getThursday_hr();
-                    if (weekday_hr == null)
-                        weekday_hr = new LinkedList<>();
-                    weekday_hr.add(hr);
-                    weeklyCount.setThursday_hr(weekday_hr);
-                    break;
-                case 6:
-                    weeklyCount.setFriday(weeklyCount.getFriday() + 1);
-                    weekday_hr = weeklyCount.getFriday_hr();
-                    if (weekday_hr == null)
-                        weekday_hr = new LinkedList<>();
-                    weekday_hr.add(hr);
-                    weeklyCount.setFriday_hr(weekday_hr);
-                    break;
-                case 7:
-                    weeklyCount.setSaturday(weeklyCount.getSaturday() + 1);
-                    weekday_hr = weeklyCount.getSaturday_hr();
-                    if (weekday_hr == null)
-                        weekday_hr = new LinkedList<>();
-                    weekday_hr.add(hr);
-                    weeklyCount.setSaturday_hr(weekday_hr);
-                    break;
-            }
+            weeklyCount = weeklyCountAddData(weeklyCount, hr, P, PR, QRS, QTC, SDNN, RMSSD, week);
             weeklyCountHashMap.put(mapKey, weeklyCount);
         }
         //检测次数排名
@@ -222,7 +179,7 @@ public class WeeklyServiceImpl implements IWeeklyService {
         ZSetOperations<String, Object> zSet = redisTemplate.opsForZSet();
         HashOperations<String, String, WeeklyCount> hash = redisTemplate.opsForHash();
         WeeklyCount thisWeek = hash.get("thisWeek", patientPhone);
-        if(thisWeek==null) return res;
+        if (thisWeek == null) return res;
         WeeklyCount lastWeek = hash.get("lastWeek", patientPhone);
         Long allPerson = zSet.size("thisWeekCheckNum");
         //检测次数排名
@@ -239,33 +196,131 @@ public class WeeklyServiceImpl implements IWeeklyService {
         //检测时长同比
         double tb = 0.0;
         if (lastWeek != null)
-            if(lastWeek.getSignalCount()==0)
-                tb=-1; //无法计算
+            if (lastWeek.getSignalCount() == 0)
+                tb = -1; //无法计算
             else
                 tb = (thisWeek.getSignalCount() - lastWeek.getSignalCount()) * 1.0 / lastWeek.getSignalCount();
         LinkedList<Double> weekTimeList = new LinkedList<>();
-        weekTimeList.add(thisWeek.getMonday()*30*1.0/60);
-        weekTimeList.add(thisWeek.getTuesday()*30*1.0/60);
-        weekTimeList.add(thisWeek.getWednesday()*30*1.0/60);
-        weekTimeList.add(thisWeek.getThursday()*30*1.0/60);
-        weekTimeList.add(thisWeek.getFriday()*30*1.0/60);
-        weekTimeList.add(thisWeek.getSaturday()*30*1.0/60);
-        weekTimeList.add(thisWeek.getSaturday()*30*1.0/60);
-        if(thisWeek.getMonday_hr()==null) thisWeek.setMonday_hr(new LinkedList<>());
-        if(thisWeek.getTuesday_hr()==null) thisWeek.setTuesday_hr(new LinkedList<>());
-        if(thisWeek.getWednesday_hr()==null) thisWeek.setWednesday_hr(new LinkedList<>());
-        if(thisWeek.getThursday_hr()==null) thisWeek.setThursday_hr(new LinkedList<>());
-        if(thisWeek.getFriday_hr()==null) thisWeek.setFriday_hr(new LinkedList<>());
-        if(thisWeek.getSaturday_hr()==null) thisWeek.setSaturday_hr(new LinkedList<>());
-        if(thisWeek.getSunday_hr()==null) thisWeek.setSunday_hr(new LinkedList<>());
+
+        weekTimeList.add(thisWeek.getMonday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getTuesday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getWednesday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getThursday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getFriday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getSaturday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getSunday().getCount() * 30 * 1.0 / 60);
+        if (thisWeek.getMonday() == null) thisWeek.setMonday(new ECGTendency());
+        if (thisWeek.getTuesday() == null) thisWeek.setTuesday(new ECGTendency());
+        if (thisWeek.getWednesday() == null) thisWeek.setWednesday(new ECGTendency());
+        if (thisWeek.getThursday() == null) thisWeek.setThursday(new ECGTendency());
+        if (thisWeek.getFriday() == null) thisWeek.setFriday(new ECGTendency());
+        if (thisWeek.getSaturday() == null) thisWeek.setSaturday(new ECGTendency());
+        if (thisWeek.getSunday() == null) thisWeek.setSunday(new ECGTendency());
+
         thisWeek.setPatientPhone("");
         res.put("thisWeek", thisWeek);
-        res.put("rankDetectionNum", rankCheckNum*100);
-        res.put("rankHealth", rankHealth*100);
-        res.put("increase",tb*100);
-        res.put("detectionTime",thisWeek.getSignalCount()*30*1.0/60);
-        res.put("weekTimeList",weekTimeList);
+        res.put("rankDetectionNum", rankCheckNum * 100);
+        res.put("rankHealth", rankHealth * 100);
+        res.put("increase", tb * 100);
+        res.put("detectionTime", thisWeek.getSignalCount() * 30 * 1.0 / 60);
+        res.put("weekTimeList", weekTimeList);
+//        res.put("weekTimeList",weekTimeList);
         return res;
+    }
+
+    @Override
+    public WeeklyCount weeklyCountAddData(WeeklyCount weeklyCount, double hr, double P, double PR, double QRS, double QTC, double SDNN, double RMSSD, int week) {
+        ECGTendency day;
+        switch (week) {
+            case 1:
+                day = weeklyCount.getSunday();
+                break;
+            case 2:
+                day = weeklyCount.getMonday();
+                break;
+            case 3:
+                day = weeklyCount.getTuesday();
+                break;
+            case 4:
+                day = weeklyCount.getWednesday();
+                break;
+            case 5:
+                day = weeklyCount.getThursday();
+                break;
+            case 6:
+                day = weeklyCount.getFriday();
+                break;
+            default:
+                day = weeklyCount.getSaturday();
+        }
+        if(day == null)
+            day = new ECGTendency();
+        day.setCount(day.getCount() + 1);
+
+        List<Double> p = day.getP();
+        if (p == null)
+            p = new LinkedList<>();
+        p.add(P);
+        day.setP(p);
+
+        List<Double> Hr = day.getHr();
+        if (Hr == null)
+            Hr = new LinkedList<>();
+        Hr.add(hr);
+        day.setHr(Hr);
+
+        List<Double> pr = day.getPR();
+        if (pr == null)
+            pr = new LinkedList<>();
+        pr.add(PR);
+        day.setPR(pr);
+
+        List<Double> qrs = day.getQRS();
+        if (qrs == null)
+            qrs = new LinkedList<>();
+        qrs.add(QRS);
+        day.setQRS(qrs);
+
+        List<Double> qtc = day.getQTC();
+        if (qtc == null)
+            qtc = new LinkedList<>();
+        qtc.add(QTC);
+        day.setQTC(qtc);
+
+        List<Double> sdnn = day.getSDNN();
+        if (sdnn == null)
+            sdnn = new LinkedList<>();
+        sdnn.add(SDNN);
+        day.setSDNN(sdnn);
+
+        List<Double> rmssd = day.getRMSSD();
+        if (rmssd == null)
+            rmssd = new LinkedList<>();
+        rmssd.add(RMSSD);
+        day.setRMSSD(rmssd);
+        switch (week) {
+            case 1:
+                weeklyCount.setSunday(day);
+                break;
+            case 2:
+                weeklyCount.setMonday(day);
+                break;
+            case 3:
+                weeklyCount.setTuesday(day);
+                break;
+            case 4:
+                weeklyCount.setWednesday(day);
+                break;
+            case 5:
+                weeklyCount.setThursday(day);
+                break;
+            case 6:
+                weeklyCount.setFriday(day);
+                break;
+            default:
+                weeklyCount.setSaturday(day);
+        }
+        return weeklyCount;
     }
 
 }

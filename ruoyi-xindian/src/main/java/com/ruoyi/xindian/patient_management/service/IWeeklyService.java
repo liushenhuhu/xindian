@@ -17,4 +17,6 @@ public interface IWeeklyService {
 
     HashMap<String, Object> getWeeklyByPhone(String patientPhone);
 
+    WeeklyCount weeklyCountAddData(WeeklyCount weeklyCount, double hr, double P, double PR, double QRS, double QTC, double SDNN, double RMSSD, int week);
+
 }
