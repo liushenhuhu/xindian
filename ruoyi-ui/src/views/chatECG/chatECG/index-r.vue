@@ -8,26 +8,30 @@
             <div class="img_box">
               <img class="zhengda" src="@/assets/images/zhengda.png" />
             </div>
-            <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">
-              +&emsp;&emsp;新建对话框
+<!--            <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">-->
+            <div class="new_his" @click="conversationClickAdd" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }" >
+              +&emsp;&emsp;新建
+            </div>
+            <div class="new_his" @click="empty" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">
+              清空
             </div>
           </div>
           <div class="his">
             <!-- 对话框 -->
-            <div class="his_item" style="cursor: pointer;" v-for="(item, i) in conversation"
+            <div class="his_item" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }" v-for="(item, i) in conversation"
               :ref="'div-' + item.conversationId" :class="{ bgc: i === 0 }" :key="item.conversationId"
               @click="conversationClickCut(item.conversationId, 2)">
               <!-- <img class="mesimg2" src="@/assets/images/messge2.png"/> -->
               <div class="his_title">
-                <div class="tit" v-show="item.isCustom">{{ item.title }}</div>
+                <div class="tit" v-show="item.isCustom" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">{{ item.title }}</div>
                 <input :class="{ titUp: item.isHighlighted, tit: item.isCustom }" :ref="'input' + item.conversationId"
                   type="hidden" :value="item.title" @blur="blurId(item.conversationId)" />
-                <div class="time">{{ item.createTime }}</div>
+                <div class="time" >{{ item.createTime }}</div>
               </div>
               <div style="display: flex">
-                <img class="upimg" src="@/assets/images/updat.png" style="cursor: pointer"
+                <img class="upimg" src="@/assets/images/updat.png" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
                   @click.stop="updatatit(item.conversationId, i)" />
-                <img class="delimg" src="@/assets/images/delimg.png" style="cursor: pointer"
+                <img class="delimg" src="@/assets/images/delimg.png" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
                   @click.stop="conversationClickDel(item.conversationId)" />
               </div>
             </div>
@@ -100,14 +104,16 @@
                   border: 0;
                   font-size: 1.3vw;
                   padding: 1vh;
-                 
+
                 " id="text" v-model="customerText" @keyup.enter="sentMsg()"></textarea>
               <div class="right-child">
                 <div v-if="vocState == 0" class="mkf">
                   <img v-if="iptDisabled" class="mesimg3" src="@/assets/images/microphone-0.png" />
+<!--                  开始录音-->
                   <img v-else class="mesimg3" src="@/assets/images/microphone-0.png" @click="recorderStart()" />
                 </div>
                 <div v-else-if="vocState == 1" class="mkf mkf-s">
+<!--                  停止录音-->
                   <img class="mesimg3" src="@/assets/images/microphone-1.png" @click="recorderStop()" />
                   <div class="mkftips" v-show="resultState">
                     倾听中...
@@ -260,6 +266,9 @@ export default {
   },
 
   methods: {
+    daayin(){
+      console.log("1")
+    },
     // console.log('process.env.port: ', process.env.VUE_APP_CHAT);
     async getStream(data, lock, th) {
       try {
@@ -472,12 +481,18 @@ export default {
         console.log(e)
       }
     },
+
+
     recorderStart() {
+      // 1
       let ts = new Date().getTime() / 1000;
       ts = parseInt(ts)
       let th = this
       this.voc = new Voc();
+      // 初始化websocket连接
       this.voc.init(ts);
+
+      // 4 设置最终消息结果的回调函数
       this.voc.onmessage((text) => {
         console.log('text: ', text);
         th.customerText += text;
@@ -488,23 +503,31 @@ export default {
         }
         console.log('结束消息')
       })
+
+      // 5 设置结束消息的回调函数
       this.voc.onOverMsg(() => {
         th.sentMsg()
         th.resultState = 0;
         console.log('结束消息111')
         let audio = new Audio()
+        // 结束时的发送音乐
         audio.src = require('@/assets/audio/msgEnd.mp3')
         audio.play()
       })
+
+      // 3 设置中间消息结果的回调函数
       this.voc.onmiddlemessage((text) => {
         console.log('text11: ', text);
         th.resultTextTemp = text;
+        console.log(th.resultState)
         if (!th.resultState) {
           //首次且仅触发一次
           //播放本地音频文件
           th.msgOverLock = Symbol()
           th.audioPlayer.stopAudio()
+
           let audio = new Audio()
+          // 我在
           audio.src = require('@/assets/audio/msgOpen.mp3')
           audio.play()
           th.resultState = 1;
@@ -512,19 +535,24 @@ export default {
         }
         console.log('中间消息')
       })
+
+      // 设置错误消息
       this.voc.setErrorFunc(() => {
         this.$message.error('语音网络连接失败，请稍后重试或使用输入框手动输入')
         setTimeout(() => {
           this.recorderStop()
         }, 50)
       })
+
+
+
+      // 2 使用Recorder类来实现音频录制功能
       this.recorder = new Recorder({
         sampleBits: 16,
         sampleRate: 16000,
         numChannels: 1,
         compiling: true,
       })
-
       Recorder.getPermission().then(() => {
         this.vocState = 1;
         th.recorder.start();
@@ -538,7 +566,9 @@ export default {
         })
         this.vocState = 0;
       })
+
     },
+
     recorderStop() {
       console.log('执行关闭')
       this.vocState = 0;
@@ -581,17 +611,22 @@ export default {
     // 用户发送消息
     sentMsg() {
       this.iptDisabled = true
+      //存在就停止录音
       if (this.recorder) {
         this.recorderStop()
       }
+      // 清除定时器
       clearInterval(this.timeOut)
       console.log('----1----')
+      // overTurn() 方法的作用是将 newText 的内容追加到消息列表中的最后一条消息上，并清空 newText。
       this.overTurn();
       console.log('----2----')
       let th = this;
       console.log("queryParams: =====", this.queryParams.history);
+      // 停止播放当次音频
       this.audioPlayer.stopAudio()
       clearTimeout(this.timer);
+      // 自动触发结束语
       this.showTimer();
       let text = this.customerText.trim();
       //把text中的小雅替换成空
@@ -603,11 +638,14 @@ export default {
       if (text.length === 0) {
         return
       }
+
       let lock = Symbol();
       this.audioLock = lock;
       th.msgOverLock = lock
       this.queryParams.text = text;
       this.queryParams.createTime = this.formatDateToCustomFormat(new Date());
+
+      // 判断是否新建窗口并处理会话信息
       if (this.isAddNewWin || this.conversation.length === 0) {
         let is = this.findMaxIdObject(this.conversation);
         console.log('--------------1-----------', is);
@@ -708,8 +746,12 @@ export default {
       }, 100)
     },
     overTurn() {
+      console.log("这是this.newText")
+      console.log(this.newText)
       if (this.newText.length == 0) return;
       clearInterval(this.textInterval)
+      console.log("这是this.info")
+      console.log(this.info)
       this.info[this.info.length - 1].content += this.newText;
       this.newText = ''
     },
@@ -728,7 +770,7 @@ export default {
 
 
 
-      // } 
+      // }
       // this.$nextTick(() => {
       //   var contentHeight = document.getElementById("right");
       //   contentHeight.scrollTop = contentHeight.scrollHeight;
@@ -829,6 +871,7 @@ export default {
 
     getConversation(v) {
       getConversation().then((r) => {
+        console.log("获取了对话的值")
         console.log(r);
         this.conversation = r.data;
         this.conversation.forEach((item) => {
@@ -870,17 +913,19 @@ export default {
      * @param val
      */
     conversationClickDel(val) {
-      this.$modal
-        .confirm('是否确认删除会话窗口编号为"' + val + '"的数据项？')
-        .then(function () {
-          return deleteConversation(val);
-        })
-        .then(() => {
-          this.getConversation(1);
-          this.$modal.msgSuccess("删除成功");
-        })
-        .catch(() => {
-        });
+      if (!this.iptDisabled){
+        this.$modal
+          .confirm('是否确认删除会话窗口编号为"' + val + '"的数据项？')
+          .then(function () {
+            return deleteConversation(val);
+          })
+          .then(() => {
+            this.getConversation(1);
+            this.$modal.msgSuccess("删除成功");
+          })
+          .catch(() => {
+          });
+      }
     },
 
     /**
@@ -896,101 +941,131 @@ export default {
       //   // 在这里执行你想要的操作
       //   console.log("点击了禁用的输入框");
       // }
-
-      this.isAddNewWin = false;
-      if (id === 2) {
-        this.$refs[
+      if (!this.iptDisabled){
+        this.isAddNewWin = false;
+        if (id === 2) {
+          this.$refs[
           "div-" + this.conversation[0].conversationId
-        ][0].classList.remove("bgc");
+            ][0].classList.remove("bgc");
+        }
+
+        this.conversation.forEach((i, index) => {
+          if (this.$refs["div-" + val]) {
+            if (i.conversationId === val) {
+              this.$refs["div-" + val][0].style.backgroundColor = "#343541";
+            } else {
+              this.$refs["div-" + i.conversationId][0].style.backgroundColor = "";
+            }
+          }
+        });
+
+        this.queryParams.conversationId = val;
+
+        getChatQuizList(val).then((r) => {
+          this.info = [];
+          for (let i = 0; i < r.data.length; i++) {
+            let label = JSON.parse(r.data[i].messageContent).label;
+            let value = JSON.parse(r.data[i].messageContent).value;
+
+            let obj_l = {
+              type: "leftinfo",
+              time: r.data[i].responseTime,
+              name: "robot",
+              content: value,
+              text: "2",
+            };
+            let obj_r = {
+              type: "rightinfo",
+              time: r.data[i].createTime,
+              name: "robot",
+              content: label,
+              text: "2",
+            };
+            this.info.push(obj_r);
+            this.info.push(obj_l);
+          }
+          this.$nextTick(() => {
+            this.$refs.message.scrollTop = this.$refs.message.scrollHeight;
+          });
+        });
       }
 
-      this.conversation.forEach((i, index) => {
-        if (this.$refs["div-" + val]) {
-          if (i.conversationId === val) {
-            this.$refs["div-" + val][0].style.backgroundColor = "#343541";
-          } else {
-            this.$refs["div-" + i.conversationId][0].style.backgroundColor = "";
-          }
-        }
-      });
-
-      this.queryParams.conversationId = val;
-
-      getChatQuizList(val).then((r) => {
-        this.info = [];
-        for (let i = 0; i < r.data.length; i++) {
-          let label = JSON.parse(r.data[i].messageContent).label;
-          let value = JSON.parse(r.data[i].messageContent).value;
-
-          let obj_l = {
-            type: "leftinfo",
-            time: r.data[i].responseTime,
-            name: "robot",
-            content: value,
-            text: "2",
-          };
-          let obj_r = {
-            type: "rightinfo",
-            time: r.data[i].createTime,
-            name: "robot",
-            content: label,
-            text: "2",
-          };
-          this.info.push(obj_r);
-          this.info.push(obj_l);
-        }
-        this.$nextTick(() => {
-          this.$refs.message.scrollTop = this.$refs.message.scrollHeight;
-        });
-      });
     },
 
     /**
      * 新增窗口
      */
     conversationClickAdd() {
-      // 获取时间
-      this.getConversation(2);
-      this.info = [
-        {
-          type: "leftinfo",
-          time: this.getTodayTime(),
-          name: "robot",
-          content: "",
-          question: [],
-          text: "1",
-        },
-      ];
-      let text = "您好，我是智能AI医生小雅，请问有什么问题可以帮助您？";
-      let index = 0;
-      const interval = setInterval(() => {
-        if (index < text.length && this.info[0].text === "1") {
-          this.info[0].content += text[index];
-          index++;
-        } else {
-          clearInterval(interval);
-        }
-      }, 100); // 控制逐字显示速度，你可以根据需要调整
+      if (!this.iptDisabled ){
+        // 获取时间
+        this.getConversation(2);
+        this.info = [
+          {
+            type: "leftinfo",
+            time: this.getTodayTime(),
+            name: "robot",
+            content: "",
+            question: [],
+            text: "1",
+          },
+        ];
+        let text = "您好，我是智能AI医生小郑，请问有什么问题可以帮助您？";
+        let index = 0;
+        const interval = setInterval(() => {
+          if (index < text.length && this.info[0].text === "1") {
+            this.info[0].content += text[index];
+            index++;
+          } else {
+            clearInterval(interval);
+          }
+        }, 100); // 控制逐字显示速度，你可以根据需要调整
 
-      this.robotAnswer = [];
+        this.robotAnswer = [];
 
-      this.isAddNewWin = true;
+        this.isAddNewWin = true;
 
-      this.$refs["div-" + this.conversation[0].conversationId][0].classList.remove("bgc");
-      this.conversation.forEach((i, index) => {
-        this.$refs["div-" + i.conversationId][0].style.backgroundColor = "";
-      });
+        this.$refs["div-" + this.conversation[0].conversationId][0].classList.remove("bgc");
+        this.conversation.forEach((i, index) => {
+          this.$refs["div-" + i.conversationId][0].style.backgroundColor = "";
+        });
+      }
+
+    },
+    empty(){
+      if (!this.iptDisabled){
+        console.log(this.conversation);
+        // 保存Vue实例的this
+        const that = this;
+        this.$modal
+          .confirm('是否确认删除所有历史对话？')
+          .then(() => {
+            // 使用map生成Promise数组，然后用Promise.all等待所有删除操作完成
+            const deletePromises = that.conversation.map(convo => deleteConversation(convo.conversationId));
+            return Promise.all(deletePromises);
+          })
+          .then(() => {
+            that.getConversation();
+            that.$modal.msgSuccess("删除成功");
+          })
+          .catch(() => {
+            // 可以在这里处理取消操作或错误
+          });
+      }
+
     },
     //点击修改图标显示input
     updatatit(id, ins) {
-      this.conversation.forEach((i, index) => {
-        if (i.conversationId === id) {
-          i.isCustom = false;
-          i.isHighlighted = true;
-          this.$refs["input" + id][0].type = "text";
-          this.$refs["input" + id][0].focus();
-        }
-      });
+      if (!this.iptDisabled){
+        this.conversation.forEach((i, index) => {
+          if (i.conversationId === id) {
+            i.isCustom = false;
+            i.isHighlighted = true;
+            this.$refs["input" + id][0].type = "text";
+            this.$refs["input" + id][0].focus();
+          }
+        });
+      }
+
     },
     //input失去焦点
     blurId(id) {
