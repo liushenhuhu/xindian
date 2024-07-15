@@ -904,7 +904,6 @@ public class PatientManagementController extends BaseController {
 
     @GetMapping("/getWeekly")
     public AjaxResult getWeekly(SingleHistoryData Info) throws Exception {
-
         if (Info == null) {
             return AjaxResult.error("参数不为能空！");
         }

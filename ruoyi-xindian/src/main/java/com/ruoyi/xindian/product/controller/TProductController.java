@@ -29,7 +29,7 @@ import com.ruoyi.xindian.product.domain.ProductImgs;
 import com.ruoyi.xindian.product.domain.TProductDto;
 ;
 import com.ruoyi.xindian.wx_pay.domain.Product;
-import org.apache.ibatis.jdbc.Null;
+//import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
