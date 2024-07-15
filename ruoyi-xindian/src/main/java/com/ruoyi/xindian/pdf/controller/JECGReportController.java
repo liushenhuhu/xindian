@@ -235,7 +235,7 @@ public class JECGReportController {
     @PostMapping("/createPdf")
     public AjaxResult createPdf(@RequestBody ReportData reportData) throws IOException, ParseException {
         PdfGenerator pdfGenerator = new PdfGenerator();
-        String write_dir = "/home/chenpeng/workspace/system/xindian/pdf/" + reportData.getPid() + ".pdf";
+        String write_dir = "/home/chenpeng/workspace/system/xindian/data/pdf/" + reportData.getPid() + ".pdf";
         pdfGenerator.createPdf(write_dir, reportData);
         return AjaxResult.success("ok");
     }
