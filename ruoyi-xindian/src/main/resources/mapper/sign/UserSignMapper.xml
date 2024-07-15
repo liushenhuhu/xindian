@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.sign.mapper.UserSignMapper">
+
+    <resultMap type="UserSign" id="UserSignResult">
+        <result property="id"    column="id"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="seriesDays"    column="series_days"    />
+        <result property="continuityDays"    column="continuity_days"    />
+        <result property="lastSign"    column="last_sign"    />
+        <result property="signNums"    column="sign_nums"    />
+    </resultMap>
+
+    <sql id="selectUserSignVo">
+        select id, patient_phone, series_days, continuity_days, last_sign, sign_nums from user_sign
+    </sql>
+
+    <select id="selectUserSignList" parameterType="UserSign" resultMap="UserSignResult">
+        <include refid="selectUserSignVo"/>
+        <where>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="seriesDays != null "> and series_days = #{seriesDays}</if>
+            <if test="continuityDays != null "> and continuity_days = #{continuityDays}</if>
+            <if test="lastSign != null "> and last_sign = #{lastSign}</if>
+            <if test="signNums != null "> and sign_nums = #{signNums}</if>
+        </where>
+    </select>
+
+    <select id="selectUserSignById" parameterType="Long" resultMap="UserSignResult">
+        <include refid="selectUserSignVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectUserSignByPhone" resultType="com.ruoyi.xindian.sign.domain.UserSign">
+        <include refid="selectUserSignVo"/>
+        where patient_phone = #{phone}
+    </select>
+
+    <insert id="insertUserSign" parameterType="UserSign">
+        insert into user_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="seriesDays != null">series_days,</if>
+            <if test="continuityDays != null">continuity_days,</if>
+            <if test="lastSign != null">last_sign,</if>
+            <if test="signNums != null">sign_nums,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="seriesDays != null">#{seriesDays},</if>
+            <if test="continuityDays != null">#{continuityDays},</if>
+            <if test="lastSign != null">#{lastSign},</if>
+            <if test="signNums != null">#{signNums},</if>
+        </trim>
+    </insert>
+
+    <update id="updateUserSign" parameterType="UserSign">
+        update user_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="seriesDays != null">series_days = #{seriesDays},</if>
+            <if test="continuityDays != null">continuity_days = #{continuityDays},</if>
+            <if test="lastSign != null">last_sign = #{lastSign},</if>
+            <if test="signNums != null">sign_nums = #{signNums},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserSignById" parameterType="Long">
+        delete from user_sign where id = #{id}
+    </delete>
+
+    <delete id="deleteUserSignByIds" parameterType="String">
+        delete from user_sign where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

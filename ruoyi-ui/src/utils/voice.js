@@ -43,6 +43,9 @@ export class Voc {
     }
     this.ws.onmessage = (data, err) => {
       console.log('收到讯飞科大消息');
+      console.log("触发renderResult函数")
+      console.log("中的参数data为")
+      console.log(data.data)
       this.renderResult(data.data)
       // console.log(JSON.parse(data))
       // if (err) return this.result.err(err)
@@ -102,13 +105,20 @@ export class Voc {
   }
 
   renderResult(resultData) {
+    console.log("renderResult")
     let th = this;
     let jsonData = JSON.parse(resultData);
+    console.log("这是jsonData")
+    console.log(jsonData)
+    console.log("这是jsonData中的action")
+    console.log(jsonData.action)
     if (jsonData.action == "started") {
       // 握手成功
       console.log("握手成功");
     } else if (jsonData.action == "result") {
+      console.log("JSON.parse(jsonData.data)")
       const data = JSON.parse(jsonData.data)
+      console.log(data)
       // 转写结果
       let resultTextTemp = ""
       data.cn.st.rt.forEach((j) => {
@@ -118,6 +128,8 @@ export class Voc {
           });
         });
       });
+      console.log("1这是resultTextTemp")
+      console.log(resultTextTemp)
       const arr = ['，', '。', '？', '！', '；',]
       if (arr.includes(resultTextTemp[0]) && th.openState == 0) {
         resultTextTemp = resultTextTemp.slice(1)
@@ -137,23 +149,28 @@ export class Voc {
       }
       if(this.oneState&&resultTextTemp.includes('小雅')){
         this.timeOutObj = setTimeout(() => {
+          console.log(th.result.overMsg)
           if(th.result.overMsg){
             th.result.overMsg()
-            console.log('触发发送')
+            console.log('1触发发送')
           }
           th.openState =0;
         },10000)
         th.oneState = 0;
         resultTextTemp = resultTextTemp.slice(resultTextTemp.indexOf('小雅')+2)
+        console.log("2这是resultTextTemp")
+        console.log(resultTextTemp)
         if (arr.includes(resultTextTemp[0])) {
           resultTextTemp = resultTextTemp.slice(1)
+          console.log("3这是resultTextTemp")
+          console.log(resultTextTemp)
           if(resultTextTemp.length!=0){
             clearTimeout(this.timeOutObj)
             this.timeOutObj = null;
             this.timeOutObj = setTimeout(() => {
               if(th.result.overMsg){
                 th.result.overMsg()
-                console.log('触发发送')
+                console.log('2触发发送')
               }
               th.openState =0;
               th.oneState = 1;
@@ -164,7 +181,7 @@ export class Voc {
         this.timeOutObj = setTimeout(() => {
           if(th.result.overMsg){
             th.result.overMsg()
-            console.log('触发发送')
+            console.log('4触发发送')
           }
           th.openState =0;
           th.oneState = 1;

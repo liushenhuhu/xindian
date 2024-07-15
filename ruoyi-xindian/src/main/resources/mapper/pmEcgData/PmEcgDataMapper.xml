@@ -7,23 +7,30 @@
     <resultMap type="PmEcgData" id="PmEcgDataResult">
         <result property="pId" column="p_id"/>
         <result property="ecgAnalysisData" column="ecg_analysis_data"/>
-        <result property="hrMean"    column="hr_mean"    />
-        <result property="pAmplitude"    column="P_amplitude"    />
-        <result property="rAmplitude"    column="R_amplitude"    />
-        <result property="tAmplitude"    column="T_amplitude"    />
-        <result property="pTime"    column="P_time"    />
-        <result property="qrsInterval"    column="QRS_interval"    />
-        <result property="tTime"    column="T_time"    />
-        <result property="prInterval"    column="PR_interval"    />
-        <result property="qtInterval"    column="QT_interval"    />
-        <result property="qtc"    column="QTc"    />
-        <result property="sdnn"    column="SDNN"    />
-        <result property="rmssd"    column="RMSSD"    />
-        <result property="nni"    column="nni"    />
+        <result property="hrMean" column="hr_mean"/>
+        <result property="pAmplitude" column="P_amplitude"/>
+        <result property="rAmplitude" column="R_amplitude"/>
+        <result property="tAmplitude" column="T_amplitude"/>
+        <result property="pTime" column="P_time"/>
+        <result property="qrsInterval" column="QRS_interval"/>
+        <result property="tTime" column="T_time"/>
+        <result property="prInterval" column="PR_interval"/>
+        <result property="qtInterval" column="QT_interval"/>
+        <result property="qtc" column="QTc"/>
+        <result property="sdnn" column="SDNN"/>
+        <result property="rmssd" column="RMSSD"/>
+        <result property="nni" column="nni"/>
     </resultMap>
 
     <sql id="selectPmEcgDataVo">
-        select p_id, ecg_analysis_data
+        select p_id,
+               ecg_analysis_data,
+               hr_mean,
+               P_amplitude,
+               QRS_interval,
+               PR_interval,
+               QTc,
+               RMSSD
         from pm_ecg_data
     </sql>
 

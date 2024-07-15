@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.sign.mapper.SignConfigMapper">
+    
+    <resultMap type="SignConfig" id="SignConfigResult">
+        <result property="id"    column="id"    />
+        <result property="signDay"    column="sign_day"    />
+        <result property="sCategory"    column="s_category"    />
+        <result property="sNumber"    column="s_number"    />
+        <result property="sMark"    column="s_mark"    />
+        <result property="isSet"    column="is_set"    />
+    </resultMap>
+
+    <sql id="selectSignConfigVo">
+        select id, sign_day, s_category, s_number, s_mark, is_set from sign_config
+    </sql>
+
+    <select id="selectSignConfigList" parameterType="SignConfig" resultMap="SignConfigResult">
+        <include refid="selectSignConfigVo"/>
+        <where>  
+            <if test="signDay != null "> and sign_day = #{signDay}</if>
+            <if test="sCategory != null "> and s_category = #{sCategory}</if>
+            <if test="sNumber != null "> and s_number = #{sNumber}</if>
+            <if test="sMark != null  and sMark != ''"> and s_mark = #{sMark}</if>
+            <if test="isSet != null "> and is_set = #{isSet}</if>
+        </where>
+    </select>
+    
+    <select id="selectSignConfigById" parameterType="Long" resultMap="SignConfigResult">
+        <include refid="selectSignConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSignConfig" parameterType="SignConfig">
+        insert into sign_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="signDay != null">sign_day,</if>
+            <if test="sCategory != null">s_category,</if>
+            <if test="sNumber != null">s_number,</if>
+            <if test="sMark != null">s_mark,</if>
+            <if test="isSet != null">is_set,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="signDay != null">#{signDay},</if>
+            <if test="sCategory != null">#{sCategory},</if>
+            <if test="sNumber != null">#{sNumber},</if>
+            <if test="sMark != null">#{sMark},</if>
+            <if test="isSet != null">#{isSet},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSignConfig" parameterType="SignConfig">
+        update sign_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="signDay != null">sign_day = #{signDay},</if>
+            <if test="sCategory != null">s_category = #{sCategory},</if>
+            <if test="sNumber != null">s_number = #{sNumber},</if>
+            <if test="sMark != null">s_mark = #{sMark},</if>
+            <if test="isSet != null">is_set = #{isSet},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSignConfigById" parameterType="Long">
+        delete from sign_config where id = #{id}
+    </delete>
+
+    <delete id="deleteSignConfigByIds" parameterType="String">
+        delete from sign_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

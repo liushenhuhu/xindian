@@ -37,6 +37,9 @@ server:
       max: 800
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
+    #tomcat 指标需要开启
+    mbeanregistry:
+      enabled: true
 
 # 日志配置
 logging:
@@ -167,3 +170,33 @@ uploadImg:
 
 sx:
   url: https://pro3.mymagicangel.com
+
+
+#监控的端点
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'
+#  #应用程序名称，在prometheus 上会显示
+#  metrics:
+#    export:
+#      prometheus:
+#        enabled: true
+#    tags:
+#      application=${spring.application.name}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name} # 暴露的数据中添加application label
+
+
+

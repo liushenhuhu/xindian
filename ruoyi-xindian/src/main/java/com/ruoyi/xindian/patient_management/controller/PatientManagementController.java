@@ -1,9 +1,11 @@
 package com.ruoyi.xindian.patient_management.controller;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -36,21 +38,24 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient.service.SingleHistoryDataService;
 import com.ruoyi.xindian.patient_management.domain.*;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
+import com.ruoyi.xindian.patient_management.service.IWeeklyService;
 import com.ruoyi.xindian.patient_management.vo.Limit;
 import com.ruoyi.xindian.patient_management.vo.PatientManagementVO;
+import com.ruoyi.xindian.pmEcgData.domain.PmEcgData;
+import com.ruoyi.xindian.pmEcgData.service.IPmEcgDataService;
 import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.PhoneCheckUtils;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.verify.domain.SxReport;
 import com.ruoyi.xindian.verify.service.SxReportService;
-import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -58,14 +63,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * 患者管理Controller
@@ -81,6 +81,9 @@ public class PatientManagementController extends BaseController {
 
     @Autowired
     private IPatientService patientService;
+
+    @Autowired
+    private IWeeklyService weeklyService;
 
     @Autowired
     private IDoctorService doctorService;
@@ -110,6 +113,9 @@ public class PatientManagementController extends BaseController {
     @Resource
     private IMedicalHistoryService medicalHistoryService;
 
+    @Autowired
+    private IPmEcgDataService pmEcgDataService;
+
 
     @Resource
     private WXPublicRequest wxPublicRequest;
@@ -130,14 +136,14 @@ public class PatientManagementController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PatientManagement patientManagement,HttpServletRequest request ,Integer pageNum, Integer pageSize) throws Exception {
+    public TableDataInfo list(PatientManagement patientManagement, HttpServletRequest request, Integer pageNum, Integer pageSize) throws Exception {
 //        startPage();
 //        List<PatientManagement> list_add = new ArrayList<>();
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
 
-        if(patientManagement.getHospitalCode()!=null&&!"".equals(patientManagement.getHospitalCode())){
+        if (patientManagement.getHospitalCode() != null && !"".equals(patientManagement.getHospitalCode())) {
             patientManagement.getHospitalCodeList().add(patientManagement.getHospitalCode());
         }
 
@@ -152,21 +158,21 @@ public class PatientManagementController extends BaseController {
             AssociatedHospital associatedHospital = new AssociatedHospital();
             associatedHospital.setHospitalId(hospital.getHospitalId());
             List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                for (AssociatedHospital c:associatedHospitals){
+            if (associatedHospitals != null && associatedHospitals.size() > 0) {
+                for (AssociatedHospital c : associatedHospitals) {
                     Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                     patientManagement.getHospitalCodeList().add(hospital1.getHospitalCode());
                 }
             }
             String code = patientManagement.getHospitalCode();
-            if (code!=null&&!"".equals(code)){
+            if (code != null && !"".equals(code)) {
                 List<String> patientList = patientManagement.getHospitalCodeList();
-                if (patientList!=null&&patientList.size()>0){
-                    for (String c : patientList){
-                        if (c.equals(patientManagement.getHospitalCode())){
-                                patientManagement.getHospitalCodeList().clear();
-                                patientManagement.getHospitalCodeList().add(patientManagement.getHospitalCode());
-                                break;
+                if (patientList != null && patientList.size() > 0) {
+                    for (String c : patientList) {
+                        if (c.equals(patientManagement.getHospitalCode())) {
+                            patientManagement.getHospitalCodeList().clear();
+                            patientManagement.getHospitalCodeList().add(patientManagement.getHospitalCode());
+                            break;
                         }
                     }
                 }
@@ -182,31 +188,31 @@ public class PatientManagementController extends BaseController {
                 equipmentCodeList.add(equipment1.getEquipmentCode());
             }
             patientManagement.setEquipmentCodeList(equipmentCodeList);
-        } else if(sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 104) {
+        } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 104) {
             //医生
             String phonenumber = sysUser.getPhonenumber();
-            patientManagement.setDPhone(aesUtils.decrypt(phonenumber));
-            if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
+            patientManagement.setDoctorPhone(aesUtils.decrypt(phonenumber));
+            if (patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus() == 0)
                 patientManagement.setDiagnosisStatus(2L);
-        }else if(sysUser!= null && sysUser.getRoleId()!= null && sysUser.getRoleId() == 1104) {
+        } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 1104) {
             patientManagement.getHospitalCodeList().add(sysUser.getHospitalCode());
-        }else if(sysUser!= null && sysUser.getRoleId()!= null && sysUser.getRoleId() == 1105) {
+        } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 1105) {
             Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
-            if (hospital==null){
-              return  getTable(resList,0);
+            if (hospital == null) {
+                return getTable(resList, 0);
             }
             Doctor doctor = new Doctor();
             doctor.getHospitalNameList().add(hospital.getHospitalName());
             List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
-            if (doctors!=null&& !doctors.isEmpty()){
-                for (Doctor doctor1:doctors){
+            if (doctors != null && !doctors.isEmpty()) {
+                for (Doctor doctor1 : doctors) {
                     patientManagement.getBindingDoctors().add(doctor1.getDoctorPhone());
                 }
             }
-        }else if(sysUser!= null && sysUser.getRoleId()!= null && sysUser.getRoleId() == 1106) {
+        } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 1106) {
             Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
-            if (hospital==null){
-                return  getTable(resList,0);
+            if (hospital == null) {
+                return getTable(resList, 0);
             }
             patientManagement.getHospitalCodeList().add(hospital.getHospitalCode());
         }
@@ -218,88 +224,88 @@ public class PatientManagementController extends BaseController {
         } else if (patientManagement.getEcgType().equals("DECGsingle")) {
             list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("JECG12")) {
-            if (StringUtils.isNotEmpty(patientManagement.getIsSelect())&& patientManagement.getIsSelect().equals("1")&&SysUser.isAdmin(loginUser.getUserId())&&StringUtils.isNotEmpty(patientManagement.getPatientName())){
-                return  getRedisTable(patientManagement, resList, pageNum, pageSize);
-            }else {
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect()) && patientManagement.getIsSelect().equals("1") && SysUser.isAdmin(loginUser.getUserId()) && StringUtils.isNotEmpty(patientManagement.getPatientName())) {
+                return getRedisTable(patientManagement, resList, pageNum, pageSize);
+            } else {
                 list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
             }
 
-        }else if (patientManagement.getEcgType().equals("JECGsingle")) {
+        } else if (patientManagement.getEcgType().equals("JECGsingle")) {
 
-            if (StringUtils.isNotEmpty(patientManagement.getIsSelect())&& patientManagement.getIsSelect().equals("1")&&SysUser.isAdmin(loginUser.getUserId())&&StringUtils.isNotEmpty(patientManagement.getPatientName())){
-                return  getRedisTable(patientManagement, resList, pageNum, pageSize);
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect()) && patientManagement.getIsSelect().equals("1") && SysUser.isAdmin(loginUser.getUserId()) && StringUtils.isNotEmpty(patientManagement.getPatientName())) {
+                return getRedisTable(patientManagement, resList, pageNum, pageSize);
 
-            }else {
+            } else {
                 list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
             }
 
         } else if (patientManagement.getEcgType().equals("JECG4")) {
 
-            if (StringUtils.isNotEmpty(patientManagement.getIsSelect())&& patientManagement.getIsSelect().equals("1")&&SysUser.isAdmin(loginUser.getUserId())&&StringUtils.isNotEmpty(patientManagement.getPatientName())){
-                return  getRedisTable(patientManagement, resList, pageNum, pageSize);
-            }else {
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect()) && patientManagement.getIsSelect().equals("1") && SysUser.isAdmin(loginUser.getUserId()) && StringUtils.isNotEmpty(patientManagement.getPatientName())) {
+                return getRedisTable(patientManagement, resList, pageNum, pageSize);
+            } else {
                 list = patientManagementService.selectPatientManagementJECG4(patientManagement);
             }
 
-        }else if (patientManagement.getEcgType().equals("DECG12")) {
+        } else if (patientManagement.getEcgType().equals("DECG12")) {
             list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
         } else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
         }
-        return getTableDataInfo(list, resList,2);
+        return getTableDataInfo(list, resList, 2);
     }
 
 
-    private  TableDataInfo getRedisTable(PatientManagement patientManagement, ArrayList<PatientManagmentDept> resList, int pageNum, int pageSize) throws Exception {
-        if (StringUtils.isNotEmpty(patientManagement.getPatientName())){
+    private TableDataInfo getRedisTable(PatientManagement patientManagement, ArrayList<PatientManagmentDept> resList, int pageNum, int pageSize) throws Exception {
+        if (StringUtils.isNotEmpty(patientManagement.getPatientName())) {
             String patientName = aesUtils.decrypt(patientManagement.getPatientName());
             List<PatientManagement> list1 = new ArrayList<>();
             String ecgType = patientManagement.getEcgType();
             String diagnosisStatus = String.valueOf(patientManagement.getDiagnosisStatus());
-            if (Boolean.TRUE.equals(redisTemplate.hasKey("patientManagementByName"+ecgType+":" + patientName+"="+diagnosisStatus))){
-                List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("patientManagementByName" + ecgType + ":" + patientName + "=" + diagnosisStatus))) {
+                List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName" + ecgType + ":" + patientName + "=" + diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
                 resList = getEncryptManagement(listKeys);
-                return getTable(resList, redisTemplate.opsForList().size("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus));
+                return getTable(resList, redisTemplate.opsForList().size("patientManagementByName" + ecgType + ":" + patientName + "=" + diagnosisStatus));
             }
-            List<Object> patientList =  redisTemplate.opsForList().range("patientManagement"+ecgType, 0, -1);
+            List<Object> patientList = redisTemplate.opsForList().range("patientManagement" + ecgType, 0, -1);
             if (patientList != null) {
                 for (Object pat : patientList) {
-                    PatientManagement patientManagement1 = (PatientManagement)pat;
-                    if (patientManagement1==null||patientManagement1.getPatientName()==null||patientManagement1.getDiagnosisStatus()==null){
+                    PatientManagement patientManagement1 = (PatientManagement) pat;
+                    if (patientManagement1 == null || patientManagement1.getPatientName() == null || patientManagement1.getDiagnosisStatus() == null) {
                         continue;
                     }
-                    if(patientManagement1.getPatientName().contains(patientName)&&patientManagement1.getDiagnosisStatus().equals(patientManagement.getDiagnosisStatus())){
+                    if (patientManagement1.getPatientName().contains(patientName) && patientManagement1.getDiagnosisStatus().equals(patientManagement.getDiagnosisStatus())) {
                         list1.add(patientManagement1);
                     }
                 }
             }
             if (patientList != null && list1.size() == patientList.size()) {
-                List<Object> listKeys = redisTemplate.opsForList().range("patientManagement"+ecgType, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                List<Object> listKeys = redisTemplate.opsForList().range("patientManagement" + ecgType, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
                 resList = getEncryptManagement(listKeys);
-                return getTable(resList,patientList.size());
-            }else {
-                for (PatientManagement s : list1){
-                    redisTemplate.opsForList().rightPush("patientManagementByName"+ecgType+":"+patientName+"="+diagnosisStatus,s);
+                return getTable(resList, patientList.size());
+            } else {
+                for (PatientManagement s : list1) {
+                    redisTemplate.opsForList().rightPush("patientManagementByName" + ecgType + ":" + patientName + "=" + diagnosisStatus, s);
                 }
-                List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName"+ecgType+":"+patientName+"="+diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                List<Object> listKeys = redisTemplate.opsForList().range("patientManagementByName" + ecgType + ":" + patientName + "=" + diagnosisStatus, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
                 resList = getEncryptManagement(listKeys);
-                return getTable(resList, redisTemplate.opsForList().size("patientManagementByName"+ecgType+":"+ patientName+"="+diagnosisStatus));
+                return getTable(resList, redisTemplate.opsForList().size("patientManagementByName" + ecgType + ":" + patientName + "=" + diagnosisStatus));
             }
         }
-        return getTable(resList,0);
+        return getTable(resList, 0);
     }
 
 
     private ArrayList<PatientManagmentDept> getEncryptManagement(List<Object> list) throws Exception {
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
-        if (list==null|| list.isEmpty()){
+        if (list == null || list.isEmpty()) {
             return resList;
         }
-        for (Object pat : list){
+        for (Object pat : list) {
 
-            if (pat instanceof PatientManagement){
+            if (pat instanceof PatientManagement) {
 
-               PatientManagement patientManagement = (PatientManagement)pat;
+                PatientManagement patientManagement = (PatientManagement) pat;
                 PatientManagmentDept patientManagmentDept;
                 patientManagmentDept = new PatientManagmentDept();
                 BeanUtils.copyProperties(patientManagement, patientManagmentDept);
@@ -315,11 +321,11 @@ public class PatientManagementController extends BaseController {
         return resList;
     }
 
-    private TableDataInfo getTableDataInfo(List<PatientManagement> list, ArrayList<PatientManagmentDept> resList,Integer type) throws Exception {
+    private TableDataInfo getTableDataInfo(List<PatientManagement> list, ArrayList<PatientManagmentDept> resList, Integer type) throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         PatientManagmentDept patientManagmentDept;
         for (PatientManagement management : list) {
-            if(DateUtil.isValidDate(management.getBirthDay())){
+            if (DateUtil.isValidDate(management.getBirthDay())) {
                 try {
                     management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
                 } catch (ParseException e) {
@@ -327,27 +333,27 @@ public class PatientManagementController extends BaseController {
                 }
             }
 
-            if (management.getPatientPhone()!=null&& !management.getPatientPhone().isEmpty()){
+            if (management.getPatientPhone() != null && !management.getPatientPhone().isEmpty()) {
                 management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
             }
-            if (management.getPatientName()!=null&& !management.getPatientName().isEmpty()){
+            if (management.getPatientName() != null && !management.getPatientName().isEmpty()) {
                 management.setPatientName(aesUtils.decrypt(management.getPatientName()));
             }
-            if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
+            if (management.getDiagnosisDoctor() != null && !"".equals(management.getDiagnosisDoctor())) {
                 management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
             }
-            if (management.getFamilyPhone()!=null&&!"".equals(management.getFamilyPhone())){
+            if (management.getFamilyPhone() != null && !"".equals(management.getFamilyPhone())) {
                 management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
             }
-            if (StringUtils.isNotEmpty(management.getDoctorPhone())){
+            if (StringUtils.isNotEmpty(management.getDoctorPhone())) {
                 management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
             }
-            if (StringUtils.isNotEmpty(management.getDPhone())){
+            if (StringUtils.isNotEmpty(management.getDPhone())) {
                 management.setDPhone(aesUtils.decrypt(management.getDPhone()));
             }
-            if (type!=null&&type==1){
+            if (type != null && type == 1) {
                 MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(aesUtils.encrypt(management.getPatientPhone()));
-                if (medicalHistory!=null){
+                if (medicalHistory != null) {
                     management.setWeight(medicalHistory.getWeight());
                     management.setHeight(medicalHistory.getHeight());
                 }
@@ -356,24 +362,24 @@ public class PatientManagementController extends BaseController {
             try {
                 management.setSxStatus(0);
                 management.setSxPayStatus(0);
-                if (StringUtils.isNotEmpty(management.getEcgType())&&management.getEcgType().contains("DECG")){
+                if (StringUtils.isNotEmpty(management.getEcgType()) && management.getEcgType().contains("DECG")) {
                     SxReport sxReport = new SxReport();
                     sxReport.setPatientPhone(aesUtils.encrypt(management.getPatientPhone()));
                     String format = simpleDateFormat.format(management.getConnectionTime());
                     sxReport.setUploadStart(format);
                     List<SxReport> reportList = sxReportService.getReportList(sxReport);
-                    if (reportList!=null&& !reportList.isEmpty()){
-                       management.setSxStatus(1);
-                    }else {
+                    if (reportList != null && !reportList.isEmpty()) {
+                        management.setSxStatus(1);
+                    } else {
                         management.setSxStatus(0);
                     }
-                    if (management.getSxReportStatus()!=null&&management.getSxReportStatus()==1){
+                    if (management.getSxReportStatus() != null && management.getSxReportStatus() == 1) {
                         management.setSxPayStatus(1);
-                    }else {
+                    } else {
                         management.setSxPayStatus(0);
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 management.setSxPayStatus(0);
                 management.setSxPayStatus(0);
             }
@@ -393,22 +399,22 @@ public class PatientManagementController extends BaseController {
     }
 
     private void getEncryptManagement(PatientManagement patientManagement) throws Exception {
-        if (patientManagement.getDiagnosisDoctor()!=null&& !patientManagement.getDiagnosisDoctor().isEmpty()){
+        if (patientManagement.getDiagnosisDoctor() != null && !patientManagement.getDiagnosisDoctor().isEmpty()) {
             patientManagement.setDiagnosisDoctor(aesUtils.encrypt(patientManagement.getDiagnosisDoctor()));
         }
-        if (patientManagement.getDoctorPhone()!=null&& !patientManagement.getDoctorPhone().isEmpty()){
+        if (patientManagement.getDoctorPhone() != null && !patientManagement.getDoctorPhone().isEmpty()) {
             patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
         }
-        if (patientManagement.getPatientPhone()!=null){
+        if (patientManagement.getPatientPhone() != null) {
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }
-        if (patientManagement.getPatientName()!=null){
+        if (patientManagement.getPatientName() != null) {
             patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
         }
-        if (patientManagement.getPatPhone()!=null&& !patientManagement.getPatPhone().isEmpty()){
+        if (patientManagement.getPatPhone() != null && !patientManagement.getPatPhone().isEmpty()) {
             patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
         }
-        if (patientManagement.getDPhone()!=null&& !patientManagement.getDPhone().isEmpty()){
+        if (patientManagement.getDPhone() != null && !patientManagement.getDPhone().isEmpty()) {
             patientManagement.setDPhone(aesUtils.encrypt(patientManagement.getDPhone()));
         }
     }
@@ -419,17 +425,17 @@ public class PatientManagementController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:list')")
     @GetMapping("/listP")
-    public TableDataInfo listP(PatientManagement patientManagement,HttpServletRequest request) throws Exception {
+    public TableDataInfo listP(PatientManagement patientManagement, HttpServletRequest request) throws Exception {
 
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
-        if (patientManagement.getPatientPhone()!=null){
+        if (patientManagement.getPatientPhone() != null) {
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }
-        if (patientManagement.getPatientName()!=null){
+        if (patientManagement.getPatientName() != null) {
             patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
         }
-        if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
+        if (patientManagement.getPatPhone() != null && !"".equals(patientManagement.getPatPhone())) {
             patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
         }
         startPage();
@@ -439,83 +445,85 @@ public class PatientManagementController extends BaseController {
             list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("JECG12")) {
             list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
-        }else if (patientManagement.getEcgType().equals("JECGsingle")) {
+        } else if (patientManagement.getEcgType().equals("JECGsingle")) {
             list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
         } else if (patientManagement.getEcgType().equals("DECG12")) {
             list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
-        }else if (patientManagement.getEcgType().equals("JECGDUO")) {
+        } else if (patientManagement.getEcgType().equals("JECGDUO")) {
             list = patientManagementService.selectPatientManagementListJECGDUO(patientManagement);
-        }  else {
+        } else {
             list = patientManagementService.selectPatientManagementList(patientManagement);
         }
-        return getTableDataInfo(list, resList,1);
+        return getTableDataInfo(list, resList, 1);
     }
 
 
     /**
      * 社区版获取患者信息
+     *
      * @param patientManagement
      * @return
      * @throws Exception
      */
     @GetMapping("/getEquipmentCodeList")
-    public TableDataInfo getEquipmentCodeList(PatientManagement patientManagement, Integer pageSize,Integer pageNum) throws Exception {
+    public TableDataInfo getEquipmentCodeList(PatientManagement patientManagement, Integer pageSize, Integer pageNum) throws Exception {
 
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
-        if (patientManagement.getPatientPhone()!=null){
+        if (patientManagement.getPatientPhone() != null) {
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }
-        if (StringUtils.isNotEmpty(patientManagement.getDoctorPhone())){
+        if (StringUtils.isNotEmpty(patientManagement.getDoctorPhone())) {
             patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
         }
 //        startPage();
-        list = patientManagementService.selectPatientManagementSPList(patientManagement,pageSize,pageNum);
+        list = patientManagementService.selectPatientManagementSPList(patientManagement, pageSize, pageNum);
 
         PatientManagmentDept patientManagmentDept;
 
-        if (StringUtils.isNotEmpty(patientManagement.getPatientPhone())){
+        if (StringUtils.isNotEmpty(patientManagement.getPatientPhone())) {
             patientManagement.setPatientName(patientManagement.getPatientPhone());
             patientManagement.setPatientPhone(null);
-            if (list==null||list.size()==0){
+            if (list == null || list.size() == 0) {
                 startPage();
-                list = patientManagementService.selectPatientManagementSPList(patientManagement,pageSize,pageNum);
+                list = patientManagementService.selectPatientManagementSPList(patientManagement, pageSize, pageNum);
             }
         }
-        return getTableDataInfo(list, resList,1);
+        return getTableDataInfo(list, resList, 1);
     }
 
     /**
      * web端查询指定医生诊断的相关报告
+     *
      * @param patientManagement
      * @param request
      * @return
      * @throws Exception
      */
     @GetMapping("/listPatientTimeList")
-    public TableDataInfo listPatientTimeList(PatientManagement patientManagement,HttpServletRequest request) throws Exception {
+    public TableDataInfo listPatientTimeList(PatientManagement patientManagement, HttpServletRequest request) throws Exception {
 
-        if (patientManagement.getPatientPhone()!=null){
+        if (patientManagement.getPatientPhone() != null) {
             patientManagement.setPatientPhone(aesUtils.encrypt(patientManagement.getPatientPhone()));
         }
-        if (patientManagement.getPatientName()!=null){
+        if (patientManagement.getPatientName() != null) {
             patientManagement.setPatientName(aesUtils.encrypt(patientManagement.getPatientName()));
         }
-        if (patientManagement.getPatPhone()!=null&&!"".equals(patientManagement.getPatPhone())){
+        if (patientManagement.getPatPhone() != null && !"".equals(patientManagement.getPatPhone())) {
             patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
         }
-        if (StringUtils.isNotEmpty(patientManagement.getDoctorPhone())){
+        if (StringUtils.isNotEmpty(patientManagement.getDoctorPhone())) {
             patientManagement.setDoctorPhone(aesUtils.encrypt(patientManagement.getDoctorPhone()));
         }
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
         startPage();
-        List<PatientManagement> list  = patientManagementService.selectPatientManagementList12(patientManagement);
+        List<PatientManagement> list = patientManagementService.selectPatientManagementList12(patientManagement);
 
         PatientManagmentDept patientManagmentDept;
         Doctor doctor = new Doctor();
         Department department = new Department();
         for (PatientManagement management : list) {
-            if(DateUtil.isValidDate(management.getBirthDay())){
+            if (DateUtil.isValidDate(management.getBirthDay())) {
                 try {
                     management.setPatientAge(String.valueOf(DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(management.getBirthDay()))));
                 } catch (ParseException e) {
@@ -523,14 +531,14 @@ public class PatientManagementController extends BaseController {
                 }
             }
 
-            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+            if (management.getPatientPhone() != null && !"".equals(management.getPatientPhone())) {
                 management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
 
             }
-            if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
+            if (management.getPatientName() != null && !"".equals(management.getPatientName())) {
                 management.setPatientName(aesUtils.decrypt(management.getPatientName()));
             }
-            if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
+            if (management.getDiagnosisDoctor() != null && !"".equals(management.getDiagnosisDoctor())) {
                 management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
             }
 
@@ -557,7 +565,7 @@ public class PatientManagementController extends BaseController {
 
             BigDecimal bigDecimal = new BigDecimal(String.valueOf(Double.parseDouble(management.getAvgTime()) / 60));
             BigDecimal bigDecimal1 = bigDecimal.setScale(1, RoundingMode.UP);
-            patientManagmentDept.setAvgTime(bigDecimal1 +"分钟");
+            patientManagmentDept.setAvgTime(bigDecimal1 + "分钟");
             resList.add(patientManagmentDept);
         }
         long total = new PageInfo(list).getTotal();
@@ -588,16 +596,15 @@ public class PatientManagementController extends BaseController {
 //    }
 
     @GetMapping(value = "/sendMsg/{phone}")
-    public AjaxResult sendMsg(@PathVariable("phone") String phone,HttpServletRequest request)
-    {
+    public AjaxResult sendMsg(@PathVariable("phone") String phone, HttpServletRequest request) {
         LoginUser loginUser = tokenService.getLoginUser(request);
-        if (Boolean.TRUE.equals(redisTemplate.hasKey("userPhoneTimeOne:" + loginUser.getUser().getUserId()))){
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("userPhoneTimeOne:" + loginUser.getUser().getUserId()))) {
             return AjaxResult.error("请勿重复请求验证码");
         }
         if (!PhoneCheckUtils.isPhoneLegal(phone)) {
             return AjaxResult.error("手机号格式不对，请重新输入");
         }
-        redisTemplate.opsForValue().set("userPhoneTimeOne:" + loginUser.getUser().getUserId(),phone,50, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set("userPhoneTimeOne:" + loginUser.getUser().getUserId(), phone, 50, TimeUnit.SECONDS);
         WxUtil.sendAdvice(phone);
 //        System.out.println(phone);
         return AjaxResult.success();
@@ -610,13 +617,13 @@ public class PatientManagementController extends BaseController {
     @GetMapping(value = "/{pId}")
     public AjaxResult getInfo(@PathVariable("pId") String pId) throws Exception {
         PatientManagement management = patientManagementService.selectPatientManagementByPId(pId);
-        if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+        if (management.getPatientPhone() != null && !"".equals(management.getPatientPhone())) {
             management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
         }
-        if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
+        if (management.getPatientName() != null && !"".equals(management.getPatientName())) {
             management.setPatientName(aesUtils.decrypt(management.getPatientName()));
         }
-        if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
+        if (management.getDiagnosisDoctor() != null && !"".equals(management.getDiagnosisDoctor())) {
             management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
         }
         return AjaxResult.success(management);
@@ -629,13 +636,13 @@ public class PatientManagementController extends BaseController {
     @Log(title = "患者管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PatientManagement management) throws Exception {
-        if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+        if (management.getPatientPhone() != null && !"".equals(management.getPatientPhone())) {
             management.setPatientPhone(aesUtils.encrypt(management.getPatientPhone()));
         }
-        if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
+        if (management.getPatientName() != null && !"".equals(management.getPatientName())) {
             management.setPatientName(aesUtils.encrypt(management.getPatientName()));
         }
-        if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
+        if (management.getDiagnosisDoctor() != null && !"".equals(management.getDiagnosisDoctor())) {
             management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
         }
         return toAjax(patientManagementService.insertPatientManagement(management));
@@ -673,7 +680,7 @@ public class PatientManagementController extends BaseController {
 
         patientManagementService.updateStatusAll();
         patientService.updateMonitoringStatus();
-        if (pIds.length != 0&& !pIds[0].isEmpty()) {
+        if (pIds.length != 0 && !pIds[0].isEmpty()) {
             patientManagementService.updateStatus(pIds);
 
             for (String pId : pIds) {
@@ -690,16 +697,17 @@ public class PatientManagementController extends BaseController {
         }
         return "down";
     }
+
     /**
      * 获取用户信息
      */
     @GetMapping("/getUserInfo")
     public SysUser getUserInfo() throws Exception {
         SysUser sysUser = userService.selectUserById(getUserId());
-        if (sysUser.getUserName()!=null){
+        if (sysUser.getUserName() != null) {
             sysUser.setUserName(aesUtils.encrypt(sysUser.getUserName()));
         }
-        if (sysUser.getPhonenumber()!=null){
+        if (sysUser.getPhonenumber() != null) {
             sysUser.setPhonenumber(aesUtils.encrypt(sysUser.getPhonenumber()));
         }
 //        String hospitalName = sysUser.getHospitalName();
@@ -708,6 +716,7 @@ public class PatientManagementController extends BaseController {
 
     /**
      * 心电大屏数据查找医院
+     *
      * @param hospitalId
      * @param request
      * @return
@@ -717,18 +726,18 @@ public class PatientManagementController extends BaseController {
 
         LoginUser loginUser = tokenService.getLoginUser(request);
 
-            if (SecurityUtils.isAdmin(loginUser.getUser().getUserId())) {
-                if (hospitalId.equals(1L)){
-                    Hospital hospital = new Hospital();
-                    hospital.setHospitalName("所有");
-                    return AjaxResult.success(hospital);
-                }
-                Hospital hospital1 = hospitalService.selectHospitalByHospitalId(hospitalId);
-                return AjaxResult.success(hospital1);
-            }else {
-                Hospital hospital1 = hospitalService.selectId(loginUser.getUser().getUserId());
-                return AjaxResult.success(hospital1);
+        if (SecurityUtils.isAdmin(loginUser.getUser().getUserId())) {
+            if (hospitalId.equals(1L)) {
+                Hospital hospital = new Hospital();
+                hospital.setHospitalName("所有");
+                return AjaxResult.success(hospital);
             }
+            Hospital hospital1 = hospitalService.selectHospitalByHospitalId(hospitalId);
+            return AjaxResult.success(hospital1);
+        } else {
+            Hospital hospital1 = hospitalService.selectId(loginUser.getUser().getUserId());
+            return AjaxResult.success(hospital1);
+        }
 
     }
 
@@ -737,14 +746,14 @@ public class PatientManagementController extends BaseController {
         PatientManagement patientManagement = new PatientManagement();
         patientManagement.setPatientPhone(aesUtils.encrypt(patientPhone));
         List<PatientManagement> patientManagements = patientManagementService.selectListOrderByTime(patientManagement);
-        for (PatientManagement management :patientManagements){
-            if (management.getPatientPhone()!=null&&!"".equals(management.getPatientPhone())){
+        for (PatientManagement management : patientManagements) {
+            if (management.getPatientPhone() != null && !"".equals(management.getPatientPhone())) {
                 management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
             }
-            if (management.getPatientName()!=null&&!"".equals(management.getPatientName())){
+            if (management.getPatientName() != null && !"".equals(management.getPatientName())) {
                 management.setPatientName(aesUtils.decrypt(management.getPatientName()));
             }
-            if (management.getDiagnosisDoctor()!=null&&!"".equals(management.getDiagnosisDoctor())){
+            if (management.getDiagnosisDoctor() != null && !"".equals(management.getDiagnosisDoctor())) {
                 management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
             }
         }
@@ -775,7 +784,7 @@ public class PatientManagementController extends BaseController {
         //心动过速
         description.put("tachycardia", Details.tachycardia);
 
-        if (Info!=null&&Info.getPatientPhone()!=null&& !Info.getPatientPhone().isEmpty()){
+        if (Info != null && Info.getPatientPhone() != null && !Info.getPatientPhone().isEmpty()) {
             Info.setPatientPhone(aesUtils.encrypt(Info.getPatientPhone()));
         }
         if (Info != null && (Info.getPatientPhone() == null || Info.getPatientPhone().isEmpty())) {
@@ -795,13 +804,14 @@ public class PatientManagementController extends BaseController {
         }
         res.put("infoNumber", singleHistoryData);
         res.put("description", description);
-        res.put("patient",patient);
+        res.put("patient", patient);
         return AjaxResult.success(res);
     }
 
 
     /**
      * 患者统计对应日期的诊断次数
+     *
      * @param patientManagement
      * @return
      */
@@ -815,6 +825,7 @@ public class PatientManagementController extends BaseController {
 
     /**
      * 通过医院给医生分组
+     *
      * @return
      */
     @GetMapping("/listDoc")
@@ -823,26 +834,23 @@ public class PatientManagementController extends BaseController {
     }
 
 
-
-
     @GetMapping("/aesCopy")
     public AjaxResult aesCopy(Limit limit) throws Exception {
         patientManagementService.aesCopy(limit);
         return AjaxResult.success();
     }
+
     /**
-     *
      * 根据在线的设备号查询患者手机号、家人电话
-     *
      **/
     @GetMapping("/getPhone")
-    public AjaxResult getPhone(@RequestParam("deviceSn")String deviceSn) throws Exception {
-        PhoneList one=patientManagementService.selectpatientByEquipmentCode(deviceSn);
-        if(one==null){
+    public AjaxResult getPhone(@RequestParam("deviceSn") String deviceSn) throws Exception {
+        PhoneList one = patientManagementService.selectpatientByEquipmentCode(deviceSn);
+        if (one == null) {
             return AjaxResult.success();
         }
-        List<RolePhone> list=new ArrayList<>();
-        if(one.getPatientPhone()!=null&&!"".equals(one.getPatientPhone())){
+        List<RolePhone> list = new ArrayList<>();
+        if (one.getPatientPhone() != null && !"".equals(one.getPatientPhone())) {
             RolePhone a1 = new RolePhone("患者", aesUtils.decrypt(one.getPatientPhone()));
             list.add(a1);
         }
@@ -863,7 +871,7 @@ public class PatientManagementController extends BaseController {
 
 
     @GetMapping("/getEcgType")
-    public AjaxResult getEcgType(String ecgType){
+    public AjaxResult getEcgType(String ecgType) {
         return AjaxResult.success(patientManagementService.selectEcgType(ecgType));
     }
 
@@ -894,4 +902,25 @@ public class PatientManagementController extends BaseController {
         util.exportExcel(response, list, "患者管理数据");
     }
 
+    @GetMapping("/getWeekly")
+    public AjaxResult getWeekly(SingleHistoryData Info) throws Exception {
+        if (Info == null) {
+            return AjaxResult.error("参数不为能空！");
+        }
+        if (Info.getPatientPhone() != null && !Info.getPatientPhone().isEmpty()) {
+            Info.setPatientPhone(aesUtils.encrypt(Info.getPatientPhone()));
+        }
+        if (Info.getPatientPhone() == null || Info.getPatientPhone().isEmpty()) {
+            return AjaxResult.error("手机号不完整，请稍后在试");
+        }
+        String patientPhone = Info.getPatientPhone();
+        HashMap<String, Object> res = weeklyService.getWeeklyByPhone(patientPhone);
+
+        return AjaxResult.success(res);
+    }
+    @GetMapping("/refreshWeekly")
+    public AjaxResult getDTest(SingleHistoryData Info) throws Exception {
+        weeklyService.getWeekly(Info);
+        return AjaxResult.success();
+    }
 }

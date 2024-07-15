@@ -900,6 +900,17 @@
         WHERE patient_management.equipment_code = '2306EC10011928'
     </select>
 
+    <select id="getDetectinCountAll" resultType="java.lang.Long">
+        select count(*) from patient_management
+        where patient_phone_aes = #{patientPhone}
+    </select>
+
+    <select id="getDetectinCountToday" resultType="java.lang.Long">
+        select count(*) from patient_management
+        where patient_phone_aes = #{patientPhone}
+          and DATE(connection_time) = CURDATE()
+    </select>
+
 
     <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">
         insert into patient_management

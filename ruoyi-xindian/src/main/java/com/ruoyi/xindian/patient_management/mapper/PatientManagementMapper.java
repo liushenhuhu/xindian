@@ -139,4 +139,7 @@ public interface PatientManagementMapper
 
     List<PatientManagementVO> selectPatientManagementByCode(String equipmentCode);
 
+    Long getDetectinCountAll(String patientPhone);
+
+    Long getDetectinCountToday(String patientPhone);
 }
