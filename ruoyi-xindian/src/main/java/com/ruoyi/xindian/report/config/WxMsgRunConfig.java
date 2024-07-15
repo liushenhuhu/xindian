@@ -177,6 +177,12 @@ public class WxMsgRunConfig {
      * @param pId
      */
     public void redisDTTime(String pId) throws Exception {
+
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("reportOnce:" + pId))){
+            return;
+        }
+        redisTemplate.opsForValue().set("reportOnce:" + pId,pId,10, TimeUnit.MINUTES);
+
         Report report2 = reportService.selectReportByPId(pId);
         LocalTime now = LocalTime.now();
 

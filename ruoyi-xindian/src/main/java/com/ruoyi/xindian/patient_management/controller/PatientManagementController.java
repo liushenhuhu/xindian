@@ -185,7 +185,7 @@ public class PatientManagementController extends BaseController {
         } else if(sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 104) {
             //医生
             String phonenumber = sysUser.getPhonenumber();
-            patientManagement.setDoctorPhone(aesUtils.decrypt(phonenumber));
+            patientManagement.setDPhone(aesUtils.decrypt(phonenumber));
             if(patientManagement.getDiagnosisStatus() != null && patientManagement.getDiagnosisStatus()==0)
                 patientManagement.setDiagnosisStatus(2L);
         }else if(sysUser!= null && sysUser.getRoleId()!= null && sysUser.getRoleId() == 1104) {

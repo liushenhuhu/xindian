@@ -245,6 +245,14 @@
                 @keyup.enter.native="handleQuery"
               />
             </el-form-item>
+            <el-form-item label="医生诊断" prop="diagnosisConclusion">
+              <el-input
+                v-model="queryParams.diagnosisConclusion"
+                placeholder="请输入医生诊断关键词"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
             <el-form-item label="诊断状态" prop="diagnosisStatus">
               <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>
                 <el-option
@@ -255,14 +263,14 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="诊断结论" prop="diagnosisConclusion">
-              <el-input
-                v-model="queryParams.diagnosisConclusion"
-                placeholder="请输入诊断结论"
-                clearable
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+<!--            <el-form-item label="诊断结论" prop="diagnosisConclusion">-->
+<!--              <el-input-->
+<!--                v-model="queryParams.diagnosisConclusion"-->
+<!--                placeholder="请输入诊断结论"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--              />-->
+<!--            </el-form-item>-->
             <el-form-item label="诊断医生" prop="diagnosisDoctor">
               <el-input
                 v-model="queryParams.diagnosisDoctor"
@@ -390,7 +398,7 @@
                      size="mini"
                      :disabled="multiple"
                      @click="handleDelete"
-                     v-hasPermi="['patient_management:patient_management:export']"
+                     v-hasPermi="['jecg:report:del']"
           >删除</el-button>
           <el-button
             type="warning"
@@ -398,7 +406,7 @@
             icon="el-icon-download"
             size="mini"
             @click="handleExport"
-            v-hasPermi="['patient_management:patient_management:export']">导出</el-button>
+            v-hasPermi="['jecg:report:export']">导出</el-button>
           <el-button
             type="success"
             plain
@@ -450,6 +458,7 @@
                 </el-table-column>-->
           <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" width="200"
                            show-overflow-tooltip/>
+
           <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
           <el-table-column label="用户姓名" align="center" prop="patientName" min-width="100">
             <template slot-scope="scope">
@@ -508,6 +517,8 @@
           </el-table-column>
           <el-table-column label="诊断医生" align="center" width="100" prop="diagnosisDoctor">
           </el-table-column>
+          <el-table-column label="医生诊断" align="center"  prop="diagnosisConclusion" width="200"
+                           show-overflow-tooltip/>
           <el-table-column label="设备号" align="center" prop="equipmentCode" min-width="150"></el-table-column>
           <el-table-column label="用户电话" align="center" prop="patientPhone" min-width="150">
             <template slot-scope="scope">
@@ -543,7 +554,7 @@
                 type="text"
                 icon="el-icon-s-order"
                 @click="lookECG(scope.row)"
-                v-hasPermi="['patient:patient:alert']"
+                v-hasPermi="['jecg:report:look']"
               >查看报告
               </el-button>
               <el-popover placement="left" width="50" trigger="click" style="margin-left:8px">
@@ -553,7 +564,7 @@
                   type="text"
                   icon="el-icon-s-operation"
                   @click="selectECG(scope.row)"
-                  v-hasPermi="['patient_management:patient_management:diagnose']"
+                  v-hasPermi="['jecg:report:diagnose']"
                   v-if="scope.row.diagnosisStatus!=1"
                 >选择医生诊断
                 </el-button>
@@ -607,14 +618,13 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="handleDelete(scope.row)"
-                  v-hasPermi="['patient_management:patient_management:export']"
+                  v-hasPermi="['jecg:report:del']"
                 >删除
                 </el-button>
                 <el-button
                   slot="reference"
                   size="small"
-                  type="text"
-                  v-hasPermi="['patient_management:patient_management:inform']">
+                  type="text">
                   更多<i class="el-icon-arrow-down"/>
                 </el-button>
               </el-popover>

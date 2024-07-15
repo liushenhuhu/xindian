@@ -52,6 +52,14 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="医生诊断" prop="diagnosisConclusion">
+        <el-input
+          v-model="queryParams.diagnosisConclusion"
+          placeholder="请输入医生诊断关键词"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <!--      <el-form-item label="设备号" prop="equipmentCode">
               <el-input
                 v-model="queryParams.equipmentCode"
@@ -223,6 +231,8 @@
         </template>
       </el-table-column>
       <el-table-column label="诊断医生" align="center" prop="diagnosisDoctor"/>
+      <el-table-column label="医生诊断" align="center"  prop="diagnosisConclusion" width="200"
+                       show-overflow-tooltip/>
       <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -230,7 +240,7 @@
             type="text"
             icon="el-icon-s-order"
             @click="lookECG(scope.row)"
-            v-hasPermi="['patient:patient:alert']"
+            v-hasPermi="['jecg:report:look']"
           >查看报告
           </el-button>
           <el-popover placement="left" width="50" trigger="click" style="margin-left:8px">
@@ -240,9 +250,24 @@
               type="text"
               icon="el-icon-s-operation"
               @click="selectECG(scope.row)"
-              v-hasPermi="['patient_management:patient_management:diagnose']"
+              v-hasPermi="['jecg:report:diagnose']"
               v-if="scope.row.diagnosisStatus!=1"
             >选择医生诊断
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-star-off"
+              v-hasPermi="['jecg:report:find']"
+              @click="findJEcgReport(scope.row)"
+            >查看静态报告
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-s-order"
+              @click="lookHistoryData(scope.row)"
+            >查看历史数据
             </el-button>
             <el-button
               size="mini"
@@ -266,19 +291,26 @@
               @click="sendMsg(scope.row)"
             >发送短信
             </el-button>
+            <!--          <el-button-->
+            <!--            size="mini"-->
+            <!--            type="text"-->
+            <!--            icon="el-icon-edit"-->
+            <!--            @click="handleUpdate(scope.row)"-->
+            <!--            v-hasPermi="['patient_management:patient_management:export']"-->
+            <!--          >修改-->
+            <!--          </el-button>-->
             <el-button
               size="mini"
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['patient_management:patient_management:export']"
+              v-hasPermi="['jecg:report:del']"
             >删除
             </el-button>
             <el-button
               slot="reference"
               size="small"
-              type="text"
-              v-hasPermi="['patient_management:patient_management:inform']">
+              type="text">
               更多<i class="el-icon-arrow-down"/>
             </el-button>
           </el-popover>
