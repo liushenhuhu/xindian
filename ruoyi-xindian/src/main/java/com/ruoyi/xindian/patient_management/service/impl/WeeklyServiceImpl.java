@@ -102,20 +102,24 @@ public class WeeklyServiceImpl implements IWeeklyService {
         HashOperations<String, String, WeeklyCount> hash = redisTemplate.opsForHash();
 
         //thisweek换到lastweek
-        Boolean exists_thisWeek = redisTemplate.hasKey("thisWeek");
-        Boolean exists_lastWeek = redisTemplate.hasKey("lastWeek");
-        if (exists_thisWeek != null && exists_thisWeek) {
-            HashMap<String, WeeklyCount> thisweeklyCountHashMap = new HashMap<>();
-            Set<String> week = hash.keys("thisWeek");
-            for (String str : week) {
-                WeeklyCount thisWeek = hash.get("thisWeek", str);
-                thisweeklyCountHashMap.put(str, thisWeek);
-            }
-            if (exists_lastWeek != null && exists_lastWeek)
-                hash.entries("lastWeek").clear();
-            hash.putAll("lastWeek", thisweeklyCountHashMap);
-            hash.entries("thisWeek").clear();
-        }
+//        String lastWeekTime = info.getStartTime();
+//        lastWeekTime = DateUtil.subDay(lastWeekTime);
+        String thisWeekTime = info.getEndTime();
+
+//        Boolean exists_thisWeek = redisTemplate.hasKey("thisWeek");
+//        Boolean exists_lastWeek = redisTemplate.hasKey("lastWeek");
+//        if (exists_thisWeek != null && exists_thisWeek) {
+//            HashMap<String, WeeklyCount> thisweeklyCountHashMap = new HashMap<>();
+//            Set<String> week = hash.keys("thisWeek");
+//            for (String str : week) {
+//                WeeklyCount thisWeek = hash.get("thisWeek", str);
+//                thisweeklyCountHashMap.put(str, thisWeek);
+//            }
+//            if (exists_lastWeek != null && exists_lastWeek)
+//                hash.entries("lastWeek").clear();
+//            hash.putAll("lastWeek", thisweeklyCountHashMap);
+//            hash.entries("thisWeek").clear();
+//        }
         //0为正常，1为异常
         int flag = 1;
         //总数据概括
@@ -167,29 +171,38 @@ public class WeeklyServiceImpl implements IWeeklyService {
             double thisWeekHealthScore = 0;
             if (thisWeekCheckNumScore != 0)
                 thisWeekHealthScore = value.getNormalCount() * 1.0 / thisWeekCheckNumScore;
-            zSet.add("thisWeekCheckNum", key, thisWeekCheckNumScore);
-            zSet.add("thisWeekHealth", key, thisWeekHealthScore);
+            zSet.add("WeekCheckNum_" + thisWeekTime, key, thisWeekCheckNumScore);
+            zSet.add("thisWeekHealth_" + thisWeekTime, key, thisWeekHealthScore);
         });
-        hash.putAll("thisWeek", weeklyCountHashMap);
+        hash.putAll("week_" + thisWeekTime, weeklyCountHashMap);
     }
 
     @Override
-    public HashMap<String, Object> getWeeklyByPhone(String patientPhone) {
+    public HashMap<String, Object> getWeeklyByPhone(SingleHistoryData Info) {
+        String endTime = Info.getEndTime();
+        String lastSunday = DateUtil.getLastSunday(endTime);
+        String lastDoubleSunday = DateUtil.getLastSunday(lastSunday);
+        String patientPhone = Info.getPatientPhone();
+
+        System.out.println(lastSunday);
+        System.out.println(lastDoubleSunday);
+        System.out.println(patientPhone);
+
         HashMap<String, Object> res = new HashMap<>();
         ZSetOperations<String, Object> zSet = redisTemplate.opsForZSet();
         HashOperations<String, String, WeeklyCount> hash = redisTemplate.opsForHash();
-        WeeklyCount thisWeek = hash.get("thisWeek", patientPhone);
+        WeeklyCount thisWeek = hash.get("week_" + lastSunday, patientPhone);
         if (thisWeek == null) return res;
-        WeeklyCount lastWeek = hash.get("lastWeek", patientPhone);
-        Long allPerson = zSet.size("thisWeekCheckNum");
+        WeeklyCount lastWeek = hash.get("week_" + lastDoubleSunday, patientPhone);
+        Long allPerson = zSet.size("thisWeekCheckNum_" + lastSunday);
         //检测次数排名
         double rankCheckNum = 0.0;
         double rankHealth = 0.0;
-        Long thisWeekCheckNum = zSet.rank("thisWeekCheckNum", patientPhone);
+        Long thisWeekCheckNum = zSet.rank("thisWeekCheckNum_" + lastSunday, patientPhone);
         if (thisWeekCheckNum != null && allPerson != null && allPerson > 0)
             rankCheckNum = thisWeekCheckNum * 1.0 / allPerson;
         //健康排名
-        Long thisWeekHealth = zSet.rank("thisWeekHealth", patientPhone);
+        Long thisWeekHealth = zSet.rank("thisWeekHealth_" + lastSunday, patientPhone);
         if (thisWeekHealth != null && allPerson != null && allPerson > 0)
             rankHealth = thisWeekHealth * 1.0 / allPerson;
 
@@ -202,13 +215,6 @@ public class WeeklyServiceImpl implements IWeeklyService {
                 tb = (thisWeek.getSignalCount() - lastWeek.getSignalCount()) * 1.0 / lastWeek.getSignalCount();
         LinkedList<Double> weekTimeList = new LinkedList<>();
 
-        weekTimeList.add(thisWeek.getMonday().getCount() * 30 * 1.0 / 60);
-        weekTimeList.add(thisWeek.getTuesday().getCount() * 30 * 1.0 / 60);
-        weekTimeList.add(thisWeek.getWednesday().getCount() * 30 * 1.0 / 60);
-        weekTimeList.add(thisWeek.getThursday().getCount() * 30 * 1.0 / 60);
-        weekTimeList.add(thisWeek.getFriday().getCount() * 30 * 1.0 / 60);
-        weekTimeList.add(thisWeek.getSaturday().getCount() * 30 * 1.0 / 60);
-        weekTimeList.add(thisWeek.getSunday().getCount() * 30 * 1.0 / 60);
         if (thisWeek.getMonday() == null) thisWeek.setMonday(new ECGTendency());
         if (thisWeek.getTuesday() == null) thisWeek.setTuesday(new ECGTendency());
         if (thisWeek.getWednesday() == null) thisWeek.setWednesday(new ECGTendency());
@@ -216,6 +222,14 @@ public class WeeklyServiceImpl implements IWeeklyService {
         if (thisWeek.getFriday() == null) thisWeek.setFriday(new ECGTendency());
         if (thisWeek.getSaturday() == null) thisWeek.setSaturday(new ECGTendency());
         if (thisWeek.getSunday() == null) thisWeek.setSunday(new ECGTendency());
+
+        weekTimeList.add(thisWeek.getMonday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getTuesday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getWednesday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getThursday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getFriday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getSaturday().getCount() * 30 * 1.0 / 60);
+        weekTimeList.add(thisWeek.getSunday().getCount() * 30 * 1.0 / 60);
 
         thisWeek.setPatientPhone("");
         res.put("thisWeek", thisWeek);
@@ -327,6 +341,11 @@ public class WeeklyServiceImpl implements IWeeklyService {
                 weeklyCount.setSaturday(day);
         }
         return weeklyCount;
+    }
+
+    @Override
+    public HashMap<String, Object> getHistoryWeekly(SingleHistoryData info) {
+        return new HashMap<>();
     }
 
 }

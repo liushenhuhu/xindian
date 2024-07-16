@@ -1,6 +1,9 @@
 package com.ruoyi.xindian.util;
 
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -138,5 +141,25 @@ public class DateUtil {
             e.printStackTrace();
         }
         return dayOfWeek;
+    }
+
+    public static String subDay(String lastWeekTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // 将字符串解析为LocalDate对象
+        LocalDate date = LocalDate.parse(lastWeekTime, formatter);
+        // 减去一天
+        LocalDate newDate = date.minusDays(1);
+        // 将LocalDate对象转换回字符串
+        return newDate.format(formatter);
+    }
+
+    public static String getLastSunday(String day) {
+        DateTimeFormatter formatterString = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // 将字符串解析为LocalDate对象
+        LocalDate date = LocalDate.parse(day, formatterString);
+        LocalDate lastSunday = date.minusWeeks(1).with(DayOfWeek.SUNDAY);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return lastSunday.format(formatter);
+
     }
 }

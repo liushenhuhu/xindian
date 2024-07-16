@@ -913,11 +913,12 @@ public class PatientManagementController extends BaseController {
         if (Info.getPatientPhone() == null || Info.getPatientPhone().isEmpty()) {
             return AjaxResult.error("手机号不完整，请稍后在试");
         }
-        String patientPhone = Info.getPatientPhone();
-        HashMap<String, Object> res = weeklyService.getWeeklyByPhone(patientPhone);
+//        String patientPhone = Info.getPatientPhone();
+        HashMap<String, Object> res = weeklyService.getWeeklyByPhone(Info);
 
         return AjaxResult.success(res);
     }
+
     @GetMapping("/refreshWeekly")
     public AjaxResult getDTest(SingleHistoryData Info) throws Exception {
         weeklyService.getWeekly(Info);
