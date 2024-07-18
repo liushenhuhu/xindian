@@ -309,7 +309,7 @@ public class JECGReportController {
             weekPdfDataList.add(weekPdfData);
         }
         String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + ".pdf";
-        write_dir = "E:/test.pdf";
+//        write_dir = "E:/test.pdf";
         pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight);
 //            HttpHeaders headers = new HttpHeaders();
 //            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=generated.pdf");
