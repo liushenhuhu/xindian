@@ -55,14 +55,14 @@ public class PdfGenerator {
         table_info.setWidth(UnitValue.createPercentValue(100));
         contextCell(table_info, "姓名：" + patientName, font, 1, 0, 1, 0);
         contextCell(table_info, "性别：" + gender, font, 1, 0, 0, 0);
-        contextCell(table_info, "年龄：" + patientAge, font, 1, 0, 0, 1);
-        contextCell(table_info, "身高：" + height, font, 0, 1, 1, 0);
-        contextCell(table_info, "体重：" + weight, font, 0, 1, 0, 0);
+        contextCell(table_info, "年龄：" + patientAge + " 岁", font, 1, 0, 0, 1);
+        contextCell(table_info, "身高：" + height + " cm", font, 0, 1, 1, 0);
+        contextCell(table_info, "体重：" + weight + " kg", font, 0, 1, 0, 0);
         contextCell(table_info, "", font, 0, 1, 0, 1);
 
         //结论
         // 获取当前日期
-        LocalDateTime currentDate = LocalDate.now().atStartOfDay();
+        LocalDateTime currentDate = LocalDateTime.now();
         // 定义日期格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         // 将当前日期格式化为字符串
@@ -173,21 +173,26 @@ public class PdfGenerator {
             div1.add(table1);
             // 将Div添加到文档中
             doc.add(div1);
-            drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 400, 525, 210);
-            if (len > 0)
+            drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 450, 525, 136.5f);
+            if (len >= 1)
+                drawWeekEcg30(doc, font, weekPdfData.get(1), 35, 250, 525, 136.5f);
+            if (len > 1)
                 doc.add(new AreaBreak());
             Div div;
-            for (int i = 1; i < len; i += 1) {
+            for (int i = 2; i < len; i += 1) {
                 // 使用Div容器来居中表格
                 div = new Div();
                 div.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
                 div.add(table_info);
                 // 将Div添加到文档中
                 doc.add(div);
-                drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 700, 525, 210);
+                drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 670, 525, 136.5f);
                 i += 1;
                 if (i < len)
-                    drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 400, 525, 210);
+                    drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 465, 525, 136.5f);
+                i += 1;
+                if (i < len)
+                    drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 260, 525, 136.5f);
                 if (i < len - 1)
                     doc.add(new AreaBreak());
             }
@@ -211,11 +216,11 @@ public class PdfGenerator {
                 .endText();
         pdfCanvas.beginText()
                 .moveText(x, y - lo)
-                .showText("心率(bpm)：" + (weekPdfData.getHr() == null ? "-" : weekPdfData.getHr()))
+                .showText("心率(bpm)：" + (weekPdfData.getHr() == null || Objects.equals(weekPdfData.getHr(), "nan") ? "-" : weekPdfData.getHr()))
                 .endText();
         pdfCanvas.beginText()
                 .moveText(x + co, y - lo)
-                .showText("P波(ms)：" + (weekPdfData.getP() == null ? "-" : weekPdfData.getP()))
+                .showText("P波(ms)：" + (weekPdfData.getP() == null || Objects.equals(weekPdfData.getP(), "nan") ? "-" : weekPdfData.getP()))
                 .endText();
 //        pdfCanvas.beginText()
 //                .moveText(x + 2 * co, y - lo)
@@ -223,15 +228,15 @@ public class PdfGenerator {
 //                .endText();
         pdfCanvas.beginText()
                 .moveText(x + 2 * (co + 5), y - lo)
-                .showText("QRS波群(ms)：" + (weekPdfData.getQrs() == null ? "-" : weekPdfData.getQrs()))
+                .showText("QRS波群(ms)：" + (weekPdfData.getQrs() == null || Objects.equals(weekPdfData.getQrs(), "nan") ? "-" : weekPdfData.getQrs()))
                 .endText();
         pdfCanvas.beginText()
                 .moveText(x + 3 * (co + 10), y - lo)
-                .showText("QTc(ms)：" + (weekPdfData.getQtc() == null ? "-" : weekPdfData.getQtc()))
+                .showText("QTc(ms)：" + (weekPdfData.getQtc() == null || Objects.equals(weekPdfData.getQtc(), "nan") ? "-" : weekPdfData.getQtc()))
                 .endText();
         pdfCanvas.beginText()
                 .moveText(x + 4 * (co + 10), y - lo)
-                .showText("HRV(ms)：" + (weekPdfData.getHrv() == null ? "-" : weekPdfData.getHrv()))
+                .showText("HRV(ms)：" + (weekPdfData.getHrv() == null || Objects.equals(weekPdfData.getHrv(), "nan") ? "-" : weekPdfData.getHrv()))
                 .endText();
         pdfCanvas.stroke();
         // 设置绘图区域
@@ -278,7 +283,7 @@ public class PdfGenerator {
         pdfCanvas.setFillColor(ColorConstants.BLACK);
         double dx, dy;
         dx = x;
-        dy = y - height + 16 * pigK;
+        dy = y - 4 * pigK;
         pdfCanvas.moveTo(dx, dy);
         int flag = 0;
         int sampleRate = 250;
@@ -287,14 +292,14 @@ public class PdfGenerator {
             flag++;
             if (flag >= ecgData.length / 3) break;
         }
-        dy = y - height + 10 * pigK;
+        dy = y - 7 * pigK;
         pdfCanvas.moveTo(dx, dy);
         for (double i = x; i < x + width; i += 5 * pigK / sampleRate) {
             pdfCanvas.lineTo(i, dy + ecgData[flag] * 2 * pigK);
             flag++;
             if (flag >= ecgData.length / 3 * 2) break;
         }
-        dy = y - height + 4 * pigK;
+        dy = y - 10 * pigK;
         pdfCanvas.moveTo(dx, dy);
         for (double i = x; i < x + width; i += 5 * pigK / sampleRate) {
             pdfCanvas.lineTo(i, dy + ecgData[flag] * 2 * pigK);
