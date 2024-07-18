@@ -19,6 +19,7 @@ import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
 import com.ruoyi.xindian.pdf.domain.ReportData;
 import com.ruoyi.xindian.pdf.domain.WeekPdfData;
+import com.ruoyi.xindian.util.DateUtil;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.imageio.ImageIO;
@@ -26,20 +27,23 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
 public class PdfGenerator {
 
 
-    public byte[] createWeekPdf(String fileName, LinkedList<WeekPdfData> weekPdfData, String patientName, String gender, String patientAge, String height, String weight) throws IOException {
+    public void createWeekPdf(String fileName, LinkedList<WeekPdfData> weekPdfData, String patientName, String gender, String patientAge, String height, String weight) throws IOException {
         String title = "心电报告";
-//        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
-//        Document doc = new Document(pdfDoc, PageSize.A4);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PdfWriter writer = new PdfWriter(baos);
-        PdfDocument pdfDoc = new PdfDocument(writer);
+        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        PdfWriter writer = new PdfWriter(baos);
+//        PdfDocument pdfDoc = new PdfDocument(writer);
+//        Document doc = new Document(pdfDoc, PageSize.A4);
 
         // 设置字体  simhei.ttf黑体  SimSun宋体
 //        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
@@ -55,7 +59,104 @@ public class PdfGenerator {
         contextCell(table_info, "身高：" + height, font, 0, 1, 1, 0);
         contextCell(table_info, "体重：" + weight, font, 0, 1, 0, 0);
         contextCell(table_info, "", font, 0, 1, 0, 1);
-        if (weekPdfData == null || weekPdfData.isEmpty()) {
+
+        //结论
+        // 获取当前日期
+        LocalDateTime currentDate = LocalDate.now().atStartOfDay();
+        // 定义日期格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // 将当前日期格式化为字符串
+        String nowTime = currentDate.format(formatter);
+        //
+        int sum = 0;
+        double sumHr = 0;
+
+        int sumHrv = 0;
+        double sumHrvs = 0;
+
+        int len = weekPdfData.size();
+        double meanHr = 0;
+        double maxHr = 0;
+        String maxTime = "-";
+        String minTime = "-";
+        double minHr = 1000;
+        int fz = 0;
+        int sz = 0;
+        int fc = 0;
+        int rr = 0;
+        double meanHrv = 0;
+
+        for (WeekPdfData weekPdfDatum : weekPdfData) {
+            double hrDouble = 0;
+            double Hrvs = 0;
+            String hr = weekPdfDatum.getHr();
+            try {
+                hrDouble = Double.parseDouble(hr);
+                sumHr += hrDouble;
+                sum++;
+            } catch (NumberFormatException ignored) {
+            }
+
+            String hrvs = weekPdfDatum.getHrv();
+            try {
+                Hrvs = Double.parseDouble(hrvs);
+                sumHrvs += Hrvs;
+                sumHrv++;
+            } catch (NumberFormatException ignored) {
+            }
+
+            if (hrDouble > maxHr) {
+                maxHr = hrDouble;
+                maxTime = weekPdfDatum.getDetectionTime();
+            }
+            if (hrDouble < minHr) {
+                minHr = hrDouble;
+                minTime = weekPdfDatum.getDetectionTime();
+            }
+            //房早
+            if (weekPdfDatum.getAiConclusion().contains("房性早搏")) {
+                fz++;
+            }
+            //室早
+            if (weekPdfDatum.getAiConclusion().contains("室性早搏")) {
+                sz++;
+            }
+            //房颤
+            if (weekPdfDatum.getAiConclusion().contains("心房颤动")) {
+                fc++;
+            }
+            //长rr
+            if (weekPdfDatum.getAiConclusion().contains("长RR间期")) {
+                rr++;
+            }
+        }
+        if (sum != 0)
+            meanHr = sumHr / sum;
+        if (sumHrv != 0)
+            meanHrv = sumHrvs / sumHrv;
+
+        String conclusion = "一、本周总共测量" + len + "次，平均心率" + String.format("%.2f", meanHr) + "bpm，" +
+                "最快心率" + maxHr + "bpm（发生于" + maxTime + "），" +
+                "最慢心率" + minHr + "bpm（发生于" + minTime + "），" +
+                "房性早搏" + fz + "次，室性早搏" + sz + "次，房颤" + fc +
+                "次，长RR间期" + rr + "次，心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms。\n\n" +
+                "二、诊断结论\n" +
+                "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.";
+
+        Table table1 = new Table(6);
+        table1.setWidth(UnitValue.createPercentValue(100));
+        Cell con = new Cell(1, 6).add(new Paragraph("结论").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(16));
+        table1.addCell(con);
+        Cell text = new Cell(4, 6).add(
+                new Paragraph(conclusion).setPaddingLeft(10).setHeight(180).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        table1.addCell(text);
+        Cell name = new Cell(1, 3).add(new Paragraph("医生姓名：").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(8));
+        name.setBorderRight(Border.NO_BORDER);
+        table1.addCell(name);
+        Cell time = new Cell(1, 3).add(new Paragraph("日期：" + nowTime).setPaddingRight(5).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(8));
+        time.setBorderLeft(Border.NO_BORDER);
+        table1.addCell(time);
+        if (weekPdfData.isEmpty()) {
             PdfCanvas pdfCanvas = new PdfCanvas(doc.getPdfDocument().getLastPage());
             pdfCanvas.setFontAndSize(font, 20);
             pdfCanvas.setFillColor(ColorConstants.RED);
@@ -64,9 +165,19 @@ public class PdfGenerator {
                     .showText("最近7天未做检测！")
                     .endText();
         } else {
-            int len = weekPdfData.size();
+            // 使用Div容器来居中表格
+            Div div1 = new Div();
+            div1.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
+            div1.add(table_info);
+            div1.add(new Paragraph().setMarginBottom(5));
+            div1.add(table1);
+            // 将Div添加到文档中
+            doc.add(div1);
+            drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 400, 525, 210);
+            if (len > 0)
+                doc.add(new AreaBreak());
             Div div;
-            for (int i = 0; i < len; i += 1) {
+            for (int i = 1; i < len; i += 1) {
                 // 使用Div容器来居中表格
                 div = new Div();
                 div.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
@@ -82,7 +193,7 @@ public class PdfGenerator {
             }
         }
         doc.close();
-        return baos.toByteArray();
+//        return baos.toByteArray();
     }
 
     private void drawWeekEcg30(Document doc, PdfFont font, WeekPdfData weekPdfData, float x, float y, float width, float height) {
@@ -106,20 +217,20 @@ public class PdfGenerator {
                 .moveText(x + co, y - lo)
                 .showText("P波(ms)：" + (weekPdfData.getP() == null ? "-" : weekPdfData.getP()))
                 .endText();
+//        pdfCanvas.beginText()
+//                .moveText(x + 2 * co, y - lo)
+//                .showText("RR间期(ms)：" + (weekPdfData.getRr() == null ? "-" : weekPdfData.getRr()))
+//                .endText();
         pdfCanvas.beginText()
-                .moveText(x + 2 * co, y - lo)
-                .showText("RR间期(ms)：" + (weekPdfData.getRr() == null ? "-" : weekPdfData.getRr()))
-                .endText();
-        pdfCanvas.beginText()
-                .moveText(x + 3 * (co + 5), y - lo)
+                .moveText(x + 2 * (co + 5), y - lo)
                 .showText("QRS波群(ms)：" + (weekPdfData.getQrs() == null ? "-" : weekPdfData.getQrs()))
                 .endText();
         pdfCanvas.beginText()
-                .moveText(x + 4 * (co + 10), y - lo)
+                .moveText(x + 3 * (co + 10), y - lo)
                 .showText("QTc(ms)：" + (weekPdfData.getQtc() == null ? "-" : weekPdfData.getQtc()))
                 .endText();
         pdfCanvas.beginText()
-                .moveText(x + 5 * (co + 10), y - lo)
+                .moveText(x + 4 * (co + 10), y - lo)
                 .showText("HRV(ms)：" + (weekPdfData.getHrv() == null ? "-" : weekPdfData.getHrv()))
                 .endText();
         pdfCanvas.stroke();

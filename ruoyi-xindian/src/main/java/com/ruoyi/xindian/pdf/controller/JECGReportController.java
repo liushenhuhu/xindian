@@ -26,6 +26,9 @@ import com.spire.pdf.PdfPageBase;
 import com.spire.pdf.graphics.PdfBlendMode;
 import com.spire.pdf.graphics.PdfTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -40,6 +43,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -79,6 +83,9 @@ public class JECGReportController {
 
     @Resource
     private IPmEcgDataService pmEcgDataService;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @PostMapping("/getPdf")
     public AjaxResult getPdf(@RequestBody PatientManagement patientManagement, HttpServletResponse response) throws Exception {
@@ -241,9 +248,9 @@ public class JECGReportController {
     }
 
     @GetMapping("/creatWeekPdf")
-    public ResponseEntity<byte[]> creatWeekPdf(PatientManagement patientManagement) throws Exception {
-        try {
-            PdfGenerator pdfGenerator = new PdfGenerator();
+    public AjaxResult creatWeekPdf(PatientManagement patientManagement) throws Exception {
+//        try {
+        PdfGenerator pdfGenerator = new PdfGenerator();
 //        if (patientManagement == null) {
 //            return AjaxResult.error("参数不为能空！");
 //        }
@@ -253,63 +260,83 @@ public class JECGReportController {
 //        if (patientManagement.getPatientPhone() == null || patientManagement.getPatientPhone().isEmpty()) {
 //            return AjaxResult.error("手机号不完整，请稍后在试");
 //        }
-            String patientPhone = aesUtils.encrypt(patientManagement.getPatientPhone());
-            MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientPhone);
-            Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
+        String patientPhone = aesUtils.encrypt(patientManagement.getPatientPhone());
+        MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientPhone);
+        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
 //        if (patient == null || medicalHistory == null) return AjaxResult.error("当前用户信息存在问题，请联系管理员。");
-            String height = String.valueOf(medicalHistory.getHeight());
-            String weight = String.valueOf(medicalHistory.getWeight());
-            Date birthDay = patient.getBirthDay();
-            String patientAge = String.valueOf(DateUtil.getAge(birthDay));
-            String patientName = aesUtils.decrypt(patient.getPatientName());
-            String gender = patient.getPatientSex();
+        String height = String.valueOf(medicalHistory.getHeight());
+        String weight = String.valueOf(medicalHistory.getWeight());
+        Date birthDay = patient.getBirthDay();
+        String patientAge = String.valueOf(DateUtil.getAge(birthDay));
+        String patientName = aesUtils.decrypt(patient.getPatientName());
+        String gender = patient.getPatientSex();
 
-            Report report = new Report();
-            report.setPPhone(patientPhone);
-            LocalDate now = LocalDate.now();
-            LocalDate now_7 = now.minusDays(6);
-            // 格式化日期输出
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String today = now.format(formatter);
-            String startDay = now_7.format(formatter);
-            report.setStartReportTime(startDay);
-            report.setEndReportTime(today);
-            report.setReportType("JECGsingleWL");
-            List<Report> reports = reportService.selectReportList(report);
+        Report report = new Report();
+        report.setPPhone(patientPhone);
+        LocalDate now = LocalDate.now();
+        LocalDate now_7 = now.minusDays(6);
+        // 格式化日期输出
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String today = now.format(formatter);
+        String startDay = now_7.format(formatter);
+        report.setStartReportTime(startDay);
+        report.setEndReportTime(today);
+        report.setReportType("JECGsingleWL");
+        List<Report> reports = reportService.selectReportList(report);
 //            List<String> pidList = reports.stream().map(Report::getpId).collect(Collectors.toList());
 
-            PmEcgData pmEcgData;
-            WeekPdfData weekPdfData;
-            float[] floats;
-            LinkedList<WeekPdfData> weekPdfDataList = new LinkedList<>();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            for (Report rp : reports) {
-                JECGSingnalData jecgSingnalData = pdfDataService.getJECGSingnalByPid(rp.getpId());
-                floats = btyeToFloatList(jecgSingnalData.getEcgData());
-                pmEcgData = pmEcgDataService.selectPmEcgDataByPId(rp.getpId());
-                weekPdfData = new WeekPdfData();
-                weekPdfData.setAiConclusion(rp.getIntelligentDiagnosis());
-                weekPdfData.setHr(pmEcgData.getHrMean());
-                weekPdfData.setP(pmEcgData.getpAmplitude());
-                weekPdfData.setQtc(pmEcgData.getQtc());
-                weekPdfData.setRr(pmEcgData.getrAmplitude());
-                weekPdfData.setHrv(pmEcgData.getRmssd());
-                weekPdfData.setQrs(pmEcgData.getQrsInterval());
-                weekPdfData.setEcgData(floats);
-                weekPdfData.setDetectionTime(sdf.format(rp.getReportTime()));
-                weekPdfDataList.add(weekPdfData);
-            }
-
-            byte[] weekPdf = pdfGenerator.createWeekPdf("E:\\test.pdf", weekPdfDataList, patientName, gender, patientAge, height, weight);
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=generated.pdf");
-            headers.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
-            System.out.println("ok");
-            return new ResponseEntity<>(weekPdf, headers, HttpStatus.OK);
-        } catch (IOException e) {
-            System.out.println(e.toString());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        PmEcgData pmEcgData;
+        WeekPdfData weekPdfData;
+        float[] floats;
+        LinkedList<WeekPdfData> weekPdfDataList = new LinkedList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (Report rp : reports) {
+            JECGSingnalData jecgSingnalData = pdfDataService.getJECGSingnalByPid(rp.getpId());
+            floats = btyeToFloatList(jecgSingnalData.getEcgData());
+            pmEcgData = pmEcgDataService.selectPmEcgDataByPId(rp.getpId());
+            weekPdfData = new WeekPdfData();
+            weekPdfData.setAiConclusion(rp.getIntelligentDiagnosis());
+            weekPdfData.setHr(pmEcgData.getHrMean());
+            weekPdfData.setP(pmEcgData.getpAmplitude());
+            weekPdfData.setQtc(pmEcgData.getQtc());
+            weekPdfData.setRr(pmEcgData.getrAmplitude());
+            weekPdfData.setHrv(pmEcgData.getRmssd());
+            weekPdfData.setQrs(pmEcgData.getQrsInterval());
+            weekPdfData.setEcgData(floats);
+            weekPdfData.setDetectionTime(sdf.format(rp.getReportTime()));
+            weekPdfDataList.add(weekPdfData);
         }
+        String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + ".pdf";
+//        write_dir = "E:/test.pdf";
+        pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight);
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=generated.pdf");
+//            headers.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
+//            System.out.println("ok");
+//            return new ResponseEntity<>(weekPdf, headers, HttpStatus.OK);
+//        } catch (IOException e) {
+//            System.out.println(e.toString());
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//        ValueOperations<String, Object> phone = redisTemplate.opsForValue();
+////        phone.set("weekpdf_" + patientManagement.getPatientPhone(), "1");
+        HashOperations<String, String, Object> phone = redisTemplate.opsForHash();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("week_pdf")))
+            phone.put("week_pdf", patientManagement.getPatientPhone(), "1");
+        else {
+            System.out.println(DateUtil.getToday());
+            phone.put("week_pdf", patientManagement.getPatientPhone(), "1");
+            redisTemplate.expire("week_pdf", Duration.ofSeconds(DateUtil.getToday()));
+        }
+        return AjaxResult.success();
+    }
+
+    @GetMapping("/getPdfStatus")
+    public AjaxResult getPdfStatus(PatientManagement patientManagement) {
+        Boolean week_pdf = redisTemplate.opsForHash().hasKey("week_pdf", patientManagement.getPatientPhone());
+//        return AjaxResult.success(redisTemplate.hasKey("weekpdf_" + patientManagement.getPatientPhone()));
+        return AjaxResult.success(week_pdf);
+
     }
 
     private float[] btyeToFloatList(byte[] ecgData) {

@@ -3,7 +3,9 @@ package com.ruoyi.xindian.util;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -160,6 +162,22 @@ public class DateUtil {
         LocalDate lastSunday = date.minusWeeks(1).with(DayOfWeek.SUNDAY);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return lastSunday.format(formatter);
-
     }
+
+    /**
+     * 获取今天剩余时间
+     * @param
+     * @return
+     */
+    public static Long getToday() {
+        // 获取当前时间（包含时区）
+        ZonedDateTime now = ZonedDateTime.now();
+        // 计算今天的午夜（开始时间）
+        ZonedDateTime todayStart = now.truncatedTo(ChronoUnit.DAYS);
+        // 计算今天的结束时间（午夜23:59:59.999999999）
+        ZonedDateTime todayEnd = todayStart.plusDays(1).minusNanos(1);
+        // 计算时间差
+        return ChronoUnit.SECONDS.between(now, todayEnd);
+    }
+
 }
