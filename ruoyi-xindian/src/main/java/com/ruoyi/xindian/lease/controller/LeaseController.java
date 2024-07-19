@@ -38,7 +38,7 @@ public class LeaseController extends BaseController
     /**
      * 查询租赁列表
      */
-    @PreAuthorize("@ss.hasPermi('lease:lease:list')")
+//    @PreAuthorize("@ss.hasPermi('lease:lease:list')")
     @GetMapping("/list")
     public TableDataInfo list(Lease lease)
     {
