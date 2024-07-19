@@ -81,6 +81,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
         lock.lock();
         try {
             String expiredKey = message.toString();
+            System.out.println("key失效：" + expiredKey);
             String[] split = expiredKey.split(":");
             String[] split1 = expiredKey.split("!");
             if (split[0].equals("order")){

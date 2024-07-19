@@ -164,41 +164,30 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
             Product product = productMapper.selectById(c.getProductId());
             log.info("更新订单状态 ===> {}", orderStatus.getType());
+
             QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("order_no", orderNo);
+
+            OrderInfo orderInfo = new OrderInfo();
+
+            orderInfo.setOrderStatus(OrderStatus.SERVE_ORDER.getType());
+
+            orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
+            baseMapper.update(orderInfo, queryWrapper);
             if (product.getType().equals("服务")||product.getType().equals("卡片")){
 
-                queryWrapper.eq("order_no", orderNo);
 
-                OrderInfo orderInfo = new OrderInfo();
-
-                orderInfo.setOrderStatus(OrderStatus.SERVE_ORDER.getType());
-
-                orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
-                baseMapper.update(orderInfo, queryWrapper);
 
                 vipPatient(product,orderByOrderNo.getUserId(),c);
 
             }else if (product.getType().equals("报告服务")){
-                queryWrapper.eq("order_no", orderNo);
-
-                OrderInfo orderInfo = new OrderInfo();
-
-                orderInfo.setOrderStatus(OrderStatus.REPORT_ORDER.getType());
-
-                orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
-                baseMapper.update(orderInfo, queryWrapper);
-
                 addSXOrder(product,orderByOrderNo.getUserId(),c);
 //                equipmentHeadingCodeController.ifSubmitOrder(orderByOrderNo.getPId());
+            }else if (product.getType().equals("周报")){
+                addCountReportOrder(product,orderByOrderNo.getUserId(),c);
+//                equipmentHeadingCodeController.ifSubmitOrder(orderByOrderNo.getPId());
             }
-            else {
-                queryWrapper.eq("order_no", orderNo);
-                OrderInfo orderInfo = new OrderInfo();
-                orderInfo.setOrderStatus(orderStatus.getType());
-                orderInfo.setOrderState(orderStatus.getType());
-                baseMapper.update(orderInfo, queryWrapper);
-//                WxUtil.send("15286981260");
-            }
+
         }
 
 
@@ -217,6 +206,38 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                     FwLog fwLog = new FwLog();
                     fwLog.setUserName(sysUser.getPhonenumber());
                     fwLog.setMsg("购买动态心电解读");
+                    fwLog.setStatus("1");
+                    fwLog.setLogTime(new Date());
+                    fwLog.setFwStatus("1");
+                    fwLog.setFwNum(product.getFrequency());
+                    fwLogMapper.insert(fwLog);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+                System.out.println("异步线程 =====> 结束添加购买服务日志 =====> " + new Date());
+            },executorService);
+            executorService.shutdown(); // 回收线程池
+            return true;
+        }
+        return  false;
+
+    }
+
+    public Boolean addCountReportOrder(Product product ,Long userId,SuborderOrderInfo suborderOrderInfo) throws Exception {
+        SysUser sysUser = sysUserMapper.selectUserById(userId);
+        if (sysUser==null){
+            return false;
+        }
+
+        int i = sysUserMapper.updateWeeklyNewspaperNum(sysUser.getPhonenumber(),  product.getFrequency() * suborderOrderInfo.getSum());
+        if (i>0){
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            CompletableFuture.runAsync(() ->{
+                System.out.println("异步线程 =====> 开始添加购买服务日志 =====> " + new Date());
+                try{
+                    FwLog fwLog = new FwLog();
+                    fwLog.setUserName(sysUser.getPhonenumber());
+                    fwLog.setMsg("购买周报解读");
                     fwLog.setStatus("1");
                     fwLog.setLogTime(new Date());
                     fwLog.setFwStatus("1");

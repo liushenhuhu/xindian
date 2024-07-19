@@ -178,11 +178,6 @@ public class WxMsgRunConfig {
      */
     public void redisDTTime(String pId) throws Exception {
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey("reportOnce:" + pId))){
-            return;
-        }
-        redisTemplate.opsForValue().set("reportOnce:" + pId,pId,10, TimeUnit.MINUTES);
-
         Report report2 = reportService.selectReportByPId(pId);
         LocalTime now = LocalTime.now();
 
@@ -209,7 +204,6 @@ public class WxMsgRunConfig {
                     int rand = StrUtil.randomInt(doctors.size());
                     Doctor doctor = doctors.get(rand);
                     String dPhone= doctor.getDoctorPhone();
-                    WxUtil.send(aesUtils.decrypt(dPhone));
                     report2.setdPhone(dPhone);
                     diagnoseDoc.setDoctorPhone(dPhone);
                     report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
@@ -218,7 +212,7 @@ public class WxMsgRunConfig {
                     redisTemplate.opsForList().leftPushAll("DocList"+pId,doctors);
                 }else {
                     List<Object> doctors = redisTemplate.opsForList().range("DocList"+pId, 0, -1);
-                    if (doctors!=null&&doctors.size()>0){
+                    if (doctors!=null&& !doctors.isEmpty()){
                         List<Doctor> doctorList = new ArrayList<>();
                         for (Object c : doctors){
                             doctorList.addAll((List<Doctor>) c);
@@ -231,12 +225,15 @@ public class WxMsgRunConfig {
                         report2.setDiagnosisDoctorAes(aesUtils.decrypt(doctor.getDoctorName()));
                         report2.setDPhoneAes(aesUtils.decrypt(doctor.getDoctorPhone()));
                         report2.setDiagnosisDoctor(doctor.getDoctorName());
-                        WxUtil.send(aesUtils.decrypt(dPhone));
                     }
                 }
                 diagnoseDoc.setDiagnoseType("2");
                 diagnoseDocService.insertDiagnose(diagnoseDoc);
                 redisTemplate.opsForValue().set("reportDT:"+pId,pId,30, TimeUnit.MINUTES);
+                System.out.println("发送短信");
+                System.out.println(aesUtils.decrypt(report2.getdPhone()));
+                WxUtil.send(aesUtils.decrypt(report2.getdPhone()));
+
             }else {
                 //如果半夜提交报告，则直接延迟到第二天
                 LocalDateTime nowTime = LocalDateTime.now();

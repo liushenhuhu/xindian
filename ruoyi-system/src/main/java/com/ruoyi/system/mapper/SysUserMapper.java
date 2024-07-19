@@ -158,4 +158,7 @@ public interface SysUserMapper
 
 
     int deleteAppData(@Param("phone") String phone);
+
+    int updateWeeklyNewspaperNum(@Param("patientPhone") String patientPhone,@Param("sum") long sum);
+
 }

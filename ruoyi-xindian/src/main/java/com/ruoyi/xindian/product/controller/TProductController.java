@@ -180,6 +180,17 @@ public class TProductController extends BaseController
         }
         return getDataTable(list);
     }
+    @GetMapping("/getZB/list")
+    public TableDataInfo getZBList(TProduct tProduct){
+        tProduct.setType("周报");
+        startPage();
+        List<TProduct> list = tProductService.selectTProductList(tProduct);
+        for (TProduct product : list) {
+            product.setPrice(product.getPrice().multiply(new BigDecimal("0.01")));
+            product.setDiscount(product.getDiscount().multiply(new BigDecimal("0.01")));
+        }
+        return getDataTable(list);
+    }
     /**
      * 导出商品信息列表
      */

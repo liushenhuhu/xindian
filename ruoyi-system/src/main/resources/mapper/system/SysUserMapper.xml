@@ -33,6 +33,7 @@
         <result property="publicMsgStatus"    column="public_msg_status"    />
         <result property="detectionTime" column="detection_time"/>
         <result property="detectionNum" column="detection_num"/>
+        <result property="weeklyNewspaperNum" column="weekly_newspaper_num"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
@@ -82,6 +83,7 @@
                u.public_msg_status,
                u.detection_time,
                u.detection_num,
+               u.weekly_newspaper_num,
                d.dept_id,
                d.parent_id,
                d.ancestors,
@@ -108,7 +110,7 @@
 
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
         select u.user_id, u.dept_id, u.nick_name, u.user_name_aes, u.email,  u.public_open_id,
-        u.public_msg_status, u.avatar, u.phonenumber_aes, u.sex, u.status,
+        u.public_msg_status, u.avatar, u.phonenumber_aes, u.sex, u.status,u.weekly_newspaper_num,
         u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user
         u
         left join sys_dept d on u.dept_id = d.dept_id
@@ -230,6 +232,7 @@
         <if test="detectionNum != null and detectionNum != ''">detection_num,</if>
         <if test="publicOpenId != null">public_open_id,</if>
         <if test="publicMsgStatus != null">public_msg_status,</if>
+        <if test="weeklyNewspaperNum != null">weekly_newspaper_num,</if>
         detection_time,
         create_time
         )values(
@@ -253,6 +256,7 @@
         <if test="detectionNum != null">#{detectionNum},</if>
         <if test="publicOpenId != null">#{publicOpenId},</if>
         <if test="publicMsgStatus != null">#{publicMsgStatus},</if>
+        <if test="weeklyNewspaperNum != null">#{weeklyNewspaperNum},</if>
         <if test="detectionTime != null">#{detectionTime},</if>
         sysdate()
         )
@@ -331,6 +335,7 @@
             <if test="detectionTime != null">detection_time = #{detectionTime},</if>
             <if test="publicOpenId != null">public_open_id = #{publicOpenId},</if>
             <if test="publicMsgStatus != null">public_msg_status = #{publicMsgStatus},</if>
+            <if test="weeklyNewspaperNum != null">weekly_newspaper_num = #{weeklyNewspaperNum},</if>
             update_time = sysdate()
         </set>
         where user_id = #{userId}
@@ -402,7 +407,9 @@
     <update id="updateDetectionNumAdd">
         update sys_user set detection_num = detection_num +1 where phonenumber_aes = #{patientPhone}
     </update>
-
+    <update id="updateWeeklyNewspaperNum">
+        update sys_user set weekly_newspaper_num = weekly_newspaper_num + #{sum} where phonenumber_aes = #{patientPhone}
+    </update>
 
 
 </mapper>

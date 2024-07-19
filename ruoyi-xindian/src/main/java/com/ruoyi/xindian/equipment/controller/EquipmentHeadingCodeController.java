@@ -21,6 +21,8 @@ import com.ruoyi.xindian.equipment.service.IEquipmentService;
 import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
+import com.ruoyi.xindian.lease.domain.Lease;
+import com.ruoyi.xindian.lease.service.LeaseService;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -35,6 +37,7 @@ import com.ruoyi.xindian.vipPatient.service.SxReportUnscrambleService;
 import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.aspectj.weaver.loadtime.Aj;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
@@ -60,6 +63,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/headingCode/headingCode")
@@ -118,7 +122,8 @@ public class EquipmentHeadingCodeController extends BaseController {
     @Resource
     private IPatientManagementService patientManagementService;
 
-
+    @Autowired
+    private LeaseService leaseService;
 
 
     /**
@@ -482,7 +487,8 @@ public class EquipmentHeadingCodeController extends BaseController {
                 return AjaxResult.error("报告不存在");
             }
 
-            Patient patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
+            String patientPhone = patientManagement.getPatientPhone();
+            Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
             String sxUserId = getSXUserId(patient);
             if (sxUserId==null){
                 sxUserId =getSXUserId(patient);
@@ -502,24 +508,30 @@ public class EquipmentHeadingCodeController extends BaseController {
                 return AjaxResult.error("该报告已提交诊断");
             }
 
-            SxReportUnscramble sxReportUnscramble = sxReportUnscrambleService.selectSxReportUnscrambleById(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
-            if (sxReportUnscramble==null){
-                return AjaxResult.error(302,"服务次数不够，请先购买");
-            }
-            if (sxReportUnscramble.getVipNum()==null||sxReportUnscramble.getVipNum()<=0){
-                return AjaxResult.error(302,"服务次数不够，请先购买");
+            Lease lease = new Lease();
+            lease.setGiveBack("0");
+            List<String> leases = leaseService.selectLeaseList(lease).stream().map(Lease::getPhone).collect(Collectors.toList());
+            if (!leases.contains(aesUtils.decrypt(patientPhone))){
+                SxReportUnscramble sxReportUnscramble = sxReportUnscrambleService.selectSxReportUnscrambleById(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
+                if (sxReportUnscramble==null){
+                    return AjaxResult.error(302,"服务次数不够，请先购买");
+                }
+                if (sxReportUnscramble.getVipNum()==null||sxReportUnscramble.getVipNum()<=0){
+                    return AjaxResult.error(302,"服务次数不够，请先购买");
+                }
+                int i = sxReportUnscrambleService.updateSxReportUnscrambleByNumReduce(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
             }
 
-            int i = sxReportUnscrambleService.updateSxReportUnscrambleByNumReduce(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
-            if (i>0){
-                ifSubmitOrder(pId);
-                PatientManagement patientManagement1 = new PatientManagement();
-                patientManagement1.setpId(pId);
-                patientManagement1.setSxReportStatus(1);
-                patientManagementService.updatePatientManagement(patientManagement1);
-                return AjaxResult.success("提交成功");
-            }
-            return AjaxResult.error("网络开小差~~，请稍后再试一次");
+
+
+
+            ifSubmitOrder(pId);
+            PatientManagement patientManagement1 = new PatientManagement();
+            patientManagement1.setpId(pId);
+            patientManagement1.setSxReportStatus(1);
+            patientManagementService.updatePatientManagement(patientManagement1);
+            return AjaxResult.success("提交成功");
+
 
         }catch (Exception e){
             System.out.println(e);

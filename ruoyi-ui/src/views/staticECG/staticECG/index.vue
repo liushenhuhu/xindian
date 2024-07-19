@@ -462,7 +462,7 @@ export default {
     // this.getyujingleixing()
   },
   mounted() {
-    this.zidian()
+    // this.zidian()
     // 心电数据
     this.get();
 
@@ -471,14 +471,14 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
-    zidian() {
-      console.log("字典")
-      // console.log(this.dicts.type.medical_history)
-      this.getDicts("medical_history").then((res) => {
-        console.log(res.data)
-        this.zidianzhi = res.data
-      })
-    },
+    // zidian() {
+    //   console.log("字典")
+    //   // console.log(this.dicts.type.medical_history)
+    //   this.getDicts("medical_history").then((res) => {
+    //     console.log(res.data)
+    //     this.zidianzhi = res.data
+    //   })
+    // },
     getMH(zdList, ecgType = this.data.pastMedicalHistory) {
       let str = ''
       if (ecgType) {

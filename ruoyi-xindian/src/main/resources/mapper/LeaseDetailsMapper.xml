@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.lease.mapper.LeaseDetailsMapper">
+
+    <resultMap type="LeaseDetails" id="LeaseDetailsResult">
+        <result property="leaseDetailsId"    column="lease_details_id"    />
+        <result property="leaseId"    column="lease_id"    />
+        <result property="equipmentCode"    column="equipment_code"    />
+        <result property="equipmentType"    column="equipment_type"    />
+    </resultMap>
+
+    <sql id="selectLeaseDetailsVo">
+        select lease_details_id, lease_id, equipment_code, equipment_type from lease_details
+    </sql>
+
+    <select id="selectLeaseDetailsList" parameterType="LeaseDetails" resultMap="LeaseDetailsResult">
+        <include refid="selectLeaseDetailsVo"/>
+        <where>
+            <if test="leaseId != null "> and lease_id = #{leaseId}</if>
+            <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code = #{equipmentCode}</if>
+            <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
+        </where>
+    </select>
+
+    <select id="selectLeaseDetailsByLeaseDetailsId" parameterType="Long" resultMap="LeaseDetailsResult">
+        <include refid="selectLeaseDetailsVo"/>
+        where lease_details_id = #{leaseDetailsId}
+    </select>
+
+    <insert id="insertLeaseDetails" parameterType="LeaseDetails">
+        insert into lease_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="leaseDetailsId != null">lease_details_id,</if>
+            <if test="leaseId != null">lease_id,</if>
+            <if test="equipmentCode != null">equipment_code,</if>
+            <if test="equipmentType != null">equipment_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="leaseDetailsId != null">#{leaseDetailsId},</if>
+            <if test="leaseId != null">#{leaseId},</if>
+            <if test="equipmentCode != null">#{equipmentCode},</if>
+            <if test="equipmentType != null">#{equipmentType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLeaseDetails" parameterType="LeaseDetails">
+        update lease_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="leaseId != null">lease_id = #{leaseId},</if>
+            <if test="equipmentCode != null">equipment_code = #{equipmentCode},</if>
+            <if test="equipmentType != null">equipment_type = #{equipmentType},</if>
+        </trim>
+        where lease_details_id = #{leaseDetailsId}
+    </update>
+
+    <delete id="deleteLeaseDetailsByLeaseDetailsId" parameterType="Long">
+        delete from lease_details where lease_details_id = #{leaseDetailsId}
+    </delete>
+
+    <delete id="deleteLeaseDetailsByLeaseDetailsIds" parameterType="String">
+        delete from lease_details where lease_details_id in
+        <foreach item="leaseDetailsId" collection="array" open="(" separator="," close=")">
+            #{leaseDetailsId}
+        </foreach>
+    </delete>
+</mapper>

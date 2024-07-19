@@ -188,7 +188,6 @@ public class OrderController {
 
     }
 
-
     /**
      * 添加服务订单
      * @param request
@@ -242,6 +241,58 @@ public class OrderController {
         }
     }
 
+
+
+    /**
+     * 添加服务订单
+     * @param request
+     * @param productId
+     * @param sum
+     * @return
+     */
+    @PostMapping("/orderCountReportAdd")
+    public AjaxResult orderCountReportAdd(HttpServletRequest request,Long productId,Integer sum){
+
+        lock.lock();
+        try {
+            LoginUser loginUser1 = tokenService.getLoginUser(request);
+            Long userId = loginUser1.getUser().getUserId();
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("getOrderId"+userId))){
+                return AjaxResult.error("请勿重复支付");
+            }
+            redisTemplate.opsForValue().set("getOrderId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
+
+            if (productId==null){
+                return AjaxResult.error("商品参数错误，请稍后再试");
+            }
+            if (sum==null){
+                return AjaxResult.error("商品购买数量错误，请稍后再试");
+            }
+            LoginUser loginUser = tokenService.getLoginUser(request);
+
+            SysUser sysUser = sysUserService.selectUserById(loginUser.getUser().getUserId());
+
+            if ((sysUser.getWeeklyNewspaperNum()+sum)>500){
+                return AjaxResult.error("每人仅限购买500服务次数");
+            }
+            Product product = productService.selectPId(productId);
+            if (product==null){
+                return AjaxResult.error("商品不存在");
+            }
+            if (product.getState().equals("2")){
+                return AjaxResult.error("商品已下架");
+            }
+
+            String stringBuilder = orderInfoService.addKpOrFwOrder(request, productId, sum);
+            return AjaxResult.success("操作成功",stringBuilder);
+        }catch (Exception e){
+            System.out.println(e);
+            return AjaxResult.error("创建订单失败");
+        }finally {
+            lock.unlock();
+        }
+    }
+
     /**
      * 添加服务订单
      * @param request
@@ -271,37 +322,37 @@ public class OrderController {
                 return AjaxResult.error("商品已下架");
             }
 
-            if (pId==null){
-                return AjaxResult.error("报告不能为空");
-            }
-            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
-            if (patientManagement==null){
-                return AjaxResult.error("报告不存在");
-            }
-            if (StringUtils.isEmpty(patientManagement.getPatientPhone())){
-                return AjaxResult.error("报告不存在");
-            }
+//            if (pId==null){
+//                return AjaxResult.error("报告不能为空");
+//            }
+//            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
+//            if (patientManagement==null){
+//                return AjaxResult.error("报告不存在");
+//            }
+//            if (StringUtils.isEmpty(patientManagement.getPatientPhone())){
+//                return AjaxResult.error("报告不存在");
+//            }
 
 
-            Patient patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
-            String sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
-            if (sxUserId==null){
-                sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
-            }
-
-            LinkedHashMap<String, Object> sxDateList = equipmentHeadingCodeController.getSXDateList(sxUserId, pId);
-            if (sxDateList==null){
-                return AjaxResult.error("数据采集不够24小时,请注意数据是否采集完成");
-            }
-            Integer notifyStatus = (Integer)sxDateList.get("notifyStatus");
-            if (notifyStatus!=null&&notifyStatus==1){
-                return AjaxResult.error("该报告已提交诊断");
-            }
-            Integer fuwaiSendStatus = (Integer)sxDateList.get("fuwaiSendStatus");
-
-            if (fuwaiSendStatus!=null&&fuwaiSendStatus==2){
-                return AjaxResult.error("该报告已提交诊断");
-            }
+//            Patient patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
+//            String sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
+//            if (sxUserId==null){
+//                sxUserId = equipmentHeadingCodeController.getSXUserId(patient);
+//            }
+//
+//            LinkedHashMap<String, Object> sxDateList = equipmentHeadingCodeController.getSXDateList(sxUserId, pId);
+//            if (sxDateList==null){
+//                return AjaxResult.error("数据采集不够24小时,请注意数据是否采集完成");
+//            }
+//            Integer notifyStatus = (Integer)sxDateList.get("notifyStatus");
+//            if (notifyStatus!=null&&notifyStatus==1){
+//                return AjaxResult.error("该报告已提交诊断");
+//            }
+//            Integer fuwaiSendStatus = (Integer)sxDateList.get("fuwaiSendStatus");
+//
+//            if (fuwaiSendStatus!=null&&fuwaiSendStatus==2){
+//                return AjaxResult.error("该报告已提交诊断");
+//            }
             String stringBuilder = orderInfoService.addBGOrder(request, productId, pId);
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){

@@ -132,6 +132,35 @@ public class SysUser extends BaseEntity
 
     private String isEncrypt;
 
+    /**
+     * 周报服务次数
+     */
+    private Integer weeklyNewspaperNum;
+
+    public String getPublicOpenId() {
+        return publicOpenId;
+    }
+
+    public void setPublicOpenId(String publicOpenId) {
+        this.publicOpenId = publicOpenId;
+    }
+
+    public Long getPublicMsgStatus() {
+        return publicMsgStatus;
+    }
+
+    public void setPublicMsgStatus(Long publicMsgStatus) {
+        this.publicMsgStatus = publicMsgStatus;
+    }
+
+    public Integer getWeeklyNewspaperNum() {
+        return weeklyNewspaperNum;
+    }
+
+    public void setWeeklyNewspaperNum(Integer weeklyNewspaperNum) {
+        this.weeklyNewspaperNum = weeklyNewspaperNum;
+    }
+
     public String getIsEncrypt() {
         return isEncrypt;
     }

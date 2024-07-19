@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.lease.mapper.LeaseMapper">
+
+    <resultMap type="Lease" id="LeaseResult">
+        <result property="leaseId"    column="lease_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="identityCard"    column="identity_card"    />
+        <result property="unitLeader"    column="unit_leader"    />
+        <result property="place"    column="place"    />
+        <result property="giveBack"    column="give_back"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+    <resultMap id="LeaseDetailsAndLeaseResult" type="Lease" extends="LeaseResult">
+        <collection property="details" ofType="LeaseDetails">
+            <result property="leaseDetailsId" column="lease_details_id"/>
+            <result property="leaseId" column="lease_id"/>
+            <result property="equipmentCode" column="equipment_code"/>
+            <result property="equipmentType" column="equipment_type"/>
+        </collection>
+    </resultMap>
+
+    <sql id="selectLeaseVo">
+        select lease_id, user_name, phone, identity_card, unit_leader, place, give_back, create_time, update_time from lease
+    </sql>
+
+    <select id="selectLeaseList" parameterType="Lease" resultMap="LeaseResult">
+        <include refid="selectLeaseVo"/>
+        <where>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="identityCard != null  and identityCard != ''"> and identity_card = #{identityCard}</if>
+            <if test="unitLeader != null  and unitLeader != ''"> and unit_leader = #{unitLeader}</if>
+            <if test="place != null  and place != ''"> and place = #{place}</if>
+            <if test="giveBack != null  and giveBack != ''"> and give_back = #{giveBack}</if>
+        </where>
+    </select>
+
+    <select id="selectLeaseByLeaseId" parameterType="Long" resultMap="LeaseDetailsAndLeaseResult">
+        SELECT
+            lease.lease_id,
+            lease.user_name,
+            lease.phone,
+            lease.identity_card,
+            lease.unit_leader,
+            lease.place,
+            lease.give_back,
+            lease.create_time,
+            lease.update_time,
+            lease_details.lease_details_id,
+            lease_details.equipment_code,
+            lease_details.equipment_type
+        FROM
+            lease
+                INNER JOIN
+            lease_details
+            ON
+                lease.lease_id = lease_details.lease_id
+        where lease.lease_id = #{leaseId}
+    </select>
+
+    <insert id="insertLease" parameterType="Lease" useGeneratedKeys="true" keyProperty="leaseId">
+        insert into lease
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="identityCard != null">identity_card,</if>
+            <if test="unitLeader != null">unit_leader,</if>
+            <if test="place != null">place,</if>
+            <if test="giveBack != null">give_back,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="identityCard != null">#{identityCard},</if>
+            <if test="unitLeader != null">#{unitLeader},</if>
+            <if test="place != null">#{place},</if>
+            <if test="giveBack != null">#{giveBack},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLease" parameterType="Lease">
+        update lease
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="identityCard != null">identity_card = #{identityCard},</if>
+            <if test="unitLeader != null">unit_leader = #{unitLeader},</if>
+            <if test="place != null">place = #{place},</if>
+            <if test="giveBack != null">give_back = #{giveBack},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where lease_id = #{leaseId}
+    </update>
+
+    <delete id="deleteLeaseByLeaseId" parameterType="Long">
+        delete from lease where lease_id = #{leaseId}
+    </delete>
+
+    <delete id="deleteLeaseByLeaseIds" parameterType="String">
+        delete from lease where lease_id in
+        <foreach item="leaseId" collection="array" open="(" separator="," close=")">
+            #{leaseId}
+        </foreach>
+    </delete>
+</mapper>
