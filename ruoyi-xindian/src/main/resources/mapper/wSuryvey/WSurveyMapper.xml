@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.wSuryvey.mapper.WSurveyMapper">
+    
+    <resultMap type="WSurvey" id="WSurveyResult">
+        <result property="id"    column="id"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="gender"    column="gender"    />
+        <result property="age"    column="age"    />
+        <result property="waistline"    column="waistline"    />
+        <result property="cholesterol"    column="cholesterol"    />
+        <result property="systolicAlbumen"    column="systolic_albumen"    />
+        <result property="diastolicBlood"    column="diastolic_blood"    />
+        <result property="systolicBlood"    column="systolic_blood"    />
+        <result property="hypotensiveDrugs"    column="hypotensive_drugs"    />
+        <result property="diabetes"    column="diabetes"    />
+        <result property="smoking"    column="smoking"    />
+        <result property="fammilyCd"    column="fammily_cd"    />
+        <result property="fammilyCa"    column="fammily_ca"    />
+    </resultMap>
+
+    <sql id="selectWSurveyVo">
+        select id, patient_phone, gender, age, waistline, cholesterol, systolic_albumen, diastolic_blood, systolic_blood, hypotensive_drugs, diabetes, smoking, fammily_cd, fammily_ca from w_survey
+    </sql>
+
+    <select id="selectWSurveyList" parameterType="WSurvey" resultMap="WSurveyResult">
+        <include refid="selectWSurveyVo"/>
+        <where>  
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="waistline != null "> and waistline = #{waistline}</if>
+            <if test="cholesterol != null "> and cholesterol = #{cholesterol}</if>
+            <if test="systolicAlbumen != null "> and systolic_albumen = #{systolicAlbumen}</if>
+            <if test="diastolicBlood != null "> and diastolic_blood = #{diastolicBlood}</if>
+            <if test="systolicBlood != null "> and systolic_blood = #{systolicBlood}</if>
+            <if test="hypotensiveDrugs != null "> and hypotensive_drugs = #{hypotensiveDrugs}</if>
+            <if test="diabetes != null "> and diabetes = #{diabetes}</if>
+            <if test="smoking != null "> and smoking = #{smoking}</if>
+            <if test="fammilyCd != null "> and fammily_cd = #{fammilyCd}</if>
+            <if test="fammilyCa != null "> and fammily_ca = #{fammilyCa}</if>
+        </where>
+    </select>
+    
+    <select id="selectWSurveyById" parameterType="Long" resultMap="WSurveyResult">
+        <include refid="selectWSurveyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWSurvey" parameterType="WSurvey" useGeneratedKeys="true" keyProperty="id">
+        insert into w_survey
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="gender != null">gender,</if>
+            <if test="age != null">age,</if>
+            <if test="waistline != null">waistline,</if>
+            <if test="cholesterol != null">cholesterol,</if>
+            <if test="systolicAlbumen != null">systolic_albumen,</if>
+            <if test="diastolicBlood != null">diastolic_blood,</if>
+            <if test="systolicBlood != null">systolic_blood,</if>
+            <if test="hypotensiveDrugs != null">hypotensive_drugs,</if>
+            <if test="diabetes != null">diabetes,</if>
+            <if test="smoking != null">smoking,</if>
+            <if test="fammilyCd != null">fammily_cd,</if>
+            <if test="fammilyCa != null">fammily_ca,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="age != null">#{age},</if>
+            <if test="waistline != null">#{waistline},</if>
+            <if test="cholesterol != null">#{cholesterol},</if>
+            <if test="systolicAlbumen != null">#{systolicAlbumen},</if>
+            <if test="diastolicBlood != null">#{diastolicBlood},</if>
+            <if test="systolicBlood != null">#{systolicBlood},</if>
+            <if test="hypotensiveDrugs != null">#{hypotensiveDrugs},</if>
+            <if test="diabetes != null">#{diabetes},</if>
+            <if test="smoking != null">#{smoking},</if>
+            <if test="fammilyCd != null">#{fammilyCd},</if>
+            <if test="fammilyCa != null">#{fammilyCa},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWSurvey" parameterType="WSurvey">
+        update w_survey
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="waistline != null">waistline = #{waistline},</if>
+            <if test="cholesterol != null">cholesterol = #{cholesterol},</if>
+            <if test="systolicAlbumen != null">systolic_albumen = #{systolicAlbumen},</if>
+            <if test="diastolicBlood != null">diastolic_blood = #{diastolicBlood},</if>
+            <if test="systolicBlood != null">systolic_blood = #{systolicBlood},</if>
+            <if test="hypotensiveDrugs != null">hypotensive_drugs = #{hypotensiveDrugs},</if>
+            <if test="diabetes != null">diabetes = #{diabetes},</if>
+            <if test="smoking != null">smoking = #{smoking},</if>
+            <if test="fammilyCd != null">fammily_cd = #{fammilyCd},</if>
+            <if test="fammilyCa != null">fammily_ca = #{fammilyCa},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWSurveyById" parameterType="Long">
+        delete from w_survey where id = #{id}
+    </delete>
+
+    <delete id="deleteWSurveyByIds" parameterType="String">
+        delete from w_survey where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -19,6 +19,7 @@ import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
 import com.ruoyi.xindian.pdf.domain.ReportData;
 import com.ruoyi.xindian.pdf.domain.WeekPdfData;
+import com.ruoyi.xindian.util.DateUtil;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.imageio.ImageIO;
@@ -26,20 +27,23 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
 public class PdfGenerator {
 
 
-    public byte[] createWeekPdf(String fileName, LinkedList<WeekPdfData> weekPdfData, String patientName, String gender, String patientAge, String height, String weight) throws IOException {
+    public void createWeekPdf(String fileName, LinkedList<WeekPdfData> weekPdfData, String patientName, String gender, String patientAge, String height, String weight) throws IOException {
         String title = "心电报告";
-//        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
-//        Document doc = new Document(pdfDoc, PageSize.A4);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PdfWriter writer = new PdfWriter(baos);
-        PdfDocument pdfDoc = new PdfDocument(writer);
+        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        PdfWriter writer = new PdfWriter(baos);
+//        PdfDocument pdfDoc = new PdfDocument(writer);
+//        Document doc = new Document(pdfDoc, PageSize.A4);
 
         // 设置字体  simhei.ttf黑体  SimSun宋体
 //        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
@@ -51,11 +55,108 @@ public class PdfGenerator {
         table_info.setWidth(UnitValue.createPercentValue(100));
         contextCell(table_info, "姓名：" + patientName, font, 1, 0, 1, 0);
         contextCell(table_info, "性别：" + gender, font, 1, 0, 0, 0);
-        contextCell(table_info, "年龄：" + patientAge, font, 1, 0, 0, 1);
-        contextCell(table_info, "身高：" + height, font, 0, 1, 1, 0);
-        contextCell(table_info, "体重：" + weight, font, 0, 1, 0, 0);
+        contextCell(table_info, "年龄：" + patientAge + " 岁", font, 1, 0, 0, 1);
+        contextCell(table_info, "身高：" + height + " cm", font, 0, 1, 1, 0);
+        contextCell(table_info, "体重：" + weight + " kg", font, 0, 1, 0, 0);
         contextCell(table_info, "", font, 0, 1, 0, 1);
-        if (weekPdfData == null || weekPdfData.isEmpty()) {
+
+        //结论
+        // 获取当前日期
+        LocalDateTime currentDate = LocalDateTime.now();
+        // 定义日期格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // 将当前日期格式化为字符串
+        String nowTime = currentDate.format(formatter);
+        //
+        int sum = 0;
+        double sumHr = 0;
+
+        int sumHrv = 0;
+        double sumHrvs = 0;
+
+        int len = weekPdfData.size();
+        double meanHr = 0;
+        double maxHr = 0;
+        String maxTime = "-";
+        String minTime = "-";
+        double minHr = 1000;
+        int fz = 0;
+        int sz = 0;
+        int fc = 0;
+        int rr = 0;
+        double meanHrv = 0;
+
+        for (WeekPdfData weekPdfDatum : weekPdfData) {
+            double hrDouble = 0;
+            double Hrvs = 0;
+            String hr = weekPdfDatum.getHr();
+            try {
+                hrDouble = Double.parseDouble(hr);
+                sumHr += hrDouble;
+                sum++;
+            } catch (NumberFormatException ignored) {
+            }
+
+            String hrvs = weekPdfDatum.getHrv();
+            try {
+                Hrvs = Double.parseDouble(hrvs);
+                sumHrvs += Hrvs;
+                sumHrv++;
+            } catch (NumberFormatException ignored) {
+            }
+
+            if (hrDouble > maxHr) {
+                maxHr = hrDouble;
+                maxTime = weekPdfDatum.getDetectionTime();
+            }
+            if (hrDouble < minHr) {
+                minHr = hrDouble;
+                minTime = weekPdfDatum.getDetectionTime();
+            }
+            //房早
+            if (weekPdfDatum.getAiConclusion().contains("房性早搏")) {
+                fz++;
+            }
+            //室早
+            if (weekPdfDatum.getAiConclusion().contains("室性早搏")) {
+                sz++;
+            }
+            //房颤
+            if (weekPdfDatum.getAiConclusion().contains("心房颤动")) {
+                fc++;
+            }
+            //长rr
+            if (weekPdfDatum.getAiConclusion().contains("长RR间期")) {
+                rr++;
+            }
+        }
+        if (sum != 0)
+            meanHr = sumHr / sum;
+        if (sumHrv != 0)
+            meanHrv = sumHrvs / sumHrv;
+
+        String conclusion = "一、本周总共测量" + len + "次，平均心率" + String.format("%.2f", meanHr) + "bpm，" +
+                "最快心率" + maxHr + "bpm（发生于" + maxTime + "），" +
+                "最慢心率" + minHr + "bpm（发生于" + minTime + "），" +
+                "房性早搏" + fz + "次，室性早搏" + sz + "次，房颤" + fc +
+                "次，长RR间期" + rr + "次，心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms。\n\n" +
+                "二、诊断结论\n" +
+                "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.";
+
+        Table table1 = new Table(6);
+        table1.setWidth(UnitValue.createPercentValue(100));
+        Cell con = new Cell(1, 6).add(new Paragraph("结论").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(16));
+        table1.addCell(con);
+        Cell text = new Cell(4, 6).add(
+                new Paragraph(conclusion).setPaddingLeft(10).setHeight(180).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        table1.addCell(text);
+        Cell name = new Cell(1, 3).add(new Paragraph("医生姓名：").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(8));
+        name.setBorderRight(Border.NO_BORDER);
+        table1.addCell(name);
+        Cell time = new Cell(1, 3).add(new Paragraph("日期：" + nowTime).setPaddingRight(5).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(8));
+        time.setBorderLeft(Border.NO_BORDER);
+        table1.addCell(time);
+        if (weekPdfData.isEmpty()) {
             PdfCanvas pdfCanvas = new PdfCanvas(doc.getPdfDocument().getLastPage());
             pdfCanvas.setFontAndSize(font, 20);
             pdfCanvas.setFillColor(ColorConstants.RED);
@@ -64,30 +165,46 @@ public class PdfGenerator {
                     .showText("最近7天未做检测！")
                     .endText();
         } else {
-            int len = weekPdfData.size();
+            // 使用Div容器来居中表格
+            Div div1 = new Div();
+            div1.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
+            div1.add(table_info);
+            div1.add(new Paragraph().setMarginBottom(5));
+            div1.add(table1);
+            // 将Div添加到文档中
+            doc.add(div1);
+            drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 450, 525, 136.5f);
+            if (len >= 1)
+                drawWeekEcg30(doc, font, weekPdfData.get(1), 35, 250, 525, 136.5f);
+            if (len > 1)
+                doc.add(new AreaBreak());
             Div div;
-            for (int i = 0; i < len; i += 1) {
+            for (int i = 2; i < len; i += 1) {
                 // 使用Div容器来居中表格
                 div = new Div();
                 div.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
                 div.add(table_info);
                 // 将Div添加到文档中
                 doc.add(div);
-                drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 700, 525, 210);
+                drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 670, 525, 136.5f);
                 i += 1;
                 if (i < len)
-                    drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 400, 525, 210);
+                    drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 465, 525, 136.5f);
+                i += 1;
+                if (i < len)
+                    drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 260, 525, 136.5f);
                 if (i < len - 1)
                     doc.add(new AreaBreak());
             }
         }
         doc.close();
-        return baos.toByteArray();
+//        return baos.toByteArray();
     }
 
     private void drawWeekEcg30(Document doc, PdfFont font, WeekPdfData weekPdfData, float x, float y, float width, float height) {
         PdfCanvas pdfCanvas = new PdfCanvas(doc.getPdfDocument().getLastPage());
 //        float[] ecgData = {-0.094f, -0.065f, -0.041f, -0.061f, -0.052f, -0.03f, 0.0f, -0.026f, 0.004f, 0.015f, 0.087f, 0.068f, 0.05f, -0.006f, -0.008f, -0.032f, -0.03f, -0.046f, -0.046f, -0.035f, -0.017f, -0.039f, -0.021f, 0.037f, 0.14f, 0.32f, 0.709f, 0.129f, -0.727f, -0.217f, -0.032f, 0.004f, 0.039f, 0.054f, 0.054f, 0.098f, 0.116f, 0.114f, 0.145f, 0.131f, 0.134f, 0.186f, 0.232f, 0.285f, 0.342f, 0.419f, 0.522f, 0.617f, 0.674f, 0.718f, 0.67f, 0.549f, 0.34f, 0.103f, -0.096f, -0.241f, -0.329f, -0.375f, -0.355f, -0.371f, -0.36f, -0.327f, -0.325f, -0.287f, -0.276f, -0.263f, -0.21f, -0.215f, -0.206f, -0.186f, -0.184f, -0.191f, -0.145f, -0.147f, -0.112f, -0.118f, -0.127f, -0.127f, -0.136f, -0.14f, -0.127f, -0.153f, -0.118f, -0.127f, -0.107f, -0.112f, -0.116f, -0.12f, -0.114f, -0.109f, -0.103f, -0.107f, -0.085f, -0.098f, -0.081f, -0.079f, -0.074f, -0.079f, -0.068f, -0.05f, -0.052f, -0.048f, 0.008f, 0.017f, 0.061f, 0.039f, 0.054f, 0.035f, -0.008f, -0.061f, -0.03f, -0.041f, -0.024f, -0.032f, -0.026f, -0.024f, -0.026f, 0.072f, 0.09f, 0.463f, 0.626f, -0.054f, -0.494f, 0.0f, 0.048f, 0.039f, 0.052f, 0.068f, 0.065f, 0.054f, 0.063f, 0.09f, 0.134f, 0.142f, 0.169f, 0.191f, 0.199f, 0.259f, 0.318f, 0.404f, 0.494f, 0.617f, 0.703f, 0.672f, 0.643f, 0.492f, 0.274f, 0.03f, -0.166f, -0.29f, -0.34f, -0.358f, -0.362f, -0.364f, -0.347f, -0.349f, -0.305f, -0.303f, -0.281f, -0.265f, -0.235f, -0.21f, -0.197f, -0.217f, -0.173f, -0.182f, -0.158f, -0.156f, -0.16f, -0.166f, -0.131f, -0.149f, -0.156f, -0.147f, -0.145f, -0.129f, -0.136f, -0.149f, -0.136f, -0.145f, -0.12f, -0.09f, -0.094f, -0.105f, -0.085f, -0.116f, -0.09f, -0.101f, -0.087f, -0.094f, -0.048f, -0.068f, -0.074f, -0.05f, -0.035f, -0.019f, 0.006f, 0.054f, 0.061f, -0.008f, 0.021f, -0.008f, -0.052f, -0.072f, -0.05f, -0.074f, -0.065f, -0.068f, -0.05f, -0.068f, 0.057f, 0.054f, 0.446f, 0.61f, -0.039f, -0.577f, -0.017f, 0.002f, 0.019f, 0.032f, 0.07f, 0.046f, 0.085f, 0.07f, 0.098f, 0.123f, 0.127f, 0.12f, 0.188f, 0.219f, 0.261f, 0.32f, 0.406f, 0.507f, 0.593f, 0.659f, 0.7f, 0.639f, 0.465f, 0.237f, 0.021f, -0.158f, -0.274f, -0.342f, -0.349f, -0.373f, -0.36f, -0.362f, -0.307f, -0.312f, -0.327f, -0.283f, -0.281f, -0.268f, -0.226f, -0.215f, -0.204f, -0.18f, -0.191f, -0.171f, -0.16f, -0.142f, -0.153f, -0.164f, -0.162f, -0.147f, -0.153f, -0.182f, -0.151f, -0.164f, -0.129f, -0.171f, -0.153f, -0.12f, -0.114f, -0.103f, -0.103f, -0.105f, -0.079f, -0.09f, -0.063f, -0.092f, -0.087f, -0.037f, 0.006f, 0.013f, 0.07f, 0.004f, 0.019f, -0.03f, -0.046f, -0.063f, -0.037f, -0.054f, -0.052f, -0.057f, -0.021f, -0.01f, 0.074f, 0.118f, 0.509f, 0.533f, -0.208f, -0.505f, -0.074f, 0.026f, 0.05f, 0.028f, 0.048f, 0.043f, 0.074f, 0.068f, 0.101f, 0.107f, 0.145f, 0.162f, 0.195f, 0.23f, 0.279f, 0.336f, 0.461f, 0.553f, 0.643f, 0.705f, 0.718f, 0.635f, 0.45f, 0.206f, -0.017f, -0.16f, -0.276f, -0.329f, -0.355f, -0.342f, -0.351f, -0.349f, -0.342f, -0.322f, -0.296f, -0.29f, -0.252f, -0.241f, -0.226f, -0.226f, -0.206f, -0.18f, -0.173f, -0.184f, -0.158f, -0.153f, -0.158f, -0.131f, -0.149f, -0.166f, -0.125f, -0.123f, -0.118f, -0.123f, -0.107f, -0.094f, -0.076f, -0.118f, -0.105f, -0.114f, -0.101f, -0.083f, -0.065f, -0.092f, -0.048f, -0.074f, -0.039f, -0.052f, -0.015f, 0.019f, 0.039f, 0.05f, 0.048f, 0.028f, -0.013f, -0.043f, -0.041f, -0.057f, -0.048f, -0.065f, -0.037f, -0.052f, -0.03f, 0.07f, 0.076f, 0.494f, 0.45f, -0.375f, -0.362f, -0.03f, 0.026f, 0.028f, 0.061f, 0.063f, 0.094f, 0.085f, 0.083f, 0.105f, 0.125f, 0.136f, 0.175f, 0.18f, 0.239f, 0.307f, 0.366f, 0.459f, 0.553f, 0.635f, 0.698f, 0.672f, 0.621f, 0.435f, 0.202f, -0.026f, -0.16f, -0.272f, -0.305f, -0.344f, -0.338f, -0.336f, -0.318f, -0.336f, -0.274f, -0.272f, -0.272f, -0.276f, -0.241f, -0.215f, -0.21f, -0.204f, -0.169f, -0.175f, -0.145f, -0.191f, -0.129f, -0.164f, -0.195f, -0.213f, -0.158f, -0.16f, -0.191f, -0.162f, -0.147f, -0.224f, -0.006f, -0.114f, 0.046f, 0.0f, 0.039f, 0.043f, -0.054f, -0.032f, -0.072f, -0.017f, -0.083f, -0.03f, -0.008f, -0.039f, 0.037f, -0.07f, 0.107f, 0.063f, 0.024f, 0.037f, -0.041f, -0.068f, -0.063f, -0.026f, -0.048f, -0.037f, -0.063f, -0.083f, 0.123f, 0.074f, 0.395f, 0.47f, -0.226f, -0.476f, 0.0f, 0.048f, 0.063f, 0.035f, 0.085f, 0.107f, 0.123f, 0.123f, 0.14f, 0.116f, 0.14f, 0.173f, 0.184f, 0.204f, 0.283f, 0.369f, 0.432f, 0.516f, 0.61f, 0.667f, 0.674f, 0.624f, 0.435f, 0.202f, -0.032f, -0.204f, -0.279f, -0.333f, -0.38f, -0.404f, -0.404f, -0.38f, -0.369f, -0.369f, -0.371f, -0.318f, -0.281f, -0.285f, -0.279f, -0.252f, -0.204f, -0.237f, -0.21f, -0.184f, -0.177f, -0.177f, -0.18f, -0.149f, -0.142f, -0.166f, -0.147f, -0.158f, -0.156f, -0.147f, -0.131f, -0.12f, -0.118f, -0.12f, -0.14f, -0.134f, -0.116f, -0.081f, -0.09f, -0.085f, -0.087f, -0.074f, -0.037f, -0.021f, 0.017f, -0.004f, -0.01f, -0.03f, -0.026f, -0.068f, -0.057f, -0.057f, -0.072f, -0.09f, -0.076f, -0.07f, -0.057f, 0.085f, 0.153f, 0.586f, 0.369f, -0.58f, -0.432f, -0.032f, -0.015f, -0.015f, 0.008f, -0.008f, 0.068f, 0.072f, 0.09f, 0.085f, 0.101f, 0.134f, 0.164f, 0.193f, 0.246f, 0.318f, 0.377f, 0.459f, 0.573f, 0.635f, 0.685f, 0.709f, 0.584f, 0.382f, 0.171f, -0.024f, -0.147f, -0.25f, -0.301f, -0.305f, -0.279f, -0.301f, -0.272f, -0.261f, -0.257f, -0.246f, -0.241f, -0.237f, -0.206f, -0.184f, -0.173f, -0.171f, -0.142f, -0.151f, -0.142f, -0.145f, -0.123f, -0.12f, -0.171f, -0.173f, -0.118f, -0.12f, -0.138f, -0.138f, -0.136f, -0.138f, -0.098f, -0.112f, -0.101f, -0.14f, -0.09f, -0.046f, 0.032f, 0.035f, 0.043f, 0.008f, 0.026f, -0.024f, -0.063f, -0.094f, -0.096f, -0.107f, -0.087f, -0.037f, -0.041f, -0.074f, 0.024f, -0.019f, 0.191f, 0.678f, 0.05f, -0.628f, -0.092f, 0.01f, 0.032f, 0.05f, 0.059f, 0.068f, 0.063f, 0.074f, 0.114f, 0.136f, 0.149f, 0.16f, 0.199f, 0.217f, 0.248f, 0.349f, 0.424f, 0.511f, 0.599f, 0.678f, 0.689f, 0.628f, 0.457f, 0.239f, -0.013f, -0.14f, -0.263f, -0.333f, -0.353f, -0.366f, -0.347f, -0.347f, -0.316f, -0.309f, -0.29f, -0.23f, -0.241f, -0.219f, -0.197f, -0.197f, -0.173f, -0.175f, -0.166f, -0.14f, -0.142f, -0.136f, -0.123f, -0.134f, -0.114f, -0.131f, -0.123f, -0.134f, -0.092f, -0.101f, -0.112f, -0.109f, -0.101f, -0.109f, -0.109f, -0.085f, -0.081f, -0.087f, -0.085f, -0.098f, -0.043f, 0.002f, 0.037f, 0.037f, -0.006f, -0.002f, -0.03f, -0.035f, -0.061f, -0.081f, -0.076f, -0.081f, -0.074f, -0.081f, -0.041f, 0.07f, -0.002f, 0.454f, 0.441f, -0.316f, -0.485f, -0.059f, 0.002f, -0.004f, 0.006f, 0.052f, 0.087f, 0.085f, 0.094f, 0.105f, 0.116f, 0.151f, 0.162f, 0.202f, 0.228f, 0.27f, 0.358f, 0.443f, 0.555f, 0.652f, 0.683f, 0.696f, 0.571f, 0.406f, 0.175f, -0.041f, -0.215f, -0.316f, -0.34f, -0.351f, -0.364f, -0.353f, -0.349f, -0.325f, -0.274f, -0.27f, -0.276f, -0.265f, -0.248f, -0.243f, -0.202f, -0.162f, -0.195f, -0.175f, -0.177f, -0.134f, -0.142f, -0.166f, -0.182f, -0.188f, -0.136f, -0.059f, -0.054f, -0.072f, -0.09f, -0.065f, -0.068f, -0.101f, -0.041f, -0.09f, -0.008f, -0.054f, -0.063f, -0.074f, -0.046f, -0.019f, -0.013f, -0.048f, -0.019f, 0.057f, 0.098f, 0.054f, 0.026f, 0.015f, -0.041f, -0.043f, -0.07f, -0.07f, -0.081f, -0.07f, -0.054f, -0.068f, -0.052f, 0.039f, 0.004f, 0.404f, 0.522f, -0.129f, -0.542f, -0.035f, 0.013f, 0.024f, 0.013f, 0.061f, 0.063f, 0.068f, 0.074f, 0.087f, 0.098f, 0.12f, 0.145f, 0.184f, 0.206f, 0.268f, 0.336f, 0.406f, 0.505f, 0.604f, 0.637f, 0.659f, 0.602f, 0.417f, 0.193f, -0.041f, -0.197f, -0.303f, -0.382f, -0.373f, -0.393f, -0.371f, -0.369f, -0.366f, -0.353f, -0.316f, -0.309f, -0.298f, -0.294f, -0.263f, -0.25f, -0.204f, -0.202f, -0.182f, -0.197f, -0.184f, -0.156f, -0.175f, -0.171f, -0.171f, -0.171f, -0.175f, -0.173f, -0.156f, -0.171f, -0.153f, -0.16f, -0.149f, -0.123f, -0.109f, -0.101f, -0.112f, -0.105f, -0.079f, -0.105f, -0.098f, -0.07f, -0.083f, -0.061f, -0.039f, 0.017f, 0.035f, 0.035f, -0.01f, -0.01f, -0.024f, -0.037f, -0.074f, -0.035f, -0.061f, -0.061f, -0.046f, -0.032f, -0.039f, 0.021f, 0.101f, 0.318f, 0.76f, 0.206f, -0.736f, -0.265f, -0.046f, 0.008f, 0.006f, 0.026f, 0.05f, 0.037f, 0.063f, 0.079f, 0.094f, 0.12f, 0.149f, 0.173f, 0.217f, 0.252f, 0.312f, 0.397f, 0.5f, 0.595f, 0.665f, 0.683f, 0.67f, 0.544f, 0.307f, 0.098f, -0.105f, -0.219f, -0.301f, -0.331f, -0.369f, -0.349f, -0.36f, -0.329f, -0.294f, -0.285f, -0.287f, -0.252f, -0.257f, -0.217f, -0.219f, -0.195f, -0.18f, -0.166f, -0.151f, -0.14f, -0.138f, -0.136f, -0.136f, -0.134f, -0.142f, -0.142f, -0.134f, -0.105f, -0.094f, -0.096f, -0.09f, -0.087f, -0.083f, -0.083f, -0.065f, -0.063f, -0.061f, -0.081f, -0.05f, -0.013f, -0.01f, 0.026f, 0.0f, -0.008f, 0.002f, -0.039f, -0.052f, -0.07f, -0.057f, -0.054f, -0.046f, -0.037f, -0.035f, 0.006f, 0.116f, 0.114f, 0.606f, 0.465f, -0.461f, -0.408f, -0.03f, 0.024f, 0.046f};
+        if (weekPdfData.getEcgData() == null) return;
         float[] ecgData = weekPdfData.getEcgData();
         //信息
         int co = 80;
@@ -100,38 +217,44 @@ public class PdfGenerator {
                 .endText();
         pdfCanvas.beginText()
                 .moveText(x, y - lo)
-                .showText("心率(bpm)：" + (weekPdfData.getHr() == null ? "-" : weekPdfData.getHr()))
+                .showText("心率(bpm)：" + (weekPdfData.getHr() == null || Objects.equals(weekPdfData.getHr(), "nan") ? "-" : weekPdfData.getHr()))
                 .endText();
         pdfCanvas.beginText()
                 .moveText(x + co, y - lo)
-                .showText("P波(ms)：" + (weekPdfData.getP() == null ? "-" : weekPdfData.getP()))
+                .showText("P波(ms)：" + (weekPdfData.getP() == null || Objects.equals(weekPdfData.getP(), "nan") ? "-" : weekPdfData.getP()))
+                .endText();
+//        pdfCanvas.beginText()
+//                .moveText(x + 2 * co, y - lo)
+//                .showText("RR间期(ms)：" + (weekPdfData.getRr() == null ? "-" : weekPdfData.getRr()))
+//                .endText();
+        pdfCanvas.beginText()
+                .moveText(x + 2 * (co + 5), y - lo)
+                .showText("QRS波群(ms)：" + (weekPdfData.getQrs() == null || Objects.equals(weekPdfData.getQrs(), "nan") ? "-" : weekPdfData.getQrs()))
                 .endText();
         pdfCanvas.beginText()
-                .moveText(x + 2 * co, y - lo)
-                .showText("RR间期(ms)：" + (weekPdfData.getRr() == null ? "-" : weekPdfData.getRr()))
-                .endText();
-        pdfCanvas.beginText()
-                .moveText(x + 3 * (co + 5), y - lo)
-                .showText("QRS波群(ms)：" + (weekPdfData.getQrs() == null ? "-" : weekPdfData.getQrs()))
+                .moveText(x + 3 * (co + 10), y - lo)
+                .showText("QTc(ms)：" + (weekPdfData.getQtc() == null || Objects.equals(weekPdfData.getQtc(), "nan") ? "-" : weekPdfData.getQtc()))
                 .endText();
         pdfCanvas.beginText()
                 .moveText(x + 4 * (co + 10), y - lo)
-                .showText("QTc(ms)：" + (weekPdfData.getQtc() == null ? "-" : weekPdfData.getQtc()))
+                .showText("HRV(ms)：" + (weekPdfData.getHrv() == null || Objects.equals(weekPdfData.getHrv(), "nan") ? "-" : weekPdfData.getHrv()))
                 .endText();
+
+        pdfCanvas.setFontAndSize(font, 5);
         pdfCanvas.beginText()
-                .moveText(x + 5 * (co + 10), y - lo)
-                .showText("HRV(ms)：" + (weekPdfData.getHrv() == null ? "-" : weekPdfData.getHrv()))
+                .moveText(x + width - 45, y - 15)
+                .showText("25mm/s 10mm/mV")
                 .endText();
         pdfCanvas.stroke();
         // 设置绘图区域
         y = y - lo - 3;
         com.itextpdf.kernel.geom.Rectangle rectangle = new com.itextpdf.kernel.geom.Rectangle(x, y - height, width, height);
         // 设置画布边框
-        pdfCanvas.setLineWidth(0.1f);
+        pdfCanvas.setLineWidth(0.4f);
         pdfCanvas.setStrokeColor(ColorConstants.BLACK);
         pdfCanvas.rectangle(rectangle);
         pdfCanvas.stroke();
-        pdfCanvas.setLineWidth(0.2f);
+        pdfCanvas.setLineWidth(0.4f);
 
         //一大格
         double pigK = 10.5;
@@ -140,34 +263,47 @@ public class PdfGenerator {
         for (double i = y - height; i < y; i += pigK) {
             pdfCanvas.moveTo(x, i);
             pdfCanvas.lineTo(x + width, i);
-            pdfCanvas.stroke();
         }
         for (double i = x; i < x + width; i += pigK) {
             pdfCanvas.moveTo(i, y - height);
             pdfCanvas.lineTo(i, y);
-            pdfCanvas.stroke();
         }
+        pdfCanvas.stroke();
+        //画线
+        pdfCanvas.setLineWidth(0.01f);
         int index = 0;
         int indey = 0;
         for (double i = y - height + smallK; i < y; i += smallK) {
             index++;
             if (index % 5 == 0) continue;
-            indey = 0;
-            for (double j = x + smallK; j < x + width; j += smallK) {
-                indey++;
-                if (indey % 5 == 0) continue;
-                pdfCanvas.circle(j, i, 0.2);
-                pdfCanvas.fill();
-            }
+//            indey = 0;
+//            for (double j = x + smallK; j < x + width; j += smallK) {
+//                indey++;
+//                if (indey % 5 == 0) continue;
+//                pdfCanvas.circle(j, i, 0.2);
+//                pdfCanvas.fill();
+//            }
+            pdfCanvas.moveTo(x, i);
+            pdfCanvas.lineTo(x + width, i);
         }
+        index = 0;
+        for (double i = x + smallK; i < width + x; i += smallK) {
+            index++;
+            if (index % 5 == 0) continue;
+            pdfCanvas.moveTo(i, y);
+            pdfCanvas.lineTo(i, y - height);
+        }
+
+        pdfCanvas.stroke();
+
 
         //画心电图
         pdfCanvas.setFontAndSize(font, 8);
-        pdfCanvas.setLineWidth(0.4f);
+        pdfCanvas.setLineWidth(0.5f);
         pdfCanvas.setFillColor(ColorConstants.BLACK);
         double dx, dy;
         dx = x;
-        dy = y - height + 16 * pigK;
+        dy = y - 4 * pigK;
         pdfCanvas.moveTo(dx, dy);
         int flag = 0;
         int sampleRate = 250;
@@ -176,14 +312,14 @@ public class PdfGenerator {
             flag++;
             if (flag >= ecgData.length / 3) break;
         }
-        dy = y - height + 10 * pigK;
+        dy = y - 7 * pigK;
         pdfCanvas.moveTo(dx, dy);
         for (double i = x; i < x + width; i += 5 * pigK / sampleRate) {
             pdfCanvas.lineTo(i, dy + ecgData[flag] * 2 * pigK);
             flag++;
             if (flag >= ecgData.length / 3 * 2) break;
         }
-        dy = y - height + 4 * pigK;
+        dy = y - 10 * pigK;
         pdfCanvas.moveTo(dx, dy);
         for (double i = x; i < x + width; i += 5 * pigK / sampleRate) {
             pdfCanvas.lineTo(i, dy + ecgData[flag] * 2 * pigK);
