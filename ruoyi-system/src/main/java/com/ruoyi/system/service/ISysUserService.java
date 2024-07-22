@@ -229,4 +229,5 @@ public interface ISysUserService {
     public int insertMedical(SysUser sysUser);
 
 
+    int updateNum(SysUser sysUser);
 }

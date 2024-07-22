@@ -86,4 +86,5 @@ public interface ReportMapper
     List<Report> selectA(Limit limit);
 
 
+    Report getRecentlyTimeByPhone(String patientPhone);
 }

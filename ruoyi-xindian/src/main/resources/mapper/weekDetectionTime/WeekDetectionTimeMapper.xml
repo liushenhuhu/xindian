@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.weekDetectionTime.mapper.WeekDetectionTimeMapper">
+    
+    <resultMap type="WeekDetectionTime" id="WeekDetectionTimeResult">
+        <result property="id"    column="id"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="detectionTime"    column="detection_time"    />
+    </resultMap>
+
+    <sql id="selectWeekDetectionTimeVo">
+        select id, patient_phone, detection_time from week_detection_time
+    </sql>
+
+    <select id="selectWeekDetectionTimeList" parameterType="WeekDetectionTime" resultMap="WeekDetectionTimeResult">
+        <include refid="selectWeekDetectionTimeVo"/>
+        <where>  
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="detectionTime != null "> and detection_time = #{detectionTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWeekDetectionTimeById" parameterType="Long" resultMap="WeekDetectionTimeResult">
+        <include refid="selectWeekDetectionTimeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWeekDetectionTime" parameterType="WeekDetectionTime" useGeneratedKeys="true" keyProperty="id">
+        insert into week_detection_time
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientPhone != null and patientPhone != ''">patient_phone,</if>
+            <if test="detectionTime != null">detection_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientPhone != null and patientPhone != ''">#{patientPhone},</if>
+            <if test="detectionTime != null">#{detectionTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWeekDetectionTime" parameterType="WeekDetectionTime">
+        update week_detection_time
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientPhone != null and patientPhone != ''">patient_phone = #{patientPhone},</if>
+            <if test="detectionTime != null">detection_time = #{detectionTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWeekDetectionTimeById" parameterType="Long">
+        delete from week_detection_time where id = #{id}
+    </delete>
+
+    <delete id="deleteWeekDetectionTimeByIds" parameterType="String">
+        delete from week_detection_time where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

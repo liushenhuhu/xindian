@@ -42,7 +42,7 @@ public class WSurveyController extends BaseController {
     /**
      * 查询wSuryvey列表
      */
-    @PreAuthorize("@ss.hasPermi('system:survey:list')")
+//    @PreAuthorize("@ss.hasPermi('system:survey:list')")
     @GetMapping("/list")
     public TableDataInfo list(WSurvey wSurvey) throws Exception {
         if (wSurvey.getPatientPhone() != null)
@@ -58,7 +58,7 @@ public class WSurveyController extends BaseController {
     /**
      * 导出wSuryvey列表
      */
-    @PreAuthorize("@ss.hasPermi('system:survey:export')")
+//    @PreAuthorize("@ss.hasPermi('system:survey:export')")
     @Log(title = "wSuryvey", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, WSurvey wSurvey) {
@@ -70,7 +70,7 @@ public class WSurveyController extends BaseController {
     /**
      * 获取wSuryvey详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:survey:query')")
+//    @PreAuthorize("@ss.hasPermi('system:survey:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(wSurveyService.selectWSurveyById(id));
@@ -79,7 +79,7 @@ public class WSurveyController extends BaseController {
     /**
      * 新增wSuryvey
      */
-    @PreAuthorize("@ss.hasPermi('system:survey:add')")
+//    @PreAuthorize("@ss.hasPermi('system:survey:add')")
     @Log(title = "wSuryvey", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody WSurvey wSurvey) {
@@ -89,7 +89,7 @@ public class WSurveyController extends BaseController {
     /**
      * 修改wSuryvey
      */
-    @PreAuthorize("@ss.hasPermi('system:survey:edit')")
+//    @PreAuthorize("@ss.hasPermi('system:survey:edit')")
     @Log(title = "wSuryvey", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WSurvey wSurvey) throws Exception {

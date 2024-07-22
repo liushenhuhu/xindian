@@ -135,4 +135,9 @@ public class ReportServiceImpl implements IReportService
             reportMapper.updateReport(c);
         }
     }
+
+    @Override
+    public Report getRecentlyTimeByPhone(String patientPhone) {
+        return reportMapper.getRecentlyTimeByPhone(patientPhone);
+    }
 }

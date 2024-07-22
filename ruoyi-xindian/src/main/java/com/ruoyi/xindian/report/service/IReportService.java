@@ -92,4 +92,5 @@ public interface IReportService
 
     void reportAes(Limit limit) throws Exception;
 
+    Report getRecentlyTimeByPhone(String patientPhone);
 }
