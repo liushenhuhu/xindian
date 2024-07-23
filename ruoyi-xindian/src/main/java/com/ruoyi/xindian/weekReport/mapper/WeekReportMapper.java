@@ -60,4 +60,6 @@ public interface WeekReportMapper
     public int deleteWeekReportByIds(Long[] ids);
 
     List<WeekReport> groupByPatientPhone(String getdPhone);
+
+    WeekReport selectWeekReportByWeekId(String weekid);
 }

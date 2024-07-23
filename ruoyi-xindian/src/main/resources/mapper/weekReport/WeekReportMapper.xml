@@ -44,6 +44,10 @@
           and diagnosis_status = 1
         group by patient_phone;
     </select>
+    <select id="selectWeekReportByWeekId" resultType="com.ruoyi.xindian.weekReport.domain.WeekReport">
+        <include refid="selectWeekReportVo"/>
+        where weekid = #{weekid}
+    </select>
 
     <insert id="insertWeekReport" parameterType="WeekReport" useGeneratedKeys="true" keyProperty="id">
         insert into week_report
@@ -68,14 +72,13 @@
     <update id="updateWeekReport" parameterType="WeekReport">
         update week_report
         <trim prefix="SET" suffixOverrides=",">
-            <if test="weekid != null">weekid = #{weekid},</if>
             <if test="patientPhone != null and patientPhone != ''">patient_phone = #{patientPhone},</if>
             <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
             <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
             <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
             <if test="weekpdftime != null">weekpdftime = #{weekpdftime},</if>
         </trim>
-        where id = #{id}
+        where weekid = #{weekid}
     </update>
 
     <delete id="deleteWeekReportById" parameterType="Long">

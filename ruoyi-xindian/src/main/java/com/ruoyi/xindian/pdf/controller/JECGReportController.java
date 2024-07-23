@@ -344,9 +344,9 @@ public class JECGReportController {
         nowTime = nowTime.replace(":", "");
         nowTime = nowTime.replace("-", "");
         String weekId = nowTime;
-        weekReport.setWeekid(weekId);
+        weekReport.setWeekid(patientManagement.getPatientPhone() + weekId);
         weekReport.setWeekpdftime(new Date());
-        String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + "/" + weekId + ".pdf";
+        String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + "/" + weekReport.getWeekid() + ".pdf";
         File file = new File("/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone());
         if (!file.exists()) file.mkdirs();
         //write_dir = "E:/test.pdf";

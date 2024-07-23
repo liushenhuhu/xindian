@@ -88,8 +88,9 @@ public class WeekReportServiceImpl implements IWeekReportService {
             //修改pdf
             if (weekReport.getDiagnosisConclusion() != null) {
 
-                WeekReport wP = weekReportMapper.selectWeekReportById(weekReport.getId());
-                Patient patient = patientService.selectPatientByPatientPhone(weekReport.getDoctorPhone());
+                WeekReport wP = weekReportMapper.selectWeekReportByWeekId(weekReport.getWeekid());
+
+                Patient patient = patientService.selectPatientByPatientPhone(wP.getDoctorPhone());
                 String patientPhone = aesUtils.decrypt(wP.getPatientPhone());
                 String src = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientPhone + "/" + wP.getWeekid() + ".pdf";
                 String dest = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientPhone + "/" + wP.getWeekid() + "_md.pdf";
