@@ -104,7 +104,7 @@ public class GenerateSms {
         logger.info(" 为 {} 设置短信验证码：{}", mobile, code);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("uuid", uuid);
-//        ajax.put("smsCode", code);
+        ajax.put("smsCode", code);
 //        ajax.put("codeResult", codeResult);
         return ajax;
     }

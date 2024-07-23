@@ -7,6 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -14,6 +16,8 @@ import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.service.ISysUserService;
@@ -148,16 +152,24 @@ public class WeekReportController extends BaseController {
                     .showText(s).endText();
             y -= 10;
         }
-        canvas.beginText().moveText(80, 493).setFontAndSize(font, 8)
-                .showText("陈鹏").endText();
+//        canvas.beginText().moveText(80, 493).setFontAndSize(font, 8)
+//                .showText("陈鹏").endText();
+
+        ImageData imageData = ImageDataFactory.create("C:\\Users\\chenpeng\\Pictures\\Saved Pictures\\chenpeng.jpg");
+        Image image = new Image(imageData)
+                .setFixedPosition(450,500)
+                .scaleToFit(100,100)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER);
+        document.add(image);
+
 
         // 关闭文档
         document.close();
         pdfDoc.close();
 
         //复制pdf
-        pdfDoc = new PdfDocument(new PdfReader(dest), new PdfWriter(src));
-        pdfDoc.close();
+//        pdfDoc = new PdfDocument(new PdfReader(dest), new PdfWriter(src));
+//        pdfDoc.close();
 
         return AjaxResult.success();
     }
