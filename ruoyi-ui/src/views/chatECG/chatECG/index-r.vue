@@ -543,7 +543,7 @@ export default {
 
       // 设置错误消息
       this.voc.setErrorFunc(() => {
-        this.$message.error('语音网络连接失败，请稍后重试或使用输入框手动输入')
+        this.$message.info('语音网络连接失败，请稍后重试或使用输入框手动输入')
         setTimeout(() => {
           this.recorderStop()
         }, 50)
