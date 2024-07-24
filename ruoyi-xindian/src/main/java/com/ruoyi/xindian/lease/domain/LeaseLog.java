@@ -9,37 +9,17 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 租赁详情
- * @TableName lease_details
+ * 
+ * @TableName lease_log
  */
-@TableName(value ="lease_details")
+@TableName(value ="lease_log")
 @Data
-public class LeaseDetails implements Serializable {
+public class LeaseLog implements Serializable {
     /**
-     * 租赁详情id
+     * 租赁日志
      */
     @TableId(type = IdType.AUTO)
-    private Integer leaseDetailsId;
-
-    /**
-     * 租赁id
-     */
-    private Long leaseId;
-
-    /**
-     * 设备号
-     */
-    private String equipmentCode;
-
-    /**
-     * 设备类型
-     */
-    private String equipmentType;
-
-    /**
-     * 设备的状态（1=使用中，0=未使用）
-     */
-    private String status;
+    private Integer leaseLogId;
 
     /**
      * 用户名称
@@ -52,17 +32,27 @@ public class LeaseDetails implements Serializable {
     private String phone;
 
     /**
-     * 保证金
+     * 是否归还（0=租赁，1=归还）
      */
-    private String cashPledge;
+    private String status;
 
     /**
-     * 租赁时间
+     * 设备号
+     */
+    private String equipmentCode;
+
+    /**
+     * 设备类型
+     */
+    private String equipmentType;
+
+    /**
+     * 创建时间
      */
     private Date createTime;
 
     /**
-     * 归还时间
+     * 修改时间
      */
     private Date updateTime;
 

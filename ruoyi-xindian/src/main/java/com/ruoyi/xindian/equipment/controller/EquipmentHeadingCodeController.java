@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.equipment.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.util.StringUtil;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -7,6 +8,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
@@ -22,6 +24,11 @@ import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.lease.domain.Lease;
+import com.ruoyi.xindian.lease.domain.LeaseDetails;
+import com.ruoyi.xindian.lease.domain.LeaseLog;
+import com.ruoyi.xindian.lease.mapper.LeaseDetailsMapper;
+import com.ruoyi.xindian.lease.service.LeaseDetailsService;
+import com.ruoyi.xindian.lease.service.LeaseLogService;
 import com.ruoyi.xindian.lease.service.LeaseService;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
@@ -75,6 +82,10 @@ public class EquipmentHeadingCodeController extends BaseController {
     private String sxUrl;
 
 
+    @Autowired
+    private LeaseDetailsService leaseDetailsService;
+
+
     @Resource
     private EquipmentHeadingCodeService equipmentHeadingCodeService;
 
@@ -125,6 +136,13 @@ public class EquipmentHeadingCodeController extends BaseController {
     @Autowired
     private LeaseService leaseService;
 
+
+    @Resource
+    private LeaseLogService leaseLogService;
+
+
+    @Resource
+    private LeaseDetailsMapper leaseDetailsMapper;
 
     /**
      * 查询善行设备管理列表
@@ -342,41 +360,66 @@ public class EquipmentHeadingCodeController extends BaseController {
         if (patient==null){
             return AjaxResult.error("患者信息不存在");
         }
-        if (equipment.getEquipmentStatus().equals("True")){
-            return AjaxResult.error(207,"当前设备已被使用，请更换设备后重试");
-        }
-        String sxUserId = getSXUserId(patient);
-        if (sxUserId==null){
-            sxUserId = getSXUserId(patient);
-        }
-        String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
-        HttpHeaders headers = new HttpHeaders(); //构建请求头
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("authorization","Bearer "+equipmentCodeAccessToken);
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("userId",sxUserId);
-        paramsMap.put("mac", equipment.getEquipmentCode());
+//        if (equipment.getEquipmentStatus().equals("True")){
+//            return AjaxResult.error(207,"当前设备已被使用，请更换设备后重试");
+//        }
+//        String sxUserId = getSXUserId(patient);
+//        if (sxUserId==null){
+//            sxUserId = getSXUserId(patient);
+//        }
+//        String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
+//        HttpHeaders headers = new HttpHeaders(); //构建请求头
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.set("authorization","Bearer "+equipmentCodeAccessToken);
+//        Map<String, Object> paramsMap = new HashMap<>();
+//        paramsMap.put("userId",sxUserId);
+//        paramsMap.put("mac", equipment.getEquipmentCode());
+//
+//        HttpEntity<Map<String, Object>> request1 = new HttpEntity<>(paramsMap,headers);
+//
+//        String url = sxUrl+"/bmecg/third/report/zzdx/bindDevice";
+//        HashMap<String,String> sendMessageVo=null;
+//        try {
+//            sendMessageVo = restTemplate.postForObject(url, request1, HashMap.class);
+//        }catch (Exception e){
+//            System.out.println(e);
+//        }
 
-        HttpEntity<Map<String, Object>> request1 = new HttpEntity<>(paramsMap,headers);
 
-        String url = sxUrl+"/bmecg/third/report/zzdx/bindDevice";
-        HashMap<String,String> sendMessageVo=null;
-        try {
-            sendMessageVo = restTemplate.postForObject(url, request1, HashMap.class);
-        }catch (Exception e){
-            System.out.println(e);
-        }
-        EquipmentHeadingCode finalEquipmentHeadingCode = equipmentHeadingCode;
-        redisTemplate.opsForValue().set("getEquipmentCodeTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),5, TimeUnit.SECONDS);
-        redisTemplate.opsForValue().set("getEquipmentCodeT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),30,TimeUnit.MINUTES);
-        redisTemplate.opsForValue().set("getEquipmentCodeSF!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),12,TimeUnit.SECONDS);
-        if (sendMessageVo!=null){
-            if (sendMessageVo.get("resultCode").equals("200")){
-                return AjaxResult.success("绑定成功,请等待2-3分钟后重新打开");
-            }else {
-                return AjaxResult.error(sendMessageVo.get("resultMsg"));
+        LeaseDetails leaseDetails1 = leaseDetailsService.selectLeaseDetailsByEquipmentCode(equipment.getEquipmentCode());
+        if (leaseDetails1!=null){
+            if (StringUtils.isNotEmpty(leaseDetails1.getStatus())&&!leaseDetails1.getStatus().equals("1")){
+                LeaseDetails leaseDetails = new LeaseDetails();
+                leaseDetails.setUsername(aesUtils.decrypt(patient.getPatientName()));
+                leaseDetails.setCreateTime(new Date());
+                leaseDetails.setPhone(phone);
+                leaseDetails.setEquipmentCode(equipment.getEquipmentCode());
+                int update = leaseDetailsMapper.update(leaseDetails, new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getEquipmentCode, leaseDetails.getEquipmentCode()));
+
+                LeaseLog leaseLog = new LeaseLog();
+                leaseLog.setUsername(aesUtils.decrypt(patient.getPatientName()));
+                leaseLog.setPhone(phone);
+                leaseLog.setStatus("1");
+                leaseLog.setEquipmentCode(equipment.getEquipmentCode());
+                leaseLog.setEquipmentType("心电衣");
+                leaseLog.setCreateTime(new Date());
+                leaseLog.setUpdateTime(new Date());
+                leaseLogService.save(leaseLog);
             }
+
         }
+
+//        EquipmentHeadingCode finalEquipmentHeadingCode = equipmentHeadingCode;
+//        redisTemplate.opsForValue().set("getEquipmentCodeTwo!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),5, TimeUnit.SECONDS);
+//        redisTemplate.opsForValue().set("getEquipmentCodeT15!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),30,TimeUnit.MINUTES);
+//        redisTemplate.opsForValue().set("getEquipmentCodeSF!"+finalEquipmentHeadingCode.getHeadingCode()+"="+phone,finalEquipmentHeadingCode.getEquipmentCode(),12,TimeUnit.SECONDS);
+//        if (sendMessageVo!=null){
+//            if (sendMessageVo.get("resultCode").equals("200")){
+//                return AjaxResult.success("绑定成功,请等待2-3分钟后重新打开");
+//            }else {
+//                return AjaxResult.error(sendMessageVo.get("resultMsg"));
+//            }
+//        }
         return AjaxResult.success("申请绑定成功");
     }
 

@@ -50,6 +50,8 @@ public class SXReportController {
     @Resource
     private SxReportService sxReportService;
 
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
 
     @Resource
     private RestTemplate restTemplate;
@@ -71,8 +73,6 @@ public class SXReportController {
     @Resource
     private FileUploadUtils fileUploadUtils;
 
-    @Resource
-    private RedisTemplate<String,String> redisTemplate;
     @Resource
     private ISysUserService sysUserService;
     /**
@@ -127,19 +127,23 @@ public class SXReportController {
 //                        }
 //                    }
                     if (patient!=null){
-                        if (sxReport.getPatientPhone()!=null&&aesUtils.decrypt(sxReport.getPatientPhone()).length()>11){
-                            sxReport.setPatientPhone(aesUtils.encrypt(aesUtils.decrypt(sxReport.getPatientPhone()).substring(0,11)));
-                        }
-                        SysUser sysUser = sysUserService.selectUserByPhone(sxReport.getPatientPhone());
-                        if (sysUser!=null){
-                            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
-                            String time = "";
-                            try {
-                                time= simpleDate.format(simpleDate.parse(sxReportVO.getStartTime()));
-                            }catch (Exception e){
-                                time = sxReportVO.getStartTime().substring(0,10);
+                        if (!Boolean.TRUE.equals(redisTemplate.hasKey("SX_report:"+patient.getPatientPhone()))){
+                            redisTemplate.opsForValue().set("SX_report:" + patient.getPatientPhone(), "1", 5, TimeUnit.MINUTES);
+                            if (sxReport.getPatientPhone()!=null&&aesUtils.decrypt(sxReport.getPatientPhone()).length()>11){
+                                sxReport.setPatientPhone(aesUtils.encrypt(aesUtils.decrypt(sxReport.getPatientPhone()).substring(0,11)));
                             }
-                            wxPublicRequest.SXEquipmentMsg(sysUser.getOpenId(),aesUtils.decrypt(patient.getPatientName()),aesUtils.decrypt(sxReport.getPatientPhone()),time);
+                            SysUser sysUser = sysUserService.selectUserByPhone(sxReport.getPatientPhone());
+                            if (sysUser!=null){
+                                SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+                                String time = "";
+                                try {
+                                    time= simpleDate.format(simpleDate.parse(sxReportVO.getStartTime()));
+                                }catch (Exception e){
+                                    time = sxReportVO.getStartTime().substring(0,10);
+                                }
+
+                                wxPublicRequest.SXEquipmentMsg(sysUser.getOpenId(),aesUtils.decrypt(patient.getPatientName()),aesUtils.decrypt(sxReport.getPatientPhone()),time);
+                            }
                         }
                     }
                 }catch (Exception e){

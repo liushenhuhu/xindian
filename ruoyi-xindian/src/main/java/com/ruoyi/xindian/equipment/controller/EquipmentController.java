@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.equipment.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -367,6 +368,67 @@ public class EquipmentController extends BaseController {
         return getDataTable(equipment1);
     }
 
+
+    @GetMapping("/getEquipmentList")
+    public AjaxResult getEquipmentList(Equipment equipment) throws Exception {
+
+        List<Equipment> list = new ArrayList<>();
+
+        if (equipment.getDepartmentName()!=null&&!"".equals(equipment.getDepartmentName())){
+            Department department1 = new Department();
+            department1.setDepartmentName(equipment.getDepartmentName());
+
+            List<Department> departments1 = departmentService.selectDepartmentList(department1);
+            for (Department c:departments1){
+                equipment.getDepartmentCodeList().add(c.getDepartmentCode());
+            }
+        }
+        Long userId = getUserId();
+        if (!SysUser.isAdmin(userId)) {
+            SysUser sysUser = userService.selectUserById(getUserId());
+            String hospitalCode = sysUser.getHospitalCode();
+            equipment.getHospitalCodeList().add(hospitalCode);
+            if (equipment.getHospitalCode()!=null){
+                Hospital hospital = hospitalService.selectHospitalByHospitalCode(hospitalCode);
+                if (hospital!=null){
+                    AssociatedHospital associatedHospital = new AssociatedHospital();
+                    associatedHospital.setHospitalId(hospital.getHospitalId());
+                    List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+                    if (associatedHospitals!=null&& !associatedHospitals.isEmpty()){
+                        for (AssociatedHospital c:associatedHospitals){
+                            Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                            equipment.getHospitalCodeList().add(hospital1.getHospitalCode());
+                        }
+                    }
+                }
+            }
+            if (equipment.getHospitalCode()!=null&&!"".equals(equipment.getHospitalCode())){
+                List<String> equipmentList = equipment.getHospitalCodeList();
+                if (equipmentList!=null&& !equipmentList.isEmpty()){
+                    for (String c : equipmentList){
+                        if (c.equals(equipment.getHospitalCode())){
+
+                            equipment.getHospitalCodeList().clear();
+                            equipment.getHospitalCodeList().add(equipment.getHospitalCode());
+                            break;
+                        }
+                    }
+                }
+            }
+            list = equipmentService.selectEquipmentList(equipment);
+        } else {
+            if (equipment.getHospitalCode()!=null&&!"".equals(equipment.getHospitalCode())){
+                Hospital hospital = hospitalService.selectCode(equipment.getHospitalCode());
+                if (hospital==null){
+                    return AjaxResult.success(list);
+                }
+                equipment.getHospitalCodeList().add(hospital.getHospitalCode());
+            }
+            list = equipmentService.selectEquipmentList(equipment);
+        }
+        Collection<Equipment> collect = list.stream().filter(c -> StringUtils.isNotEmpty(c.getEquipmentCode())).collect(Collectors.toList());
+        return AjaxResult.success(collect);
+    }
 
 
 }

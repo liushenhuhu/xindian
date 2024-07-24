@@ -129,7 +129,7 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-share"
             @click="handleUpdateByAll(scope.row)"
             v-hasPermi="['lease:lease:edit']"
           >查看租赁设备情况</el-button>
@@ -174,7 +174,14 @@
           <el-row :gutter="24">
             <el-col :span="8">
               <el-form-item label="设备号" >
-                <el-input v-model="item.equipmentCode"   placeholder="请输入设备号"/>
+                <el-select v-model="item.equipmentCode" filterable placeholder="请选择设备号" @change="equipmentCodeChange(item.equipmentCode)">
+                  <el-option
+                    v-for="item1 in equipmentList"
+                    :key="item1.equipmentCode"
+                    :label="item1.equipmentCode"
+                    :value="item1.equipmentCode">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -216,6 +223,7 @@
 
 <script>
 import { listLease, getLease, delLease, addLease, updateLease } from "@/api/lease/lease";
+import {getEquipmentList} from "@/api/equipment/equipment";
 
 export default {
   name: "Lease",
@@ -235,6 +243,7 @@ export default {
       total: 0,
       // 租赁表格数据
       leaseList: [],
+      equipmentList: [],
       // 弹出层标题
       title: "",
       titleByDetails: "",
@@ -296,6 +305,9 @@ export default {
     };
   },
   created() {
+    getEquipmentList().then(r=>{
+      this.equipmentList = r.data
+    })
     this.getList();
   },
   methods: {
@@ -307,6 +319,11 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    equipmentCodeChange(code){
+      if (code){
+        this.equipmentList =  this.equipmentList.filter(item => item.equipmentCode!=code)
+      }
     },
     // 取消按钮
     cancel() {
