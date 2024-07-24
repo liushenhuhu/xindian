@@ -2,13 +2,14 @@ package com.ruoyi.xindian.lease.mapper;
 
 import com.ruoyi.xindian.lease.domain.LeaseDetails;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
 * @author w
-* @description 针对表【lease_details】的数据库操作Mapper
-* @createDate 2024-07-18 11:51:35
+* @description 针对表【lease_details(租赁详情)】的数据库操作Mapper
+* @createDate 2024-07-23 15:36:32
 * @Entity com.ruoyi.xindian.lease.domain.LeaseDetails
 */
 public interface LeaseDetailsMapper extends BaseMapper<LeaseDetails> {
@@ -20,6 +21,7 @@ public interface LeaseDetailsMapper extends BaseMapper<LeaseDetails> {
      * @return 租赁详情
      */
     public LeaseDetails selectLeaseDetailsByLeaseDetailsId(Long leaseDetailsId);
+    public LeaseDetails selectLeaseDetailsByCode(@Param("code") String code);
 
     /**
      * 查询租赁详情列表

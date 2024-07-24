@@ -9,10 +9,16 @@
         <result property="leaseId"    column="lease_id"    />
         <result property="equipmentCode"    column="equipment_code"    />
         <result property="equipmentType"    column="equipment_type"    />
+        <result property="status"    column="status"    />
+        <result property="username"    column="username"    />
+        <result property="phone"    column="phone"    />
+        <result property="cashPledge"    column="cash_pledge"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectLeaseDetailsVo">
-        select lease_details_id, lease_id, equipment_code, equipment_type from lease_details
+        select lease_details_id, lease_id, equipment_code, equipment_type, status, username, phone, cash_pledge, create_time ,update_time from lease_details
     </sql>
 
     <select id="selectLeaseDetailsList" parameterType="LeaseDetails" resultMap="LeaseDetailsResult">
@@ -21,12 +27,38 @@
             <if test="leaseId != null "> and lease_id = #{leaseId}</if>
             <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code = #{equipmentCode}</if>
             <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="cashPledge != null  and cashPledge != ''"> and cash_pledge = #{cashPledge}</if>
         </where>
     </select>
 
     <select id="selectLeaseDetailsByLeaseDetailsId" parameterType="Long" resultMap="LeaseDetailsResult">
         <include refid="selectLeaseDetailsVo"/>
         where lease_details_id = #{leaseDetailsId}
+    </select>
+    <select id="selectLeaseDetailsByCode" resultType="com.ruoyi.xindian.lease.domain.LeaseDetails" resultMap="LeaseDetailsResult">
+        SELECT
+            lease_details.lease_id,
+            lease_details.lease_details_id,
+            lease_details.equipment_code,
+            lease_details.equipment_type,
+            lease_details.`status`,
+            lease_details.username,
+            lease_details.phone,
+            lease_details.cash_pledge,
+            lease_details.create_time,
+            lease_details.update_time
+        FROM
+            lease
+                INNER JOIN
+            lease_details
+            ON
+                lease.lease_id = lease_details.lease_id
+
+        WHERE equipment_code = #{code}  and  lease.give_back = 0
+        LIMIT 1
     </select>
 
     <insert id="insertLeaseDetails" parameterType="LeaseDetails">
@@ -36,12 +68,24 @@
             <if test="leaseId != null">lease_id,</if>
             <if test="equipmentCode != null">equipment_code,</if>
             <if test="equipmentType != null">equipment_type,</if>
+            <if test="status != null">status,</if>
+            <if test="username != null">username,</if>
+            <if test="phone != null">phone,</if>
+            <if test="cashPledge != null">cash_pledge,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="leaseDetailsId != null">#{leaseDetailsId},</if>
             <if test="leaseId != null">#{leaseId},</if>
             <if test="equipmentCode != null">#{equipmentCode},</if>
             <if test="equipmentType != null">#{equipmentType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="username != null">#{username},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="cashPledge != null">#{cashPledge},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
         </trim>
     </insert>
 
@@ -51,6 +95,12 @@
             <if test="leaseId != null">lease_id = #{leaseId},</if>
             <if test="equipmentCode != null">equipment_code = #{equipmentCode},</if>
             <if test="equipmentType != null">equipment_type = #{equipmentType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="cashPledge != null">cash_pledge = #{cashPledge},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where lease_details_id = #{leaseDetailsId}
     </update>

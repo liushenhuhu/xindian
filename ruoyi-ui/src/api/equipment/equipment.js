@@ -15,7 +15,12 @@ export function ecg_use(query) {
     params: query
   })
 }
-
+export function getEquipmentList() {
+  return request({
+    url: '/equipment/equipment/getEquipmentList',
+    method: 'get',
+  })
+}
 // 查询设备详细
 export function getEquipment(equipmentId) {
   return request({

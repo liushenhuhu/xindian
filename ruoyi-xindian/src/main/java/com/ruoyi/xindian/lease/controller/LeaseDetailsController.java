@@ -102,4 +102,9 @@ public class LeaseDetailsController extends BaseController
     {
         return toAjax(leaseDetailsService.deleteLeaseDetailsByLeaseDetailsIds(leaseDetailsIds));
     }
+
+    @PutMapping("/putStatus")
+    public AjaxResult putStatus(@RequestBody LeaseDetails leaseDetails) throws Exception {
+        return toAjax(leaseDetailsService.updateLeaseDetailsByEquipmentCode(leaseDetails));
+    }
 }

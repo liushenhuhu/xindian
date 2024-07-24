@@ -7,8 +7,8 @@ import java.util.List;
 
 /**
 * @author w
-* @description 针对表【lease_details】的数据库操作Service
-* @createDate 2024-07-18 11:51:35
+* @description 针对表【lease_details(租赁详情)】的数据库操作Service
+* @createDate 2024-07-23 15:36:32
 */
 public interface LeaseDetailsService extends IService<LeaseDetails> {
 
@@ -19,6 +19,9 @@ public interface LeaseDetailsService extends IService<LeaseDetails> {
      * @return 租赁详情
      */
     public LeaseDetails selectLeaseDetailsByLeaseDetailsId(Long leaseDetailsId);
+
+
+    public LeaseDetails selectLeaseDetailsByEquipmentCode(String equipmentCode);
 
     /**
      * 查询租赁详情列表
@@ -43,6 +46,7 @@ public interface LeaseDetailsService extends IService<LeaseDetails> {
      * @return 结果
      */
     public int updateLeaseDetails(LeaseDetails leaseDetails);
+    public int updateLeaseDetailsByEquipmentCode(LeaseDetails leaseDetails) throws Exception;
 
     /**
      * 批量删除租赁详情
@@ -52,6 +56,8 @@ public interface LeaseDetailsService extends IService<LeaseDetails> {
      */
     public int deleteLeaseDetailsByLeaseDetailsIds(Long[] leaseDetailsIds);
 
+
+
     /**
      * 删除租赁详情信息
      *
@@ -59,5 +65,6 @@ public interface LeaseDetailsService extends IService<LeaseDetails> {
      * @return 结果
      */
     public int deleteLeaseDetailsByLeaseDetailsId(Long leaseDetailsId);
-    public int deleteLeaseDetailsByLeaseId(Long leaseId);
+
+    int deleteLeaseDetailsByLeaseId(Long leaseId);
 }

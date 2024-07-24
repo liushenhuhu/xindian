@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.lease.mapper.LeaseLogMapper">
+
+    <resultMap type="LeaseLog" id="LeaseLogResult">
+        <result property="leaseLogId"    column="lease_log_id"    />
+        <result property="username"    column="username"    />
+        <result property="phone"    column="phone"    />
+        <result property="status"    column="status"    />
+        <result property="equipmentCode"    column="equipment_code"    />
+        <result property="equipmentType"    column="equipment_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectLeaseLogVo">
+        select lease_log_id, username, phone, status, equipment_code, equipment_type, create_time, update_time from lease_log
+    </sql>
+
+    <select id="selectLeaseLogList" parameterType="LeaseLog" resultMap="LeaseLogResult">
+        <include refid="selectLeaseLogVo"/>
+        <where>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code = #{equipmentCode}</if>
+            <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
+        </where>
+    </select>
+
+    <select id="selectLeaseLogByLeaseLogId" parameterType="Long" resultMap="LeaseLogResult">
+        <include refid="selectLeaseLogVo"/>
+        where lease_log_id = #{leaseLogId}
+    </select>
+
+    <insert id="insertLeaseLog" parameterType="LeaseLog">
+        insert into lease_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="leaseLogId != null">lease_log_id,</if>
+            <if test="username != null">username,</if>
+            <if test="phone != null">phone,</if>
+            <if test="status != null">status,</if>
+            <if test="equipmentCode != null">equipment_code,</if>
+            <if test="equipmentType != null">equipment_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="leaseLogId != null">#{leaseLogId},</if>
+            <if test="username != null">#{username},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="status != null">#{status},</if>
+            <if test="equipmentCode != null">#{equipmentCode},</if>
+            <if test="equipmentType != null">#{equipmentType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLeaseLog" parameterType="LeaseLog">
+        update lease_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null">username = #{username},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="equipmentCode != null">equipment_code = #{equipmentCode},</if>
+            <if test="equipmentType != null">equipment_type = #{equipmentType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where lease_log_id = #{leaseLogId}
+    </update>
+
+    <delete id="deleteLeaseLogByLeaseLogId" parameterType="Long">
+        delete from lease_log where lease_log_id = #{leaseLogId}
+    </delete>
+
+    <delete id="deleteLeaseLogByLeaseLogIds" parameterType="String">
+        delete from lease_log where lease_log_id in
+        <foreach item="leaseLogId" collection="array" open="(" separator="," close=")">
+            #{leaseLogId}
+        </foreach>
+    </delete>
+</mapper>
