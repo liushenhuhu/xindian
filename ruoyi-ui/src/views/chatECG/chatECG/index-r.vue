@@ -488,6 +488,7 @@ export default {
 
 
     recorderStart() {
+      clearInterval(this.timeOut)
       // 1
       let ts = new Date().getTime() / 1000;
       ts = parseInt(ts)
