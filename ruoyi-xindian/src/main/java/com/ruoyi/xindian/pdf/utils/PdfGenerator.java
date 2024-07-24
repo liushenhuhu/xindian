@@ -140,8 +140,9 @@ public class PdfGenerator {
                 "最慢心率" + minHr + "bpm（发生于" + minTime + "），" +
                 "房性早搏" + fz + "次，室性早搏" + sz + "次，房颤" + fc +
                 "次，长RR间期" + rr + "次，心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms。\n\n" +
-                "二、诊断结论\n" +
-                "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.";
+                "二、诊断结论";
+//                "二、诊断结论\n" +
+//                "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.";
 
         Table table1 = new Table(6);
         table1.setWidth(UnitValue.createPercentValue(100));
@@ -250,11 +251,11 @@ public class PdfGenerator {
         y = y - lo - 3;
         com.itextpdf.kernel.geom.Rectangle rectangle = new com.itextpdf.kernel.geom.Rectangle(x, y - height, width, height);
         // 设置画布边框
-        pdfCanvas.setLineWidth(0.4f);
+        pdfCanvas.setLineWidth(0.2f);
         pdfCanvas.setStrokeColor(ColorConstants.BLACK);
         pdfCanvas.rectangle(rectangle);
         pdfCanvas.stroke();
-        pdfCanvas.setLineWidth(0.4f);
+        pdfCanvas.setLineWidth(0.2f);
 
         //一大格
         double pigK = 10.5;
@@ -270,7 +271,8 @@ public class PdfGenerator {
         }
         pdfCanvas.stroke();
         //画线
-        pdfCanvas.setLineWidth(0.01f);
+        pdfCanvas.setLineWidth(0.1f);
+//        pdfCanvas.setStrokeColor(ColorConstants.DARK_GRAY);
         int index = 0;
         int indey = 0;
         for (double i = y - height + smallK; i < y; i += smallK) {
@@ -293,13 +295,11 @@ public class PdfGenerator {
             pdfCanvas.moveTo(i, y);
             pdfCanvas.lineTo(i, y - height);
         }
-
         pdfCanvas.stroke();
-
 
         //画心电图
         pdfCanvas.setFontAndSize(font, 8);
-        pdfCanvas.setLineWidth(0.5f);
+        pdfCanvas.setLineWidth(0.4f);
         pdfCanvas.setFillColor(ColorConstants.BLACK);
         double dx, dy;
         dx = x;

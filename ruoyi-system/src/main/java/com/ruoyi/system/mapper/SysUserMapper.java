@@ -161,4 +161,5 @@ public interface SysUserMapper
 
     int updateWeeklyNewspaperNum(@Param("patientPhone") String patientPhone,@Param("sum") long sum);
 
+    int updateNum(SysUser sysUser);
 }

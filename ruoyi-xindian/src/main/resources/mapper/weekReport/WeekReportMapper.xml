@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.weekReport.mapper.WeekReportMapper">
+
+    <resultMap type="WeekReport" id="WeekReportResult">
+        <result property="id" column="id"/>
+        <result property="weekid" column="weekid"/>
+        <result property="patientPhone" column="patient_phone"/>
+        <result property="doctorPhone" column="doctor_phone"/>
+        <result property="diagnosisStatus" column="diagnosis_status"/>
+        <result property="diagnosisConclusion" column="diagnosis_conclusion"/>
+        <result property="weekpdftime" column="weekpdftime"/>
+    </resultMap>
+
+    <sql id="selectWeekReportVo">
+        select id, weekid, patient_phone, doctor_phone, diagnosis_status, diagnosis_conclusion, weekpdftime
+        from week_report
+    </sql>
+
+    <select id="selectWeekReportList" parameterType="WeekReport" resultMap="WeekReportResult">
+        <include refid="selectWeekReportVo"/>
+        <where>
+            <if test="weekid != null ">and weekid = #{weekid}</if>
+            <if test="patientPhone != null  and patientPhone != ''">and patient_phone = #{patientPhone}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone = #{doctorPhone}</if>
+            <if test="diagnosisStatus != null ">and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="weekpdftime != null ">and weekpdftime = #{weekpdftime}</if>
+            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''">and diagnosis_conclusion =
+                #{diagnosisConclusion}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWeekReportById" parameterType="Long" resultMap="WeekReportResult">
+        <include refid="selectWeekReportVo"/>
+        where id = #{id}
+    </select>
+    <select id="groupByPatientPhone" resultType="com.ruoyi.xindian.weekReport.domain.WeekReport">
+        select patient_phone
+        from week_report
+        where doctor_phone = #{getdPhone}
+          and diagnosis_status = 1
+        group by patient_phone;
+    </select>
+    <select id="selectWeekReportByWeekId" resultType="com.ruoyi.xindian.weekReport.domain.WeekReport">
+        <include refid="selectWeekReportVo"/>
+        where weekid = #{weekid}
+    </select>
+
+    <insert id="insertWeekReport" parameterType="WeekReport" useGeneratedKeys="true" keyProperty="id">
+        insert into week_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="weekid != null">weekid,</if>
+            <if test="patientPhone != null and patientPhone != ''">patient_phone,</if>
+            <if test="doctorPhone != null">doctor_phone,</if>
+            <if test="diagnosisStatus != null">diagnosis_status,</if>
+            <if test="diagnosisConclusion != null">diagnosis_conclusion,</if>
+            <if test="weekpdftime != null">weekpdftime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="weekid != null">#{weekid},</if>
+            <if test="patientPhone != null and patientPhone != ''">#{patientPhone},</if>
+            <if test="doctorPhone != null">#{doctorPhone},</if>
+            <if test="diagnosisStatus != null">#{diagnosisStatus},</if>
+            <if test="diagnosisConclusion != null">#{diagnosisConclusion},</if>
+            <if test="weekpdftime != null">#{weekpdftime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWeekReport" parameterType="WeekReport">
+        update week_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientPhone != null and patientPhone != ''">patient_phone = #{patientPhone},</if>
+            <if test="doctorPhone != null">doctor_phone = #{doctorPhone},</if>
+            <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
+            <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
+            <if test="weekpdftime != null">weekpdftime = #{weekpdftime},</if>
+        </trim>
+        where weekid = #{weekid}
+    </update>
+
+    <delete id="deleteWeekReportById" parameterType="Long">
+        delete
+        from week_report
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWeekReportByIds" parameterType="String">
+        delete from week_report where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

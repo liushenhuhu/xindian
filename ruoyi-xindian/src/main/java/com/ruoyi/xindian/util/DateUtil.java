@@ -3,6 +3,7 @@ package com.ruoyi.xindian.util;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -166,6 +167,7 @@ public class DateUtil {
 
     /**
      * 获取今天剩余时间
+     *
      * @param
      * @return
      */
@@ -179,5 +181,16 @@ public class DateUtil {
         // 计算时间差
         return ChronoUnit.SECONDS.between(now, todayEnd);
     }
+
+    public static String getNowTime() {
+        // 获取当前日期
+        LocalDateTime currentDate = LocalDateTime.now();
+        // 定义日期格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // 将当前日期格式化为字符串
+        return currentDate.format(formatter);
+    }
+
+
 
 }

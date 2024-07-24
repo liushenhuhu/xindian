@@ -20,6 +20,10 @@ import com.ruoyi.xindian.pmEcgData.service.IPmEcgDataService;
 import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.report.service.IReportService;
 import com.ruoyi.xindian.util.DateUtil;
+import com.ruoyi.xindian.weekDetectionTime.domain.WeekDetectionTime;
+import com.ruoyi.xindian.weekDetectionTime.service.IWeekDetectionTimeService;
+import com.ruoyi.xindian.weekReport.domain.WeekReport;
+import com.ruoyi.xindian.weekReport.service.IWeekReportService;
 import com.spire.pdf.FileFormat;
 import com.spire.pdf.PdfDocument;
 import com.spire.pdf.PdfPageBase;
@@ -36,6 +40,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -86,6 +91,12 @@ public class JECGReportController {
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource
+    private IWeekReportService weekReportService;
+
+    @Resource
+    private IWeekDetectionTimeService weekDetectionTimeService;
 
     @PostMapping("/getPdf")
     public AjaxResult getPdf(@RequestBody PatientManagement patientManagement, HttpServletResponse response) throws Exception {
@@ -249,6 +260,16 @@ public class JECGReportController {
 
     @GetMapping("/creatWeekPdf")
     public AjaxResult creatWeekPdf(PatientManagement patientManagement) throws Exception {
+        int flag = 0;//1插入
+        String patientPhone = aesUtils.encrypt(patientManagement.getPatientPhone());
+        Report reportT = reportService.getRecentlyTimeByPhone(patientPhone);
+        WeekDetectionTime weekDetectionTime = new WeekDetectionTime();
+        weekDetectionTime.setPatientPhone(patientPhone);
+        List<WeekDetectionTime> weekDetectionTimes = weekDetectionTimeService.selectWeekDetectionTimeList(weekDetectionTime);
+        if (weekDetectionTimes != null && weekDetectionTimes.size() != 0 && weekDetectionTimes.get(0).getDetectionTime().getTime() >= reportT.getReportTime().getTime()) {
+            AjaxResult.error("未有新的检测数据，请检测之后再重新生成！");
+        }
+        if (weekDetectionTimes == null || weekDetectionTimes.size() == 0) flag = 1;
 //        try {
         PdfGenerator pdfGenerator = new PdfGenerator();
 //        if (patientManagement == null) {
@@ -260,7 +281,7 @@ public class JECGReportController {
 //        if (patientManagement.getPatientPhone() == null || patientManagement.getPatientPhone().isEmpty()) {
 //            return AjaxResult.error("手机号不完整，请稍后在试");
 //        }
-        String patientPhone = aesUtils.encrypt(patientManagement.getPatientPhone());
+//        String patientPhone = aesUtils.encrypt(patientManagement.getPatientPhone());
         MedicalHistory medicalHistory = medicalHistoryService.selectMedicalHistoryByPatientPhone(patientPhone);
         Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
 //        if (patient == null || medicalHistory == null) return AjaxResult.error("当前用户信息存在问题，请联系管理员。");
@@ -287,10 +308,17 @@ public class JECGReportController {
 
         PmEcgData pmEcgData;
         WeekPdfData weekPdfData;
+        Date maxTime = null;
         float[] floats;
         LinkedList<WeekPdfData> weekPdfDataList = new LinkedList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (reports != null) {
+            maxTime = reports.get(0).getReportTime();
+        }
         for (Report rp : reports) {
+            if (rp.getReportTime() != null && maxTime.getTime() < rp.getReportTime().getTime()) {
+                maxTime = rp.getReportTime();
+            }
             JECGSingnalData jecgSingnalData = pdfDataService.getJECGSingnalByPid(rp.getpId());
             if (jecgSingnalData == null)
                 continue;
@@ -308,9 +336,30 @@ public class JECGReportController {
             weekPdfData.setDetectionTime(sdf.format(rp.getReportTime()));
             weekPdfDataList.add(weekPdfData);
         }
-        String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + ".pdf";
-//        write_dir = "E:/test.pdf";
+        //数据记录入库
+        WeekReport weekReport = new WeekReport();
+        weekReport.setPatientPhone(patientPhone);
+        String nowTime = DateUtil.getNowTime();
+        nowTime = nowTime.replace(" ", "");
+        nowTime = nowTime.replace(":", "");
+        nowTime = nowTime.replace("-", "");
+        String weekId = nowTime;
+        weekReport.setWeekid(patientManagement.getPatientPhone() + weekId);
+        weekReport.setWeekpdftime(new Date());
+        String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + "/" + weekReport.getWeekid() + ".pdf";
+        File file = new File("/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone());
+        if (!file.exists()) file.mkdirs();
+        //write_dir = "E:/test.pdf";
         pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight);
+        weekReportService.insertWeekReport(weekReport);
+
+        weekDetectionTime.setDetectionTime(maxTime);
+        if (flag == 0) {
+            weekDetectionTime.setId(weekDetectionTimes.get(0).getId());
+            weekDetectionTimeService.updateWeekDetectionTime(weekDetectionTime);
+        } else {
+            weekDetectionTimeService.insertWeekDetectionTime(weekDetectionTime);
+        }
 //            HttpHeaders headers = new HttpHeaders();
 //            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=generated.pdf");
 //            headers.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
@@ -322,14 +371,15 @@ public class JECGReportController {
 //        }
 //        ValueOperations<String, Object> phone = redisTemplate.opsForValue();
 ////        phone.set("weekpdf_" + patientManagement.getPatientPhone(), "1");
-        HashOperations<String, String, Object> phone = redisTemplate.opsForHash();
-        if (Boolean.TRUE.equals(redisTemplate.hasKey("week_pdf")))
-            phone.put("week_pdf", patientManagement.getPatientPhone(), "1");
-        else {
-            System.out.println(DateUtil.getToday());
-            phone.put("week_pdf", patientManagement.getPatientPhone(), "1");
-            redisTemplate.expire("week_pdf", Duration.ofSeconds(DateUtil.getToday()));
-        }
+
+//        HashOperations<String, String, Object> phone = redisTemplate.opsForHash();
+//        if (Boolean.TRUE.equals(redisTemplate.hasKey("week_pdf")))
+//            phone.put("week_pdf", patientManagement.getPatientPhone(), "1");
+//        else {
+//            System.out.println(DateUtil.getToday());
+//            phone.put("week_pdf", patientManagement.getPatientPhone(), "1");
+//            redisTemplate.expire("week_pdf", Duration.ofSeconds(DateUtil.getToday()));
+//        }
         return AjaxResult.success();
     }
 

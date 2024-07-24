@@ -410,6 +410,9 @@
     <update id="updateWeeklyNewspaperNum">
         update sys_user set weekly_newspaper_num = weekly_newspaper_num + #{sum} where phonenumber_aes = #{patientPhone}
     </update>
+    <update id="updateNum">
+
+    </update>
 
 
 </mapper>

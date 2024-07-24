@@ -543,4 +543,9 @@ public class SysUserServiceImpl implements ISysUserService {
     public int insertMedical(SysUser sysUser) {
         return userMapper.insertMedical(sysUser);
     }
+
+    @Override
+    public int updateNum(SysUser sysUser) {
+        return userMapper.updateUser(sysUser);
+    }
 }

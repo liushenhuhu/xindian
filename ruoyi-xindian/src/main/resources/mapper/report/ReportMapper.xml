@@ -68,6 +68,13 @@
     <select id="selectA" resultType="com.ruoyi.xindian.report.domain.Report">
         select * from report limit #{start},#{end}
     </select>
+    <select id="getRecentlyTimeByPhone" resultType="com.ruoyi.xindian.report.domain.Report">
+        SELECT report_time
+        FROM report
+        WHERE p_phone_aes = #{patientPhone}
+        ORDER BY report_time DESC
+        LIMIT 1;
+    </select>
 
 
     <insert id="insertReport" parameterType="Report" useGeneratedKeys="true" keyProperty="reportId">

@@ -10,5 +10,6 @@ public class ReportM extends Report {
     private String patientName;
     private String patientSex;
     private String patientAge;
+    private boolean weekReport;
     private List<String> medicalHistory;
 }

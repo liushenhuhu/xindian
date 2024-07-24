@@ -8,8 +8,9 @@
             <div class="img_box">
               <img class="zhengda" src="@/assets/images/zhengda.png" />
             </div>
-<!--            <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">-->
-            <div class="new_his" @click="conversationClickAdd" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }" >
+            <!--            <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">-->
+            <div class="new_his" @click="conversationClickAdd"
+              :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">
               +&emsp;&emsp;新建
             </div>
             <div class="new_his" @click="empty" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">
@@ -18,20 +19,23 @@
           </div>
           <div class="his">
             <!-- 对话框 -->
-            <div class="his_item" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }" v-for="(item, i) in conversation"
-              :ref="'div-' + item.conversationId" :class="{ bgc: i === 0 }" :key="item.conversationId"
-              @click="conversationClickCut(item.conversationId, 2)">
+            <div class="his_item" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
+              v-for="(item, i) in conversation" :ref="'div-' + item.conversationId" :class="{ bgc: i === 0 }"
+              :key="item.conversationId" @click="conversationClickCut(item.conversationId, 2)">
               <!-- <img class="mesimg2" src="@/assets/images/messge2.png"/> -->
               <div class="his_title">
-                <div class="tit" v-show="item.isCustom" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">{{ item.title }}</div>
+                <div class="tit" v-show="item.isCustom" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">{{
+                  item.title }}</div>
                 <input :class="{ titUp: item.isHighlighted, tit: item.isCustom }" :ref="'input' + item.conversationId"
                   type="hidden" :value="item.title" @blur="blurId(item.conversationId)" />
-                <div class="time" >{{ item.createTime }}</div>
+                <div class="time">{{ item.createTime }}</div>
               </div>
               <div style="display: flex">
-                <img class="upimg" src="@/assets/images/updat.png" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
+                <img class="upimg" src="@/assets/images/updat.png"
+                  :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
                   @click.stop="updatatit(item.conversationId, i)" />
-                <img class="delimg" src="@/assets/images/delimg.png" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
+                <img class="delimg" src="@/assets/images/delimg.png"
+                  :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
                   @click.stop="conversationClickDel(item.conversationId)" />
               </div>
             </div>
@@ -109,11 +113,11 @@
               <div class="right-child">
                 <div v-if="vocState == 0" class="mkf">
                   <img v-if="iptDisabled" class="mesimg3" src="@/assets/images/microphone-0.png" />
-<!--                  开始录音-->
+                  <!--                  开始录音-->
                   <img v-else class="mesimg3" src="@/assets/images/microphone-0.png" @click="recorderStart()" />
                 </div>
                 <div v-else-if="vocState == 1" class="mkf mkf-s">
-<!--                  停止录音-->
+                  <!--                  停止录音-->
                   <img class="mesimg3" src="@/assets/images/microphone-1.png" @click="recorderStop()" />
                   <div class="mkftips" v-show="resultState">
                     倾听中...
@@ -266,7 +270,7 @@ export default {
   },
 
   methods: {
-    daayin(){
+    daayin() {
       console.log("1")
     },
     // console.log('process.env.port: ', process.env.VUE_APP_CHAT);
@@ -610,6 +614,10 @@ export default {
     },
     // 用户发送消息
     sentMsg() {
+      let text = this.customerText.trim();
+      if (text == "") return false
+
+
       this.iptDisabled = true
       //存在就停止录音
       if (this.recorder) {
@@ -628,7 +636,7 @@ export default {
       clearTimeout(this.timer);
       // 自动触发结束语
       this.showTimer();
-      let text = this.customerText.trim();
+
       //把text中的小雅替换成空
       text = text.replace(/小雅/g, "");
       const arr = ['，', '。', '？', '！', '；',]
@@ -913,7 +921,7 @@ export default {
      * @param val
      */
     conversationClickDel(val) {
-      if (!this.iptDisabled){
+      if (!this.iptDisabled) {
         this.$modal
           .confirm('是否确认删除会话窗口编号为"' + val + '"的数据项？')
           .then(function () {
@@ -941,12 +949,12 @@ export default {
       //   // 在这里执行你想要的操作
       //   console.log("点击了禁用的输入框");
       // }
-      if (!this.iptDisabled){
+      if (!this.iptDisabled) {
         this.isAddNewWin = false;
         if (id === 2) {
           this.$refs[
-          "div-" + this.conversation[0].conversationId
-            ][0].classList.remove("bgc");
+            "div-" + this.conversation[0].conversationId
+          ][0].classList.remove("bgc");
         }
 
         this.conversation.forEach((i, index) => {
@@ -996,7 +1004,7 @@ export default {
      * 新增窗口
      */
     conversationClickAdd() {
-      if (!this.iptDisabled ){
+      if (!this.iptDisabled) {
         // 获取时间
         this.getConversation(2);
         this.info = [
@@ -1031,8 +1039,8 @@ export default {
       }
 
     },
-    empty(){
-      if (!this.iptDisabled){
+    empty() {
+      if (!this.iptDisabled) {
         console.log(this.conversation);
         // 保存Vue实例的this
         const that = this;
@@ -1055,7 +1063,7 @@ export default {
     },
     //点击修改图标显示input
     updatatit(id, ins) {
-      if (!this.iptDisabled){
+      if (!this.iptDisabled) {
         this.conversation.forEach((i, index) => {
           if (i.conversationId === id) {
             i.isCustom = false;
