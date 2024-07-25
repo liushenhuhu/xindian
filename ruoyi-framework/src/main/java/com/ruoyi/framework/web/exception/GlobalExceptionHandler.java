@@ -1,16 +1,21 @@
 package com.ruoyi.framework.web.exception;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -19,6 +24,8 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 全局异常处理器
@@ -108,6 +115,43 @@ public class GlobalExceptionHandler
         return AjaxResult.error(message);
     }
 
+
+    @ExceptionHandler({ConstraintViolationException.class})
+    public AjaxResult handleConstraintViolationException(ConstraintViolationException e) {
+        log.error("参数校验异常", e);
+
+        String message = e.getMessage();
+        StringBuffer returnError=new StringBuffer();
+        if (message.contains(",")){
+            String[] split = message.split(",");
+            for (int i = 0; i < split.length; i++) {
+                String s1 = split[i].substring(0, split[i].indexOf(":"));
+                String s2 = split[i].substring(s1.length() + 1, split[i].length());
+                if (i!=split.length-1){
+                    returnError.append(s2+",");
+                }else{
+                    returnError.append(s2);
+                }
+            }
+            return AjaxResult.error(returnError.toString());
+        }else if (message.contains("，")){
+            String[] split = message.split("，");
+            for (int i = 0; i < split.length; i++) {
+                String s1 = split[i].substring(0, split[i].indexOf(":"));
+                String s2 = split[i].substring(s1.length() + 1, split[i].length());
+                if (i!=split.length-1){
+                    returnError.append(s2+",");
+                }else{
+                    returnError.append(s2);
+                }
+            }
+            return AjaxResult.error(returnError.toString());
+        }
+        String substring = message.substring(0, message.indexOf(":"));
+        String substring1 = message.substring(substring.length() + 1, message.length());
+        return AjaxResult.error(substring1.trim());
+    }
+
     /**
      * SQL异常
      * @param e
@@ -140,4 +184,7 @@ public class GlobalExceptionHandler
     {
         return AjaxResult.error("演示模式，不允许操作");
     }
+
+
+
 }
