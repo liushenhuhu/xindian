@@ -210,6 +210,10 @@
     <div class="nobottom"></div>
     <child ref="drawShow" @closeMain="closeMain"></child>
 
+
+
+
+
     <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
       <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
         <el-form-item label="验证密码" prop="password">
@@ -869,6 +873,11 @@ export default {
       var level = 1;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
       this.open1 = true;
+      console.log("下面是双击心电图后，弹出心电图的参数")
+      console.log(this.nArr[0])
+      console.log(pId)
+      console.log(level)
+      console.log(this.datalabel)
       this.$refs.drawShow.getchart(
         this.nArr[0],
         pId,
