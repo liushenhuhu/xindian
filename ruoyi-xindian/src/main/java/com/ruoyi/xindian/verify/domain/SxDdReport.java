@@ -42,9 +42,9 @@ public class SxDdReport implements Serializable {
     private String uploadStart;
 
     /**
-     * 上传结束时间
+     * 开始采集时间
      */
-    private String uploadEnd;
+    private String gatherStartTime;
 
     /**
      * 患者手机号
@@ -80,6 +80,11 @@ public class SxDdReport implements Serializable {
      * 用户生日
      */
     private String birthday;
+
+    /**
+     * 采集时长
+     */
+    private String gatherDuration;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

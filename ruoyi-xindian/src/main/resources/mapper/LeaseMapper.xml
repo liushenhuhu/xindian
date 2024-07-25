@@ -53,7 +53,12 @@
             lease.update_time,
             lease_details.lease_details_id,
             lease_details.equipment_code,
-            lease_details.equipment_type
+            lease_details.equipment_type,
+            lease_details.`status`,
+            lease_details.username,
+            lease_details.phone,
+            lease_details.cash_pledge,
+            lease_details.create_time
         FROM
             lease
                 INNER JOIN

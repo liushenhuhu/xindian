@@ -10,7 +10,7 @@
             <result property="sn" column="sn" jdbcType="VARCHAR"/>
             <result property="userId" column="user_id" jdbcType="VARCHAR"/>
             <result property="uploadStart" column="upload_start" jdbcType="VARCHAR"/>
-            <result property="uploadEnd" column="upload_end" jdbcType="VARCHAR"/>
+            <result property="gatherStartTime" column="gather_start_time" jdbcType="VARCHAR"/>
             <result property="phone" column="phone" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="pdfUrl" column="pdf_url" jdbcType="VARCHAR"/>
@@ -18,13 +18,14 @@
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="sex" column="sex" jdbcType="VARCHAR"/>
             <result property="birthday" column="birthday" jdbcType="VARCHAR"/>
+            <result property="gatherDuration" column="gather_duration" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         sx_report_id,order_id,sn,
-        user_id,upload_start,upload_end,
+        user_id,upload_start,gather_start_time,
         phone,create_time,pdf_url,
         file_name,name,sex,
-        birthday
+        birthday,gather_duration
     </sql>
 </mapper>

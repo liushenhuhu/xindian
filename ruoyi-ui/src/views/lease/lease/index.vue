@@ -332,10 +332,16 @@ export default {
     },
     handleUpdateByAll(row){
       const leaseId = row.leaseId
-      this.openByDetails = true
-      getLease(leaseId).then(response => {
-        this.detailsList = response.data.details;
-      });
+      // this.openByDetails = true
+      // getLease(leaseId).then(response => {
+      //   this.detailsList = response.data.details;
+      // });
+      this.$router.push({
+        path: '/tool/details',
+        query: {
+          leaseId: leaseId
+        }
+      })
     },
     // 表单重置
     reset() {
