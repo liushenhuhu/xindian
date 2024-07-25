@@ -1,14 +1,15 @@
 <template>
   <div class="navbar">
+
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav"/>
     <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav"/>
-
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
 
+      <template v-if="device!=='mobile'">
+        <span style="vertical-align: text-bottom;margin-right: 10px;color: #FFFFFF;">版本号: V1.0.00</span>
+        <search id="header-search" class="right-menu-item" />
 <!--        <el-tooltip content="源码地址" effect="dark" placement="bottom">-->
 <!--          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />-->
 <!--        </el-tooltip>-->
