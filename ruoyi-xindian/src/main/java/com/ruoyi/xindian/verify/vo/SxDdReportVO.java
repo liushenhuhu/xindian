@@ -21,8 +21,8 @@ public class SxDdReportVO implements Serializable {
     /**
      * 报告编号
      */
-    @NotNull(message = "报告编号不能为空")
-    private String orderId;
+//    @NotNull(message = "报告编号不能为空")
+//    private String orderId;
 
     /**
      * 设备号
@@ -43,10 +43,16 @@ public class SxDdReportVO implements Serializable {
     private String uploadStart;
 
     /**
-     * 上传结束时间
+     * 开始采集时间
      */
-    @NotNull(message = "上传结束时间不能为空")
-    private String uploadEnd;
+//    @NotNull(message = "上传结束时间不能为空")
+    private String gatherStartTime;
+
+    /**
+     * 采集时长
+     */
+    private String gatherDuration;
+
 
     /**
      * 患者手机号
