@@ -24,24 +24,31 @@ public class FileUploadUtils {
     @Value("${ruoyi.profile}")
     private String proFile;
 
-    public String uploadImgUrl(MultipartFile file,String location,String phone){
+    public String uploadImgUrl(MultipartFile file, String location, String phone) {
         LocalDate now = LocalDate.now();
         String time = now.toString();
-        String front = saveFile(file,location,phone,time);
+        String front = saveFile(file, location, phone, time);
         String[] fronts = front.split("uploadPath");
-        return url+fronts[1];
+        return url + fronts[1];
+    }
+
+    public String uploadDzVisa(MultipartFile file, String location, String phone) {
+        LocalDate now = LocalDate.now();
+        String time = now.toString();
+        String front = saveFile(file, location, phone, time);
+        String[] fronts = front.split("uploadPath");
+        return fronts[1];
     }
 
 
-
-    public String uploadPDFUrl(byte[] bytes,String location,String phone){
+    public String uploadPDFUrl(byte[] bytes, String location, String phone) {
         try {
             LocalDate now = LocalDate.now();
             String time = now.toString();
-            String front = fileToBytes(bytes,location,phone,time);
+            String front = fileToBytes(bytes, location, phone, time);
             String[] fronts = front.split("uploadPath");
-            return url+fronts[1];
-        }catch (Exception e){
+            return url + fronts[1];
+        } catch (Exception e) {
             return null;
         }
 
@@ -53,7 +60,7 @@ public class FileUploadUtils {
         try {
             String f = file.getOriginalFilename();
             int dotIndex = f.lastIndexOf('.');
-            String extension="";
+            String extension = "";
             if (dotIndex > 0 && dotIndex < f.length() - 1) {
                 extension = f.substring(dotIndex + 1).toLowerCase();
                 // 这里假设你只关心 JPEG 和 PNG 图片格式，如果需要支持更多格式需要自行修改判断条件
@@ -68,11 +75,11 @@ public class FileUploadUtils {
             // Generate a unique file name based on the current time
             String fileName = System.currentTimeMillis() + "-" + location;
 //            String mainDir="E:/saveImg/";
-            File dir = new File(proFile+userId+"/"+time+"/");
-            if(!dir.exists()){
+            File dir = new File(proFile + userId + "/" + time + "/");
+            if (!dir.exists()) {
                 boolean mkdirs = dir.mkdirs();
             }
-            Path path = Paths.get( proFile+userId+"/"+time+"/" + "/" + fileName + extension);
+            Path path = Paths.get(proFile + userId + "/" + time + "/" + "/" + fileName + extension);
             // Save the file to disk
             Files.write(path, file.getBytes());
             // Return the file path
@@ -83,17 +90,17 @@ public class FileUploadUtils {
     }
 
 
-    private   String fileToBytes(byte[] bytes, String location, String userId, String time) {
+    private String fileToBytes(byte[] bytes, String location, String userId, String time) {
         try {
-            String extension=".pdf";
+            String extension = ".pdf";
             // Generate a unique file name based on the current time
             String fileName = System.currentTimeMillis() + "-" + location;
 //            String mainDir="E:/saveImg/";
-            File dir = new File(proFile+userId+"/"+time+"/");
-            if(!dir.exists()){
+            File dir = new File(proFile + userId + "/" + time + "/");
+            if (!dir.exists()) {
                 boolean mkdirs = dir.mkdirs();
             }
-            Path path = Paths.get( proFile+userId+"/"+time+"/" + "/" + fileName + extension);
+            Path path = Paths.get(proFile + userId + "/" + time + "/" + "/" + fileName + extension);
             // Save the file to disk
             Files.write(path, bytes);
             // Return the file path
@@ -103,9 +110,9 @@ public class FileUploadUtils {
         }
     }
 
-    private Boolean deleteFile(String img){
+    private Boolean deleteFile(String img) {
         String[] fronts = img.split("uploadPath");
-        File file = new File(proFile+fronts[1]);
+        File file = new File(proFile + fronts[1]);
         return file.delete();
     }
 

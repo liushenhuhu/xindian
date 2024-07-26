@@ -2,6 +2,7 @@ package com.ruoyi.xindian.pdf.domain;
 
 import lombok.Data;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -15,4 +16,5 @@ public class WeekPdfData {
     private String qtc;
     private String hrv;
     private float[] ecgData;
+    private LinkedList<LinkedList<Integer>> rList;
 }

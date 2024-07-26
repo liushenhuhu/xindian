@@ -255,18 +255,18 @@ public class ReportController extends BaseController {
         }
         if (isDoctor == 1) {
             WeekReport weekReport = new WeekReport();
-            weekReport.setDoctorPhone(report.getdPhone());
+            weekReport.setDoctorPhone(aesUtils.decrypt(report.getdPhone()));
             if (report.getPPhone() != null && !"".equals(report.getPPhone())) {
-                weekReport.setPatientPhone(report.getPPhone());
+                weekReport.setPatientPhone(aesUtils.decrypt(report.getPPhone()));
             }
             weekReport.setDiagnosisStatus(Math.toIntExact(report.getDiagnosisStatus()));
             List<WeekReport> weekReports = weekReportService.selectWeekReportList(weekReport);
             for (WeekReport wr : weekReports) {
                 reportM = new ReportM();
-                patient = patientService.selectPatientByPatientPhone(wr.getPatientPhone());
+                patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(wr.getPatientPhone()));
 
-                reportM.setPPhone(aesUtils.decrypt(wr.getPatientPhone()));
-                reportM.setdPhone(aesUtils.decrypt(wr.getDoctorPhone()));
+                reportM.setPPhone(wr.getPatientPhone());
+                reportM.setdPhone(wr.getDoctorPhone());
                 reportM.setDiagnosisStatus(report.getDiagnosisStatus());
                 reportM.setDiagnosisConclusion(wr.getDiagnosisConclusion());
                 reportM.setReportTime(wr.getWeekpdftime());
@@ -756,6 +756,7 @@ public class ReportController extends BaseController {
                     rp = new Report();
                     rp.setPPhone(weekReport.getPatientPhone());
                     patientPhone.add(rp);
+
                 }
 
             }
@@ -805,8 +806,8 @@ public class ReportController extends BaseController {
             resList.add(reportM);
         }
 
-        return getTable(resList, new PageInfo(patientPhone).getTotal());
-//        return getTable(resList, new PageInfo(resList).getTotal());
+//        return getTable(resList, new PageInfo(patientPhone).getTotal());
+        return getTable(resList, new PageInfo(resList).getTotal());
     }
 
     @GetMapping("/wx")

@@ -26,10 +26,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="outpatientId"    column="outpatient_id"    />
         <result property="specialId"    column="special_id"    />
         <result property="accountStatus"    column="account_status"    />
+        <result property="dzVisa"    column="dz_visa"    />
     </resultMap>
 
     <sql id="selectDoctorVo">
-        select doctor_id, doctor_name_aes as doctor_name, doctor_phone_aes as doctor_phone, department_code, skill, introduction, service_content, applicable_population, charge_price, online_state, hospital, img, professional, open_id, union_id, equipment_list,is_doc,special_id,outpatient_id,account_status from doctor
+        select doctor_id, doctor_name_aes as doctor_name, doctor_phone_aes as doctor_phone, department_code,
+               skill, introduction, service_content, applicable_population, charge_price, online_state,
+               hospital, img, professional, open_id, union_id,
+               equipment_list,is_doc,special_id,outpatient_id,account_status,dz_visa from doctor
     </sql>
 
     <select id="selectDoctorList" parameterType="Doctor" resultMap="DoctorResult">
@@ -50,6 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         doctor.outpatient_id,
         doctor.special_id,
         doctor.account_status,
+        doctor.dz_visa,
         department.department_name,
         department.hospital_code,
         department.department_id
@@ -131,6 +136,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         doctor.outpatient_id,
         doctor.special_id,
         doctor.account_status,
+        doctor.dz_visa,
         department.department_name,
         department.hospital_code,
         department.department_id
@@ -191,6 +197,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="outpatientId != null">outpatient_id,</if>
             <if test="specialId != null">special_id,</if>
             <if test="accountStatus != null">account_status,</if>
+            <if test="dzVisa != null">dz_visa,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="doctorName != null">#{doctorName},</if>
@@ -210,6 +217,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="outpatientId != null">#{outpatientId},</if>
             <if test="specialId != null">#{specialId},</if>
             <if test="accountStatus != null">#{accountStatus},</if>
+            <if test="dzVisa != null">#{dzVisa},</if>
          </trim>
     </insert>
 
@@ -234,6 +242,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="specialId != null">special_id = #{specialId},</if>
             <if test="outpatientId != null">outpatient_id = #{outpatientId},</if>
             <if test="accountStatus != null">account_status = #{accountStatus},</if>
+            <if test="dzVisa != null">dz_visa = #{dzVisa},</if>
             <if test="isDoc!=null and isDoc!=2">
               special_id = null,
               outpatient_id = null,

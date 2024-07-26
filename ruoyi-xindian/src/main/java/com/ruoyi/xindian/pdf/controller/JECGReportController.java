@@ -1,8 +1,12 @@
 package com.ruoyi.xindian.pdf.controller;
 
+import com.google.gson.*;
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.alert_log.domain.JecgSingle;
+import com.ruoyi.xindian.alert_log.service.JecgSingleService;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -30,12 +34,15 @@ import com.spire.pdf.PdfPageBase;
 import com.spire.pdf.graphics.PdfBlendMode;
 import com.spire.pdf.graphics.PdfTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.*;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -46,8 +53,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -56,7 +65,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pdf/jecgReport")
-public class JECGReportController {
+public class JECGReportController extends BaseController {
 
     @Value("${ruoyi.profile}")
     private String path;
@@ -97,6 +106,9 @@ public class JECGReportController {
 
     @Resource
     private IWeekDetectionTimeService weekDetectionTimeService;
+
+    @Resource
+    private JecgSingleService jecgSingleService;
 
     @PostMapping("/getPdf")
     public AjaxResult getPdf(@RequestBody PatientManagement patientManagement, HttpServletResponse response) throws Exception {
@@ -260,16 +272,16 @@ public class JECGReportController {
 
     @GetMapping("/creatWeekPdf")
     public AjaxResult creatWeekPdf(PatientManagement patientManagement) throws Exception {
-        int flag = 0;//1插入
+        int flag = 0;
         String patientPhone = aesUtils.encrypt(patientManagement.getPatientPhone());
-        Report reportT = reportService.getRecentlyTimeByPhone(patientPhone);
-        WeekDetectionTime weekDetectionTime = new WeekDetectionTime();
-        weekDetectionTime.setPatientPhone(patientPhone);
-        List<WeekDetectionTime> weekDetectionTimes = weekDetectionTimeService.selectWeekDetectionTimeList(weekDetectionTime);
-        if (weekDetectionTimes != null && weekDetectionTimes.size() != 0 && weekDetectionTimes.get(0).getDetectionTime().getTime() >= reportT.getReportTime().getTime()) {
-            AjaxResult.error("未有新的检测数据，请检测之后再重新生成！");
-        }
-        if (weekDetectionTimes == null || weekDetectionTimes.size() == 0) flag = 1;
+//        Report reportT = reportService.getRecentlyTimeByPhone(patientPhone);
+//        WeekDetectionTime weekDetectionTime = new WeekDetectionTime();
+//        weekDetectionTime.setPatientPhone(patientPhone);
+//        List<WeekDetectionTime> weekDetectionTimes = weekDetectionTimeService.selectWeekDetectionTimeList(weekDetectionTime);
+//        if (weekDetectionTimes != null && weekDetectionTimes.size() != 0 && weekDetectionTimes.get(0).getDetectionTime().getTime() >= reportT.getReportTime().getTime()) {
+//            AjaxResult.error("未有新的检测数据，请检测之后再重新生成！");
+//        }
+//        if (weekDetectionTimes == null || weekDetectionTimes.size() == 0) flag = 1;
 //        try {
         PdfGenerator pdfGenerator = new PdfGenerator();
 //        if (patientManagement == null) {
@@ -294,12 +306,21 @@ public class JECGReportController {
 
         Report report = new Report();
         report.setPPhone(patientPhone);
-        LocalDate now = LocalDate.now();
-        LocalDate now_7 = now.minusDays(6);
+        LocalDate now;
+        LocalDate now_7;
+        if (patientManagement.getReportTime() != null) {
+            now = DateUtil.getLocalDate(patientManagement.getReportTime()).minusWeeks(1).with(DayOfWeek.SUNDAY);
+            now_7 = DateUtil.getLocalDate(patientManagement.getReportTime()).minusWeeks(1).with(DayOfWeek.MONDAY);
+            flag = 1;
+        } else {
+            now = LocalDate.now().minusWeeks(1).with(DayOfWeek.SUNDAY);
+            now_7 = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
+        }
         // 格式化日期输出
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = now.format(formatter);
         String startDay = now_7.format(formatter);
+
         report.setStartReportTime(startDay);
         report.setEndReportTime(today);
         report.setReportType("JECGsingleWL");
@@ -308,20 +329,43 @@ public class JECGReportController {
 
         PmEcgData pmEcgData;
         WeekPdfData weekPdfData;
-        Date maxTime = null;
+//        Date maxTime = null;
         float[] floats;
         LinkedList<WeekPdfData> weekPdfDataList = new LinkedList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if (reports != null) {
-            maxTime = reports.get(0).getReportTime();
-        }
+//        if (reports != null) {
+//            maxTime = reports.get(0).getReportTime();
+//        }
         for (Report rp : reports) {
-            if (rp.getReportTime() != null && maxTime.getTime() < rp.getReportTime().getTime()) {
-                maxTime = rp.getReportTime();
-            }
+//            if (rp.getReportTime() != null && maxTime.getTime() < rp.getReportTime().getTime()) {
+//                maxTime = rp.getReportTime();
+//            }
             JECGSingnalData jecgSingnalData = pdfDataService.getJECGSingnalByPid(rp.getpId());
             if (jecgSingnalData == null)
                 continue;
+            JecgSingle jecgSingle = jecgSingleService.selectById(rp.getpId());
+            //获取R波
+            String beatLabel = jecgSingle.getBeatLabel();
+            JsonObject jsonObject = JsonParser.parseString(beatLabel).getAsJsonObject();
+            //JsonArray list1 = jsonObject.getAsJsonObject("0").getAsJsonArray("Normal");
+            //JsonArray list2 = jsonObject.getAsJsonObject("1").getAsJsonArray("Normal");
+            //JsonArray list3 = jsonObject.getAsJsonObject("2").getAsJsonArray("Normal");
+            LinkedList<LinkedList<Integer>> linkedLists = new LinkedList<>();
+            for (int i = 0; i < 10; i++) {
+                JsonObject asJsonObject = jsonObject.getAsJsonObject(String.valueOf(i));
+                if (asJsonObject != null) {
+                    JsonArray list1 = asJsonObject.getAsJsonArray("Normal");
+                    LinkedList<Integer> rP = new LinkedList<>();
+                    for (JsonElement jsonElement : list1) {
+                        rP.add(jsonElement.getAsInt());
+                    }
+                    linkedLists.add(rP);
+                } else {
+                    break;
+                }
+            }
+
+
             floats = btyeToFloatList(jecgSingnalData.getEcgData());
             pmEcgData = pmEcgDataService.selectPmEcgDataByPId(rp.getpId());
             weekPdfData = new WeekPdfData();
@@ -334,8 +378,10 @@ public class JECGReportController {
             weekPdfData.setQrs(pmEcgData.getQrsInterval());
             weekPdfData.setEcgData(floats);
             weekPdfData.setDetectionTime(sdf.format(rp.getReportTime()));
+            weekPdfData.setRList(linkedLists);
             weekPdfDataList.add(weekPdfData);
         }
+        if (weekPdfDataList.isEmpty()) return new AjaxResult(202, "无检测数据！");
         //数据记录入库
         WeekReport weekReport = new WeekReport();
         weekReport.setPatientPhone(patientPhone);
@@ -345,21 +391,21 @@ public class JECGReportController {
         nowTime = nowTime.replace("-", "");
         String weekId = nowTime;
         weekReport.setWeekid(patientManagement.getPatientPhone() + weekId);
-        weekReport.setWeekpdftime(new Date());
+        weekReport.setWeekpdftime(DateUtil.getDateByLocalDate(now_7));
         String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + "/" + weekReport.getWeekid() + ".pdf";
         File file = new File("/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone());
         if (!file.exists()) file.mkdirs();
-        //write_dir = "E:/test.pdf";
+//        write_dir = "E:/test.pdf";
         pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight);
         weekReportService.insertWeekReport(weekReport);
 
-        weekDetectionTime.setDetectionTime(maxTime);
-        if (flag == 0) {
-            weekDetectionTime.setId(weekDetectionTimes.get(0).getId());
-            weekDetectionTimeService.updateWeekDetectionTime(weekDetectionTime);
-        } else {
-            weekDetectionTimeService.insertWeekDetectionTime(weekDetectionTime);
-        }
+//        weekDetectionTime.setDetectionTime(maxTime);
+//        if (flag == 0) {
+//            weekDetectionTime.setId(weekDetectionTimes.get(0).getId());
+//            weekDetectionTimeService.updateWeekDetectionTime(weekDetectionTime);
+//        } else {
+//            weekDetectionTimeService.insertWeekDetectionTime(weekDetectionTime);
+//        }
 //            HttpHeaders headers = new HttpHeaders();
 //            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=generated.pdf");
 //            headers.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
@@ -371,8 +417,10 @@ public class JECGReportController {
 //        }
 //        ValueOperations<String, Object> phone = redisTemplate.opsForValue();
 ////        phone.set("weekpdf_" + patientManagement.getPatientPhone(), "1");
-
-//        HashOperations<String, String, Object> phone = redisTemplate.opsForHash();
+//        if (flag == 0) {
+//            HashOperations<String, String, Object> phone = redisTemplate.opsForHash();
+//            phone.put("week_pdf", patientManagement.getPatientPhone(), "1");
+//        }
 //        if (Boolean.TRUE.equals(redisTemplate.hasKey("week_pdf")))
 //            phone.put("week_pdf", patientManagement.getPatientPhone(), "1");
 //        else {

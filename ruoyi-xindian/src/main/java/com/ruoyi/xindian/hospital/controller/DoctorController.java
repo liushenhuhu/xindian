@@ -43,8 +43,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/doctor/doctor")
-public class DoctorController extends BaseController
-{
+public class DoctorController extends BaseController {
     @Autowired
     private IDoctorService doctorService;
 
@@ -69,8 +68,9 @@ public class DoctorController extends BaseController
 
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
+
     /**
-    /**
+     * /**
      * 查询医生列表
      */
 //    @PreAuthorize("@ss.hasPermi('doctor:doctor:list')")
@@ -79,16 +79,16 @@ public class DoctorController extends BaseController
     public TableDataInfo list(Doctor doctor, HttpServletRequest request) throws Exception {
         LoginUser loginUser = tokenService.getLoginUser(request);
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
-        if (sysUser.getDeptId()!=null&&sysUser.getDeptId()==200){
+        if (sysUser.getDeptId() != null && sysUser.getDeptId() == 200) {
 
             Hospital hospital = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
-            if (hospital!=null){
+            if (hospital != null) {
                 doctor.getHospitalNameList().add(hospital.getHospitalName());
                 AssociatedHospital associatedHospital = new AssociatedHospital();
                 associatedHospital.setHospitalId(hospital.getHospitalId());
                 List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-                if (associatedHospitals!=null&& !associatedHospitals.isEmpty()){
-                    for (AssociatedHospital c:associatedHospitals){
+                if (associatedHospitals != null && !associatedHospitals.isEmpty()) {
+                    for (AssociatedHospital c : associatedHospitals) {
                         Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                         doctor.getHospitalNameList().add(hospital1.getHospitalName());
                     }
@@ -97,10 +97,10 @@ public class DoctorController extends BaseController
                 List<Doctor> doctors = doctorService.selectUserDoc(doctor);
                 for (Doctor value : doctors) {
                     //解密
-                    if(!StringUtils.isEmpty(value.getDoctorName())){
+                    if (!StringUtils.isEmpty(value.getDoctorName())) {
                         value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
                     }
-                    if(!StringUtils.isEmpty(value.getDoctorPhone())){
+                    if (!StringUtils.isEmpty(value.getDoctorPhone())) {
                         value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
                     }
                 }
@@ -109,23 +109,22 @@ public class DoctorController extends BaseController
             return getDataTable(null);
 
         }
-            if (StringUtils.isNotEmpty(doctor.getHospital())){
-                doctor.getHospitalNameList().add(doctor.getHospital());
-            }
-            startPage();
-            List<Doctor> list = doctorService.selectDoctorList(doctor);
+        if (StringUtils.isNotEmpty(doctor.getHospital())) {
+            doctor.getHospitalNameList().add(doctor.getHospital());
+        }
+        startPage();
+        List<Doctor> list = doctorService.selectDoctorList(doctor);
 
-            for (Doctor value : list) {
-                //解密
-                if(!StringUtils.isEmpty(value.getDoctorName())){
-                    value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
-                }
-                if(!StringUtils.isEmpty(value.getDoctorPhone())){
-                    value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
-                }
+        for (Doctor value : list) {
+            //解密
+            if (!StringUtils.isEmpty(value.getDoctorName())) {
+                value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
             }
-            return getDataTable(list);
-
+            if (!StringUtils.isEmpty(value.getDoctorPhone())) {
+                value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
+            }
+        }
+        return getDataTable(list);
 
 
     }
@@ -137,10 +136,10 @@ public class DoctorController extends BaseController
         List<Doctor> list = doctorService.selectDoctorList(doctor);
         for (Doctor value : list) {
             //解密
-            if(!StringUtils.isEmpty(value.getDoctorName())){
+            if (!StringUtils.isEmpty(value.getDoctorName())) {
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
             }
-            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+            if (!StringUtils.isEmpty(value.getDoctorPhone())) {
                 value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
             }
         }
@@ -150,8 +149,7 @@ public class DoctorController extends BaseController
 
 
     @GetMapping("/nameList")
-    public List<String> nameList()
-    {
+    public List<String> nameList() {
         Doctor doctor = new Doctor();
         return doctorService.selectDoctorNameList(doctor);
     }
@@ -166,10 +164,10 @@ public class DoctorController extends BaseController
         List<Doctor> list = doctorService.selectDoctorList(doctor);
         for (Doctor value : list) {
             //解密
-            if(!StringUtils.isEmpty(value.getDoctorName())){
+            if (!StringUtils.isEmpty(value.getDoctorName())) {
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
             }
-            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+            if (!StringUtils.isEmpty(value.getDoctorPhone())) {
                 value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
             }
         }
@@ -184,7 +182,7 @@ public class DoctorController extends BaseController
     @GetMapping(value = "/{doctorId}")
     public AjaxResult getInfo(@PathVariable("doctorId") Long doctorId) throws Exception {
         Doctor doctor = doctorService.selectDoctorByDoctorId(doctorId);
-        if (doctor!=null){
+        if (doctor != null) {
             doctor.setDoctorPhone(aesUtils.decrypt(doctor.getDoctorPhone()));
             doctor.setDoctorName(aesUtils.decrypt(doctor.getDoctorName()));
             Department department = new Department();
@@ -203,7 +201,7 @@ public class DoctorController extends BaseController
     public AjaxResult getInfoByDoctorPhone(@PathVariable("doctorPhone") String doctorPhone) throws Exception {
         String encrypt = aesUtils.encrypt(doctorPhone);
         Doctor doctor = doctorService.selectDoctorByDoctorPhone(encrypt);
-        if (doctor==null){
+        if (doctor == null) {
             return AjaxResult.error("医生不存在");
         }
         doctor.setDoctorPhone(aesUtils.decrypt(doctor.getDoctorPhone()));
@@ -221,17 +219,22 @@ public class DoctorController extends BaseController
     @PreAuthorize("@ss.hasPermi('doctor:doctor:add')")
     @Log(title = "医生", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add( @RequestParam("doctor")String doctor2,@RequestParam(value = "imgFile",required = false) MultipartFile imgFile) throws Exception {
+    public AjaxResult add(@RequestParam("doctor") String doctor2, @RequestParam(value = "imgFile", required = false) MultipartFile imgFile, @RequestParam(value = "zdVisa", required = false) MultipartFile zdVisa) throws Exception {
         Doctor doctor = JSONObject.parseObject(doctor2, Doctor.class);
 
         String encrypt = aesUtils.encrypt(doctor.getDoctorPhone());
         Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(encrypt);
-        if (doctor1!=null){
+        if (doctor1 != null) {
             return AjaxResult.error("手机号已存在");
         }
-        if (imgFile!=null){
+        if (imgFile != null) {
             String fileUploadUrl = fileUploadUtils.uploadImgUrl(imgFile, "doctor", doctor.getDoctorPhone());
             doctor.setImg(fileUploadUrl);
+        }
+        //电子签
+        if (zdVisa != null) {
+            String fileUploadUrl = fileUploadUtils.uploadDzVisa(zdVisa, "doctor", "doctorDzVisa");
+            doctor.setDzVisa(fileUploadUrl);
         }
         doctor.setDoctorPhone(aesUtils.encrypt(doctor.getDoctorPhone()));
         doctor.setDoctorName(aesUtils.encrypt(doctor.getDoctorName()));
@@ -246,24 +249,49 @@ public class DoctorController extends BaseController
     @PreAuthorize("@ss.hasPermi('doctor:doctor:edit')")
     @Log(title = "医生", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestParam("doctor")String doctor3,@RequestParam(value = "imgFile",required = false) MultipartFile imgFile) throws Exception {
+    public AjaxResult edit(@RequestParam("doctor") String doctor3, @RequestParam(value = "imgFile", required = false) MultipartFile imgFile, @RequestParam(value = "zdVisa", required = false) MultipartFile zdVisa) throws Exception {
         Doctor doctor = JSONObject.parseObject(doctor3, Doctor.class);
         doctor.setDoctorPhone(aesUtils.encrypt(doctor.getDoctorPhone()));
         doctor.setDoctorName(aesUtils.encrypt(doctor.getDoctorName()));
         Doctor doctor1 = doctorService.selectDoctorByDoctorId(doctor.getDoctorId());
-        if (!doctor1.getDoctorPhone().equals(doctor.getDoctorPhone())){
+        if (!doctor1.getDoctorPhone().equals(doctor.getDoctorPhone())) {
             Doctor doctor2 = doctorService.selectDoctorByDoctorPhone(doctor.getDoctorPhone());
-            if (doctor2!=null){
+            if (doctor2 != null) {
                 return AjaxResult.error("手机号已存在");
             }
         }
-        if (imgFile!=null){
+        if (imgFile != null) {
             String fileUploadUrl = fileUploadUtils.uploadImgUrl(imgFile, "doctor", doctor.getDoctorPhone());
             doctor.setImg(fileUploadUrl);
         }
+        //电子签
+        if (zdVisa != null) {
+            String fileUploadUrl = fileUploadUtils.uploadDzVisa(zdVisa, "doctor", "doctorDzVisa");
+            doctor.setDzVisa(fileUploadUrl);
+        }
+
         Hospital hospital = hospitalService.selectHospitalByHospitalCode(doctor.getHospital());
         doctor.setHospital(hospital.getHospitalName());
 
+        return toAjax(doctorService.updateDoctor(doctor));
+    }
+
+    /**
+     * 上传医生电子签
+     * @param doctorId
+     * @param zdVisa
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/uploadDzVisa")
+    public AjaxResult edit(@RequestParam("doctorId") Long doctorId, @RequestParam(value = "zdVisa", required = false) MultipartFile zdVisa) throws Exception {
+        Doctor doctor = new Doctor();
+        doctor.setDoctorId(doctorId);
+        //电子签
+        if (zdVisa != null) {
+            String fileUploadUrl = fileUploadUtils.uploadDzVisa(zdVisa, "doctor", "doctorDzVisa");
+            doctor.setDzVisa(fileUploadUrl);
+        }
         return toAjax(doctorService.updateDoctor(doctor));
     }
 
@@ -272,22 +300,20 @@ public class DoctorController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('doctor:doctor:remove')")
     @Log(title = "医生", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{doctorIds}")
-    public AjaxResult remove(@PathVariable Long[] doctorIds)
-    {
+    @DeleteMapping("/{doctorIds}")
+    public AjaxResult remove(@PathVariable Long[] doctorIds) {
         return toAjax(doctorService.deleteDoctorByDoctorIds(doctorIds));
     }
-
 
 
     @GetMapping("/docList")
     public AjaxResult docList(Doctor doctor) throws Exception {
         List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
-        for (Doctor value:doctors){
-            if(!StringUtils.isEmpty(value.getDoctorName())){
+        for (Doctor value : doctors) {
+            if (!StringUtils.isEmpty(value.getDoctorName())) {
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
             }
-            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+            if (!StringUtils.isEmpty(value.getDoctorPhone())) {
                 value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
             }
         }
@@ -296,7 +322,7 @@ public class DoctorController extends BaseController
 
 
     @GetMapping("/isDoc")
-    public AjaxResult idDoc(){
+    public AjaxResult idDoc() {
         return AjaxResult.success(doctorService.selectIsDoc());
     }
 
@@ -309,15 +335,15 @@ public class DoctorController extends BaseController
 
         Hospital hospital = hospitalService.selectHospitalByHospitalCode(code);
 
-        if (hospital==null){
+        if (hospital == null) {
             return AjaxResult.error("请选择医院");
         }
         List<Doctor> doctors = doctorService.selectVisitDoc(hospital.getHospitalName());
-        for (Doctor value:doctors){
-            if(!StringUtils.isEmpty(value.getDoctorName())){
+        for (Doctor value : doctors) {
+            if (!StringUtils.isEmpty(value.getDoctorName())) {
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
             }
-            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+            if (!StringUtils.isEmpty(value.getDoctorPhone())) {
                 value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
             }
         }
@@ -328,25 +354,25 @@ public class DoctorController extends BaseController
      * 门诊预约通过医院code查询当前医院的医生
      */
     @GetMapping("/getHospitalVisitDoc")
-    public AjaxResult getHospitalVisitDoc(Doctor doctor,HttpServletRequest request) throws Exception {
-        if(!StringUtils.isEmpty(doctor.getDoctorName())){
+    public AjaxResult getHospitalVisitDoc(Doctor doctor, HttpServletRequest request) throws Exception {
+        if (!StringUtils.isEmpty(doctor.getDoctorName())) {
             doctor.setDoctorName(aesUtils.encrypt(doctor.getDoctorName()));
         }
-        if(!StringUtils.isEmpty(doctor.getDoctorPhone())){
+        if (!StringUtils.isEmpty(doctor.getDoctorPhone())) {
             doctor.setDoctorPhone(aesUtils.encrypt(doctor.getDoctorPhone()));
         }
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<Doctor> doctors = new ArrayList<>();
-        if (doctor.getHospital()==null){
+        if (doctor.getHospital() == null) {
 
-            if (SysUser.isAdmin(loginUser.getUserId())){
+            if (SysUser.isAdmin(loginUser.getUserId())) {
                 doctors = doctorService.selectDoctorListNot(doctor);
-            }else {
-                if (loginUser.getUser().getHospitalCode()!=null){
+            } else {
+                if (loginUser.getUser().getHospitalCode() != null) {
                     Hospital hospital = hospitalService.selectHospitalByHospitalCode(loginUser.getUser().getHospitalCode());
-                    if (loginUser.getUser().getDeptId()!=null&&loginUser.getUser().getDeptId()==200 ){
+                    if (loginUser.getUser().getDeptId() != null && loginUser.getUser().getDeptId() == 200) {
                         doctors = doctorService.selectVisitDoc(hospital.getHospitalName());
-                    }else {
+                    } else {
                         doctor.setDoctorPhone(loginUser.getUser().getUserName());
                         doctor.getHospitalNameList().add(hospital.getHospitalName());
                         doctors = doctorService.selectDoctorListNot(doctor);
@@ -354,15 +380,15 @@ public class DoctorController extends BaseController
                     }
                 }
             }
-        }else {
+        } else {
             doctors = doctorService.selectDoctorListNot(doctor);
         }
 
-        for (Doctor value:doctors){
-            if(!StringUtils.isEmpty(value.getDoctorName())){
+        for (Doctor value : doctors) {
+            if (!StringUtils.isEmpty(value.getDoctorName())) {
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
             }
-            if(!StringUtils.isEmpty(value.getDoctorPhone())){
+            if (!StringUtils.isEmpty(value.getDoctorPhone())) {
                 value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
             }
         }
@@ -370,12 +396,8 @@ public class DoctorController extends BaseController
     }
 
     @GetMapping("/getXDDoc")
-    public AjaxResult getXDDoc(String hospitalName){
+    public AjaxResult getXDDoc(String hospitalName) {
         List<Doctor> doctors = doctorService.selectXDDoc(hospitalName);
         return AjaxResult.success(doctors);
     }
-
-
-
-
 }

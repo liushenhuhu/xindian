@@ -1,8 +1,17 @@
 package com.ruoyi.xindian.weekReport.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -10,9 +19,16 @@ import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.report.domain.Report;
+import com.ruoyi.xindian.report.service.IReportService;
+import com.ruoyi.xindian.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.weekReport.mapper.WeekReportMapper;
@@ -36,6 +52,12 @@ public class WeekReportServiceImpl implements IWeekReportService {
     @Autowired
     private IPatientService patientService;
 
+    @Autowired
+    private IDoctorService doctorService;
+
+    @Autowired
+    private IReportService reportService;
+
     /**
      * 查询weekReport
      *
@@ -58,9 +80,35 @@ public class WeekReportServiceImpl implements IWeekReportService {
         try {
             if (weekReport.getPatientPhone() != null)
                 weekReport.setPatientPhone(aesUtils.encrypt(weekReport.getPatientPhone()));
+            if (weekReport.getDoctorPhone() != null)
+                weekReport.setDoctorPhone(aesUtils.encrypt(weekReport.getDoctorPhone()));
         } catch (Exception ignored) {
         }
-        return weekReportMapper.selectWeekReportList(weekReport);
+        List<WeekReport> weekReports;
+        if (weekReport.getStartTime() != null) {
+            LocalDate s = DateUtil.getLocalDate(weekReport.getStartTime()).minusWeeks(1);
+            LocalDate e = DateUtil.getLocalDate(weekReport.getEndTime()).minusWeeks(1);
+            weekReport.setStartTime(DateUtil.getDateByLocalDate(s));
+            weekReport.setEndTime(DateUtil.getDateByLocalDate(e));
+            weekReports = weekReportMapper.selectWeekReportTimeList(weekReport);
+        } else {
+            weekReports = weekReportMapper.selectWeekReportList(weekReport);
+        }
+
+        try {
+            for (WeekReport report : weekReports) {
+                if (report.getPatientPhone() != null)
+                    report.setPatientPhone(aesUtils.decrypt(report.getPatientPhone()));
+                if (report.getDoctorPhone() != null)
+                    report.setDoctorPhone(aesUtils.decrypt(report.getDoctorPhone()));
+                LocalDate s = DateUtil.getLocalDate(report.getWeekpdftime()).with(DayOfWeek.MONDAY);
+                LocalDate e = DateUtil.getLocalDate(report.getWeekpdftime()).with(DayOfWeek.SUNDAY);
+                report.setStartTime(DateUtil.getDateByLocalDate(s));
+                report.setEndTime(DateUtil.getDateByLocalDate(e));
+            }
+        } catch (Exception ignored) {
+        }
+        return weekReports;
     }
 
     /**
@@ -90,7 +138,9 @@ public class WeekReportServiceImpl implements IWeekReportService {
 
                 WeekReport wP = weekReportMapper.selectWeekReportByWeekId(weekReport.getWeekid());
 
-                Patient patient = patientService.selectPatientByPatientPhone(wP.getDoctorPhone());
+//                Patient patient = patientService.selectPatientByPatientPhone(wP.getDoctorPhone());
+                Doctor doctor = doctorService.selectDoctorByDoctorPhone(wP.getDoctorPhone());
+
                 String patientPhone = aesUtils.decrypt(wP.getPatientPhone());
                 String src = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientPhone + "/" + wP.getWeekid() + ".pdf";
                 String dest = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientPhone + "/" + wP.getWeekid() + "_md.pdf";
@@ -106,14 +156,26 @@ public class WeekReportServiceImpl implements IWeekReportService {
 //                String con = "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊\n断进一步确认.";
                 String[] split = weekReport.getDiagnosisConclusion().split("\n");
                 float x = 50;
-                float y = 605;
+                float y = 585;
                 for (String s : split) {
                     canvas.beginText().moveText(x, y).setFontAndSize(font, 10)
                             .showText(s).endText();
                     y -= 10;
                 }
-                canvas.beginText().moveText(80, 493).setFontAndSize(font, 8)
-                        .showText(aesUtils.decrypt(patient.getPatientName())).endText();
+                canvas.beginText().moveText(80, 475).setFontAndSize(font, 8)
+                        .showText(aesUtils.decrypt(doctor.getDoctorName())).endText();
+
+                //添加电子签
+                if (doctor.getDzVisa() != null) {
+                    String wdir = "/home/chenpeng/workspace/system/xindian/uploadPath" + doctor.getDzVisa();
+                    ImageData imageData = ImageDataFactory.create(wdir);
+                    Image image = new Image(imageData)
+                            .setFixedPosition(440, 490)
+                            .scaleToFit(100, 100)
+                            .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                            .setRotationAngle(Math.toRadians(90));
+                    document.add(image);
+                }
                 // 关闭文档
                 document.close();
                 pdfDoc.close();
@@ -152,5 +214,82 @@ public class WeekReportServiceImpl implements IWeekReportService {
     @Override
     public List<WeekReport> groupByPatientPhone(String getdPhone) {
         return weekReportMapper.groupByPatientPhone(getdPhone);
+    }
+
+    @Override
+    public WeekReport selectWeekReportByTime(String mon) {
+        return weekReportMapper.selectWeekReportByTime(mon);
+    }
+
+    @Override
+    public List<WeekReport> selectWeekReportMonthList(WeekReport weekReport) {
+        try {
+            if (weekReport.getPatientPhone() != null)
+                weekReport.setPatientPhone(aesUtils.encrypt(weekReport.getPatientPhone()));
+            if (weekReport.getDoctorPhone() != null)
+                weekReport.setDoctorPhone(aesUtils.encrypt(weekReport.getDoctorPhone()));
+        } catch (Exception ignored) {
+        }
+        List<WeekReport> weekReports;
+        if (weekReport.getStartTime() != null) {
+            LocalDate s = DateUtil.getLocalDate(weekReport.getStartTime()).minusWeeks(1);
+            LocalDate e = DateUtil.getLocalDate(weekReport.getEndTime()).minusWeeks(1);
+            weekReport.setStartTime(DateUtil.getDateByLocalDate(s));
+            weekReport.setEndTime(DateUtil.getDateByLocalDate(e));
+            weekReports = weekReportMapper.selectWeekReportTimeList(weekReport);
+        } else {
+            weekReports = weekReportMapper.selectWeekReportList(weekReport);
+        }
+
+        try {
+            for (WeekReport report : weekReports) {
+                if (report.getPatientPhone() != null)
+                    report.setPatientPhone(aesUtils.decrypt(report.getPatientPhone()));
+                if (report.getDoctorPhone() != null)
+                    report.setDoctorPhone(aesUtils.decrypt(report.getDoctorPhone()));
+                LocalDate s = DateUtil.getLocalDate(report.getWeekpdftime()).with(DayOfWeek.MONDAY);
+                LocalDate e = DateUtil.getLocalDate(report.getWeekpdftime()).with(DayOfWeek.SUNDAY);
+                report.setStartTime(DateUtil.getDateByLocalDate(s));
+                report.setEndTime(DateUtil.getDateByLocalDate(e));
+            }
+
+            Date dd = DateUtil.getNextMonDay(weekReport.getStartTime());
+            long startTime = dd.getTime();
+            int flag = 0;
+            for (long t = startTime; t <= weekReport.getEndTime().getTime(); t += 1000 * 60 * 60 * 24 * 7) {
+                System.out.println(new Date(t));
+                flag = 0;
+                for (WeekReport report : weekReports) {
+                    if (report.getStartTime().getTime() == t) {
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag == 0) {
+                    WeekReport wR = new WeekReport();
+                    Date date = new Date(t);
+                    LocalDate s = DateUtil.getLocalDate(date).with(DayOfWeek.MONDAY);
+                    LocalDate e = DateUtil.getLocalDate(date).with(DayOfWeek.SUNDAY);
+                    wR.setStartTime(DateUtil.getDateByLocalDate(s));
+                    wR.setEndTime(DateUtil.getDateByLocalDate(e));
+                    weekReports.add(wR);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        Report report = new Report();
+        report.setPPhone(weekReport.getPatientPhone());
+        report.setReportType("JECGsingleWL");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for (WeekReport wreport : weekReports) {
+            String today = DateUtil.getLocalDate(wreport.getStartTime()).format(formatter);
+            String startDay = DateUtil.getLocalDate(wreport.getEndTime()).format(formatter);
+            report.setStartReportTime(today);
+            report.setEndReportTime(startDay);
+            List<Report> reports = reportService.selectReportList(report);
+            wreport.setHData(reports != null && reports.size() != 0);
+        }
+        List<WeekReport> collect = weekReports.stream().sorted(Comparator.comparing(WeekReport::getStartTime)).collect(Collectors.toList());
+        return collect;
     }
 }

@@ -42,14 +42,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * detectionController
- * 
+ *
  * @author chenpeng
  * @date 2023-05-25
  */
 @RestController
 @RequestMapping("/detection/detection")
-public class DetectionController extends BaseController
-{
+public class DetectionController extends BaseController {
     @Autowired
     private IDetectionService detectionService;
 
@@ -71,13 +70,13 @@ public class DetectionController extends BaseController
     @PreAuthorize("@ss.hasPermi('detection:detection:list')")
     @GetMapping("/list")
     public TableDataInfo list(Detection detection) throws Exception {
-        if (detection.getPatientPhone()!=null&&!"".equals(detection.getPatientPhone())){
+        if (detection.getPatientPhone() != null && !"".equals(detection.getPatientPhone())) {
             detection.setPatientPhone(aesUtils.encrypt(detection.getPatientPhone()));
         }
         startPage();
         List<Detection> list = detectionService.selectDetectionList(detection);
-        for (Detection c:list){
-            if (c.getPatientPhone()!=null&&!"".equals(c.getPatientPhone())){
+        for (Detection c : list) {
+            if (c.getPatientPhone() != null && !"".equals(c.getPatientPhone())) {
                 c.setPatientPhone(aesUtils.decrypt(c.getPatientPhone()));
             }
         }
@@ -90,8 +89,7 @@ public class DetectionController extends BaseController
     @PreAuthorize("@ss.hasPermi('detection:detection:export')")
     @Log(title = "detection", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Detection detection)
-    {
+    public void export(HttpServletResponse response, Detection detection) {
         List<Detection> list = detectionService.selectDetectionList(detection);
         ExcelUtil<Detection> util = new ExcelUtil<Detection>(Detection.class);
         util.exportExcel(response, list, "detection数据");
@@ -104,7 +102,7 @@ public class DetectionController extends BaseController
     @GetMapping(value = "/{detectionId}")
     public AjaxResult getInfo(@PathVariable("detectionId") Long detectionId) throws Exception {
         Detection detection = detectionService.selectDetectionByDetectionId(detectionId);
-        if (detection.getPatientPhone()!=null&&!"".equals(detection.getPatientPhone())){
+        if (detection.getPatientPhone() != null && !"".equals(detection.getPatientPhone())) {
             detection.setPatientPhone(aesUtils.decrypt(detection.getPatientPhone()));
         }
         return AjaxResult.success();
@@ -117,7 +115,7 @@ public class DetectionController extends BaseController
     @Log(title = "detection", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Detection detection) throws Exception {
-        if (detection.getPatientPhone()!=null&&!"".equals(detection.getPatientPhone())){
+        if (detection.getPatientPhone() != null && !"".equals(detection.getPatientPhone())) {
             detection.setPatientPhone(aesUtils.encrypt(detection.getPatientPhone()));
         }
         return toAjax(detectionService.insertDetection(detection));
@@ -130,7 +128,7 @@ public class DetectionController extends BaseController
     @Log(title = "detection", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Detection detection) throws Exception {
-        if (detection.getPatientPhone()!=null&&!"".equals(detection.getPatientPhone())){
+        if (detection.getPatientPhone() != null && !"".equals(detection.getPatientPhone())) {
             detection.setPatientPhone(aesUtils.encrypt(detection.getPatientPhone()));
         }
         return toAjax(detectionService.updateDetection(detection));
@@ -141,11 +139,11 @@ public class DetectionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('detection:detection:remove')")
     @Log(title = "detection", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{detectionIds}")
-    public AjaxResult remove(@PathVariable Long[] detectionIds)
-    {
+    @DeleteMapping("/{detectionIds}")
+    public AjaxResult remove(@PathVariable Long[] detectionIds) {
         return toAjax(detectionService.deleteDetectionByDetectionIds(detectionIds));
     }
+
     /**
      * 获取当前天次数
      */
@@ -153,15 +151,23 @@ public class DetectionController extends BaseController
     public AjaxResult getDetectionNumByPhone(@PathVariable String patientPhone) throws Exception {
         String encrypt = aesUtils.encrypt(patientPhone);
         VipPatient vipPhone = vipPatientService.findVipPhone(encrypt);
-        if (vipPhone!=null){
+        if (vipPhone != null) {
             return AjaxResult.success(vipPhone.getVipNum());
         }
         SysUser sysUser = sysUserService.selectUserByPhone(encrypt);
         return AjaxResult.success(sysUser.getDetectionNum());
-
-
     }
 
+    @GetMapping("/getWeekPdfNumByPhone/{patientPhone}")
+    public AjaxResult getWeekPdfNumByPhone(@PathVariable String patientPhone) throws Exception {
+        String encrypt = aesUtils.encrypt(patientPhone);
+//        VipPatient vipPhone = vipPatientService.findVipPhone(encrypt);
+//        if (vipPhone != null) {
+//            return AjaxResult.success(vipPhone.getVipNum());
+//        }
+        SysUser sysUser = sysUserService.selectUserByPhone(encrypt);
+        return AjaxResult.success(sysUser.getWeeklyNewspaperNum());
+    }
 
 
 }

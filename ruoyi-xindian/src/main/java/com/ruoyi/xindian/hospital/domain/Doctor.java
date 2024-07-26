@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.hospital.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -94,6 +95,19 @@ public class Doctor extends BaseEntity
 
     private String accountStatus;
 
+    /**
+     * 电子签地址
+     */
+    private String dzVisa;
+
+    public String getDzVisa() {
+        return dzVisa;
+    }
+
+    public void setDzVisa(String dzVisa) {
+        this.dzVisa = dzVisa;
+    }
+
     public String getAccountStatus() {
         return accountStatus;
     }
@@ -170,39 +184,39 @@ public class Doctor extends BaseEntity
         return openId;
     }
 
-    public void setDoctorId(Long doctorId) 
+    public void setDoctorId(Long doctorId)
     {
         this.doctorId = doctorId;
     }
 
-    public Long getDoctorId() 
+    public Long getDoctorId()
     {
         return doctorId;
     }
-    public void setDoctorName(String doctorName) 
+    public void setDoctorName(String doctorName)
     {
         this.doctorName = doctorName;
     }
 
-    public String getDoctorName() 
+    public String getDoctorName()
     {
         return doctorName;
     }
-    public void setDoctorPhone(String doctorPhone) 
+    public void setDoctorPhone(String doctorPhone)
     {
         this.doctorPhone = doctorPhone;
     }
 
-    public String getDoctorPhone() 
+    public String getDoctorPhone()
     {
         return doctorPhone;
     }
-    public void setDepartmentCode(String departmentCode) 
+    public void setDepartmentCode(String departmentCode)
     {
         this.departmentCode = departmentCode;
     }
 
-    public String getDepartmentCode() 
+    public String getDepartmentCode()
     {
         return departmentCode;
     }

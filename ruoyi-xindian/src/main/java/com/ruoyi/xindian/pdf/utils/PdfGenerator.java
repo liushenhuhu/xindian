@@ -53,6 +53,7 @@ public class PdfGenerator {
         //基本信息
         Table table_info = new Table(6);
         table_info.setWidth(UnitValue.createPercentValue(100));
+        headCell(table_info, "基本信息", font, 1, 0, 1, 1);
         contextCell(table_info, "姓名：" + patientName, font, 1, 0, 1, 0);
         contextCell(table_info, "性别：" + gender, font, 1, 0, 0, 0);
         contextCell(table_info, "年龄：" + patientAge + " 岁", font, 1, 0, 0, 1);
@@ -147,6 +148,7 @@ public class PdfGenerator {
         Table table1 = new Table(6);
         table1.setWidth(UnitValue.createPercentValue(100));
         Cell con = new Cell(1, 6).add(new Paragraph("结论").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(16));
+        con.setBackgroundColor(new DeviceRgb(127, 127, 127), 0.5f);
         table1.addCell(con);
         Cell text = new Cell(4, 6).add(
                 new Paragraph(conclusion).setPaddingLeft(10).setHeight(180).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
@@ -157,6 +159,11 @@ public class PdfGenerator {
         Cell time = new Cell(1, 3).add(new Paragraph("日期：" + nowTime).setPaddingRight(5).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(8));
         time.setBorderLeft(Border.NO_BORDER);
         table1.addCell(time);
+
+        Table table2 = new Table(6);
+        table2.setWidth(UnitValue.createPercentValue(100));
+        headCell(table2, "心电记录", font, 1, 1, 1, 1);
+
         if (weekPdfData.isEmpty()) {
             PdfCanvas pdfCanvas = new PdfCanvas(doc.getPdfDocument().getLastPage());
             pdfCanvas.setFontAndSize(font, 20);
@@ -166,17 +173,34 @@ public class PdfGenerator {
                     .showText("最近7天未做检测！")
                     .endText();
         } else {
+            PdfCanvas pdfCanvas = new PdfCanvas(doc.getPdfDocument().getLastPage());
+            pdfCanvas.setFontAndSize(font, 10);
+            pdfCanvas.setFillColor(ColorConstants.BLACK);
+            pdfCanvas.beginText()
+                    .moveText(390, 510)
+                    .showText("报告医生:")
+                    .endText();
+            pdfCanvas.stroke();
             // 使用Div容器来居中表格
             Div div1 = new Div();
             div1.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
             div1.add(table_info);
             div1.add(new Paragraph().setMarginBottom(5));
             div1.add(table1);
+            div1.add(new Paragraph().setMarginBottom(5));
+            div1.add(table2);
+            // 设置画布边框
+            com.itextpdf.kernel.geom.Rectangle rectangle = new com.itextpdf.kernel.geom.Rectangle(35, 40, 525, 420);
+            pdfCanvas.setLineWidth(1f);
+            pdfCanvas.setStrokeColor(ColorConstants.BLACK);
+            pdfCanvas.rectangle(rectangle);
+            pdfCanvas.stroke();
+
             // 将Div添加到文档中
             doc.add(div1);
-            drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 450, 525, 136.5f);
+            drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 420, 525, 136.5f);
             if (len >= 1)
-                drawWeekEcg30(doc, font, weekPdfData.get(1), 35, 250, 525, 136.5f);
+                drawWeekEcg30(doc, font, weekPdfData.get(1), 35, 220, 525, 136.5f);
             if (len > 1)
                 doc.add(new AreaBreak());
             Div div;
@@ -185,8 +209,18 @@ public class PdfGenerator {
                 div = new Div();
                 div.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
                 div.add(table_info);
+                div.add(new Paragraph().setMarginBottom(5));
+                div.add(table2);
                 // 将Div添加到文档中
                 doc.add(div);
+                pdfCanvas = new PdfCanvas(doc.getPdfDocument().getLastPage());
+                // 设置画布边框
+                com.itextpdf.kernel.geom.Rectangle rect = new com.itextpdf.kernel.geom.Rectangle(35, 70, 525, 670);
+                pdfCanvas.setLineWidth(1f);
+                pdfCanvas.setStrokeColor(ColorConstants.BLACK);
+                pdfCanvas.rectangle(rect);
+                pdfCanvas.stroke();
+
                 drawWeekEcg30(doc, font, weekPdfData.get(i), 35, 670, 525, 136.5f);
                 i += 1;
                 if (i < len)
@@ -224,10 +258,6 @@ public class PdfGenerator {
                 .moveText(x + co, y - lo)
                 .showText("P波(ms)：" + (weekPdfData.getP() == null || Objects.equals(weekPdfData.getP(), "nan") ? "-" : weekPdfData.getP()))
                 .endText();
-//        pdfCanvas.beginText()
-//                .moveText(x + 2 * co, y - lo)
-//                .showText("RR间期(ms)：" + (weekPdfData.getRr() == null ? "-" : weekPdfData.getRr()))
-//                .endText();
         pdfCanvas.beginText()
                 .moveText(x + 2 * (co + 5), y - lo)
                 .showText("QRS波群(ms)：" + (weekPdfData.getQrs() == null || Objects.equals(weekPdfData.getQrs(), "nan") ? "-" : weekPdfData.getQrs()))
@@ -252,7 +282,7 @@ public class PdfGenerator {
         com.itextpdf.kernel.geom.Rectangle rectangle = new com.itextpdf.kernel.geom.Rectangle(x, y - height, width, height);
         // 设置画布边框
         pdfCanvas.setLineWidth(0.2f);
-        pdfCanvas.setStrokeColor(ColorConstants.BLACK);
+        pdfCanvas.setStrokeColor(ColorConstants.RED);
         pdfCanvas.rectangle(rectangle);
         pdfCanvas.stroke();
         pdfCanvas.setLineWidth(0.2f);
@@ -278,32 +308,33 @@ public class PdfGenerator {
         for (double i = y - height + smallK; i < y; i += smallK) {
             index++;
             if (index % 5 == 0) continue;
-//            indey = 0;
-//            for (double j = x + smallK; j < x + width; j += smallK) {
-//                indey++;
-//                if (indey % 5 == 0) continue;
-//                pdfCanvas.circle(j, i, 0.2);
-//                pdfCanvas.fill();
-//            }
-            pdfCanvas.moveTo(x, i);
-            pdfCanvas.lineTo(x + width, i);
+            indey = 0;
+            for (double j = x + smallK; j < x + width; j += smallK) {
+                indey++;
+                if (indey % 5 == 0) continue;
+                pdfCanvas.rectangle(j - 0.25, i - 0.25, 0.5, 0.5);
+                pdfCanvas.fill();
+            }
+//            pdfCanvas.moveTo(x, i);
+//            pdfCanvas.lineTo(x + width, i);
         }
-        index = 0;
-        for (double i = x + smallK; i < width + x; i += smallK) {
-            index++;
-            if (index % 5 == 0) continue;
-            pdfCanvas.moveTo(i, y);
-            pdfCanvas.lineTo(i, y - height);
-        }
+//        index = 0;
+//        for (double i = x + smallK; i < width + x; i += smallK) {
+//            index++;
+//            if (index % 5 == 0) continue;
+//            pdfCanvas.moveTo(i, y);
+//            pdfCanvas.lineTo(i, y - height);
+//        }
         pdfCanvas.stroke();
 
         //画心电图
-        pdfCanvas.setFontAndSize(font, 8);
+        pdfCanvas.setStrokeColor(ColorConstants.BLACK);
+        pdfCanvas.setFontAndSize(font, 6);
         pdfCanvas.setLineWidth(0.4f);
         pdfCanvas.setFillColor(ColorConstants.BLACK);
         double dx, dy;
         dx = x;
-        dy = y - 4 * pigK;
+        dy = y - 3 * pigK;
         pdfCanvas.moveTo(dx, dy);
         int flag = 0;
         int sampleRate = 250;
@@ -319,7 +350,7 @@ public class PdfGenerator {
             flag++;
             if (flag >= ecgData.length / 3 * 2) break;
         }
-        dy = y - 10 * pigK;
+        dy = y - 11 * pigK;
         pdfCanvas.moveTo(dx, dy);
         for (double i = x; i < x + width; i += 5 * pigK / sampleRate) {
             pdfCanvas.lineTo(i, dy + ecgData[flag] * 2 * pigK);
@@ -327,6 +358,43 @@ public class PdfGenerator {
             if (flag >= ecgData.length) break;
         }
         pdfCanvas.stroke();
+        if (weekPdfData.getAiConclusion().contains("信号干扰较大, 建议重新采集")) return;
+
+        //打标签 width=525
+        double h = y - 1 * pigK;
+        pdfCanvas.setFontAndSize(font, 8);
+        LinkedList<LinkedList<Integer>> rList = weekPdfData.getRList();
+        for (LinkedList<Integer> integers : rList) {
+            for (int i = 0; i < integers.size(); i++) {
+                pdfCanvas.beginText()
+                        .moveText(x + integers.get(i).doubleValue() * 0.525 - 3, h)
+                        .showText("N")
+                        .endText();
+                if (i < integers.size() - 1) {
+                    double mid = (integers.get(i + 1) - integers.get(i)) * 1.0 / 2 + integers.get(i);
+                    pdfCanvas.beginText()
+                            .moveText(x + mid * 0.525 - 8, h + 4)
+                            .showText(String.valueOf((integers.get(i + 1) - integers.get(i)) * 10))
+                            .endText();
+                    int kk = 6000 / (integers.get(i + 1) - integers.get(i));
+                    if (kk < 100) {
+                        pdfCanvas.beginText()
+                                .moveText(x + mid * 0.525 - 6, h - 4)
+                                .showText(String.valueOf(kk))
+                                .endText();
+                    } else {
+                        pdfCanvas.beginText()
+                                .moveText(x + mid * 0.525 - 8, h - 4)
+                                .showText(String.valueOf(kk))
+                                .endText();
+                    }
+
+                }
+            }
+            h -= 4 * pigK;
+        }
+        pdfCanvas.stroke();
+
     }
 
     public void createPdf(String fileName, ReportData reportData) throws IOException, ParseException {
@@ -1092,6 +1160,13 @@ public class PdfGenerator {
     //设置内容
     public void contextCell(Table table, String data, PdfFont font, int top, int bottom, int left, int right) {
         Cell cell = new Cell(1, 2).add(new Paragraph(data).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(cell, top, bottom, left, right);
+        table.addCell(cell);
+    }
+
+    private void headCell(Table table, String data, PdfFont font, int top, int bottom, int left, int right) {
+        Cell cell = new Cell(1, 6).add(new Paragraph(data).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10));
+        cell.setBackgroundColor(new DeviceRgb(127, 127, 127), 0.5f);
         vanishLine(cell, top, bottom, left, right);
         table.addCell(cell);
     }
