@@ -208,30 +208,28 @@ public class LeaseDetailsServiceImpl extends ServiceImpl<LeaseDetailsMapper, Lea
     @Override
     public Map<String, Object> giveBack(LeaseDetails lease, HttpServletResponse response) throws Exception {
 
-//        if (lease.getLeaseDetailsId()==null) {
-//            throw new ServiceException("请选择设备");
-//        }
-//
-//        LeaseDetails leaseDetails = selectLeaseDetailsByLeaseDetailsId(lease.getLeaseDetailsId());
-//        if (leaseDetails==null){
-//            throw new ServiceException("记录不存在");
-//        }
-//        if (StringUtils.isEmpty(leaseDetails.getStatus())||!leaseDetails.getStatus().equals("1")){
-//            throw new ServiceException("设备未租赁");
-//        }
-//        SysUser sysUser = sysUserService.selectUserByPhone(aesUtils.encrypt(leaseDetails.getPhone()));
-//        LeaseDetails leaseDetail = new LeaseDetails();
-//        leaseDetail.setEquipmentCode(leaseDetails.getEquipmentCode());
-//        leaseDetail.setStatus("0");
-//        int update = leaseDetailsMapper.update(leaseDetail, new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getEquipmentCode, leaseDetail.getEquipmentCode()));
-//        if (sysUser!=null){
-//            OrderInfo orderInfo = orderInfoService.selectTOrderInfoByUserId(sysUser.getUserId(), leaseDetails.getEquipmentCode());
-//            if (orderInfo!=null){
-//               return wxPayController.refund(orderInfo.getId(), "设备归还", response);
-//            }
-//        }
-        wxPayController.refund("20240726210423860611", "设备归还", response);
+        if (lease.getLeaseDetailsId()==null) {
+            throw new ServiceException("请选择设备");
+        }
 
+        LeaseDetails leaseDetails = selectLeaseDetailsByLeaseDetailsId(lease.getLeaseDetailsId());
+        if (leaseDetails==null){
+            throw new ServiceException("记录不存在");
+        }
+        if (StringUtils.isEmpty(leaseDetails.getStatus())||!leaseDetails.getStatus().equals("1")){
+            throw new ServiceException("设备未租赁");
+        }
+        SysUser sysUser = sysUserService.selectUserByPhone(aesUtils.encrypt(leaseDetails.getPhone()));
+        LeaseDetails leaseDetail = new LeaseDetails();
+        leaseDetail.setEquipmentCode(leaseDetails.getEquipmentCode());
+        leaseDetail.setStatus("0");
+        int update = leaseDetailsMapper.update(leaseDetail, new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getEquipmentCode, leaseDetail.getEquipmentCode()));
+        if (sysUser!=null){
+            OrderInfo orderInfo = orderInfoService.selectTOrderInfoByUserId(sysUser.getUserId(), leaseDetails.getEquipmentCode());
+            if (orderInfo!=null){
+               return wxPayController.refund(orderInfo.getId(), "设备归还", response);
+            }
+        }
         return new HashMap<>();
     }
 }
