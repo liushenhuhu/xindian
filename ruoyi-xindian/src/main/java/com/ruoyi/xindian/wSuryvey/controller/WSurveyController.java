@@ -1,10 +1,16 @@
 package com.ruoyi.xindian.wSuryvey.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import avro.shaded.com.google.common.base.Preconditions;
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.patient.domain.Patient;
+import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.wSuryvey.convert.WSurveyDTOConverter;
+import com.ruoyi.xindian.wSuryvey.domain.WSurveyDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +45,9 @@ public class WSurveyController extends BaseController {
     @Autowired
     private AesUtils aesUtils;
 
+    @Autowired
+    private IPatientService patientService;
+
     /**
      * 查询wSuryvey列表
      */
@@ -47,10 +56,27 @@ public class WSurveyController extends BaseController {
     public TableDataInfo list(WSurvey wSurvey) throws Exception {
         if (wSurvey.getPatientPhone() != null)
             wSurvey.setPatientPhone(aesUtils.encrypt(wSurvey.getPatientPhone()));
+//        Patient patient = patientService.selectPatientByPatientPhone(wSurvey.getPatientPhone());
+//        //身份证
+//        String patientCode = patient.getPatientCode();
+//        if (patientCode == null || patientCode.contains("**")) {
+//            patientCode = "";
+//        } else {
+//            patientCode = aesUtils.decrypt(patientCode);
+//        }
+//        //地址
+//        String patientSource = patient.getPatientSource();
+//
+//        WSurveyDTO wSurveyDTO;
+//        LinkedList<WSurveyDTO> res = new LinkedList<>();
         startPage();
         List<WSurvey> list = wSurveyService.selectWSurveyList(wSurvey);
         for (WSurvey survey : list) {
             survey.setPatientPhone(aesUtils.decrypt(survey.getPatientPhone()));
+//            wSurveyDTO = WSurveyDTOConverter.INSTANCE.covertEntertyTODTO(survey);
+//            wSurveyDTO.setAddr(patientSource);
+//            wSurveyDTO.setPatientCode(patientCode);
+//            res.add(wSurveyDTO);
         }
         return getDataTable(list);
     }

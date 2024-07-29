@@ -1,10 +1,7 @@
 package com.ruoyi.xindian.util;
 
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
@@ -48,6 +45,34 @@ public class DateUtil {
             return 0;
         }
 
+    }
+
+    /**
+     * Date转LocalDate
+     */
+    public static LocalDate getLocalDate(Date date) {
+        // 将Date转换为Instant
+        Instant instant = date.toInstant();
+        // 获取系统默认时区
+        ZoneId zoneId = ZoneId.systemDefault();
+        // 将Instant转换为ZonedDateTime
+        ZonedDateTime zonedDateTime = instant.atZone(zoneId);
+        // 从ZonedDateTime获取LocalDate
+        return zonedDateTime.toLocalDate();
+    }
+
+    public static Date getDateByLocalDate(LocalDate localDate) {
+        // 将LocalDate转换为LocalDateTime
+        LocalDateTime localDateTime = localDate.atStartOfDay();
+
+        // 获取系统默认时区
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        // 将LocalDateTime转换为ZonedDateTime
+        ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+
+        // 将ZonedDateTime转换为Instant
+        return Date.from(zonedDateTime.toInstant());
     }
 
     /**
@@ -192,5 +217,8 @@ public class DateUtil {
     }
 
 
-
+    public static Date getNextMonDay(Date startTime) {
+        LocalDate localDate = getLocalDate(startTime).plusWeeks(1).with(DayOfWeek.MONDAY);
+        return getDateByLocalDate(localDate);
+    }
 }

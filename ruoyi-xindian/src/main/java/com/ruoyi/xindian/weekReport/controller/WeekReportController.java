@@ -1,14 +1,25 @@
 package com.ruoyi.xindian.weekReport.controller;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.pagehelper.PageInfo;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -21,6 +32,7 @@ import com.itextpdf.layout.property.HorizontalAlignment;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.WxUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +68,9 @@ public class WeekReportController extends BaseController {
     @Autowired
     private ISysUserService sysUserService;
 
+    @Resource
+    private AesUtils aesUtils;
+
     /**
      * 查询weekReport列表
      */
@@ -65,6 +80,22 @@ public class WeekReportController extends BaseController {
         startPage();
         List<WeekReport> list = weekReportService.selectWeekReportList(weekReport);
         return getDataTable(list);
+    }
+
+    @GetMapping("/monthList")
+    public TableDataInfo monthList(WeekReport weekReport) {
+        startPage();
+        List<WeekReport> list = weekReportService.selectWeekReportMonthList(weekReport);
+        return getTable(list, list.size());
+    }
+
+    @GetMapping("/getWeekPdf")
+    public TableDataInfo getWeekPdf(WeekReport weekReport) throws Exception {
+        LocalDate monday = DateUtil.getLocalDate(weekReport.getWeekpdftime()).minusWeeks(1).with(DayOfWeek.MONDAY);
+        Date dateByLocalDate = DateUtil.getDateByLocalDate(monday);
+        weekReport.setWeekpdftime(dateByLocalDate);
+        List<WeekReport> weekReports = weekReportService.selectWeekReportList(weekReport);
+        return getDataTable(weekReports);
     }
 
     /**
@@ -141,25 +172,25 @@ public class WeekReportController extends BaseController {
         PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
 //        PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
 
-
         PdfCanvas canvas = new PdfCanvas(pdfDoc.getFirstPage());
         String con = "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊\n断进一步确认.";
         String[] split = con.split("\n");
         float x = 50;
-        float y = 605;
+        float y = 585;
         for (String s : split) {
             canvas.beginText().moveText(x, y).setFontAndSize(font, 10)
                     .showText(s).endText();
             y -= 10;
         }
-//        canvas.beginText().moveText(80, 493).setFontAndSize(font, 8)
-//                .showText("陈鹏").endText();
+        canvas.beginText().moveText(80, 475).setFontAndSize(font, 8)
+                .showText("陈鹏").endText();
 
-        ImageData imageData = ImageDataFactory.create("C:\\Users\\chenpeng\\Pictures\\Saved Pictures\\chenpeng.jpg");
+        ImageData imageData = ImageDataFactory.create("C:\\Users\\chenpeng\\Pictures\\Saved Pictures\\whl.jpg");
         Image image = new Image(imageData)
-                .setFixedPosition(450,500)
-                .scaleToFit(100,100)
-                .setHorizontalAlignment(HorizontalAlignment.CENTER);
+                .setFixedPosition(440, 490)
+                .scaleToFit(100, 100)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setRotationAngle(Math.toRadians(90));
         document.add(image);
 
 

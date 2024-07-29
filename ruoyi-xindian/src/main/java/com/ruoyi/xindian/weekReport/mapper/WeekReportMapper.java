@@ -62,4 +62,8 @@ public interface WeekReportMapper
     List<WeekReport> groupByPatientPhone(String getdPhone);
 
     WeekReport selectWeekReportByWeekId(String weekid);
+
+    WeekReport selectWeekReportByTime(String mon);
+
+    List<WeekReport> selectWeekReportTimeList(WeekReport weekReport);
 }

@@ -49,6 +49,25 @@
         where weekid = #{weekid}
     </select>
 
+    <select id="selectWeekReportByTime" resultType="com.ruoyi.xindian.weekReport.domain.WeekReport">
+        <include refid="selectWeekReportVo"/>
+        where weekpdftime between #{weekpdftime} and DATE_ADD(#{weekpdftime}, INTERVAL 7 DAY)
+    </select>
+    <select id="selectWeekReportTimeList" resultType="com.ruoyi.xindian.weekReport.domain.WeekReport">
+        <include refid="selectWeekReportVo"/>
+        <where>
+            <if test="weekid != null ">and weekid = #{weekid}</if>
+            <if test="patientPhone != null  and patientPhone != ''">and patient_phone = #{patientPhone}</if>
+            <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone = #{doctorPhone}</if>
+            <if test="diagnosisStatus != null ">and diagnosis_status = #{diagnosisStatus}</if>
+            <if test="startTime != null ">and weekpdftime between #{startTime} and #{endTime}
+            </if>
+            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''">and diagnosis_conclusion =
+                #{diagnosisConclusion}
+            </if>
+        </where>
+    </select>
+
     <insert id="insertWeekReport" parameterType="WeekReport" useGeneratedKeys="true" keyProperty="id">
         insert into week_report
         <trim prefix="(" suffix=")" suffixOverrides=",">

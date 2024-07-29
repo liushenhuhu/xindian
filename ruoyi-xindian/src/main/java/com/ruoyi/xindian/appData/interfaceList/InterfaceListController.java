@@ -1,4 +1,4 @@
-package com.ruoyi.xindian.interfaceList;
+package com.ruoyi.xindian.appData.interfaceList;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;

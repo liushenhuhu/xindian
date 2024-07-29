@@ -61,4 +61,8 @@ public interface IWeekReportService
 
     List<WeekReport> groupByPatientPhone(String getdPhone);
 
+    WeekReport selectWeekReportByTime(String mon);
+
+    List<WeekReport> selectWeekReportMonthList(WeekReport weekReport);
+
 }

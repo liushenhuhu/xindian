@@ -1,4 +1,5 @@
 package com.ruoyi.xindian.patient.controller;
+
 import java.util.Date;
 
 import com.github.pagehelper.PageInfo;
@@ -50,8 +51,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/patient/patient")
-public class PatientController extends BaseController
-{
+public class PatientController extends BaseController {
 
     @Autowired
     private IMedicalHistoryService medicalHistoryService;
@@ -77,12 +77,11 @@ public class PatientController extends BaseController
     private AesUtils aesUtils;
 
 
-
     @Resource
     private DoctorRelationPatientService doctorRelationPatientService;
 
     @Resource
-    private RedisTemplate<String,Patient> redisTemplate;
+    private RedisTemplate<String, Patient> redisTemplate;
 
     /**
      * 查询患者列表
@@ -90,40 +89,40 @@ public class PatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('patient:patient:list')")
     @GetMapping("/list")
     @Aes
-    public TableDataInfo list(Patient patient,Integer pageSize,Integer pageNum) throws Exception {
+    public TableDataInfo list(Patient patient, Integer pageSize, Integer pageNum) throws Exception {
         List<Patient> list = new ArrayList<>();
         Long userId = getUserId();
 
         if (!SysUser.isAdmin(userId)) {
             SysUser sysUser = userService.selectUserById(getUserId());
-            String userHospitalCode= sysUser.getHospitalCode();
-            if(userHospitalCode!=null){
+            String userHospitalCode = sysUser.getHospitalCode();
+            if (userHospitalCode != null) {
                 Hospital hospital = hospitalService.selectHospitalByHospitalCode(userHospitalCode);
-                if (hospital!=null){
+                if (hospital != null) {
                     patient.getHospitalNameList().add(hospital.getHospitalName());
                     patient.setHospitalId(hospital.getHospitalId());
                 }
 
-            }else {
+            } else {
                 return getDataTable(list);
             }
 
-            if (patient.getHospitalId()!=null){
+            if (patient.getHospitalId() != null) {
                 AssociatedHospital associatedHospital = new AssociatedHospital();
                 associatedHospital.setHospitalId(patient.getHospitalId());
                 List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-                if (associatedHospitals!=null&&associatedHospitals.size()>0){
-                    for (AssociatedHospital c:associatedHospitals){
+                if (associatedHospitals != null && associatedHospitals.size() > 0) {
+                    for (AssociatedHospital c : associatedHospitals) {
                         Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                         patient.getHospitalNameList().add(hospital1.getHospitalName());
                     }
                 }
             }
-            if (patient.getPatientSource()!=null&&!"".equals(patient.getPatientSource())){
+            if (patient.getPatientSource() != null && !"".equals(patient.getPatientSource())) {
                 List<String> patientList = patient.getHospitalNameList();
-                if (patientList!=null&&patientList.size()>0){
-                    for (String c : patientList){
-                        if (c.equals(patient.getPatientSource())){
+                if (patientList != null && patientList.size() > 0) {
+                    for (String c : patientList) {
+                        if (c.equals(patient.getPatientSource())) {
                             patient.getHospitalNameList().clear();
                             patient.getHospitalNameList().add(patient.getPatientSource());
                             break;
@@ -134,24 +133,24 @@ public class PatientController extends BaseController
             startPage();
             list = patientService.selectPatientList(patient);
         } else {
-            if(patient.getPatientSource()!=null&&!"".equals(patient.getPatientSource())){
+            if (patient.getPatientSource() != null && !"".equals(patient.getPatientSource())) {
                 patient.getHospitalNameList().add(patient.getPatientSource());
             }
-            if (StringUtils.isNotEmpty(patient.getIsSelect())&& patient.getIsSelect().equals("1")){
-                if (StringUtils.isNotEmpty(patient.getPatientName())){
+            if (StringUtils.isNotEmpty(patient.getIsSelect()) && patient.getIsSelect().equals("1")) {
+                if (StringUtils.isNotEmpty(patient.getPatientName())) {
 
                     String patientName = aesUtils.decrypt(patient.getPatientName());
 
-                    if (Boolean.TRUE.equals(redisTemplate.hasKey("patientListByTest:" + patientName))){
-                        List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:"+ patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                    if (Boolean.TRUE.equals(redisTemplate.hasKey("patientListByTest:" + patientName))) {
+                        List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:" + patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
 
-                        return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:"+patientName));
+                        return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:" + patientName));
                     }
                     List<Patient> list1 = new ArrayList<>();
                     List<Patient> patientList = redisTemplate.opsForList().range("patientList", 0, -1);
                     if (patientList != null) {
                         for (Patient pat : patientList) {
-                            if(pat.getPatientName().contains(patientName)){
+                            if (pat.getPatientName().contains(patientName)) {
                                 list1.add(pat);
                             }
                         }
@@ -164,13 +163,13 @@ public class PatientController extends BaseController
                             total = new PageInfo(listKeys).getTotal();
                         }
                         return getTable(listKeys, total);
-                    }else {
+                    } else {
                         redisTemplate.delete("patientListByTest:*");
-                        for (Patient s : list1){
-                            redisTemplate.opsForList().rightPush("patientListByTest:"+patientName,s);
+                        for (Patient s : list1) {
+                            redisTemplate.opsForList().rightPush("patientListByTest:" + patientName, s);
                         }
-                        List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:"+patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
-                        return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:"+ patientName));
+                        List<Patient> listKeys = redisTemplate.opsForList().range("patientListByTest:" + patientName, (long) (pageNum - 1) * pageSize, ((long) pageNum * pageSize) - 1);
+                        return getTable(listKeys, redisTemplate.opsForList().size("patientListByTest:" + patientName));
                     }
 
 
@@ -178,29 +177,24 @@ public class PatientController extends BaseController
             }
 
 
-
-
-
-
-
             startPage();
-            list   = patientService.selectPatientList(patient);
+            list = patientService.selectPatientList(patient);
 
         }
 
         for (Patient pat : list) {
-            if(pat.getBirthDay()!=null)
+            if (pat.getBirthDay() != null)
                 pat.setPatientAge(String.valueOf(DateUtil.getAge(pat.getBirthDay())));
-            if(pat.getPatientSex().length()>1){
-                    pat.setPatientSex(pat.getPatientSex().substring(0,1));
-                }
-            if(pat.getPatientPhone() != null){
+            if (pat.getPatientSex().length() > 1) {
+                pat.setPatientSex(pat.getPatientSex().substring(0, 1));
+            }
+            if (pat.getPatientPhone() != null) {
                 pat.setPatientPhone(aesUtils.decrypt(pat.getPatientPhone()));
             }
-            if(pat.getPatientName() != null){
+            if (pat.getPatientName() != null) {
                 pat.setPatientName(aesUtils.decrypt(pat.getPatientName()));
             }
-            if (pat.getFamilyPhone()!=null&&!"".equals(pat.getFamilyPhone())){
+            if (pat.getFamilyPhone() != null && !"".equals(pat.getFamilyPhone())) {
                 pat.setFamilyPhone(aesUtils.decrypt(pat.getFamilyPhone()));
             }
 //            if(pat.getPatientAge()==null || Objects.equals(pat.getPatientAge(), "")){
@@ -216,8 +210,7 @@ public class PatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('patient:patient:export')")
     @Log(title = "患者", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Patient patient)
-    {
+    public void export(HttpServletResponse response, Patient patient) {
         List<Patient> list = new ArrayList<>();
         if (getDeptId() == 200) {
             SysUser sysUser = userService.selectUserById(getUserId());
@@ -238,19 +231,19 @@ public class PatientController extends BaseController
     @GetMapping(value = "/{patientId}")
     public AjaxResult getInfo(@PathVariable("patientId") Long patientId) throws Exception {
         Patient patient = patientService.selectPatientByPatientId(patientId);
-        if (patient==null){
+        if (patient == null) {
             return AjaxResult.error("用户不存在");
         }
-        if(patient.getPatientPhone() != null){
+        if (patient.getPatientPhone() != null) {
             patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
         }
-        if(patient.getPatientName() != null){
+        if (patient.getPatientName() != null) {
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
-        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+        if (patient.getFamilyPhone() != null && !"".equals(patient.getFamilyPhone())) {
             patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
         }
-        if(StringUtils.isNotEmpty(patient.getFamilyName())){
+        if (StringUtils.isNotEmpty(patient.getFamilyName())) {
             patient.setFamilyName(aesUtils.decrypt(patient.getFamilyName()));
         }
         return AjaxResult.success(patient);
@@ -263,23 +256,23 @@ public class PatientController extends BaseController
     public AjaxResult getInfoByPhone(@PathVariable("patientPhone") String patientPhone) throws Exception {
 
         Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(patientPhone));
-        if (patient==null){
+        if (patient == null) {
             return AjaxResult.error("用户不存在");
         }
         Date birthDay = patient.getBirthDay();
-        if(birthDay != null){
+        if (birthDay != null) {
             patient.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
         }
-        if(patient.getPatientPhone() != null){
+        if (patient.getPatientPhone() != null) {
             patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
         }
-        if(patient.getPatientName() != null){
+        if (patient.getPatientName() != null) {
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
-        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+        if (patient.getFamilyPhone() != null && !"".equals(patient.getFamilyPhone())) {
             patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
         }
-        if(StringUtils.isNotEmpty(patient.getFamilyName())){
+        if (StringUtils.isNotEmpty(patient.getFamilyName())) {
             patient.setFamilyName(aesUtils.decrypt(patient.getFamilyName()));
         }
         return AjaxResult.success(patient);
@@ -294,24 +287,24 @@ public class PatientController extends BaseController
     public AjaxResult getInfoByPatientName(@PathVariable("patientName") String patientName) throws Exception {
         Patient patient = patientService.selectPatientByPatientName(patientName);
 
-        if (patient==null){
+        if (patient == null) {
             return AjaxResult.error("用户不存在");
         }
         System.out.println(patient);
         Date birthDay = patient.getBirthDay();
-        if(birthDay != null){
+        if (birthDay != null) {
             patient.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
         }
-        if(patient.getPatientPhone() != null){
+        if (patient.getPatientPhone() != null) {
             patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
         }
-        if(patient.getPatientName() != null){
+        if (patient.getPatientName() != null) {
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
-        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+        if (patient.getFamilyPhone() != null && !"".equals(patient.getFamilyPhone())) {
             patient.setFamilyPhone(aesUtils.decrypt(patient.getFamilyPhone()));
         }
-        if(StringUtils.isNotEmpty(patient.getFamilyName())){
+        if (StringUtils.isNotEmpty(patient.getFamilyName())) {
             patient.setFamilyName(aesUtils.decrypt(patient.getFamilyName()));
         }
         return AjaxResult.success(patient);
@@ -330,10 +323,10 @@ public class PatientController extends BaseController
         patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
         patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
         Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
-        if (patient1!=null){
+        if (patient1 != null) {
             return AjaxResult.error("手机号已重复");
         }
-        if (StringUtils.isNotEmpty(patient.getFamilyPhone())){
+        if (StringUtils.isNotEmpty(patient.getFamilyPhone())) {
             patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
         }
 
@@ -353,18 +346,18 @@ public class PatientController extends BaseController
         //加密
         patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
         patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
-        if (StringUtils.isNotEmpty(patient.getFamilyPhone())){
+        if (StringUtils.isNotEmpty(patient.getFamilyPhone())) {
             patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
         }
         Patient patient2 = patientService.selectPatientByPatientId(patient.getPatientId());
-        if (!patient2.getPatientPhone().equals(patient.getPatientPhone())){
+        if (!patient2.getPatientPhone().equals(patient.getPatientPhone())) {
             Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
-            if (patient1!=null){
+            if (patient1 != null) {
                 return AjaxResult.error("手机号已重复");
             }
         }
 
-        if (patient.getBirthDay()!=null){
+        if (patient.getBirthDay() != null) {
             patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
         }
         return toAjax(patientService.updatePatient(patient));
@@ -376,8 +369,7 @@ public class PatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('patient:patient:remove')")
     @Log(title = "患者", businessType = BusinessType.DELETE)
     @DeleteMapping("/{patientIds}")
-    public AjaxResult remove(@PathVariable Long[] patientIds)
-    {
+    public AjaxResult remove(@PathVariable Long[] patientIds) {
         return toAjax(patientService.deletePatientByPatientIds(patientIds));
     }
 
@@ -387,8 +379,7 @@ public class PatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('patient:patient:edit')")
     @Log(title = "患者", businessType = BusinessType.UPDATE)
     @PostMapping("/updateMonitoringStatus")
-    public void updateMonitoringStatus(@RequestBody List<String> monitoringStatusList)
-    {
+    public void updateMonitoringStatus(@RequestBody List<String> monitoringStatusList) {
         System.out.println("执行开始");
         patientService.updateMonitoringStatus();
         for (String equipmentCode : monitoringStatusList) {
@@ -414,7 +405,7 @@ public class PatientController extends BaseController
             if (sysDictData.isEmpty()) {
                 dictDataService.insertDictData(dict);
             }
-            i = i +1;
+            i = i + 1;
         }
         return AjaxResult.success("down");
     }
@@ -425,8 +416,7 @@ public class PatientController extends BaseController
     @PreAuthorize("@ss.hasPermi('patient:patient:remove')")
     @Log(title = "患者", businessType = BusinessType.DELETE)
     @DeleteMapping("/delByPatientPhone/{patientPhone}")
-    public AjaxResult delPatient(@PathVariable String patientPhone)
-    {
+    public AjaxResult delPatient(@PathVariable String patientPhone) {
         return toAjax(patientService.deletePatientByPatientPhone(patientPhone));
     }
 
@@ -434,6 +424,7 @@ public class PatientController extends BaseController
     /**
      * 患者使用医生的手机号进行注册
      * 患者新手机号为   医生手机号-患者姓名-随机三位字符串
+     *
      * @param patientMedicalHistoryDTO
      * @return
      * @throws Exception
@@ -442,20 +433,20 @@ public class PatientController extends BaseController
     public AjaxResult addPatientAndDocPhoneOrMed(@RequestBody PatientMedicalHistoryDTO patientMedicalHistoryDTO) throws Exception {
 
 
-        if (StringUtils.isEmpty(patientMedicalHistoryDTO.getDoctorPhone())){
+        if (StringUtils.isEmpty(patientMedicalHistoryDTO.getDoctorPhone())) {
             return AjaxResult.error("医生手机号不能为空");
         }
-        if (StringUtils.isEmpty(patientMedicalHistoryDTO.getPatientName())){
+        if (StringUtils.isEmpty(patientMedicalHistoryDTO.getPatientName())) {
             return AjaxResult.error("患者姓名不能为空");
         }
 
         PatientMedicalHistoryDTO patientMedicalHistoryDTO1 = getRelationship(patientMedicalHistoryDTO);
 
-        if (StringUtils.isNotEmpty(patientMedicalHistoryDTO1.getPatientName())){
+        if (StringUtils.isNotEmpty(patientMedicalHistoryDTO1.getPatientName())) {
             patientMedicalHistoryDTO1.setPatientName(aesUtils.encrypt(patientMedicalHistoryDTO1.getPatientName()));
         }
 
-        if (StringUtils.isNotEmpty(patientMedicalHistoryDTO1.getPatientPhone())){
+        if (StringUtils.isNotEmpty(patientMedicalHistoryDTO1.getPatientPhone())) {
             patientMedicalHistoryDTO1.setPatientPhone(aesUtils.encrypt(patientMedicalHistoryDTO1.getPatientPhone()));
         }
 
@@ -466,19 +457,18 @@ public class PatientController extends BaseController
         Patient patient = getPatient(patientMedicalHistoryDTO1);
 
         Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
-        if(patient1!=null){
+        if (patient1 != null) {
             patient.setPatientId(patient1.getPatientId());
             patientService.updatePatient(patient);
-        }else{
+        } else {
             patientService.insertPatient(patient);
         }
         appDataService.insertAppData(appData);
         MedicalHistory medicalHistory1 = medicalHistoryService.selectMedicalHistoryByPatientPhone(medicalHistory.getPatientPhone());
-        if(medicalHistory1!=null){
+        if (medicalHistory1 != null) {
             medicalHistory.setMedicalHistoryId(medicalHistory1.getMedicalHistoryId());
             medicalHistoryService.updateMedicalHistory(medicalHistory);
-        }
-        else{
+        } else {
             medicalHistoryService.insertMedicalHistory(medicalHistory);
         }
         return AjaxResult.success(aesUtils.decrypt(patient.getPatientPhone()));
@@ -488,6 +478,7 @@ public class PatientController extends BaseController
 
     /**
      * 解析出患者信息
+     *
      * @param patientRelationship
      * @return
      * @throws Exception
@@ -498,7 +489,7 @@ public class PatientController extends BaseController
         patient.setPatientPhone(patientRelationship.getPatientPhone());
         patient.setPatientSex(patientRelationship.getPatientSex());
         patient.setBirthDay(patientRelationship.getBirthDay());
-        if (patientRelationship.getBirthDay()!=null){
+        if (patientRelationship.getBirthDay() != null) {
             patient.setPatientAge(String.valueOf(DateUtil.getAge(patientRelationship.getBirthDay())));
         }
         return patient;
@@ -506,10 +497,11 @@ public class PatientController extends BaseController
 
     /**
      * 通过医生的手机号生成患者对应的手机号
+     *
      * @param patientRelationship
      * @return
      */
-    private PatientMedicalHistoryDTO getRelationship(PatientMedicalHistoryDTO patientRelationship){
+    private PatientMedicalHistoryDTO getRelationship(PatientMedicalHistoryDTO patientRelationship) {
         StringBuilder patientPhone = new StringBuilder(patientRelationship.getDoctorPhone());
         patientPhone.append("-").append(randomGen(5)).append("-");
         Random random = new Random();
@@ -524,7 +516,7 @@ public class PatientController extends BaseController
         String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder sb = new StringBuilder();
         Random rd = new Random();
-        for(int i=0;i<place;i++) {
+        for (int i = 0; i < place; i++) {
             sb.append(base.charAt(rd.nextInt(base.length())));
         }
         return sb.toString();
@@ -532,10 +524,11 @@ public class PatientController extends BaseController
 
     /**
      * 解析出患者相关信息
+     *
      * @param patientRelationship
      * @return
      */
-    private MedicalHistory getMedicalHistory(PatientMedicalHistoryDTO patientRelationship){
+    private MedicalHistory getMedicalHistory(PatientMedicalHistoryDTO patientRelationship) {
         MedicalHistory medicalHistory = new MedicalHistory();
         medicalHistory.setPastMedicalHistory(patientRelationship.getPastMedicalHistory());
         medicalHistory.setLivingHabit(patientRelationship.getLivingHabit());
@@ -548,6 +541,7 @@ public class PatientController extends BaseController
 
     /**
      * 解析除appData的所需数据
+     *
      * @param patientRelationship
      * @return
      * @throws Exception
@@ -564,49 +558,50 @@ public class PatientController extends BaseController
 
 
     @GetMapping("/getPatientByCode")
-    public TableDataInfo getPatientByCode(String code) throws Exception{
+    public TableDataInfo getPatientByCode(String code) throws Exception {
         startPage();
         List<Patient> patients = patientService.selectPatientByCode(code);
-        for (Patient patient:patients){
-            if(patient.getBirthDay()!=null){
+        for (Patient patient : patients) {
+            if (patient.getBirthDay() != null) {
                 patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
             }
-            if(patient.getPatientPhone()!=null){
+            if (patient.getPatientPhone() != null) {
                 patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
             }
-            if(patient.getPatientName()!=null){
+            if (patient.getPatientName() != null) {
                 patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
             }
         }
         return getDataTable(patients);
     }
+
     @PostMapping("/addPatientByJZ")
     public AjaxResult getPatientByCode(@RequestBody Patient patient) throws Exception {
-        if (patient.getDoctorPhone()==null){
+        if (patient.getDoctorPhone() == null) {
             return AjaxResult.success(patient);
         }
-        if(StringUtils.isEmpty(patient.getPatientPhone())){
-            patient.setPatientPhone(patient.getDoctorPhone()+"-"+randomGenNum(6));
+        if (StringUtils.isEmpty(patient.getPatientPhone())) {
+            patient.setPatientPhone(patient.getDoctorPhone() + "-" + randomGenNum(6));
         }
         patient.setBindingDoctor(aesUtils.encrypt(patient.getDoctorPhone()));
         encryptPatient(patient);
 
         Patient patient1 = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
-        if (patient1!= null) {
+        if (patient1 != null) {
 
             DoctorRelationPatient doctorRelationPatient = new DoctorRelationPatient();
             doctorRelationPatient.setDoctorPhone(patient.getDoctorPhone());
             doctorRelationPatient.setPatientPhone(patient.getPatientPhone());
             List<DoctorRelationPatient> doctorRelationPatients = doctorRelationPatientService.selectDoctorRelationPatientList(doctorRelationPatient);
-            if (doctorRelationPatients!=null&& doctorRelationPatients.isEmpty()) {
+            if (doctorRelationPatients != null && doctorRelationPatients.isEmpty()) {
                 doctorRelationPatientService.insertDoctorRelationPatient(doctorRelationPatient);
             }
             decryptPatient(patient1);
             return AjaxResult.success(patient1);
-        }else {
+        } else {
             int i = patientService.insertPatient(patient);
             MedicalHistory medicalHistory = new MedicalHistory();
-            BeanUtils.copyProperties(patient,medicalHistory);
+            BeanUtils.copyProperties(patient, medicalHistory);
             int i1 = medicalHistoryService.insertMedicalHistory(medicalHistory);
             DoctorRelationPatient doctorRelationPatient = new DoctorRelationPatient();
             doctorRelationPatient.setDoctorPhone(patient.getDoctorPhone());
@@ -622,7 +617,7 @@ public class PatientController extends BaseController
     @GetMapping("/getDoctorRelationPatient")
     public AjaxResult getDoctorRelationPatient(DoctorRelationPatient doctorRelationPatient) throws Exception {
         List<Patient> patients = patientService.selectByDoc(doctorRelationPatient);
-        for (Patient patient:patients){
+        for (Patient patient : patients) {
             decryptPatient(patient);
         }
         return AjaxResult.success(patients);
@@ -630,49 +625,50 @@ public class PatientController extends BaseController
 
     /**
      * 随机数
+     *
      * @param place 定义随机数的位数
      */
     public String randomGenNum(int place) {
         String base = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder sb = new StringBuilder();
         Random rd = new Random();
-        for(int i=0;i<place;i++) {
+        for (int i = 0; i < place; i++) {
             sb.append(base.charAt(rd.nextInt(base.length())));
         }
         return sb.toString();
     }
 
 
-    private void  encryptPatient(Patient patient) throws Exception {
-        if(patient.getBirthDay() != null){
+    private void encryptPatient(Patient patient) throws Exception {
+        if (patient.getBirthDay() != null) {
             patient.setPatientAge(Integer.toString(DateUtil.getAge(patient.getBirthDay())));
         }
-        if(patient.getPatientPhone() != null){
+        if (patient.getPatientPhone() != null) {
             patient.setPatientPhone(aesUtils.encrypt(patient.getPatientPhone()));
         }
-        if(patient.getPatientName() != null){
+        if (patient.getPatientName() != null) {
             patient.setPatientName(aesUtils.encrypt(patient.getPatientName()));
         }
-        if (patient.getFamilyPhone()!=null&&!"".equals(patient.getFamilyPhone())){
+        if (patient.getFamilyPhone() != null && !"".equals(patient.getFamilyPhone())) {
             patient.setFamilyPhone(aesUtils.encrypt(patient.getFamilyPhone()));
         }
-        if (patient.getDoctorPhone()!=null&&!"".equals(patient.getDoctorPhone())){
+        if (patient.getDoctorPhone() != null && !"".equals(patient.getDoctorPhone())) {
             patient.setDoctorPhone(aesUtils.encrypt(patient.getDoctorPhone()));
         }
     }
 
     private void decryptPatient(Patient patient) throws Exception {
 
-        if(patient.getBirthDay()!=null){
+        if (patient.getBirthDay() != null) {
             patient.setPatientAge(String.valueOf(DateUtil.getAge(patient.getBirthDay())));
         }
-        if(patient.getPatientPhone()!=null){
+        if (patient.getPatientPhone() != null) {
             patient.setPatientPhone(aesUtils.decrypt(patient.getPatientPhone()));
         }
-        if(patient.getPatientName()!=null){
+        if (patient.getPatientName() != null) {
             patient.setPatientName(aesUtils.decrypt(patient.getPatientName()));
         }
-        if(patient.getDoctorPhone()!=null){
+        if (patient.getDoctorPhone() != null) {
             patient.setDoctorPhone(aesUtils.decrypt(patient.getDoctorPhone()));
         }
     }
