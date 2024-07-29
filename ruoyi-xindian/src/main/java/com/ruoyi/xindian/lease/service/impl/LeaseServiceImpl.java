@@ -64,7 +64,7 @@ public class LeaseServiceImpl extends ServiceImpl<LeaseMapper, Lease>
     }
 
     @Override
-    public List<Lease> selectLeaseListByUsed(Lease lease) {
+    public List<Lease> selectLeaseListByUsed(LeaseDetails lease) {
         return leaseMapper.selectLeaseListByUsed(lease);
     }
 

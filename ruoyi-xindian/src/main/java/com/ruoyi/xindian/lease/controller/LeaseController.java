@@ -123,7 +123,7 @@ public class LeaseController extends BaseController
 
 
     @GetMapping("/getUserEqList")
-    public AjaxResult getUserEqList(Lease lease)
+    public AjaxResult getUserEqList(LeaseDetails lease)
     {
         List<Lease> list = leaseService.selectLeaseListByUsed(lease);
         return AjaxResult.success(list);

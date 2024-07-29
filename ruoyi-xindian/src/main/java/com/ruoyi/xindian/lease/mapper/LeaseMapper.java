@@ -32,7 +32,7 @@ public interface LeaseMapper extends BaseMapper<Lease> {
 
 
     List<Lease> selectLeaseListByUsable(LeaseDetails lease);
-    List<Lease> selectLeaseListByUsed(Lease lease);
+    List<Lease> selectLeaseListByUsed(LeaseDetails lease);
 
     /**
      * 新增租赁

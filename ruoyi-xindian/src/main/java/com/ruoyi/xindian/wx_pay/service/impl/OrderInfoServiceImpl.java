@@ -564,12 +564,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         orderInfoMapper.update(orderInfo,queryWrapper);
 
-
+        OrderInfo orderInfo1 = orderInfoMapper.selectById(id);
         List<SuborderOrderInfo> suborderOrderInfo = suborderOrderInfoMapper.selectList(new QueryWrapper<SuborderOrderInfo>().eq("order_father", id));
-
-
         for(SuborderOrderInfo c : suborderOrderInfo){
-            updateProductDel(c.getSum().intValue(),c.getProductId(),orderInfo);
+            updateProductDel(c.getSum().intValue(),c.getProductId(),orderInfo1);
         }
 
     }
@@ -749,7 +747,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setId(OrderNoUtils.getNo());
-        orderInfo.setTitle("购买"+product.getProductName());
+        orderInfo.setTitle(product.getProductName());
         orderInfo.setOrderNo(OrderNoUtils.getOrderNo());
         orderInfo.setUserId(loginUser.getUser().getUserId());
         orderInfo.setTotalFee(new BigDecimal(sum).multiply(product.getDiscount()));
@@ -910,7 +908,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     public OrderInfo selectTOrderInfoByUserId(Long userId, String equipmentCode) {
         return orderInfoMapper.selectOne(new QueryWrapper<OrderInfo>().eq("user_id",userId).eq("equipment_code",equipmentCode)
-                .eq("order_state","交易成功").orderByDesc("create_time").last("limit 1"));
+                        .and(w -> w.eq("order_state","交易成功").or().eq("order_state","已支付")).orderByDesc("create_time").last("limit 1"));
     }
 
 

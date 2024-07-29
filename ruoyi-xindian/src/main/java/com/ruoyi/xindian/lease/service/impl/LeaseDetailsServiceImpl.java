@@ -223,7 +223,7 @@ public class LeaseDetailsServiceImpl extends ServiceImpl<LeaseDetailsMapper, Lea
         LeaseDetails leaseDetail = new LeaseDetails();
         leaseDetail.setEquipmentCode(leaseDetails.getEquipmentCode());
         leaseDetail.setStatus("0");
-        int update = leaseDetailsMapper.update(leaseDetail, new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getEquipmentCode, leaseDetail.getEquipmentCode()));
+        int update = leaseDetailsMapper.update(leaseDetail, new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getEquipmentCode, leaseDetails.getEquipmentCode()));
         if (sysUser!=null){
             OrderInfo orderInfo = orderInfoService.selectTOrderInfoByUserId(sysUser.getUserId(), leaseDetails.getEquipmentCode());
             if (orderInfo!=null){

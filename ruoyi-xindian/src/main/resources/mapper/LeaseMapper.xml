@@ -92,7 +92,10 @@
             lease_details
             ON
                 lease.lease_id = lease_details.lease_id
-        where lease.give_back= '0' and lease_details.`status` = '0' and lease_details.equipment_type = #{equipmentType}
+        <where>
+            and lease.give_back= '0' and lease_details.`status` = '0' and lease_details.equipment_type = #{equipmentType}
+            <if test="equipmentCode != null">and lease_details.equipment_code like concat ('%',#{equipmentCode},'%')</if>
+        </where>
     </select>
     <select id="selectLeaseListByUsed" resultType="com.ruoyi.xindian.lease.domain.Lease" resultMap="LeaseDetailsAndLeaseResult">
         SELECT
@@ -119,7 +122,9 @@
             lease_details
             ON
                 lease.lease_id = lease_details.lease_id
-        where lease.give_back= '0' and lease_details.`status` = '1' and lease_details.phone = #{phone}
+        <where>
+            and lease.give_back= '0' and lease_details.`status` = '1' and lease_details.phone = #{phone}
+        </where>
     </select>
 
     <insert id="insertLease" parameterType="Lease" useGeneratedKeys="true" keyProperty="leaseId">

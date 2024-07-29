@@ -30,7 +30,7 @@ public interface LeaseService extends IService<Lease> {
      */
     public List<Lease> selectLeaseList(Lease lease);
     public List<Lease> selectLeaseListByUsable(LeaseDetails lease);
-    public List<Lease> selectLeaseListByUsed(Lease lease);
+    public List<Lease> selectLeaseListByUsed(LeaseDetails lease);
 
     /**
      * 新增租赁
