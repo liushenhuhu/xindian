@@ -19,7 +19,7 @@ public class LeaseDetails implements Serializable {
      * 租赁详情id
      */
     @TableId(type = IdType.AUTO)
-    private Integer leaseDetailsId;
+    private Long leaseDetailsId;
 
     /**
      * 租赁id
@@ -65,6 +65,8 @@ public class LeaseDetails implements Serializable {
      * 归还时间
      */
     private Date updateTime;
+    @TableField(exist = false)
+    private String userPhone;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

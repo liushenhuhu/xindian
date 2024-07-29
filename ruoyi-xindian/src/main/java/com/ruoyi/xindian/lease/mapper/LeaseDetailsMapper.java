@@ -62,6 +62,9 @@ public interface LeaseDetailsMapper extends BaseMapper<LeaseDetails> {
      * @return 结果
      */
     public int deleteLeaseDetailsByLeaseDetailsIds(Long[] leaseDetailsIds);
+
+    public List<LeaseDetails> selectLeaseByPhone(LeaseDetails lease);
+
 }
 
 

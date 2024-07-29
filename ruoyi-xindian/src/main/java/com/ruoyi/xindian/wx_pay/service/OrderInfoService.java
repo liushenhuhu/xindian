@@ -82,6 +82,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @return
      */
     String addKpOrFwOrder(HttpServletRequest request, Long productId, Integer sum);
+    String addLeaseOrder(HttpServletRequest request,Long productId,Integer sum,String equipmentCode);
 
 
 
@@ -113,6 +114,6 @@ public interface OrderInfoService extends IService<OrderInfo> {
 
     List<OrderInfo> selectOrderByPId(String pId);
 
-
+    OrderInfo selectTOrderInfoByUserId(Long userId,String equipmentCode);
 
 }

@@ -111,7 +111,7 @@
       </el-table-column>
       <el-table-column label="用户名称" align="center" prop="username" />
       <el-table-column label="手机号" align="center" prop="phone" />
-      <el-table-column label="保证金" align="center" prop="cashPledge" />
+<!--      <el-table-column label="保证金" align="center" prop="cashPledge" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -144,10 +144,23 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="租赁id" prop="leaseId">
-          <el-input v-model="form.leaseId" placeholder="请输入租赁id" />
+          <el-input v-model="form.leaseId" disabled placeholder="请输入租赁id" />
         </el-form-item>
         <el-form-item label="设备号" prop="equipmentCode">
-          <el-input v-model="form.equipmentCode" placeholder="请输入设备号" />
+          <el-select v-model="form.equipmentCode" filterable placeholder="请选择设备号" @change="equipmentCodeChange(form.equipmentCode)">
+            <el-option
+              v-for="item1 in equipmentList"
+              :key="item1.equipmentCode"
+              :label="item1.equipmentCode"
+              :value="item1.equipmentCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="设备类型" >
+          <el-select v-model="form.equipmentType" placeholder="请选择设备类型">
+            <el-option label="心电卡" value="心电卡"></el-option>
+            <el-option label="心电衣" value="心电衣"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="用户名称" prop="username">
           <el-input v-model="form.username" placeholder="请输入用户名称" />
@@ -155,9 +168,9 @@
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入手机号" />
         </el-form-item>
-        <el-form-item label="保证金" prop="cashPledge">
-          <el-input v-model="form.cashPledge" placeholder="请输入保证金" />
-        </el-form-item>
+<!--        <el-form-item label="保证金" prop="cashPledge">-->
+<!--          <el-input v-model="form.cashPledge" placeholder="请输入保证金" />-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -170,6 +183,7 @@
 <script>
 import { listDetails, getDetails, delDetails, addDetails, updateDetails } from "@/api/lease_details/details";
 import {updateLease} from "@/api/lease/lease";
+import {getEquipmentList} from "@/api/equipment/equipment";
 
 export default {
   name: "Details",
@@ -189,6 +203,7 @@ export default {
       total: 0,
       // 租赁详情表格数据
       detailsList: [],
+      equipmentList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -197,7 +212,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        leaseId: null,
+        leaseId: this.$route.query.leaseId,
         equipmentCode: null,
         equipmentType: null,
         status: null,
@@ -213,6 +228,10 @@ export default {
     };
   },
   created() {
+    this.getList();
+  },
+  activated() {
+
     this.getList();
   },
   methods: {
@@ -235,7 +254,7 @@ export default {
     reset() {
       this.form = {
         leaseDetailsId: null,
-        leaseId: null,
+        leaseId: this.$route.query.leaseId,
         equipmentCode: null,
         equipmentType: null,
         status: "0",
@@ -267,6 +286,9 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加租赁详情";
+      getEquipmentList().then(r=>{
+        this.equipmentList = r.data
+      })
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -276,6 +298,9 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改租赁详情";
+        getEquipmentList().then(r=>{
+          this.equipmentList = r.data
+        })
       });
     },
     /** 提交按钮 */
@@ -316,13 +341,18 @@ export default {
     },
     handleStatusChange(row) {
       let text = row.status === "0" ? "归还" : "正在使用";
-      this.$modal.confirm('确认设备"' + text + '""' + row.userName + '"用户吗？').then(function () {
+      this.$modal.confirm('确认设备"' + text +'"吗？').then(function () {
         return updateDetails({leaseDetailsId: row.leaseDetailsId, status:row.status});
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function () {
         row.status = row.status === "0" ? "1" : "0";
       });
+    },
+    equipmentCodeChange(code){
+      if (code){
+        this.equipmentList =  this.equipmentList.filter(item => item.equipmentCode!=code)
+      }
     },
   }
 };

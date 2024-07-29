@@ -27,6 +27,8 @@ import com.ruoyi.xindian.hospital.service.IAssociatedHospitalService;
 import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.lease.domain.LeaseDetails;
+import com.ruoyi.xindian.lease.service.LeaseDetailsService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.util.DateUtil;
@@ -75,6 +77,9 @@ public class EquipmentController extends BaseController {
     private IHospitalService hospitalService;
     @Autowired
     private IAssociatedHospitalService associatedHospitalService;
+
+    @Resource
+    private LeaseDetailsService leaseDetailsService;
 
     @Resource
     private AesUtils aesUtils;
@@ -426,7 +431,9 @@ public class EquipmentController extends BaseController {
             }
             list = equipmentService.selectEquipmentList(equipment);
         }
-        Collection<Equipment> collect = list.stream().filter(c -> StringUtils.isNotEmpty(c.getEquipmentCode())).collect(Collectors.toList());
+        List<String> leaseDetails = leaseDetailsService.selectLeaseDetailsList(new LeaseDetails()).stream().map(LeaseDetails::getEquipmentCode).collect(Collectors.toList());
+        Collection<Equipment> collect = list.stream().filter(c -> StringUtils.isNotEmpty(c.getEquipmentCode()))
+                .filter(c -> !leaseDetails.contains(c.getEquipmentCode())).collect(Collectors.toList());
         return AjaxResult.success(collect);
     }
 

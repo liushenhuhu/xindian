@@ -1,9 +1,12 @@
 package com.ruoyi.xindian.lease.service;
 
+import com.ruoyi.xindian.lease.domain.Lease;
 import com.ruoyi.xindian.lease.domain.LeaseDetails;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author w
@@ -67,4 +70,8 @@ public interface LeaseDetailsService extends IService<LeaseDetails> {
     public int deleteLeaseDetailsByLeaseDetailsId(Long leaseDetailsId);
 
     int deleteLeaseDetailsByLeaseId(Long leaseId);
+
+    public List<LeaseDetails> selectLeaseByPhone(LeaseDetails lease);
+
+    Map<String, Object> giveBack(LeaseDetails lease, HttpServletResponse response) throws Exception;
 }

@@ -8,7 +8,6 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
@@ -16,11 +15,9 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.xindian.equipment.domain.AccountsMsg;
 import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.domain.EquipmentHeadingCode;
-import com.ruoyi.xindian.equipment.mapper.EquipmentHeadingCodeMapper;
 import com.ruoyi.xindian.equipment.service.AccountsMsgService;
 import com.ruoyi.xindian.equipment.service.EquipmentHeadingCodeService;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
-import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.lease.domain.Lease;
@@ -41,10 +38,7 @@ import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.vipPatient.domain.SxReportUnscramble;
 import com.ruoyi.xindian.vipPatient.service.SxReportUnscrambleService;
-import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
-import org.apache.commons.io.FileUtils;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -56,17 +50,12 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.ParseException;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -76,13 +65,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 @RestController
-@RequestMapping("/headingCode/headingCode")
-public class EquipmentHeadingCodeController extends BaseController {
+@RequestMapping("/headingCode/dd")
+public class EquipmentHeadingCodeByDDController extends BaseController {
 
 
 
@@ -466,7 +452,7 @@ public class EquipmentHeadingCodeController extends BaseController {
         paramsMap.put("weight",medicalHistory.getWeight() );
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
 
-        String url = sxUrl+"/p/third/userSync/"+"ZZDX";
+        String url = sxUrl+"/bmecg/third/ecg/zzdx/user";
         HashMap<String,Map<String,Object>> sendMessageVo=null;
         try {
             sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
@@ -496,201 +482,21 @@ public class EquipmentHeadingCodeController extends BaseController {
         headers.set("authorization","Bearer "+equipmentCodeAccessToken);
         //封装请求头
         HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
-        String url = sxUrl+"/bmecg/third/ecg/zzdx/data/download?userId="+"177666b907d34c6183fcb8e4fc7f9850"+"&fileName="+"66862120.mss"+"&sn="+"C0223110076";
-        ResponseEntity<byte[]> response=null;
+        String url = sxUrl+"/bmecg/third/report/download?orderId="+orderId;
+        ResponseEntity<byte[]> sendMessageVo=null;
         try {
-            response = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
+             sendMessageVo = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
         }catch (Exception e){
             redisTemplate.delete("EquipmentCodeAccess_token");
             System.out.println(e);
         }
-
-        if (response != null && response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            // 保存下载的 ZIP 文件到临时文件
-            File zipFile = File.createTempFile("temp", ".zip");
-            try (FileOutputStream fos = new FileOutputStream(zipFile)) {
-                fos.write(response.getBody());
-            }
-
-            // 解压缩 ZIP 文件到指定目录
-            String extractPath = "D:\\Users\\Downloads\\"; // 指定解压目录
-            extractZip(zipFile, extractPath);
-
-            // 删除临时 ZIP 文件
-            zipFile.delete();
-
-            // 返回成功或其他信息，这里应根据业务逻辑返回适当的 AjaxResult
-        } else {
-            // 处理下载失败的情况，这里可以根据实际需求进行异常处理或返回适当的信息
-        }
+        fileToBytes(sendMessageVo.getBody(),"D:\\Users\\Downloads\\","test.pdf");
         return null;
     }
 
-    private void extractZip(File zipFile, String extractPath) throws IOException {
-        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
-            ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
-                File entryFile = new File(extractPath, entry.getName());
-                if (entry.isDirectory()) {
-                    entryFile.mkdirs();
-                } else {
-                    try (FileOutputStream fos = new FileOutputStream(entryFile)) {
-                        byte[] buffer = new byte[1024];
-                        int len;
-                        while ((len = zis.read(buffer)) > 0) {
-                            fos.write(buffer, 0, len);
-                        }
-                    }
-                }
-                zis.closeEntry();
-            }
-        }
-    }
-//    /**
-//     * 下载PDF
-//     * @param orderId
-//     * @return
-//     * @throws Exception
-//     */
-//    @GetMapping("/downloadPFD")
-//    public AjaxResult downloadPFD(String orderId) throws Exception {
-//        HttpHeaders headers = new HttpHeaders(); //构建请求头
-//        String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
-//        headers.set("authorization","Bearer "+equipmentCodeAccessToken);
-//        //封装请求头
-//        HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<MultiValueMap<String, Object>>(headers);
-//        String url = sxUrl+"/bmecg/third/report/download?orderId="+orderId;
-//        ResponseEntity<byte[]> response=null;
-//        try {
-//            response = restTemplate.exchange(url, HttpMethod.GET,formEntity, byte[].class);
-//        }catch (Exception e){
-//            redisTemplate.delete("EquipmentCodeAccess_token");
-//            System.out.println(e);
-//        }
-//        String fileType = determineFileType(response.getBody());
-//        System.out.println("Detected file type: " + fileType);
-//        fileToBytes(response.getBody(),"D:\\Users\\Downloads\\","test.pdf");
-//        return null;
-//    }
 
-    public String determineFileType(byte[] bytes) {
-        if (bytes == null || bytes.length < 4) {
-            return "Unknown";
-        }
 
-        ByteBuffer bb = ByteBuffer.wrap(bytes);
 
-        int firstByte = bb.get(0) & 0xFF;
-        int secondByte = bb.get(1) & 0xFF;
-        int thirdByte = bb.get(2) & 0xFF;
-        int fourthByte = bb.get(3) & 0xFF;
-
-        if (firstByte == 'P' && secondByte == 'K' && thirdByte == 3 && fourthByte == 4) {
-            return "ZIP";
-        } else if (firstByte == 'G' && secondByte == 'I' && thirdByte == 'F') {
-            return "GIF";
-        } else if (firstByte == '8' && secondByte == '9' && thirdByte == '5' && fourthByte == '0') {
-            return "PNG";
-        } else if (firstByte == 'R' && secondByte == 'a' && thirdByte == 'r' && fourthByte == '!') {
-            return "RAR";
-        } else if (new String(bytes, 0, 5).startsWith("%PDF-")) {
-            return "PDF";
-        } else if (new String(bytes, 0, 5).startsWith("<?xml")) {
-            return "XML";
-        } else if (new String(bytes, 0, 1).equals("{")) {
-            return "JSON";
-        } else if (new String(bytes, 0, 2).equals("PK") && (thirdByte == 0x05 || thirdByte == 0x06)) {
-            return "Office Document (docx, xlsx, pptx)";
-        } else {
-            return "Unknown";
-        }
-    }
-    public void saveZipFile(ResponseEntity<byte[]> response, String filePath) {
-        // 检查response是否有效
-        if (response != null && response.getBody() != null) {
-            byte[] fileBytes = response.getBody();
-
-            try {
-                // 创建文件输出流
-                FileOutputStream fos = new FileOutputStream(filePath);
-                // 将字节数组写入文件
-                fos.write(fileBytes);
-                // 关闭流
-                fos.close();
-
-                System.out.println("ZIP 文件已成功保存到: " + filePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            throw new IllegalArgumentException("Invalid ResponseEntity provided.");
-        }
-    }
-
-    public boolean isZipFileValid(byte[] zipData) {
-        try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipData))) {
-            ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
-                // 进行更详细的验证，例如检查文件名、文件大小、文件内容等
-                if (!isValidZipEntry(entry, zis)) {
-                    return false;
-                }
-            }
-            return true; // 如果没有异常，则认为文件是有效的
-        } catch (IOException e) {
-            // ZIP文件损坏或无法读取
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private boolean isValidZipEntry(ZipEntry entry, ZipInputStream zis) throws IOException {
-        // 检查文件名等其他验证逻辑，这里示例检查文件大小
-        if (entry.getSize() == 0) {
-            return false; // 文件大小为0，认为文件损坏
-        }
-        // 如果有其他特定的验证需求，可以在这里添加
-
-        // 读取文件内容并做进一步验证（这里仅示例检查文件大小）
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        long totalBytesRead = 0;
-        while ((bytesRead = zis.read(buffer)) != -1) {
-            totalBytesRead += bytesRead;
-            // 在这里可以添加其他内容的验证逻辑，例如文件内容的格式检查等
-        }
-
-        // 例如，简单验证文件大小是否与ZipEntry的大小匹配
-        if (totalBytesRead != entry.getSize()) {
-            return false;
-        }
-
-        return true; // 文件有效
-    }
-
-    // 使用方法
-
-    public static void unzip(Path zipFilePath, Path destDirectory) throws IOException {
-        try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(zipFilePath))) {
-            ZipEntry entry;
-            byte[] buffer = new byte[1024];
-            while ((entry = zis.getNextEntry()) != null) {
-                Path entryPath = destDirectory.resolve(entry.getName());
-                if (entry.isDirectory()) {
-                    Files.createDirectories(entryPath);
-                } else {
-                    Files.createDirectories(entryPath.getParent());
-                    try (OutputStream fos = Files.newOutputStream(entryPath)) {
-                        int length;
-                        while ((length = zis.read(buffer)) > 0) {
-                            fos.write(buffer, 0, length);
-                        }
-                    }
-                }
-                zis.closeEntry();
-            }
-        }
-    }
 
     @GetMapping("/submitSXReport")
     public AjaxResult submitSXReport(String pId,HttpServletRequest request) throws Exception {

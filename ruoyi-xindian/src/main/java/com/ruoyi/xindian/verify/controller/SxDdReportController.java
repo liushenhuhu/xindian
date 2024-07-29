@@ -8,11 +8,13 @@ import com.ruoyi.xindian.verify.domain.SxReport;
 import com.ruoyi.xindian.verify.service.SxDdReportService;
 import com.ruoyi.xindian.verify.vo.SxDdReportVO;
 import com.ruoyi.xindian.verify.vo.SxReportVO;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -41,8 +43,12 @@ public class SxDdReportController {
         sxDdReportService.save(sxDdReport);
 
         return AjaxResult.success();
-
     }
+
+
+
+
+
 
 
 }

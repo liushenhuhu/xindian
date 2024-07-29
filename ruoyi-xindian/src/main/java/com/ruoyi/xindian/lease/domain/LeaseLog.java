@@ -32,7 +32,7 @@ public class LeaseLog implements Serializable {
     private String phone;
 
     /**
-     * 是否归还（0=租赁，1=归还）
+     * 是否归还（1=租赁，0=归还）
      */
     private String status;
 

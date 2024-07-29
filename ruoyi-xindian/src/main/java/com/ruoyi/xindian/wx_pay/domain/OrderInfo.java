@@ -125,6 +125,9 @@ public class OrderInfo implements Serializable {
     private String pId;
 
 
+    private String equipmentCode;
+
+
     private Integer delFlag;
 
     private String  remark;

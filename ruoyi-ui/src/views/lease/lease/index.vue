@@ -305,9 +305,6 @@ export default {
     };
   },
   created() {
-    getEquipmentList().then(r=>{
-      this.equipmentList = r.data
-    })
     this.getList();
   },
   methods: {
@@ -396,12 +393,18 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加租赁";
+      getEquipmentList().then(r=>{
+        this.equipmentList = r.data
+      })
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const leaseId = row.leaseId || this.ids
       getLease(leaseId).then(response => {
+        getEquipmentList().then(r=>{
+          this.equipmentList = r.data
+        })
         this.form = response.data;
         this.open = true;
         this.title = "修改租赁";

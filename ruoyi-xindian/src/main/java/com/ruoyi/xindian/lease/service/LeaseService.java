@@ -2,6 +2,7 @@ package com.ruoyi.xindian.lease.service;
 
 import com.ruoyi.xindian.lease.domain.Lease;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.xindian.lease.domain.LeaseDetails;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public interface LeaseService extends IService<Lease> {
      */
     public Lease selectLeaseByLeaseId(Long leaseId);
 
+
     /**
      * 查询租赁列表
      *
@@ -27,6 +29,8 @@ public interface LeaseService extends IService<Lease> {
      * @return 租赁集合
      */
     public List<Lease> selectLeaseList(Lease lease);
+    public List<Lease> selectLeaseListByUsable(LeaseDetails lease);
+    public List<Lease> selectLeaseListByUsed(Lease lease);
 
     /**
      * 新增租赁

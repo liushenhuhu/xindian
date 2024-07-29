@@ -44,6 +44,8 @@ public class LeaseServiceImpl extends ServiceImpl<LeaseMapper, Lease>
         return leaseMapper.selectLeaseByLeaseId(leaseId);
     }
 
+
+
     /**
      * 查询租赁列表
      *
@@ -54,6 +56,16 @@ public class LeaseServiceImpl extends ServiceImpl<LeaseMapper, Lease>
     public List<Lease> selectLeaseList(Lease lease)
     {
         return leaseMapper.selectLeaseList(lease);
+    }
+
+    @Override
+    public List<Lease> selectLeaseListByUsable(LeaseDetails lease) {
+        return leaseMapper.selectLeaseListByUsable(lease).stream().filter(lease1 -> !lease1.getDetails().isEmpty()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Lease> selectLeaseListByUsed(Lease lease) {
+        return leaseMapper.selectLeaseListByUsed(lease);
     }
 
     /**

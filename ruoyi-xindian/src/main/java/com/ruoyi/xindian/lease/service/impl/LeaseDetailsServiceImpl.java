@@ -2,9 +2,11 @@ package com.ruoyi.xindian.lease.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.lease.domain.LeaseDetails;
 import com.ruoyi.xindian.lease.domain.LeaseLog;
 import com.ruoyi.xindian.lease.service.LeaseDetailsService;
@@ -14,13 +16,19 @@ import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient.service.PatientBloodService;
 import com.ruoyi.xindian.patient.service.impl.PatientServiceImpl;
+import com.ruoyi.xindian.wx_pay.controller.WXPayController;
+import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
+import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,6 +54,16 @@ public class LeaseDetailsServiceImpl extends ServiceImpl<LeaseDetailsMapper, Lea
 
     @Resource
     private RedisTemplate<String,String> redisTemplate;
+
+    @Resource
+    private ISysUserService sysUserService;
+
+    @Resource
+    private OrderInfoService orderInfoService;
+
+
+    @Resource
+    private WXPayController wxPayController;
 
     /**
      * 查询租赁详情
@@ -97,7 +115,22 @@ public class LeaseDetailsServiceImpl extends ServiceImpl<LeaseDetailsMapper, Lea
     @Override
     public int updateLeaseDetails(LeaseDetails leaseDetails)
     {
-        return leaseDetailsMapper.updateLeaseDetails(leaseDetails);
+        int i = leaseDetailsMapper.updateLeaseDetails(leaseDetails);
+
+        if (StringUtils.isEmpty(leaseDetails.getEquipmentCode())){
+            LeaseDetails leaseDetails1 = selectLeaseDetailsByLeaseDetailsId(leaseDetails.getLeaseDetailsId());
+            LeaseLog leaseLog = new LeaseLog();
+            leaseLog.setUsername(leaseDetails1.getUsername());
+            leaseLog.setPhone(leaseDetails1.getPhone());
+            leaseLog.setStatus(leaseDetails.getStatus());
+            leaseLog.setEquipmentCode(leaseDetails1.getEquipmentCode());
+            leaseLog.setEquipmentType(leaseDetails1.getEquipmentType());
+            leaseLog.setCreateTime(new Date());
+            leaseLog.setUpdateTime(new Date());
+            leaseLogService.save(leaseLog);
+        }
+
+        return i;
     }
 
     @Override
@@ -114,11 +147,11 @@ public class LeaseDetailsServiceImpl extends ServiceImpl<LeaseDetailsMapper, Lea
             throw  new ServiceException("设备不存在");
         }
         if (StringUtils.isNotEmpty(leaseDetails1.getStatus())&&leaseDetails1.getStatus().equals("1")){
-            return 0;
+            throw  new ServiceException("设备已被人绑定");
         }
         Patient patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(leaseDetails.getPhone()));
         if (patient==null){
-            throw  new ServiceException("设备已被绑定");
+            throw  new ServiceException("患者信息不存在");
         }
         leaseDetails.setUsername(aesUtils.decrypt(patient.getPatientName()));
         leaseDetails.setCreateTime(new Date());
@@ -165,6 +198,41 @@ public class LeaseDetailsServiceImpl extends ServiceImpl<LeaseDetailsMapper, Lea
     @Override
     public int deleteLeaseDetailsByLeaseId(Long leaseId) {
         return leaseDetailsMapper.delete(new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getLeaseId,leaseId));
+    }
+
+    @Override
+    public List<LeaseDetails> selectLeaseByPhone(LeaseDetails lease) {
+        return leaseDetailsMapper.selectLeaseByPhone(lease);
+    }
+
+    @Override
+    public Map<String, Object> giveBack(LeaseDetails lease, HttpServletResponse response) throws Exception {
+
+//        if (lease.getLeaseDetailsId()==null) {
+//            throw new ServiceException("请选择设备");
+//        }
+//
+//        LeaseDetails leaseDetails = selectLeaseDetailsByLeaseDetailsId(lease.getLeaseDetailsId());
+//        if (leaseDetails==null){
+//            throw new ServiceException("记录不存在");
+//        }
+//        if (StringUtils.isEmpty(leaseDetails.getStatus())||!leaseDetails.getStatus().equals("1")){
+//            throw new ServiceException("设备未租赁");
+//        }
+//        SysUser sysUser = sysUserService.selectUserByPhone(aesUtils.encrypt(leaseDetails.getPhone()));
+//        LeaseDetails leaseDetail = new LeaseDetails();
+//        leaseDetail.setEquipmentCode(leaseDetails.getEquipmentCode());
+//        leaseDetail.setStatus("0");
+//        int update = leaseDetailsMapper.update(leaseDetail, new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getEquipmentCode, leaseDetail.getEquipmentCode()));
+//        if (sysUser!=null){
+//            OrderInfo orderInfo = orderInfoService.selectTOrderInfoByUserId(sysUser.getUserId(), leaseDetails.getEquipmentCode());
+//            if (orderInfo!=null){
+//               return wxPayController.refund(orderInfo.getId(), "设备归还", response);
+//            }
+//        }
+        wxPayController.refund("20240726210423860611", "设备归还", response);
+
+        return new HashMap<>();
     }
 }
 

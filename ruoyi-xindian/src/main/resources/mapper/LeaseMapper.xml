@@ -67,6 +67,60 @@
                 lease.lease_id = lease_details.lease_id
         where lease.lease_id = #{leaseId}
     </select>
+    <select id="selectLeaseListByUsable" resultType="com.ruoyi.xindian.lease.domain.Lease" resultMap="LeaseDetailsAndLeaseResult">
+        SELECT
+            lease.lease_id,
+            lease.user_name,
+            lease.phone,
+            lease.identity_card,
+            lease.unit_leader,
+            lease.place,
+            lease.give_back,
+            lease.create_time,
+            lease.update_time,
+            lease_details.lease_details_id,
+            lease_details.equipment_code,
+            lease_details.equipment_type,
+            lease_details.`status`,
+            lease_details.username,
+            lease_details.phone,
+            lease_details.cash_pledge,
+            lease_details.create_time
+        FROM
+            lease
+                INNER JOIN
+            lease_details
+            ON
+                lease.lease_id = lease_details.lease_id
+        where lease.give_back= '0' and lease_details.`status` = '0' and lease_details.equipment_type = #{equipmentType}
+    </select>
+    <select id="selectLeaseListByUsed" resultType="com.ruoyi.xindian.lease.domain.Lease" resultMap="LeaseDetailsAndLeaseResult">
+        SELECT
+            lease.lease_id,
+            lease.user_name,
+            lease.phone,
+            lease.identity_card,
+            lease.unit_leader,
+            lease.place,
+            lease.give_back,
+            lease.create_time,
+            lease.update_time,
+            lease_details.lease_details_id,
+            lease_details.equipment_code,
+            lease_details.equipment_type,
+            lease_details.`status`,
+            lease_details.username,
+            lease_details.phone,
+            lease_details.cash_pledge,
+            lease_details.create_time
+        FROM
+            lease
+                INNER JOIN
+            lease_details
+            ON
+                lease.lease_id = lease_details.lease_id
+        where lease.give_back= '0' and lease_details.`status` = '1' and lease_details.phone = #{phone}
+    </select>
 
     <insert id="insertLease" parameterType="Lease" useGeneratedKeys="true" keyProperty="leaseId">
         insert into lease

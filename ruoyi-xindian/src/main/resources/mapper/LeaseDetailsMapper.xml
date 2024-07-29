@@ -60,6 +60,34 @@
         WHERE equipment_code = #{code}  and  lease.give_back = 0
         LIMIT 1
     </select>
+    <select id="selectLeaseByPhone" resultType="com.ruoyi.xindian.lease.domain.LeaseDetails" resultMap="LeaseDetailsResult">
+        SELECT
+            lease_details.lease_id,
+            lease_details.lease_details_id,
+            lease_details.equipment_code,
+            lease_details.equipment_type,
+            lease_details.`status`,
+            lease_details.username,
+            lease_details.phone,
+            lease_details.cash_pledge,
+            lease_details.create_time,
+            lease_details.update_time
+        FROM
+            lease
+                INNER JOIN
+            lease_details
+            ON
+                lease.lease_id = lease_details.lease_id
+        <where>
+            and lease.phone = #{phone}  and  lease.give_back = 0
+            <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code = #{equipmentCode}</if>
+            <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="userPhone != null  and userPhone != ''"> and lease_details.phone like concat('%', #{userPhone}, '%')</if>
+        </where>
+        order by lease_details.status desc
+    </select>
 
     <insert id="insertLeaseDetails" parameterType="LeaseDetails">
         insert into lease_details

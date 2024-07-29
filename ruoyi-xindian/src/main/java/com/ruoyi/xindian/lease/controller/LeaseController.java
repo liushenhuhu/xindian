@@ -1,10 +1,13 @@
 package com.ruoyi.xindian.lease.controller;
 
+import java.util.Collection;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.xindian.lease.domain.Lease;
+import com.ruoyi.xindian.lease.domain.LeaseDetails;
 import com.ruoyi.xindian.lease.service.LeaseService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +73,14 @@ public class LeaseController extends BaseController
         return AjaxResult.success(leaseService.selectLeaseByLeaseId(leaseId));
     }
 
+
+    @GetMapping("/getUsableList")
+    public AjaxResult getUsableList(LeaseDetails lease)
+    {
+        List<Lease> list = leaseService.selectLeaseListByUsable(lease);
+        return AjaxResult.success(list);
+    }
+
     /**
      * 新增租赁
      */
@@ -101,5 +112,20 @@ public class LeaseController extends BaseController
     public AjaxResult remove(@PathVariable Long[] leaseIds)
     {
         return toAjax(leaseService.deleteLeaseByLeaseIds(leaseIds));
+    }
+
+    @GetMapping("/getPhoneIs")
+    public AjaxResult getPhoneIs(Lease lease)
+    {
+        List<Lease> list = leaseService.list(new LambdaQueryWrapper<Lease>().eq(Lease::getPhone, lease.getPhone()).eq(Lease::getGiveBack, 0).last("limit 1"));
+        return AjaxResult.success(!list.isEmpty());
+    }
+
+
+    @GetMapping("/getUserEqList")
+    public AjaxResult getUserEqList(Lease lease)
+    {
+        List<Lease> list = leaseService.selectLeaseListByUsed(lease);
+        return AjaxResult.success(list);
     }
 }

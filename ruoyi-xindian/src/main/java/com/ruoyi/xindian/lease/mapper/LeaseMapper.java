@@ -2,6 +2,7 @@ package com.ruoyi.xindian.lease.mapper;
 
 import com.ruoyi.xindian.lease.domain.Lease;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.xindian.lease.domain.LeaseDetails;
 
 import java.util.List;
 
@@ -28,6 +29,10 @@ public interface LeaseMapper extends BaseMapper<Lease> {
      * @return 租赁集合
      */
     public List<Lease> selectLeaseList(Lease lease);
+
+
+    List<Lease> selectLeaseListByUsable(LeaseDetails lease);
+    List<Lease> selectLeaseListByUsed(Lease lease);
 
     /**
      * 新增租赁

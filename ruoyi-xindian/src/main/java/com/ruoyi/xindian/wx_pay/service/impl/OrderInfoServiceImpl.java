@@ -1,4 +1,5 @@
 package com.ruoyi.xindian.wx_pay.service.impl;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,6 +14,8 @@ import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
 import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.fw_log.mapper.FwLogMapper;
+import com.ruoyi.xindian.lease.domain.LeaseDetails;
+import com.ruoyi.xindian.lease.mapper.LeaseDetailsMapper;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -99,6 +102,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Resource
+    private LeaseDetailsMapper leaseDetailsMapper;
 
 
     @Override
@@ -164,30 +169,58 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
             Product product = productMapper.selectById(c.getProductId());
             log.info("更新订单状态 ===> {}", orderStatus.getType());
-
             QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("order_no", orderNo);
-
-            OrderInfo orderInfo = new OrderInfo();
-
-            orderInfo.setOrderStatus(OrderStatus.SERVE_ORDER.getType());
-
-            orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
-            baseMapper.update(orderInfo, queryWrapper);
             if (product.getType().equals("服务")||product.getType().equals("卡片")){
 
+                queryWrapper.eq("order_no", orderNo);
 
+                OrderInfo orderInfo = new OrderInfo();
+
+                orderInfo.setOrderStatus(OrderStatus.SERVE_ORDER.getType());
+
+                orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
+                baseMapper.update(orderInfo, queryWrapper);
 
                 vipPatient(product,orderByOrderNo.getUserId(),c);
 
             }else if (product.getType().equals("报告服务")){
+                queryWrapper.eq("order_no", orderNo);
+
+                OrderInfo orderInfo = new OrderInfo();
+
+                orderInfo.setOrderStatus(OrderStatus.REPORT_ORDER.getType());
+
+                orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
+                baseMapper.update(orderInfo, queryWrapper);
+
                 addSXOrder(product,orderByOrderNo.getUserId(),c);
 //                equipmentHeadingCodeController.ifSubmitOrder(orderByOrderNo.getPId());
             }else if (product.getType().equals("周报")){
-                addCountReportOrder(product,orderByOrderNo.getUserId(),c);
-//                equipmentHeadingCodeController.ifSubmitOrder(orderByOrderNo.getPId());
-            }
+                queryWrapper.eq("order_no", orderNo);
 
+                OrderInfo orderInfo = new OrderInfo();
+
+                orderInfo.setOrderStatus(OrderStatus.REPORT_ORDER.getType());
+
+                orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
+                baseMapper.update(orderInfo, queryWrapper);
+                addCountReportOrder(product,orderByOrderNo.getUserId(),c);
+            }else if (product.getType().equals("租赁")){
+                queryWrapper.eq("order_no", orderNo);
+
+                OrderInfo orderInfo = new OrderInfo();
+
+                orderInfo.setOrderStatus(OrderStatus.SERVE_LEASE.getType());
+
+                orderInfo.setOrderState(OrderStatus.ORDER_STATUS.getType());
+                baseMapper.update(orderInfo, queryWrapper);
+            } else {
+                queryWrapper.eq("order_no", orderNo);
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.setOrderStatus(orderStatus.getType());
+                orderInfo.setOrderState(orderStatus.getType());
+                baseMapper.update(orderInfo, queryWrapper);
+            }
         }
 
 
@@ -536,7 +569,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
 
         for(SuborderOrderInfo c : suborderOrderInfo){
-            updateProductDel(c.getSum().intValue(),c.getProductId());
+            updateProductDel(c.getSum().intValue(),c.getProductId(),orderInfo);
         }
 
     }
@@ -561,12 +594,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     public Boolean deleteOrder(String orderId) {
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
-        if (orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
+        if (orderInfo!=null&&orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
             List<SuborderOrderInfo> suborderOrderInfo = suborderOrderInfoMapper.selectList(new QueryWrapper<SuborderOrderInfo>().eq("order_father", orderId));
 
             for(SuborderOrderInfo c : suborderOrderInfo){
-                updateProductDel(c.getSum().intValue(),c.getProductId());
+                updateProductDel(c.getSum().intValue(),c.getProductId(),orderInfo);
             }
+
         }
 
         int i = orderInfoMapper.deleteById(orderId);
@@ -704,6 +738,45 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderInfo.getId();
     }
 
+    @Override
+    public String addLeaseOrder(HttpServletRequest request, Long productId, Integer sum, String equipmentCode) {
+        Product product = productMapper.selectById(productId);
+
+        //获取token中发送请求的用户信息
+        LoginUser loginUser = tokenService.getLoginUser(request);
+
+        SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
+
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(OrderNoUtils.getNo());
+        orderInfo.setTitle("购买"+product.getProductName());
+        orderInfo.setOrderNo(OrderNoUtils.getOrderNo());
+        orderInfo.setUserId(loginUser.getUser().getUserId());
+        orderInfo.setTotalFee(new BigDecimal(sum).multiply(product.getDiscount()));
+        orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
+        orderInfo.setOpenId(sysUser.getOpenId());
+        orderInfo.setCreateTime(new Date());
+        orderInfo.setUpdateTime(new Date());
+        orderInfo.setOrderState(OrderStatus.NOTPAY.getType());
+        orderInfo.setDelFlag(0);
+        orderInfo.setEquipmentCode(equipmentCode);
+        orderInfoMapper.insert(orderInfo);
+
+        SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();
+        suborderOrderInfo.setOrderFather(orderInfo.getId());
+        suborderOrderInfo.setProductId(productId);
+        suborderOrderInfo.setSum(Long.valueOf(sum));
+        suborderOrderInfo.setCreateTime(new Date());
+        suborderOrderInfo.setUpdateTime(new Date());
+        suborderOrderInfo.setProductPrice(product.getDiscount());
+        suborderOrderInfo.setProductName(product.getProductName());
+        int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
+
+        redisTemplate.opsForValue().set("order:"+orderInfo.getId(),orderInfo,10, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("orderQuery:"+orderInfo.getId(),orderInfo,20, TimeUnit.SECONDS);
+        return orderInfo.getId();
+    }
+
     @Transactional
     @Override
     public String addBGOrder(HttpServletRequest request, Long productId,String pId) {
@@ -834,6 +907,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderInfoMapper.selectList(new QueryWrapper<OrderInfo>().eq("p_id",pId).eq("order_state","交易成功"));
     }
 
+    @Override
+    public OrderInfo selectTOrderInfoByUserId(Long userId, String equipmentCode) {
+        return orderInfoMapper.selectOne(new QueryWrapper<OrderInfo>().eq("user_id",userId).eq("equipment_code",equipmentCode)
+                .eq("order_state","交易成功").orderByDesc("create_time").last("limit 1"));
+    }
+
 
     /**
      * 创建订单时，修改商品库存
@@ -871,12 +950,21 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @param productId
      * @return
      */
-    private int updateProductDel(Integer sum,Long productId){
+    private int updateProductDel(Integer sum,Long productId,OrderInfo orderInfo){
 
 
         Product product = productMapper.selectById(productId);
-        if (product!=null&&product.getType().equals("服务")){
+        if (product==null){
             return 1;
+        }
+        if (product.getType().equals("服务")){
+            return 1;
+        }
+        if (product.getType().equals("租赁")){
+            LeaseDetails leaseDetail = new LeaseDetails();
+            leaseDetail.setEquipmentCode(orderInfo.getEquipmentCode());
+            leaseDetail.setStatus("0");
+            int update = leaseDetailsMapper.update(leaseDetail, new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getEquipmentCode, leaseDetail.getEquipmentCode()));
         }
 
         UpdateWrapper<Product> updateWrapper = Wrappers.update();

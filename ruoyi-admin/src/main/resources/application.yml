@@ -172,6 +172,10 @@ sx:
   url: https://pro3.mymagicangel.com
 
 
+report:
+  status: false
+
+
 #监控的端点
 #management:
 #  endpoints:

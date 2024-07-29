@@ -57,6 +57,13 @@ public enum OrderStatus {
     SERVE_ORDER("服务"),
 
 
+
+    /**
+     *租赁
+     */
+    SERVE_LEASE("租赁"),
+
+
     /**
      * 报告服务
      */

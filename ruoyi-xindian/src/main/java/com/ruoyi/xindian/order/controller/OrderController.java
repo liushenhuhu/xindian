@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.order.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -8,6 +9,10 @@ import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
+import com.ruoyi.xindian.lease.domain.LeaseDetails;
+import com.ruoyi.xindian.lease.mapper.LeaseDetailsMapper;
+import com.ruoyi.xindian.lease.service.LeaseDetailsService;
+import com.ruoyi.xindian.order.vo.OrderVo;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
@@ -19,16 +24,15 @@ import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -79,6 +83,13 @@ public class OrderController {
 
     @Resource
     private AesUtils aesUtils;
+
+
+    @Autowired
+    private LeaseDetailsService leaseDetailsService;
+
+    @Resource
+    private LeaseDetailsMapper leaseDetailsMapper;
     /**
      * 查询用户所存在的订单
      * @return
@@ -241,7 +252,66 @@ public class OrderController {
         }
     }
 
+    /**
+     * 添加服务订单
+     * @param request
+     * @return
+     */
+    @PostMapping("/orderLeaseAdd")
+    public AjaxResult orderLeaseAdd(HttpServletRequest request,@RequestBody OrderVo orderVo){
+        lock.lock();
+        try {
+            LoginUser loginUser = tokenService.getLoginUser(request);
+            Long userId = loginUser.getUser().getUserId();
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("getOrderId"+userId))){
+                return AjaxResult.error("请勿重复支付");
+            }
+            redisTemplate.opsForValue().set("getOrderId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
 
+            Long productId = orderVo.getProductId();
+            String equipmentCode = orderVo.getEquipmentCode();
+            if (productId==null){
+                return AjaxResult.error("商品参数错误，请稍后再试");
+            }
+            if (StringUtils.isEmpty(equipmentCode)){
+                return AjaxResult.error("设备不存在，请稍后再试");
+            }
+            LeaseDetails leaseDetails = leaseDetailsService.selectLeaseDetailsByEquipmentCode(equipmentCode);
+            if (leaseDetails==null){
+                return AjaxResult.error("设备不存在");
+            }
+            if (leaseDetails.getStatus().equals("1")){
+                return AjaxResult.error("设备已被租赁");
+            }
+            Product product = productService.selectPId(productId);
+            if (product==null){
+                return AjaxResult.error("商品不存在");
+            }
+            if (product.getState().equals("2")){
+                return AjaxResult.error("商品已下架");
+            }
+            SysUser sysUser = sysUserService.selectUserById(loginUser.getUser().getUserId());
+
+            Patient patient = patientService.selectPatientByPatientPhone(sysUser.getPhonenumber());
+            if (patient==null){
+                return AjaxResult.error("用户信息不存在");
+            }
+            String stringBuilder = orderInfoService.addLeaseOrder(request, productId, 1, equipmentCode);
+            LeaseDetails leaseDetail = new LeaseDetails();
+            leaseDetail.setUsername(aesUtils.decrypt(patient.getPatientName()));
+            leaseDetail.setCreateTime(new Date());
+            leaseDetail.setPhone(aesUtils.decrypt(patient.getPatientPhone()));
+            leaseDetail.setEquipmentCode(equipmentCode);
+            leaseDetail.setStatus("1");
+            int update = leaseDetailsMapper.update(leaseDetail, new LambdaQueryWrapper<LeaseDetails>().eq(LeaseDetails::getEquipmentCode, leaseDetail.getEquipmentCode()));
+            return AjaxResult.success("操作成功",stringBuilder);
+        }catch (Exception e){
+            System.out.println(e);
+            return AjaxResult.error("创建订单失败");
+        }finally {
+            lock.unlock();
+        }
+    }
 
     /**
      * 添加服务订单
@@ -361,5 +431,17 @@ public class OrderController {
         }finally {
             lock.unlock();
         }
+    }
+
+    @PostMapping("/updateOrderType")
+    public AjaxResult updateOrderType(@RequestBody OrderVo orderVo){
+
+        if (orderVo.getOrderId()==null){
+            return AjaxResult.error();
+        }
+        redisTemplate.delete("orderQuery:"+orderVo.getOrderId());
+        redisTemplate.delete("order:"+orderVo.getOrderId());
+        orderInfoService.redisOrderKey(orderVo.getOrderId());
+        return AjaxResult.success();
     }
 }
