@@ -45,7 +45,7 @@ public class WeekReport extends BaseEntity {
     /**
      * 诊断状态0:未诊断，1：已诊断，2诊断中
      */
-    @Excel(name = "诊断状态0:未诊断，1：已诊断，2诊断中")
+    @Excel(name = "诊断状态0:未诊断，1：已诊断，2：诊断中，3：已诊断")
     private Integer diagnosisStatus;
 
     /**

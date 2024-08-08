@@ -36,7 +36,7 @@ import java.util.List;
 public class PdfGenerator {
 
 
-    public void createWeekPdf(String fileName, LinkedList<WeekPdfData> weekPdfData, String patientName, String gender, String patientAge, String height, String weight) throws IOException {
+    public String createWeekPdf(String fileName, LinkedList<WeekPdfData> weekPdfData, String patientName, String gender, String patientAge, String height, String weight) throws IOException {
         String title = "心电报告";
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
@@ -136,12 +136,18 @@ public class PdfGenerator {
         if (sumHrv != 0)
             meanHrv = sumHrvs / sumHrv;
 
-        String conclusion = "一、本周总共测量" + len + "次，平均心率" + String.format("%.2f", meanHr) + "bpm，" +
+//        String conclusion = "一、本周总共测量" + len + "次，平均心率" + String.format("%.2f", meanHr) + "bpm，" +
+//                "最快心率" + maxHr + "bpm（发生于" + maxTime + "），" +
+//                "最慢心率" + minHr + "bpm（发生于" + minTime + "），" +
+//                "房性早搏" + fz + "次，室性早搏" + sz + "次，房颤" + fc +
+//                "次，长RR间期" + rr + "次，心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms。\n\n" +
+//                "二、诊断结论";
+        String conclusion = "一、本周总共测量" + len + "次，房性早搏" + fz + "次，室性早搏" + sz + "次，房颤" + fc +
+                "次，长RR间期" + rr + "次，平均心率" + String.format("%.2f", meanHr) + "bpm，" +
                 "最快心率" + maxHr + "bpm（发生于" + maxTime + "），" +
-                "最慢心率" + minHr + "bpm（发生于" + minTime + "），" +
-                "房性早搏" + fz + "次，室性早搏" + sz + "次，房颤" + fc +
-                "次，长RR间期" + rr + "次，心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms。\n\n" +
+                "最慢心率" + minHr + "bpm（发生于" + minTime + "），心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms。\n\n" +
                 "二、诊断结论";
+
 //                "二、诊断结论\n" +
 //                "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.";
 
@@ -199,9 +205,9 @@ public class PdfGenerator {
             // 将Div添加到文档中
             doc.add(div1);
             drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 420, 525, 136.5f);
-            if (len >= 1)
-                drawWeekEcg30(doc, font, weekPdfData.get(1), 35, 220, 525, 136.5f);
             if (len > 1)
+                drawWeekEcg30(doc, font, weekPdfData.get(1), 35, 220, 525, 136.5f);
+            if (len > 2)
                 doc.add(new AreaBreak());
             Div div;
             for (int i = 2; i < len; i += 1) {
@@ -233,7 +239,11 @@ public class PdfGenerator {
             }
         }
         doc.close();
-//        return baos.toByteArray();
+
+        return "本周总共测量" + len + "次，房性早搏" + fz + "次，室性早搏" + sz + "次，房颤" + fc +
+                "次，长RR间期" + rr + "次，平均心率" + String.format("%.2f", meanHr) + "bpm，" +
+                "最快心率" + maxHr + "bpm（发生于" + maxTime + "），" +
+                "最慢心率" + minHr + "bpm（发生于" + minTime + "），心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms。";
     }
 
     private void drawWeekEcg30(Document doc, PdfFont font, WeekPdfData weekPdfData, float x, float y, float width, float height) {
@@ -370,28 +380,91 @@ public class PdfGenerator {
                         .moveText(x + integers.get(i).doubleValue() * 0.525 - 3, h)
                         .showText("N")
                         .endText();
+//                //nni
+//                if (i < integers.size() - 1) {
+//                    double mid = (integers.get(i + 1) - integers.get(i)) * 1.0 / 2 + integers.get(i);
+//                    pdfCanvas.beginText()
+//                            .moveText(x + mid * 0.525 - 8, h + 4)
+//                            .showText(String.valueOf((integers.get(i + 1) - integers.get(i)) * 10))
+//                            .endText();
+//                    int kk = 6000 / (integers.get(i + 1) - integers.get(i));
+//                    if (kk < 100) {
+//                        pdfCanvas.beginText()
+//                                .moveText(x + mid * 0.525 - 6, h - 4)
+//                                .showText(String.valueOf(kk))
+//                                .endText();
+//                    } else {
+//                        pdfCanvas.beginText()
+//                                .moveText(x + mid * 0.525 - 8, h - 4)
+//                                .showText(String.valueOf(kk))
+//                                .endText();
+//                    }
+//
+//                }
+            }
+            h -= 4 * pigK;
+        }
+        //房早室早标签
+        double hfz = y - 1 * pigK;
+        pdfCanvas.setFontAndSize(font, 8);
+        pdfCanvas.setStrokeColor(ColorConstants.RED);
+        pdfCanvas.setFillColor(ColorConstants.RED);
+        LinkedList<LinkedList<Integer>> fzList = weekPdfData.getFzList();
+        LinkedList<LinkedList<Integer>> szList = weekPdfData.getSzList();
+        for (LinkedList<Integer> integers : fzList) {
+            for (Integer integer : integers) {
+                pdfCanvas.beginText()
+                        .moveText(x + integer.doubleValue() * 0.525 - 3, hfz)
+                        .showText("S")
+                        .endText();
+            }
+            hfz -= 4 * pigK;
+        }
+
+        //房早室早标签
+        double hsz = y - 1 * pigK;
+        for (LinkedList<Integer> integers : szList) {
+            for (Integer integer : integers) {
+                pdfCanvas.beginText()
+                        .moveText(x + integer.doubleValue() * 0.525 - 3, hsz)
+                        .showText("V")
+                        .endText();
+            }
+            hsz -= 4 * pigK;
+        }
+
+        //画nni
+        pdfCanvas.setStrokeColor(ColorConstants.BLACK);
+        pdfCanvas.setFillColor(ColorConstants.BLACK);
+        double nni = y - 1 * pigK;
+        for (int j = 0; j < rList.size(); j++) {
+            LinkedList<Integer> integers = rList.get(j);
+            integers.addAll(fzList.get(j));
+            integers.addAll(szList.get(j));
+            Collections.sort(integers);
+            for (int i = 0; i < integers.size(); i++) {
+                //nni
                 if (i < integers.size() - 1) {
                     double mid = (integers.get(i + 1) - integers.get(i)) * 1.0 / 2 + integers.get(i);
                     pdfCanvas.beginText()
-                            .moveText(x + mid * 0.525 - 8, h + 4)
+                            .moveText(x + mid * 0.525 - 8, nni + 4)
                             .showText(String.valueOf((integers.get(i + 1) - integers.get(i)) * 10))
                             .endText();
                     int kk = 6000 / (integers.get(i + 1) - integers.get(i));
                     if (kk < 100) {
                         pdfCanvas.beginText()
-                                .moveText(x + mid * 0.525 - 6, h - 4)
+                                .moveText(x + mid * 0.525 - 6, nni - 4)
                                 .showText(String.valueOf(kk))
                                 .endText();
                     } else {
                         pdfCanvas.beginText()
-                                .moveText(x + mid * 0.525 - 8, h - 4)
+                                .moveText(x + mid * 0.525 - 8, nni - 4)
                                 .showText(String.valueOf(kk))
                                 .endText();
                     }
-
                 }
             }
-            h -= 4 * pigK;
+            nni -= 4 * pigK;
         }
         pdfCanvas.stroke();
 

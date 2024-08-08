@@ -347,25 +347,38 @@ public class JECGReportController extends BaseController {
             //获取R波
             String beatLabel = jecgSingle.getBeatLabel();
             JsonObject jsonObject = JsonParser.parseString(beatLabel).getAsJsonObject();
-            //JsonArray list1 = jsonObject.getAsJsonObject("0").getAsJsonArray("Normal");
-            //JsonArray list2 = jsonObject.getAsJsonObject("1").getAsJsonArray("Normal");
-            //JsonArray list3 = jsonObject.getAsJsonObject("2").getAsJsonArray("Normal");
-            LinkedList<LinkedList<Integer>> linkedLists = new LinkedList<>();
+            //R
+            LinkedList<LinkedList<Integer>> linkedListR = new LinkedList<>();
+
+            LinkedList<LinkedList<Integer>> linkedListFZ = new LinkedList<>();
+
+            LinkedList<LinkedList<Integer>> linkedListSZ = new LinkedList<>();
+
             for (int i = 0; i < 10; i++) {
                 JsonObject asJsonObject = jsonObject.getAsJsonObject(String.valueOf(i));
                 if (asJsonObject != null) {
                     JsonArray list1 = asJsonObject.getAsJsonArray("Normal");
+                    JsonArray list2 = asJsonObject.getAsJsonArray("FangZao");
+                    JsonArray list3 = asJsonObject.getAsJsonArray("ShiZao");
                     LinkedList<Integer> rP = new LinkedList<>();
+                    LinkedList<Integer> fz = new LinkedList<>();
+                    LinkedList<Integer> sz = new LinkedList<>();
                     for (JsonElement jsonElement : list1) {
                         rP.add(jsonElement.getAsInt());
                     }
-                    linkedLists.add(rP);
+                    for (JsonElement jsonElement : list2) {
+                        fz.add(jsonElement.getAsInt());
+                    }
+                    for (JsonElement jsonElement : list3) {
+                        sz.add(jsonElement.getAsInt());
+                    }
+                    linkedListR.add(rP);
+                    linkedListFZ.add(fz);
+                    linkedListSZ.add(sz);
                 } else {
                     break;
                 }
             }
-
-
             floats = btyeToFloatList(jecgSingnalData.getEcgData());
             pmEcgData = pmEcgDataService.selectPmEcgDataByPId(rp.getpId());
             weekPdfData = new WeekPdfData();
@@ -378,7 +391,9 @@ public class JECGReportController extends BaseController {
             weekPdfData.setQrs(pmEcgData.getQrsInterval());
             weekPdfData.setEcgData(floats);
             weekPdfData.setDetectionTime(sdf.format(rp.getReportTime()));
-            weekPdfData.setRList(linkedLists);
+            weekPdfData.setRList(linkedListR);
+            weekPdfData.setFzList(linkedListFZ);
+            weekPdfData.setSzList(linkedListSZ);
             weekPdfDataList.add(weekPdfData);
         }
         if (weekPdfDataList.isEmpty()) return new AjaxResult(202, "无检测数据！");
@@ -396,7 +411,8 @@ public class JECGReportController extends BaseController {
         File file = new File("/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone());
         if (!file.exists()) file.mkdirs();
 //        write_dir = "E:/test.pdf";
-        pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight);
+        String conclusion = pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight);
+        weekReport.setDiagnosisConclusion(conclusion);
         weekReportService.insertWeekReport(weekReport);
 
 //        weekDetectionTime.setDetectionTime(maxTime);
