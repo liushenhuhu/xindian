@@ -73,11 +73,12 @@ public class WSurveyServiceImpl implements IWSurveyService
     private void  updateByWSurveyHistory(WSurvey wSurvey) {
         List<WSurveyHistory> wSurveyHistories = wSurvey.getwSurveyHistories();
         wSurveyHistoryService.deleteWSurveyHistoryBywSurveyId(wSurvey.getId());
-        if (wSurveyHistories!=null&&!wSurveyHistories.isEmpty()){
+        for (WSurveyHistory wSurveyHistory : wSurveyHistories) {
+            wSurveyHistory.setwSurveyId(wSurvey.getId());
+        }
+        if (!wSurveyHistories.isEmpty()){
             wSurveyHistoryService.saveBatch(wSurveyHistories);
         }
-
-
 
     }
 
@@ -119,5 +120,11 @@ public class WSurveyServiceImpl implements IWSurveyService
     public int deleteWSurveyById(Long id)
     {
         return wSurveyMapper.deleteWSurveyById(id);
+    }
+
+    @Override
+    public WSurvey getScreening(String patientPhone) {
+
+        return wSurveyMapper.selectWSurveyByPhone(patientPhone);
     }
 }

@@ -22,7 +22,7 @@ public class WSurveyHistory implements Serializable {
     /**
      * 问卷id
      */
-    private Integer wSurveyId;
+    private Long wSurveyId;
 
     /**
      * 年份
@@ -58,11 +58,11 @@ public class WSurveyHistory implements Serializable {
         this.wSurveyHistoryId = wSurveyHistoryId;
     }
 
-    public Integer getwSurveyId() {
+    public Long getwSurveyId() {
         return wSurveyId;
     }
 
-    public void setwSurveyId(Integer wSurveyId) {
+    public void setwSurveyId(Long wSurveyId) {
         this.wSurveyId = wSurveyId;
     }
 

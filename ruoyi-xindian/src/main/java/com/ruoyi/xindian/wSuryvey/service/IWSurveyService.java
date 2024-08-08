@@ -58,4 +58,6 @@ public interface IWSurveyService
      * @return 结果
      */
     public int deleteWSurveyById(Long id);
+
+    WSurvey getScreening(String patientPhone);
 }

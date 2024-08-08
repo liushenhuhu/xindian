@@ -18,6 +18,7 @@ public interface WSurveyMapper
      * @return wSuryvey
      */
     public WSurvey selectWSurveyById(Long id);
+    public WSurvey selectWSurveyByPhone(String patientPhone);
 
     /**
      * 查询wSuryvey列表
@@ -58,4 +59,7 @@ public interface WSurveyMapper
      * @return 结果
      */
     public int deleteWSurveyByIds(Long[] ids);
+
+
+
 }

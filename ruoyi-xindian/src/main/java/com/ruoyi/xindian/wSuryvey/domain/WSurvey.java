@@ -82,6 +82,8 @@ public class WSurvey extends BaseEntity
     private Long triglyceride;
 
 
+    private List<WSurveyHistory> wSurveyHistories = new ArrayList<>();
+
     public Long getLowAlbumen() {
         return lowAlbumen;
     }
@@ -98,7 +100,6 @@ public class WSurvey extends BaseEntity
         this.triglyceride = triglyceride;
     }
 
-    private List<WSurveyHistory> wSurveyHistories = new ArrayList<>();
 
     public List<WSurveyHistory> getwSurveyHistories() {
         return wSurveyHistories;

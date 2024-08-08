@@ -24,6 +24,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
     </resultMap>
 
+    <resultMap id="WSurveyAndWSurveyHistory" type="WSurvey" extends="WSurveyResult">
+        <collection property="wSurveyHistories" ofType="wSurveyHistory" resultMap="com.ruoyi.xindian.wSuryvey.mapper.WSurveyHistoryMapper.BaseResultMap"/>
+    </resultMap>
+
     <sql id="selectWSurveyVo">
         select id, patient_phone, gender, age, waistline, cholesterol, systolic_albumen, diastolic_blood, systolic_blood, hypotensive_drugs, diabetes, smoking, fammily_cd, fammily_ca, low_albumen, triglyceride, create_time from w_survey
     </sql>
@@ -52,6 +56,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectWSurveyById" parameterType="Long" resultMap="WSurveyResult">
         <include refid="selectWSurveyVo"/>
         where id = #{id}
+    </select>
+    <select id="selectWSurveyByPhone" resultType="com.ruoyi.xindian.wSuryvey.domain.WSurvey" resultMap="WSurveyAndWSurveyHistory">
+        SELECT
+            w_survey.patient_phone,
+            w_survey.id,
+            w_survey.gender,
+            w_survey.age,
+            w_survey.waistline,
+            w_survey.cholesterol,
+            w_survey.systolic_albumen,
+            w_survey.diastolic_blood,
+            w_survey.systolic_blood,
+            w_survey.hypotensive_drugs,
+            w_survey.diabetes,
+            w_survey.smoking,
+            w_survey.fammily_cd,
+            w_survey.fammily_ca,
+            w_survey.low_albumen,
+            w_survey.triglyceride,
+            w_survey.create_time,
+            w_survey_history.w_survey_history_id,
+            w_survey_history.particular_year,
+            w_survey_history.h_low_albumen,
+            w_survey_history.h_triglyceride,
+            w_survey_history.h_systolic_albumen,
+            w_survey_history.h_cholesterol
+        FROM
+            w_survey
+                LEFT JOIN
+            w_survey_history
+            ON
+                w_survey.id = w_survey_history.w_survey_id
+        where
+            w_survey.patient_phone = #{patientPhone}
     </select>
 
     <insert id="insertWSurvey" parameterType="WSurvey" useGeneratedKeys="true" keyProperty="id">

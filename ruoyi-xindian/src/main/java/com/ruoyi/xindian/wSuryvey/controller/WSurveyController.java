@@ -151,4 +151,37 @@ public class WSurveyController extends BaseController {
         }
     }
 
+    /**
+     * 判断是否存在
+     * @param patientPhone
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getIsScreening")
+    public AjaxResult getScreening(String patientPhone) throws Exception {
+        Preconditions.checkNotNull(patientPhone, "用户电话不能为空！");
+        patientPhone = aesUtils.encrypt(patientPhone);
+        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
+        if (patient == null) {
+            return AjaxResult.error("用户不存在！");
+        }
+        WSurvey wSurvey = new WSurvey();
+        wSurvey.setPatientPhone(aesUtils.encrypt(patientPhone));
+        List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey);
+        return AjaxResult.success(!wSurveyList.isEmpty());
+    }
+
+    @GetMapping("/getScreeningByPhone")
+    public AjaxResult getScreeningByPhone(String patientPhone) throws Exception {
+        if (patientPhone == null) {
+            return AjaxResult.error("用户电话不能为空！");
+        }
+        patientPhone = aesUtils.encrypt(patientPhone);
+        WSurvey screening = wSurveyService.getScreening(patientPhone);
+        if (screening!=null) {
+            screening.setPatientPhone(aesUtils.decrypt(screening.getPatientPhone()));
+        }
+        return AjaxResult.success(screening);
+    }
+
 }
