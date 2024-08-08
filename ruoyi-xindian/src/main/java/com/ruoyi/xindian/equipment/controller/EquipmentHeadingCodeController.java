@@ -1005,7 +1005,7 @@ public class EquipmentHeadingCodeController extends BaseController {
      * @return
      * @throws Exception
      */
-    private String getEquipmentCodeAccess_token() throws Exception {
+    public String getEquipmentCodeAccess_token() throws Exception {
         if (Boolean.TRUE.equals(redisTemplate.hasKey("EquipmentCodeAccess_token"))){
             return redisTemplate.opsForValue().get("EquipmentCodeAccess_token");
         }

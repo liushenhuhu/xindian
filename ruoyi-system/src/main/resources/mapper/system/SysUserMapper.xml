@@ -408,7 +408,7 @@
         update sys_user set detection_num = detection_num +1 where phonenumber_aes = #{patientPhone}
     </update>
     <update id="updateWeeklyNewspaperNum">
-        update sys_user set weekly_newspaper_num = weekly_newspaper_num + #{sum} where phonenumber_aes = #{patientPhone}
+        update sys_user set weekly_newspaper_num = COALESCE(weekly_newspaper_num, 0) + #{sum} where sys_user.user_id = #{userId}
     </update>
     <update id="updateNum">
 

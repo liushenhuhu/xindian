@@ -20,11 +20,13 @@ public class WXPayConstants {
     public static final String OPENID_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
     public static final String NOTIFY_URL = "";//回调ip
     public static final String UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一下单接口
-//    public static final String CALLBACK_URL = "http://localhost:83/dev-api/api/v1/callBack";//微信服务器调用支付结果通知路径
-//    public static final String CALLBACK_URL = "http://8m7bff.natappfree.cc/api/v1/callBack";//微信服务器调用支付结果通知路径
-    public static final String CALLBACK_URL = "https://ecg.mindyard.cn:84/prod-api/api/v1/callBack";//微信服务器调用支付结果通知路径
-//    public static final String CALLBACK_URL = "  http://guxk7w.natappfree.cc/prod-api/api/v1/callBack";//微信服务器调用支付结果通知路径
-//    public static final String CALLBACK_URL = "https://develop.mindyard.cn:84/prod-api/api/v1/callBack";//微信服务器调用支付结果通知路径
+
+
+
+//    public static final String CALLBACK_URL = "http://kxiish.natappfree.cc/api/v1/callBack";//微信服务器调用支付结果通知路径
+//    public static final String CALLBACK_URL = "https://ecg.mindyard.cn/prod-api/api/v1/callBack";//微信服务器调用支付结果通知路径
+    public static final String CALLBACK_URL = "https://ecg.mindyard.cn/test-api/api/v1/callBack";//微信服务器调用支付结果通知路径
+
 
     public static final String VISIT_CALLBACK_URL = "https://ecg.mindyard.cn:84/prod-api/visit/pay/callBack";//微信服务器调用支付结果通知路径(预约门诊支付回调)
 //    public static final String VISIT_CALLBACK_URL = "http://x8uz96.natappfree.cc/prod-api/api/v1/callBack";//微信服务器调用支付结果通知路径(预约门诊支付回调)

@@ -119,14 +119,7 @@ public class WSurveyController extends BaseController {
     @Log(title = "wSuryvey", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WSurvey wSurvey) throws Exception {
-        if (wSurvey.getId() == null) {
-            Preconditions.checkNotNull(wSurvey.getPatientPhone(), "用户电话不能为空！");
-            wSurvey.setPatientPhone(aesUtils.encrypt(wSurvey.getPatientPhone()));
-            return toAjax(wSurveyService.insertWSurvey(wSurvey));
-        } else {
-            wSurvey.setPatientPhone(null);
-            return toAjax(wSurveyService.updateWSurvey(wSurvey));
-        }
+        return getAjaxResult(wSurvey);
     }
 
     /**
@@ -137,6 +130,25 @@ public class WSurveyController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(wSurveyService.deleteWSurveyByIds(ids));
+    }
+
+
+
+
+    @PostMapping("/addWSurveyHistory")
+    public AjaxResult addWSurveyHistory(@RequestBody WSurvey wSurvey) throws Exception {
+        return getAjaxResult(wSurvey);
+    }
+
+    private AjaxResult getAjaxResult(WSurvey wSurvey) throws Exception {
+        if (wSurvey.getId() == null) {
+            Preconditions.checkNotNull(wSurvey.getPatientPhone(), "用户电话不能为空！");
+            wSurvey.setPatientPhone(aesUtils.encrypt(wSurvey.getPatientPhone()));
+            return toAjax(wSurveyService.insertWSurvey(wSurvey));
+        } else {
+            wSurvey.setPatientPhone(null);
+            return toAjax(wSurveyService.updateWSurvey(wSurvey));
+        }
     }
 
 }

@@ -9,5 +9,9 @@ public class OrderVo {
 
     private String orderId;
 
+    private Integer sum;
+
     private String equipmentCode;
+
+    private String pId;
 }

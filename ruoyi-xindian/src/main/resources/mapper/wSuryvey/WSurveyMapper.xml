@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.wSuryvey.mapper.WSurveyMapper">
-    
+
     <resultMap type="WSurvey" id="WSurveyResult">
         <result property="id"    column="id"    />
         <result property="patientPhone"    column="patient_phone"    />
@@ -19,15 +19,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="smoking"    column="smoking"    />
         <result property="fammilyCd"    column="fammily_cd"    />
         <result property="fammilyCa"    column="fammily_ca"    />
+        <result property="lowAlbumen"    column="low_albumen"    />
+        <result property="triglyceride"    column="triglyceride"    />
+        <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectWSurveyVo">
-        select id, patient_phone, gender, age, waistline, cholesterol, systolic_albumen, diastolic_blood, systolic_blood, hypotensive_drugs, diabetes, smoking, fammily_cd, fammily_ca from w_survey
+        select id, patient_phone, gender, age, waistline, cholesterol, systolic_albumen, diastolic_blood, systolic_blood, hypotensive_drugs, diabetes, smoking, fammily_cd, fammily_ca, low_albumen, triglyceride, create_time from w_survey
     </sql>
 
     <select id="selectWSurveyList" parameterType="WSurvey" resultMap="WSurveyResult">
         <include refid="selectWSurveyVo"/>
-        <where>  
+        <where>
             <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
             <if test="gender != null "> and gender = #{gender}</if>
             <if test="age != null "> and age = #{age}</if>
@@ -41,14 +44,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="smoking != null "> and smoking = #{smoking}</if>
             <if test="fammilyCd != null "> and fammily_cd = #{fammilyCd}</if>
             <if test="fammilyCa != null "> and fammily_ca = #{fammilyCa}</if>
+            <if test="lowAlbumen != null "> and low_albumen = #{lowAlbumen}</if>
+            <if test="triglyceride != null "> and triglyceride = #{triglyceride}</if>
         </where>
     </select>
-    
+
     <select id="selectWSurveyById" parameterType="Long" resultMap="WSurveyResult">
         <include refid="selectWSurveyVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertWSurvey" parameterType="WSurvey" useGeneratedKeys="true" keyProperty="id">
         insert into w_survey
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -65,7 +70,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="smoking != null">smoking,</if>
             <if test="fammilyCd != null">fammily_cd,</if>
             <if test="fammilyCa != null">fammily_ca,</if>
-         </trim>
+            <if test="lowAlbumen != null">low_albumen,</if>
+            <if test="triglyceride != null">triglyceride,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientPhone != null">#{patientPhone},</if>
             <if test="gender != null">#{gender},</if>
@@ -80,7 +88,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="smoking != null">#{smoking},</if>
             <if test="fammilyCd != null">#{fammilyCd},</if>
             <if test="fammilyCa != null">#{fammilyCa},</if>
-         </trim>
+            <if test="lowAlbumen != null">#{lowAlbumen},</if>
+            <if test="triglyceride != null">#{triglyceride},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
     </insert>
 
     <update id="updateWSurvey" parameterType="WSurvey">
@@ -99,6 +110,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="smoking != null">smoking = #{smoking},</if>
             <if test="fammilyCd != null">fammily_cd = #{fammilyCd},</if>
             <if test="fammilyCa != null">fammily_ca = #{fammilyCa},</if>
+            <if test="lowAlbumen != null">low_albumen = #{lowAlbumen},</if>
+            <if test="triglyceride != null">triglyceride = #{triglyceride},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
         where id = #{id}
     </update>
@@ -108,7 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteWSurveyByIds" parameterType="String">
-        delete from w_survey where id in 
+        delete from w_survey where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

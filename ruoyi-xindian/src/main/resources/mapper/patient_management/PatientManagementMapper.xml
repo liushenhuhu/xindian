@@ -120,7 +120,7 @@
                end_time, time_duration, d_phone_aes, report_state,patient_symptom,report_normal,refuse_text,sx_report_status, height, weight, past_medical_history, living_habit
         from patient_management m
                  inner join patient p on p.patient_phone_aes = m.patient_phone_aes
-                 inner join equipment e on m.equipment_code = e.equipment_code
+                 left join equipment e on m.equipment_code = e.equipment_code
                  left join hospital h on m.hospital_code = h.hospital_code
                  left join report r on m.p_id = r.p_id
                 left join medical_history mh on m.patient_phone_aes = mh.patient_phone_aes
@@ -912,35 +912,61 @@
     </select>
 
 
-    <insert id="insertPatientManagement" parameterType="PatientManagement" useGeneratedKeys="true" keyProperty="pId">
+    <insert id="insertPatientManagement" parameterType="PatientManagement">
         insert into patient_management
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="patientCode != null and patientCode != ''">patient_code,</if>
+            <if test="pId != null">p_id,</if>
             <if test="hospitalCode != null and hospitalCode != ''">hospital_code,</if>
             <if test="equipmentCode != null and equipmentCode != ''">equipment_code,</if>
+            <if test="patientCode != null">patient_code,</if>
             <if test="connectionTime != null">connection_time,</if>
             <if test="bedNumber != null">bed_number,</if>
             <if test="caseHistoryNumber != null">case_history_number,</if>
             <if test="ecgType != null">ecg_type,</if>
             <if test="onlineStatus != null">online_status,</if>
-            <if test="patientPhone != null">patient_phone_aes,</if>
             <if test="ecgLevel != null">ecg_level,</if>
-            <if test="doctorPhone != null">doctor_phone_aes,</if>
+            <if test="pacemaker != null">pacemaker,</if>
+            <if test="uploadTime != null">upload_time,</if>
+            <if test="guardianshipDuration != null">guardianship_duration,</if>
+            <if test="samplingRate != null">sampling_rate,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="detectionState != null">detection_state,</if>
+            <if test="generationTime != null">generation_time,</if>
+            <if test="timeDuration != null">time_duration,</if>
+            <if test="reportState != null">report_state,</if>
+            <if test="patientPhone != null and patientPhone != ''">patient_phone_aes,</if>
+            <if test="sxReportStatus != null">sx_report_status,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="latitude != null">latitude,</if>
             <if test="logDataType != null">log_data_type,</if>
+            <if test="ecgIsLabel != null">ecg_is_label,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="patientCode != null and patientCode != ''">#{patientCode},</if>
+            <if test="pId != null">#{pId},</if>
             <if test="hospitalCode != null and hospitalCode != ''">#{hospitalCode},</if>
             <if test="equipmentCode != null and equipmentCode != ''">#{equipmentCode},</if>
+            <if test="patientCode != null">#{patientCode},</if>
             <if test="connectionTime != null">#{connectionTime},</if>
             <if test="bedNumber != null">#{bedNumber},</if>
             <if test="caseHistoryNumber != null">#{caseHistoryNumber},</if>
             <if test="ecgType != null">#{ecgType},</if>
             <if test="onlineStatus != null">#{onlineStatus},</if>
-            <if test="patientPhone != null">#{patientPhone},</if>
             <if test="ecgLevel != null">#{ecgLevel},</if>
-            <if test="doctorPhone != null">#{doctorPhone},</if>
+            <if test="pacemaker != null">#{pacemaker},</if>
+            <if test="uploadTime != null">#{uploadTime},</if>
+            <if test="guardianshipDuration != null">#{guardianshipDuration},</if>
+            <if test="samplingRate != null">#{samplingRate},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="detectionState != null">#{detectionState},</if>
+            <if test="generationTime != null">#{generationTime},</if>
+            <if test="timeDuration != null">#{timeDuration},</if>
+            <if test="reportState != null">#{reportState},</if>
+            <if test="patientPhone != null and patientPhone != ''">#{patientPhone},</if>
+            <if test="sxReportStatus != null">#{sxReportStatus},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="latitude != null">#{latitude},</if>
             <if test="logDataType != null">#{logDataType},</if>
+            <if test="ecgIsLabel != null">#{ecgIsLabel},</if>
         </trim>
     </insert>
 

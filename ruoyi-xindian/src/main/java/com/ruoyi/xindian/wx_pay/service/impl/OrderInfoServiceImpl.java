@@ -262,7 +262,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             return false;
         }
 
-        int i = sysUserMapper.updateWeeklyNewspaperNum(sysUser.getPhonenumber(),  product.getFrequency() * suborderOrderInfo.getSum());
+        int i = sysUserMapper.updateWeeklyNewspaperNum(userId,  product.getFrequency() * suborderOrderInfo.getSum());
         if (i>0){
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             CompletableFuture.runAsync(() ->{

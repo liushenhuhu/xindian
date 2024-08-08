@@ -1,11 +1,18 @@
 package com.ruoyi.xindian.wSuryvey.service.impl;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.xindian.wSuryvey.domain.WSurveyHistory;
+import com.ruoyi.xindian.wSuryvey.service.WSurveyHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.wSuryvey.mapper.WSurveyMapper;
 import com.ruoyi.xindian.wSuryvey.domain.WSurvey;
 import com.ruoyi.xindian.wSuryvey.service.IWSurveyService;
+
+import javax.annotation.Resource;
 
 /**
  * wSuryveyService业务层处理
@@ -18,6 +25,9 @@ public class WSurveyServiceImpl implements IWSurveyService
 {
     @Autowired
     private WSurveyMapper wSurveyMapper;
+
+    @Resource
+    private WSurveyHistoryService wSurveyHistoryService;
 
     /**
      * 查询wSuryvey
@@ -52,7 +62,23 @@ public class WSurveyServiceImpl implements IWSurveyService
     @Override
     public int insertWSurvey(WSurvey wSurvey)
     {
-        return wSurveyMapper.insertWSurvey(wSurvey);
+        wSurvey.setCreateTime(new Date());
+        int i = wSurveyMapper.insertWSurvey(wSurvey);
+        if (i>0){
+            updateByWSurveyHistory(wSurvey);
+        }
+        return i;
+    }
+
+    private void  updateByWSurveyHistory(WSurvey wSurvey) {
+        List<WSurveyHistory> wSurveyHistories = wSurvey.getwSurveyHistories();
+        wSurveyHistoryService.deleteWSurveyHistoryBywSurveyId(wSurvey.getId());
+        if (wSurveyHistories!=null&&!wSurveyHistories.isEmpty()){
+            wSurveyHistoryService.saveBatch(wSurveyHistories);
+        }
+
+
+
     }
 
     /**
@@ -64,7 +90,11 @@ public class WSurveyServiceImpl implements IWSurveyService
     @Override
     public int updateWSurvey(WSurvey wSurvey)
     {
-        return wSurveyMapper.updateWSurvey(wSurvey);
+        int i = wSurveyMapper.updateWSurvey(wSurvey);
+        if (i>0){
+            updateByWSurveyHistory(wSurvey);
+        }
+        return i;
     }
 
     /**

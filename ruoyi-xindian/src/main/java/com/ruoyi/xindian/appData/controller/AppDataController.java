@@ -182,16 +182,16 @@ public class AppDataController extends BaseController {
         }
 
         List<Patient> patientList = patientService.selectPatientList(patientSel);
-        if (null == patientList || patientList.size() == 0) {
-            Date endDate =new Date();
-            // 创建 Calendar 实例并设置原始日期
-            Calendar calendar = Calendar.getInstance();
-            // 设置日期
-            calendar.setTime(endDate);
-            // 加一年
-            calendar.add(Calendar.YEAR, 1);
-            // 获取加一年后的日期
-            Date newDate = calendar.getTime();
+        if (null == patientList || patientList.isEmpty()) {
+//            Date endDate =new Date();
+//            // 创建 Calendar 实例并设置原始日期
+//            Calendar calendar = Calendar.getInstance();
+//            // 设置日期
+//            calendar.setTime(endDate);
+//            // 加一年
+//            calendar.add(Calendar.YEAR, 1);
+//            // 获取加一年后的日期
+//            Date newDate = calendar.getTime();
 //            patient.setDetectionTime(newDate);
             patientService.insertPatient(patient);
         } else {
@@ -202,7 +202,7 @@ public class AppDataController extends BaseController {
         AppData appDataSel = new AppData();
         appDataSel.setPatientPhone(appData.getPatientPhone());
         List<AppData> appDataList = appDataService.selectAppDataList(appDataSel);
-        if (null == appDataList || appDataList.size() == 0) {
+        if (null == appDataList || appDataList.isEmpty()) {
             res = appDataService.insertAppData(appData);
         } else {
             AppData appData1 = appDataService.selectAppDataByPatientPhone(appData.getPatientPhone());
@@ -211,6 +211,70 @@ public class AppDataController extends BaseController {
         }
         return toAjax(res);
     }
+
+
+
+
+
+
+
+    /**
+     * 新增app相关数据
+     */
+//    @PreAuthorize("@ss.hasPermi('appData:appData:add')")
+//    @Log(title = "app相关数据", businessType = BusinessType.INSERT)
+    @PostMapping("/addQuestionnaireRegister")
+    public AjaxResult addQuestionnaireRegister(@RequestBody AppData appData) throws Exception {
+
+        int res = 0;
+        Patient patient = new Patient();
+        Patient patientSel = new Patient();
+        patient.setPatientNameAes(appData.getPatientName());
+        patient.setPatientPhoneAes(appData.getPatientPhone());
+        if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
+            appData.setUserName(aesUtils.encrypt(appData.getUserName()));
+        }
+        if (appData.getPatientPhone()!=null&&!"".equals(appData.getPatientPhone())){
+            appData.setPatientPhone(aesUtils.encrypt(appData.getPatientPhone()));
+        }
+        if (appData.getPatientName()!=null&&!"".equals(appData.getPatientName())){
+            appData.setPatientName(aesUtils.encrypt(appData.getPatientName()));
+        }
+        if (appData.getFamilyPhone()!=null&&!"".equals(appData.getFamilyPhone())){
+            appData.setFamilyPhone(aesUtils.encrypt(appData.getFamilyPhone()));
+        }
+        patientSel.setPatientPhone(appData.getPatientPhone());
+        patient.setPatientName(appData.getPatientName());
+        patient.setPatientPhone(appData.getPatientPhone());
+        patient.setPatientSex(appData.getPatientSex());
+        patient.setBirthDay(appData.getBirthDay());
+        patient.setFamilyName(appData.getFamilyName());
+        patient.setFamilyPhone(appData.getFamilyPhone());
+        if (appData.getHospital()!=null){
+            patient.setPatientSource(appData.getHospital());
+        }
+        if(appData.getPatientAge() != null){
+            patient.setPatientAge(appData.getPatientAge());
+        }
+
+        Patient patientList = patientService.selectPatientByPatientPhone(patient.getPatientPhone());
+        if (null == patientList) {
+            patientService.insertPatient(patient);
+        } else {
+            patient.setPatientId(patientList.getPatientId());
+            patientService.updatePatient(patient);
+        }
+        AppData appDataList = appDataService.selectAppDataByPatientPhone(appData.getPatientPhone());
+        if (null == appDataList) {
+            res = appDataService.insertAppData(appData);
+        } else {
+            appData.setAppDataId(appDataList.getAppDataId());
+            res = appDataService.updateAppData(appData);
+        }
+        return toAjax(res);
+    }
+
+
 
 
     @GetMapping("/getPatientByCode")

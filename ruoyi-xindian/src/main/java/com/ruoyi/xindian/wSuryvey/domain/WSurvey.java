@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * wSuryvey对象 w_survey
  * 
@@ -70,7 +73,42 @@ public class WSurvey extends BaseEntity
     @Excel(name = "是否脑卒中家族史")
     private Long fammilyCa;
 
-    public void setId(Long id) 
+    /** 低密度脂蛋白胆固醇 */
+    @Excel(name = "低密度脂蛋白胆固醇")
+    private Long lowAlbumen;
+
+    /** 甘油三酯 */
+    @Excel(name = "甘油三酯")
+    private Long triglyceride;
+
+
+    public Long getLowAlbumen() {
+        return lowAlbumen;
+    }
+
+    public void setLowAlbumen(Long lowAlbumen) {
+        this.lowAlbumen = lowAlbumen;
+    }
+
+    public Long getTriglyceride() {
+        return triglyceride;
+    }
+
+    public void setTriglyceride(Long triglyceride) {
+        this.triglyceride = triglyceride;
+    }
+
+    private List<WSurveyHistory> wSurveyHistories = new ArrayList<>();
+
+    public List<WSurveyHistory> getwSurveyHistories() {
+        return wSurveyHistories;
+    }
+
+    public void setwSurveyHistories(List<WSurveyHistory> wSurveyHistories) {
+        this.wSurveyHistories = wSurveyHistories;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
