@@ -18,7 +18,7 @@ public interface WSurveyMapper
      * @return wSuryvey
      */
     public WSurvey selectWSurveyById(Long id);
-    public WSurvey selectWSurveyByPhone(String patientPhone);
+    public List<WSurvey> selectWSurveyByPhone(String patientPhone);
 
     /**
      * 查询wSuryvey列表

@@ -863,7 +863,7 @@ public class ReportController extends BaseController {
 
 
     /**
-     * app选择医师绑定
+     * app选择医师诊断
      *
      * @param report
      * @return
@@ -905,14 +905,17 @@ public class ReportController extends BaseController {
     public AjaxResult appRelationDocUpdateByBinding(@RequestBody Report report, HttpServletRequest request) throws Exception {
 
         LoginUser loginUser = tokenService.getLoginUser(request);
+
         Long userId = loginUser.getUser().getUserId();
+
+        SysUser sysUser = sysUserMapper.selectUserById(userId);
         if (Boolean.TRUE.equals(redisTemplate.hasKey("reportPutAddApp" + userId))) {
             return AjaxResult.error("请勿重复提交");
         }
         redisTemplate.opsForValue().set("reportPutAddApp" + userId, String.valueOf(userId), 5, TimeUnit.SECONDS);
         VipPatient vipPhone = vipPatientService.findVipPhone(loginUser.getUser().getPhonenumber());
         if (vipPhone == null) {
-            if (loginUser.getUser().getDetectionNum() <= 0) {
+            if (sysUser.getDetectionNum() <= 0) {
                 return AjaxResult.error("用户服务次数不足");
             }
         }

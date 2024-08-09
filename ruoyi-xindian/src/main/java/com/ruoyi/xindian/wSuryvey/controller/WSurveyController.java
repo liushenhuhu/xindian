@@ -161,12 +161,8 @@ public class WSurveyController extends BaseController {
     public AjaxResult getScreening(String patientPhone) throws Exception {
         Preconditions.checkNotNull(patientPhone, "用户电话不能为空！");
         patientPhone = aesUtils.encrypt(patientPhone);
-        Patient patient = patientService.selectPatientByPatientPhone(patientPhone);
-        if (patient == null) {
-            return AjaxResult.error("用户不存在！");
-        }
         WSurvey wSurvey = new WSurvey();
-        wSurvey.setPatientPhone(aesUtils.encrypt(patientPhone));
+        wSurvey.setPatientPhone(patientPhone);
         List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey);
         return AjaxResult.success(!wSurveyList.isEmpty());
     }

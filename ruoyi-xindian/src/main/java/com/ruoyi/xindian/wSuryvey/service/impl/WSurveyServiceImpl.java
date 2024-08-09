@@ -124,7 +124,10 @@ public class WSurveyServiceImpl implements IWSurveyService
 
     @Override
     public WSurvey getScreening(String patientPhone) {
-
-        return wSurveyMapper.selectWSurveyByPhone(patientPhone);
+        List<WSurvey> wSurveys = wSurveyMapper.selectWSurveyByPhone(patientPhone);
+        if (wSurveys.isEmpty()){
+            return null;
+        }
+        return wSurveys.get(0);
     }
 }

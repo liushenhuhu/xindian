@@ -90,6 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 w_survey.id = w_survey_history.w_survey_id
         where
             w_survey.patient_phone = #{patientPhone}
+        order by w_survey.id desc
     </select>
 
     <insert id="insertWSurvey" parameterType="WSurvey" useGeneratedKeys="true" keyProperty="id">
