@@ -260,27 +260,30 @@ public class ReportController extends BaseController {
                 weekReport.setPatientPhone(aesUtils.decrypt(report.getPPhone()));
             }
             weekReport.setDiagnosisStatus(Math.toIntExact(report.getDiagnosisStatus()));
-            List<WeekReport> weekReports = weekReportService.selectWeekReportList(weekReport);
-            for (WeekReport wr : weekReports) {
-                reportM = new ReportM();
-                patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(wr.getPatientPhone()));
+            //未诊断才返回周报数据
+            if (weekReport.getDiagnosisStatus() != 1) {
+                List<WeekReport> weekReports = weekReportService.selectWeekReportList(weekReport);
+                for (WeekReport wr : weekReports) {
+                    reportM = new ReportM();
+                    patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(wr.getPatientPhone()));
 
-                reportM.setPPhone(wr.getPatientPhone());
-                reportM.setdPhone(wr.getDoctorPhone());
-                reportM.setDiagnosisStatus(report.getDiagnosisStatus());
-                reportM.setDiagnosisConclusion(wr.getDiagnosisConclusion());
-                reportM.setReportTime(wr.getWeekpdftime());
-                reportM.setWeekReport(true);
-                reportM.setpId(wr.getWeekid());
-                reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
-                reportM.setPatientSex(patient.getPatientSex());
-                birthDay = patient.getBirthDay();
-                if (birthDay != null)
-                    reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
-                else {
-                    reportM.setPatientAge(patient.getPatientAge());
+                    reportM.setPPhone(wr.getPatientPhone());
+                    reportM.setdPhone(wr.getDoctorPhone());
+                    reportM.setDiagnosisStatus(report.getDiagnosisStatus());
+                    reportM.setDiagnosisConclusion(wr.getDiagnosisConclusion());
+                    reportM.setReportTime(wr.getWeekpdftime());
+                    reportM.setWeekReport(true);
+                    reportM.setpId(wr.getWeekid());
+                    reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+                    reportM.setPatientSex(patient.getPatientSex());
+                    birthDay = patient.getBirthDay();
+                    if (birthDay != null)
+                        reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+                    else {
+                        reportM.setPatientAge(patient.getPatientAge());
+                    }
+                    resList.add(reportM);
                 }
-                resList.add(reportM);
             }
         }
         return getTable(resList, new PageInfo(resList).getTotal());

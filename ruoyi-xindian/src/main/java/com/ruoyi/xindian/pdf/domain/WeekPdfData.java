@@ -17,4 +17,6 @@ public class WeekPdfData {
     private String hrv;
     private float[] ecgData;
     private LinkedList<LinkedList<Integer>> rList;
+    private LinkedList<LinkedList<Integer>> fzList;
+    private LinkedList<LinkedList<Integer>> szList;
 }

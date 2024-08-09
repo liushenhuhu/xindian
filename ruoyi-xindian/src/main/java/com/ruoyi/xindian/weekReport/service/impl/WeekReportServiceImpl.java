@@ -21,19 +21,28 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.HorizontalAlignment;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.report.service.IReportService;
 import com.ruoyi.xindian.util.DateUtil;
+import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
+import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.xindian.weekReport.mapper.WeekReportMapper;
 import com.ruoyi.xindian.weekReport.domain.WeekReport;
 import com.ruoyi.xindian.weekReport.service.IWeekReportService;
+
+import javax.annotation.Resource;
 
 /**
  * weekReportService业务层处理
@@ -57,6 +66,18 @@ public class WeekReportServiceImpl implements IWeekReportService {
 
     @Autowired
     private IReportService reportService;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private WXPublicRequest wxPublicRequest;
+
+    @Autowired
+    private IWeekReportService weekReportService;
+
+    @Autowired
+    private ISysUserService sysUserService;
 
     /**
      * 查询weekReport
@@ -122,6 +143,17 @@ public class WeekReportServiceImpl implements IWeekReportService {
         return weekReportMapper.insertWeekReport(weekReport);
     }
 
+    private void WxMsgPut(String patientPhone, String hospitalName, String patientName, String conclusion) {
+        SysUser sysUser2 = sysUserMapper.selectUserByPhone(patientPhone);
+        if (sysUser2 != null) {
+            try {
+                wxPublicRequest.sendMsg(hospitalName, sysUser2.getOpenId(), patientName, "周报检测", conclusion);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
     /**
      * 修改weekReport
      *
@@ -133,56 +165,74 @@ public class WeekReportServiceImpl implements IWeekReportService {
         try {
             if (weekReport.getDoctorPhone() != null)
                 weekReport.setDoctorPhone(aesUtils.encrypt(weekReport.getDoctorPhone()));
-            //修改pdf
-            if (weekReport.getDiagnosisConclusion() != null) {
-
+            //拒绝
+            if (weekReport.getDiagnosisStatus() == 3) {
+                //患者的次数返还
                 WeekReport wP = weekReportMapper.selectWeekReportByWeekId(weekReport.getWeekid());
+                SysUser sysUser = sysUserService.selectUserByPhone(wP.getPatientPhone());
+                sysUser.setWeeklyNewspaperNum(sysUser.getWeeklyNewspaperNum() + 1);
+                sysUserService.updateNum(sysUser);
+                //提醒患者，医生拒绝判读
+                Doctor doctor = doctorService.selectDoctorByDoctorPhone(wP.getDoctorPhone());
+                Patient patient = patientService.selectPatientByPatientPhone(wP.getPatientPhone());
+                WxMsgPut(wP.getPatientPhone(), doctor.getHospital(), aesUtils.decrypt(patient.getPatientName()), "拒绝诊断");
+            } else {
+                //修改pdf
+                if (weekReport.getDiagnosisConclusion() != null) {
+
+                    WeekReport wP = weekReportMapper.selectWeekReportByWeekId(weekReport.getWeekid());
 
 //                Patient patient = patientService.selectPatientByPatientPhone(wP.getDoctorPhone());
-                Doctor doctor = doctorService.selectDoctorByDoctorPhone(wP.getDoctorPhone());
+                    Doctor doctor = doctorService.selectDoctorByDoctorPhone(wP.getDoctorPhone());
 
-                String patientPhone = aesUtils.decrypt(wP.getPatientPhone());
-                String src = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientPhone + "/" + wP.getWeekid() + ".pdf";
-                String dest = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientPhone + "/" + wP.getWeekid() + "_md.pdf";
+                    String patientPhone = aesUtils.decrypt(wP.getPatientPhone());
+                    String src = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientPhone + "/" + wP.getWeekid() + ".pdf";
+                    String dest = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientPhone + "/" + wP.getWeekid() + "_md.pdf";
 
-                PdfReader reader = new PdfReader(src);
-                PdfWriter writer = new PdfWriter(dest);
-                // 使用PdfDocument和Document来添加内容
-                PdfDocument pdfDoc = new PdfDocument(reader, writer);
-                Document document = new Document(pdfDoc);
+                    PdfReader reader = new PdfReader(src);
+                    PdfWriter writer = new PdfWriter(dest);
+                    // 使用PdfDocument和Document来添加内容
+                    PdfDocument pdfDoc = new PdfDocument(reader, writer);
+                    Document document = new Document(pdfDoc);
 //                PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
-                PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
-                PdfCanvas canvas = new PdfCanvas(pdfDoc.getFirstPage());
+                    PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
+                    PdfCanvas canvas = new PdfCanvas(pdfDoc.getFirstPage());
 //                String con = "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊\n断进一步确认.";
-                String[] split = weekReport.getDiagnosisConclusion().split("\n");
-                float x = 50;
-                float y = 585;
-                for (String s : split) {
-                    canvas.beginText().moveText(x, y).setFontAndSize(font, 10)
-                            .showText(s).endText();
-                    y -= 10;
-                }
-                canvas.beginText().moveText(80, 475).setFontAndSize(font, 8)
-                        .showText(aesUtils.decrypt(doctor.getDoctorName())).endText();
+                    String[] split = weekReport.getDiagnosisConclusion().split("\n");
+                    float x = 50;
+                    float y = 585;
+                    for (String s : split) {
+                        canvas.beginText().moveText(x, y).setFontAndSize(font, 10)
+                                .showText(s).endText();
+                        y -= 10;
+                    }
+                    canvas.beginText().moveText(80, 475).setFontAndSize(font, 8)
+                            .showText(aesUtils.decrypt(doctor.getDoctorName())).endText();
 
-                //添加电子签
-                if (doctor.getDzVisa() != null) {
-                    String wdir = "/home/chenpeng/workspace/system/xindian/uploadPath" + doctor.getDzVisa();
-                    ImageData imageData = ImageDataFactory.create(wdir);
-                    Image image = new Image(imageData)
-                            .setFixedPosition(440, 490)
-                            .scaleToFit(100, 100)
-                            .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                            .setRotationAngle(Math.toRadians(90));
-                    document.add(image);
+                    //添加电子签
+                    if (doctor.getDzVisa() != null) {
+                        String wdir = "/home/chenpeng/workspace/system/xindian/uploadPath" + doctor.getDzVisa();
+                        ImageData imageData = ImageDataFactory.create(wdir);
+                        Image image = new Image(imageData)
+                                .setFixedPosition(440, 490)
+                                .scaleToFit(100, 100)
+                                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                                .setRotationAngle(Math.toRadians(90));
+                        document.add(image);
+                    }
+                    // 关闭文档
+                    document.close();
+                    pdfDoc.close();
+                    //复制pdf
+                    pdfDoc = new PdfDocument(new PdfReader(dest), new PdfWriter(src));
+                    pdfDoc.close();
+
+                    //发送消息给患者
+                    Patient patient = patientService.selectPatientByPatientPhone(wP.getPatientPhone());
+                    WxMsgPut(wP.getPatientPhone(), doctor.getHospital(), aesUtils.decrypt(patient.getPatientName()), "诊断完成");
                 }
-                // 关闭文档
-                document.close();
-                pdfDoc.close();
-                //复制pdf
-                pdfDoc = new PdfDocument(new PdfReader(dest), new PdfWriter(src));
-                pdfDoc.close();
             }
+
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -252,8 +302,13 @@ public class WeekReportServiceImpl implements IWeekReportService {
                 report.setStartTime(DateUtil.getDateByLocalDate(s));
                 report.setEndTime(DateUtil.getDateByLocalDate(e));
             }
-
-            Date dd = DateUtil.getNextMonDay(weekReport.getStartTime());
+            Date dd;
+            System.out.println(DateUtil.getWeek(weekReport.getStartTime()));
+            if (DateUtil.getWeek(weekReport.getStartTime()) != 2) {
+                dd = DateUtil.getNextMonDay(weekReport.getStartTime());
+            } else {
+                dd = weekReport.getStartTime();
+            }
             long startTime = dd.getTime();
             int flag = 0;
             for (long t = startTime; t <= weekReport.getEndTime().getTime(); t += 1000 * 60 * 60 * 24 * 7) {
