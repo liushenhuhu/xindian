@@ -377,6 +377,11 @@ let hospName='所有'
 export default {
   data() {
     return {
+      // 路径
+      // 原先的路径
+      // url:'https://server.mindyard.cn:84/detect_decg',
+      // 提高心电大屏的显示速度
+      url: 'https://server.mindyard.cn:84/detect_decg_bgScreen',
       test:1,
       // 版本号
       isFullFlag:false,
@@ -674,7 +679,7 @@ export default {
     async list1(){
       if(this.currentpage[this.pages-1][0]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][0],
             "ts": 0,
@@ -718,7 +723,7 @@ export default {
               chart.resize()
             //第一次请求 请求下个时间段保存到newData
             if(tag===1){
-              this.$http.post('https://server.mindyard.cn:84/detect_decg',
+              this.$http.post(this.url,
                 JSON.stringify({
                   "deviceSn": this.currentpage[this.pages - 1][0],
                   "ts": ts,
@@ -778,7 +783,7 @@ export default {
     async list2(){
       if(this.currentpage[this.pages-1][1]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][1],
             "ts": 0,
@@ -817,7 +822,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][1],
                     "ts": ts,
@@ -869,7 +874,7 @@ export default {
     async list3(){
       if(this.currentpage[this.pages-1][2]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][2],
             "ts": 0,
@@ -908,7 +913,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][2],
                     "ts": ts,
@@ -961,7 +966,7 @@ export default {
     async list4(){
       if(this.currentpage[this.pages-1][3]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][3],
             "ts": 0,
@@ -1000,7 +1005,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][3],
                     "ts": ts,
@@ -1051,7 +1056,7 @@ export default {
     async list5(){
       if(this.currentpage[this.pages-1][4]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][4],
             "ts": 0,
@@ -1090,7 +1095,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][4],
                     "ts": ts,
@@ -1141,7 +1146,7 @@ export default {
     async list6(){
       if(this.currentpage[this.pages-1][5]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][5],
             "ts": 0,
@@ -1180,7 +1185,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][5],
                     "ts": ts,
@@ -1230,7 +1235,7 @@ export default {
     async list7(){
       if(this.currentpage[this.pages-1][6]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][6],
             "ts": 0,
@@ -1269,7 +1274,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][6],
                     "ts": ts,
@@ -1321,7 +1326,7 @@ export default {
     async list8(){
       if(this.currentpage[this.pages-1][7]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][7],
             "ts": 0,
@@ -1359,7 +1364,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][7],
                     "ts": ts,
@@ -1411,7 +1416,7 @@ export default {
     async list9(){
       if(this.currentpage[this.pages-1][8]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][8],
             "ts": 0,
@@ -1449,7 +1454,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][8],
                     "ts": ts,
@@ -1501,7 +1506,7 @@ export default {
     async list10(){
       if(this.currentpage[this.pages-1][9]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][9],
             "ts": 0,
@@ -1539,7 +1544,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][9],
                     "ts": ts,
@@ -1591,7 +1596,7 @@ export default {
     async list11(){
       if(this.currentpage[this.pages-1][10]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][10],
             "ts": 0,
@@ -1629,7 +1634,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][10],
                     "ts": ts,
@@ -1680,7 +1685,7 @@ export default {
     async list12(){
       if(this.currentpage[this.pages-1][11]!==null) {
         const p=this.pages
-        await this.$http.post('https://server.mindyard.cn:84/detect_decg',
+        await this.$http.post(this.url,
           JSON.stringify({
             "deviceSn": this.currentpage[this.pages - 1][11],
             "ts": 0,
@@ -1718,7 +1723,7 @@ export default {
               }
               chart.resize()
               if (tag === 1) {
-                this.$http.post('https://server.mindyard.cn:84/detect_decg',
+                this.$http.post(this.url,
                   JSON.stringify({
                     "deviceSn": this.currentpage[this.pages - 1][11],
                     "ts": ts,
