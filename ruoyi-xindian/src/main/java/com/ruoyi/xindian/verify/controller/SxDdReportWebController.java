@@ -103,9 +103,9 @@ public class SxDdReportWebController extends BaseController
         return toAjax(sxDdReportService.deleteSxDdReportBySxReportIds(sxReportIds));
     }
 
-//    @GetMapping("/getFilePath")
-//    public AjaxResult getFilePath(SxDdReport sxDdReport)
-//    {
-//        return AjaxResult.success(sxDdReportService.getFilePath(sxDdReport));
-//    }
+    @GetMapping("/getFilePath")
+    public AjaxResult getFilePath(SxDdReport sxDdReport)
+    {
+        return AjaxResult.success(sxDdReportService.getFilePath(sxDdReport));
+    }
 }

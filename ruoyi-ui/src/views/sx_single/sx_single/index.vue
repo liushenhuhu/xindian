@@ -96,27 +96,27 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['sx_single:sx_single:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['sx_single:sx_single:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['sx_single:sx_single:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['sx_single:sx_single:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -156,15 +156,16 @@
       <el-table-column label="用户性别" align="center" prop="sex" />
       <el-table-column label="用户生日" align="center" prop="birthday" />
       <el-table-column label="采集时长" align="center" prop="gatherDuration" />
+      <el-table-column label="关联患者id" align="center" prop="pid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['sx_single:sx_single:edit']"
-          >修改</el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['sx_single:sx_single:edit']"-->
+<!--          >修改</el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -172,6 +173,13 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['sx_single:sx_single:remove']"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-share"
+            @click="uploadReport(scope.row)"
+            v-hasPermi="['sx_single:sx_single:remove']"
+          >上传文件</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -230,7 +238,14 @@
 </template>
 
 <script>
-import { listSx_single, getSx_single, delSx_single, addSx_single, updateSx_single } from "@/api/sx_single/sx_single";
+import {
+  listSx_single,
+  getSx_single,
+  delSx_single,
+  addSx_single,
+  updateSx_single,
+  getFilePath
+} from "@/api/sx_single/sx_single";
 
 export default {
   name: "Sx_single",
@@ -376,6 +391,18 @@ export default {
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
+      }).catch(() => {});
+    },
+    uploadReport(row){
+      const sxReportIds = row.sxReportId
+      let obj = {
+        sxReportId:sxReportIds
+      }
+      this.$modal.confirm('是否确认上传善行单导心电贴编号为"' + sxReportIds + '"的数据项？').then(function() {
+        return getFilePath(obj);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("上传成功");
       }).catch(() => {});
     },
     /** 导出按钮操作 */

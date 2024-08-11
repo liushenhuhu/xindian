@@ -626,7 +626,7 @@
         select   DATE_FORMAT(connection_time,'%Y-%m-%d') as date,COUNT(connection_time) as info
         from patient_management m
             inner join patient p on p.patient_phone_aes = m.patient_phone_aes
-            inner join equipment e on m.equipment_code = e.equipment_code
+            left join equipment e on m.equipment_code = e.equipment_code
             left join hospital h on m.hospital_code = h.hospital_code
             left join report r on m.p_id = r.p_id
       <where>
@@ -673,7 +673,7 @@
         end_time, time_duration, d_phone_aes, report_state,patient_symptom,TIMESTAMPDIFF(SECOND,start_time,report_time) as avgTime
         from patient_management m
         inner join patient p on p.patient_phone_aes = m.patient_phone_aes
-        inner join equipment e on m.equipment_code = e.equipment_code
+        left join equipment e on m.equipment_code = e.equipment_code
         left join hospital h on m.hospital_code = h.hospital_code
         left join report r on m.p_id = r.p_id
         <where>

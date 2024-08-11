@@ -19,10 +19,11 @@
         <result property="sex"    column="sex"    />
         <result property="birthday"    column="birthday"    />
         <result property="gatherDuration"    column="gather_duration"    />
+        <result property="pId"    column="p_id"    />
     </resultMap>
 
     <sql id="selectSxDdReportVo">
-        select sx_report_id, order_id, sn, user_id, upload_start, gather_start_time, phone, create_time, pdf_url, file_name, name, sex, birthday, gather_duration from sx_dd_report
+        select sx_report_id, order_id, sn, user_id, upload_start, gather_start_time, phone, create_time, pdf_url, file_name, name, sex, birthday, gather_duration, p_id from sx_dd_report
     </sql>
 
     <select id="selectSxDdReportList" parameterType="SxDdReport" resultMap="SxDdReportResult">
@@ -40,6 +41,7 @@
             <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
             <if test="birthday != null  and birthday != ''"> and birthday = #{birthday}</if>
             <if test="gatherDuration != null  and gatherDuration != ''"> and gather_duration = #{gatherDuration}</if>
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
         </where>
     </select>
 
@@ -64,6 +66,7 @@
             <if test="sex != null">sex,</if>
             <if test="birthday != null">birthday,</if>
             <if test="gatherDuration != null">gather_duration,</if>
+            <if test="pId != null">p_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
@@ -79,6 +82,7 @@
             <if test="sex != null">#{sex},</if>
             <if test="birthday != null">#{birthday},</if>
             <if test="gatherDuration != null">#{gatherDuration},</if>
+            <if test="pId != null">#{pId},</if>
         </trim>
     </insert>
 
@@ -98,6 +102,7 @@
             <if test="sex != null">sex = #{sex},</if>
             <if test="birthday != null">birthday = #{birthday},</if>
             <if test="gatherDuration != null">gather_duration = #{gatherDuration},</if>
+            <if test="pId != null">p_id = #{pId},</if>
         </trim>
         where sx_report_id = #{sxReportId}
     </update>

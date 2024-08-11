@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
@@ -111,8 +112,6 @@ public class SxDdReportController {
         },executorService);
         executorService.shutdown(); // 回收线程池
 
-
-
         return AjaxResult.success();
     }
 
@@ -123,6 +122,10 @@ public class SxDdReportController {
         if (!sxDdReport.getSn().isEmpty() && sxDdReport.getSn().charAt(0) == 'C'){
                 try{
                     SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+
+
+                    String pId = "SX"+ UniqueIdGenerator.generateUniqueId();
+                    downloadPFD(sxDdReport,pId);
 
                     Date parse = simpleDateFormat1.parse(sxDdReport.getBirthday());
 
@@ -140,8 +143,9 @@ public class SxDdReportController {
                         patientService.insertPatient(patient1);
                     }
 
+
                     PatientManagement patientManagement = new PatientManagement();
-                    patientManagement.setpId("SX"+ UniqueIdGenerator.generateUniqueId());
+                    patientManagement.setpId(pId);
                     patientManagement.setHospitalCode("29");
                     patientManagement.setEquipmentCode(sxDdReport.getSn());
 
@@ -158,7 +162,9 @@ public class SxDdReportController {
                     patientManagement.setPatientPhone(encrypt);
                     patientManagementService.insertPatientManagement(patientManagement);
 
-                    downloadPFD(sxDdReport,patientManagement.getpId());
+                    sxDdReport.setPId(pId);
+                    sxDdReportService.updateById(sxDdReport);
+
                 }catch (Exception e){
                     System.out.println(e);
                 }
@@ -167,8 +173,8 @@ public class SxDdReportController {
     }
 
 
-    public void downloadPFD(SxDdReport sxDdReport,String pId)  {
-        try {
+    public void downloadPFD(SxDdReport sxDdReport,String pId) throws Exception {
+
             HttpHeaders headers = new HttpHeaders(); //构建请求头
             String equipmentCodeAccessToken = equipmentHeadingCodeController.getEquipmentCodeAccess_token();
             headers.set("authorization","Bearer "+equipmentCodeAccessToken);
@@ -215,15 +221,16 @@ public class SxDdReportController {
                 if (isSuccessful) {
                     System.out.println("文件上传成功！");
                 } else {
+
                     System.out.println("文件上传失败！");
+                    throw new ServiceException("报告上传失败");
                 }
                 // 返回成功或其他信息，这里应根据业务逻辑返回适当的 AjaxResult
             } else {
                 // 处理下载失败的情况，这里可以根据实际需求进行异常处理或返回适当的信息
+                throw new ServiceException("报告上传失败");
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
 
     }
 

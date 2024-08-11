@@ -60,5 +60,7 @@ public interface SxDdReportService extends IService<SxDdReport> {
      */
     public int deleteSxDdReportBySxReportId(Long sxReportId);
 
+    int getFilePath(SxDdReport sxDdReport);
+
 //    String getFilePath(SxDdReport sxDdReport);
 }

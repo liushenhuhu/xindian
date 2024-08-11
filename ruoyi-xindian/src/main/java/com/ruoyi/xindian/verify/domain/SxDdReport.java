@@ -86,6 +86,8 @@ public class SxDdReport implements Serializable {
      */
     private String gatherDuration;
 
+    private String pId;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

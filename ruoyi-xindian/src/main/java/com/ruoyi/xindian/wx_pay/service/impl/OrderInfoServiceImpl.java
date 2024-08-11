@@ -21,11 +21,14 @@ import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.shipAddress.domain.ShipAddress;
 import com.ruoyi.xindian.shipAddress.mapper.ShipAddressMapper;
+import com.ruoyi.xindian.util.DiscountCalculator;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.vipPatient.controller.SxReportUnscrambleController;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
 import com.ruoyi.xindian.vipPatient.service.SxReportUnscrambleService;
+import com.ruoyi.xindian.wSuryvey.domain.WSurvey;
+import com.ruoyi.xindian.wSuryvey.service.IWSurveyService;
 import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.Product;
@@ -64,6 +67,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private TokenService tokenService;
     @Resource
     private OrderInfoMapper orderInfoMapper;
+
+
+    @Autowired
+    private IWSurveyService wSurveyService;
 
     @Autowired
     private IPatientService patientService;
@@ -643,6 +650,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         LoginUser loginUser = tokenService.getLoginUser(request);
 
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
+        WSurvey wSurvey = new WSurvey();
+        wSurvey.setPatientPhone(sysUser.getPhonenumber());
+        List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey);
+
 
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setPatientPhone(shipAddress.getPatientPhone());
@@ -657,7 +668,15 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setTitle("购买"+product.getProductName());
         orderInfo.setOrderNo(OrderNoUtils.getOrderNo());
         orderInfo.setUserId(loginUser.getUser().getUserId());
-        orderInfo.setTotalFee(new BigDecimal(sum).multiply(product.getDiscount()));
+
+
+        if (wSurveyList!=null&& !wSurveyList.isEmpty()){
+            BigDecimal bigDecimal = DiscountCalculator.calculateDiscount(product.getDiscount(), BigDecimal.valueOf(product.getDiscountPrice()));
+            orderInfo.setTotalFee(new BigDecimal(sum).multiply(bigDecimal));
+        }else {
+            orderInfo.setTotalFee(new BigDecimal(sum).multiply(product.getDiscount()));
+        }
+
         orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
         orderInfo.setOpenId(sysUser.getOpenId());
         orderInfo.setCreateTime(new Date());

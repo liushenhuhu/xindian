@@ -16,7 +16,13 @@ export function getSx_single(sxReportId) {
     method: 'get'
   })
 }
-
+export function getFilePath(data) {
+  return request({
+    url: '/sx_single/sx_single/getFilePath',
+    method: 'get',
+    params: data
+  })
+}
 // 新增善行单导心电贴
 export function addSx_single(data) {
   return request({
