@@ -470,7 +470,7 @@ public class PdfGenerator {
 
     }
 
-    public void createPdf(String fileName, ReportData reportData) throws IOException, ParseException {
+    public void createNewPdf(String fileName, ReportData reportData) throws IOException, ParseException {
         String title = "心电报告";
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
@@ -478,6 +478,212 @@ public class PdfGenerator {
         System.out.println(System.getProperty("user.dir"));
 //        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
+        //设置标题
+        titleSet(doc, title, font);
+        // 创建表格
+        int numColumns = 6;
+        Table table = new Table(numColumns);
+        table.setWidth(UnitValue.createPercentValue(100)); // 表格宽度设置为100%
+//        table.setFixedPosition(1, 1, 1); // 设置表格在页面上的位置（可选）
+        //添加内容
+        contextCell(table, "姓名：" + reportData.getPatientName(), font, 1, 0, 1, 0);
+        contextCell(table, "性别：" + reportData.getGender(), font, 1, 0, 0, 0);
+        contextCell(table, "年龄：" + reportData.getAge(), font, 1, 0, 0, 1);
+        contextCell(table, "病历号：" + reportData.getPid(), font, 0, 0, 1, 0);
+        contextCell(table, "科室：" + reportData.getDepartment(), font, 0, 0, 0, 0);
+        contextCell(table, "病房/病床：" + reportData.getHospitalBed(), font, 0, 0, 0, 1);
+
+        Cell headerCell1 = new Cell(1, 3).add(new Paragraph("临床诊断：" + reportData.getClinicalDiagnosis()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(headerCell1, 0, 0, 1, 0);
+        Cell headerCell2 = new Cell(1, 3).add(new Paragraph("用药：" + reportData.getMedicate()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(headerCell2, 0, 0, 0, 1);
+        table.addCell(headerCell1);
+        table.addCell(headerCell2);
+
+        Cell headerCell3 = new Cell(1, 4).add(new Paragraph("心电检测时间：" + reportData.getDetectionTime()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        Cell headerCell4 = new Cell(1, 2).add(new Paragraph("分析时长：" + reportData.getAnalysisTime()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(headerCell3, 0, 1, 1, 0);
+        vanishLine(headerCell4, 0, 1, 0, 1);
+        table.addCell(headerCell3);
+        table.addCell(headerCell4);
+
+
+        Cell hrHeadCell = new Cell(1, 3).add(new Paragraph("心率").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        vanishLine(hrHeadCell, 1, 0, 1, 1);
+        table.addCell(hrHeadCell);
+        Cell afHeadCell = new Cell(1, 3).add(new Paragraph("房扑/房颤事件").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        vanishLine(afHeadCell, 1, 0, 1, 1);
+        table.addCell(afHeadCell);
+        //心率
+        Cell hrCell = new Cell(1, 3)
+                .add(new Paragraph(
+                        "总心博数：" + reportData.getBeatCount() + "\n" +
+                                "平均心率(bpm)：" + reportData.getMeanHr() + "\n" +
+                                "最快心率(bpm)：" + reportData.getMaxHr() + "\n" +
+                                "最慢心率(bpm)：" + reportData.getMinHr() + "\n" +
+                                "停搏次数(>2.0s)：" + reportData.getCardiacArrestcount() + "\n" +
+                                "最长停搏(s)：" + reportData.getCardiacArrestTime()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(hrCell, 0, 1, 1, 1);
+        table.addCell(hrCell);
+        //房颤、房扑
+        Cell afCell = new Cell(1, 3)
+                .add(new Paragraph(
+                        "房颤总时长：" + reportData.getAfTime() + "\n" +
+                                "房颤最早发生于：" + reportData.getAfStartTime() + "\n" +
+                                "房扑总时长：" + reportData.getApTime() + "\n" +
+                                "房扑最早发生于：" + reportData.getApStartTime()
+//                        "房扑/房颤总阵数：" + reportData.getAfCount() + "\n" +
+//                                "总时长：" + reportData.getAfTime() + "\n" +
+//                                "最快(bpm)：" + reportData.getMaxAf() + "\n" +
+//                                "最慢(bpm)：" + reportData.getMinAf() + "\n" +
+//                                "最长持续时间：" + reportData.getAfLongTime()
+                ).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(afCell, 0, 1, 1, 1);
+        table.addCell(afCell);
+
+        //房性事件
+        Cell cell3 = new Cell(1, 3).add(new Paragraph("心动过速").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        vanishLine(cell3, 1, 0, 1, 1);
+        table.addCell(cell3);
+        Cell cell4 = new Cell(1, 3).add(new Paragraph("心动过缓").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        vanishLine(cell4, 1, 0, 1, 1);
+        table.addCell(cell4);
+        //房性事件
+        Cell cell3_1 = new Cell(1, 3)
+                .add(new Paragraph(
+                        "心动过速占比(%)：" + reportData.getHrFastB() + "\n" +
+                                "心动过速总持续时间：" + reportData.getHrFastTime() + "\n" +
+                                "最长心动过速周期开始时间：" + reportData.getHrFastStartTime() + "\n" +
+                                "最长心动过速周期结束时间：" + reportData.getHrFastEndTime() + "\n" +
+                                "最长心动过速周期持续时间(分钟)：" + reportData.getHrFastContinueTime()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(cell3_1, 0, 1, 1, 1);
+        table.addCell(cell3_1);
+        //室性事件
+        Cell cell4_1 = new Cell(1, 3)
+                .add(new Paragraph(
+                        "心动过缓占比：" + reportData.getHrSlowB() + "%\n" +
+                                "心动过缓总持续时间：" + reportData.getHrSlowTime() + "\n" +
+                                "最长心动过缓周期开始时间：" + reportData.getHrSlowStartTime() + "\n" +
+                                "最长心动过缓周期结束时间：" + reportData.getHrSlowEndTime() + "\n" +
+                                "最长心动过缓周期持续时间(分钟)" + reportData.getHrSlowContinueTime()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(cell4_1, 0, 1, 1, 1);
+        table.addCell(cell4_1);
+
+
+        //交界性事件
+//        Cell cell5 = new Cell(1, 3).add(new Paragraph("室性异位心律").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+//        vanishLine(cell5, 1, 0, 1, 1);
+//        table.addCell(cell5);
+        Cell cell6 = new Cell(1, 3).add(new Paragraph("室上性异位心律").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        vanishLine(cell6, 1, 0, 1, 1);
+        table.addCell(cell6);
+        Cell cell8 = new Cell(1, 3).add(new Paragraph("心率变异性").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        vanishLine(cell8, 1, 0, 1, 1);
+        table.addCell(cell8);
+//        //房性事件
+//        Cell cell5_1 = new Cell(1, 3)
+//                .add(new Paragraph(
+//                        "总数(次)：" + reportData.getVeCount() + "\n" +
+//                                "室性百分比(%)：" + reportData.getVeB() + "\n" +
+//                                "单发(次)：" + reportData.getVeDf() + "\n" +
+//                                "成对(次)：" + reportData.getVeDouble() + "\n" +
+//                                "短阵性室速(阵)：" + reportData.getVevt() + "\n" +
+//                                "二联律(阵)：" + reportData.getVeBigeminy() + "\n" +
+//                                "三联律(阵)：" + reportData.getVeTrigeminy() + "").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+//        vanishLine(cell5_1, 0, 1, 1, 1);
+//        table.addCell(cell5_1);
+        //室性事件
+        Cell cell6_1 = new Cell(1, 3)
+                .add(new Paragraph(
+                        "总数(次)：" + reportData.getSeCount() + "\n" +
+                                "室性百分比(%)：" + reportData.getSeB() + "\n" +
+                                "单发(次)：" + reportData.getSeDf() + "\n" +
+                                "成对(次)：" + reportData.getSeDouble() + "\n" +
+                                "短阵性室速(阵)：" + reportData.getSevt() + "\n" +
+                                "二联律(阵)：" + reportData.getSeBigeminy() + "\n" +
+                                "三联律(阵)：" + reportData.getSeTrigeminy() + "").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(cell6_1, 0, 1, 1, 1);
+        table.addCell(cell6_1);
+
+
+        //室性事件
+        Cell cell8_1 = new Cell(1, 3)
+                .add(new Paragraph(
+                        "SDNN(ms)：" + reportData.getSdnn() + "\n" +
+                                "rMSSD(ms)：" + reportData.getRmssd() + "\n" +
+                                "NN20(ms)：" + reportData.getNn20() + "\n" +
+                                "PNN20(%)：" + reportData.getPnn20() + "\n" +
+                                "NN50(ms)：" + reportData.getNn50() + "\n" +
+                                "PNN50(%)：" + reportData.getPnn50()
+                ).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+//        Cell cell8_2 = new Cell(1, 2)
+//                .add(new Paragraph(
+//                        "NN20(ms)：" + reportData.getNn20() + "\n" +
+//                                "PNN20(%)：" + reportData.getPnn20()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+//        Cell cell8_3 = new Cell(1, 2)
+//                .add(new Paragraph(
+//                        "NN50(ms)：" + reportData.getNn50() + "\n" +
+//                                "PNN50(%)：" + reportData.getPnn50()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(cell8_1, 0, 1, 1, 1);
+//        vanishLine(cell8_2, 0, 1, 0, 0);
+//        vanishLine(cell8_3, 0, 1, 0, 1);
+        table.addCell(cell8_1);
+//        table.addCell(cell8_2);
+//        table.addCell(cell8_3);
+
+
+        //结论
+        Table table1 = new Table(numColumns);
+        table1.setWidth(UnitValue.createPercentValue(100));
+        Cell con = new Cell(1, 6).add(new Paragraph("结论").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(16));
+        table1.addCell(con);
+        Cell text = new Cell(4, 6).add(
+                new Paragraph(reportData.getConclusion()).setPaddingLeft(10).setHeight(180).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+//      reportData.getConclusion()
+        table1.addCell(text);
+        Cell name = new Cell(1, 3).add(new Paragraph("签名：").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(8));
+        name.setBorderRight(Border.NO_BORDER);
+        table1.addCell(name);
+        Cell time = new Cell(1, 3).add(new Paragraph("日期：" + reportData.getReportTime()).setPaddingRight(5).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(8));
+        time.setBorderLeft(Border.NO_BORDER);
+        table1.addCell(time);
+
+        // 使用Div容器来居中表格
+        Div div = new Div();
+        div.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
+        div.add(table); // 将表格添加到Div中
+        div.add(new Paragraph().setMarginBottom(5));
+        div.add(table1); // 将表格添加到Div中
+        // 将Div添加到文档中
+        doc.add(div);
+        doc.add(new AreaBreak());
+//        //心率失常统计表
+//        arrhythmiaTable(doc, font, reportData);
+//        doc.add(new AreaBreak());
+        //趋势波形图
+        waveformTable(doc, font, reportData);
+        doc.add(new AreaBreak());
+        //心率变异性时域分析
+        HRVTimeTable(doc, font, reportData);
+        doc.add(new AreaBreak());
+//        //心率变异性频域分析
+//        HRVFrequencyTable(doc, font);
+//        doc.add(new AreaBreak());
+        //心电片段
+        ECGTable(doc, font, pdfDoc, reportData);
+        // 关闭文档
+        doc.close();
+    }
+
+
+    public void createPdf(String fileName, ReportData reportData) throws IOException, ParseException {
+        String title = "心电报告";
+        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
+        Document doc = new Document(pdfDoc, PageSize.A4);
+        // 设置字体  simhei.ttf黑体  SimSun宋体
+        System.out.println(System.getProperty("user.dir"));
+        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
+//        PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         //设置标题
         titleSet(doc, title, font);
         // 创建表格
@@ -570,7 +776,7 @@ public class PdfGenerator {
         vanishLine(cell4_1, 0, 1, 1, 1);
         table.addCell(cell4_1);
 
-        //房性事件
+        //交界性事件
         Cell cell5 = new Cell(1, 3).add(new Paragraph("交界性事件").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
         vanishLine(cell5, 1, 0, 1, 1);
         table.addCell(cell5);
@@ -606,7 +812,8 @@ public class PdfGenerator {
         Cell con = new Cell(1, 6).add(new Paragraph("结论").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(16));
         table1.addCell(con);
         Cell text = new Cell(4, 6).add(
-                new Paragraph(reportData.getConclusion()).setPaddingLeft(10).setHeight(180).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+                new Paragraph("").setPaddingLeft(10).setHeight(180).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+//      reportData.getConclusion()
         table1.addCell(text);
         Cell name = new Cell(1, 3).add(new Paragraph("签名：").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(8));
         name.setBorderRight(Border.NO_BORDER);
@@ -625,8 +832,8 @@ public class PdfGenerator {
         doc.add(div);
         doc.add(new AreaBreak());
         //心率失常统计表
-        arrhythmiaTable(doc, font, reportData);
-        doc.add(new AreaBreak());
+//        arrhythmiaTable(doc, font, reportData);
+//        doc.add(new AreaBreak());
         //趋势波形图
         waveformTable(doc, font, reportData);
         doc.add(new AreaBreak());
@@ -817,6 +1024,15 @@ public class PdfGenerator {
         return dataset;
     }
 
+    private static DefaultCategoryDataset getBarDatasetNN(List<LinkedList<Integer>> list) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (LinkedList<Integer> integers : list) {
+            dataset.addValue(integers.get(1), "", integers.get(0) + "-" + (integers.get(0) + 200));
+        }
+        return dataset;
+    }
+
+
     //趋势波形图
     private void waveformTable(Document doc, PdfFont font, ReportData reportData) {
         //设置标题
@@ -926,13 +1142,11 @@ public class PdfGenerator {
         titleSet_s(doc, "心率变异性时域分析", font);
         ByteArrayOutputStream barBos = new ByteArrayOutputStream();
         if (reportData.getNnList() == null) reportData.setNnList(new LinkedList<>());
-        DefaultCategoryDataset barDataset = getBarDataset(reportData.getNnList());
-        int maxNN = reportData.getNnList().isEmpty() ? 0 : Collections.max(reportData.getNnList());
-        if (maxNN % 10 != 0) maxNN = (maxNN / 10 + 1) * 10;
-        int minNN = reportData.getNnList().isEmpty() ? 0 : Collections.min(reportData.getNnList());
-        if (minNN % 10 != 0) minNN = (minNN / 10) * 10;
+        DefaultCategoryDataset barDataset = getBarDatasetNN(reportData.getNnList());
 
-        BufferedImage bar = ChartUtil.NNChart("NN间期直方图", "NN间期(ms)", "NN间期数", barDataset, maxNN, minNN, (maxNN - minNN) / 5).createBufferedImage(1600, 500);
+        BufferedImage bar = ChartUtil.NNChart("NN间期直方图", "NN间期(ms)", "NN间期数",
+                barDataset, Integer.parseInt(reportData.getMaxNN()), Integer.parseInt(reportData.getMinNN()),
+                (Integer.parseInt(reportData.getMaxNN()) - Integer.parseInt(reportData.getMinNN())) / 5).createBufferedImage(1600, 500);
         ImageIO.write(bar, "png", barBos);
         Image barimage = new Image(ImageDataFactory.create(barBos.toByteArray()));
         // 调整图像在PDF中的大小以适应页面
@@ -1182,7 +1396,12 @@ public class PdfGenerator {
             for (double j = x + 3; j < x + width; j += 3) {
                 indey++;
                 if (indey % 5 == 0) continue;
-                pdfCanvas.circle(j, i, 0.2);
+                rectangle.setX((float) j);
+                rectangle.setY((float) i);
+                rectangle.setHeight(0.2f);
+                rectangle.setWidth(0.2f);
+                pdfCanvas.rectangle(rectangle);
+//                pdfCanvas.circle(j, i, 0.2);
                 pdfCanvas.fill();
             }
         }
@@ -1202,10 +1421,10 @@ public class PdfGenerator {
                 .moveText(x + width / 2 - 15, y + 4)
                 .showText(title)
                 .endText();
-        pdfCanvas.beginText()
-                .moveText(x + 30, y - height + 5)
-                .showText("平均心率: " + hr + " bpm")
-                .endText();
+//        pdfCanvas.beginText()
+//                .moveText(x + 30, y - height + 5)
+//                .showText("平均心率: " + hr + " bpm")
+//                .endText();
         //画心电图
         pdfCanvas.setFontAndSize(font, 6);
         pdfCanvas.setFillColor(ColorConstants.BLACK);
