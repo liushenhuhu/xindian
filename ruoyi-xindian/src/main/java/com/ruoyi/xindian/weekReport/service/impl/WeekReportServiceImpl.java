@@ -23,6 +23,7 @@ import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.ISysUserService;
@@ -99,9 +100,9 @@ public class WeekReportServiceImpl implements IWeekReportService {
     @Override
     public List<WeekReport> selectWeekReportList(WeekReport weekReport) {
         try {
-            if (weekReport.getPatientPhone() != null)
+            if (StringUtils.isNotEmpty(weekReport.getPatientPhone()))
                 weekReport.setPatientPhone(aesUtils.encrypt(weekReport.getPatientPhone()));
-            if (weekReport.getDoctorPhone() != null)
+            if (StringUtils.isNotEmpty(weekReport.getDoctorPhone()))
                 weekReport.setDoctorPhone(aesUtils.encrypt(weekReport.getDoctorPhone()));
         } catch (Exception ignored) {
         }

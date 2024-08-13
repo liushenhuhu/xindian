@@ -45,9 +45,6 @@ public class WSurveyController extends BaseController {
     @Autowired
     private AesUtils aesUtils;
 
-    @Autowired
-    private IPatientService patientService;
-
     /**
      * 查询wSuryvey列表
      */
@@ -56,27 +53,11 @@ public class WSurveyController extends BaseController {
     public TableDataInfo list(WSurvey wSurvey) throws Exception {
         if (wSurvey.getPatientPhone() != null)
             wSurvey.setPatientPhone(aesUtils.encrypt(wSurvey.getPatientPhone()));
-//        Patient patient = patientService.selectPatientByPatientPhone(wSurvey.getPatientPhone());
-//        //身份证
-//        String patientCode = patient.getPatientCode();
-//        if (patientCode == null || patientCode.contains("**")) {
-//            patientCode = "";
-//        } else {
-//            patientCode = aesUtils.decrypt(patientCode);
-//        }
-//        //地址
-//        String patientSource = patient.getPatientSource();
-//
-//        WSurveyDTO wSurveyDTO;
-//        LinkedList<WSurveyDTO> res = new LinkedList<>();
+
         startPage();
         List<WSurvey> list = wSurveyService.selectWSurveyList(wSurvey);
         for (WSurvey survey : list) {
             survey.setPatientPhone(aesUtils.decrypt(survey.getPatientPhone()));
-//            wSurveyDTO = WSurveyDTOConverter.INSTANCE.covertEntertyTODTO(survey);
-//            wSurveyDTO.setAddr(patientSource);
-//            wSurveyDTO.setPatientCode(patientCode);
-//            res.add(wSurveyDTO);
         }
         return getDataTable(list);
     }
@@ -98,8 +79,12 @@ public class WSurveyController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('system:survey:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(wSurveyService.selectWSurveyById(id));
+    public AjaxResult getInfo(@PathVariable("id") Long id) throws Exception {
+        WSurvey wSurvey = wSurveyService.selectWSurveyById(id);
+        if (wSurvey!=null){
+            wSurvey.setPatientPhone(aesUtils.decrypt(wSurvey.getPatientPhone()));
+        }
+        return AjaxResult.success(wSurvey);
     }
 
     /**
@@ -108,7 +93,8 @@ public class WSurveyController extends BaseController {
 //    @PreAuthorize("@ss.hasPermi('system:survey:add')")
     @Log(title = "wSuryvey", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WSurvey wSurvey) {
+    public AjaxResult add(@RequestBody WSurvey wSurvey) throws Exception {
+        wSurvey.setPatientPhone(aesUtils.encrypt(wSurvey.getPatientPhone()));
         return toAjax(wSurveyService.insertWSurvey(wSurvey));
     }
 
@@ -141,13 +127,16 @@ public class WSurveyController extends BaseController {
     }
 
     private AjaxResult getAjaxResult(WSurvey wSurvey) throws Exception {
-        if (wSurvey.getId() == null) {
-            Preconditions.checkNotNull(wSurvey.getPatientPhone(), "用户电话不能为空！");
-            wSurvey.setPatientPhone(aesUtils.encrypt(wSurvey.getPatientPhone()));
-            return toAjax(wSurveyService.insertWSurvey(wSurvey));
-        } else {
-            wSurvey.setPatientPhone(null);
+        Preconditions.checkNotNull(wSurvey.getPatientPhone(), "用户电话不能为空！");
+        wSurvey.setPatientPhone(aesUtils.encrypt(wSurvey.getPatientPhone()));
+        WSurvey wSurvey1 = new WSurvey();
+        wSurvey1.setPatientPhone(wSurvey.getPatientPhone());
+        List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey1);
+        if (!wSurveyList.isEmpty()){
+            wSurvey.setId(wSurveyList.get(0).getId());
             return toAjax(wSurveyService.updateWSurvey(wSurvey));
+        }else {
+            return toAjax(wSurveyService.insertWSurvey(wSurvey));
         }
     }
 

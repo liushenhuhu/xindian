@@ -7,7 +7,8 @@ public class DiscountCalculator {
 
 
     public static void main(String[] args) {
-        calculateDiscount(new BigDecimal("699.00"), new BigDecimal("60.00"));
+        BigDecimal bigDecimal = calculateDiscount(new BigDecimal("59900.00"), new BigDecimal("60.00"));
+        System.out.println(bigDecimal);
     }
 
     public static BigDecimal calculateDiscount(BigDecimal originalPrice, BigDecimal discountPercentage) {
@@ -34,6 +35,6 @@ public class DiscountCalculator {
         // 输出结果
         System.out.println("原值: " + discountAmount);
         System.out.println("进位后的整数值: " + roundedValue);
-        return roundedValue;
+        return roundedValue.multiply(new BigDecimal("100"));
     }
 }

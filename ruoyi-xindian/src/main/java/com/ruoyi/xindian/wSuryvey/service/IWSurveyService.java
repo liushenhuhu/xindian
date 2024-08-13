@@ -43,6 +43,7 @@ public interface IWSurveyService
      */
     public int updateWSurvey(WSurvey wSurvey);
 
+
     /**
      * 批量删除wSuryvey
      * 

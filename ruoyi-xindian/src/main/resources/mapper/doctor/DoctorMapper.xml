@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="specialId"    column="special_id"    />
         <result property="accountStatus"    column="account_status"    />
         <result property="dzVisa"    column="dz_visa"    />
+        <result property="userId"    column="user_id"    />
     </resultMap>
 
     <sql id="selectDoctorVo">
@@ -57,14 +58,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         doctor.dz_visa,
         department.department_name,
         department.hospital_code,
+        sys_user.user_id,
         department.department_id
-
         FROM
         department
-        INNER JOIN
+        right JOIN
         doctor
         ON
         doctor.department_code = department.department_code
+        LEFT JOIN
+        sys_user
+        ON
+        sys_user.user_name_aes = doctor.doctor_phone_aes
         <where>
             <if test="doctorName != null  and doctorName != ''"> and doctor_name_aes like concat('%', #{doctorName}, '%')</if>
             <if test="outpatientId != null  and outpatientId != ''"> and outpatient_id =  #{outpatientId} </if>

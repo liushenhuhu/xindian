@@ -95,10 +95,20 @@ public class Doctor extends BaseEntity
 
     private String accountStatus;
 
+
+    private Long userId;
     /**
      * 电子签地址
      */
     private String dzVisa;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getDzVisa() {
         return dzVisa;

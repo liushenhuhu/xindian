@@ -289,6 +289,120 @@ public class ReportController extends BaseController {
         return getTable(resList, new PageInfo(resList).getTotal());
     }
 
+
+
+
+    @GetMapping("/web/list")
+    public TableDataInfo getWebList(Report report) throws Exception {
+
+        if (report.getdPhone() != null && !"".equals(report.getdPhone())) {
+            report.setdPhone(aesUtils.encrypt(report.getdPhone()));
+        }
+
+        if (report.getPPhone() != null && !"".equals(report.getPPhone())) {
+            report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+        }
+        List<Report> list;
+        startPage();
+        list = reportService.selectReportList(report);
+
+        ArrayList<ReportM> resList = new ArrayList<>();
+
+        PatientManagement patientManagement;
+        Patient patient;
+        Date birthDay;
+        ReportM reportM;
+        for (Report r : list) {
+            reportM = new ReportM();
+            patientManagement = patientManagementService.selectPatientManagementByPId(r.getpId());
+            if (r.getPPhone() != null && !"".equals(r.getPPhone())) {
+                r.setPPhone(aesUtils.decrypt(r.getPPhone()));
+            }
+            if (r.getdPhone() != null && !"".equals(r.getdPhone())) {
+                r.setdPhone(aesUtils.decrypt(r.getdPhone()));
+            }
+            if (r.getDiagnosisDoctor() != null && !"".equals(r.getDiagnosisDoctor())) {
+                r.setDiagnosisDoctor(aesUtils.decrypt(r.getDiagnosisDoctor()));
+            }
+            BeanUtils.copyProperties(r, reportM);
+            if (patientManagement != null) {
+                patient = patientService.selectPatientByPatientPhone(patientManagement.getPatientPhone());
+                if (patientManagement.getPatientPhone() != null && !"".equals(patientManagement.getPatientPhone())) {
+                    patientManagement.setPatientPhone(aesUtils.decrypt(patientManagement.getPatientPhone()));
+                }
+                if (patientManagement.getPatientName() != null && !"".equals(patientManagement.getPatientName())) {
+                    patientManagement.setPatientName(aesUtils.decrypt(patientManagement.getPatientName()));
+                }
+
+                if (patientManagement.getDiagnosisDoctor() != null && !"".equals(patientManagement.getDiagnosisDoctor())) {
+                    patientManagement.setDiagnosisDoctor(aesUtils.decrypt(patientManagement.getDiagnosisDoctor()));
+                }
+                if (patientManagement.getDoctorPhone() != null && !"".equals(patientManagement.getDoctorPhone())) {
+                    patientManagement.setDoctorPhone(aesUtils.decrypt(patientManagement.getDoctorPhone()));
+                }
+                birthDay = patient.getBirthDay();
+                if (birthDay != null)
+                    reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+                else {
+                    reportM.setPatientAge(patient.getPatientAge());
+                }
+                reportM.setPatientPhone(patientManagement.getPatientPhone());
+                reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+                reportM.setPatientSex(patient.getPatientSex());
+            }
+            reportM.setWeekReport(false);
+            resList.add(reportM);
+        }
+
+
+
+            WeekReport weekReport = new WeekReport();
+            if (!SysUser.isAdmin(getUserId())){
+                weekReport.setDoctorPhone(getUsername());
+            }else {
+                weekReport.setDoctorPhone(aesUtils.decrypt(report.getdPhone()));
+            }
+
+            if (report.getPPhone() != null && !report.getPPhone().isEmpty()) {
+                weekReport.setPatientPhone(aesUtils.decrypt(report.getPPhone()));
+            }
+            weekReport.setDiagnosisStatus(Math.toIntExact(report.getDiagnosisStatus()));
+            //未诊断才返回周报数据
+            if (weekReport.getDiagnosisStatus() != 1) {
+                List<WeekReport> weekReports = weekReportService.selectWeekReportList(weekReport);
+                for (WeekReport wr : weekReports) {
+                    reportM = new ReportM();
+                    patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(wr.getPatientPhone()));
+                    Doctor doctor = doctorService.selectDoctorByDoctorPhone(aesUtils.encrypt(wr.getDoctorPhone()));
+                    reportM.setPPhone(wr.getPatientPhone());
+                    reportM.setdPhone(wr.getDoctorPhone());
+                    reportM.setDiagnosisStatus(report.getDiagnosisStatus());
+                    if (doctor!=null){
+                        reportM.setDiagnosisDoctor(aesUtils.decrypt(doctor.getDoctorName()));
+                    }
+                    reportM.setReportType("week");
+                    reportM.setDiagnosisConclusion(wr.getDiagnosisConclusion());
+                    reportM.setReportTime(wr.getWeekpdftime());
+                    reportM.setWeekReport(true);
+                    reportM.setpId(wr.getWeekid());
+                    if (patient!=null){
+                        reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+                        reportM.setPatientSex(patient.getPatientSex());
+                        birthDay = patient.getBirthDay();
+                        if (birthDay != null)
+                            reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+                        else {
+                            reportM.setPatientAge(patient.getPatientAge());
+                        }
+                    }
+
+                    resList.add(reportM);
+                }
+
+        }
+        return getTable(resList, new PageInfo(resList).getTotal());
+    }
+
     /**
      * 导出报告列表
      */

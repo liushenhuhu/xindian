@@ -98,6 +98,8 @@ public class WSurveyServiceImpl implements IWSurveyService
         return i;
     }
 
+
+
     /**
      * 批量删除wSuryvey
      * 
@@ -107,7 +109,10 @@ public class WSurveyServiceImpl implements IWSurveyService
     @Override
     public int deleteWSurveyByIds(Long[] ids)
     {
-        return wSurveyMapper.deleteWSurveyByIds(ids);
+        for (Long id : ids) {
+            deleteWSurveyById(id);
+        }
+        return 1;
     }
 
     /**
@@ -119,6 +124,7 @@ public class WSurveyServiceImpl implements IWSurveyService
     @Override
     public int deleteWSurveyById(Long id)
     {
+        wSurveyHistoryService.deleteWSurveyHistoryBywSurveyId(id);
         return wSurveyMapper.deleteWSurveyById(id);
     }
 

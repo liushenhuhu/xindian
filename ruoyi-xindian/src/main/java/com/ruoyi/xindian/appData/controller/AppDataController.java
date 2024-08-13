@@ -228,7 +228,6 @@ public class AppDataController extends BaseController {
 
         int res = 0;
         Patient patient = new Patient();
-        Patient patientSel = new Patient();
         patient.setPatientNameAes(appData.getPatientName());
         patient.setPatientPhoneAes(appData.getPatientPhone());
         if (appData.getUserName()!=null&&!"".equals(appData.getUserName())){
@@ -243,13 +242,13 @@ public class AppDataController extends BaseController {
         if (appData.getFamilyPhone()!=null&&!"".equals(appData.getFamilyPhone())){
             appData.setFamilyPhone(aesUtils.encrypt(appData.getFamilyPhone()));
         }
-        patientSel.setPatientPhone(appData.getPatientPhone());
         patient.setPatientName(appData.getPatientName());
         patient.setPatientPhone(appData.getPatientPhone());
         patient.setPatientSex(appData.getPatientSex());
         patient.setBirthDay(appData.getBirthDay());
         patient.setFamilyName(appData.getFamilyName());
         patient.setFamilyPhone(appData.getFamilyPhone());
+        patient.setPatientCode(appData.getPatientCode());
         if (appData.getHospital()!=null){
             patient.setPatientSource(appData.getHospital());
         }

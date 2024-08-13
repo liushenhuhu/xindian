@@ -12,10 +12,11 @@
         <result property="diagnosisStatus" column="diagnosis_status"/>
         <result property="diagnosisConclusion" column="diagnosis_conclusion"/>
         <result property="weekpdftime" column="weekpdftime"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectWeekReportVo">
-        select id, weekid, patient_phone, doctor_phone, diagnosis_status, diagnosis_conclusion, weekpdftime
+        select id, weekid, patient_phone, doctor_phone, diagnosis_status, diagnosis_conclusion, weekpdftime,update_time
         from week_report
     </sql>
 
@@ -96,6 +97,7 @@
             <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
             <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
             <if test="weekpdftime != null">weekpdftime = #{weekpdftime},</if>
+            update_time = now()
         </trim>
         where weekid = #{weekid}
     </update>

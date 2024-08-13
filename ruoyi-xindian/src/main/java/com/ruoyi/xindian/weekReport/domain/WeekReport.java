@@ -66,4 +66,6 @@ public class WeekReport extends BaseEntity {
 
     //是否存在数据
     private boolean hData;
+
+    private Date updateTime;
 }

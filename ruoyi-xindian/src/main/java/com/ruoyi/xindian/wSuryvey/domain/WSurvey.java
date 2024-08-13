@@ -54,7 +54,7 @@ public class WSurvey extends BaseEntity
     private Long systolicBlood;
 
     /** 复用降压药 */
-    @Excel(name = "复用降压药")
+    @Excel(name = "服用降压药")
     private Integer hypotensiveDrugs;
 
     /** 是否糖尿病 */
@@ -81,6 +81,18 @@ public class WSurvey extends BaseEntity
     @Excel(name = "甘油三酯")
     private Long triglyceride;
 
+    /** 身份证号 */
+    @Excel(name = "身份证号")
+    private String patientCode;
+
+
+    public String getPatientCode() {
+        return patientCode;
+    }
+
+    public void setPatientCode(String patientCode) {
+        this.patientCode = patientCode;
+    }
 
     private List<WSurveyHistory> wSurveyHistories = new ArrayList<>();
 
