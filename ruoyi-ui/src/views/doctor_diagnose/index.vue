@@ -132,3 +132,12 @@ export default {
   },
 }
 </script>
+<style scoped lang="scss">
+
+::v-deep .el-tabs__item{
+  color: #909399 !important;
+}
+::v-deep .is-active{
+  color: #2e7dc9 !important;
+}
+</style>
