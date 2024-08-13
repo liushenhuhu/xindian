@@ -1,47 +1,36 @@
 <template>
   <div class="app-container">
-
-
     <div>
       <div class="box">
         <div class="touzuo">
-          <div class="touzuo-top">
-            <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card">
-              <el-tab-pane label="基本信息" name="userInfo">
-                <div class="tabBox">
-                  <table>
-                    <tr>
-                      <td>姓名</td>
-                      <td v-if="isShowName.status === true">{{ data.name }}</td>
-                      <td v-else>{{ hideMiddleName(data.name) }}</td>
-                      <td>性别</td>
-                      <td>{{ data.gender }}</td>
-                      <td>患者病史</td>
-                      <td>{{ getMH(dict.type.medical_history) }}</td>
-                    </tr>
-                    <tr>
-                      <td>报告编码</td>
-                      <td>{{ data.pId }}</td>
-                      <td>年龄</td>
-                      <td>{{ data.age }}</td>
-                      <td>患者症状</td>
-                      <td>{{ data.patientSymptom }}</td>
-                    </tr>
-                  </table>
-                </div>
-              </el-tab-pane>
-            </el-tabs>
+          <div class="touzuobiaoti">
+            <div>基本信息</div>
           </div>
+              <table class="tabBox">
+                <tr>
+                  <td>姓名</td>
+                  <td v-if="isShowName.status === true">{{ data.name }}</td>
+                  <td v-else>{{ hideMiddleName(data.name) }}</td>
+                  <td>性别</td>
+                  <td>{{ data.gender }}</td>
+                  <td>患者病史</td>
+                  <td>{{ getMH(dict.type.medical_history) }}</td>
+                </tr>
+                <tr>
+                  <td>报告编码</td>
+                  <td>{{ data.pId }}</td>
+                  <td>年龄</td>
+                  <td>{{ data.age }}</td>
+                  <td>患者症状</td>
+                  <td>{{ data.patientSymptom }}</td>
+                </tr>
+              </table>
+
         </div>
 
         <div class="touyou">
           <div class="touzuobiaoti">
             <div>医师诊断</div>
-            <div>
-<!--              <el-button type="success" plain icon="el-icon-view" size="mini" @click="isShowNameClick"-->
-<!--                         v-if="true">{{ isShowName.name }}-->
-<!--              </el-button>-->
-            </div>
           </div>
           <div class="mt">
             <el-input type="textarea" v-model="data.diagnosisConclusion" placeholder="请输入" data-value="1111" :rows="5"
@@ -52,32 +41,19 @@
           <div class="doctor">
             <div class="input yishi">
               <strong>医师:</strong>
-              <!--<el-select v-model="data.doctorName" clearable style="width: 66%">
-                <el-option
-                  v-for="item in options"
-                  :label="item.doctorName"
-                  :value="item.doctorName">
-                </el-option>
-              </el-select>-->
               <el-cascader v-model="data.doctorName" :options="doctorList" @change="selectDoctorChange"
                            :show-all-levels="false">
               </el-cascader>
             </div>
-<!--            <div class="input">-->
-<!--              <strong>日期:</strong>-->
-<!--              <el-input v-if="data.diagnosisData != null" v-model="data.diagnosisData" clearable-->
-<!--                        style="width: 66%"></el-input>-->
-<!--              <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>-->
-<!--            </div>-->
+            <div class="input">
+              <strong>日期:</strong>
+              <el-input v-if="data.diagnosisData != null" v-model="data.diagnosisData" clearable
+                        style="width: 66%"></el-input>
+              <el-input v-else v-model="data.dataTime" clearable ></el-input>
+            </div>
           </div>
 
           <div class="oder">
-<!--            <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">-->
-<!--              <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">-->
-<!--                <i class="el-icon-question"></i>-->
-<!--              </el-tooltip>-->
-<!--              发送预警-->
-<!--            </el-button>-->
             <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
             <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
           </div>
@@ -85,6 +61,10 @@
 
       </div>
     </div>
+
+
+
+<!--    PDF -->
     <div>
       <iframe
         width="100%"
@@ -126,6 +106,14 @@ export default {
     };
   },
   created() {
+    const date = new Date();
+    const year = date.getFullYear().toString().padStart(4, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hour = date.getHours().toString().padStart(2, "0");
+    const minute = date.getMinutes().toString().padStart(2, "0");
+    const second = date.getSeconds().toString().padStart(2, "0");
+    this.data.diagnosisData = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
     this.getPatientdetails()
     this.loading = this.$loading({
       lock: true,
@@ -137,6 +125,8 @@ export default {
     this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
     this.getPdf(pId)
     const iframe = this.$refs.myFrame;
+    console.log("iframe")
+    console.log(iframe)
     iframe.contentWindow.scrollTo(0, 0);
 
   },
@@ -148,15 +138,26 @@ export default {
       background: 'rgba(0, 0, 0, 0.7)'
     });
     this.num +=1
-    this.getPatientdetails()
     if(this.$route.query.pId!=null&&this.num>2){
+      const date = new Date();
+      const year = date.getFullYear().toString().padStart(4, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const hour = date.getHours().toString().padStart(2, "0");
+      const minute = date.getMinutes().toString().padStart(2, "0");
+      const second = date.getSeconds().toString().padStart(2, "0");
+      this.data.diagnosisData = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      this.getPatientdetails()
       window.scrollTo(0, 0)
       this.src=null
       let pId=this.$route.query.pId
       this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
+
       this.getPdf(pId)
 
       const iframe = this.$refs.myFrame;
+      console.log("iframe")
+      console.log(iframe)
       iframe.contentWindow.scrollTo(0, 0);
     }
 
@@ -183,11 +184,30 @@ export default {
       this.src=_this.src
     },
     btnUpload(){
+      if (this.data.diagnosisConclusion==null||this.data.diagnosisConclusion=='')  {
+        this.$message({
+          type: 'info',
+          message: '请输入诊断内容'
+        });
+        return
+      }
+      if (this.data.doctorName==null||this.data.doctorName==''){
+        this.$message({
+          type: 'info',
+          message: '请选择医生'
+        });
+      }
+      console.log("this.data.diagnosisConclusion")
+      console.log(this.data.diagnosisConclusion)
+      console.log("this.data.doctorName")
+      console.log(this.data.doctorName)
       let obj = {
         weekid: this.data.pId,
         diagnosisStatus:'1',
-        diagnosisConclusion:''
+        diagnosisConclusion:this.data.diagnosisConclusion,
+        doctorPhone:this.data.doctorName
       }
+      console.log(obj)
       updateWeekReport(obj).then(r=>{
         this.$message({
           type: "success",
@@ -196,17 +216,16 @@ export default {
       })
     },
     sendMsg() {
-      // console.log("用户电话: " + this.data.pphone);
+      console.log("用户电话: " + this.data.pphone);
       let patientPhone = this.data.pphone;
       if (patientPhone.length === 14 || patientPhone.length === 15) {
         patientPhone = patientPhone.substring(0, 11);
       }
-      // console.log(patientPhone);
+      console.log(patientPhone);
       let SMSverification = sessionStorage.getItem('SMSverification')
       this.on_off = true
-      if (SMSverification) {
+      // if (SMSverification) {
         if (patientPhone) {
-          // console.log("用户姓名: " + row.patientName)
           this.$confirm("向该用户发送短信提示采集存在较大干扰?", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
@@ -229,10 +248,10 @@ export default {
         } else {
           this.$message.error("该用户手机号不合法！！！");
         }
-      } else {
-        this.verifyForm.password = ''
-        this.dialogFormVisibleVerifyAuthority = true
-      }
+      // } else {
+      //   this.verifyForm.password = ''
+      //   this.dialogFormVisibleVerifyAuthority = true
+      // }
     },
     getJEcgPdf(){
       let _this=this;
@@ -275,21 +294,28 @@ export default {
       // 判断转换后的值是否为整数且不为NaN
       return Number.isInteger(parsedInt);
     },
+
+
     getPatientdetails(){
       listDoc().then(r => {
         console.log(r)
         this.doctorList = r.data
       })
       this.data.pId = this.$route.query.pId
+      this.data.pphone = this.$route.query.pphone
       getMedicalHistoryByPhone(this.$route.query.pphone).then(r=>{
         this.data.name = r.data.userName
         this.data.gender = r.data.gender
         this.data.pastMedicalHistory = r.data.pastMedicalHistory
         this.data.patientSymptom = r.data.livingHabit
         this.data.age = this.calculateAge(r.data.birthDay)
-
+        console.log('this.data')
+        console.log(this.data)
       })
     },
+
+
+
     hideMiddleName(patientName) {
       if (patientName.length <= 1) {
         return "*"; // 一个字的则用一个 * 代替
@@ -302,6 +328,7 @@ export default {
       }
     },
     selectDoctorChange(e) {
+      console.log(e)
       this.data.doctorName = e[1]
     },
     calculateAge(birthDateStr){
@@ -438,88 +465,16 @@ export default {
   background-color: #1890ff;
 }
 
-.noleft {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  color: #000000;
-
-  //background-color: rgba(108, 176, 245, 0.98);
-  //background: linear-gradient(to left,#ffffff, rgba(158, 173, 189, 0.98));
   .box {
-    overflow: hidden;
     width: 100%;
-    margin: 0 auto;
     display: flex;
-    // align-items: center;
     margin-top: 1.5vh;
     margin-bottom: 1.5vh;
     border-radius: 1vh;
     justify-content: space-between;
-    padding: 15px;
-    padding-bottom: 0px;
-
-    //opacity: 0.6;
-    .box1 {
-      width: 35%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
     }
 
-    .box2 {
-      width: 32.5%;
-      height: 100%;
-    }
 
-    .box3 {
-      width: 32.5%;
-      height: 100%;
-    }
-
-    .h11 {
-      width: 100%;
-      font-size: 2.5vh;
-      background-color: #e2e2e3;
-      font-weight: 700;
-      height: 4vh;
-      display: flex;
-      margin-top: 1vh;
-
-      span {
-        width: 6px;
-        height: 100%;
-        background-color: #00afff;
-      }
-
-      p {
-        height: 40px;
-        line-height: 4vh;
-        margin: 0;
-        margin-left: 1vw;
-      }
-
-      .between {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-
-        p {
-          height: 4vh;
-          line-height: 4vh;
-          margin: 0;
-          margin-left: 1vw;
-        }
-      }
-    }
-
-    .result {
-      height: 13.5vh;
-      width: 100%;
-    }
-  }
-}
 
 .size {
   font-size: 2.3vh;
@@ -865,6 +820,8 @@ export default {
 
 .touzuo {
   width: 66%;
+  display: flex;
+  flex-direction:column;
 }
 
 .touzuo-top {
@@ -1050,16 +1007,12 @@ export default {
   }
 }
 
-.tabBox {
-  height: 100%;
-  width: 100%;
-  display: block;
 
-  table {
+.tabBox {
+    //display: block;
     height: 100%;
     width: 100%;
     border-collapse: collapse;
-
     tr {
       min-height: 20%;
 
@@ -1078,7 +1031,7 @@ export default {
       }
     }
   }
-}
+
 
 // ::v-deep .el-tabs__nav-scroll::after {
 //        content: 'aafaf';
@@ -1177,4 +1130,18 @@ export default {
 .wubiankuang ::v-deep .el-input__inner {
   border: 0 solid #dcdfe6;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </style>
