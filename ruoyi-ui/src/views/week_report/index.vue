@@ -41,7 +41,7 @@
           <div class="doctor">
             <div class="input yishi">
               <strong>医师:</strong>
-              <el-cascader v-model="data.doctorName" :options="doctorList" @change="selectDoctorChange"
+              <el-cascader v-model="data.doctorName" disabled :options="doctorList" @change="selectDoctorChange"
                            :show-all-levels="false">
               </el-cascader>
             </div>
@@ -54,8 +54,8 @@
           </div>
 
           <div class="oder">
-            <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
-            <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
+            <el-button type="success" plain class="anNiu" @click="sendMsg()" v-if="isTrue">发送短信</el-button>
+            <el-button type="success" plain class="anNiu" @click="btnUpload" v-if="isTrue">医生诊断</el-button>
           </div>
         </div>
 
@@ -80,9 +80,8 @@
 
 <script>
 import $ from "jquery";
-import {getPdf, getSX_PDFByPId, listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
-import {getDoctorList} from "@/api/statistics/statistics";
-import {getMedicalHistoryByPhone, updateWeekReport} from "@/api/medicalHistory/medicalHistory";
+import {getPdf, listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
+import {getMedicalHistoryByPhone, getWeekReport, updateWeekReport} from "@/api/medicalHistory/medicalHistory";
 
 export default {
   name: "lookPdf",
@@ -96,24 +95,18 @@ export default {
       flagCre:0,
       num:1,
       loading:null,
+      isTrue:false,
       data:{},
       tabsStatus: "userInfo",
       isShowName:{
         status:true,
         name:"显示姓名"
       },
+      form:{},
       doctorList: [],
     };
   },
   created() {
-    const date = new Date();
-    const year = date.getFullYear().toString().padStart(4, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const hour = date.getHours().toString().padStart(2, "0");
-    const minute = date.getMinutes().toString().padStart(2, "0");
-    const second = date.getSeconds().toString().padStart(2, "0");
-    this.data.diagnosisData = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
     this.getPatientdetails()
     this.loading = this.$loading({
       lock: true,
@@ -121,9 +114,7 @@ export default {
       spinner: 'el-icon-loading',
       background: 'rgba(0, 0, 0, 0.7)'
     });
-    let pId=this.$route.query.pId
     this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
-    this.getPdf(pId)
     const iframe = this.$refs.myFrame;
     console.log("iframe")
     console.log(iframe)
@@ -139,21 +130,13 @@ export default {
     });
     this.num +=1
     if(this.$route.query.pId!=null&&this.num>2){
-      const date = new Date();
-      const year = date.getFullYear().toString().padStart(4, "0");
-      const month = (date.getMonth() + 1).toString().padStart(2, "0");
-      const day = date.getDate().toString().padStart(2, "0");
-      const hour = date.getHours().toString().padStart(2, "0");
-      const minute = date.getMinutes().toString().padStart(2, "0");
-      const second = date.getSeconds().toString().padStart(2, "0");
-      this.data.diagnosisData = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+
       this.getPatientdetails()
       window.scrollTo(0, 0)
       this.src=null
-      let pId=this.$route.query.pId
       this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
 
-      this.getPdf(pId)
+
 
       const iframe = this.$refs.myFrame;
       console.log("iframe")
@@ -164,23 +147,41 @@ export default {
   },
 
   methods: {
-    getPdf(pId){
+    getPdf(pId,type){
       let _this=this;
-      $.ajax({
-        type: "get",
-        url: "https://ecg.mindyard.cn/data/weekpdf/"+_this.$route.query.pphone+"/"+pId+".pdf",
-        success: function () {
-          _this.src="https://ecg.mindyard.cn/data/weekpdf/"+_this.$route.query.pphone+"/"+pId+".pdf";
-          _this.loading.close();
-        },
-        error: function () {
-          _this.getJEcgPdf()
-          this.$message({
-            type: 'info',
-            message: '正在生成报告，请稍等'
-          });
-        }
-      })
+      if (type==1){
+        $.ajax({
+          type: "get",
+          url: "https://ecg.mindyard.cn/data/weekpdf/"+_this.data.pphone+"/"+pId+"_md.pdf",
+          success: function () {
+            _this.src="https://ecg.mindyard.cn/data/weekpdf/"+_this.data.pphone+"/"+pId+"_md.pdf";
+            _this.loading.close();
+          },
+          error: function () {
+            this.$message({
+              type: 'info',
+              message: '正在生成报告，请稍等'
+            });
+          }
+        })
+      }else {
+        $.ajax({
+          type: "get",
+          url: "https://ecg.mindyard.cn/data/weekpdf/"+_this.data.pphone+"/"+pId+".pdf",
+          success: function () {
+            _this.src="https://ecg.mindyard.cn/data/weekpdf/"+_this.data.pphone+"/"+pId+".pdf";
+            _this.loading.close();
+          },
+          error: function () {
+            // _this.getJEcgPdf()
+            this.$message({
+              type: 'info',
+              message: '正在生成报告，请稍等'
+            });
+          }
+        })
+      }
+
       this.src=_this.src
     },
     btnUpload(){
@@ -204,8 +205,7 @@ export default {
       let obj = {
         weekid: this.data.pId,
         diagnosisStatus:'1',
-        diagnosisConclusion:this.data.diagnosisConclusion,
-        doctorPhone:this.data.doctorName
+        diagnosisConclusion:this.data.diagnosisConclusion
       }
       console.log(obj)
       updateWeekReport(obj).then(r=>{
@@ -213,6 +213,7 @@ export default {
           type: "success",
           message: "诊断成功!",
         });
+        this.$router.push({path: '/doctor_diagnose'})
       })
     },
     sendMsg() {
@@ -301,17 +302,53 @@ export default {
         console.log(r)
         this.doctorList = r.data
       })
-      this.data.pId = this.$route.query.pId
-      this.data.pphone = this.$route.query.pphone
-      getMedicalHistoryByPhone(this.$route.query.pphone).then(r=>{
-        this.data.name = r.data.userName
-        this.data.gender = r.data.gender
-        this.data.pastMedicalHistory = r.data.pastMedicalHistory
-        this.data.patientSymptom = r.data.livingHabit
-        this.data.age = this.calculateAge(r.data.birthDay)
-        console.log('this.data')
-        console.log(this.data)
+      let _this = this
+      getWeekReport(this.$route.query.id).then(r1=>{
+        if (r1.data){
+          this.form = r1.data
+          this.data.pId = r1.data.weekid
+          this.data.pphone = r1.data.patientPhone
+          this.data.doctorName = r1.data.doctorPhone
+          getMedicalHistoryByPhone(_this.data.pphone).then(r=>{
+            this.data.name = r.data.userName
+            this.data.gender = r.data.gender
+            this.data.pastMedicalHistory = r.data.pastMedicalHistory
+            this.data.patientSymptom = r.data.livingHabit
+            this.data.age = _this.calculateAge(r.data.birthDay)
+
+            if (r1.data.updateTime){
+              // 创建 Date 对象
+              const date = new Date(r1.data.updateTime);
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，需要加 1
+              const day = String(date.getDate()).padStart(2, '0');
+              const hours = String(date.getHours()).padStart(2, '0');
+              const minutes = String(date.getMinutes()).padStart(2, '0');
+              const seconds = String(date.getSeconds()).padStart(2, '0');
+              _this.data.diagnosisData =`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+            }
+            const date = new Date();
+            const year = date.getFullYear().toString().padStart(4, "0");
+            const month = (date.getMonth() + 1).toString().padStart(2, "0");
+            const day = date.getDate().toString().padStart(2, "0");
+            const hour = date.getHours().toString().padStart(2, "0");
+            const minute = date.getMinutes().toString().padStart(2, "0");
+            const second = date.getSeconds().toString().padStart(2, "0");
+            _this.data.dataTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+            _this.data.diagnosisConclusion = r1.data.diagnosisConclusion
+            _this.isTrue = r1.data.diagnosisStatus == 2 ? true : false
+            _this.getPdf( r1.data.weekid,r1.data.diagnosisStatus)
+          })
+        }else {
+          this.$message({
+            type: "info",
+            message: "数据不存在",
+          });
+        }
+
       })
+
+
     },
 
 

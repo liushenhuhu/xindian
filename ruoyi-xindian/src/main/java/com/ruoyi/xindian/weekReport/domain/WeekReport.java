@@ -36,11 +36,14 @@ public class WeekReport extends BaseEntity {
     @Excel(name = "电话")
     private String patientPhone;
 
+    private String patientName;
     /**
      * 医生电话
      */
     @Excel(name = "医生电话")
     private String doctorPhone;
+
+    private String doctorName;
 
     /**
      * 诊断状态0:未诊断，1：已诊断，2诊断中

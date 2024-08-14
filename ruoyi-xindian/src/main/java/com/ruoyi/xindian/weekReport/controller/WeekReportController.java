@@ -30,6 +30,8 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.util.DateUtil;
@@ -76,7 +78,12 @@ public class WeekReportController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('weekReport:report:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WeekReport weekReport) {
+    public TableDataInfo list(WeekReport weekReport) throws Exception {
+        Long userId = getUserId();
+        if (!SysUser.isAdmin(userId)){
+            LoginUser loginUser = getLoginUser();
+            weekReport.setDoctorPhone(aesUtils.decrypt(loginUser.getUsername()));
+        }
         startPage();
         List<WeekReport> list = weekReportService.selectWeekReportList(weekReport);
         return getDataTable(list);
@@ -115,8 +122,19 @@ public class WeekReportController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('weekReport:report:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(weekReportService.selectWeekReportById(id));
+    public AjaxResult getInfo(@PathVariable("id") Long id) throws Exception {
+        WeekReport report = weekReportService.selectWeekReportById(id);
+        if (report!=null){
+            if (StringUtils.isNotEmpty(report.getPatientPhone()))
+                report.setPatientPhone(aesUtils.decrypt(report.getPatientPhone()));
+            if (StringUtils.isNotEmpty(report.getDoctorPhone()))
+                report.setDoctorPhone(aesUtils.decrypt(report.getDoctorPhone()));
+            if (StringUtils.isNotEmpty(report.getDoctorName()))
+                report.setDoctorName(aesUtils.decrypt(report.getDoctorName()));
+            if (StringUtils.isNotEmpty(report.getPatientName()))
+                report.setPatientName(aesUtils.decrypt(report.getPatientName()));
+        }
+        return AjaxResult.success(report);
     }
 
     /**

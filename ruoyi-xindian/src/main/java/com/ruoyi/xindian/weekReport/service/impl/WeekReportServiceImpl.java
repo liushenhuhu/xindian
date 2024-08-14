@@ -104,6 +104,10 @@ public class WeekReportServiceImpl implements IWeekReportService {
                 weekReport.setPatientPhone(aesUtils.encrypt(weekReport.getPatientPhone()));
             if (StringUtils.isNotEmpty(weekReport.getDoctorPhone()))
                 weekReport.setDoctorPhone(aesUtils.encrypt(weekReport.getDoctorPhone()));
+            if (StringUtils.isNotEmpty(weekReport.getDoctorName()))
+                weekReport.setDoctorName(aesUtils.encrypt(weekReport.getDoctorName()));
+            if (StringUtils.isNotEmpty(weekReport.getPatientName()))
+                weekReport.setPatientName(aesUtils.encrypt(weekReport.getPatientName()));
         } catch (Exception ignored) {
         }
         List<WeekReport> weekReports;
@@ -119,10 +123,14 @@ public class WeekReportServiceImpl implements IWeekReportService {
 
         try {
             for (WeekReport report : weekReports) {
-                if (report.getPatientPhone() != null)
+                if (StringUtils.isNotEmpty(report.getPatientPhone()))
                     report.setPatientPhone(aesUtils.decrypt(report.getPatientPhone()));
-                if (report.getDoctorPhone() != null)
+                if (StringUtils.isNotEmpty(report.getDoctorPhone()))
                     report.setDoctorPhone(aesUtils.decrypt(report.getDoctorPhone()));
+                if (StringUtils.isNotEmpty(report.getDoctorName()))
+                    report.setDoctorName(aesUtils.decrypt(report.getDoctorName()));
+                if (StringUtils.isNotEmpty(report.getPatientName()))
+                    report.setPatientName(aesUtils.decrypt(report.getPatientName()));
                 LocalDate s = DateUtil.getLocalDate(report.getWeekpdftime()).with(DayOfWeek.MONDAY);
                 LocalDate e = DateUtil.getLocalDate(report.getWeekpdftime()).with(DayOfWeek.SUNDAY);
                 report.setStartTime(DateUtil.getDateByLocalDate(s));

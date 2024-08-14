@@ -358,7 +358,7 @@ public class ReportController extends BaseController {
 
             WeekReport weekReport = new WeekReport();
             if (!SysUser.isAdmin(getUserId())){
-                weekReport.setDoctorPhone(getUsername());
+                weekReport.setDoctorPhone(aesUtils.decrypt(getUsername()));
             }else {
                 weekReport.setDoctorPhone(aesUtils.decrypt(report.getdPhone()));
             }
@@ -381,6 +381,7 @@ public class ReportController extends BaseController {
                         reportM.setDiagnosisDoctor(aesUtils.decrypt(doctor.getDoctorName()));
                     }
                     reportM.setReportType("week");
+                    reportM.setReportId(wr.getId());
                     reportM.setDiagnosisConclusion(wr.getDiagnosisConclusion());
                     reportM.setReportTime(wr.getWeekpdftime());
                     reportM.setWeekReport(true);

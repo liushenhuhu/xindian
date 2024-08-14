@@ -48,6 +48,12 @@ export function updateWeekReport(data) {
     data: data
   })
 }
+export function getWeekReport(medicalHistoryId) {
+  return request({
+    url: '/weekReport/report/' + medicalHistoryId,
+    method: 'get'
+  })
+}
 
 
 // 删除病史
