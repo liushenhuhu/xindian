@@ -6,10 +6,14 @@ import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.patient.domain.PatientLogin;
 import com.ruoyi.xindian.patient.service.PatientLoginService;
 import com.ruoyi.xindian.patient.mapper.PatientLoginMapper;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author w
@@ -27,17 +31,34 @@ public class PatientLoginServiceImpl extends ServiceImpl<PatientLoginMapper, Pat
     @Resource
     private AesUtils aesUtils;
 
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
+
     @Override
     public int addLoginLog(PatientLogin patientLogin) throws Exception {
         if (StringUtils.isEmpty(patientLogin.getPatientPhone())) {
             return 0;
         }
-
         if (StringUtils.isNotEmpty(patientLogin.getPatientPhone())) {
             patientLogin.setPatientPhone(aesUtils.encrypt(patientLogin.getPatientPhone()));
         }
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("patient_login:"+patientLogin.getPatientPhone()))) {
+            return 0;
+        }
         patientLogin.setCreateTime(new Date());
-        return patientLoginMapper.insert(patientLogin);
+        int insert = patientLoginMapper.insert(patientLogin);
+        // 获取当前时间
+        LocalTime now = LocalTime.now();
+        // 定义晚上11点59分的时间
+        LocalTime targetTime = LocalTime.of(23, 59);
+        // 计算当前时间与目标时间之间的时间差
+        Duration duration = Duration.between(now, targetTime);
+        // 获取剩余的分钟数
+        long minutesUntilTarget = duration.toMinutes();
+        if (minutesUntilTarget>0){
+            redisTemplate.opsForValue().set("patient_login:" + patientLogin.getPatientPhone(), "1",minutesUntilTarget, TimeUnit.MINUTES );
+        }
+        return insert;
     }
 }
 
