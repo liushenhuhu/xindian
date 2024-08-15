@@ -611,7 +611,7 @@ export default {
           { required: true, message: "密码不能为空", trigger: "blur" },
         ],
       },
-      isShowBtn: false,
+      isShowBtn: true,
       // lead:false,
       // radio:'',
       // xIndex:null,

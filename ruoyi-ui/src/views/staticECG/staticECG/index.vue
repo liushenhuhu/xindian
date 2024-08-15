@@ -364,7 +364,7 @@ export default {
   dicts: ["medical_history"],
   data() {
     return {
-      isShowBtn: false,
+      isShowBtn: true,
       tanchuang: false,
       name: null,
       isShowName: {
