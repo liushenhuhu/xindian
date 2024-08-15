@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.set_app.mapper.SetEcgAppMapper">
+
+    <resultMap type="SetEcgApp" id="SetEcgAppResult">
+        <result property="setId"    column="set_id"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="pId"    column="p_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSetEcgAppVo">
+        select set_id, patient_phone, type, status, p_id, create_time from set_ecg_app
+    </sql>
+
+    <select id="selectSetEcgAppList" parameterType="SetEcgApp" resultMap="SetEcgAppResult">
+        <include refid="selectSetEcgAppVo"/>
+        <where>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+        </where>
+    </select>
+
+    <select id="selectSetEcgAppBySetId" parameterType="Long" resultMap="SetEcgAppResult">
+        <include refid="selectSetEcgAppVo"/>
+        where set_id = #{setId}
+    </select>
+
+    <insert id="insertSetEcgApp" parameterType="SetEcgApp">
+        insert into set_ecg_app
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="setId != null">set_id,</if>
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
+            <if test="pId != null">p_id,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="setId != null">#{setId},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
+            <if test="pId != null">#{pId},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSetEcgApp" parameterType="SetEcgApp">
+        update set_ecg_app
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="pId != null">p_id = #{pId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where set_id = #{setId}
+    </update>
+
+    <delete id="deleteSetEcgAppBySetId" parameterType="Long">
+        delete from set_ecg_app where set_id = #{setId}
+    </delete>
+
+    <delete id="deleteSetEcgAppBySetIds" parameterType="String">
+        delete from set_ecg_app where set_id in
+        <foreach item="setId" collection="array" open="(" separator="," close=")">
+            #{setId}
+        </foreach>
+    </delete>
+</mapper>

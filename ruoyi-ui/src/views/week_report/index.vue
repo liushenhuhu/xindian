@@ -33,8 +33,8 @@
             <div>医师诊断</div>
           </div>
           <div class="mt">
-            <el-input type="textarea" v-model="data.diagnosisConclusion" placeholder="请输入" data-value="1111" :rows="5"
-                      class="font">{{ data.diagnosisConclusion }}
+            <el-input type="textarea" v-model="data.diagnosisConclusion" placeholder="请输入" :rows="5"
+                      class="font">
             </el-input>
           </div>
 
@@ -96,7 +96,18 @@ export default {
       num:1,
       loading:null,
       isTrue:false,
-      data:{},
+      data:{
+        pId:null,
+        pphone:null,
+        name:null,
+        gender:null,
+        age:null,
+        patientSymptom:null,
+        diagnosisConclusion:null,
+        doctorName:null,
+        dataTime:null,
+        diagnosisData:null,
+      },
       tabsStatus: "userInfo",
       isShowName:{
         status:true,
@@ -116,8 +127,6 @@ export default {
     });
     this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
     const iframe = this.$refs.myFrame;
-    console.log("iframe")
-    console.log(iframe)
     iframe.contentWindow.scrollTo(0, 0);
 
   },
@@ -130,17 +139,11 @@ export default {
     });
     this.num +=1
     if(this.$route.query.pId!=null&&this.num>2){
-
       this.getPatientdetails()
       window.scrollTo(0, 0)
       this.src=null
       this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
-
-
-
       const iframe = this.$refs.myFrame;
-      console.log("iframe")
-      console.log(iframe)
       iframe.contentWindow.scrollTo(0, 0);
     }
 
@@ -335,7 +338,12 @@ export default {
             const minute = date.getMinutes().toString().padStart(2, "0");
             const second = date.getSeconds().toString().padStart(2, "0");
             _this.data.dataTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-            _this.data.diagnosisConclusion = r1.data.diagnosisConclusion
+            if (r1.data.diagnosisStatus == 2){
+              _this.data.diagnosisConclusion = ''
+            }else {
+              _this.data.diagnosisConclusion = r1.data.diagnosisConclusion
+            }
+
             _this.isTrue = r1.data.diagnosisStatus == 2 ? true : false
             _this.getPdf( r1.data.weekid,r1.data.diagnosisStatus)
           })

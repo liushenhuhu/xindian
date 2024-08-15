@@ -31,7 +31,12 @@
 <!--          <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" show-overflow-tooltip/>-->
           <el-table-column label="报告种类" align="center" prop="reportType">
             <template slot-scope="scope">
-              <dict-tag :options="dict.type.ecg_type" :value="scope.row.reportType"/>
+              <el-tag  v-if="scope.row.reportType=='week'">
+                  周报
+              </el-tag>
+              <el-tag  v-else>
+                {{ scope.row.reportType }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -182,7 +187,7 @@
             <div class="tablebox">
               <div class="table-hand">
                 <div class="table-hand-left">
-                  <el-select v-model="queryParamsEcg.ecgType" placeholder="请选择采集类型" clearable @change="getList"
+                  <el-select v-model="queryParamsEcg.ecgType" placeholder="请选择采集类型" clearable @change="getListEcg"
                              class="table-hand-left-select table-hand-left-select-type">
                     <el-option key="JECG" label="全部" value="JECG"></el-option>
                     <el-option
