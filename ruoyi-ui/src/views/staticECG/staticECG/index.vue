@@ -5,14 +5,21 @@
         <div class="box">
           <div class="touzuo">
             <div class="touzuo-top">
-              <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs"
-                @click="handleButtonClick">
+              <el-tabs
+                style="height: 100%; width: 100%"
+                v-model="tabsStatus"
+                type="card"
+                @tab-click="switchTabs"
+                @click="handleButtonClick"
+              >
                 <el-tab-pane label="基本信息" name="userInfo">
                   <div class="tabBox">
                     <table>
                       <tr>
                         <td>姓名</td>
-                        <td v-if="isShowName.status === true">{{ data.name }}</td>
+                        <td v-if="isShowName.status === true">
+                          {{ data.name }}
+                        </td>
                         <td v-else>{{ hideMiddleName(data.name) }}</td>
                         <td>性别</td>
                         <td>{{ data.gender }}</td>
@@ -34,7 +41,6 @@
                         <td>患者病史</td>
                         <td>{{ getMH(dict.type.medical_history) }}</td>
                       </tr>
-
                     </table>
                   </div>
                 </el-tab-pane>
@@ -65,12 +71,22 @@
             <div class="touzuo-btm">
               <div class="yujinclass">
                 <div class="yujinclass_tou">预警类型:</div>
-                <div class="yujinclass_zhi">
-                  {{ xianshizifuchuan }}
-                </div>
+                <div class="yujinclass_zhi">{{ xianshizifuchuan }}</div>
                 <div>
-                  <el-button type="success" round @click="xianshi">选择预警类型</el-button>
-                  <el-button type="success" round @click="tijiao()">提交</el-button>
+                  <el-button
+                    v-if="isShowBtn"
+                    type="success"
+                    round
+                    @click="xianshi"
+                    >选择预警类型</el-button
+                  >
+                  <el-button
+                    v-if="isShowBtn"
+                    type="success"
+                    round
+                    @click="tijiao()"
+                    >提交</el-button
+                  >
                 </div>
               </div>
             </div>
@@ -80,14 +96,26 @@
             <div class="touzuobiaoti">
               <div>医师诊断</div>
               <div>
-                <el-button type="success" plain icon="el-icon-view" size="mini" @click="isShowNameClick"
-                  v-if="true">{{ isShowName.name }}
+                <el-button
+                  type="success"
+                  plain
+                  icon="el-icon-view"
+                  size="mini"
+                  @click="isShowNameClick"
+                  v-if="true"
+                  >{{ isShowName.name }}
                 </el-button>
               </div>
             </div>
             <div class="mt">
-              <el-input type="textarea" v-model="data.resultByDoctor" placeholder="请输入" data-value="1111" :rows="5"
-                class="font">{{ data.resultByDoctor }}
+              <el-input
+                type="textarea"
+                v-model="data.resultByDoctor"
+                placeholder="请输入"
+                data-value="1111"
+                :rows="5"
+                class="font"
+                >{{ data.resultByDoctor }}
               </el-input>
             </div>
 
@@ -101,34 +129,70 @@
                     :value="item.doctorName">
                   </el-option>
                 </el-select>-->
-                <el-cascader v-model="data.doctorName" :options="doctorList" @change="selectDoctorChange"
-                  :show-all-levels="false">
+                <el-cascader
+                  v-model="data.doctorName"
+                  :options="doctorList"
+                  @change="selectDoctorChange"
+                  :show-all-levels="false"
+                >
                 </el-cascader>
               </div>
               <div class="input">
                 <strong>日期:</strong>
-                <el-input v-if="data.diagnosisData != null" v-model="data.diagnosisData" clearable
-                  style="width: 66%"></el-input>
-                <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
+                <el-input
+                  v-if="data.diagnosisData != null"
+                  v-model="data.diagnosisData"
+                  clearable
+                  style="width: 66%"
+                ></el-input>
+                <el-input
+                  v-else
+                  v-model="data.dataTime"
+                  clearable
+                  style="width: 34%"
+                ></el-input>
               </div>
             </div>
 
             <div class="oder">
-              <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
-                <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
+              <el-button
+                v-if="isShowBtn"
+                type="success"
+                plain
+                class="anNiu"
+                @click="sendWarnMsg()"
+              >
+                <el-tooltip
+                  content="请注意20个字数限制，每次用户授权，仅有一次发送的机会"
+                  placement="top"
+                >
                   <i class="el-icon-question"></i>
                 </el-tooltip>
                 发送预警
               </el-button>
-              <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
-              <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
-              <el-button class="next" @click="prev()" :loading="loading">上一个</el-button>
-              <el-button class="next" @click="next()" :loading="loading">下一个</el-button>
+              <el-button type="success" plain class="anNiu" @click="sendMsg()"
+                >发送短信</el-button
+              >
+              <el-button type="success" plain class="anNiu" @click="btnUpload"
+                >医生诊断</el-button
+              >
+              <el-button
+                v-if="isShowBtn"
+                class="next"
+                @click="prev()"
+                :loading="loading"
+                >上一个</el-button
+              >
+              <el-button
+                v-if="isShowBtn"
+                class="next"
+                @click="next()"
+                :loading="loading"
+                >下一个</el-button
+              >
             </div>
           </div>
-
         </div>
-
 
         <!-- 预警类型弹窗 -->
         <!-- <div class="xuanzheyujing" v-else>
@@ -172,7 +236,9 @@
 
       <div class="shangbianju">
         <div>
-          <div style="padding: 15px ;font-size: 1vw;font-weight: 700;">患者心电图</div>
+          <div style="padding: 15px; font-size: 1vw; font-weight: 700">
+            患者心电图
+          </div>
           <div>
             <div id="1" class="line" @dblclick="showChart1()"></div>
           </div>
@@ -204,25 +270,29 @@
       </div>
     </div>
 
-
-
-
     <div class="nobottom"></div>
     <child ref="drawShow" @closeMain="closeMain"></child>
 
-
-
-
-
-    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+    <el-dialog
+      title="密码验证"
+      :visible.sync="dialogFormVisibleVerifyAuthority"
+    >
       <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
         <el-form-item label="验证密码" prop="password">
-          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+          <el-input
+            placeholder="请输入密码"
+            v-model="verifyForm.password"
+            show-password
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+        <el-button @click="dialogFormVisibleVerifyAuthority = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" @click="dialogFormVisibleVerify"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog title="选择类型" :visible.sync="tanchuang">
@@ -235,7 +305,11 @@
               </div>
               <div class="fenzuzhutizi">
                 <ul class="xiaoul">
-                  <li v-for="(item, i) in group.options" class="xiaoli" :key="i">
+                  <li
+                    v-for="(item, i) in group.options"
+                    class="xiaoli"
+                    :key="i"
+                  >
                     <el-checkbox :label="item.value" border size="mini">
                       {{ item.value }}
                     </el-checkbox>
@@ -251,9 +325,6 @@
         <el-button type="primary" plain @click="queren">完成</el-button>
       </div>
     </el-dialog>
-
-
-
   </div>
 </template>
 
@@ -273,10 +344,10 @@ import CacheList from "@/views/monitor/cache/list.vue";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
 import { selectDoctor, getDoctorList } from "@/api/statistics/statistics";
 // 发送信息时获取密码
-import { getlogin_password } from '@/api/jecg4_ecg/jecg4_ecg'
+import { getlogin_password } from "@/api/jecg4_ecg/jecg4_ecg";
 // 获取预警类型选项
 import { selectList } from "@/api/log_user/log_user";
-import { checkPassword } from "@/utils/verify.js"
+import { checkPassword } from "@/utils/verify.js";
 // 存储选择的预警类型
 import { addReport as addReportyujing } from "@/api/alert_log_count/count";
 import { listPatient_management } from "@/api/patient_management/patient_management";
@@ -290,20 +361,21 @@ export default {
     CacheList,
     child,
   },
-  dicts: ['medical_history'],
+  dicts: ["medical_history"],
   data() {
     return {
+      isShowBtn: false,
       tanchuang: false,
       name: null,
       isShowName: {
         status: false,
-        name: "显示姓名"
+        name: "显示姓名",
       },
       on_off: false,
       dialogFormVisibleVerifyAuthority: false,
       verifyForm: {
         password: null,
-        status: false
+        status: false,
       },
 
       selectDoctor: [],
@@ -451,9 +523,9 @@ export default {
       // 表单校验
       rules: {
         password: [
-          { required: true, message: "密码不能为空", trigger: "blur" }
+          { required: true, message: "密码不能为空", trigger: "blur" },
         ],
-      }
+      },
     };
   },
   created() {
@@ -470,11 +542,22 @@ export default {
     // 心电数据
     this.get();
 
+    this.getShowBnt();
     // this.drawgrid();//canvas 画图
     //预警的类型
     // this.getyujingleixing()
   },
   methods: {
+    getShowBnt() {
+      if (this.$auth.hasRole("admin")) {
+        this.isShowBtn = true;
+      } else if (
+        this.$auth.hasRole("hospitalUser") ||
+        this.$auth.hasRole("doctorUser")
+      ) {
+        this.isShowBtn = false;
+      }
+    },
     // zidian() {
     //   console.log("字典")
     //   // console.log(this.dicts.type.medical_history)
@@ -484,21 +567,21 @@ export default {
     //   })
     // },
     getMH(zdList, ecgType = this.data.pastMedicalHistory) {
-      let str = ''
+      let str = "";
       if (ecgType) {
-        ecgType.split(",").forEach(item => {
+        ecgType.split(",").forEach((item) => {
           if (this.canConvertToInt(item)) {
-            zdList.forEach(zd => {
+            zdList.forEach((zd) => {
               if (zd.value == item) {
-                str += zd.label + ','
+                str += zd.label + ",";
               }
-            })
+            });
           } else {
-            str += item + ','
+            str += item + ",";
           }
-        })
+        });
         if (str.endsWith(",")) {
-          str = str.substring(0, str.length - 1)
+          str = str.substring(0, str.length - 1);
         }
       }
       return str;
@@ -511,7 +594,6 @@ export default {
     },
     // 选择预警类型弹窗按钮 取消
     quxiao() {
-
       if (this.logDataType) {
         this.xianshizifuchuan = this.logDataType;
         this.zhi = this.logDataType.split(",").map((str) => str.trim());
@@ -521,11 +603,11 @@ export default {
         this.zhi = [];
         this.xianshizifuchuan = "";
       }
-      this.tanchuang = false
+      this.tanchuang = false;
     },
     // 选择预警类型弹窗按钮 完成
     queren() {
-      this.tanchuang = false
+      this.tanchuang = false;
     },
     hideMiddleName(patientName) {
       if (patientName.length <= 1) {
@@ -534,27 +616,26 @@ export default {
         return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
       } else {
         // let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
-        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 1);
+        let visibleChars =
+          patientName.charAt(0) + "*".repeat(patientName.length - 1);
         return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
       }
     },
     isShowNameClick() {
-      let isShowName = sessionStorage.getItem('isShowName')
+      let isShowName = sessionStorage.getItem("isShowName");
       if (isShowName) {
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "显示姓名"
-
+          this.isShowName.name = "显示姓名";
         } else {
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "隐藏姓名"
+          this.isShowName.name = "隐藏姓名";
         }
       } else {
-        this.name = true
-        this.verifyForm.password = ''
-        this.dialogFormVisibleVerifyAuthority = true
+        this.name = true;
+        this.verifyForm.password = "";
+        this.dialogFormVisibleVerifyAuthority = true;
       }
-
     },
     handleButtonClick() {
       // Your button click logic here
@@ -562,55 +643,52 @@ export default {
     },
     // 密码弹出框点击确认时
     dialogFormVisibleVerify() {
-      this.$refs["verifyForm"].validate(valid => {
+      this.$refs["verifyForm"].validate((valid) => {
         if (valid) {
           if (this.name) {
-
             // 显示姓名
             let obj = {
-              accountPwd: this.verifyForm.password
-            }
-            getVerify(obj).then(r => {
+              accountPwd: this.verifyForm.password,
+            };
+            getVerify(obj).then((r) => {
               this.$modal.msgSuccess("密码正确");
-              this.verifyForm.status = true
-              sessionStorage.setItem('isShowName', true)
-              this.dialogFormVisibleVerifyAuthority = false
+              this.verifyForm.status = true;
+              sessionStorage.setItem("isShowName", true);
+              this.dialogFormVisibleVerifyAuthority = false;
               this.isShowName.status = !this.isShowName.status;
-              this.isShowName.name = "隐藏姓名"
-              this.name = false
-            })
-
+              this.isShowName.name = "隐藏姓名";
+              this.name = false;
+            });
           } else {
-
             // 发送短信
             let objj = {
-              password: this.verifyForm.password
-            }
-            getlogin_password(objj).then(res => {
+              password: this.verifyForm.password,
+            };
+            getlogin_password(objj).then((res) => {
               if (res.code == 200) {
                 this.$modal.msgSuccess("密码正确");
-                this.verifyForm.status = true
-                this.dialogFormVisibleVerifyAuthority = false
-                sessionStorage.setItem('SMSverification', true)
+                this.verifyForm.status = true;
+                this.dialogFormVisibleVerifyAuthority = false;
+                sessionStorage.setItem("SMSverification", true);
                 if (this.on_off) {
                   this.sendMsg();
                 }
               } else {
                 this.$modal.msgSuccess("密码错误请重试");
               }
-            })
+            });
           }
         }
-      })
+      });
     },
     /** 切换顶部tabs **/
     switchTabs(value) {
-      console.log(value)
+      console.log(value);
     },
     yanzheng(value) {
       //todo 将函数当作实参传递
       //checkPassword('abcd',this.yanzheng)
-      console.log(value)
+      console.log(value);
     },
     /** 查询用户管理列表 */
     async getList() {
@@ -687,7 +765,7 @@ export default {
       if (this.index >= this.patient_managementList.length) {
         if (
           (this.queryParams.pageNum - 1) * this.queryParams.pageSize +
-          this.patient_managementList.length >=
+            this.patient_managementList.length >=
           this.total
         ) {
           this.$message.warning("已经是最后一页！！！");
@@ -720,7 +798,7 @@ export default {
     },
     //选择医生
     selectDoctorChange(e) {
-      this.data.doctorName = e[1]
+      this.data.doctorName = e[1];
     },
     // 患者用户信息
     getPatientdetails() {
@@ -754,26 +832,29 @@ export default {
       selectDoctor().then((response) => {
         this.options = response;
       });
-      getDoctorList().then(res => {
-        let options = []
-        let data = res.data.options
-        data.forEach(e => {
+      getDoctorList().then((res) => {
+        let options = [];
+        let data = res.data.options;
+        data.forEach((e) => {
           if (e.doctorList.length != 0) {
             let hospital = {
               value: e.hospitalCode,
               label: e.hospitalName,
-              children: []
-            }
-            e.doctorList.forEach(doctorInfo => {
-              hospital.children.push({ label: doctorInfo.doctorName, value: doctorInfo.doctorName })
-            })
-            options.push(hospital)
+              children: [],
+            };
+            e.doctorList.forEach((doctorInfo) => {
+              hospital.children.push({
+                label: doctorInfo.doctorName,
+                value: doctorInfo.doctorName,
+              });
+            });
+            options.push(hospital);
           }
-        })
+        });
         this.doctorList = options;
-        console.log('医生信息')
-        console.log(this.doctorList)
-      })
+        console.log("医生信息");
+        console.log(this.doctorList);
+      });
       this.getyujingleixing();
     },
     //预警类型
@@ -823,7 +904,7 @@ export default {
     },
     // 选择预警类型的开关
     xianshi() {
-      this.tanchuang = true
+      this.tanchuang = true;
       // this.xuanzheyujingleixing = !this.xuanzheyujingleixing;
     },
     dialogVisible() {
@@ -873,11 +954,11 @@ export default {
       var level = 1;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
       this.open1 = true;
-      console.log("下面是双击心电图后，弹出心电图的参数")
-      console.log(this.nArr[0])
-      console.log(pId)
-      console.log(level)
-      console.log(this.datalabel)
+      console.log("下面是双击心电图后，弹出心电图的参数");
+      console.log(this.nArr[0]);
+      console.log(pId);
+      console.log(level);
+      console.log(this.datalabel);
       this.$refs.drawShow.getchart(
         this.nArr[0],
         pId,
@@ -2218,8 +2299,8 @@ export default {
         patientPhone = patientPhone.substring(0, 11);
       }
       // console.log(patientPhone);
-      let SMSverification = sessionStorage.getItem('SMSverification')
-      this.on_off = true
+      let SMSverification = sessionStorage.getItem("SMSverification");
+      this.on_off = true;
       if (SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
@@ -2246,8 +2327,8 @@ export default {
           this.$message.error("该用户手机号不合法！！！");
         }
       } else {
-        this.verifyForm.password = ''
-        this.dialogFormVisibleVerifyAuthority = true
+        this.verifyForm.password = "";
+        this.dialogFormVisibleVerifyAuthority = true;
       }
     },
     sendWarnMsg() {
@@ -2343,8 +2424,7 @@ export default {
         .then((_) => {
           done();
         })
-        .catch((_) => {
-        });
+        .catch((_) => {});
     },
     //截断数据（一条数据现在2000）
     getNewArray(array, subGroupLength) {
@@ -2480,11 +2560,6 @@ export default {
   /* 显示省略号 */
   width: 20px;
 }
-
-
-
-
-
 
 .updown {
   width: 100%;
@@ -2792,7 +2867,7 @@ export default {
   border: 1px solid #fff;
 }
 
-.el-tag+.el-tag {
+.el-tag + .el-tag {
   margin-left: 10px;
 }
 
@@ -2911,7 +2986,7 @@ export default {
 }
 
 /* 选择父元素中的基数子元素 */
-.tablex tr> :nth-child(odd) {
+.tablex tr > :nth-child(odd) {
   /* 样式设置 */
   background-color: #f2f6fe;
 }
@@ -2921,7 +2996,7 @@ export default {
 //   width: 90px;
 // }
 /* 选择父元素中的偶数子元素 */
-.parentElement> :nth-child(even) {
+.parentElement > :nth-child(even) {
   /* 样式设置 */
 }
 
@@ -3189,9 +3264,7 @@ export default {
     padding: 0 10px;
     font-size: 0.9vw;
     color: #8c8c8e;
-
   }
-
 }
 
 .yujinclass_zhi ::v-deep .el-popover__reference-wrapper button {
@@ -3208,7 +3281,6 @@ export default {
 
 .biaodan {
   height: 60vh;
-
 }
 
 ::v-deep .el-dialog__body::-webkit-scrollbar-button {
@@ -3220,10 +3292,13 @@ export default {
 }
 
 .xiaoli ::v-deep .el-checkbox.is-bordered {
-  border: none
+  border: none;
 }
 
-.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium .el-checkbox__label {
+.xiaoli
+  ::v-deep
+  .el-checkbox.is-bordered.el-checkbox--medium
+  .el-checkbox__label {
   line-height: 17px;
   font-size: 12px;
   display: flex;
@@ -3235,9 +3310,6 @@ export default {
   display: flex;
   align-items: center;
 }
-
-
-
 
 .biaodananniu {
   display: flex;
