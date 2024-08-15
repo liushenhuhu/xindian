@@ -1,18 +1,25 @@
 <template>
   <div class="wrap">
-    <div id="pdfDom" style="padding: 10px;">
+    <div id="pdfDom" style="padding: 10px">
       <div id="app">
         <div class="page">
           <div class="box">
             <div class="touzuo">
               <div class="touzuo-top">
-                <el-tabs style="height: 100%;width: 100%" v-model="tabsStatus" type="card" @tab-click="switchTabs">
+                <el-tabs
+                  style="height: 100%; width: 100%"
+                  v-model="tabsStatus"
+                  type="card"
+                  @tab-click="switchTabs"
+                >
                   <el-tab-pane label="基本信息" name="userInfo">
                     <div class="tabBox">
                       <table>
                         <tr>
                           <td>姓名</td>
-                          <td v-if="isShowName.status === true">{{ data.name }}</td>
+                          <td v-if="isShowName.status === true">
+                            {{ data.name }}
+                          </td>
                           <td v-else>{{ hideMiddleName(data.name) }}</td>
                           <td>性别</td>
                           <td>{{ data.gender }}</td>
@@ -33,10 +40,31 @@
                           <td>患者病史</td>
                           <td>{{ getMH(dict.type.medical_history) }}</td>
                         </tr>
+
+                        <tr v-if="isDoctorUser">
+                          <td>P波</td>
+                          <td>{{ data.p }}</td>
+                          <td>QTc</td>
+                          <td>{{ data.qtc }}</td>
+                          <td>HRV</td>
+                          <td>{{ data.hrv }}ms</td>
+                        </tr>
+                        <tr v-if="isDoctorUser">
+                          <td>QRS区间</td>
+                          <td>{{ data.qrs }}ms</td>
+                          <td>住院号</td>
+                          <td>-</td>
+                          <td>申请单号</td>
+                          <td></td>
+                        </tr>
                       </table>
                     </div>
                   </el-tab-pane>
-                  <el-tab-pane label="心电参数" name="ecgInfo">
+                  <el-tab-pane
+                    v-if="!isDoctorUser"
+                    label="心电参数"
+                    name="ecgInfo"
+                  >
                     <div class="tabBox">
                       <table>
                         <tr>
@@ -66,9 +94,13 @@
                   <div class="yujinclass_zhi">
                     {{ xianshizifuchuan }}
                   </div>
-                  <div>
-                    <el-button type="success" round @click="xianshi">选择预警类型</el-button>
-                    <el-button type="success" round @click="tijiao()">提交</el-button>
+                  <div v-if="isShowBtn">
+                    <el-button type="success" round @click="xianshi"
+                      >选择预警类型</el-button
+                    >
+                    <el-button type="success" round @click="tijiao()"
+                      >提交</el-button
+                    >
                   </div>
                 </div>
               </div>
@@ -78,14 +110,26 @@
               <div class="touzuobiaoti">
                 <div>医师诊断</div>
                 <div>
-                  <el-button type="success" plain icon="el-icon-view" size="mini" @click="isShowNameClick"
-                    v-if="true">{{ isShowName.name }}
+                  <el-button
+                    type="success"
+                    plain
+                    icon="el-icon-view"
+                    size="mini"
+                    @click="isShowNameClick"
+                    v-if="true"
+                    >{{ isShowName.name }}
                   </el-button>
                 </div>
               </div>
               <div class="mt">
-                <el-input type="textarea" v-model="data.resultByDoctor" placeholder="请输入" data-value="1111" :rows="5"
-                  class="font">{{ data.resultByDoctor }}
+                <el-input
+                  type="textarea"
+                  v-model="data.resultByDoctor"
+                  placeholder="请输入"
+                  data-value="1111"
+                  :rows="5"
+                  class="font"
+                  >{{ data.resultByDoctor }}
                 </el-input>
               </div>
 
@@ -99,31 +143,69 @@
                   <!--    :value="item.doctorName">-->
                   <!--  </el-option>-->
                   <!--</el-select>-->
-                  <el-cascader v-model="data.doctorName" :options="doctorList" @change="selectDoctorChange"
-                    :show-all-levels="false">
+                  <el-cascader
+                    v-model="data.doctorName"
+                    :options="doctorList"
+                    @change="selectDoctorChange"
+                    :show-all-levels="false"
+                  >
                   </el-cascader>
                 </div>
                 <div class="input">
                   <strong>日期:</strong>
-                  <el-input v-if="data.diagnosisData != null" v-model="data.diagnosisData" clearable
-                    style="width: 66%"></el-input>
-                  <el-input v-else v-model="data.dataTime" clearable style="width: 34%"></el-input>
+                  <el-input
+                    v-if="data.diagnosisData != null"
+                    v-model="data.diagnosisData"
+                    clearable
+                    style="width: 66%"
+                  ></el-input>
+                  <el-input
+                    v-else
+                    v-model="data.dataTime"
+                    clearable
+                    style="width: 34%"
+                  ></el-input>
                 </div>
               </div>
 
               <div class="oder">
-                <el-button type="success" plain class="anNiu" @click="sendWarnMsg()">
-                  <el-tooltip content="请注意20个字数限制，每次用户授权，仅有一次发送的机会" placement="top">
+                <el-button
+                  v-if="isShowBtn"
+                  type="success"
+                  plain
+                  class="anNiu"
+                  @click="sendWarnMsg()"
+                >
+                  <el-tooltip
+                    content="请注意20个字数限制，每次用户授权，仅有一次发送的机会"
+                    placement="top"
+                  >
                     <i class="el-icon-question"></i>
                   </el-tooltip>
-                  发送预警</el-button>
-                <el-button type="success" plain class="anNiu" @click="sendMsg()">发送短信</el-button>
-                <el-button type="success" plain class="anNiu" @click="btnUpload">医生诊断</el-button>
+                  发送预警</el-button
+                >
+                <el-button type="success" plain class="anNiu" @click="sendMsg()"
+                  >发送短信</el-button
+                >
+                <el-button type="success" plain class="anNiu" @click="btnUpload"
+                  >医生诊断</el-button
+                >
 
-                <el-button class="next" @click="prev()" :loading="loading">上一个</el-button>
-                <el-button class="next" @click="next()" :loading="loading">下一个</el-button>
+                <el-button
+                  class="next"
+                  v-if="isShowBtn"
+                  @click="prev()"
+                  :loading="loading"
+                  >上一个</el-button
+                >
+                <el-button
+                  class="next"
+                  v-if="isShowBtn"
+                  @click="next()"
+                  :loading="loading"
+                  >下一个</el-button
+                >
               </div>
-
 
               <!-- <div class="updown shangbianju">
                 <el-button
@@ -133,75 +215,132 @@
                 >上一个</el-button>
                 <el-button class="next"  @click="next()" :loading="loading">下一个</el-button>
               </div> -->
-
-
             </div>
-
           </div>
 
           <!-- 医生诊断弹窗 -->
           <div class="shangbianju">
-            <div style="padding: 15px ;font-size: 1vw;font-weight: 700;">患者心电图</div>
+            <div style="padding: 15px; font-size: 1vw; font-weight: 700">
+              患者心电图
+            </div>
             <div class="body" id="body">
               <!--            <div class="demo-image__preview">-->
               <!--              <el-image :src="baseImage"></el-image>-->
               <!--            </div>-->
               <div class="body-1">
                 <div>
-                  <div id="I" class="line" @dblclick="clicktrue('I', data12.dataI)"></div>
+                  <div
+                    id="I"
+                    class="line"
+                    @dblclick="clicktrue('I', data12.dataI)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="II" class="line" @dblclick="clicktrue('II', data12.dataII)"></div>
+                  <div
+                    id="II"
+                    class="line"
+                    @dblclick="clicktrue('II', data12.dataII)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="III" class="line" @dblclick="clicktrue('III', data12.dataIII)"></div>
+                  <div
+                    id="III"
+                    class="line"
+                    @dblclick="clicktrue('III', data12.dataIII)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="aVR" class="line" @dblclick="clicktrue('aVR', data12.dataaVR)"></div>
+                  <div
+                    id="aVR"
+                    class="line"
+                    @dblclick="clicktrue('aVR', data12.dataaVR)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="aVL" class="line" @dblclick="clicktrue('aVL', data12.dataaVL)"></div>
+                  <div
+                    id="aVL"
+                    class="line"
+                    @dblclick="clicktrue('aVL', data12.dataaVL)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="aVF" class="line" @dblclick="clicktrue('aVF', data12.dataaVF)"></div>
+                  <div
+                    id="aVF"
+                    class="line"
+                    @dblclick="clicktrue('aVF', data12.dataaVF)"
+                  ></div>
                 </div>
               </div>
               <div class="body-1">
                 <div>
-                  <div id="V1" class="line" @dblclick="clicktrue('V1', data12.dataV1)"></div>
+                  <div
+                    id="V1"
+                    class="line"
+                    @dblclick="clicktrue('V1', data12.dataV1)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="V2" class="line" @dblclick="clicktrue('V2', data12.dataV2)"></div>
+                  <div
+                    id="V2"
+                    class="line"
+                    @dblclick="clicktrue('V2', data12.dataV2)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="V3" class="line" @dblclick="clicktrue('V3', data12.dataV3)"></div>
+                  <div
+                    id="V3"
+                    class="line"
+                    @dblclick="clicktrue('V3', data12.dataV3)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="V4" class="line" @dblclick="clicktrue('V4', data12.dataV4)"></div>
+                  <div
+                    id="V4"
+                    class="line"
+                    @dblclick="clicktrue('V4', data12.dataV4)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="V5" class="line" @dblclick="clicktrue('V5', data12.dataV5)"></div>
+                  <div
+                    id="V5"
+                    class="line"
+                    @dblclick="clicktrue('V5', data12.dataV5)"
+                  ></div>
                 </div>
                 <div>
-                  <div id="V6" class="line" @dblclick="clicktrue('V6', data12.dataV6)"></div>
+                  <div
+                    id="V6"
+                    class="line"
+                    @dblclick="clicktrue('V6', data12.dataV6)"
+                  ></div>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
       <child ref="drawShow" @closeMain="closeMain"></child>
     </div>
-    <el-dialog title="密码验证" :visible.sync="dialogFormVisibleVerifyAuthority">
+    <el-dialog
+      title="密码验证"
+      :visible.sync="dialogFormVisibleVerifyAuthority"
+    >
       <el-form :model="verifyForm" :rules="rules" ref="verifyForm">
         <el-form-item label="验证密码" prop="password">
-          <el-input placeholder="请输入密码" v-model="verifyForm.password" show-password></el-input>
+          <el-input
+            placeholder="请输入密码"
+            v-model="verifyForm.password"
+            show-password
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleVerifyAuthority = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
+        <el-button @click="dialogFormVisibleVerifyAuthority = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" @click="dialogFormVisibleVerify"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog title="选择类型" :visible.sync="tanchuang">
@@ -214,7 +353,11 @@
               </div>
               <div class="fenzuzhutizi">
                 <ul class="xiaoul">
-                  <li v-for="(item, i) in group.options" class="xiaoli" :key="i">
+                  <li
+                    v-for="(item, i) in group.options"
+                    class="xiaoli"
+                    :key="i"
+                  >
                     <el-checkbox :label="item.value" border size="mini">
                       {{ item.value }}
                     </el-checkbox>
@@ -247,7 +390,7 @@ import { sendMsgToPatient } from "@/api/patient_management/patient_management";
 import html2canvas from "html2canvas";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
 // 发送信息时获取密码
-import { getlogin_password } from '@/api/jecg4_ecg/jecg4_ecg'
+import { getlogin_password } from "@/api/jecg4_ecg/jecg4_ecg";
 import { addLabel } from "@/api/log_user/log_user";
 import child from "@/views/staticECG/staticECG/child.vue";
 import { selectDoctor, getDoctorList } from "@/api/statistics/statistics";
@@ -265,14 +408,14 @@ import { getVerify } from "@/api/verify/verify";
 export default {
   name: "index",
   components: { child },
-  dicts: ['medical_history'],
+  dicts: ["medical_history"],
   data() {
     return {
       tanchuang: false,
       name: null,
       isShowName: {
         status: false,
-        name: "显示姓名"
+        name: "显示姓名",
       },
       on_off: false,
       selectDoctor: [],
@@ -282,7 +425,7 @@ export default {
       dialogFormVisibleVerifyAuthority: false,
       verifyForm: {
         password: null,
-        status: false
+        status: false,
       },
       // 路由
       luyou: "",
@@ -486,9 +629,11 @@ export default {
       // 表单校验
       rules: {
         password: [
-          { required: true, message: "密码不能为空", trigger: "blur" }
+          { required: true, message: "密码不能为空", trigger: "blur" },
         ],
-      }
+      },
+      isShowBtn: true,
+      isDoctorUser: false,
       // lead:false,
       // radio:'',
       // xIndex:null,
@@ -559,25 +704,40 @@ export default {
     // }
     //预警的类型
     // this.getyujingleixing()
+    this.getShowBnt();
   },
   methods: {
+    getShowBnt() {
+      if (this.$auth.hasRole("admin")) {
+        this.isShowBtn = true;
+      } else if (
+        !this.$auth.hasRole("admin") &&
+        (this.$auth.hasRole("hospitalUser") || this.$auth.hasRole("doctorUser"))
+      ) {
+        this.isShowBtn = false;
+      }
+
+      if (this.$auth.hasRole("doctorUser") && !this.$auth.hasRole("admin")) {
+        this.isDoctorUser = true;
+      }
+    },
     // 病史
     getMH(zdList, ecgType = this.data.pastMedicalHistory) {
-      let str = ''
+      let str = "";
       if (ecgType) {
-        ecgType.split(",").forEach(item => {
+        ecgType.split(",").forEach((item) => {
           if (this.canConvertToInt(item)) {
-            zdList.forEach(zd => {
+            zdList.forEach((zd) => {
               if (zd.value == item) {
-                str += zd.label + ','
+                str += zd.label + ",";
               }
-            })
+            });
           } else {
-            str += item + ','
+            str += item + ",";
           }
-        })
+        });
         if (str.endsWith(",")) {
-          str = str.substring(0, str.length - 1)
+          str = str.substring(0, str.length - 1);
         }
       }
       return str;
@@ -590,7 +750,6 @@ export default {
     },
     // 选择预警类型弹窗按钮 取消
     quxiao() {
-
       if (this.logDataType) {
         this.xianshizifuchuan = this.logDataType;
         this.zhi = this.logDataType.split(",").map((str) => str.trim());
@@ -600,11 +759,11 @@ export default {
         this.zhi = [];
         this.xianshizifuchuan = "";
       }
-      this.tanchuang = false
+      this.tanchuang = false;
     },
     // 选择预警类型弹窗按钮 完成
     queren() {
-      this.tanchuang = false
+      this.tanchuang = false;
     },
     hideMiddleName(patientName) {
       if (patientName.length <= 1) {
@@ -613,73 +772,69 @@ export default {
         return patientName.charAt(0) + "*"; // 两个字的保留第一个字，后面用 * 代替
       } else {
         // let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 2) + patientName.charAt(patientName.length - 1);
-        let visibleChars = patientName.charAt(0) + "*".repeat(patientName.length - 1);
+        let visibleChars =
+          patientName.charAt(0) + "*".repeat(patientName.length - 1);
         return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
       }
     },
     isShowNameClick() {
-      let isShowName = sessionStorage.getItem('isShowName')
+      let isShowName = sessionStorage.getItem("isShowName");
       if (isShowName) {
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "显示姓名"
-
+          this.isShowName.name = "显示姓名";
         } else {
           this.isShowName.status = !this.isShowName.status;
-          this.isShowName.name = "隐藏姓名"
+          this.isShowName.name = "隐藏姓名";
         }
       } else {
-        this.name = true
-        this.verifyForm.password = ''
-        this.dialogFormVisibleVerifyAuthority = true
+        this.name = true;
+        this.verifyForm.password = "";
+        this.dialogFormVisibleVerifyAuthority = true;
       }
-
     },
     /** 切换顶部tabs **/
     switchTabs(value) {
-      console.log(value)
+      console.log(value);
     },
     // 密码弹出框点击确认时
     dialogFormVisibleVerify() {
-      this.$refs["verifyForm"].validate(valid => {
+      this.$refs["verifyForm"].validate((valid) => {
         if (valid) {
           if (this.name) {
             // 显示姓名
             let obj = {
-              accountPwd: this.verifyForm.password
-            }
-            getVerify(obj).then(r => {
+              accountPwd: this.verifyForm.password,
+            };
+            getVerify(obj).then((r) => {
               this.$modal.msgSuccess("密码正确");
-              this.verifyForm.status = true
-              sessionStorage.setItem('isShowName', true)
-              this.dialogFormVisibleVerifyAuthority = false
+              this.verifyForm.status = true;
+              sessionStorage.setItem("isShowName", true);
+              this.dialogFormVisibleVerifyAuthority = false;
               this.isShowName.status = !this.isShowName.status;
-              this.isShowName.name = "隐藏姓名"
-              this.name = false
-            })
-
+              this.isShowName.name = "隐藏姓名";
+              this.name = false;
+            });
           } else {
             let objj = {
-              password: this.verifyForm.password
-            }
-            getlogin_password(objj).then(res => {
+              password: this.verifyForm.password,
+            };
+            getlogin_password(objj).then((res) => {
               if (res.code == 200) {
                 this.$modal.msgSuccess("密码正确");
-                this.verifyForm.status = true
-                this.dialogFormVisibleVerifyAuthority = false
-                sessionStorage.setItem('SMSverification', true)
+                this.verifyForm.status = true;
+                this.dialogFormVisibleVerifyAuthority = false;
+                sessionStorage.setItem("SMSverification", true);
                 if (this.on_off) {
                   this.sendMsg();
                 }
               } else {
                 this.$modal.msgSuccess("密码错误请重试");
               }
-            })
+            });
           }
-
         }
-      })
-
+      });
     },
     /** 查询用户管理列表 */
     async getList() {
@@ -752,31 +907,34 @@ export default {
       selectDoctor().then((response) => {
         this.options = response;
       });
-      getDoctorList().then(res => {
-        let options = []
-        let data = res.data.options
-        data.forEach(e => {
+      getDoctorList().then((res) => {
+        let options = [];
+        let data = res.data.options;
+        data.forEach((e) => {
           if (e.doctorList.length != 0) {
             let hospital = {
               value: e.hospitalCode,
               label: e.hospitalName,
-              children: []
-            }
-            e.doctorList.forEach(doctorInfo => {
-              hospital.children.push({ label: doctorInfo.doctorName, value: doctorInfo.doctorName })
-            })
-            options.push(hospital)
+              children: [],
+            };
+            e.doctorList.forEach((doctorInfo) => {
+              hospital.children.push({
+                label: doctorInfo.doctorName,
+                value: doctorInfo.doctorName,
+              });
+            });
+            options.push(hospital);
           }
-        })
+        });
         this.doctorList = options;
-        console.log('医生信息')
-        console.log(this.doctorList)
-      })
+        console.log("医生信息");
+        console.log(this.doctorList);
+      });
       this.getyujingleixing();
     },
     //选择医生
     selectDoctorChange(e) {
-      this.data.doctorName = e[1]
+      this.data.doctorName = e[1];
     },
     // 获取预警类型选项
     getyujingleixing() {
@@ -886,7 +1044,7 @@ export default {
       if (this.index >= this.patient_managementList.length) {
         if (
           (this.queryParams.pageNum - 1) * this.queryParams.pageSize +
-          this.patient_managementList.length >=
+            this.patient_managementList.length >=
           this.total
         ) {
           this.$message.warning("已经是最后一页！！！");
@@ -943,7 +1101,7 @@ export default {
     },
     // 选择预警类型的开关
     xianshi() {
-      this.tanchuang = true
+      this.tanchuang = true;
       // this.xuanzheyujingleixing = !this.xuanzheyujingleixing;
     },
     // 提交预警类型
@@ -2504,8 +2662,8 @@ export default {
         patientPhone = patientPhone.substring(0, 11);
       }
       // console.log(patientPhone);
-      let SMSverification = sessionStorage.getItem('SMSverification')
-      this.on_off = true
+      let SMSverification = sessionStorage.getItem("SMSverification");
+      this.on_off = true;
       if (SMSverification) {
         if (patientPhone) {
           // console.log("用户姓名: " + row.patientName)
@@ -2532,8 +2690,8 @@ export default {
           this.$message.error("该用户手机号不合法！！！");
         }
       } else {
-        this.verifyForm.password = ''
-        this.dialogFormVisibleVerifyAuthority = true
+        this.verifyForm.password = "";
+        this.dialogFormVisibleVerifyAuthority = true;
       }
     },
     //保存数据
@@ -2992,7 +3150,7 @@ export default {
   border: 1px solid #000000;
 }
 
-.el-tag+.el-tag {
+.el-tag + .el-tag {
   margin-left: 10px;
 }
 
@@ -3115,12 +3273,6 @@ export default {
   justify-content: space-around;
 }
 
-
-
-
-
-
-
 // 表格
 .tablex {
   border: 1px solid #ccc;
@@ -3137,7 +3289,7 @@ export default {
 }
 
 /* 选择父元素中的基数子元素 */
-.tablex tr> :nth-child(odd) {
+.tablex tr > :nth-child(odd) {
   /* 样式设置 */
   background-color: #f2f6fe;
 }
@@ -3147,7 +3299,7 @@ export default {
 // width: 90px;
 // }
 /* 选择父元素中的偶数子元素 */
-.parentElement> :nth-child(even) {
+.parentElement > :nth-child(even) {
   /* 样式设置 */
 }
 
@@ -3244,7 +3396,7 @@ export default {
 }
 
 ::v-deep .el-button--success {
-  background-color: #517AFC;
+  background-color: #517afc;
 }
 
 ::v-deep .el-button {
@@ -3277,7 +3429,7 @@ export default {
 }
 
 ::v-deep .el-button--primary {
-  background-color: #517AFC;
+  background-color: #517afc;
   color: #ffffff;
 }
 
@@ -3287,7 +3439,6 @@ export default {
 
 .shangbianju {
   background-color: #ffffff;
-
 }
 
 ::v-deep .el-textarea__inner {
@@ -3374,9 +3525,6 @@ export default {
   }
 }
 
-
-
-
 .yujinclass {
   display: flex;
   align-items: center;
@@ -3403,9 +3551,7 @@ export default {
     padding: 0 10px;
     font-size: 0.9vw;
     color: #8c8c8e;
-
   }
-
 }
 
 .yujinclass_zhi ::v-deep .el-popover__reference-wrapper button {
@@ -3422,7 +3568,6 @@ export default {
 
 .biaodan {
   height: 60vh;
-
 }
 
 ::v-deep .el-dialog__body::-webkit-scrollbar-button {
@@ -3434,10 +3579,13 @@ export default {
 }
 
 .xiaoli ::v-deep .el-checkbox.is-bordered {
-  border: none
+  border: none;
 }
 
-.xiaoli ::v-deep .el-checkbox.is-bordered.el-checkbox--medium .el-checkbox__label {
+.xiaoli
+  ::v-deep
+  .el-checkbox.is-bordered.el-checkbox--medium
+  .el-checkbox__label {
   line-height: 17px;
   font-size: 12px;
   display: flex;
