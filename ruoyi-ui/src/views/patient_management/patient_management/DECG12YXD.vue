@@ -228,6 +228,7 @@
                       </el-table-column>
                       <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>-->
           <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
+
           <el-table-column label="设备号" align="center" width="170" prop="equipmentCode"/>
           <el-table-column label="在线状态" align="center" width="100" prop="onlineStatus">
             <template slot-scope="scope">
@@ -239,6 +240,7 @@
               <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
             </template>
           </el-table-column>
+          <el-table-column label="采集时长" align="center" prop="timeDuration"/>
           <el-table-column label="患者电话" align="center" prop="patientPhone" min-width="150">
             <template slot-scope="scope">
               <span v-if="isShowName.status===true">{{ scope.row.patientPhone }}</span>

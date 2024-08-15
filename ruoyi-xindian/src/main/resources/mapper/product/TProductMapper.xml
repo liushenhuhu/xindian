@@ -22,6 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isVip"    column="is_vip"    />
         <result property="video"    column="video"    />
         <result property="title"    column="title"    />
+        <result property="discountPrice"    column="discount_price"    />
     </resultMap>
 
     <resultMap type="ProductImgs" id="ProductImgsResult">
@@ -31,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTProductVo">
-        select product_id, product_name, price, product_description, product_url, discount, state, update_time, create_time, product_num, sales,type,url_one ,frequency,is_vip,video,title from t_product
+        select product_id, product_name, price, product_description, product_url, discount, state, update_time, create_time, product_num, sales,type,url_one ,frequency,is_vip,video,title, discount_price from t_product
     </sql>
 
     <select id="selectTProductList" parameterType="TProduct" resultMap="TProductResult">
@@ -102,12 +103,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="productNum != null">product_num,</if>
             <if test="sales != null">sales,</if>
-            <if test="type != null">type,</if>
+            <if test="type != null and type != ''">type,</if>
             <if test="urlOne != null">url_one,</if>
             <if test="frequency != null">frequency,</if>
             <if test="isVip != null">is_vip,</if>
-            del_flag,
-         </trim>
+
+            <if test="video != null">video,</if>
+            <if test="title != null">title,</if>
+            <if test="discountPrice != null">discount_price,</if>
+           del_flag
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="productName != null">#{productName},</if>
             <if test="price != null">#{price},</if>
@@ -119,12 +124,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="productNum != null">#{productNum},</if>
             <if test="sales != null">#{sales},</if>
-            <if test="type != null">#{type},</if>
+            <if test="type != null and type != ''">#{type},</if>
             <if test="urlOne != null">#{urlOne},</if>
             <if test="frequency != null">#{frequency},</if>
             <if test="isVip != null">#{isVip},</if>
-            0,
-         </trim>
+
+            <if test="video != null">#{video},</if>
+            <if test="title != null">#{title},</if>
+            <if test="discountPrice != null">#{discountPrice},</if>
+           1
+        </trim>
     </insert>
 
     <update id="updateTProduct" parameterType="TProduct">
@@ -140,10 +149,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="productNum != null">product_num = #{productNum},</if>
             <if test="sales != null">sales = #{sales},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
             <if test="urlOne != null">url_one = #{urlOne},</if>
-            <if test="type != null">type = #{type},</if>
             <if test="frequency != null">frequency = #{frequency},</if>
             <if test="isVip != null">is_vip = #{isVip},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="video != null">video = #{video},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="discountPrice != null">discount_price = #{discountPrice},</if>
         </trim>
         where product_id = #{productId}
     </update>

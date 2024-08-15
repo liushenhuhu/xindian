@@ -313,7 +313,7 @@ public class PatientController extends BaseController {
     /**
      * 新增患者
      */
-    @PreAuthorize("@ss.hasPermi('patient:patient:add')")
+//    @PreAuthorize("@ss.hasPermi('patient:patient:add')")
     @Log(title = "患者", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Patient patient) throws Exception {
@@ -339,7 +339,7 @@ public class PatientController extends BaseController {
     /**
      * 修改患者
      */
-    @PreAuthorize("@ss.hasPermi('patient:patient:edit')")
+//    @PreAuthorize("@ss.hasPermi('patient:patient:edit')")
     @Log(title = "患者", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Patient patient) throws Exception {

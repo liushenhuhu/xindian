@@ -216,6 +216,15 @@
         <el-form-item label="销量" prop="sales">
           <el-input v-model="form.sales" placeholder="请输入销量" />
         </el-form-item>
+        <el-form-item label="视频路径" prop="video">
+          <el-input v-model="form.video" placeholder="请输入视频路径" />
+        </el-form-item>
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="form.title" placeholder="请输入标题" />
+        </el-form-item>
+        <el-form-item label="折扣" prop="discountPrice">
+          <el-input v-model="form.discountPrice" placeholder="请输入折扣" />
+        </el-form-item>
         <el-form-item label="商品详情图片" prop="urlOne">
           <el-input v-if="false" v-model="form.urlOne"/>
           <el-upload
@@ -369,8 +378,14 @@ export default {
         createTime: null,
         productNum: null,
         sales: null,
-        type:null,
-        urlOne:null
+        type: null,
+        urlOne: null,
+        frequency: null,
+        isVip: null,
+        delFlag: null,
+        video: null,
+        title: null,
+        discountPrice: null
       };
       this.resetForm("form");
     },

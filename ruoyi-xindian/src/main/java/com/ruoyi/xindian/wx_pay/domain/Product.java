@@ -88,6 +88,8 @@ public class Product implements Serializable {
      */
     private Integer isVip;
 
+    private Float discountPrice;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

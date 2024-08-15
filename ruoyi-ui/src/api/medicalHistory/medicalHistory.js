@@ -17,6 +17,13 @@ export function getMedicalHistory(medicalHistoryId) {
   })
 }
 
+export function getMedicalHistoryByPhone(phone) {
+  return request({
+    url: '/medicalHistory/medicalHistory/getByPatientPhone/' + phone,
+    method: 'get'
+  })
+}
+
 // 新增病史
 export function addMedicalHistory(data) {
   return request({
@@ -34,6 +41,20 @@ export function updateMedicalHistory(data) {
     data: data
   })
 }
+export function updateWeekReport(data) {
+  return request({
+    url: '/weekReport/report',
+    method: 'put',
+    data: data
+  })
+}
+export function getWeekReport(medicalHistoryId) {
+  return request({
+    url: '/weekReport/report/' + medicalHistoryId,
+    method: 'get'
+  })
+}
+
 
 // 删除病史
 export function delMedicalHistory(medicalHistoryId) {

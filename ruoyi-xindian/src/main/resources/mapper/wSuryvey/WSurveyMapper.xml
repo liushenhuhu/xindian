@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.wSuryvey.mapper.WSurveyMapper">
-    
+
     <resultMap type="WSurvey" id="WSurveyResult">
         <result property="id"    column="id"    />
         <result property="patientPhone"    column="patient_phone"    />
@@ -19,15 +19,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="smoking"    column="smoking"    />
         <result property="fammilyCd"    column="fammily_cd"    />
         <result property="fammilyCa"    column="fammily_ca"    />
+        <result property="lowAlbumen"    column="low_albumen"    />
+        <result property="triglyceride"    column="triglyceride"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="patientCode"    column="patient_code"    />
+    </resultMap>
+
+    <resultMap id="WSurveyAndWSurveyHistory" type="WSurvey" extends="WSurveyResult">
+        <collection property="wSurveyHistories" ofType="wSurveyHistory" resultMap="com.ruoyi.xindian.wSuryvey.mapper.WSurveyHistoryMapper.BaseResultMap"/>
+    </resultMap>
+
+
+    <resultMap id="WSurveyWSurveyHistoryResult" type="WSurvey" extends="WSurveyResult">
+        <collection property="wSurveyHistories" ofType="wSurveyHistory" javaType="java.util.List" resultMap="WSurveyHistoryResult" />
+    </resultMap>
+
+    <resultMap type="WSurveyHistory" id="WSurveyHistoryResult">
+        <result property="wSurveyHistoryId"    column="sub_w_survey_history_id"    />
+        <result property="wSurveyId"    column="sub_w_survey_id"    />
+        <result property="particularYear"    column="sub_particular_year"    />
+        <result property="hLowAlbumen"    column="sub_h_low_albumen"    />
+        <result property="hTriglyceride"    column="sub_h_triglyceride"    />
+        <result property="hSystolicAlbumen"    column="sub_h_systolic_albumen"    />
+        <result property="hCholesterol"    column="sub_h_cholesterol"    />
     </resultMap>
 
     <sql id="selectWSurveyVo">
-        select id, patient_phone, gender, age, waistline, cholesterol, systolic_albumen, diastolic_blood, systolic_blood, hypotensive_drugs, diabetes, smoking, fammily_cd, fammily_ca from w_survey
+        select id, patient_phone, gender, age, waistline, cholesterol, systolic_albumen, diastolic_blood, systolic_blood, hypotensive_drugs, diabetes, smoking, fammily_cd, fammily_ca, low_albumen, triglyceride, create_time , patient_code from w_survey
     </sql>
 
     <select id="selectWSurveyList" parameterType="WSurvey" resultMap="WSurveyResult">
         <include refid="selectWSurveyVo"/>
-        <where>  
+        <where>
             <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
             <if test="gender != null "> and gender = #{gender}</if>
             <if test="age != null "> and age = #{age}</if>
@@ -41,14 +64,54 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="smoking != null "> and smoking = #{smoking}</if>
             <if test="fammilyCd != null "> and fammily_cd = #{fammilyCd}</if>
             <if test="fammilyCa != null "> and fammily_ca = #{fammilyCa}</if>
+            <if test="lowAlbumen != null "> and low_albumen = #{lowAlbumen}</if>
+            <if test="triglyceride != null "> and triglyceride = #{triglyceride}</if>
         </where>
     </select>
-    
-    <select id="selectWSurveyById" parameterType="Long" resultMap="WSurveyResult">
-        <include refid="selectWSurveyVo"/>
-        where id = #{id}
+
+    <select id="selectWSurveyById" parameterType="Long" resultMap="WSurveyWSurveyHistoryResult">
+        select a.id, a.patient_phone, a.gender, a.age, a.waistline, a.cholesterol, a.systolic_albumen, a.diastolic_blood, a.systolic_blood, a.hypotensive_drugs, a.diabetes, a.smoking, a.fammily_cd, a.fammily_ca, a.low_albumen, a.triglyceride, a.create_time, a.patient_code,
+               b.w_survey_history_id as sub_w_survey_history_id, b.w_survey_id as sub_w_survey_id, b.particular_year as sub_particular_year, b.h_low_albumen as sub_h_low_albumen, b.h_triglyceride as sub_h_triglyceride, b.h_systolic_albumen as sub_h_systolic_albumen, b.h_cholesterol as sub_h_cholesterol
+        from w_survey a
+                 left join w_survey_history b on b.w_survey_id = a.id
+        where a.id = #{id}
     </select>
-        
+    <select id="selectWSurveyByPhone" resultType="com.ruoyi.xindian.wSuryvey.domain.WSurvey" resultMap="WSurveyAndWSurveyHistory">
+        SELECT
+            w_survey.patient_phone,
+            w_survey.id,
+            w_survey.gender,
+            w_survey.age,
+            w_survey.waistline,
+            w_survey.cholesterol,
+            w_survey.systolic_albumen,
+            w_survey.diastolic_blood,
+            w_survey.systolic_blood,
+            w_survey.hypotensive_drugs,
+            w_survey.diabetes,
+            w_survey.smoking,
+            w_survey.fammily_cd,
+            w_survey.fammily_ca,
+            w_survey.low_albumen,
+            w_survey.triglyceride,
+            w_survey.create_time,
+            w_survey_history.w_survey_history_id,
+            w_survey_history.particular_year,
+            w_survey_history.h_low_albumen,
+            w_survey_history.h_triglyceride,
+            w_survey_history.h_systolic_albumen,
+            w_survey_history.h_cholesterol
+        FROM
+            w_survey
+                LEFT JOIN
+            w_survey_history
+            ON
+                w_survey.id = w_survey_history.w_survey_id
+        where
+            w_survey.patient_phone = #{patientPhone}
+        order by w_survey.id desc
+    </select>
+
     <insert id="insertWSurvey" parameterType="WSurvey" useGeneratedKeys="true" keyProperty="id">
         insert into w_survey
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -65,7 +128,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="smoking != null">smoking,</if>
             <if test="fammilyCd != null">fammily_cd,</if>
             <if test="fammilyCa != null">fammily_ca,</if>
-         </trim>
+            <if test="lowAlbumen != null">low_albumen,</if>
+            <if test="triglyceride != null">triglyceride,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="patientCode != null">patient_code,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientPhone != null">#{patientPhone},</if>
             <if test="gender != null">#{gender},</if>
@@ -80,7 +147,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="smoking != null">#{smoking},</if>
             <if test="fammilyCd != null">#{fammilyCd},</if>
             <if test="fammilyCa != null">#{fammilyCa},</if>
-         </trim>
+            <if test="lowAlbumen != null">#{lowAlbumen},</if>
+            <if test="triglyceride != null">#{triglyceride},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="patientCode != null">#{patientCode},</if>
+        </trim>
     </insert>
 
     <update id="updateWSurvey" parameterType="WSurvey">
@@ -99,6 +170,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="smoking != null">smoking = #{smoking},</if>
             <if test="fammilyCd != null">fammily_cd = #{fammilyCd},</if>
             <if test="fammilyCa != null">fammily_ca = #{fammilyCa},</if>
+            <if test="lowAlbumen != null">low_albumen = #{lowAlbumen},</if>
+            <if test="triglyceride != null">triglyceride = #{triglyceride},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="patientCode != null">patient_code = #{patientCode},</if>
         </trim>
         where id = #{id}
     </update>
@@ -108,7 +183,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteWSurveyByIds" parameterType="String">
-        delete from w_survey where id in 
+        delete from w_survey where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

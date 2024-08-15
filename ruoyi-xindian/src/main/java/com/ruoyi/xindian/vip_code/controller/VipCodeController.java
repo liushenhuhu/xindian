@@ -124,12 +124,13 @@ public class VipCodeController extends BaseController {
         Calendar calendar = Calendar.getInstance();
         int a=0;// 1是对年份加时间 2是对月份加时间
         int data=0;//加多少
-        //服务次数判断  加上相应时间
-        if(one.getNum()==25){
+        if(one.getNum()<25){
             a=2;
-            data=3;
-        }
-        if(one.getNum()==100){
+            data=2;
+        }else if(one.getNum()<100){
+            a=2;
+            data=6;
+        }else {
             a=1;
             data=1;
         }
@@ -149,16 +150,16 @@ public class VipCodeController extends BaseController {
             sysUserMapper.updateUser(sysUser2);
         }else {
             if(one.getIsVip()==1){//激活码是vip
-                Date date = new Date();
+                Date date1 = new Date();
                 //升级为vip
                 VipPatient vip = new VipPatient();
                 vip.setPatientPhone(sysUser.getPhonenumber());
                 vip.setVipNum(Long.valueOf(one.getNum())+sysUser.getDetectionNum());
                 //加时间
-                calendar.setTime(date);
+                calendar.setTime(date1);
                 calendar.add(a, data);
                 vip.setEndDate(calendar.getTime());
-                vip.setCreateTime(date);
+                vip.setCreateTime(date1);
                 iVipPatientService.insertVipPatient(vip);
                 sysUserMapper.updateDeteTime(sysUser.getPhonenumber());
                 SysUser sysUser2 = new SysUser();

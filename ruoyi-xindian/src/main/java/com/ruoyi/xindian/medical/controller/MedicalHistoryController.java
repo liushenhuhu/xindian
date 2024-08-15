@@ -159,6 +159,17 @@ public class MedicalHistoryController extends BaseController
         return toAjax(medicalHistoryService.insertMedicalHistory(medicalHistory));
     }
 
+
+//    @Log(title = "病史", businessType = BusinessType.INSERT)
+    @PostMapping("addQuestionnaireRegister")
+    public AjaxResult addQuestionnaireRegister(@RequestBody MedicalHistory medicalHistory) throws Exception {
+        if (medicalHistory.getPatientPhone()!=null&&!"".equals(medicalHistory.getPatientPhone())){
+            medicalHistory.setPatientPhone(aesUtils.encrypt(medicalHistory.getPatientPhone()));
+        }
+
+        return toAjax(medicalHistoryService.insertMedicalHistory(medicalHistory));
+    }
+
     /**
      * 修改病史
      */

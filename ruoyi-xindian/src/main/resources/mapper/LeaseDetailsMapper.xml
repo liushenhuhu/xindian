@@ -80,7 +80,7 @@
                 lease.lease_id = lease_details.lease_id
         <where>
             and lease.phone = #{phone}  and  lease.give_back = 0
-            <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code = #{equipmentCode}</if>
+            <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code like concat('%', #{equipmentCode}, '%')</if>
             <if test="equipmentType != null  and equipmentType != ''"> and equipment_type = #{equipmentType}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>

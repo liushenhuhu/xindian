@@ -19,7 +19,7 @@ public class SxDdReport implements Serializable {
      * 善行生成报告id
      */
     @TableId(type = IdType.AUTO)
-    private Integer sxReportId;
+    private Long sxReportId;
 
     /**
      * 报告编号
@@ -85,6 +85,8 @@ public class SxDdReport implements Serializable {
      * 采集时长
      */
     private String gatherDuration;
+
+    private String pId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

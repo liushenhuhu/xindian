@@ -164,6 +164,8 @@ public class PatientManagement extends BaseEntity {
     private String pastMedicalHistory;
 
     private String livingHabit;
+
+    private Date generationTime;
     /**
      * 报告时间
      */

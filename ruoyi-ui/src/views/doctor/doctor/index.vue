@@ -123,6 +123,7 @@
           <el-tag v-else-if="scope.row.accountStatus === '1'" size="small" type="danger">停用</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="用户编号" align="center" prop="userId" />
 <!--      <el-table-column label="关联设备" align="center" prop="equipmentList" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -140,6 +141,23 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['doctor:doctor:remove']"
           >删除</el-button>
+          <el-dropdown  size="mini" @command="(command) => handleCommand(command, scope.row)"
+                       v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
+                <span class="el-dropdown-link">
+                  <i class="el-icon-d-arrow-right el-icon--right"></i>更多
+                </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-if="scope.row.userId!=null&&scope.row.userId!=''" command="handleResetPwd" icon="el-icon-key"
+                                v-hasPermi="['system:user:resetPwd']">重置密码
+              </el-dropdown-item>
+              <el-dropdown-item v-if="scope.row.userId!=null&&scope.row.userId!=''" command="handleUpdateUser" icon="el-icon-circle-check"
+                                v-hasPermi="['system:user:edit']">修改角色信息
+              </el-dropdown-item>
+              <el-dropdown-item v-if="scope.row.userId==null||scope.row.userId==''" command="handleUserAdd" icon="el-icon-circle-check"
+                                v-hasPermi="['system:user:add']">新增账号信息
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -267,6 +285,142 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+
+
+
+    <!-- 添加或修改用户配置对话框 -->
+    <el-dialog :title="titleUser" :visible.sync="openUser" width="600px" append-to-body>
+      <el-form ref="formUser" :model="formUser" :rules="rulesUser" label-width="80px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户昵称" prop="nickName">
+              <el-input v-model="formUser.nickName" placeholder="请输入用户昵称" maxlength="30"/>
+            </el-form-item>
+          </el-col>
+
+
+          <el-col :span="12">
+            <el-form-item label="归属部门" >
+              <treeselect v-model="formUser.deptId" :options="deptOptions" :show-count="true" @input="inputSelect" placeholder="请选择归属部门"/>
+            </el-form-item>
+          </el-col>
+
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="手机号码" prop="phonenumber">
+              <el-input v-model="formUser.phonenumber" disabled placeholder="请输入手机号码" maxlength="11"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="formUser.email" placeholder="请输入邮箱" maxlength="50"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="医院代号" prop="hospitalCode">
+              <el-select v-model="formUser.hospitalCode" placeholder="请选择医院代号">
+                <el-option
+                  v-for="item in hospitaloptions"
+                  :key="item.hospitalId"
+                  :label="item.hospitalName"
+                  :value="item.hospitalCode">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="科室代号" prop="departmentCode">
+              <el-input v-model="formUser.departmentCode" placeholder="请输入科室代号" maxlength="50"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item v-if="formUser.userId == undefined" label="用户名称" prop="userName">
+              <el-input v-model="formUser.userName" disabled placeholder="请输入用户名称" maxlength="30"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item v-if="formUser.userId == undefined" label="用户密码" prop="password">
+              <el-input v-model="formUser.password" placeholder="请输入用户密码" type="password" maxlength="20" show-password/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户性别">
+              <el-select v-model="formUser.sex" placeholder="请选择性别">
+                <el-option
+                  v-for="dict in dict.type.sys_user_sex"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态">
+              <el-radio-group v-model="formUser.status">
+                <el-radio
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{ dict.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="岗位">
+              <el-select v-model="formUser.postIds" multiple placeholder="请选择岗位">
+                <el-option
+                  v-for="item in postOptions"
+                  :key="item.postId"
+                  :label="item.postName"
+                  :value="item.postId"
+                  :disabled="item.status == 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="角色">
+              <el-select v-model="formUser.roleIds" multiple placeholder="请选择角色">
+                <el-option
+                  v-for="item in roleOptions"
+                  :key="item.roleId"
+                  :label="item.roleName"
+                  :value="item.roleId"
+                  :disabled="item.status == 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="备注">
+              <el-input v-model="formUser.remark" type="textarea" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFormUser">确 定</el-button>
+        <el-button @click="cancelUser">取 消</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -279,10 +433,15 @@ import item from "@/layout/components/Sidebar/Item";
 import {listHospital, listHospitalId} from "@/api/hospital/hospital";
 import {getHospitalSpecialList} from "@/api/visit/hospitalRelation";
 import {getHospitalOutpatientList} from "@/api/visit/hospitalOutpatient";
+import {addUser, getUser, resetUserPwd, updateUser} from "@/api/system/user";
+import Treeselect from "@riophae/vue-treeselect";
+import {treeselect} from "@/api/system/dept";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "Doctor",
-  dicts: ['hospital_name_list','docker_type'],
+  components: {Treeselect},
+  dicts: ['hospital_name_list','docker_type','sys_user_sex','sys_normal_disable'],
   data() {
     return {
       hospitalvalue:null,
@@ -314,13 +473,21 @@ export default {
       // 总条数
       total: 0,
       options:[],
+      optionsUser:[],
       options1:[],
       // 医生表格数据
       doctorList: [],
+      deptOptions: undefined,
       // 弹出层标题
       title: "",
+      titleUser: "",
       // 是否显示弹出层
       open: false,
+      openUser: false,
+      // 岗位选项
+      postOptions: [],
+      // 角色选项
+      roleOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -338,10 +505,12 @@ export default {
         hospital: null,
         img: null,
         professional:null,
+        initPassword: undefined,
         // equipmentList:null
       },
       // 表单参数
       form: {},
+      formUser: {},
       // 表单校验
       rules: {
         doctorName: [
@@ -366,6 +535,38 @@ export default {
           { required: true, message: "门诊不能为空", trigger: "blur" }
         ],
 
+      },
+      // 表单校验
+      rulesUser: {
+        userName: [
+          {required: true, message: "用户名称不能为空", trigger: "blur"},
+          {min: 2, max: 20, message: '用户名称长度必须介于 2 和 20 之间', trigger: 'blur'}
+        ],
+        nickName: [
+          {required: true, message: "用户昵称不能为空", trigger: "blur"}
+        ],
+        password: [
+          {required: true, message: "用户密码不能为空", trigger: "blur"},
+          {min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur'}
+        ],
+        email: [
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ],
+        phonenumber: [
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ],
+
+        deptId: [
+          {required: true, message: '所属模块不能为空', trigger: 'input'}
+        ]
       }
     };
   },
@@ -436,6 +637,9 @@ export default {
         });
 
     },
+    inputSelect(data){
+      this.$refs.formUser.validateField('deptId');
+    },
     historyId(val){
       if (val!==""){
         this.form.departmentCode=null
@@ -480,6 +684,10 @@ export default {
     cancel() {
       this.open = false;
       this.reset();
+    },
+    cancelUser(){
+      this.openUser = false;
+      this.resetUser();
     },
     // 表单重置
     reset() {
@@ -601,22 +809,127 @@ export default {
       this.download('doctor/doctor/export', {
         ...this.queryParams
       }, `doctor_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 表单重置
+    resetUser() {
+      this.formUser = {
+        userId: undefined,
+        deptId: undefined,
+        userName: undefined,
+        nickName: undefined,
+        password: undefined,
+        phonenumber: undefined,
+        email: undefined,
+        sex: undefined,
+        status: "0",
+        remark: undefined,
+        postIds: [],
+        roleIds: []
+      };
+      this.resetForm("form");
+    },
+    /** 查询部门下拉树结构 */
+    getTreeselectUser() {
+      treeselect().then(response => {
+        this.deptOptions = response.data;
+      });
+    },
+    /** 修改按钮操作 */
+    handleUpdateUser(row) {
+      this.resetUser();
+      this.getTreeselectUser();
+      const userId = row.userId || this.ids;
+      getUser(userId).then(response => {
+        this.formUser = response.data;
+        this.postOptions = response.posts;
+        this.roleOptions = response.roles;
+        this.formUser.postIds = response.postIds;
+        this.formUser.roleIds = response.roleIds;
+        this.openUser = true;
+        this.titleUser = "修改用户";
+        this.formUser.password = "";
+      });
+    },
+    submitFormUser(){
+      this.$refs["formUser"].validate(valid => {
+        if (valid) {
+          if (this.formUser.userId != undefined) {
+            updateUser(this.formUser).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.openUser = false;
+              this.getList();
+            });
+          } else {
+            addUser(this.formUser).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.openUser = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    // 更多操作触发
+    handleCommand(command, row) {
+      switch (command) {
+        case "handleResetPwd":
+          this.handleResetPwd(row);
+          break;
+        case "handleUpdateUser":
+          this.handleUpdateUser(row);
+          break;
+        case "handleUserAdd":
+          this.handleAddUser(row);
+          break;
+        default:
+          break;
+      }
+    },
+    /** 新增按钮操作 */
+    handleAddUser(row) {
+      this.resetUser();
+      this.getTreeselectUser();
+      getUser().then(response => {
+        this.postOptions = response.posts;
+        this.roleOptions = response.roles;
+        this.openUser = true;
+        this.titleUser = "添加用户";
+        this.formUser.password = '123456';
+        this.formUser.phonenumber = row.doctorPhone;
+        this.formUser.userName = row.doctorPhone;
+        this.formUser.nickName = row.doctorName;
+      });
+    },
+    /** 重置密码按钮操作 */
+    handleResetPwd(row) {
+      this.$prompt('请输入"' + row.doctorName + '"的新密码', "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        inputPattern: /^.{5,20}$/,
+        inputErrorMessage: "用户密码长度必须介于 5 和 20 之间"
+      }).then(({value}) => {
+        resetUserPwd(row.userId, value).then(response => {
+          this.$modal.msgSuccess("修改成功，新密码是：" + value);
+        });
+      }).catch(() => {
+      });
+    },
   }
 };
 </script>
-<style>
-.avatar {
-  width: 160px;
-  height: 150px;
-  display: flex;
-}
-</style>
-<style lang="scss" scoped>
-::v-deep .biaodan{
-  display: flex;
-}
-::v-deep .kaoyou{
-  margin-left: auto;
-}
-</style>
+<!--<style>-->
+<!--.avatar {-->
+<!--  width: 160px;-->
+<!--  height: 150px;-->
+<!--  display: flex;-->
+<!--}-->
+<!--</style>-->
+<!--<style lang="scss" scoped>-->
+<!--::v-deep .biaodan{-->
+<!--  display: flex;-->
+<!--}-->
+<!--::v-deep .kaoyou{-->
+<!--  margin-left: auto;-->
+<!--}-->
+<!--</style>-->

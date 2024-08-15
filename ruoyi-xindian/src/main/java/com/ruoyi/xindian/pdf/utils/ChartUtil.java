@@ -199,6 +199,8 @@ public class ChartUtil {
         domainAxis.setLabelFont(new Font("SansSerif", Font.PLAIN, 20));
         //设置横纵字体大小
         domainAxis.setTickLabelFont(new Font("SansSerif", Font.PLAIN, 20));
+        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
 
         //设置纵轴范围
         NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();

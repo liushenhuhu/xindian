@@ -43,6 +43,7 @@ public interface IWSurveyService
      */
     public int updateWSurvey(WSurvey wSurvey);
 
+
     /**
      * 批量删除wSuryvey
      * 
@@ -58,4 +59,6 @@ public interface IWSurveyService
      * @return 结果
      */
     public int deleteWSurveyById(Long id);
+
+    WSurvey getScreening(String patientPhone);
 }

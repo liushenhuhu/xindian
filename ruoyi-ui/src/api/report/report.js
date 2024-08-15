@@ -8,6 +8,20 @@ export function listReport(query) {
     params: query
   })
 }
+export function getWebList(query) {
+  return request({
+    url: '/report/report/web/list',
+    method: 'get',
+    params: query
+  })
+}
+export function getWeekReportList(query) {
+  return request({
+    url: '/weekReport/report/list',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询报告详细
 export function getReport(reportId) {

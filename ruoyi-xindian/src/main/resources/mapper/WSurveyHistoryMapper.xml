@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.wSuryvey.mapper.WSurveyHistoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.wSuryvey.domain.WSurveyHistory">
+            <id property="wSurveyHistoryId" column="w_survey_history_id" jdbcType="INTEGER"/>
+            <result property="wSurveyId" column="w_survey_id" jdbcType="INTEGER"/>
+            <result property="particularYear" column="particular_year" jdbcType="VARCHAR"/>
+            <result property="hLowAlbumen" column="h_low_albumen" jdbcType="FLOAT"/>
+            <result property="hTriglyceride" column="h_triglyceride" jdbcType="FLOAT"/>
+            <result property="hSystolicAlbumen" column="h_systolic_albumen" jdbcType="FLOAT"/>
+            <result property="hCholesterol" column="h_cholesterol" jdbcType="FLOAT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        w_survey_history_id,w_survey_id,particular_year,
+        h_low_albumen,h_triglyceride,h_systolic_albumen,
+        h_cholesterol
+    </sql>
+</mapper>

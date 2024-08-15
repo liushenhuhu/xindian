@@ -4,28 +4,117 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.verify.mapper.SxDdReportMapper">
 
-    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.verify.domain.SxDdReport">
-            <id property="sxReportId" column="sx_report_id" jdbcType="INTEGER"/>
-            <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
-            <result property="sn" column="sn" jdbcType="VARCHAR"/>
-            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
-            <result property="uploadStart" column="upload_start" jdbcType="VARCHAR"/>
-            <result property="gatherStartTime" column="gather_start_time" jdbcType="VARCHAR"/>
-            <result property="phone" column="phone" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="pdfUrl" column="pdf_url" jdbcType="VARCHAR"/>
-            <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="sex" column="sex" jdbcType="VARCHAR"/>
-            <result property="birthday" column="birthday" jdbcType="VARCHAR"/>
-            <result property="gatherDuration" column="gather_duration" jdbcType="VARCHAR"/>
+    <resultMap type="SxDdReport" id="SxDdReportResult">
+        <result property="sxReportId"    column="sx_report_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="sn"    column="sn"    />
+        <result property="userId"    column="user_id"    />
+        <result property="uploadStart"    column="upload_start"    />
+        <result property="gatherStartTime"    column="gather_start_time"    />
+        <result property="phone"    column="phone"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="pdfUrl"    column="pdf_url"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="gatherDuration"    column="gather_duration"    />
+        <result property="pId"    column="p_id"    />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        sx_report_id,order_id,sn,
-        user_id,upload_start,gather_start_time,
-        phone,create_time,pdf_url,
-        file_name,name,sex,
-        birthday,gather_duration
+    <sql id="selectSxDdReportVo">
+        select sx_report_id, order_id, sn, user_id, upload_start, gather_start_time, phone, create_time, pdf_url, file_name, name, sex, birthday, gather_duration, p_id from sx_dd_report
     </sql>
+
+    <select id="selectSxDdReportList" parameterType="SxDdReport" resultMap="SxDdReportResult">
+        <include refid="selectSxDdReportVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="sn != null  and sn != ''"> and sn = #{sn}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="uploadStart != null  and uploadStart != ''"> and upload_start = #{uploadStart}</if>
+            <if test="gatherStartTime != null  and gatherStartTime != ''"> and gather_start_time = #{gatherStartTime}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="pdfUrl != null  and pdfUrl != ''"> and pdf_url = #{pdfUrl}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="birthday != null  and birthday != ''"> and birthday = #{birthday}</if>
+            <if test="gatherDuration != null  and gatherDuration != ''"> and gather_duration = #{gatherDuration}</if>
+            <if test="pId != null  and pId != ''"> and p_id = #{pId}</if>
+        </where>
+    </select>
+
+    <select id="selectSxDdReportBySxReportId" parameterType="Long" resultMap="SxDdReportResult">
+        <include refid="selectSxDdReportVo"/>
+        where sx_report_id = #{sxReportId}
+    </select>
+
+    <insert id="insertSxDdReport" parameterType="SxDdReport" useGeneratedKeys="true" keyProperty="sxReportId">
+        insert into sx_dd_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="sn != null">sn,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="uploadStart != null">upload_start,</if>
+            <if test="gatherStartTime != null">gather_start_time,</if>
+            <if test="phone != null">phone,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="pdfUrl != null">pdf_url,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="name != null">name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="gatherDuration != null">gather_duration,</if>
+            <if test="pId != null">p_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="sn != null">#{sn},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="uploadStart != null">#{uploadStart},</if>
+            <if test="gatherStartTime != null">#{gatherStartTime},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="pdfUrl != null">#{pdfUrl},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="gatherDuration != null">#{gatherDuration},</if>
+            <if test="pId != null">#{pId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSxDdReport" parameterType="SxDdReport">
+        update sx_dd_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="sn != null">sn = #{sn},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="uploadStart != null">upload_start = #{uploadStart},</if>
+            <if test="gatherStartTime != null">gather_start_time = #{gatherStartTime},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="pdfUrl != null">pdf_url = #{pdfUrl},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="gatherDuration != null">gather_duration = #{gatherDuration},</if>
+            <if test="pId != null">p_id = #{pId},</if>
+        </trim>
+        where sx_report_id = #{sxReportId}
+    </update>
+
+    <delete id="deleteSxDdReportBySxReportId" parameterType="Long">
+        delete from sx_dd_report where sx_report_id = #{sxReportId}
+    </delete>
+
+    <delete id="deleteSxDdReportBySxReportIds" parameterType="String">
+        delete from sx_dd_report where sx_report_id in
+        <foreach item="sxReportId" collection="array" open="(" separator="," close=")">
+            #{sxReportId}
+        </foreach>
+    </delete>
 </mapper>

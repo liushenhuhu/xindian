@@ -12,25 +12,52 @@
         <result property="diagnosisStatus" column="diagnosis_status"/>
         <result property="diagnosisConclusion" column="diagnosis_conclusion"/>
         <result property="weekpdftime" column="weekpdftime"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="doctorName" column="doctor_name"/>
+        <result property="patientName" column="patient_name"/>
     </resultMap>
 
     <sql id="selectWeekReportVo">
-        select id, weekid, patient_phone, doctor_phone, diagnosis_status, diagnosis_conclusion, weekpdftime
+        select id, weekid, patient_phone, doctor_phone, diagnosis_status, diagnosis_conclusion, weekpdftime,update_time
         from week_report
     </sql>
 
     <select id="selectWeekReportList" parameterType="WeekReport" resultMap="WeekReportResult">
-        <include refid="selectWeekReportVo"/>
+        SELECT
+        doctor.doctor_name_aes as doctor_name,
+        week_report.id,
+        week_report.weekid,
+        week_report.patient_phone,
+        week_report.doctor_phone,
+        week_report.diagnosis_status,
+        week_report.diagnosis_conclusion,
+        week_report.weekpdftime,
+        week_report.update_time,
+        patient.patient_id,
+        patient.patient_name_aes as patient_name
+        FROM
+        patient
+        INNER JOIN
+        week_report
+        ON
+        patient.patient_phone_aes = week_report.patient_phone
+        INNER JOIN
+        doctor
+        ON
+        doctor.doctor_phone_aes = week_report.doctor_phone
         <where>
             <if test="weekid != null ">and weekid = #{weekid}</if>
             <if test="patientPhone != null  and patientPhone != ''">and patient_phone = #{patientPhone}</if>
             <if test="doctorPhone != null  and doctorPhone != ''">and doctor_phone = #{doctorPhone}</if>
             <if test="diagnosisStatus != null ">and diagnosis_status = #{diagnosisStatus}</if>
             <if test="weekpdftime != null ">and weekpdftime = #{weekpdftime}</if>
-            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''">and diagnosis_conclusion =
-                #{diagnosisConclusion}
+            <if test=" doctorName!= null ">and doctor.doctor_name_aes = #{doctorName}</if>
+            <if test=" patientName!= null ">and patient.patient_name_aes = #{patientName}</if>
+            <if test="diagnosisConclusion != null  and diagnosisConclusion != ''">
+            and diagnosis_conclusion  like concat('%',#{diagnosisConclusion},'%')
             </if>
         </where>
+        order by update_time desc
     </select>
 
     <select id="selectWeekReportById" parameterType="Long" resultMap="WeekReportResult">
@@ -96,6 +123,7 @@
             <if test="diagnosisStatus != null">diagnosis_status = #{diagnosisStatus},</if>
             <if test="diagnosisConclusion != null">diagnosis_conclusion = #{diagnosisConclusion},</if>
             <if test="weekpdftime != null">weekpdftime = #{weekpdftime},</if>
+            update_time = now()
         </trim>
         where weekid = #{weekid}
     </update>

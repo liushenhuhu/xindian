@@ -202,12 +202,10 @@ public class OrderController {
     /**
      * 添加服务订单
      * @param request
-     * @param productId
-     * @param sum
      * @return
      */
     @PostMapping("/orderKpOrFwAdd")
-    public AjaxResult orderKpOrFwAdd(HttpServletRequest request,Long productId,Integer sum){
+    public AjaxResult orderKpOrFwAdd(HttpServletRequest request,@RequestBody OrderVo orderVo){
 
         lock.lock();
         try {
@@ -218,23 +216,23 @@ public class OrderController {
             }
             redisTemplate.opsForValue().set("getOrderId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
 
-            if (productId==null){
+            if (orderVo.getProductId()==null){
                 return AjaxResult.error("商品参数错误，请稍后再试");
             }
-            if (sum==null){
+            if (orderVo.getSum()==null){
                 return AjaxResult.error("商品购买数量错误，请稍后再试");
             }
             LoginUser loginUser = tokenService.getLoginUser(request);
 
             SysUser sysUser = sysUserService.selectUserById(loginUser.getUser().getUserId());
             VipPatient vipPhone = vipPatientService.findVipPhone(sysUser.getPhonenumber());
-            if (vipPhone!=null&&(vipPhone.getVipNum()+sum)>500){
+            if (vipPhone!=null&&(vipPhone.getVipNum()==null?0:vipPhone.getVipNum()+orderVo.getSum())>500){
                 return AjaxResult.error("每人仅限购买500服务次数");
             }
-            if (vipPhone==null&&(sysUser.getDetectionNum()+sum)>500){
+            if (vipPhone==null&&(sysUser.getDetectionNum()==null?0:sysUser.getDetectionNum()+orderVo.getSum())>500){
                 return AjaxResult.error("每人仅限购买500服务次数");
             }
-            Product product = productService.selectPId(productId);
+            Product product = productService.selectPId(orderVo.getProductId());
             if (product==null){
                 return AjaxResult.error("商品不存在");
             }
@@ -242,7 +240,7 @@ public class OrderController {
                 return AjaxResult.error("商品已下架");
             }
 
-            String stringBuilder = orderInfoService.addKpOrFwOrder(request, productId, sum);
+            String stringBuilder = orderInfoService.addKpOrFwOrder(request, orderVo.getProductId(), orderVo.getSum());
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){
             System.out.println(e);
@@ -316,12 +314,10 @@ public class OrderController {
     /**
      * 添加服务订单
      * @param request
-     * @param productId
-     * @param sum
      * @return
      */
     @PostMapping("/orderCountReportAdd")
-    public AjaxResult orderCountReportAdd(HttpServletRequest request,Long productId,Integer sum){
+    public AjaxResult orderCountReportAdd(HttpServletRequest request,@RequestBody OrderVo orderVo){
 
         lock.lock();
         try {
@@ -332,20 +328,20 @@ public class OrderController {
             }
             redisTemplate.opsForValue().set("getOrderId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
 
-            if (productId==null){
+            if (orderVo.getProductId()==null){
                 return AjaxResult.error("商品参数错误，请稍后再试");
             }
-            if (sum==null){
+            if (orderVo.getSum()==null){
                 return AjaxResult.error("商品购买数量错误，请稍后再试");
             }
             LoginUser loginUser = tokenService.getLoginUser(request);
 
             SysUser sysUser = sysUserService.selectUserById(loginUser.getUser().getUserId());
 
-            if ((sysUser.getWeeklyNewspaperNum()+sum)>500){
+            if ((sysUser.getWeeklyNewspaperNum()==null?0:sysUser.getWeeklyNewspaperNum()+orderVo.getSum())>500){
                 return AjaxResult.error("每人仅限购买500服务次数");
             }
-            Product product = productService.selectPId(productId);
+            Product product = productService.selectPId(orderVo.getProductId());
             if (product==null){
                 return AjaxResult.error("商品不存在");
             }
@@ -353,7 +349,7 @@ public class OrderController {
                 return AjaxResult.error("商品已下架");
             }
 
-            String stringBuilder = orderInfoService.addKpOrFwOrder(request, productId, sum);
+            String stringBuilder = orderInfoService.addKpOrFwOrder(request, orderVo.getProductId(), orderVo.getSum());
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){
             System.out.println(e);
@@ -366,11 +362,10 @@ public class OrderController {
     /**
      * 添加服务订单
      * @param request
-     * @param productId
      * @return
      */
     @PostMapping("/addBGOrder")
-    public AjaxResult addBGOrder(HttpServletRequest request,Long productId,String pId){
+    public AjaxResult addBGOrder(HttpServletRequest request,@RequestBody OrderVo orderVo){
 
         lock.lock();
         try {
@@ -381,10 +376,10 @@ public class OrderController {
             }
             redisTemplate.opsForValue().set("getOrderId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
 
-            if (productId==null){
+            if (orderVo.getProductId()==null){
                 return AjaxResult.error("商品参数错误，请稍后再试");
             }
-            Product product = productService.selectPId(productId);
+            Product product = productService.selectPId(orderVo.getProductId());
             if (product==null){
                 return AjaxResult.error("商品不存在");
             }
@@ -423,7 +418,7 @@ public class OrderController {
 //            if (fuwaiSendStatus!=null&&fuwaiSendStatus==2){
 //                return AjaxResult.error("该报告已提交诊断");
 //            }
-            String stringBuilder = orderInfoService.addBGOrder(request, productId, pId);
+            String stringBuilder = orderInfoService.addBGOrder(request, orderVo.getProductId(), orderVo.getPId());
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){
             System.out.println(e);
