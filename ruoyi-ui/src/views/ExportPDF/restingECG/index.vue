@@ -40,10 +40,31 @@
                           <td>患者病史</td>
                           <td>{{ getMH(dict.type.medical_history) }}</td>
                         </tr>
+
+                        <tr v-if="isDoctorUser">
+                          <td>P波</td>
+                          <td>{{ data.p }}</td>
+                          <td>QTc</td>
+                          <td>{{ data.qtc }}</td>
+                          <td>HRV</td>
+                          <td>{{ data.hrv }}ms</td>
+                        </tr>
+                        <tr v-if="isDoctorUser">
+                          <td>QRS区间</td>
+                          <td>{{ data.qrs }}ms</td>
+                          <td>住院号</td>
+                          <td>-</td>
+                          <td>申请单号</td>
+                          <td></td>
+                        </tr>
                       </table>
                     </div>
                   </el-tab-pane>
-                  <el-tab-pane label="心电参数" name="ecgInfo">
+                  <el-tab-pane
+                    v-if="!isDoctorUser"
+                    label="心电参数"
+                    name="ecgInfo"
+                  >
                     <div class="tabBox">
                       <table>
                         <tr>
@@ -612,6 +633,7 @@ export default {
         ],
       },
       isShowBtn: true,
+      isDoctorUser: false,
       // lead:false,
       // radio:'',
       // xIndex:null,
@@ -689,10 +711,14 @@ export default {
       if (this.$auth.hasRole("admin")) {
         this.isShowBtn = true;
       } else if (
-        this.$auth.hasRole("hospitalUser") ||
-        this.$auth.hasRole("doctorUser")
+        !this.$auth.hasRole("admin") &&
+        (this.$auth.hasRole("hospitalUser") || this.$auth.hasRole("doctorUser"))
       ) {
         this.isShowBtn = false;
+      }
+
+      if (this.$auth.hasRole("doctorUser") && !this.$auth.hasRole("admin")) {
+        this.isDoctorUser = true;
       }
     },
     // 病史
