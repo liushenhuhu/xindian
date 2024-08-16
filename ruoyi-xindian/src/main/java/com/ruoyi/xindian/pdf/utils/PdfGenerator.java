@@ -49,7 +49,7 @@ public class PdfGenerator {
 //        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         //设置标题
-        titleSet(doc, title, font);
+        titleSet_1(doc, title, font);
         //基本信息
         Table table_info = new Table(6);
         table_info.setWidth(UnitValue.createPercentValue(100));
@@ -479,7 +479,7 @@ public class PdfGenerator {
 //        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         //设置标题
-        titleSet_1(doc, title, font);
+        titleSet(doc, title, font);
         // 创建表格
         int numColumns = 6;
         Table table = new Table(numColumns);
@@ -1448,6 +1448,7 @@ public class PdfGenerator {
         Paragraph titleText = new Paragraph(data).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(18);
         doc.add(titleText);
     }
+
     public void titleSet_1(Document doc, String data, PdfFont font) {
         Paragraph titleText = new Paragraph(data).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(20);
         doc.add(titleText);
