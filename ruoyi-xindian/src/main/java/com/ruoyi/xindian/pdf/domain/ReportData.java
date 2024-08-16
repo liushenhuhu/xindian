@@ -327,6 +327,7 @@ public class ReportData {
         ecgFragments.add(ecgFragment3);
         ecgFragments.add(ecgFragment4);
         reportData.setEcgFrag(ecgFragments);
+        reportData.setConclusion("123");
         return reportData;
     }
 }

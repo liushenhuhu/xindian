@@ -9,6 +9,7 @@ spring:
             # 主库数据源
             master:
                 url: jdbc:mysql://202.102.249.124:3306/ecg?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#                url: jdbc:mysql://202.102.249.124:3306/test_ecg?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 #                url: jdbc:mysql://219.155.7.235:3309/ecg?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: zzu
                 password: zzu@2022

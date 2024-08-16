@@ -299,8 +299,13 @@ public class ReportController extends BaseController {
             report.setdPhone(aesUtils.encrypt(report.getdPhone()));
         }
 
-        if (report.getPPhone() != null && !"".equals(report.getPPhone())) {
+        if (report.getPPhone() != null && !report.getPPhone().isEmpty()) {
             report.setPPhone(aesUtils.encrypt(report.getPPhone()));
+        }
+        Long userId = getUserId();
+        if (!SysUser.isAdmin(userId)){
+            SysUser sysUser = sysUserMapper.selectUserById(userId);
+            report.setdPhone(sysUser.getPhonenumber());
         }
         List<Report> list;
         startPage();
