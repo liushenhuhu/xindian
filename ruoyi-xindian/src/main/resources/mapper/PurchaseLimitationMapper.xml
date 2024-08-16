@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.wSuryvey.mapper.PurchaseLimitationMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.wSuryvey.domain.PurchaseLimitation">
+            <id property="purchaseLimitationId" column="purchase_limitation_id" jdbcType="INTEGER"/>
+            <result property="patientPhone" column="patient_phone" jdbcType="VARCHAR"/>
+            <result property="productId" column="product_id" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        purchase_limitation_id,patient_phone,product_id,
+        status,create_time
+    </sql>
+</mapper>
