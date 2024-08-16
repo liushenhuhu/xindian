@@ -37,7 +37,7 @@ public class PdfGenerator {
 
 
     public String createWeekPdf(String fileName, LinkedList<WeekPdfData> weekPdfData, String patientName, String gender, String patientAge, String height, String weight) throws IOException {
-        String title = "心电报告";
+        String title = "河南省心电学诊疗中心心电图报告";
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
 //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -471,7 +471,7 @@ public class PdfGenerator {
     }
 
     public void createNewPdf(String fileName, ReportData reportData) throws IOException, ParseException {
-        String title = "心电报告";
+        String title = "河南省心电学诊疗中心\n心电报告";
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
         // 设置字体  simhei.ttf黑体  SimSun宋体
@@ -479,7 +479,7 @@ public class PdfGenerator {
 //        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         //设置标题
-        titleSet(doc, title, font);
+        titleSet_1(doc, title, font);
         // 创建表格
         int numColumns = 6;
         Table table = new Table(numColumns);
@@ -561,11 +561,11 @@ public class PdfGenerator {
         //室性事件
         Cell cell4_1 = new Cell(1, 3)
                 .add(new Paragraph(
-                        "心动过缓占比：" + reportData.getHrSlowB() + "%\n" +
+                        "心动过缓占比(%)：" + reportData.getHrSlowB() + "%\n" +
                                 "心动过缓总持续时间：" + reportData.getHrSlowTime() + "\n" +
                                 "最长心动过缓周期开始时间：" + reportData.getHrSlowStartTime() + "\n" +
                                 "最长心动过缓周期结束时间：" + reportData.getHrSlowEndTime() + "\n" +
-                                "最长心动过缓周期持续时间(分钟)" + reportData.getHrSlowContinueTime()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+                                "最长心动过缓周期持续时间(分钟)：" + reportData.getHrSlowContinueTime()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
         vanishLine(cell4_1, 0, 1, 1, 1);
         table.addCell(cell4_1);
 
@@ -660,12 +660,14 @@ public class PdfGenerator {
 //        //心率失常统计表
 //        arrhythmiaTable(doc, font, reportData);
 //        doc.add(new AreaBreak());
+
         //趋势波形图
         waveformTable(doc, font, reportData);
         doc.add(new AreaBreak());
         //心率变异性时域分析
         HRVTimeTable(doc, font, reportData);
         doc.add(new AreaBreak());
+
 //        //心率变异性频域分析
 //        HRVFrequencyTable(doc, font);
 //        doc.add(new AreaBreak());
@@ -834,12 +836,16 @@ public class PdfGenerator {
         //心率失常统计表
 //        arrhythmiaTable(doc, font, reportData);
 //        doc.add(new AreaBreak());
-        //趋势波形图
-        waveformTable(doc, font, reportData);
-        doc.add(new AreaBreak());
-        //心率变异性时域分析
-        HRVTimeTable(doc, font, reportData);
-        doc.add(new AreaBreak());
+
+
+//        //趋势波形图
+//        waveformTable(doc, font, reportData);
+//        doc.add(new AreaBreak());
+//        //心率变异性时域分析
+//        HRVTimeTable(doc, font, reportData);
+//        doc.add(new AreaBreak());
+
+
 //        //心率变异性频域分析
 //        HRVFrequencyTable(doc, font);
 //        doc.add(new AreaBreak());
@@ -1439,6 +1445,10 @@ public class PdfGenerator {
 
     //设置标题
     public void titleSet(Document doc, String data, PdfFont font) {
+        Paragraph titleText = new Paragraph(data).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(18);
+        doc.add(titleText);
+    }
+    public void titleSet_1(Document doc, String data, PdfFont font) {
         Paragraph titleText = new Paragraph(data).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(20);
         doc.add(titleText);
     }
