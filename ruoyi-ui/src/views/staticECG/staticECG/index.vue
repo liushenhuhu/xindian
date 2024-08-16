@@ -548,6 +548,21 @@ export default {
       },
       isShowBtn: true,
       isDoctorUser: false,
+      arrList: {
+        //心博标注 提交数据
+        pId: null,
+        beatLabel: null,
+      },
+      pointdata1: [], //显示的
+      pointdata2: [], //显示的
+      pointdata3: [], //显示的
+      arrList1: {}, //心博标注 每一段
+      arrList2: {},
+      arrList3: {},
+      arrList4: {},
+      arrList5: {},
+      arrList6: {},
+      arrList7: {},
     };
   },
   created() {
@@ -1128,6 +1143,186 @@ export default {
       }
       this.dialogFormVisible = false;
     },
+    //重绘
+    redraw1() {
+      console.log("this.pointdata666: ", this.pointdata1);
+
+      var chartOption = this.chart1.getOption();
+      chartOption.graphic = this.graphic;
+      // this.chart1.setOption(chartOption, true);
+      // this.chart1.setOption({});
+      // console.log(this.graphic)
+      // this.chart.setOption({
+      //   graphic:this.graphic
+      // })
+      this.chart1.setOption({
+        series: {
+          markPoint: {
+            symbol: "pin",
+            symbolSize: 25,
+            animation: false,
+            data: this.pointdata1,
+          },
+        },
+      });
+      //console.log(this.graphic)
+    },
+    //重绘
+    redraw2() {
+      console.log("this.pointdata666: ", this.pointdata2);
+
+      var chartOption = this.chart2.getOption();
+      chartOption.graphic = this.graphic;
+      // this.chart1.setOption(chartOption, true);
+      // this.chart1.setOption({});
+      // console.log(this.graphic)
+      // this.chart.setOption({
+      //   graphic:this.graphic
+      // })
+      this.chart2.setOption({
+        series: {
+          markPoint: {
+            symbol: "pin",
+            symbolSize: 25,
+            animation: false,
+            data: this.pointdata2,
+          },
+        },
+      });
+      //console.log(this.graphic)
+    },
+    //重绘
+    redraw3() {
+      console.log("this.pointdata666: ", this.pointdata3);
+
+      var chartOption = this.chart3.getOption();
+      chartOption.graphic = this.graphic;
+      // this.chart1.setOption(chartOption, true);
+      // this.chart1.setOption({});
+      // console.log(this.graphic)
+      // this.chart.setOption({
+      //   graphic:this.graphic
+      // })
+      this.chart3.setOption({
+        series: {
+          markPoint: {
+            symbol: "pin",
+            symbolSize: 25,
+            animation: false,
+            data: this.pointdata3,
+          },
+        },
+      });
+      //console.log(this.graphic)
+    },
+    getN1(num) {
+      var _th = this;
+      var level = num;
+      _th[`${"arrList" + level}`] = {
+        Normal: [],
+        FangZao: [],
+        ShiZao: [],
+        FangYi: [],
+        GanRao: [],
+      };
+      // if (_th.arrList.beatLabel) {
+      //   if (_th.flag == 1) {
+      //     //单导
+      //     _th[`${"arrList" + level}`] = _th.arrList.beatLabel[level - 1];
+      //     console.log("单导--------------");
+      //   } else {
+      //     //12导
+      //     // console.log("12导")
+      //     var each = {
+      //       Normal: [],
+      //       FangZao: [],
+      //       ShiZao: [],
+      //       FangYi: [],
+      //       GanRao: [],
+      //     };
+      //     for (let key1 in _th.arrList.beatLabel) {
+      //       for (let key2 in _th.arrList.beatLabel[key1]) {
+      //         var arr = _th.arrList.beatLabel[key1][key2].map(
+      //           (item) => item + key1 * 1000
+      //         );
+      //         each[key2] = each[key2].concat(arr);
+      //       }
+      //     }
+      //     _th[`${"arrList" + level}`] = each;
+      //   }
+      // }
+      _th[`${"arrList" + level}`] = _th.arrList.beatLabel[level - 1];
+      console.log("单导--------------");
+      if (
+        _th[`${"arrList" + level}`] == null ||
+        _th[`${"arrList" + level}`] == {}
+      ) {
+        _th[`${"arrList" + level}`] = {
+          Normal: [],
+          FangZao: [],
+          ShiZao: [],
+          FangYi: [],
+          GanRao: [],
+        };
+      }
+      //添加所有点
+      _th["pointdata" + level].length = 0;
+      var colorList = {
+        Normal: "#fe0101",
+        FangZao: "#ff7000",
+        ShiZao: "#17b09a",
+        FangYi: "#070000",
+        GanRao: "#0021da",
+      };
+      for (const key in _th[`${"arrList" + level}`]) {
+        _th[`${"arrList" + level}`][key].forEach((i) => {
+          var formatter = key;
+          switch (formatter) {
+            case "Normal":
+              formatter = "N";
+              break;
+            case "FangZao":
+              formatter = "S";
+              break;
+            case "ShiZao":
+              formatter = "V";
+              break;
+            case "FangYi":
+              formatter = "A";
+              break;
+            case "GanRao":
+              formatter = "X";
+              break;
+          }
+          // console.log("_th.nArr: ", _th.nArr);
+
+          var pointdata = {
+            name: key,
+            xAxis: i,
+            yAxis: _th.nArr[level - 1][i] + 0.3,
+            itemStyle: {
+              color: colorList[key],
+            },
+            label: {
+              color: "#ffffff",
+              show: true,
+              formatter: formatter,
+              fontSize: 13,
+            },
+          };
+          // _th.pointdata.push(pointdata);
+          _th["pointdata" + level].push(pointdata);
+        });
+      }
+      // console.log("_th.pointdata.push(pointdata): ", _th.pointdata);
+
+      setTimeout(() => {
+        //重绘
+        _th.redraw1();
+        _th.redraw2();
+        _th.redraw3();
+      });
+    },
     //请求数据
     get() {
       // console.log("获得的是那个数据："+ this.pId);
@@ -1177,7 +1372,7 @@ export default {
           _th.datalabel.waveLabel = data.result.waveLabel;
           _th.datalabel.beatLabel = data.result.beatLabel;
           _th.data.p_xingeng = data.result.p_xingeng;
-          //console.log("获取到的导联数据", _th.data.datas)
+          // console.log("获取到的导联数据", _th.data.datas);
           // console.log("获取到的导联数据长度", _th.data.datas.length)
           _th.nArr = _th.getNewArray(_th.data.datas, 1000);
           // console.log("数据以1000一条分好组", _th.nArr)
@@ -1195,7 +1390,8 @@ export default {
           _th.chart2 = echarts.init(document.getElementById("2"));
           _th.chart3 = echarts.init(document.getElementById("3"));
           _th.chart4 = echarts.init(document.getElementById("4"));
-
+          _th.arrList.beatLabel = JSON.parse(data.result.beatLabel);
+          console.log("_th.arrList.beatLabel: ", _th.arrList.beatLabel);
           _th.chart1.clear();
           _th.chart1.setOption({
             title: {
@@ -1260,7 +1456,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 1,
+              max: 2,
               min: -1,
             },
             series: {
@@ -1276,6 +1472,7 @@ export default {
                   // //opacity: 1,
                 },
               },
+              // markPoint: _th.pointdata,
               markLine: {
                 z: 1,
                 symbol: "none",
@@ -1294,6 +1491,8 @@ export default {
               },
             },
           });
+          // console.log("this.datalabel.beatLabel: ", data.result.beatLabel);
+          console.log("_th.nArr[0]----: ", _th.nArr[0]);
 
           _th.chart2.clear();
           _th.chart2.setOption({
@@ -1356,7 +1555,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 1,
+              max: 2,
               min: -1,
             },
             series: [
@@ -1453,7 +1652,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 1,
+              max: 2,
               min: -1,
             },
             series: [
@@ -1550,7 +1749,7 @@ export default {
                   //opacity: 0.6,//透明度
                 },
               },
-              max: 1,
+              max: 2,
               min: -1,
             },
             series: [
@@ -1585,7 +1784,14 @@ export default {
               },
             ],
           });
+          //回显
+          //分段
+          // setTimeout(() => {
 
+          // }, 1000);
+          _th.getN1(1);
+          _th.getN1(2);
+          _th.getN1(3);
           _th.addtext();
           $(window).resize(function () {
             _th.chart1.resize();
