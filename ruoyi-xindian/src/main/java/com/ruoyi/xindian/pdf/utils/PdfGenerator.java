@@ -475,7 +475,7 @@ public class PdfGenerator {
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
         // 设置字体  simhei.ttf黑体  SimSun宋体
-        System.out.println(System.getProperty("user.dir"));
+//        System.out.println(System.getProperty("user.dir"));
 //        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         //设置标题
@@ -574,10 +574,10 @@ public class PdfGenerator {
 //        Cell cell5 = new Cell(1, 3).add(new Paragraph("室性异位心律").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
 //        vanishLine(cell5, 1, 0, 1, 1);
 //        table.addCell(cell5);
-        Cell cell6 = new Cell(1, 3).add(new Paragraph("室上性异位心律").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        Cell cell6 = new Cell(1, 3).add(new Paragraph("室性异位心律").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
         vanishLine(cell6, 1, 0, 1, 1);
         table.addCell(cell6);
-        Cell cell8 = new Cell(1, 3).add(new Paragraph("心率变异性").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        Cell cell8 = new Cell(1, 3).add(new Paragraph("室上性异位心律").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
         vanishLine(cell8, 1, 0, 1, 1);
         table.addCell(cell8);
 //        //房性事件
@@ -593,10 +593,24 @@ public class PdfGenerator {
 //        vanishLine(cell5_1, 0, 1, 1, 1);
 //        table.addCell(cell5_1);
         //室性事件
+
+        Cell cell7_1 = new Cell(1, 3)
+                .add(new Paragraph(
+                        "总数(次)：" + reportData.getVeCount() + "\n" +
+                                "室性百分比(%)：" + reportData.getVeB() + "\n" +
+                                "单发(次)：" + reportData.getVeDf() + "\n" +
+                                "成对(次)：" + reportData.getVeDouble() + "\n" +
+                                "短阵性室速(阵)：" + reportData.getVevt() + "\n" +
+                                "二联律(阵)：" + reportData.getVeBigeminy() + "\n" +
+                                "三联律(阵)：" + reportData.getVeTrigeminy() + "").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(cell7_1, 0, 1, 1, 1);
+        table.addCell(cell7_1);
+
+
         Cell cell6_1 = new Cell(1, 3)
                 .add(new Paragraph(
                         "总数(次)：" + reportData.getSeCount() + "\n" +
-                                "室性百分比(%)：" + reportData.getSeB() + "\n" +
+                                "室上性百分比(%)：" + reportData.getSeB() + "\n" +
                                 "单发(次)：" + reportData.getSeDf() + "\n" +
                                 "成对(次)：" + reportData.getSeDouble() + "\n" +
                                 "短阵性室速(阵)：" + reportData.getSevt() + "\n" +
@@ -605,31 +619,29 @@ public class PdfGenerator {
         vanishLine(cell6_1, 0, 1, 1, 1);
         table.addCell(cell6_1);
 
-
-        //室性事件
-        Cell cell8_1 = new Cell(1, 3)
+        Cell cell5 = new Cell(1, 6).add(new Paragraph("心率变异性").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12));
+        vanishLine(cell5, 1, 0, 1, 1);
+        table.addCell(cell5);
+        //心率变异性
+        Cell cell8_1 = new Cell(1, 2)
                 .add(new Paragraph(
                         "SDNN(ms)：" + reportData.getSdnn() + "\n" +
-                                "rMSSD(ms)：" + reportData.getRmssd() + "\n" +
-                                "NN20(ms)：" + reportData.getNn20() + "\n" +
-                                "PNN20(%)：" + reportData.getPnn20() + "\n" +
-                                "NN50(ms)：" + reportData.getNn50() + "\n" +
-                                "PNN50(%)：" + reportData.getPnn50()
+                                "rMSSD(ms)：" + reportData.getRmssd()
                 ).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
-//        Cell cell8_2 = new Cell(1, 2)
-//                .add(new Paragraph(
-//                        "NN20(ms)：" + reportData.getNn20() + "\n" +
-//                                "PNN20(%)：" + reportData.getPnn20()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
-//        Cell cell8_3 = new Cell(1, 2)
-//                .add(new Paragraph(
-//                        "NN50(ms)：" + reportData.getNn50() + "\n" +
-//                                "PNN50(%)：" + reportData.getPnn50()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
-        vanishLine(cell8_1, 0, 1, 1, 1);
-//        vanishLine(cell8_2, 0, 1, 0, 0);
-//        vanishLine(cell8_3, 0, 1, 0, 1);
+        Cell cell8_2 = new Cell(1, 2)
+                .add(new Paragraph(
+                        "NN20(ms)：" + reportData.getNn20() + "\n" +
+                                "PNN20(%)：" + reportData.getPnn20()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        Cell cell8_3 = new Cell(1, 2)
+                .add(new Paragraph(
+                        "NN50(ms)：" + reportData.getNn50() + "\n" +
+                                "PNN50(%)：" + reportData.getPnn50()).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+        vanishLine(cell8_1, 0, 1, 1, 0);
+        vanishLine(cell8_2, 0, 1, 0, 0);
+        vanishLine(cell8_3, 0, 1, 0, 1);
         table.addCell(cell8_1);
-//        table.addCell(cell8_2);
-//        table.addCell(cell8_3);
+        table.addCell(cell8_2);
+        table.addCell(cell8_3);
 
 
         //结论
@@ -661,12 +673,12 @@ public class PdfGenerator {
 //        arrhythmiaTable(doc, font, reportData);
 //        doc.add(new AreaBreak());
 
-        //趋势波形图
-        waveformTable(doc, font, reportData);
-        doc.add(new AreaBreak());
-        //心率变异性时域分析
-        HRVTimeTable(doc, font, reportData);
-        doc.add(new AreaBreak());
+//        //趋势波形图
+//        waveformTable(doc, font, reportData);
+//        doc.add(new AreaBreak());
+//        //心率变异性时域分析
+//        HRVTimeTable(doc, font, reportData);
+//        doc.add(new AreaBreak());
 
 //        //心率变异性频域分析
 //        HRVFrequencyTable(doc, font);
