@@ -136,4 +136,9 @@ public class WSurveyServiceImpl implements IWSurveyService
         }
         return wSurveys.get(0);
     }
+
+    @Override
+    public int updateScreening(String patientPhone) {
+        return wSurveyMapper.updateScreening(patientPhone);
+    }
 }

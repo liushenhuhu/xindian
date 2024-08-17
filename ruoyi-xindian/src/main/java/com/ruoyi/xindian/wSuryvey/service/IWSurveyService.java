@@ -61,4 +61,6 @@ public interface IWSurveyService
     public int deleteWSurveyById(Long id);
 
     WSurvey getScreening(String patientPhone);
+
+    int   updateScreening(String patientPhone);
 }

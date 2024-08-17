@@ -1,7 +1,10 @@
 package com.ruoyi.xindian.wSuryvey.controller;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import avro.shaded.com.google.common.base.Preconditions;
@@ -10,7 +13,10 @@ import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.wSuryvey.convert.WSurveyDTOConverter;
+import com.ruoyi.xindian.wSuryvey.domain.PurchaseLimitation;
 import com.ruoyi.xindian.wSuryvey.domain.WSurveyDTO;
+import com.ruoyi.xindian.wSuryvey.service.PurchaseLimitationService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +50,12 @@ public class WSurveyController extends BaseController {
 
     @Autowired
     private AesUtils aesUtils;
+
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Resource
+    private PurchaseLimitationService purchaseLimitationService;
 
     /**
      * 查询wSuryvey列表
@@ -169,4 +181,43 @@ public class WSurveyController extends BaseController {
         return AjaxResult.success(screening);
     }
 
+    /**
+     * 判断是否存在
+     * @param wSurvey
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/getPurchase")
+    public AjaxResult getPurchase(WSurvey wSurvey) throws Exception {
+        Long userId = getUserId();
+
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("purchase_limitation:" + userId + ":" + wSurvey.getProductId()))){
+            return AjaxResult.success(false);
+        }
+
+        Preconditions.checkNotNull(wSurvey.getPatientPhone(), "用户电话不能为空！");
+        String patientPhone = aesUtils.encrypt(wSurvey.getPatientPhone());
+        WSurvey wSurvey2 = new WSurvey();
+        wSurvey2.setPatientPhone(patientPhone);
+        List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey2);
+
+        if (wSurveyList.isEmpty()){
+            return AjaxResult.success(false);
+        }
+        PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
+        purchaseLimitation.setProductId(wSurvey.getProductId());
+        purchaseLimitation.setPatientPhone(patientPhone);
+        List<PurchaseLimitation> purchaseLimitations = purchaseLimitationService.selectPurchaseLimitationList(purchaseLimitation);
+        if (purchaseLimitations.isEmpty()){
+            return AjaxResult.success(true);
+        }
+
+        return AjaxResult.success(false);
+    }
+
+    @PostMapping("/addPurchaseLimitation")
+    public AjaxResult addPurchaseLimitation(@RequestBody PurchaseLimitation purchaseLimitation) throws Exception {
+        purchaseLimitation.setPatientPhone(aesUtils.encrypt(purchaseLimitation.getPatientPhone()));
+        return AjaxResult.success(purchaseLimitationService.save(purchaseLimitation));
+    }
 }

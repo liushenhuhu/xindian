@@ -2,6 +2,7 @@ package com.ruoyi.xindian.wSuryvey.mapper;
 
 import java.util.List;
 import com.ruoyi.xindian.wSuryvey.domain.WSurvey;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * wSuryveyMapper接口
@@ -61,5 +62,6 @@ public interface WSurveyMapper
     public int deleteWSurveyByIds(Long[] ids);
 
 
+    int updateScreening(@Param("patientPhone") String patientPhone);
 
 }

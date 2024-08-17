@@ -71,7 +71,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @param addressId
      * @return
      */
-    String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId,String remark) throws Exception;
+    String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId,String remark,boolean isStatus) throws Exception;
 
 
     /**
