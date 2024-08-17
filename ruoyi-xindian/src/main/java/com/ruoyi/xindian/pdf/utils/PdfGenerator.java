@@ -471,7 +471,7 @@ public class PdfGenerator {
     }
 
     public void createNewPdf(String fileName, ReportData reportData) throws IOException, ParseException {
-        String title = "河南省心电学诊疗中心\n心电报告";
+        String title = "河南省心电学诊疗中心心电报告";
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
         // 设置字体  simhei.ttf黑体  SimSun宋体
@@ -673,12 +673,12 @@ public class PdfGenerator {
 //        arrhythmiaTable(doc, font, reportData);
 //        doc.add(new AreaBreak());
 
-//        //趋势波形图
-//        waveformTable(doc, font, reportData);
-//        doc.add(new AreaBreak());
-//        //心率变异性时域分析
-//        HRVTimeTable(doc, font, reportData);
-//        doc.add(new AreaBreak());
+        //趋势波形图
+        waveformTable(doc, font, reportData);
+        doc.add(new AreaBreak());
+        //心率变异性时域分析
+        HRVTimeTable(doc, font, reportData);
+        doc.add(new AreaBreak());
 
 //        //心率变异性频域分析
 //        HRVFrequencyTable(doc, font);
@@ -1304,12 +1304,12 @@ public class PdfGenerator {
     }
 
     private void getTable(Table table, LinkedList<String> data, PdfFont font) {
-        Cell cell1 = new Cell(1, 1).add(new Paragraph("MeanNN").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
-        Cell cell2 = new Cell(1, 1).add(new Paragraph("SDNN").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
-        Cell cell3 = new Cell(1, 1).add(new Paragraph("rMSSD").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
-        Cell cell4 = new Cell(1, 1).add(new Paragraph("NN20").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
-        Cell cell5 = new Cell(1, 1).add(new Paragraph("NN50").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
-        Cell cell6 = new Cell(1, 1).add(new Paragraph("PNN20(%)").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
+        Cell cell1 = new Cell(1, 1).add(new Paragraph("平均NN间期(ms)").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
+        Cell cell2 = new Cell(1, 1).add(new Paragraph("SDNN(ms)").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
+        Cell cell3 = new Cell(1, 1).add(new Paragraph("RMSSD(ms)").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
+        Cell cell4 = new Cell(1, 1).add(new Paragraph("NN20(ms)").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
+        Cell cell5 = new Cell(1, 1).add(new Paragraph("NN50(ms)").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
+        Cell cell6 = new Cell(1, 1).add(new Paragraph("pNN20(%)").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
         Cell cell7 = new Cell(1, 1).add(new Paragraph("pNN50(%)").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10)).setBackgroundColor(new DeviceRgb(0, 238, 238));
         table.addCell(cell1);
         table.addCell(cell2);
