@@ -89,16 +89,17 @@ export default {
       }else{
         $.ajax({
           type: "get",
-          url: "https://ecg.mindyard.cn:84/DECGReport/" + ecgType + "/report/" + pId + "/" + pId + ".pdf",
+          // url: "https://ecg.mindyard.cn:84/DECGReport/" + ecgType + "/report/" + pId + "/" + pId + ".pdf",
+          url: `https://ecg.mindyard.cn/data/pdf/${pId}.pdf`,
           success: function () {
-            _this.src = "https://ecg.mindyard.cn:84/DECGReport/" + ecgType + "/report/" + pId + "/" + pId + ".pdf";
+            _this.src = `https://ecg.mindyard.cn/data/pdf/${pId}.pdf`;
           },
           error: function () {
             alert("未生成报告，请先生成报告！")
           }
         })
       }
-   
+
       this.src = _this.src
     }
   }
