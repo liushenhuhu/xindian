@@ -29,17 +29,23 @@ export default {
     chartData: {
       type: Object,
       required: true
+    },
+    yue:{
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      chart: null
+      chart: null,
     }
   },
   watch: {
     chartData: {
       deep: true,
       handler(val) {
+        console.log("val")
+        console.log(val)
         this.setOptions(val)
       }
     }
@@ -59,16 +65,20 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
+      console.log("initChart")
+      console.log("this.chartData")
+      console.log(this.chartData)
       this.setOptions(this.chartData)
+
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ expectedData, actualData , xinzeng }) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data:actualData,
           boundaryGap: false,
           axisTick: {
             show: false
-          }
+          },
         },
         grid: {
           left: 10,
@@ -90,10 +100,11 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: this.yue ? ['月活跃量', '月新增量']:['活跃量', '新增量'],
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: this.yue ?'月活跃量':'活跃量',
+          itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -109,7 +120,7 @@ export default {
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
+          name: this.yue ?'月新增量':'新增量',
           smooth: true,
           type: 'line',
           itemStyle: {
@@ -124,7 +135,7 @@ export default {
               }
             }
           },
-          data: actualData,
+          data: xinzeng,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'
         }]
