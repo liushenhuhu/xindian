@@ -43,9 +43,9 @@
                       </tr>
                       <tr>
                         <td>肥厚型心肌病</td>
-                        <td>{{( data.p_FHXXJB * 100).toFixed(1) + "%"}}</td>
+                        <td>{{ (data.p_FHXXJB * 100).toFixed(1) + "%" }}</td>
                         <td>扩张型心肌病</td>
-                        <td>{{ (data.p_KZXXJB * 100).toFixed(1) + "%"}}</td>
+                        <td>{{ (data.p_KZXXJB * 100).toFixed(1) + "%" }}</td>
                         <td>高血钾</td>
                         <td>{{ (data.p_GaoJiaXie * 100).toFixed(1) + "%" }}</td>
                       </tr>
@@ -2577,7 +2577,9 @@ export default {
   flex-direction: column;
 
   .el-tabs__content {
-    flex: 1;
+    // flex: 1;
+    height: 300px;
+    overflow: auto !important;
   }
 
   .el-tab-pane {
