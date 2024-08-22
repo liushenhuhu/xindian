@@ -290,8 +290,6 @@ public class ReportController extends BaseController {
     }
 
 
-
-
     @GetMapping("/web/list")
     public TableDataInfo getWebList(Report report) throws Exception {
 
@@ -303,7 +301,7 @@ public class ReportController extends BaseController {
             report.setPPhone(aesUtils.encrypt(report.getPPhone()));
         }
         Long userId = getUserId();
-        if (!SysUser.isAdmin(userId)){
+        if (!SysUser.isAdmin(userId)) {
             SysUser sysUser = sysUserMapper.selectUserById(userId);
             report.setdPhone(sysUser.getPhonenumber());
         }
@@ -360,50 +358,49 @@ public class ReportController extends BaseController {
         }
 
 
+        WeekReport weekReport = new WeekReport();
+        if (!SysUser.isAdmin(getUserId())) {
+            weekReport.setDoctorPhone(aesUtils.decrypt(getUsername()));
+        } else {
+            weekReport.setDoctorPhone(aesUtils.decrypt(report.getdPhone()));
+        }
 
-            WeekReport weekReport = new WeekReport();
-            if (!SysUser.isAdmin(getUserId())){
-                weekReport.setDoctorPhone(aesUtils.decrypt(getUsername()));
-            }else {
-                weekReport.setDoctorPhone(aesUtils.decrypt(report.getdPhone()));
-            }
-
-            if (report.getPPhone() != null && !report.getPPhone().isEmpty()) {
-                weekReport.setPatientPhone(aesUtils.decrypt(report.getPPhone()));
-            }
-            weekReport.setDiagnosisStatus(Math.toIntExact(report.getDiagnosisStatus()));
-            //未诊断才返回周报数据
-            if (weekReport.getDiagnosisStatus() != 1) {
-                List<WeekReport> weekReports = weekReportService.selectWeekReportList(weekReport);
-                for (WeekReport wr : weekReports) {
-                    reportM = new ReportM();
-                    patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(wr.getPatientPhone()));
-                    Doctor doctor = doctorService.selectDoctorByDoctorPhone(aesUtils.encrypt(wr.getDoctorPhone()));
-                    reportM.setPPhone(wr.getPatientPhone());
-                    reportM.setdPhone(wr.getDoctorPhone());
-                    reportM.setDiagnosisStatus(report.getDiagnosisStatus());
-                    if (doctor!=null){
-                        reportM.setDiagnosisDoctor(aesUtils.decrypt(doctor.getDoctorName()));
-                    }
-                    reportM.setReportType("week");
-                    reportM.setReportId(wr.getId());
-                    reportM.setDiagnosisConclusion(wr.getDiagnosisConclusion());
-                    reportM.setReportTime(wr.getWeekpdftime());
-                    reportM.setWeekReport(true);
-                    reportM.setpId(wr.getWeekid());
-                    if (patient!=null){
-                        reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
-                        reportM.setPatientSex(patient.getPatientSex());
-                        birthDay = patient.getBirthDay();
-                        if (birthDay != null)
-                            reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
-                        else {
-                            reportM.setPatientAge(patient.getPatientAge());
-                        }
-                    }
-
-                    resList.add(reportM);
+        if (report.getPPhone() != null && !report.getPPhone().isEmpty()) {
+            weekReport.setPatientPhone(aesUtils.decrypt(report.getPPhone()));
+        }
+        weekReport.setDiagnosisStatus(Math.toIntExact(report.getDiagnosisStatus()));
+        //未诊断才返回周报数据
+        if (weekReport.getDiagnosisStatus() != 1) {
+            List<WeekReport> weekReports = weekReportService.selectWeekReportList(weekReport);
+            for (WeekReport wr : weekReports) {
+                reportM = new ReportM();
+                patient = patientService.selectPatientByPatientPhone(aesUtils.encrypt(wr.getPatientPhone()));
+                Doctor doctor = doctorService.selectDoctorByDoctorPhone(aesUtils.encrypt(wr.getDoctorPhone()));
+                reportM.setPPhone(wr.getPatientPhone());
+                reportM.setdPhone(wr.getDoctorPhone());
+                reportM.setDiagnosisStatus(report.getDiagnosisStatus());
+                if (doctor != null) {
+                    reportM.setDiagnosisDoctor(aesUtils.decrypt(doctor.getDoctorName()));
                 }
+                reportM.setReportType("week");
+                reportM.setReportId(wr.getId());
+                reportM.setDiagnosisConclusion(wr.getDiagnosisConclusion());
+                reportM.setReportTime(wr.getWeekpdftime());
+                reportM.setWeekReport(true);
+                reportM.setpId(wr.getWeekid());
+                if (patient != null) {
+                    reportM.setPatientName(aesUtils.decrypt(patient.getPatientName()));
+                    reportM.setPatientSex(patient.getPatientSex());
+                    birthDay = patient.getBirthDay();
+                    if (birthDay != null)
+                        reportM.setPatientAge(Integer.toString(DateUtil.getAge(birthDay)));
+                    else {
+                        reportM.setPatientAge(patient.getPatientAge());
+                    }
+                }
+
+                resList.add(reportM);
+            }
 
         }
         return getTable(resList, new PageInfo(resList).getTotal());
@@ -1251,6 +1248,18 @@ public class ReportController extends BaseController {
         if (sysUser2 != null) {
             try {
                 wxPublicRequest.sendMsg(hospitalName, sysUser2.getOpenId(), patientName, "心电图检测", "诊断完成");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    //预警消息
+    private void WxYJMsgPut(String patientPhone, String hospitalName, String patientName, String yj) {
+        SysUser sysUser2 = sysUserMapper.selectUserByPhone(patientPhone);
+        if (sysUser2 != null) {
+            try {
+                wxPublicRequest.sendMsg(hospitalName, sysUser2.getOpenId(), patientName, "心电图检测", "您提交的心电图存在异常，预警程度: " + yj);
             } catch (Exception e) {
                 System.out.println(e);
             }

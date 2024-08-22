@@ -27,8 +27,10 @@ import com.ruoyi.xindian.vipPatient.controller.SxReportUnscrambleController;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
 import com.ruoyi.xindian.vipPatient.service.SxReportUnscrambleService;
+import com.ruoyi.xindian.wSuryvey.domain.PurchaseLimitation;
 import com.ruoyi.xindian.wSuryvey.domain.WSurvey;
 import com.ruoyi.xindian.wSuryvey.service.IWSurveyService;
+import com.ruoyi.xindian.wSuryvey.service.PurchaseLimitationService;
 import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.Product;
@@ -68,9 +70,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Resource
     private OrderInfoMapper orderInfoMapper;
 
-
     @Autowired
     private IWSurveyService wSurveyService;
+
 
     @Autowired
     private IPatientService patientService;
@@ -111,6 +113,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     @Resource
     private LeaseDetailsMapper leaseDetailsMapper;
+
+    @Resource
+    private PurchaseLimitationService purchaseLimitationService;
 
 
     @Override
@@ -174,6 +179,21 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         List<SuborderOrderInfo> suborderOrderInfos = orderIdAndSuborder(orderByOrderNo.getId());
         for(SuborderOrderInfo c: suborderOrderInfos){
 
+
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("purchase_limitation:" + orderByOrderNo.getUserId() + ":" + c.getProductId()))){
+                SysUser sysUser = sysUserMapper.selectUserById(orderByOrderNo.getUserId());
+                try {
+                    PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
+                    purchaseLimitation.setPatientPhone(sysUser.getPhonenumber());
+                    purchaseLimitation.setProductId(c.getProductId());
+                    purchaseLimitation.setStatus(0);
+                    purchaseLimitation.setCreateTime(new Date());
+                    purchaseLimitationService.insertPurchaseLimitation(purchaseLimitation);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                redisTemplate.delete("purchase_limitation:" + orderByOrderNo.getUserId() + ":" + c.getProductId());
+            }
             Product product = productMapper.selectById(c.getProductId());
             log.info("更新订单状态 ===> {}", orderStatus.getType());
             QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
@@ -634,7 +654,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      */
     @Transactional
     @Override
-    public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId,String remark) throws Exception {
+    public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId,String remark,boolean isStatus) throws Exception {
         Product product = productMapper.selectById(productId);
 
         if(product.getType().equals("服务")){
@@ -650,9 +670,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         LoginUser loginUser = tokenService.getLoginUser(request);
 
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
-        WSurvey wSurvey = new WSurvey();
-        wSurvey.setPatientPhone(sysUser.getPhonenumber());
-        List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey);
+
 
 
         OrderInfo orderInfo = new OrderInfo();
@@ -670,7 +688,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setUserId(loginUser.getUser().getUserId());
 
 
-        if (wSurveyList!=null&& !wSurveyList.isEmpty()){
+        if (isStatus){
             BigDecimal bigDecimal = DiscountCalculator.calculateDiscount(product.getDiscount(), BigDecimal.valueOf(product.getDiscountPrice()));
             orderInfo.setTotalFee(new BigDecimal(sum).multiply(bigDecimal));
         }else {

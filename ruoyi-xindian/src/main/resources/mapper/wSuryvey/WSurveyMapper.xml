@@ -23,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="triglyceride"    column="triglyceride"    />
         <result property="createTime"    column="create_time"    />
         <result property="patientCode"    column="patient_code"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <resultMap id="WSurveyAndWSurveyHistory" type="WSurvey" extends="WSurveyResult">
@@ -45,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWSurveyVo">
-        select id, patient_phone, gender, age, waistline, cholesterol, systolic_albumen, diastolic_blood, systolic_blood, hypotensive_drugs, diabetes, smoking, fammily_cd, fammily_ca, low_albumen, triglyceride, create_time , patient_code from w_survey
+        select id, patient_phone, gender, age, waistline, cholesterol, systolic_albumen, diastolic_blood, systolic_blood, hypotensive_drugs, diabetes, smoking, fammily_cd, fammily_ca, low_albumen, triglyceride, create_time , patient_code ,status from w_survey
     </sql>
 
     <select id="selectWSurveyList" parameterType="WSurvey" resultMap="WSurveyResult">
@@ -70,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectWSurveyById" parameterType="Long" resultMap="WSurveyWSurveyHistoryResult">
-        select a.id, a.patient_phone, a.gender, a.age, a.waistline, a.cholesterol, a.systolic_albumen, a.diastolic_blood, a.systolic_blood, a.hypotensive_drugs, a.diabetes, a.smoking, a.fammily_cd, a.fammily_ca, a.low_albumen, a.triglyceride, a.create_time, a.patient_code,
+        select a.id, a.patient_phone, a.gender, a.age, a.waistline, a.cholesterol, a.systolic_albumen, a.diastolic_blood, a.systolic_blood, a.hypotensive_drugs, a.diabetes, a.smoking, a.fammily_cd, a.fammily_ca, a.low_albumen, a.triglyceride, a.create_time, a.patient_code,a.status,
                b.w_survey_history_id as sub_w_survey_history_id, b.w_survey_id as sub_w_survey_id, b.particular_year as sub_particular_year, b.h_low_albumen as sub_h_low_albumen, b.h_triglyceride as sub_h_triglyceride, b.h_systolic_albumen as sub_h_systolic_albumen, b.h_cholesterol as sub_h_cholesterol
         from w_survey a
                  left join w_survey_history b on b.w_survey_id = a.id
@@ -95,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             w_survey.low_albumen,
             w_survey.triglyceride,
             w_survey.create_time,
+            w_survey.status,
             w_survey_history.w_survey_history_id,
             w_survey_history.particular_year,
             w_survey_history.h_low_albumen,
@@ -132,6 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="triglyceride != null">triglyceride,</if>
             <if test="createTime != null">create_time,</if>
             <if test="patientCode != null">patient_code,</if>
+            <if test="status != null">status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="patientPhone != null">#{patientPhone},</if>
@@ -151,6 +154,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="triglyceride != null">#{triglyceride},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="patientCode != null">#{patientCode},</if>
+            <if test="status != null">#{status},</if>
         </trim>
     </insert>
 
@@ -174,8 +178,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="triglyceride != null">triglyceride = #{triglyceride},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="patientCode != null">patient_code = #{patientCode},</if>
+            <if test="status != null">status = #{status},</if>
         </trim>
         where id = #{id}
+    </update>
+    <update id="updateScreening">
+        update w_survey set status = 1 where patient_phone = #{patientPhone}
+
     </update>
 
     <delete id="deleteWSurveyById" parameterType="Long">

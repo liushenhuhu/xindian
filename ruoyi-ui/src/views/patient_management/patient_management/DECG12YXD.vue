@@ -853,7 +853,12 @@ export default {
     },
     /** 生成报告*/
     handleInform(row) {
-      var name = row.patientName
+      if (row.patientName.length <= 1) {
+        var name = row.patientName;
+      } else {
+        var name = row.patientName.charAt(0) +
+          new Array(row.patientName.length).fill('*').join('');
+      }
       this.$confirm('是否生成' + name + '的报告', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

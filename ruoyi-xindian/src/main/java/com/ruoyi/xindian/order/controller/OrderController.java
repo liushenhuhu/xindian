@@ -19,6 +19,10 @@ import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.vipPatient.domain.VipPatient;
 import com.ruoyi.xindian.vipPatient.service.IVipPatientService;
+import com.ruoyi.xindian.wSuryvey.domain.PurchaseLimitation;
+import com.ruoyi.xindian.wSuryvey.domain.WSurvey;
+import com.ruoyi.xindian.wSuryvey.service.IWSurveyService;
+import com.ruoyi.xindian.wSuryvey.service.PurchaseLimitationService;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
 import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.domain.SuborderOrderInfo;
@@ -38,6 +42,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import static com.ruoyi.common.utils.PageUtils.startPage;
 
@@ -90,6 +95,13 @@ public class OrderController {
 
     @Resource
     private LeaseDetailsMapper leaseDetailsMapper;
+
+
+    @Autowired
+    private IWSurveyService wSurveyService;
+
+    @Resource
+    private PurchaseLimitationService purchaseLimitationService;
     /**
      * 查询用户所存在的订单
      * @return
@@ -170,9 +182,6 @@ public class OrderController {
             if (sum==null){
                 return AjaxResult.error("商品购买数量错误，请稍后再试");
             }
-            if (addressId==null&&"undefined".equals(addressId)){
-                return AjaxResult.error("请选择地址");
-            }
             Product product = productService.selectPId(productId);
             if (product==null){
                 return AjaxResult.error("商品不存在");
@@ -187,7 +196,33 @@ public class OrderController {
                 return AjaxResult.error("商品库存不足");
             }
 
-            String stringBuilder = orderInfoService.addOrder(request, productId, sum, id, remark);
+
+            SysUser sysUser = sysUserService.selectUserById(userId);
+
+            WSurvey wSurvey = new WSurvey();
+            wSurvey.setPatientPhone(sysUser.getPhonenumber());
+            List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey);
+
+            boolean isVip = false;
+            if (wSurveyList!=null&&!wSurveyList.isEmpty()) {
+
+                PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
+                purchaseLimitation.setProductId(productId);
+                purchaseLimitation.setPatientPhone(sysUser.getPhonenumber());
+                List<PurchaseLimitation> purchaseLimitations = purchaseLimitationService.selectPurchaseLimitationList(purchaseLimitation);
+                if (purchaseLimitations.isEmpty()){
+                    isVip = true;
+                    if (sum>1) {
+                        return AjaxResult.error("打折商品限购一台");
+                    }
+                }
+            }
+
+            String stringBuilder = orderInfoService.addOrder(request, productId, sum, id, remark,isVip);
+            if (isVip){
+                redisTemplate.opsForValue().set("purchase_limitation:"+userId+":"+productId,stringBuilder);
+            }
+
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){
             System.out.println(e);

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.disease_explains.mapper.DiseaseExplainsMapper">
+
+    <resultMap type="DiseaseExplains" id="DiseaseExplainsResult">
+        <result property="diseaseId"    column="disease_id"    />
+        <result property="diseaseName"    column="disease_name"    />
+        <result property="explains"    column="explains"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectDiseaseExplainsVo">
+        select disease_id, disease_name, explains, create_time from disease_explains
+    </sql>
+
+    <select id="selectDiseaseExplainsList" parameterType="DiseaseExplains" resultMap="DiseaseExplainsResult">
+        <include refid="selectDiseaseExplainsVo"/>
+        <where>
+            <if test="diseaseName != null  and diseaseName != ''"> and disease_name like concat('%', #{diseaseName}, '%')</if>
+            <if test="explains != null  and explains != ''"> and explains like concat('%', #{explains}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectDiseaseExplainsByDiseaseId" parameterType="Long" resultMap="DiseaseExplainsResult">
+        <include refid="selectDiseaseExplainsVo"/>
+        where disease_id = #{diseaseId}
+    </select>
+
+    <insert id="insertDiseaseExplains" parameterType="DiseaseExplains" useGeneratedKeys="true" keyProperty="diseaseId">
+        insert into disease_explains
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="diseaseName != null">disease_name,</if>
+            <if test="explains != null">explains,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="diseaseName != null">#{diseaseName},</if>
+            <if test="explains != null">#{explains},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDiseaseExplains" parameterType="DiseaseExplains">
+        update disease_explains
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="diseaseName != null">disease_name = #{diseaseName},</if>
+            <if test="explains != null">explains = #{explains},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where disease_id = #{diseaseId}
+    </update>
+
+    <delete id="deleteDiseaseExplainsByDiseaseId" parameterType="Long">
+        delete from disease_explains where disease_id = #{diseaseId}
+    </delete>
+
+    <delete id="deleteDiseaseExplainsByDiseaseIds" parameterType="String">
+        delete from disease_explains where disease_id in
+        <foreach item="diseaseId" collection="array" open="(" separator="," close=")">
+            #{diseaseId}
+        </foreach>
+    </delete>
+</mapper>

@@ -41,7 +41,14 @@
                         <td>心梗机率</td>
                         <td>{{ (data.p_xingeng * 100).toFixed(1) + "%" }}</td>
                       </tr>
-
+                      <tr>
+                        <td>肥厚型心肌病</td>
+                        <td>{{( data.p_FHXXJB * 100).toFixed(1) + "%"}}</td>
+                        <td>扩张型心肌病</td>
+                        <td>{{ (data.p_KZXXJB * 100).toFixed(1) + "%"}}</td>
+                        <td>高血钾</td>
+                        <td>{{ (data.p_GaoJiaXie * 100).toFixed(1) + "%" }}</td>
+                      </tr>
                       <tr v-if="isDoctorUser">
                         <td>P波</td>
                         <td>{{ data.p }}</td>
@@ -431,6 +438,9 @@ export default {
         pId: "",
         patientSymptom: "暂无症状",
         p_xingeng: "", //心梗率
+        p_FHXXJB: "", //肥厚型心肌病
+        p_GaoJiaXie: "", //高血钾
+        p_KZXXJB: "", //扩张型心肌病
       },
       data4: {
         x: [],
@@ -1134,6 +1144,9 @@ export default {
           _th.data.gender = data.result.gender;
           _th.data.name = data.result.patientName;
           _th.data.p_xingeng = data.result.p_xingeng;
+          _th.data.p_FHXXJB = data.result.ecg_analysis_data.p_FHXXJB;
+          _th.data.p_GaoJiaXie = data.result.ecg_analysis_data.p_GaoJiaXie;
+          _th.data.p_KZXXJB = data.result.ecg_analysis_data.p_KZXXJB;
           //_th.data.result = data.result.intelligent_diagnosis
           _th.data.hr = data.result.ecg_analysis_data["平均心率"];
           _th.data.hr = data.result.ecg_analysis_data["平均心率"];
