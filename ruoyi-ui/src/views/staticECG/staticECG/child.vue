@@ -641,11 +641,18 @@ export default {
         //添加所有点
         this.pointdata.length = 0;
         var colorList = {
-          Normal: "#fe0101",
-          FangZao: "#ff7000",
-          ShiZao: "#17b09a",
-          FangYi: "#070000",
-          GanRao: "#0021da",
+          // Normal: "#fe0101",
+          // FangZao: "#ff7000",
+          // ShiZao: "#17b09a",
+          // FangYi: "#070000",
+          // GanRao: "#0021da",
+
+          // TODO:
+          Normal: "green",
+          FangZao: "blue",
+          ShiZao: "red",
+          FangYi: "brown",
+          GanRao: "#000",
         };
         for (const key in this[`${"arrList" + level}`]) {
           this[`${"arrList" + level}`][key].forEach((i) => {
@@ -783,11 +790,18 @@ export default {
     addpoint() {
       // let i=this.pointdata.findIndex(it=>it.x==this.xIndex)
       var colorList = {
-        Normal: "#fe0101",
-        FangZao: "#ff7000",
-        ShiZao: "#17b09a",
-        FangYi: "#070000",
-        GanRao: "#0021da",
+        // Normal: "#fe0101",
+        // FangZao: "#ff7000",
+        // ShiZao: "#17b09a",
+        // FangYi: "#070000",
+        // GanRao: "#0021da",
+
+        // TODO:
+        Normal: "green",
+        FangZao: "blue",
+        ShiZao: "red",
+        FangYi: "brown",
+        GanRao: "#000",
       };
       var formatter = this.radio1;
       switch (formatter) {

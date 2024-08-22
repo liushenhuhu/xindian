@@ -1268,12 +1268,13 @@ export default {
       //添加所有点
       _th["pointdata" + level].length = 0;
       var colorList = {
-        Normal: "#fe0101",
-        FangZao: "#ff7000",
-        ShiZao: "#17b09a",
-        FangYi: "#070000",
-        GanRao: "#0021da",
+        Normal: "green",
+        FangZao: "blue",
+        ShiZao: "red",
+        FangYi: "brown",
+        GanRao: "#000",
       };
+
       for (const key in _th[`${"arrList" + level}`]) {
         _th[`${"arrList" + level}`][key].forEach((i) => {
           var formatter = key;
@@ -1299,7 +1300,9 @@ export default {
           var pointdata = {
             name: key,
             xAxis: i,
-            yAxis: _th.nArr[level - 1][i] + 0.3,
+            // yAxis: _th.nArr[level - 1][i] + 0.3,
+            // TODO:
+            yAxis: 1.5,
             itemStyle: {
               color: colorList[key],
             },
@@ -2344,7 +2347,8 @@ export default {
           },
           z: 100,
         };
-        this.graphic1.push(text1);
+        // TODO:刻度线
+        // this.graphic1.push(text1);
         if (i == length1 - 1) {
           continue;
         }
@@ -2400,7 +2404,7 @@ export default {
           },
           z: 100,
         };
-        this.graphic2.push(text1);
+        // this.graphic2.push(text1);
         if (i == length2 - 1) {
           continue;
         }
@@ -2456,7 +2460,7 @@ export default {
           },
           z: 100,
         };
-        this.graphic3.push(text1);
+        // this.graphic3.push(text1);
         if (i == length3 - 1) {
           continue;
         }
@@ -3419,7 +3423,8 @@ export default {
   flex-direction: column;
 
   .el-tabs__content {
-    flex: 1;
+    height: 300px;
+    // flex: 1;
   }
 
   .el-tab-pane {
