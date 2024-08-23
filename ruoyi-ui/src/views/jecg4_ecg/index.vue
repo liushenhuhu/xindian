@@ -221,7 +221,7 @@
             <div
               id="II"
               class="line"
-              @dblclick="clicktrue('I', data4.dataII)"
+              @dblclick="clicktrue('IA', data4.dataII)"
             ></div>
           </div>
           <div>
@@ -928,6 +928,7 @@ export default {
       this.inputValue = "";
     },
     clicktrue(title, data) {
+      console.log("title: ", title);
       // return;
       console.log(this.datalabel);
       this.$refs.drawShow.getchart(
@@ -1961,7 +1962,9 @@ export default {
 ::v-deep .el-tabs__nav {
   z-index: 1;
 }
-
+::v-deep .el-tabs__content {
+  overflow: visible;
+}
 .body {
   display: flex;
   flex-direction: column;
@@ -2579,7 +2582,7 @@ export default {
   .el-tabs__content {
     // flex: 1;
     height: 300px;
-    overflow: auto !important;
+    overflow: visible !important;
   }
 
   .el-tab-pane {

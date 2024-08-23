@@ -1006,7 +1006,8 @@ export default {
         level,
         "II",
         1,
-        this.datalabel
+        this.datalabel,
+        "NO"
       );
     },
     showChart2() {
@@ -1023,7 +1024,8 @@ export default {
         level,
         "II",
         1,
-        this.datalabel
+        this.datalabel,
+        "NO"
       );
     },
     showChart3() {
@@ -1040,7 +1042,8 @@ export default {
         level,
         "II",
         1,
-        this.datalabel
+        this.datalabel,
+        "NO"
       );
     },
     showChart4() {
@@ -1057,7 +1060,8 @@ export default {
         level,
         "II",
         1,
-        this.datalabel
+        this.datalabel,
+        "NO"
       );
     },
     showChart5() {
@@ -3425,6 +3429,7 @@ export default {
   .el-tabs__content {
     height: 300px;
     // flex: 1;
+    // overflow: auto !important;
   }
 
   .el-tab-pane {

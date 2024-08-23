@@ -2779,7 +2779,9 @@ export default {
 ::v-deep .el-tabs__nav {
   z-index: 1;
 }
-
+::v-deep .el-tabs__content {
+  overflow: visible;
+}
 .box {
   overflow: hidden;
   width: 100%;

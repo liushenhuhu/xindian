@@ -388,7 +388,7 @@ export default {
   },
   methods: {
     //心博标注 初始化
-    async getchart(data, pIds, level, title, flag, datalabel) {
+    async getchart(data, pIds, level, title, flag, datalabel, is) {
       // console.log(this.flag)
       // console.log("第几个",level)
       this.title = title;
@@ -442,8 +442,20 @@ export default {
           seriesdata.push({ xAxis: i });
         }
       }
+      let titleStr = title;
+      if (titleStr == "IA") {
+        titleStr = "II";
+      }
+      if (is == "NO") {
+        titleStr = "";
+      }
       //绘图
       let detailoption = {
+        title: {
+          text: titleStr || "",
+          top: 10,
+          left: 50,
+        },
         animation: false,
         backgroundColor: "#ffffff",
         tooltip: {
@@ -1625,6 +1637,9 @@ export default {
 <style scoped lang="scss">
 ::v-deep .el-tabs__header {
   margin: 0;
+}
+::v-deep .el-tabs__content {
+  overflow: visible;
 }
 .container {
   user-select: none;
