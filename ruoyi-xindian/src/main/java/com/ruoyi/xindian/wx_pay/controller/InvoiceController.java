@@ -1,23 +1,20 @@
 package com.ruoyi.xindian.wx_pay.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.exception.file.InvalidExtensionException;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.order.service.InvoiceService;
-import com.ruoyi.xindian.product.domain.TProduct;
 import com.ruoyi.xindian.wx_pay.util.AjaxResult;
 import com.ruoyi.xindian.wx_pay.util.WXPayUtil;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-
-import static com.ruoyi.xindian.wx_pay.enums.OrderStatus.SUCCESS;
 
 @RestController
 @RequestMapping("/invoice/invoice")

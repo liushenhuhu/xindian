@@ -4,10 +4,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ruoyi.common.config.RuoYiConfig;
-
-import com.ruoyi.common.utils.file.FileUtils;
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.framework.config.ServerConfig;
 import com.ruoyi.xindian.product.domain.TProduct;
 import com.ruoyi.xindian.util.FileUploadUtils;

@@ -3,8 +3,8 @@ package com.ruoyi.xindian.wx_pay.util;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.order.domain.Invoice;

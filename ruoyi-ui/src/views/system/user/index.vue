@@ -333,6 +333,18 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="心电解读" prop="detectionNum">
+              <el-input v-model="form.detectionNum" placeholder="请输入心电解读" maxlength="11"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="周报" prop="weeklyNewspaperNum">
+              <el-input v-model="form.weeklyNewspaperNum" placeholder="请输入周报" maxlength="50"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
