@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -209,13 +210,13 @@ public class WeekReportServiceImpl implements IWeekReportService {
 //                String con = "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊\n断进一步确认.";
                     String[] split = weekReport.getDiagnosisConclusion().split("\n");
                     float x = 50;
-                    float y = 585;
+                    float y = 585 - 18;
                     for (String s : split) {
                         canvas.beginText().moveText(x, y).setFontAndSize(font, 10)
                                 .showText(s).endText();
                         y -= 10;
                     }
-                    canvas.beginText().moveText(80, 475).setFontAndSize(font, 8)
+                    canvas.beginText().moveText(80, 475 - 18).setFontAndSize(font, 8)
                             .showText(aesUtils.decrypt(doctor.getDoctorName())).endText();
 
                     //添加电子签
@@ -223,7 +224,7 @@ public class WeekReportServiceImpl implements IWeekReportService {
                         String wdir = "/home/chenpeng/workspace/system/xindian/uploadPath" + doctor.getDzVisa();
                         ImageData imageData = ImageDataFactory.create(wdir);
                         Image image = new Image(imageData)
-                                .setFixedPosition(440, 490)
+                                .setFixedPosition(440, 490 - 18)
                                 .scaleToFit(100, 100)
                                 .setHorizontalAlignment(HorizontalAlignment.CENTER)
                                 .setRotationAngle(Math.toRadians(90));
@@ -353,7 +354,19 @@ public class WeekReportServiceImpl implements IWeekReportService {
             List<Report> reports = reportService.selectReportList(report);
             wreport.setHData(reports != null && reports.size() != 0);
         }
-        List<WeekReport> collect = weekReports.stream().sorted(Comparator.comparing(WeekReport::getStartTime)).collect(Collectors.toList());
-        return collect;
+        List<WeekReport> collect = weekReports.stream().sorted(Comparator.comparing(WeekReport::getStartTime).reversed()).collect(Collectors.toList());
+        List<WeekReport> res = new LinkedList<>();
+
+        if (!collect.isEmpty()) {
+            Date now = new Date();
+            long now_time = now.getTime();
+            for (WeekReport weekR : collect) {
+                long f_time = weekR.getEndTime().getTime();
+                if (now_time < f_time)
+                    continue;
+                res.add(weekR);
+            }
+        }
+        return res;
     }
 }
