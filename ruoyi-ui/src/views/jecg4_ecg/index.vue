@@ -117,6 +117,51 @@
           <div class="touyou">
             <div class="touzuobiaoti">
               <div>医师诊断</div>
+                <el-button type="text" @click="dialogVisible"
+                           style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语
+                </el-button>
+              <el-dialog title="新增术语" :visible.sync="dialogVisibleTag">
+                <el-tag
+                  :key="tag"
+                  v-for="tag in dynamicTags"
+                  closable
+                  :disable-transitions="false"
+                  @close="handleCloseTag(tag)">
+                  {{ tag }}
+                </el-tag>
+                <el-input
+                  class="input-new-tag"
+                  v-if="inputVisible"
+                  v-model="inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                >
+                </el-input>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="dialogVisibleTag=false">取 消</el-button>
+                  <el-button type="primary" @click="termTag">确 定</el-button>
+                </div>
+              </el-dialog>
+
+                <el-button type="text" @click="Camera"
+                           style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语
+                </el-button>
+              <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
+                <div v-for="(item) in items">
+                  <div>{{ item.name }}</div>
+                  <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
+                          v-for="itemc in item.label"
+                          :key="itemc"
+                          @click="putDown(itemc,$event)">{{ itemc }}
+                  </button>
+                </div>
+                <div slot="footer" class="dialog-footer">
+                  <el-button type="primary" @click="dialogForm">确 定</el-button>
+                </div>
+              </el-dialog>
               <div>
                 <el-button
                   type="success"
@@ -149,6 +194,7 @@
                   :options="doctorList"
                   @change="selectDoctorChange"
                   :show-all-levels="false"
+                  :disabled="isDoctor"
                 >
                 </el-cascader>
               </div>
@@ -482,6 +528,8 @@ export default {
       },
       isShowBtn: true,
       isDoctorUser: false,
+      // 判断是不是管理员
+      isDoctor:false,
     };
   },
   beforeDestroy() {
@@ -490,6 +538,9 @@ export default {
     window.removeEventListener("resize", this.resizeDraw);
   },
   created() {
+    if (!this.$auth.hasRole("admin")){
+      this.isDoctor = true
+    }
     this.queryParams = this.$route.query.queryParams;
     this.ecgType = this.$route.query.ecgType;
     this.pId = this.$route.query.pId;
@@ -503,6 +554,48 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    // 新增术语
+    dialogVisible() {
+      getTerm().then(r => {
+        if (r.rows.length > 0) {
+          this.dynamicTags = JSON.parse(r.rows[0].termText)
+        }
+        this.dialogVisibleTag = true
+      })
+    },
+    //常用术语
+    Camera() {
+      let _th = this;
+      getCommonTerms().then((response) => {
+        console.log("常用术语：", response.data);
+        const result = Object.entries(response.data).map(([name, label]) => ({
+          name,
+          label,
+        }));
+        _th.items = result;
+        _th.dialogFormVisible = true;
+        console.log("格式过的常用术语：", _th.items);
+      });
+    },
+    //按下常用术语按钮
+    putDown(key, event) {
+      //console.log(event.currentTarget.classList.toggle('selected'))
+      event.currentTarget.classList.toggle("selected");
+      let index = this.arr.indexOf(key);
+      console.log(index)
+      if (index !== -1) {
+        this.arr.splice(index, 1);
+        this.data.resultByDoctor = this.arr.toString();
+      } else {
+        this.arr.push(key);
+        this.data.resultByDoctor = this.arr.toString();
+        console.log(this.arr)
+      }
+    },
+    dialogForm() {
+      this.data.resultByDoctor = this.arr.toString();
+      this.dialogFormVisible = false;
+    },
     getShowBnt() {
       if (this.$auth.hasRole("admin")) {
         this.isShowBtn = true;
@@ -891,14 +984,6 @@ export default {
         this.$modal.msgError("数据提交失败，请选择预警类型");
       }
     },
-    dialogVisible() {
-      getTerm().then((r) => {
-        if (r.rows.length > 0) {
-          this.dynamicTags = JSON.parse(r.rows[0].termText);
-        }
-        this.dialogVisibleTag = true;
-      });
-    },
     termTag() {
       let obj = {
         termText: JSON.stringify(this.dynamicTags),
@@ -1071,28 +1156,6 @@ export default {
       this.open7 = false;
       this.open8 = false;
       this.open9 = false;
-    },
-    //按下常用术语按钮
-    putDown(key, event) {
-      //console.log(event.currentTarget.classList.toggle('selected'))
-      event.currentTarget.classList.toggle("selected");
-      console.log(this.arr);
-      let index = this.arr.indexOf(key);
-      //console.log(index)
-      if (index !== -1) {
-        this.arr.splice(index, 1);
-      } else {
-        this.arr.push(key);
-      }
-    },
-    dialogForm() {
-      if (this.data.resultByDoctor) {
-        this.data.resultByDoctor =
-          this.data.resultByDoctor + "," + this.arr.toString();
-      } else {
-        this.data.resultByDoctor = this.arr.toString();
-      }
-      this.dialogFormVisible = false;
     },
     resizeDraw() {
       let _th = this;
@@ -1924,20 +1987,7 @@ export default {
         }
       });
     },
-    //常用术语
-    Camera() {
-      var _th = this;
-      getCommonTerms().then((response) => {
-        console.log("常用术语：", response.data);
-        const result = Object.entries(response.data).map(([name, label]) => ({
-          name,
-          label,
-        }));
-        _th.items = result;
-        _th.dialogFormVisible = true;
-        console.log("格式过的常用术语：", _th.items);
-      });
-    },
+
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then((_) => {
@@ -2441,6 +2491,7 @@ export default {
   margin-bottom: 1.5vh;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .touzuoxia {

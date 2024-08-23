@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
-    <div style="flex: 1">
+    <div style="flex: 1;margin-right: 10px">
       <div class="box">
+
         <div class="touzuo">
           <div class="touzuobiaoti">
             <div>基本信息</div>
@@ -11,19 +12,32 @@
                   <td>姓名</td>
                   <td v-if="isShowName.status === true">{{ data.name }}</td>
                   <td v-else>{{ hideMiddleName(data.name) }}</td>
+
+
+                </tr>
+                <tr>
                   <td>性别</td>
                   <td>{{ data.gender }}</td>
+                </tr>
+                <tr>
                   <td>患者病史</td>
                   <td>{{ getMH(dict.type.medical_history) }}</td>
                 </tr>
                 <tr>
                   <td>报告编码</td>
                   <td>{{ data.pId }}</td>
+
+
+                </tr>
+                <tr>
                   <td>年龄</td>
                   <td>{{ data.age }}</td>
+                </tr>
+                <tr>
                   <td>患者症状</td>
                   <td>{{ data.patientSymptom }}</td>
                 </tr>
+
               </table>
 
         </div>
@@ -31,6 +45,51 @@
         <div class="touyou">
           <div class="touzuobiaoti">
             <div>医师诊断</div>
+            <el-button type="text" @click="dialogVisible"
+                       style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语
+            </el-button>
+            <el-dialog title="新增术语" :visible.sync="dialogVisibleTag">
+              <el-tag
+                :key="tag"
+                v-for="tag in dynamicTags"
+                closable
+                :disable-transitions="false"
+                @close="handleCloseTag(tag)">
+                {{ tag }}
+              </el-tag>
+              <el-input
+                class="input-new-tag"
+                v-if="inputVisible"
+                v-model="inputValue"
+                ref="saveTagInput"
+                size="small"
+                @keyup.enter.native="handleInputConfirm"
+                @blur="handleInputConfirm"
+              >
+              </el-input>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisibleTag=false">取 消</el-button>
+                <el-button type="primary" @click="termTag">确 定</el-button>
+              </div>
+            </el-dialog>
+
+            <el-button type="text" @click="Camera"
+                       style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语
+            </el-button>
+            <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
+              <div v-for="(item) in items">
+                <div>{{ item.name }}</div>
+                <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
+                        v-for="itemc in item.label"
+                        :key="itemc"
+                        @click="putDown(itemc,$event)">{{ itemc }}
+                </button>
+              </div>
+              <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogForm">确 定</el-button>
+              </div>
+            </el-dialog>
           </div>
           <div class="mt">
             <el-input type="textarea" v-model="data.diagnosisConclusion" placeholder="请输入" :rows="5"
@@ -68,7 +127,7 @@
     <div style="flex: 2">
       <iframe
         width="100%"
-        :height="TableHeight/2"
+        height="100%"
         allowfullscreen="true"
         :src=src  ref="myFrame">
       </iframe>
@@ -82,12 +141,55 @@
 import $ from "jquery";
 import {getPdf, listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
 import {getMedicalHistoryByPhone, getWeekReport, updateWeekReport} from "@/api/medicalHistory/medicalHistory";
+import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
+import {
+  getCommonTerms,
+  addReport,
+  getReportByPId,
+  updateReport,
+  reportEarlyWarningMsg,
+} from "@/api/report/report";
 
 export default {
   name: "lookPdf",
   dicts:['medical_history'],
   data() {
     return {
+      dynamicTags: ["标签一", "标签二", "标签三"],
+      dialogVisibleTag: null,
+      items: [], //常用术语
+      dialogFormVisible: false,
+      arr: [],
+      inputValue: "",
+      inputVisible: false,
+      isSelected: false, //术语按钮没有被按下
+      datae: {
+        pastMedicalHistory: "",
+        name: "",
+        gender: "",
+        age: "",
+        result: "",
+        qt: "",
+        qrs_deg: "",
+        t: "",
+        pv5: "",
+        sv1: "",
+        rv5_sv1: "",
+        resultByDoctor: "",
+        dataTime: "",
+        doctorName: "",
+        diagnosisData: null,
+        bSuggest: "",
+        cSuggest: "",
+        patientSymptom: "无",
+        hr: "",
+        p: "",
+        pr: "",
+        qrs: "",
+        qtc: "",
+        hrv: "",
+        p_xingeng: "", //心梗率
+      },
       // 版本号
       version: "3.8.3",
       TableHeight: 100,
@@ -150,6 +252,74 @@ export default {
   },
 
   methods: {
+    // 新增术语
+    dialogVisible() {
+      getTerm().then(r => {
+        if (r.rows.length > 0) {
+          this.dynamicTags = JSON.parse(r.rows[0].termText)
+        }
+        this.dialogVisibleTag = true
+      })
+    },
+    //常用术语
+    Camera() {
+      let _th = this;
+      getCommonTerms().then((response) => {
+        console.log("常用术语：", response.data);
+        const result = Object.entries(response.data).map(([name, label]) => ({
+          name,
+          label,
+        }));
+        _th.items = result;
+        _th.dialogFormVisible = true;
+        console.log("格式过的常用术语：", _th.items);
+      });
+    },
+    //按下常用术语按钮
+    putDown(key, event) {
+      //console.log(event.currentTarget.classList.toggle('selected'))
+      event.currentTarget.classList.toggle("selected");
+      let index = this.arr.indexOf(key);
+      console.log(index)
+      if (index !== -1) {
+        this.arr.splice(index, 1);
+        this.data.diagnosisConclusion = this.arr.toString();
+      } else {
+        this.arr.push(key);
+        this.data.diagnosisConclusion = this.arr.toString();
+        console.log(this.arr)
+      }
+    },
+    dialogForm() {
+      this.data.diagnosisConclusion = this.arr.toString();
+      this.dialogFormVisible = false;
+    },
+    termTag() {
+      let obj = {
+        termText: JSON.stringify(this.dynamicTags),
+      };
+      addOrUpdateTerm(obj).then((r) => {
+        this.$modal.msgSuccess("添加成功");
+        this.dialogVisibleTag = false;
+      });
+    },
+    handleCloseTag(tag) {
+      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+    },
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+    handleInputConfirm() {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        this.dynamicTags.push(inputValue);
+      }
+      this.inputVisible = false;
+      this.inputValue = "";
+    },
     getPdf(pId,type){
       let _this=this;
       if (type==1){
@@ -512,11 +682,11 @@ export default {
 
   .box {
     width: 100%;
-    display: flex;
+    //display: flex;
     margin-top: 1.5vh;
     margin-bottom: 1.5vh;
     border-radius: 1vh;
-    justify-content: space-between;
+    //justify-content: space-between;
     }
 
 
@@ -864,7 +1034,7 @@ export default {
 }
 
 .touzuo {
-  width: 66%;
+  //width: 66%;
   display: flex;
   flex-direction:column;
 }
@@ -903,6 +1073,7 @@ export default {
   margin-bottom: 1.5vh;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .touzuoxia {
@@ -965,7 +1136,7 @@ export default {
 }
 
 .touyou {
-  width: 32%;
+  //width: 32%;
 }
 
 // ::v-deep .el-select-dropdown__list{
@@ -1178,10 +1349,17 @@ export default {
 
 .app-container{
   display: flex;
+  padding: 20px 20px 0 20px;
+  height: calc(100vh - 104px);
 }
 
 
-
+.box{
+  //height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between;
+}
 
 
 
