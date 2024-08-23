@@ -90,7 +90,9 @@
               </div>
               <div class="touzuo-btm">
                 <div class="yujinclass">
-                  <div class="yujinclass_tou">预警类型:</div>
+                  <div class="yujinclass_tou" v-if="!isDoctorUser">
+                    预警类型:
+                  </div>
                   <div class="yujinclass_zhi">
                     {{ xianshizifuchuan }}
                   </div>
@@ -3487,7 +3489,8 @@ export default {
   flex-direction: column;
 
   .el-tabs__content {
-    flex: 1;
+    // flex: 1;
+    height: 300px;
   }
 
   .el-tab-pane {

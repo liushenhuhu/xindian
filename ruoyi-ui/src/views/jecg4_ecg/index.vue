@@ -98,7 +98,7 @@
             </div>
             <div class="touzuo-btm">
               <div class="yujinclass">
-                <div class="yujinclass_tou">预警类型:</div>
+                <div class="yujinclass_tou" v-if="!isDoctorUser">预警类型:</div>
                 <div class="yujinclass_zhi">
                   {{ xianshizifuchuan }}
                 </div>
