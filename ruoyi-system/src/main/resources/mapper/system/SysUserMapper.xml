@@ -391,6 +391,12 @@
         <include refid="selectUserVo"/>
         where u.phonenumber_aes = #{phone}
     </select>
+    <select id="countToday" resultType="java.lang.Integer">
+
+    </select>
+    <select id="selectListByCount" resultType="com.ruoyi.system.domain.vo.SymCountVo">
+        SELECT user_id as userId,create_time as createTime FROM sys_user
+    </select>
 
     <update id="updateUserOpenId" parameterType="SysUser">
         update sys_user

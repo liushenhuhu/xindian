@@ -30,6 +30,8 @@ public class PatientLogin implements Serializable {
      * 登录时间
      */
     private Date createTime;
+    @TableField(exist = false)
+    private Integer year;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

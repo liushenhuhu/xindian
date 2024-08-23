@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div>
+    <div style="flex: 1">
       <div class="box">
         <div class="touzuo">
           <div class="touzuobiaoti">
@@ -65,7 +65,7 @@
 
 
 <!--    PDF -->
-    <div>
+    <div style="flex: 2">
       <iframe
         width="100%"
         :height="TableHeight/2"
@@ -1176,7 +1176,9 @@ export default {
   border: 0 solid #dcdfe6;
 }
 
-
+.app-container{
+  display: flex;
+}
 
 
 

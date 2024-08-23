@@ -5,12 +5,14 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.order.domain.Invoice;
 import com.ruoyi.xindian.order.mapper.InvoiceMapper;
 import com.ruoyi.xindian.patient_management.domain.DocReportMsg;
 import com.ruoyi.xindian.patient_management.mapper.DocReportMsgMapper;
 import com.ruoyi.xindian.relationship.mapper.PatientRelationshipMapper;
+import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.wx_pay.VO.BizField;
 import com.ruoyi.xindian.wx_pay.VO.UserField;
@@ -676,6 +678,54 @@ public class WXPublicRequest {
 
     }
 
+    /**
+     * 小程序消息推送（诊断结束，通知患者）
+     * @param first
+     * @param userOpenid
+     * @param name
+     * @param serviceName
+     * @param state
+     * @throws Exception
+     */
+    public  void sendMsgByReport(String first, SysUser userOpenid, String name, String serviceName, String state, Report report1) throws Exception {
+
+        MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity();
+        String time = new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date());
+        messageTemplateEntity.setMessageData(new MessageValueEntity(time), new MessageValueEntity(first),new MessageValueEntity(state),new MessageValueEntity(name),new MessageValueEntity(serviceName));
+
+//        List<WxMpTemplateData> wxMpTemplateDataList = Arrays.asList(
+//                new WxMpTemplateData("date7",time),
+//                new WxMpTemplateData("thing8",first),
+//                new WxMpTemplateData("phrase4",state),
+//                new WxMpTemplateData("thing11",name),
+//                new WxMpTemplateData("thing3",serviceName)
+//        );
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("touser", userOpenid.getOpenId()); //用户openid
+        paramsMap.put("miniprogram_state", "fomal");
+        paramsMap.put("page", "pagesRecord/pages/detail?id="+aesUtils.decrypt(userOpenid.getPhonenumber())+"&pid="+report1.getpId()+"&type="+report1.getReportType());
+        paramsMap.put("template_id", "LXUKc7XBotVpT_w7wDx1RpNF1PpNEJa3t6gaMsP7_Cw"); //推送消息模板id
+        paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
+        String wxAccessToken = getWXAccessToken();
+
+        HttpHeaders headers = new HttpHeaders(); //构建请求头
+        headers.setContentType(MediaType.APPLICATION_JSON); //设置内容类型为json
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap, headers); //构建http请求实体
+
+        //发送请求路径拼接获取到的access_token
+        SendMessageVo sendMessageVo = restTemplate.postForObject("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" +
+                wxAccessToken, request, SendMessageVo.class);
+
+        if (null == sendMessageVo) {
+            throw new RuntimeException("推送消息失败");
+        }
+        if (sendMessageVo.getErrcode() != 0) {
+            log.error("推送消息失败,原因：{}", sendMessageVo.getErrmsg());
+            throw new RuntimeException("推送消息失败");
+        }
+        log.info("推送消息成功");
+
+    }
     /**
      * 校验商户联系方式是否存在；
      * @return

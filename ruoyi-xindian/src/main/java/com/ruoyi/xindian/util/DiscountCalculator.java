@@ -7,7 +7,7 @@ public class DiscountCalculator {
 
 
     public static void main(String[] args) {
-        BigDecimal bigDecimal = calculateDiscount(new BigDecimal("59900.00"), new BigDecimal("60.00"));
+        BigDecimal bigDecimal = calculateDiscount(new BigDecimal("799900.00"), new BigDecimal("60.00"));
         System.out.println(bigDecimal);
     }
 
@@ -18,23 +18,22 @@ public class DiscountCalculator {
         BigDecimal originalPriceDecimal = originalPrice.divide(new BigDecimal("100"));
         BigDecimal discountAmount = originalPriceDecimal.multiply(discountDecimal);
 
-        // 计算折扣后的价格
-        BigDecimal discountedPrice = originalPrice.subtract(discountAmount);
 
         // 输出结果
         System.out.println("原价: " + originalPrice);
         System.out.println("折扣金额: " + discountAmount);
-        System.out.println("折扣后的价格: " + discountedPrice);
 
 
         // 示例数值，有小数点
 
-        // 使用 RoundingMode.CEILING 进位到最近的整数
-        BigDecimal roundedValue = discountAmount.setScale(0, RoundingMode.CEILING);
+        // 保留两位小数
+        BigDecimal discountedPrice = discountAmount.setScale(2, RoundingMode.HALF_UP);
 
         // 输出结果
         System.out.println("原值: " + discountAmount);
-        System.out.println("进位后的整数值: " + roundedValue);
-        return roundedValue.multiply(new BigDecimal("100"));
+        System.out.println("进位后的整数值: " + discountedPrice);
+        return discountedPrice.multiply(new BigDecimal("100"));
     }
+
+
 }

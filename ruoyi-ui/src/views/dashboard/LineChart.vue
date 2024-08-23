@@ -73,6 +73,9 @@ export default {
     },
     setOptions({ expectedData, actualData , xinzeng }) {
       this.chart.setOption({
+        title:{
+          text: this.yue ?"月活跃量/新增量":"七天活跃量/新增量"
+        },
         xAxis: {
           data:actualData,
           boundaryGap: false,

@@ -367,7 +367,9 @@ public class WXPayController {
                 wxPayService.processOrder(xmlStr);
                 return true;
             }
-            redisTemplate.opsForValue().set("orderQuery:"+id,id,20, TimeUnit.SECONDS);
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("order:" + id))) {
+                redisTemplate.opsForValue().set("orderQuery:"+id,id,20, TimeUnit.SECONDS);
+            }
             return false;
 
         } catch (Exception e) {

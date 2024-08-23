@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.domain.vo.SymCountVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -162,4 +163,9 @@ public interface SysUserMapper
     int updateWeeklyNewspaperNum(@Param("userId") Long userId,@Param("sum") long sum);
 
     int updateNum(SysUser sysUser);
+
+
+
+    List<SymCountVo> selectListByCount();
+
 }

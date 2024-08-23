@@ -608,7 +608,7 @@ public class ReportController extends BaseController {
             //医生拒绝判断小程序消息推送通知用户通知
             //如果报告属于患者家人，则通过发送短信的方式去
             if (StringUtils.isNotEmpty(report1.getLoginUserPhone())) {
-                WxMsgPut(report1.getLoginUserPhone(), doctor1.getHospital(), patient.getPatientName());
+                WxMsgPut(report1.getLoginUserPhone(), doctor1.getHospital(), patient.getPatientName(),report1);
             }
             redisTemplate.delete("DocList" + report.getpId());
             return toAjax(reportService.updateReportNull(report));
@@ -676,7 +676,7 @@ public class ReportController extends BaseController {
             reportService.updateReport(report);
             redisTemplate.delete("DocList" + report.getpId());
             if (StringUtils.isNotEmpty(report1.getLoginUserPhone())) {
-                WxMsgPut(report1.getLoginUserPhone(), doctor1.getHospital(), patient.getPatientName());
+                WxMsgPut(report1.getLoginUserPhone(), doctor1.getHospital(), patient.getPatientName(),report1);
             }
         }
         return toAjax(1);
@@ -1243,11 +1243,11 @@ public class ReportController extends BaseController {
     }
 
 
-    private void WxMsgPut(String patientPhone, String hospitalName, String patientName) {
+    private void WxMsgPut(String patientPhone, String hospitalName, String patientName,Report report1) {
         SysUser sysUser2 = sysUserMapper.selectUserByPhone(patientPhone);
         if (sysUser2 != null) {
             try {
-                wxPublicRequest.sendMsg(hospitalName, sysUser2.getOpenId(), patientName, "心电图检测", "诊断完成");
+                wxPublicRequest.sendMsgByReport(hospitalName, sysUser2, patientName, "心电图检测", "诊断完成",report1);
             } catch (Exception e) {
                 System.out.println(e);
             }

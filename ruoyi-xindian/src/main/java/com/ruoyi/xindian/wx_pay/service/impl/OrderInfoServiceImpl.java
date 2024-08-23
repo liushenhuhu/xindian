@@ -621,11 +621,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
         if (orderInfo!=null&&orderInfo.getOrderStatus().equals(OrderStatus.NOTPAY.getType())){
             List<SuborderOrderInfo> suborderOrderInfo = suborderOrderInfoMapper.selectList(new QueryWrapper<SuborderOrderInfo>().eq("order_father", orderId));
-
             for(SuborderOrderInfo c : suborderOrderInfo){
+                redisTemplate.delete("purchase_limitation:" + orderInfo.getUserId() + ":" + c.getProductId());
                 updateProductDel(c.getSum().intValue(),c.getProductId(),orderInfo);
             }
-
         }
 
         int i = orderInfoMapper.deleteById(orderId);

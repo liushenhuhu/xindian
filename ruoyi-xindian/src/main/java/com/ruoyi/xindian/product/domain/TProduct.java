@@ -104,12 +104,21 @@ public class TProduct extends BaseEntity
 
     private Float discountPrice;
 
+    private String discountImage;
     /**
      * 图片集合
      * @return
      */
     private List<String>  stringImg;
 
+
+    public String getDiscountImage() {
+        return discountImage;
+    }
+
+    public void setDiscountImage(String discountImage) {
+        this.discountImage = discountImage;
+    }
 
     public Float getDiscountPrice() {
         return discountPrice;

@@ -3,10 +3,7 @@ package com.ruoyi.xindian.patient.controller;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.xindian.patient.domain.PatientLogin;
 import com.ruoyi.xindian.patient.service.PatientLoginService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -35,6 +32,10 @@ public class PatientLoginController {
         return AjaxResult.success(patientLoginService.addLoginLog(patientLogin));
     }
 
+    @GetMapping("/getCount")
+    public AjaxResult getCount(PatientLogin patientLogin) {
+        return AjaxResult.success(patientLoginService.getCount(patientLogin));
+    }
 
 
 }

@@ -15,10 +15,11 @@
         framework框架核心
     </description>
 
-    <dependencies>     <dependency>
-        <groupId>com.baomidou</groupId>
-        <artifactId>mybatis-plus-annotation</artifactId>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-extension</artifactId>
