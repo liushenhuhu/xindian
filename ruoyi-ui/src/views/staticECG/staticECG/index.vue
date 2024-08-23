@@ -1306,7 +1306,7 @@ export default {
             xAxis: i,
             // yAxis: _th.nArr[level - 1][i] + 0.3,
             // TODO:
-            yAxis: 1.5,
+            yAxis: 1.4,
             itemStyle: {
               color: colorList[key],
             },
