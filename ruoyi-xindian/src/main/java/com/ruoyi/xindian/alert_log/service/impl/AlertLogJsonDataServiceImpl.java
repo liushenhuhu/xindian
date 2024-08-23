@@ -1,17 +1,15 @@
 package com.ruoyi.xindian.alert_log.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.xindian.alert_log.domain.AlertLogJsonData;
-import com.ruoyi.xindian.alert_log.service.AlertLogJsonDataService;
 import com.ruoyi.xindian.alert_log.mapper.AlertLogJsonDataMapper;
+import com.ruoyi.xindian.alert_log.service.AlertLogJsonDataService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.List;
 
 /**
 * @author 13401

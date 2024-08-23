@@ -1,14 +1,11 @@
 package com.ruoyi.xindian.alert_log.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.xindian.alert_log.domain.Jecg12;
-import com.ruoyi.xindian.alert_log.domain.JecgSingle;
-import com.ruoyi.xindian.alert_log.service.Jecg12Service;
 import com.ruoyi.xindian.alert_log.mapper.Jecg12Mapper;
+import com.ruoyi.xindian.alert_log.service.Jecg12Service;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,8 +36,8 @@ public class Jecg12ServiceImpl extends ServiceImpl<Jecg12Mapper, Jecg12>
             jecg121.setWaveLabel(jecg12.getWaveLabel());
             return jecg12Mapper.update(jecg121,new QueryWrapper<Jecg12>().eq("p_id",jecg12.getpId()));
         }
-        JSONObject parse = (JSONObject) JSONObject.parse(jecg121.getWaveLabel());
-        JSONObject webText = (JSONObject) JSONObject.parse(jecg12.getWaveLabel());
+        JSONObject parse = (JSONObject) JSONObject.parseObject(jecg121.getWaveLabel());
+        JSONObject webText = (JSONObject) JSONObject.parseObject(jecg12.getWaveLabel());
         Iterator<String> iterator = webText.keySet().iterator();
         while (iterator.hasNext()){
             String key = iterator.next();
@@ -61,8 +58,8 @@ public class Jecg12ServiceImpl extends ServiceImpl<Jecg12Mapper, Jecg12>
             jecg121.setBeatLabel(jecg12.getBeatLabel());
             return jecg12Mapper.update(jecg121,new QueryWrapper<Jecg12>().eq("p_id",jecg12.getpId()));
         }
-        JSONObject parse = (JSONObject) JSONObject.parse(jecg121.getBeatLabel());
-        JSONObject webText = (JSONObject) JSONObject.parse(jecg12.getBeatLabel());
+        JSONObject parse = (JSONObject) JSONObject.parseObject(jecg121.getBeatLabel());
+        JSONObject webText = (JSONObject) JSONObject.parseObject(jecg12.getBeatLabel());
         Iterator<String> iterator = webText.keySet().iterator();
         while (iterator.hasNext()){
             String key = iterator.next();

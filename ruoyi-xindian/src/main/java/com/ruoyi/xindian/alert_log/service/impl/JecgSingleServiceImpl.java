@@ -1,6 +1,6 @@
 package com.ruoyi.xindian.alert_log.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.xindian.alert_log.domain.JecgSingle;
@@ -33,8 +33,8 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
             jecgSingle1.setBeatLabel(jecgSingle.getBeatLabel());
             return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
         }
-        JSONObject parse = (JSONObject) JSONObject.parse(jecgSingle1.getBeatLabel());
-        JSONObject webText = (JSONObject) JSONObject.parse(jecgSingle.getBeatLabel());
+        JSONObject parse = (JSONObject) JSONObject.parseObject(jecgSingle1.getBeatLabel());
+        JSONObject webText = (JSONObject) JSONObject.parseObject(jecgSingle.getBeatLabel());
         Iterator<String> iterator = webText.keySet().iterator();
         while (iterator.hasNext()){
             String key = iterator.next();
@@ -71,8 +71,8 @@ public class JecgSingleServiceImpl extends ServiceImpl<JecgSingleMapper, JecgSin
             return jecgSingleMapper.update(jecgSingle1,new QueryWrapper<JecgSingle>().eq("p_id",jecgSingle1.getpId()));
         }
 
-        JSONObject parse = (JSONObject) JSONObject.parse(jecgSingle1.getWaveLabel());
-        JSONObject webText = (JSONObject) JSONObject.parse(jecgSingle.getWaveLabel());
+        JSONObject parse = (JSONObject) JSONObject.parseObject(jecgSingle1.getWaveLabel());
+        JSONObject webText = (JSONObject) JSONObject.parseObject(jecgSingle.getWaveLabel());
         Iterator<String> iterator = webText.keySet().iterator();
         while (iterator.hasNext()){
             String key = iterator.next();

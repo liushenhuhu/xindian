@@ -34,8 +34,17 @@
               <el-tag  v-if="scope.row.reportType=='week'">
                   周报
               </el-tag>
+              <el-tag  v-if="scope.row.reportType.indexOf('JECGsingle')">
+                静态单导
+              </el-tag>
+              <el-tag  v-if="scope.row.reportType.indexOf('JECG4')">
+                静态4导
+              </el-tag>
+              <el-tag  v-if="scope.row.reportType.indexOf('JECG12')">
+                静态12导
+              </el-tag>
               <el-tag  v-else>
-                {{ scope.row.reportType }}
+                暂无类型
               </el-tag>
             </template>
           </el-table-column>
