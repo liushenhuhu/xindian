@@ -43,11 +43,11 @@
                       </tr>
                       <tr>
                         <td>肥厚型心肌病</td>
-                        <td>{{ (data.p_FHXXJB * 100).toFixed(1) + "%" }}</td>
+                        <td>{{data.p_FHXXJB?(data.p_FHXXJB * 100).toFixed(1) + "%": '0%' }}</td>
                         <td>扩张型心肌病</td>
-                        <td>{{ (data.p_KZXXJB * 100).toFixed(1) + "%" }}</td>
+                        <td>{{ data.p_KZXXJB?(data.p_KZXXJB * 100).toFixed(1) + "%":'0%' }}</td>
                         <td>高血钾</td>
-                        <td>{{ (data.p_GaoJiaXie * 100).toFixed(1) + "%" }}</td>
+                        <td>{{ data.p_KZXXJB?(data.p_GaoJiaXie * 100).toFixed(1) + "%":'0%' }}</td>
                       </tr>
                       <tr v-if="isDoctorUser">
                         <td>P波</td>
@@ -363,7 +363,7 @@ import {
   updateReport,
   reportEarlyWarningMsg,
 } from "@/api/report/report";
-import { sendMsgToPatient } from "@/api/patient_management/patient_management";
+import {listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
 // import child from './child.vue'
 // import CacheList from "@/views/monitor/cache/list.vue";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
@@ -545,6 +545,7 @@ export default {
     this.ecgType = this.$route.query.ecgType;
     this.pId = this.$route.query.pId;
     this.getList();
+    this.getPatientdetails();
   },
   mounted() {
     this.get();
@@ -790,32 +791,12 @@ export default {
         }
         // console.log(this.data)
       });
-      selectDoctor().then((response) => {
-        this.options = response;
-      });
-      getDoctorList().then((res) => {
-        let options = [];
-        let data = res.data.options;
-        data.forEach((e) => {
-          if (e.doctorList.length != 0) {
-            let hospital = {
-              value: e.hospitalCode,
-              label: e.hospitalName,
-              children: [],
-            };
-            e.doctorList.forEach((doctorInfo) => {
-              hospital.children.push({
-                label: doctorInfo.doctorName,
-                value: doctorInfo.doctorName,
-              });
-            });
-            options.push(hospital);
-          }
-        });
-        this.doctorList = options;
-        console.log("医生信息");
-        console.log(this.doctorList);
-      });
+      // selectDoctor().then((response) => {
+      //   this.options = response;
+      // });
+      listDoc().then(r => {
+        this.doctorList = r.data
+      })
       this.getyujingleixing();
     },
     //选择医生

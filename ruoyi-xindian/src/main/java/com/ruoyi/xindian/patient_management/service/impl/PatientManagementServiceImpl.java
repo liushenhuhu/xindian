@@ -464,58 +464,58 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
                 String formattedDate = formatter.format(c.getConnectionTime());
                 PmEcgData pmEcgData = c.getPmEcgData();
                 if (StringUtils.isNotEmpty(pmEcgData.getHrMean())){
-                    String[] strings = {formattedDate,pmEcgData.getHrMean(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getHrMean(),c.getpId(),c.getEcgType()};
                     hr_mean.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getpTime())){
-                    String[] strings = {formattedDate,pmEcgData.getpTime(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getpTime(),c.getpId(),c.getEcgType()};
                     P_time.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getQrsInterval())){
-                    String[] strings = {formattedDate,pmEcgData.getQrsInterval(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getQrsInterval(),c.getpId(),c.getEcgType()};
                     QRS_interval.add(strings);
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getPrInterval())){
-                    String[] strings = {formattedDate,pmEcgData.getPrInterval(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getPrInterval(),c.getpId(),c.getEcgType()};
                     PR_interval.add(strings);
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getQtc())){
-                    String[] strings = {formattedDate,pmEcgData.getQtc(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getQtc(),c.getpId(),c.getEcgType()};
                     QTc.add(strings);
                 }
 
                 if (StringUtils.isNotEmpty(pmEcgData.getRmssd())){
-                    String[] strings = {formattedDate,pmEcgData.getRmssd(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getRmssd(),c.getpId(),c.getEcgType()};
                     RMSSD.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getpAmplitude())){
-                    String[] strings = {formattedDate,pmEcgData.getpAmplitude(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getpAmplitude(),c.getpId(),c.getEcgType()};
                     P_amplitude.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getrAmplitude())){
-                    String[] strings = {formattedDate,pmEcgData.getrAmplitude(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getrAmplitude(),c.getpId(),c.getEcgType()};
                     R_amplitude.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.gettAmplitude())){
-                    String[] strings = {formattedDate,pmEcgData.gettAmplitude(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.gettAmplitude(),c.getpId(),c.getEcgType()};
                     T_amplitude.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.gettTime())){
-                    String[] strings = {formattedDate,pmEcgData.gettTime(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.gettTime(),c.getpId(),c.getEcgType()};
                     T_time.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getSdnn())){
-                    String[] strings = {formattedDate,pmEcgData.getSdnn(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getSdnn(),c.getpId(),c.getEcgType()};
                     SDNN.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getNni())){
-                    String[] strings = {formattedDate,pmEcgData.getNni(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getNni(),c.getpId(),c.getEcgType()};
                     nni.add(strings);
                 }
                 if (StringUtils.isNotEmpty(pmEcgData.getQtInterval())){
-                    String[] strings = {formattedDate,pmEcgData.getQtInterval(),c.getpId()};
+                    String[] strings = {formattedDate,pmEcgData.getQtInterval(),c.getpId(),c.getEcgType()};
                     QT_interval.add(strings);
                 }
             }

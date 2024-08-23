@@ -764,6 +764,7 @@
             resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientAndPm">
         SELECT
             patient_management.connection_time,
+            patient_management.ecg_type,
             pm_ecg_data.p_id,
             pm_ecg_data.hr_mean,
             pm_ecg_data.P_amplitude,
