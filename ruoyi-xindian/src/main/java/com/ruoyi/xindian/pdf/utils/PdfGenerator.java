@@ -37,7 +37,7 @@ public class PdfGenerator {
 
 
     public String createWeekPdf(String fileName, LinkedList<WeekPdfData> weekPdfData, String patientName, String gender, String patientAge, String height, String weight) throws IOException {
-        String title = "河南省心电学诊疗中心心电图报告";
+        String title = "河南省心电学诊疗中心\n心电图报告";
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
 //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -49,7 +49,7 @@ public class PdfGenerator {
 //        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         //设置标题
-        titleSet_1(doc, title, font);
+        titleSet(doc, title, font);
         //基本信息
         Table table_info = new Table(6);
         table_info.setWidth(UnitValue.createPercentValue(100));
@@ -183,7 +183,7 @@ public class PdfGenerator {
             pdfCanvas.setFontAndSize(font, 10);
             pdfCanvas.setFillColor(ColorConstants.BLACK);
             pdfCanvas.beginText()
-                    .moveText(390, 510)
+                    .moveText(390, 492)
                     .showText("报告医生:")
                     .endText();
             pdfCanvas.stroke();
@@ -196,7 +196,7 @@ public class PdfGenerator {
             div1.add(new Paragraph().setMarginBottom(5));
             div1.add(table2);
             // 设置画布边框
-            com.itextpdf.kernel.geom.Rectangle rectangle = new com.itextpdf.kernel.geom.Rectangle(35, 40, 525, 420);
+            com.itextpdf.kernel.geom.Rectangle rectangle = new com.itextpdf.kernel.geom.Rectangle(35, 40, 525, 402);
             pdfCanvas.setLineWidth(1f);
             pdfCanvas.setStrokeColor(ColorConstants.BLACK);
             pdfCanvas.rectangle(rectangle);
@@ -204,9 +204,9 @@ public class PdfGenerator {
 
             // 将Div添加到文档中
             doc.add(div1);
-            drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 420, 525, 136.5f);
+            drawWeekEcg30(doc, font, weekPdfData.get(0), 35, 402, 525, 136.5f);
             if (len > 1)
-                drawWeekEcg30(doc, font, weekPdfData.get(1), 35, 220, 525, 136.5f);
+                drawWeekEcg30(doc, font, weekPdfData.get(1), 35, 215, 525, 136.5f);
             if (len > 2)
                 doc.add(new AreaBreak());
             Div div;
@@ -471,7 +471,7 @@ public class PdfGenerator {
     }
 
     public void createNewPdf(String fileName, ReportData reportData) throws IOException, ParseException {
-        String title = "河南省心电学诊疗中心心电报告";
+        String title = "河南省心电学诊疗中心\n动态心电报告";
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(fileName));
         Document doc = new Document(pdfDoc, PageSize.A4);
         // 设置字体  simhei.ttf黑体  SimSun宋体
@@ -653,7 +653,7 @@ public class PdfGenerator {
                 new Paragraph(reportData.getConclusion()).setPaddingLeft(10).setHeight(180).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
 //      reportData.getConclusion()
         table1.addCell(text);
-        Cell name = new Cell(1, 3).add(new Paragraph("签名：").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(8));
+        Cell name = new Cell(1, 3).add(new Paragraph("").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(8));
         name.setBorderRight(Border.NO_BORDER);
         table1.addCell(name);
         Cell time = new Cell(1, 3).add(new Paragraph("日期：" + reportData.getReportTime()).setPaddingRight(5).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(8));
@@ -664,7 +664,7 @@ public class PdfGenerator {
         Div div = new Div();
         div.setHorizontalAlignment(HorizontalAlignment.CENTER); // 设置Div水平居中
         div.add(table); // 将表格添加到Div中
-        div.add(new Paragraph().setMarginBottom(5));
+        div.add(new Paragraph().setMarginBottom(1));
         div.add(table1); // 将表格添加到Div中
         // 将Div添加到文档中
         doc.add(div);
@@ -1457,7 +1457,7 @@ public class PdfGenerator {
 
     //设置标题
     public void titleSet(Document doc, String data, PdfFont font) {
-        Paragraph titleText = new Paragraph(data).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(18);
+        Paragraph titleText = new Paragraph(data).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(16);
         doc.add(titleText);
     }
 

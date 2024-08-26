@@ -434,7 +434,7 @@ import {
   updateReport,
   reportEarlyWarningMsg,
 } from "@/api/report/report";
-import { sendMsgToPatient } from "@/api/patient_management/patient_management";
+import {listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
 import html2canvas from "html2canvas";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
 // 发送信息时获取密码
@@ -746,7 +746,7 @@ export default {
       this.ecgType = this.$route.query.ecgType;
       this.pId = this.$route.query.pId;
     }
-
+    this.getPatientdetails();
     this.getList();
   },
   mounted() {
@@ -963,7 +963,7 @@ export default {
           this.index = 0;
         }
       });
-      this.getPatientdetails();
+
     },
     // 患者用户信息
     getPatientdetails() {
@@ -979,7 +979,6 @@ export default {
         this.data.pastMedicalHistory = response.data.pastMedicalHistory;
         // 原先提交过的预警类型
         this.logDataType = response.data.logDataType;
-        // console.log("原先提交过的值："+this.logDataType);
         if (!this.data.doctorName) {
           const date = new Date();
           const year = date.getFullYear().toString().padStart(4, "0");
@@ -998,32 +997,12 @@ export default {
       if (!show) {
         this.get();
       }
-      selectDoctor().then((response) => {
-        this.options = response;
-      });
-      getDoctorList().then((res) => {
-        let options = [];
-        let data = res.data.options;
-        data.forEach((e) => {
-          if (e.doctorList.length != 0) {
-            let hospital = {
-              value: e.hospitalCode,
-              label: e.hospitalName,
-              children: [],
-            };
-            e.doctorList.forEach((doctorInfo) => {
-              hospital.children.push({
-                label: doctorInfo.doctorName,
-                value: doctorInfo.doctorName,
-              });
-            });
-            options.push(hospital);
-          }
-        });
-        this.doctorList = options;
-        console.log("医生信息");
-        console.log(this.doctorList);
-      });
+      // selectDoctor().then((response) => {
+      //   this.options = response;
+      // });
+      listDoc().then(r => {
+        this.doctorList = r.data
+      })
       this.getyujingleixing();
     },
     //选择医生

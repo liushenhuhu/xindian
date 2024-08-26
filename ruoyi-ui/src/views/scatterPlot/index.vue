@@ -60,7 +60,7 @@
         </el-card>
       </div>
       <!-- <div class="row">
-        
+
       </div> -->
       <div class="row">
         <el-card>
@@ -228,7 +228,7 @@ export default {
     var telHidden = telPrefix + '*'.repeat(Math.max(0, tel.length - 3)); // 用 * 代替剩余部分
     this.patientPhone = telHidden;
 
-    
+
     // const limitTo11Digits = number => parseInt(number.toString().substr(0, 11), 10);
     // let limitedNumber = limitTo11Digits(this.$route.query.row.patientPhone);
     this.ecgType=this.$route.query.ecgType
@@ -237,7 +237,7 @@ export default {
     this.patientSex =this.$route.query.row.patientSex
 
 
-    
+
 
     // var tel = this.queryParams.patientPhone;
     // tel = "" + tel;
@@ -423,8 +423,21 @@ export default {
       this.chart1.setOption(option);
       this.chart1.resize()
       this.chart1.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -472,8 +485,22 @@ export default {
       this.chart2.setOption(option);
       this.chart2.resize()
       this.chart2.on('click', (params)=>{
+
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -521,8 +548,21 @@ export default {
       this.chart3.setOption(option);
       this.chart3.resize()
       this.chart3.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -570,8 +610,21 @@ export default {
       this.chart4.setOption(option);
       this.chart4.resize()
       this.chart4.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -619,8 +672,21 @@ export default {
       this.chart5.setOption(option);
       this.chart5.resize()
       this.chart5.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -668,8 +734,21 @@ export default {
       this.chart6.setOption(option);
       this.chart6.resize()
       this.chart6.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -715,8 +794,21 @@ export default {
       this.chart7.setOption(option);
       this.chart7.resize()
       this.chart7.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -762,8 +854,21 @@ export default {
       this.chart8.setOption(option);
       this.chart8.resize()
       this.chart8.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -809,8 +914,21 @@ export default {
       this.chart9.setOption(option);
       this.chart9.resize()
       this.chart9.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -856,8 +974,21 @@ export default {
       this.chart10.setOption(option);
       this.chart10.resize()
       this.chart10.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -903,8 +1034,21 @@ export default {
       this.chart11.setOption(option);
       this.chart11.resize()
       this.chart11.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })
@@ -952,8 +1096,21 @@ export default {
       this.chart12.setOption(option);
       this.chart12.resize()
       this.chart12.on('click', (params)=>{
+        console.log(params)
+        let paths = '/staticECG';
+        if (params.data.length>3){
+          let type = params.data[3]
+          if (type.indexOf('JECGsingle')!=-1){
+            paths = '/staticECG'
+          }else if (type.indexOf('JECG4')!=-1){
+            paths = '/JECG4_ECG'
+          }else if (type.indexOf('JECG12')!=-1){
+            paths = '/restingECG'
+          }
+
+        }
         this.$router.push({
-          path:this.ecgType==1?'/staticECG':'/restingECG',
+          path:paths,
           query:{pId:params.data[2]}
         })
       })

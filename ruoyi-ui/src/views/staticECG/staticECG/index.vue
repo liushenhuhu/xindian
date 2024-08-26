@@ -405,7 +405,7 @@ import {
   updateReport,
   reportEarlyWarningMsg,
 } from "@/api/report/report";
-import { sendMsgToPatient } from "@/api/patient_management/patient_management";
+import {getPatient_management, listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
 import child from "./child.vue";
 import CacheList from "@/views/monitor/cache/list.vue";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
@@ -506,6 +506,7 @@ export default {
         { yAxis: 0 },
         { yAxis: 0.5 },
         { yAxis: 1 },
+        { yAxis: 1.5 },
       ], //没放大之前标记线
       dialogFormVisible: false, //弹出框
       items: "", //常用术语
@@ -543,7 +544,7 @@ export default {
         qrs: "",
         qtc: "",
         hrv: "",
-        pId: "",
+        pId: this.$route.query.pId,
         patientSymptom: "暂无症状",
         p_xingeng: "", //心梗率
         logid: "",
@@ -622,7 +623,10 @@ export default {
     this.ecgType = this.$route.query.ecgType;
     this.pId = this.$route.query.pId;
     this.getList();
-    // this.getPatientdetails()
+    // getPatient_management(this.pId).then(r=>{
+    //   this.data.result = r.data.intelligentDiagnosis
+    // })
+    this.getPatientdetails()
     // this.getyujingleixing()
   },
   mounted() {
@@ -826,20 +830,9 @@ export default {
     },
     /** 查询用户管理列表 */
     async getList() {
+
+      console.log(1111)
       this.loading = true;
-      this.queryParams.params = {};
-      if (
-        null != this.daterangeConnectionTime &&
-        "" != this.daterangeConnectionTime
-      ) {
-        this.queryParams.params["beginConnectionTime"] =
-          this.daterangeConnectionTime[0];
-        this.queryParams.params["endConnectionTime"] =
-          this.daterangeConnectionTime[1];
-      }
-      if (this.queryParams.ecgType == null) {
-        this.queryParams.ecgType = this.ecgType;
-      }
       await listPatient_management(this.queryParams).then((response) => {
         this.patient_managementList = response.rows;
         this.total = response.total;
@@ -942,7 +935,7 @@ export default {
         this.data.doctorName = response.data.diagnosisDoctor;
         this.data.diagnosisData = response.data.reportTime;
         this.data.pphone = response.data.pphone;
-        this.data.pId = response.data.pId;
+        // this.data.pId = response.data.pId;
         this.data.pastMedicalHistory = response.data.pastMedicalHistory;
         // 原先提交过的预警类型
         this.logDataType = response.data.logDataType;
@@ -963,32 +956,12 @@ export default {
         // console.log(this.data)
       });
       // 医生的信息
-      selectDoctor().then((response) => {
-        this.options = response;
-      });
-      getDoctorList().then((res) => {
-        let options = [];
-        let data = res.data.options;
-        data.forEach((e) => {
-          if (e.doctorList.length != 0) {
-            let hospital = {
-              value: e.hospitalCode,
-              label: e.hospitalName,
-              children: [],
-            };
-            e.doctorList.forEach((doctorInfo) => {
-              hospital.children.push({
-                label: doctorInfo.doctorName,
-                value: doctorInfo.doctorName,
-              });
-            });
-            options.push(hospital);
-          }
-        });
-        this.doctorList = options;
-        console.log("医生信息");
-        console.log(this.doctorList);
-      });
+      // selectDoctor().then((response) => {
+      //   this.options = response;
+      // });
+      listDoc().then(r => {
+        this.doctorList = r.data
+      })
       this.getyujingleixing();
     },
     //预警类型
@@ -1369,7 +1342,7 @@ export default {
             xAxis: i,
             // yAxis: _th.nArr[level - 1][i] + 0.3,
             // TODO:
-            yAxis: 1.4,
+            yAxis: 0.5,
             itemStyle: {
               color: colorList[key],
             },
@@ -1404,6 +1377,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)", //遮罩层颜色
         target: document.querySelector("#table"), //loadin覆盖的dom元素节点
       });
+      this.data.pId = this.pId
       var _th = this;
       //console.log("pId:", this.pId)
       this.data.dataTime = this.$options.methods.getData();
@@ -1447,12 +1421,13 @@ export default {
           _th.nArr = _th.getNewArray(_th.data.datas, 1000);
           // console.log("数据以1000一条分好组", _th.nArr)
           _th.x = [];
-          for (var i = 0; i < 1001; i++) {
+          for (var i = 0; i < 1000; i++) {
             _th.x.push(i);
           }
           // console.log( _th.x);
           // _th.markdata = []
-          for (var i = 0; i < 1000; i += 20) {
+          // 大竖红线
+          for (var i = 0; i < 1000; i += 25) {
             _th.markdata.push({ xAxis: i });
           }
           // console.log( _th.markdata);
@@ -1479,11 +1454,11 @@ export default {
             graphic: _th.graphic1,
             xAxis: {
               type: "category",
-              boundaryGap: true,
+              boundaryGap: false,
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 3,
+                interval: 4,
               },
               axisTick: {
                 show: false,
@@ -1526,7 +1501,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 2,
+              max: 0.8,
               min: -1,
             },
             series: {
@@ -1562,7 +1537,7 @@ export default {
             },
           });
           // console.log("this.datalabel.beatLabel: ", data.result.beatLabel);
-          console.log("_th.nArr[0]----: ", _th.nArr[0]);
+          // console.log("_th.nArr[0]----: ", _th.nArr[0]);
 
           _th.chart2.clear();
           _th.chart2.setOption({
@@ -1581,9 +1556,10 @@ export default {
             xAxis: {
               type: "category",
               data: _th.x,
+              boundaryGap: false,
               axisLabel: {
                 show: false,
-                interval: 3,
+                interval: 4,
               },
               axisTick: {
                 show: false,
@@ -1604,6 +1580,7 @@ export default {
             },
             yAxis: {
               type: "value",
+              boundaryGap: true,
               axisLabel: {
                 show: false,
               },
@@ -1625,7 +1602,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 2,
+              max: 0.8,
               min: -1,
             },
             series: [
@@ -1678,9 +1655,10 @@ export default {
             xAxis: {
               type: "category",
               data: _th.x,
+              boundaryGap: false,
               axisLabel: {
                 show: false,
-                interval: 3,
+                interval: 4,
               },
               axisTick: {
                 show: false,
@@ -1701,6 +1679,7 @@ export default {
             },
             yAxis: {
               type: "value",
+              boundaryGap: true,
               axisLabel: {
                 show: false,
               },
@@ -1722,7 +1701,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 2,
+              max: 0.8,
               min: -1,
             },
             series: [
@@ -1775,9 +1754,10 @@ export default {
             xAxis: {
               type: "category",
               data: _th.x,
+              boundaryGap: false,
               axisLabel: {
                 show: false,
-                interval: 3,
+                interval: 4,
               },
               axisTick: {
                 show: false,
@@ -1798,6 +1778,7 @@ export default {
             },
             yAxis: {
               type: "value",
+              boundaryGap: true,
               axisLabel: {
                 show: false,
               },
@@ -1819,7 +1800,7 @@ export default {
                   //opacity: 0.6,//透明度
                 },
               },
-              max: 2,
+              max: 0.8,
               min: -1,
             },
             series: [
