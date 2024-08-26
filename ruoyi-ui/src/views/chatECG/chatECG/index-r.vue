@@ -9,34 +9,63 @@
               <img class="zhengda" src="@/assets/images/zhengda.png" />
             </div>
             <!--            <div class="new_his" @click="conversationClickAdd" style="cursor: pointer">-->
-            <div class="new_his" @click="conversationClickAdd"
-              :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">
+            <div
+              class="new_his"
+              @click="conversationClickAdd"
+              :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
+            >
               +&emsp;&emsp;新建
             </div>
-            <div class="new_his" @click="empty" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">
+            <div
+              class="new_his"
+              @click="empty"
+              :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
+            >
               清空
             </div>
           </div>
           <div class="his">
             <!-- 对话框 -->
-            <div class="his_item" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
-              v-for="(item, i) in conversation" :ref="'div-' + item.conversationId" :class="{ bgc: i === 0 }"
-              :key="item.conversationId" @click="conversationClickCut(item.conversationId, 2)">
+            <div
+              class="his_item"
+              :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
+              v-for="(item, i) in conversation"
+              :ref="'div-' + item.conversationId"
+              :class="{ bgc: i === 0 }"
+              :key="item.conversationId"
+              @click="conversationClickCut(item.conversationId, 2)"
+            >
               <!-- <img class="mesimg2" src="@/assets/images/messge2.png"/> -->
               <div class="his_title">
-                <div class="tit" v-show="item.isCustom" :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }">{{
-                  item.title }}</div>
-                <input :class="{ titUp: item.isHighlighted, tit: item.isCustom }" :ref="'input' + item.conversationId"
-                  type="hidden" :value="item.title" @blur="blurId(item.conversationId)" />
+                <div
+                  class="tit"
+                  v-show="item.isCustom"
+                  :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
+                >
+                  {{ item.title }}
+                </div>
+                <input
+                  :class="{ titUp: item.isHighlighted, tit: item.isCustom }"
+                  :ref="'input' + item.conversationId"
+                  type="hidden"
+                  :value="item.title"
+                  @blur="blurId(item.conversationId)"
+                />
                 <div class="time">{{ item.createTime }}</div>
               </div>
               <div style="display: flex">
-                <img class="upimg" src="@/assets/images/updat.png"
+                <img
+                  class="upimg"
+                  src="@/assets/images/updat.png"
                   :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
-                  @click.stop="updatatit(item.conversationId, i)" />
-                <img class="delimg" src="@/assets/images/delimg.png"
+                  @click.stop="updatatit(item.conversationId, i)"
+                />
+                <img
+                  class="delimg"
+                  src="@/assets/images/delimg.png"
                   :style="{ cursor: !iptDisabled ? 'pointer' : 'not-allowed' }"
-                  @click.stop="conversationClickDel(item.conversationId)" />
+                  @click.stop="conversationClickDel(item.conversationId)"
+                />
               </div>
             </div>
             <!--              <div class="his_item">-->
@@ -56,7 +85,11 @@
             <div class="right-title-button">
               <span>静音<i class="el-icon-close-notification" /></span>&nbsp;
               <span>
-                <el-switch v-model="audioPlayState" active-color="#13ce66" inactive-color="#ccc">
+                <el-switch
+                  v-model="audioPlayState"
+                  active-color="#13ce66"
+                  inactive-color="#ccc"
+                >
                 </el-switch>
               </span>
             </div>
@@ -70,7 +103,10 @@
                   <div class="time_r">{{ item.time }}</div>
                   <div class="con_text">{{ item.content }}</div>
                   <div v-for="(item2, index) in item.question" :key="index">
-                    <div class="con_que" @click="clickRobot(item2.content, item2.id)">
+                    <div
+                      class="con_que"
+                      @click="clickRobot(item2.content, item2.id)"
+                    >
                       <div class="czkj-question-msg">
                         {{ item2.index }}
                         {{ item2.content }}
@@ -100,7 +136,10 @@
             <div class="left-child">
               <img class="mesimg1" src="@/assets/images/messge1.png" />
               <!--  -->
-              <textarea :disabled="iptDisabled" placeholder="请输入您的问题..." style="
+              <textarea
+                :disabled="iptDisabled"
+                placeholder="请输入您的问题..."
+                style="
                   height: 100%;
                   width: 85%;
                   resize: none;
@@ -108,22 +147,40 @@
                   border: 0;
                   font-size: 1.3vw;
                   padding: 1vh;
-
-                " id="text" v-model="customerText" @keyup.enter="sentMsg()"></textarea>
+                "
+                id="text"
+                v-model="customerText"
+                @keyup.enter="sentMsg()"
+              ></textarea>
               <div class="right-child">
                 <div v-if="vocState == 0" class="mkf">
-                  <img v-if="iptDisabled" class="mesimg3" src="@/assets/images/microphone-0.png" />
+                  <img
+                    v-if="iptDisabled"
+                    class="mesimg3"
+                    src="@/assets/images/microphone-0.png"
+                  />
                   <!--                  开始录音-->
-                  <img v-else class="mesimg3" src="@/assets/images/microphone-0.png" @click="recorderStart()" />
+                  <img
+                    v-else
+                    class="mesimg3"
+                    src="@/assets/images/microphone-0.png"
+                    @click="recorderStart()"
+                  />
                 </div>
                 <div v-else-if="vocState == 1" class="mkf mkf-s">
                   <!--                  停止录音-->
-                  <img class="mesimg3" src="@/assets/images/microphone-1.png" @click="recorderStop()" />
-                  <div class="mkftips" v-show="resultState">
-                    倾听中...
-                  </div>
+                  <img
+                    class="mesimg3"
+                    src="@/assets/images/microphone-1.png"
+                    @click="recorderStop()"
+                  />
+                  <div class="mkftips" v-show="resultState">倾听中...</div>
                 </div>
-                <img class="mesimg3" src="@/assets/images/messge3.png" @click="sentMsg()" />
+                <img
+                  class="mesimg3"
+                  src="@/assets/images/messge3.png"
+                  @click="sentMsg()"
+                />
               </div>
             </div>
           </div>
@@ -143,10 +200,10 @@ import {
 import loading from "./loading";
 import { delDoctor } from "@/api/doctor/doctor";
 import Recorder from "js-audio-recorder";
-import { Voc, PPlayer } from '@/utils/voice.js'
+import { Voc, PPlayer } from "@/utils/voice.js";
 import $ from "jquery";
 export default {
-  name: 'chatECG',
+  name: "chatECG",
   components: {
     loading,
   },
@@ -184,20 +241,20 @@ export default {
       voc: null,
       vocState: 0,
       audioPlayer: null,
-      resultTextTemp: '',
-      resultText: '',
+      resultTextTemp: "",
+      resultText: "",
       resultState: 0,
       audioLock: null,
       msgOverLock: null,
-      newText: '',
+      newText: "",
       textInterval: null,
       audioPlayState: false,
       currentTime: 10000,
-      isRead: false,//是否读完
+      isRead: false, //是否读完
       timeOut: null,
       readText: "",
-      resultXun: false,//是否循环完
-      audioDom: null
+      resultXun: false, //是否循环完
+      audioDom: null,
     };
   },
   computed: {
@@ -211,103 +268,104 @@ export default {
   },
   created() {
     // this.getConversation(1);
-    this.conversationClickAdd()
+    this.conversationClickAdd();
     this.showTimer();
   },
 
   mounted() {
-    var that = this
+    console.log("chunkText: ", "123\n45");
+    var that = this;
     // this.getStream()
     // console.log('process.env.port: ', process.env.VUE_APP_BASE_API);
 
-    this.audioPlayer = new PPlayer()
+    this.audioPlayer = new PPlayer();
     // console.log('this.audioPlayer: ', this.audioPlayer);
 
-    this.audioDom = document.querySelector('audio')
+    this.audioDom = document.querySelector("audio");
     // var audioDomAll = document.querySelectorAll('audio')
     // console.log('audioDom: ', audioDomAll);
 
-
-    this.audioDom.addEventListener('timeupdate', function () {
+    this.audioDom.addEventListener("timeupdate", function () {
       // 当前播放时间发生改变时的操作
       // console.log('音频正在播放，当前播放时间：' + that.currentTime);
       if (that.currentTime == that.audioDom.currentTime) {
-        console.log("播放结束")
-        that.isRead = true
+        console.log("播放结束");
+        that.isRead = true;
       } else {
-        that.currentTime = that.audioDom.currentTime
-        that.isRead = false
+        that.currentTime = that.audioDom.currentTime;
+        that.isRead = false;
       }
-
     });
 
-
-
-
-    this.getMsg()
-
+    this.getMsg();
   },
   beforeDestroy() {
-    var th = this
-    console.log('即将销毁')
-    clearInterval(th.timeOut)
+    var th = this;
+    console.log("即将销毁");
+    clearInterval(th.timeOut);
     this.audioDom.remove();
-    this.endAll()
+    this.endAll();
   },
   //keep-alive生命周期
   activated() {
-    console.log(123)
+    console.log(123);
   },
   deactivated() {
-    console.log(456)
+    console.log(456);
   },
   watch: {
     audioPlayState(newValue) {
       if (newValue) {
-        this.audioPlayer.stopAudio()
+        this.audioPlayer.stopAudio();
       }
-    }
+    },
   },
 
   methods: {
     daayin() {
-      console.log("1")
+      console.log("1");
     },
     // console.log('process.env.port: ', process.env.VUE_APP_CHAT);
     async getStream(data, lock, th) {
+      var that = this;
       try {
         var params = {
           query: data.text,
-          history: data.history != "" ? JSON.parse(data.history) : []
-        }
-        let response = await fetch(process.env.VUE_APP_CHAT + '/knowledge_base_chat', {
-          method: 'post',
-          headers: { 'content-type': 'application/json' },
-          mode: 'cors',
-          credentials: 'include',
-          body: JSON.stringify({
-            ...params,
-            knowledge_base_name: "samples",
-            top_k: 5,
-            score_threshold: 0.5,
-
-            stream: true,
-            model_name: "Qwen-14B-Chat",
-            temperature: 0.8,
-            max_tokens: 0,
-            prompt_name: "default"
-          }),
-        });
-        console.log(response);
+          history: data.history != "" ? JSON.parse(data.history) : [],
+        };
+        let response = await fetch(
+          process.env.VUE_APP_CHAT + "/knowledge_base_chat",
+          {
+            method: "post",
+            headers: { "content-type": "application/json" },
+            mode: "cors",
+            // cache: "no-store",
+            credentials: "include",
+            body: JSON.stringify({
+              ...params,
+              knowledge_base_name: "samples",
+              top_k: 5,
+              score_threshold: 0.5,
+              // cache: "no-store",
+              stream: true,
+              model_name: "Qwen-14B-Chat",
+              temperature: 0.8,
+              max_tokens: 0,
+              prompt_name: "default",
+            }),
+          }
+        );
+        console.log("response", response);
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
 
         const reader = response.body.getReader();
+
         const textDecoder = new TextDecoder();
         let result = true;
-        let output = ''
+        let output = "";
         let obj = {
           type: "leftinfo",
           time: "",
@@ -318,84 +376,104 @@ export default {
         };
         this.isLoading = false;
         this.info.push(obj);
-        var flag = true
-        var readText = ""
+        var flag = true;
+        var readText = "";
         while (result) {
           const { done, value } = await reader.read();
-          // console.log('value: ', value);
+          // console.log("value: ", value);
 
           if (done) {
-            console.log('Stream ended');
+            console.log("Stream ended");
             result = false;
-            this.resultXun = true
+            this.resultXun = true;
             break;
           }
 
           const chunkText = textDecoder.decode(value);
+          console.log("chunkText: ", chunkText.split("\n"));
+          // console.log("chunkText: ", "123<br>345");
+          var lineText = "";
+          chunkText.split("\n").forEach((item) => {
+            // console.log("item: ", item);
+            if (item != "" && item != "\r") {
+              let txtVal = item
+                .split(":")[2]
+                .split("}")[0]
+                .replace(/"/g, "")
+                .replace(/\\n/g, "")
+                .replace(/\[<span style='color/g, "");
+              // console.log("txtVal111: ", txtVal);
+              lineText += txtVal.trim();
+            }
+          });
+          // let txtVal = chunkText
+          //   .split(":")[2]
+          //   .split("}")[0]
+          //   .replace(/"/g, "")
+          //   .replace(/\\n/g, "")
+          //   .replace(/\[<span style='color/g, "");
+          // console.log("chunkText: ", txtVal);
+          this.appendRobotMsg(lineText);
 
-          let txtVal = chunkText.split(":")[2].split("}")[0].replace(/"/g, '').replace(/\\n/g, '').replace(/\[<span style='color/g, "");
-          // console.log('chunkText: ', txtVal);
-          this.appendRobotMsg(txtVal)
-
-          output += txtVal.trim();
+          output += lineText.trim();
+          // console.log("txtVal.trim(): ", lineText.trim());
           // readText += txtVal.trim();
-          this.newText += txtVal.trim();
+          this.newText += lineText.trim();
           if (output.length > 10 && flag) {
-            this.audioPlayer.send(output)
-            flag = false
-            readText = output
-            this.readText = readText
+            this.audioPlayer.send(output);
+            flag = false;
+            readText = output;
+            this.readText = readText;
             // console.log('readText: ', readText);
           } else if (this.isRead) {
-            let read = readText
+            let read = readText;
             // console.log('read: ', read);
-            this.audioPlayer.send(output.substring(read.length, output.length))
-            readText += output.substring(read.length, output.length)
-            this.readText = readText
+            this.audioPlayer.send(output.substring(read.length, output.length));
+            readText += output.substring(read.length, output.length);
+            this.readText = readText;
             // this.resultXun=false
           }
         }
-        this.iptDisabled = false
-        var that = this
-        this.info[this.info.length - 1].original += output
-        console.log('Received chunk:', output);
-        this.resultXun = true
+        this.iptDisabled = false;
+        var that = this;
+        this.info[this.info.length - 1].original += output;
+        // console.log("Received chunk:", output);
+        this.resultXun = true;
         if (readText.length == output.length) {
-
         } else {
           this.timeOut = setInterval(() => {
             // console.log("--123---", that.isRead)
             if (that.isRead) {
               // console.log('output.substring(readText.length, output.length): ', output.substring(readText.length, output.length));
-              clearInterval(that.timeOut)
-              that.timeOut = null
-              this.audioPlayer.send(output.substring(readText.length, output.length))
-
-
+              clearInterval(that.timeOut);
+              that.timeOut = null;
+              this.audioPlayer.send(
+                output.substring(readText.length, output.length)
+              );
             }
-          }, 10)
+          }, 10);
         }
 
         proxyRequest({
           history: output,
           conversationId: this.queryParams.conversationId,
           text: this.queryParams.text,
-          title: this.queryParams.title
-        })
+          title: this.queryParams.title,
+        });
       } catch (e) {
         console.log(e);
       }
     },
 
     getMsg(data, lock, th) {
-      console.log('data: ', data);
-      this.getStream(data)
+      console.log("data: ", data);
+      this.getStream(data);
       var params = {
         prompt: data.text,
-        history: data.history != "" ? JSON.parse(data.history) : []
-      }
+        history: data.history != "" ? JSON.parse(data.history) : [],
+      };
 
-      console.log('params: ', JSON.stringify(params));
+      console.log("params: ", JSON.stringify(params));
 
       $.ajax({
         type: "post",
@@ -409,7 +487,7 @@ export default {
         //   history: [{ role: "user", content: "你好" }, { role: "assistant", content: "你好，我是心电AI医生问答模型，一个由郑州大学互联网医疗与健康服务河南省协同创新中心开发的人工智能助手。很高兴为您服务。" }]
         // }
         success: function (response) {
-          console.log('response: ', response);
+          console.log("response: ", response);
           th.queryParams.history = JSON.stringify(response.history);
           th.customerText = "";
           let obj = {
@@ -417,29 +495,28 @@ export default {
             content: response.response,
             index: 1,
           };
-          console.log('----5----')
+          console.log("----5----");
           th.robotAnswer.push(obj);
           // th.appendRobotMsg(response);
-          console.log('----6----')
+          console.log("----6----");
           if (th.audioLock === lock) {
             th.isLoading = false;
             if (th.msgOverLock === lock) {
               if (!th.audioPlayState) {
-                th.audioPlayer.send(response.response)
+                th.audioPlayer.send(response.response);
               }
             }
           }
-
-        }
-      })
+        },
+      });
     },
     getMsg1(data, th) {
-      this.getStream(data)
+      this.getStream(data);
       var params = {
         prompt: data.text,
-        history: data.history != "" ? JSON.parse(data.history) : []
-      }
-      console.log('----------params----: ', JSON.stringify(params));
+        history: data.history != "" ? JSON.parse(data.history) : [],
+      };
+      console.log("----------params----: ", JSON.stringify(params));
 
       $.ajax({
         type: "post",
@@ -462,94 +539,93 @@ export default {
             index: 1,
           };
           th.robotAnswer.push(obj);
-          console.log("这是++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + this.robotAnswer);
+          console.log(
+            "这是++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" +
+              this.robotAnswer
+          );
           // th.appendRobotMsg(response);
           th.isLoading = false;
           if (!th.audioPlayState) {
-            console.log('还是走了这里？')
-            th.audioPlayer.send(response.response)
+            console.log("还是走了这里？");
+            th.audioPlayer.send(response.response);
           }
-        }
-      })
+        },
+      });
     },
     endAll() {
       let th = this;
       try {
-        console.log('清除一切')
-        th.audioPlayer.stopAudio()
+        console.log("清除一切");
+        th.audioPlayer.stopAudio();
         if (this.recorder) {
-          th.recorderStop()
+          th.recorderStop();
         }
       } catch (e) {
-        console.log('错误')
-        console.log(e)
+        console.log("错误");
+        console.log(e);
       }
     },
 
-
     recorderStart() {
-      clearInterval(this.timeOut)
+      clearInterval(this.timeOut);
       // 1
       let ts = new Date().getTime() / 1000;
-      ts = parseInt(ts)
-      let th = this
+      ts = parseInt(ts);
+      let th = this;
       this.voc = new Voc();
       // 初始化websocket连接
       this.voc.init(ts);
 
       // 4 设置最终消息结果的回调函数
       this.voc.onmessage((text) => {
-        console.log('text: ', text);
+        console.log("text: ", text);
         th.customerText += text;
-        th.resultTextTemp = '';
-        const arr = ['，', '。', '？', '！', '；',]
+        th.resultTextTemp = "";
+        const arr = ["，", "。", "？", "！", "；"];
         if (arr.includes(th.customerText[0])) {
-          th.customerText = th.customerText.slice(1)
+          th.customerText = th.customerText.slice(1);
         }
-        console.log('结束消息')
-      })
+        console.log("结束消息");
+      });
 
       // 5 设置结束消息的回调函数
       this.voc.onOverMsg(() => {
-        th.sentMsg()
+        th.sentMsg();
         th.resultState = 0;
-        console.log('结束消息111')
-        let audio = new Audio()
+        console.log("结束消息111");
+        let audio = new Audio();
         // 结束时的发送音乐
-        audio.src = require('@/assets/audio/msgEnd.mp3')
-        audio.play()
-      })
+        audio.src = require("@/assets/audio/msgEnd.mp3");
+        audio.play();
+      });
 
       // 3 设置中间消息结果的回调函数
       this.voc.onmiddlemessage((text) => {
-        console.log('text11: ', text);
+        console.log("text11: ", text);
         th.resultTextTemp = text;
-        console.log(th.resultState)
+        console.log(th.resultState);
         if (!th.resultState) {
           //首次且仅触发一次
           //播放本地音频文件
-          th.msgOverLock = Symbol()
-          th.audioPlayer.stopAudio()
+          th.msgOverLock = Symbol();
+          th.audioPlayer.stopAudio();
 
-          let audio = new Audio()
+          let audio = new Audio();
           // 我在
-          audio.src = require('@/assets/audio/msgOpen.mp3')
-          audio.play()
+          audio.src = require("@/assets/audio/msgOpen.mp3");
+          audio.play();
           th.resultState = 1;
-
         }
-        console.log('中间消息')
-      })
+        console.log("中间消息");
+      });
 
       // 设置错误消息
       this.voc.setErrorFunc(() => {
-        this.$message.info('语音网络连接失败，请稍后重试或使用输入框手动输入')
+        this.$message.info("语音网络连接失败，请稍后重试或使用输入框手动输入");
         setTimeout(() => {
-          this.recorderStop()
-        }, 50)
-      })
-
-
+          this.recorderStop();
+        }, 50);
+      });
 
       // 2 使用Recorder类来实现音频录制功能
       this.recorder = new Recorder({
@@ -557,25 +633,29 @@ export default {
         sampleRate: 16000,
         numChannels: 1,
         compiling: true,
-      })
-      Recorder.getPermission().then(() => {
-        this.vocState = 1;
-        th.recorder.start();
-        th.recorder.onprogress = (params) => {
-          th.voc.send(new Int8Array(params.data[params.data.length - 1].buffer))
+      });
+      Recorder.getPermission().then(
+        () => {
+          this.vocState = 1;
+          th.recorder.start();
+          th.recorder.onprogress = (params) => {
+            th.voc.send(
+              new Int8Array(params.data[params.data.length - 1].buffer)
+            );
+          };
+        },
+        (err) => {
+          th.$message({
+            message: "请先允许网页使用麦克风",
+            type: "info",
+          });
+          this.vocState = 0;
         }
-      }, (err) => {
-        th.$message({
-          message: "请先允许网页使用麦克风",
-          type: 'info'
-        })
-        this.vocState = 0;
-      })
-
+      );
     },
 
     recorderStop() {
-      console.log('执行关闭')
+      console.log("执行关闭");
       this.vocState = 0;
       this.resultState = 0;
       //结束对讲
@@ -587,8 +667,8 @@ export default {
       }
       this.recorder.destroy().then(() => {
         th.recorder = null;
-      })
-      this.$forceUpdate()
+      });
+      this.$forceUpdate();
     },
     formatDateToCustomFormat(date) {
       const year = date.getFullYear();
@@ -616,54 +696,52 @@ export default {
     // 用户发送消息
     sentMsg() {
       let text = this.customerText.trim();
-      if (text == "") return false
+      if (text == "") return false;
 
-
-      this.iptDisabled = true
+      this.iptDisabled = true;
       //存在就停止录音
       if (this.recorder) {
-        this.recorderStop()
+        this.recorderStop();
       }
       // 清除定时器
-      clearInterval(this.timeOut)
-      console.log('----1----')
+      clearInterval(this.timeOut);
+      console.log("----1----");
       // overTurn() 方法的作用是将 newText 的内容追加到消息列表中的最后一条消息上，并清空 newText。
       this.overTurn();
-      console.log('----2----')
+      console.log("----2----");
       let th = this;
       console.log("queryParams: =====", this.queryParams.history);
       // 停止播放当次音频
-      this.audioPlayer.stopAudio()
+      this.audioPlayer.stopAudio();
       clearTimeout(this.timer);
       // 自动触发结束语
       this.showTimer();
 
       //把text中的小雅替换成空
       text = text.replace(/小雅/g, "");
-      const arr = ['，', '。', '？', '！', '；',]
+      const arr = ["，", "。", "？", "！", "；"];
       if (arr.includes(text[0])) {
-        text = text.slice(1)
+        text = text.slice(1);
       }
       if (text.length === 0) {
-        return
+        return;
       }
 
       let lock = Symbol();
       this.audioLock = lock;
-      th.msgOverLock = lock
+      th.msgOverLock = lock;
       this.queryParams.text = text;
       this.queryParams.createTime = this.formatDateToCustomFormat(new Date());
 
       // 判断是否新建窗口并处理会话信息
       if (this.isAddNewWin || this.conversation.length === 0) {
         let is = this.findMaxIdObject(this.conversation);
-        console.log('--------------1-----------', is);
+        console.log("--------------1-----------", is);
         if (is !== null) {
           this.queryParams.conversationId = is.conversationId + 1;
         } else {
           this.queryParams.conversationId = 1;
         }
-
 
         if (text !== "") {
           var obj = {
@@ -671,18 +749,17 @@ export default {
             time: this.getTodayTime(),
             content: text,
           };
-          console.log('----3----')
+          console.log("----3----");
           this.overTurn();
-          console.log('----4----')
+          console.log("----4----");
           this.info.push(obj);
-          console.log(3)
+          console.log(3);
           this.queryParams.title = this.customerText;
-          this.queryParams.text = this.customerText
+          this.queryParams.text = this.customerText;
           this.customerText = "";
           this.isLoading = true;
-          console.log('this.queryParams: ', this.queryParams);
-          this.getStream(this.queryParams)
-
+          console.log("this.queryParams: ", this.queryParams);
+          this.getStream(this.queryParams);
 
           this.$nextTick(() => {
             var contentHeight = document.getElementById("right");
@@ -724,11 +801,11 @@ export default {
           };
           this.info.push(obj);
 
-          this.queryParams.text = this.customerText
-          this.queryParams.title = null
+          this.queryParams.text = this.customerText;
+          this.queryParams.title = null;
           this.customerText = "";
           this.isLoading = true;
-          this.getStream(this.queryParams)
+          this.getStream(this.queryParams);
 
           this.$nextTick(() => {
             var contentHeight = document.getElementById("right");
@@ -743,31 +820,30 @@ export default {
       //info的最后一项
       this.textInterval = setInterval(() => {
         if (this.newText.length === 0) {
-          clearInterval(this.textInterval)
-          return
+          clearInterval(this.textInterval);
+          return;
         }
-        this.info[this.info.length - 1].content += this.newText[0]
-        this.newText = this.newText.slice(1)
+        this.info[this.info.length - 1].content += this.newText[0];
+        this.newText = this.newText.slice(1);
         this.$nextTick(() => {
           let contentHeight = document.getElementById("right");
           contentHeight.scrollTop = contentHeight.scrollHeight;
         });
-      }, 100)
+      }, 100);
     },
     overTurn() {
-      console.log("这是this.newText")
-      console.log(this.newText)
+      console.log("这是this.newText");
+      console.log(this.newText);
       if (this.newText.length == 0) return;
-      clearInterval(this.textInterval)
-      console.log("这是this.info")
-      console.log(this.info)
+      clearInterval(this.textInterval);
+      console.log("这是this.info");
+      console.log(this.info);
       this.info[this.info.length - 1].content += this.newText;
-      this.newText = ''
+      this.newText = "";
     },
     // 机器人回答消息
 
     appendRobotMsg(text) {
-
       clearTimeout(this.timer);
       this.showTimer();
       text = text.trim();
@@ -776,16 +852,12 @@ export default {
       this.turnText();
       this.overTurn();
 
-
-
-
       // }
       // this.$nextTick(() => {
       //   var contentHeight = document.getElementById("right");
       //   contentHeight.scrollTop = contentHeight.scrollHeight;
       // });
     },
-
 
     sentMsgById(val, id) {
       clearTimeout(this.timer);
@@ -880,7 +952,7 @@ export default {
 
     getConversation(v) {
       getConversation().then((r) => {
-        console.log("获取了对话的值")
+        console.log("获取了对话的值");
         console.log(r);
         this.conversation = r.data;
         this.conversation.forEach((item) => {
@@ -932,8 +1004,7 @@ export default {
             this.getConversation(1);
             this.$modal.msgSuccess("删除成功");
           })
-          .catch(() => {
-          });
+          .catch(() => {});
       }
     },
 
@@ -963,7 +1034,8 @@ export default {
             if (i.conversationId === val) {
               this.$refs["div-" + val][0].style.backgroundColor = "#343541";
             } else {
-              this.$refs["div-" + i.conversationId][0].style.backgroundColor = "";
+              this.$refs["div-" + i.conversationId][0].style.backgroundColor =
+                "";
             }
           }
         });
@@ -998,7 +1070,6 @@ export default {
           });
         });
       }
-
     },
 
     /**
@@ -1033,12 +1104,13 @@ export default {
 
         this.isAddNewWin = true;
 
-        this.$refs["div-" + this.conversation[0].conversationId][0].classList.remove("bgc");
+        this.$refs[
+          "div-" + this.conversation[0].conversationId
+        ][0].classList.remove("bgc");
         this.conversation.forEach((i, index) => {
           this.$refs["div-" + i.conversationId][0].style.backgroundColor = "";
         });
       }
-
     },
     empty() {
       if (!this.iptDisabled) {
@@ -1046,10 +1118,12 @@ export default {
         // 保存Vue实例的this
         const that = this;
         this.$modal
-          .confirm('是否确认删除所有历史对话？')
+          .confirm("是否确认删除所有历史对话？")
           .then(() => {
             // 使用map生成Promise数组，然后用Promise.all等待所有删除操作完成
-            const deletePromises = that.conversation.map(convo => deleteConversation(convo.conversationId));
+            const deletePromises = that.conversation.map((convo) =>
+              deleteConversation(convo.conversationId)
+            );
             return Promise.all(deletePromises);
           })
           .then(() => {
@@ -1060,7 +1134,6 @@ export default {
             // 可以在这里处理取消操作或错误
           });
       }
-
     },
     //点击修改图标显示input
     updatatit(id, ins) {
@@ -1074,7 +1147,6 @@ export default {
           }
         });
       }
-
     },
     //input失去焦点
     blurId(id) {
@@ -1094,8 +1166,7 @@ export default {
     },
   },
   props: {},
-  destroyed() {
-  },
+  destroyed() {},
 };
 </script>
 <style lang="scss" scoped>
@@ -1401,7 +1472,6 @@ export default {
           min-font-size: 16px;
           pointer-events: auto;
           cursor: pointer;
-
 
           white-space: nowrap;
           /*超出的空白区域不换行*/
