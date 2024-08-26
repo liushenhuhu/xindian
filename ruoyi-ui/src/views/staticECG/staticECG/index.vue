@@ -506,6 +506,7 @@ export default {
         { yAxis: 0 },
         { yAxis: 0.5 },
         { yAxis: 1 },
+        { yAxis: 1.5 },
       ], //没放大之前标记线
       dialogFormVisible: false, //弹出框
       items: "", //常用术语
@@ -1341,7 +1342,7 @@ export default {
             xAxis: i,
             // yAxis: _th.nArr[level - 1][i] + 0.3,
             // TODO:
-            yAxis: 1.4,
+            yAxis: 0.5,
             itemStyle: {
               color: colorList[key],
             },
@@ -1420,12 +1421,13 @@ export default {
           _th.nArr = _th.getNewArray(_th.data.datas, 1000);
           // console.log("数据以1000一条分好组", _th.nArr)
           _th.x = [];
-          for (var i = 0; i < 1001; i++) {
+          for (var i = 0; i < 1000; i++) {
             _th.x.push(i);
           }
           // console.log( _th.x);
           // _th.markdata = []
-          for (var i = 0; i < 1000; i += 20) {
+          // 大竖红线
+          for (var i = 0; i < 1000; i += 25) {
             _th.markdata.push({ xAxis: i });
           }
           // console.log( _th.markdata);
@@ -1452,11 +1454,11 @@ export default {
             graphic: _th.graphic1,
             xAxis: {
               type: "category",
-              boundaryGap: true,
+              boundaryGap: false,
               data: _th.x,
               axisLabel: {
                 show: false,
-                interval: 3,
+                interval: 4,
               },
               axisTick: {
                 show: false,
@@ -1499,7 +1501,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 2,
+              max: 0.8,
               min: -1,
             },
             series: {
@@ -1554,9 +1556,10 @@ export default {
             xAxis: {
               type: "category",
               data: _th.x,
+              boundaryGap: false,
               axisLabel: {
                 show: false,
-                interval: 3,
+                interval: 4,
               },
               axisTick: {
                 show: false,
@@ -1577,6 +1580,7 @@ export default {
             },
             yAxis: {
               type: "value",
+              boundaryGap: true,
               axisLabel: {
                 show: false,
               },
@@ -1598,7 +1602,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 2,
+              max: 0.8,
               min: -1,
             },
             series: [
@@ -1651,9 +1655,10 @@ export default {
             xAxis: {
               type: "category",
               data: _th.x,
+              boundaryGap: false,
               axisLabel: {
                 show: false,
-                interval: 3,
+                interval: 4,
               },
               axisTick: {
                 show: false,
@@ -1674,6 +1679,7 @@ export default {
             },
             yAxis: {
               type: "value",
+              boundaryGap: true,
               axisLabel: {
                 show: false,
               },
@@ -1695,7 +1701,7 @@ export default {
                   ////opacity: 0.6,//透明度
                 },
               },
-              max: 2,
+              max: 0.8,
               min: -1,
             },
             series: [
@@ -1748,9 +1754,10 @@ export default {
             xAxis: {
               type: "category",
               data: _th.x,
+              boundaryGap: false,
               axisLabel: {
                 show: false,
-                interval: 3,
+                interval: 4,
               },
               axisTick: {
                 show: false,
@@ -1771,6 +1778,7 @@ export default {
             },
             yAxis: {
               type: "value",
+              boundaryGap: true,
               axisLabel: {
                 show: false,
               },
@@ -1792,7 +1800,7 @@ export default {
                   //opacity: 0.6,//透明度
                 },
               },
-              max: 2,
+              max: 0.8,
               min: -1,
             },
             series: [
