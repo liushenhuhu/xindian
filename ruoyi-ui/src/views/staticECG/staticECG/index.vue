@@ -116,8 +116,16 @@
           <div class="touyou">
             <div class="touzuobiaoti">
               <div>医师诊断</div>
-              <el-button type="text" @click="dialogVisible"
-                         style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语
+              <el-button
+                type="text"
+                @click="dialogVisible"
+                style="
+                  padding: 0;
+                  line-height: 4vh;
+                  margin-right: 1vw;
+                  font-size: 2.5vh;
+                "
+                >新增术语
               </el-button>
               <el-dialog title="新增术语" :visible.sync="dialogVisibleTag">
                 <el-tag
@@ -125,7 +133,8 @@
                   v-for="tag in dynamicTags"
                   closable
                   :disable-transitions="false"
-                  @close="handleCloseTag(tag)">
+                  @close="handleCloseTag(tag)"
+                >
                   {{ tag }}
                 </el-tag>
                 <el-input
@@ -138,27 +147,48 @@
                   @blur="handleInputConfirm"
                 >
                 </el-input>
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
+                <el-button
+                  v-else
+                  class="button-new-tag"
+                  size="small"
+                  @click="showInput"
+                  >+ 单机新增标签术语</el-button
+                >
                 <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogVisibleTag=false">取 消</el-button>
+                  <el-button @click="dialogVisibleTag = false">取 消</el-button>
                   <el-button type="primary" @click="termTag">确 定</el-button>
                 </div>
               </el-dialog>
 
-              <el-button type="text" @click="Camera"
-                         style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语
+              <el-button
+                type="text"
+                @click="Camera"
+                style="
+                  padding: 0;
+                  line-height: 4vh;
+                  margin-right: 1vw;
+                  font-size: 2.5vh;
+                "
+                >常用术语
               </el-button>
               <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-                <div v-for="(item) in items">
+                <div v-for="item in items">
                   <div>{{ item.name }}</div>
-                  <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
-                          v-for="itemc in item.label"
-                          :key="itemc"
-                          @click="putDown(itemc,$event)">{{ itemc }}
+                  <button
+                    class="commentLabelBtn"
+                    :class="{ selected: isSelected }"
+                    type="primary"
+                    v-for="itemc in item.label"
+                    :key="itemc"
+                    @click="putDown(itemc, $event)"
+                  >
+                    {{ itemc }}
                   </button>
                 </div>
                 <div slot="footer" class="dialog-footer">
-                  <el-button type="primary" @click="dialogForm">确 定</el-button>
+                  <el-button type="primary" @click="dialogForm"
+                    >确 定</el-button
+                  >
                 </div>
               </el-dialog>
               <div>
@@ -405,7 +435,11 @@ import {
   updateReport,
   reportEarlyWarningMsg,
 } from "@/api/report/report";
-import {getPatient_management, listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
+import {
+  getPatient_management,
+  listDoc,
+  sendMsgToPatient,
+} from "@/api/patient_management/patient_management";
 import child from "./child.vue";
 import CacheList from "@/views/monitor/cache/list.vue";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
@@ -611,12 +645,12 @@ export default {
       arrList6: {},
       arrList7: {},
       // 判断是不是管理员
-      isDoctor:false,
+      isDoctor: false,
     };
   },
   created() {
-    if (!this.$auth.hasRole("admin")){
-      this.isDoctor = true
+    if (!this.$auth.hasRole("admin")) {
+      this.isDoctor = true;
     }
     // console.log(this.$route.query.queryParams);
     this.queryParams = this.$route.query.queryParams;
@@ -626,7 +660,7 @@ export default {
     // getPatient_management(this.pId).then(r=>{
     //   this.data.result = r.data.intelligentDiagnosis
     // })
-    this.getPatientdetails()
+    this.getPatientdetails();
     // this.getyujingleixing()
   },
   mounted() {
@@ -642,12 +676,12 @@ export default {
   methods: {
     // 新增术语
     dialogVisible() {
-      getTerm().then(r => {
+      getTerm().then((r) => {
         if (r.rows.length > 0) {
-          this.dynamicTags = JSON.parse(r.rows[0].termText)
+          this.dynamicTags = JSON.parse(r.rows[0].termText);
         }
-        this.dialogVisibleTag = true
-      })
+        this.dialogVisibleTag = true;
+      });
     },
     //常用术语
     Camera() {
@@ -668,14 +702,14 @@ export default {
       //console.log(event.currentTarget.classList.toggle('selected'))
       event.currentTarget.classList.toggle("selected");
       let index = this.arr.indexOf(key);
-      console.log(index)
+      console.log(index);
       if (index !== -1) {
         this.arr.splice(index, 1);
         this.data.resultByDoctor = this.arr.toString();
       } else {
         this.arr.push(key);
         this.data.resultByDoctor = this.arr.toString();
-        console.log(this.arr)
+        console.log(this.arr);
       }
     },
     dialogForm() {
@@ -830,8 +864,7 @@ export default {
     },
     /** 查询用户管理列表 */
     async getList() {
-
-      console.log(1111)
+      console.log(1111);
       this.loading = true;
       await listPatient_management(this.queryParams).then((response) => {
         this.patient_managementList = response.rows;
@@ -959,9 +992,9 @@ export default {
       // selectDoctor().then((response) => {
       //   this.options = response;
       // });
-      listDoc().then(r => {
-        this.doctorList = r.data
-      })
+      listDoc().then((r) => {
+        this.doctorList = r.data;
+      });
       this.getyujingleixing();
     },
     //预警类型
@@ -1377,7 +1410,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)", //遮罩层颜色
         target: document.querySelector("#table"), //loadin覆盖的dom元素节点
       });
-      this.data.pId = this.pId
+      this.data.pId = this.pId;
       var _th = this;
       //console.log("pId:", this.pId)
       this.data.dataTime = this.$options.methods.getData();
@@ -2553,6 +2586,7 @@ export default {
       }
       this.datalabel.beatLabel = JSON.stringify(data);
       this.addtext();
+      this.get();
     },
     //获取当前时间
     getData() {
