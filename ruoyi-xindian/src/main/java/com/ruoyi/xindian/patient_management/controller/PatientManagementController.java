@@ -549,10 +549,12 @@ public class PatientManagementController extends BaseController {
             if (patientManagmentDept.getDoctorPhone() != null) {
                 doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
                 List<Doctor> doctors = doctorService.selectDoctorList(doctor);
-                if (doctors.get(0).getDepartmentCode() != null) {
+                if (!doctors.isEmpty()&&doctors.get(0).getDepartmentCode() != null) {
                     department.setDepartmentCode(doctors.get(0).getDepartmentCode());
                     List<Department> departments = departmentService.selectDepartmentList(department);
-                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                    if (!departments.isEmpty()){
+                        patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                    }
                 }
             }
 
