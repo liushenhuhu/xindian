@@ -438,7 +438,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -501,7 +501,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -563,7 +563,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -625,7 +625,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -687,7 +687,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -749,7 +749,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -809,7 +809,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -869,7 +869,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -929,7 +929,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -989,7 +989,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -1049,7 +1049,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },
@@ -1111,7 +1111,7 @@ export default {
         }
         this.$router.push({
           path:paths,
-          query:{pId:params.data[2]}
+          query:{pId:params.data[2],typeStatus:'1'}
         })
       })
     },

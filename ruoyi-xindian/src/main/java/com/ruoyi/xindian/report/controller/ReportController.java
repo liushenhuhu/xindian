@@ -503,15 +503,12 @@ public class ReportController extends BaseController {
         }
 
         //web端判断填写医生是否在该平台，没有则直接返回
-        if (StringUtils.isNotEmpty(report.getDiagnosisDoctor())) {
-            report.setDiagnosisDoctor(aesUtils.encrypt(report.getDiagnosisDoctor()));
-            Doctor doctor = new Doctor();
-            doctor.setDoctorName(report.getDiagnosisDoctor());
-            List<Doctor> doctors = doctorService.selectDoctorListNot(doctor);
-            if (doctors == null || doctors.size() == 0) {
+        if (StringUtils.isNotEmpty(report.getdPhone())) {
+            Doctor doctor1 = doctorService.selectDoctorByDoctorPhone(report.getdPhone());
+            if (doctor1 == null) {
                 return AjaxResult.error("当前医生不存在");
             }
-            report.setdPhone(doctors.get(0).getDoctorPhone());
+            report.setDiagnosisDoctor(doctor1.getDoctorName());
         }
         List<Doctor> doctors = null;
         //当前报告信息，判断报告状态

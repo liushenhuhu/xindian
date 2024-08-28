@@ -122,6 +122,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/appData/appData/addQuestionnaireRegister").anonymous()
                 .antMatchers("/medicalHistory/medicalHistory/addQuestionnaireRegister").anonymous()
                 .antMatchers("/app_update/getAppVersions").permitAll()
+                .antMatchers("/slideshow/slideshow/getAppSlideshow").permitAll()
                 .antMatchers("/system/user/profile/updatePwdByPhoneT").anonymous()
                 .antMatchers("/actuator/prometheus").anonymous()
                 .antMatchers("/login", "/wxLogin", "/wxOpenId","/wxGZHOpenId","/loginDoc","/register","/ecg/report/addReport","/ecg/report/addDdReport","/system/notice/appList", "/register_doctor", "/captchaImage").anonymous()

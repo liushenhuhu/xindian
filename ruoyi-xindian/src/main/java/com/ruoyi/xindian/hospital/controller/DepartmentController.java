@@ -7,14 +7,18 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.util.RoleUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +61,9 @@ public class DepartmentController extends BaseController
     @Autowired
     private IHospitalService hospitalService;
 
+    @Resource
+    private ISysDictDataService dictDataService;
+
 
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
@@ -70,14 +77,14 @@ public class DepartmentController extends BaseController
 
         LoginUser loginUser = tokenService.getLoginUser(request);
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
-        if (!SysUser.isAdmin(loginUser.getUserId())){
-
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (!SysUser.isAdmin(loginUser.getUserId())&& !RoleUtils.isRoleListOne(loginUser,sysDictData)){
             department.getHospitalCodeList().add(sysUser.getHospitalCode());
             Hospital hospital = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
             AssociatedHospital associatedHospital = new AssociatedHospital();
             associatedHospital.setHospitalId(hospital.getHospitalId());
             List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
+            if (associatedHospitals!=null&& !associatedHospitals.isEmpty()){
                 for (AssociatedHospital c:associatedHospitals){
                     Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                     department.getHospitalCodeList().add(hospital1.getHospitalCode());
@@ -85,7 +92,7 @@ public class DepartmentController extends BaseController
             }
             if (department.getHospitalCode()!=null&&!"".equals(department.getHospitalCode())){
                 List<String> departmentList = department.getHospitalCodeList();
-                if (departmentList!=null&&departmentList.size()>0){
+                if (departmentList!=null&& !departmentList.isEmpty()){
                     for (String c : departmentList){
                         if (c.equals(department.getHospitalCode())){
 
@@ -96,7 +103,6 @@ public class DepartmentController extends BaseController
                     }
                 }
             }
-
             startPage();
             List<Department> departments = departmentService.selectDepartmentList(department);
             return getDataTable(departments);

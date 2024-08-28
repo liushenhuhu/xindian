@@ -71,16 +71,16 @@
                   end-placeholder="结束日期"
                 ></el-date-picker>
               </el-form-item>
-              <el-form-item label="在线状态" prop="onlineStatus">
-                <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>
-                  <el-option
-                    v-for="dict in dict.type.monitoring_status"
-                    :key="dict.value"
-                    :label="dict.label"
-                    :value="dict.value"
-                  />
-                </el-select>
-              </el-form-item>
+<!--              <el-form-item label="在线状态" prop="onlineStatus">-->
+<!--                <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>-->
+<!--                  <el-option-->
+<!--                    v-for="dict in dict.type.monitoring_status"-->
+<!--                    :key="dict.value"-->
+<!--                    :label="dict.label"-->
+<!--                    :value="dict.value"-->
+<!--                  />-->
+<!--                </el-select>-->
+<!--              </el-form-item>-->
               <el-form-item label="智能诊断" prop="intelligentDiagnosis">
                 <el-input
                   v-model="queryParams.intelligentDiagnosis"
@@ -841,6 +841,7 @@ export default {
         pageSize: 10,
         isSelect: '2'
       }
+      this.daterangeConnectionTime = []
       this.resetForm("queryForm");
       if (this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
         this.queryParams.diagnosisStatus = '2'

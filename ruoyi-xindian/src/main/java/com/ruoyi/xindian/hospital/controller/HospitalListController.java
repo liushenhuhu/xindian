@@ -17,6 +17,7 @@ import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Hospital;
 import com.ruoyi.xindian.hospital.mapper.AssociatedHospitalMapper;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
+import com.ruoyi.xindian.util.RoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,9 @@ public class HospitalListController extends BaseController
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
 
+
+    @Resource
+    private ISysDictDataService dictDataService;
     /**
      * 查询医院列表
      */
@@ -59,8 +63,8 @@ public class HospitalListController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<Hospital> list = null;
         //判断是否为管理员
-        if (SecurityUtils.isAdmin(loginUser.getUser().getUserId()))
-        {
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (SysUser.isAdmin(loginUser.getUserId())||RoleUtils.isRoleListOne(loginUser,sysDictData)){
             if (hospital.getHospitalCode()!=null&&!"".equals(hospital.getHospitalCode())){
                 hospital.getHospitalCodeList().add(hospital.getHospitalCode());
             }
@@ -78,7 +82,7 @@ public class HospitalListController extends BaseController
             AssociatedHospital associatedHospital = new AssociatedHospital();
             associatedHospital.setHospitalId(hospital2.getHospitalId());
             List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals!=null&&associatedHospitals.size()>0){
+            if (associatedHospitals!=null&& !associatedHospitals.isEmpty()){
                 for (AssociatedHospital c:associatedHospitals){
                     Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                     hospital.getHospitalCodeList().add(hospital1.getHospitalCode());
@@ -86,7 +90,7 @@ public class HospitalListController extends BaseController
             }
             if (hospital.getHospitalCode()!=null&&!"".equals(hospital.getHospitalCode())){
                 List<String> hospitalCodeList = hospital.getHospitalCodeList();
-                if (hospitalCodeList!=null&&hospitalCodeList.size()>0){
+                if (hospitalCodeList!=null&& !hospitalCodeList.isEmpty()){
                     for (String c : hospitalCodeList){
                         if (c.equals(hospital.getHospitalCode())){
 
@@ -119,7 +123,8 @@ public class HospitalListController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<Hospital> list = new ArrayList<>();
         //判断是否为管理员
-        if (SysUser.isAdmin(loginUser.getUserId()))
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (SysUser.isAdmin(loginUser.getUserId())||RoleUtils.isRoleListOne(loginUser,sysDictData))
         {
             list = hospitalService.selectHospitalList(hospital);
         }

@@ -39,8 +39,14 @@ import com.ruoyi.xindian.patient_management.domain.OnlineParam;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.util.WxUtil;
+import com.ruoyi.xindian.verify.domain.SxDdReport;
+import com.ruoyi.xindian.verify.service.SxDdReportService;
 import com.ruoyi.xindian.vipPatient.domain.SxReportUnscramble;
 import com.ruoyi.xindian.vipPatient.service.SxReportUnscrambleService;
+import com.ruoyi.xindian.wSuryvey.domain.PurchaseLimitation;
+import com.ruoyi.xindian.wSuryvey.domain.WSurvey;
+import com.ruoyi.xindian.wSuryvey.service.IWSurveyService;
+import com.ruoyi.xindian.wSuryvey.service.PurchaseLimitationService;
 import com.ruoyi.xindian.wx_pay.domain.Product;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
 import org.apache.commons.io.FileUtils;
@@ -151,6 +157,15 @@ public class EquipmentHeadingCodeController extends BaseController {
 
     @Resource
     private LeaseDetailsMapper leaseDetailsMapper;
+
+    @Resource
+    private SxDdReportService sxDdReportService;
+
+    @Resource
+    private PurchaseLimitationService purchaseLimitationService;
+
+    @Resource
+    private IWSurveyService wSurveyService;
 
     /**
      * 查询善行设备管理列表
@@ -740,10 +755,16 @@ public class EquipmentHeadingCodeController extends BaseController {
                 return AjaxResult.error("该报告已提交诊断");
             }
 
-            Lease lease = new Lease();
-            lease.setGiveBack("0");
-            List<String> leases = leaseService.selectLeaseList(lease).stream().map(Lease::getPhone).collect(Collectors.toList());
-            if (!leases.contains(aesUtils.decrypt(patientPhone))){
+            WSurvey wSurvey2 = new WSurvey();
+            wSurvey2.setPatientPhone(patientPhone);
+            List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey2);
+
+            PurchaseLimitation one = null;
+            if (!wSurveyList.isEmpty()){
+                one = purchaseLimitationService.getOne(new LambdaQueryWrapper<PurchaseLimitation>().eq(PurchaseLimitation::getPatientPhone,patientPhone).eq(PurchaseLimitation::getPId,pId).last("limit 1"));
+            }
+
+            if (wSurveyList.isEmpty()||(one!=null)){
                 SxReportUnscramble sxReportUnscramble = sxReportUnscrambleService.selectSxReportUnscrambleById(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
                 if (sxReportUnscramble==null){
                     return AjaxResult.error(302,"服务次数不够，请先购买");
@@ -775,13 +796,107 @@ public class EquipmentHeadingCodeController extends BaseController {
 
 
     /**
+     * 单导检测
+     * @return
+     */
+    @GetMapping("/submitSingleReportSx")
+    public AjaxResult submitSingleReportSx(String pId,HttpServletRequest request){
+
+        lock.lock();
+        try {
+            LoginUser loginUser = tokenService.getLoginUser(request);
+            if (loginUser==null){
+                return AjaxResult.error("请先登录");
+            }
+            Long userId = loginUser.getUser().getUserId();
+            if (Boolean.TRUE.equals(redisTemplate.hasKey("submitSXReport"+userId))){
+                return AjaxResult.error("请勿重复点击");
+            }
+            redisTemplate.opsForValue().set("submitSXReport"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
+
+            if (StringUtil.isEmpty(pId)){
+                return AjaxResult.error("参数错误");
+            }
+            PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
+            if (patientManagement==null){
+                return AjaxResult.error("报告不存在");
+            }
+            if (StringUtils.isEmpty(patientManagement.getPatientPhone())){
+                return AjaxResult.error("报告不存在");
+            }
+            SxDdReport reportServiceOne = sxDdReportService.getOne(new LambdaQueryWrapper<SxDdReport>().eq(SxDdReport::getPId,pId).last("limit 1"));
+            if (reportServiceOne==null){
+                return AjaxResult.error("报告不存在");
+            }
+            String patientPhone = patientManagement.getPatientPhone();
+            LinkedHashMap<String, Object> sxDateList = getSXDateList(reportServiceOne.getUserId(), pId);
+            if (sxDateList==null){
+                return AjaxResult.error("数据采集不够,请注意数据是否采集完成");
+            }
+            Integer notifyStatus = (Integer)sxDateList.get("notifyStatus");
+            if (notifyStatus!=null&&notifyStatus==1){
+                return AjaxResult.error("该报告已提交诊断");
+            }
+            Integer fuwaiSendStatus = (Integer)sxDateList.get("fuwaiSendStatus");
+
+            if (fuwaiSendStatus!=null&&fuwaiSendStatus==2){
+                return AjaxResult.error("该报告已提交诊断");
+            }
+
+            WSurvey wSurvey2 = new WSurvey();
+            wSurvey2.setPatientPhone(patientPhone);
+            List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey2);
+
+            PurchaseLimitation one = null;
+            if (!wSurveyList.isEmpty()){
+                one = purchaseLimitationService.getOne(new LambdaQueryWrapper<PurchaseLimitation>().eq(PurchaseLimitation::getPatientPhone,patientPhone).eq(PurchaseLimitation::getPId,pId).last("limit 1"));
+            }
+
+            if (wSurveyList.isEmpty()||(one!=null)){
+                SxReportUnscramble sxReportUnscramble = sxReportUnscrambleService.selectSxReportUnscrambleById(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
+                if (sxReportUnscramble==null){
+                    return AjaxResult.error(302,"服务次数不够，请先购买");
+                }
+                if (sxReportUnscramble.getVipNum()==null||sxReportUnscramble.getVipNum()<=0){
+                    return AjaxResult.error(302,"服务次数不够，请先购买");
+                }
+                int i = sxReportUnscrambleService.updateSxReportUnscrambleByNumReduce(aesUtils.decrypt(loginUser.getUser().getPhonenumber()));
+            }
+            if (!wSurveyList.isEmpty()){
+                PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
+                purchaseLimitation.setPatientPhone(patientPhone);
+                purchaseLimitation.setPId(pId);
+                purchaseLimitation.setStatus(0);
+                purchaseLimitation.setCreateTime(new Date());
+                purchaseLimitationService.insertPurchaseLimitation(purchaseLimitation);
+            }
+
+            ifSubmitOrder(pId);
+            PatientManagement patientManagement1 = new PatientManagement();
+            patientManagement1.setpId(pId);
+            patientManagement1.setSxReportStatus(1);
+            patientManagementService.updatePatientManagement(patientManagement1);
+            return AjaxResult.success("提交成功");
+
+
+        }catch (Exception e){
+            System.out.println(e);
+            return AjaxResult.error("网络开小差~~，请稍后再试一次");
+        }finally {
+            lock.unlock();
+        }
+    }
+
+
+    /**
      * 判断提交的时间是否在规定时间内
      * @param pId
      */
     @GetMapping("/addSXReport")
     public void ifSubmitOrder(String pId) throws Exception {
 
-        PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);if (patientManagement==null){
+        PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
+        if (patientManagement==null){
             return;
         }
         if (patientManagement.getConnectionTime()==null){
@@ -799,14 +914,29 @@ public class EquipmentHeadingCodeController extends BaseController {
         // 获取当前时间
         Date currentDate = new Date();
         // 计算固定时间加上 24 小时后的时间，并获取其与当前时间的时间差
-        long diffInMinutes = calculateMinutesRemaining(currentDate, addHoursToDate(connectionTime, 23));
+        long diffInMinutes = 0;
+        if (patientManagement.getEcgType().contains("DECGsingle")){
+            diffInMinutes= calculateMinutesRemaining(currentDate, addHoursToDate(connectionTime, 11));
+        }else {
+            diffInMinutes= calculateMinutesRemaining(currentDate, addHoursToDate(connectionTime, 24));
+        }
+
 
         if (diffInMinutes > 0) {
             System.out.println("当前时间在给定固定时间的前面");
             System.out.println("距离固定时间加上 24 小时还有 " + diffInMinutes + " 分钟");
             redisTemplate.opsForValue().set("addSXReportSubmitOrder:"+pId,pId,diffInMinutes, TimeUnit.MINUTES);
         } else {
-            Boolean b = addSXReport(phone, pId);
+            Boolean b = false;
+            if (patientManagement.getEcgType().contains("DECGsingle")){
+                SxDdReport reportServiceOne = sxDdReportService.getOne(new LambdaQueryWrapper<SxDdReport>().eq(SxDdReport::getPId,pId).last("limit 1"));
+                if (reportServiceOne==null) {
+                    return;
+                }
+                b =  addSingleSXReport(reportServiceOne.getUserId(),reportServiceOne.getFileName());
+            }else {
+                b = addSXReport(phone, pId);
+            }
             if (!b){
                 redisTemplate.opsForValue().set("addSXReportSubmitOrder:"+pId,pId,5, TimeUnit.MINUTES);
             }
@@ -883,6 +1013,66 @@ public class EquipmentHeadingCodeController extends BaseController {
                             System.out.println(e);
                         }
                         System.out.println("异步线程 =====> 结束添加购买服务日志 =====> " + new Date());
+                    },executorService);
+                    executorService.shutdown(); // 回收线程池
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+
+
+            return true;
+        }catch (Exception e){
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    /**
+     * 提交报告到诊断平台
+     * @param userId
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    public Boolean addSingleSXReport(String userId,String fileName) throws Exception {
+
+
+        try {
+            String equipmentCodeAccessToken = getEquipmentCodeAccess_token();
+            HttpHeaders headers = new HttpHeaders(); //构建请求头
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("authorization","Bearer "+equipmentCodeAccessToken);
+            Map<String, Object> paramsMap = new HashMap<>();
+            paramsMap.put("userId",userId);
+            paramsMap.put("fileName",fileName);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap,headers);
+            String url = sxUrl+"/bmecg/third/report/zzdx/sendNotify";
+            HashMap<String,Object> sendMessageVo=null;
+            try {
+                sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
+            }catch (Exception e){
+                System.out.println(e);
+                return false;
+            }
+            if (sendMessageVo!=null){
+                if (sendMessageVo.get("resultCode").toString().equals("200")){
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    CompletableFuture.runAsync(() ->{
+                        System.out.println("异步线程 =====> 动态单导提交报告 =====> " + new Date());
+                        try{
+                            Doctor doctor = new Doctor();
+                            doctor.setIsDoc("4");
+                            doctor.setAccountStatus("0");
+                            List<Doctor> doctors = doctorService.selectUserDoc(doctor);
+                            for (Doctor d : doctors){
+                                WxUtil.sendSubmitAdviceSX(aesUtils.decrypt(d.getDoctorPhone()));
+                            }
+                        }catch (Exception e){
+                            System.out.println(e);
+                        }
+                        System.out.println("异步线程 =====> 结束动态单导提交报告  =====> " + new Date());
                     },executorService);
                     executorService.shutdown(); // 回收线程池
                     return true;

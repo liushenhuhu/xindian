@@ -123,7 +123,9 @@ export default {
   created() {
     this.shuju()
       // this.queryParams.endTime=this.GetDateStr(0)
-    this.queryParams.startTime=this.GetDateStr(-30)
+    let dd = new Date();
+    let y = dd.getFullYear();
+    this.queryParams.startTime = y+''
   },
   methods: {
     handleSetLineChartData(type) {

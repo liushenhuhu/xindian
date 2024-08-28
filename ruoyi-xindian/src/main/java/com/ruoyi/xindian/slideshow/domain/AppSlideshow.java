@@ -1,4 +1,4 @@
-package com.ruoyi.xindian.wSuryvey.domain;
+package com.ruoyi.xindian.slideshow.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -10,38 +10,49 @@ import lombok.Data;
 
 /**
  * 
- * @TableName purchase_limitation
+ * @TableName app_slideshow
  */
-@TableName(value ="purchase_limitation")
+@TableName(value ="app_slideshow")
 @Data
-public class PurchaseLimitation implements Serializable {
+public class AppSlideshow implements Serializable {
     /**
-     * 限购id
+     * 轮播图id
      */
     @TableId(type = IdType.AUTO)
-    private Integer purchaseLimitationId;
+    private Integer slideshowId;
 
     /**
-     * 手机号
+     * 图片路径
      */
-    private String patientPhone;
+    private String imagePath;
 
     /**
-     * 商品id
+     * 是否跳转（0=跳转，1=跳转）
      */
-    private Long productId;
+    private String isSkip;
 
     /**
-     * 是否购买（0=未购买，1=已购买）
+     * 跳转路径
      */
-    private Integer status;
+    private String path;
+
+    /**
+     * 轮播图状态
+     */
+    private String status;
 
     /**
      * 创建时间
      */
     private Date createTime;
 
-    private String pId;
+    /**
+     * 修改时间
+     */
+    private Date updateTime;
+
+
+    private String type;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

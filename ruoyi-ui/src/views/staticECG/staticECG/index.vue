@@ -717,6 +717,10 @@ export default {
       this.dialogFormVisible = false;
     },
     getShowBnt() {
+      if (this.$route.query.typeStatus&&this.$route.query.typeStatus == '1'){
+        this.isShowBtn = false;
+        return
+      }
       if (this.$auth.hasRole("admin")) {
         this.isShowBtn = true;
       } else if (
@@ -965,7 +969,7 @@ export default {
       getReportByPId(this.pId).then((response) => {
         this.data.result = response.data.intelligentDiagnosis;
         this.data.resultByDoctor = response.data.diagnosisConclusion;
-        this.data.doctorName = response.data.diagnosisDoctor;
+        this.data.doctorName = response.data.dPhone;
         this.data.diagnosisData = response.data.reportTime;
         this.data.pphone = response.data.pphone;
         // this.data.pId = response.data.pId;
@@ -2696,14 +2700,14 @@ export default {
       const minute = date.getMinutes().toString().padStart(2, "0");
       const second = date.getSeconds().toString().padStart(2, "0");
 
-      console.log(this.data.resultByDoctor);
+
       var form = {
         pId: this.pId,
         diagnosisStatus: "1",
         startDateTime: `${year}-${month}-${day} ${hour}:${minute}:${second}`,
         diagnosisConclusion: this.data.resultByDoctor,
         reportTime: this.data.dataTime,
-        diagnosisDoctor: this.data.doctorName,
+        dPhone: this.data.doctorName,
       };
       getReportByPId(this.pId).then((res) => {
         if (res.data == null) {

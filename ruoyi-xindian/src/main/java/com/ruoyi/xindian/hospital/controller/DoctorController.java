@@ -14,6 +14,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Department;
 import com.ruoyi.xindian.hospital.domain.Doctor;
@@ -23,6 +24,7 @@ import com.ruoyi.xindian.hospital.service.IDepartmentService;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.hospital.service.IHospitalService;
 import com.ruoyi.xindian.util.FileUploadUtils;
+import com.ruoyi.xindian.util.RoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -69,6 +71,8 @@ public class DoctorController extends BaseController {
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
 
+    @Resource
+    private ISysDictDataService dictDataService;
     /**
      * /**
      * 查询医生列表
@@ -79,8 +83,8 @@ public class DoctorController extends BaseController {
     public TableDataInfo list(Doctor doctor, HttpServletRequest request) throws Exception {
         LoginUser loginUser = tokenService.getLoginUser(request);
         SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUser().getUserId());
-        if (sysUser.getDeptId() != null && sysUser.getDeptId() == 200) {
-
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (!SysUser.isAdmin(loginUser.getUserId())&& !RoleUtils.isRoleListOne(loginUser,sysDictData)){
             Hospital hospital = hospitalService.selectHospitalByHospitalCode(sysUser.getHospitalCode());
             if (hospital != null) {
                 doctor.getHospitalNameList().add(hospital.getHospitalName());
@@ -95,18 +99,9 @@ public class DoctorController extends BaseController {
                 }
                 startPage();
                 List<Doctor> doctors = doctorService.selectUserDoc(doctor);
-                for (Doctor value : doctors) {
-                    //解密
-                    if (!StringUtils.isEmpty(value.getDoctorName())) {
-                        value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
-                    }
-                    if (!StringUtils.isEmpty(value.getDoctorPhone())) {
-                        value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
-                    }
-                }
-                return getDataTable(doctors);
+                return getTableDataInfo(doctors);
             }
-            return getDataTable(null);
+            return getDataTable(new ArrayList<>());
 
         }
         if (StringUtils.isNotEmpty(doctor.getHospital())) {
@@ -114,8 +109,13 @@ public class DoctorController extends BaseController {
         }
         startPage();
         List<Doctor> list = doctorService.selectDoctorList(doctor);
+        return getTableDataInfo(list);
 
-        for (Doctor value : list) {
+
+    }
+
+    private TableDataInfo getTableDataInfo(List<Doctor> doctors) throws Exception {
+        for (Doctor value : doctors) {
             //解密
             if (!StringUtils.isEmpty(value.getDoctorName())) {
                 value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
@@ -124,9 +124,7 @@ public class DoctorController extends BaseController {
                 value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
             }
         }
-        return getDataTable(list);
-
-
+        return getDataTable(doctors);
     }
 
 
@@ -134,16 +132,7 @@ public class DoctorController extends BaseController {
     @GetMapping("/getDocList")
     public TableDataInfo getDocList(Doctor doctor) throws Exception {
         List<Doctor> list = doctorService.selectDoctorList(doctor);
-        for (Doctor value : list) {
-            //解密
-            if (!StringUtils.isEmpty(value.getDoctorName())) {
-                value.setDoctorName(aesUtils.decrypt(value.getDoctorName()));
-            }
-            if (!StringUtils.isEmpty(value.getDoctorPhone())) {
-                value.setDoctorPhone(aesUtils.decrypt(value.getDoctorPhone()));
-            }
-        }
-        return getDataTable(list);
+        return getTableDataInfo(list);
 
     }
 

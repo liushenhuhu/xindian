@@ -262,7 +262,7 @@
               <span v-else>*****************</span>
             </template>
           </el-table-column>
-          <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>
+<!--          <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>-->
           <el-table-column label="设备号" align="center" width="170" prop="equipmentCode"/>
           <el-table-column label="在线状态" align="center" width="100" prop="onlineStatus">
             <template slot-scope="scope">
@@ -271,7 +271,9 @@
           </el-table-column>
           <el-table-column label="心电种类" align="center" prop="ecgType" min-width="200">
             <template slot-scope="scope">
-              <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+              <el-tag>
+                {{ scope.row.ecgType }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="采集时长" align="center" prop="timeDuration"/>
@@ -712,6 +714,7 @@ export default {
         doctorPhone: null,
         patientSex: null
       }
+      this.daterangeConnectionTime = [];
       this.handleQuery();
     },
     // 多选框选中数据
