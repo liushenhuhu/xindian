@@ -35,7 +35,22 @@
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
-                        <td>{{ data.result }}</td>
+                        <td>
+                          <textarea
+                            type="area"
+                            v-model="aiResult"
+                            @blur="editAiResult"
+                            style="
+                              width: 100%;
+                              height: 100%;
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              border: 0;
+                            "
+                          />
+                          <!-- {{ data.result }} -->
+                        </td>
                         <td>患者病史</td>
                         <td>{{ getMH(dict.type.medical_history) }}</td>
                         <td>心梗机率</td>
@@ -43,11 +58,29 @@
                       </tr>
                       <tr>
                         <td>肥厚型心肌病</td>
-                        <td>{{data.p_FHXXJB?(data.p_FHXXJB * 100).toFixed(1) + "%": '0%' }}</td>
+                        <td>
+                          {{
+                            data.p_FHXXJB
+                              ? (data.p_FHXXJB * 100).toFixed(1) + "%"
+                              : "0%"
+                          }}
+                        </td>
                         <td>扩张型心肌病</td>
-                        <td>{{ data.p_KZXXJB?(data.p_KZXXJB * 100).toFixed(1) + "%":'0%' }}</td>
+                        <td>
+                          {{
+                            data.p_KZXXJB
+                              ? (data.p_KZXXJB * 100).toFixed(1) + "%"
+                              : "0%"
+                          }}
+                        </td>
                         <td>高血钾</td>
-                        <td>{{ data.p_KZXXJB?(data.p_GaoJiaXie * 100).toFixed(1) + "%":'0%' }}</td>
+                        <td>
+                          {{
+                            data.p_KZXXJB
+                              ? (data.p_GaoJiaXie * 100).toFixed(1) + "%"
+                              : "0%"
+                          }}
+                        </td>
                       </tr>
                       <tr v-if="isDoctorUser">
                         <td>P波</td>
@@ -117,16 +150,25 @@
           <div class="touyou">
             <div class="touzuobiaoti">
               <div>医师诊断</div>
-                <el-button type="text" @click="dialogVisible"
-                           style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语
-                </el-button>
+              <el-button
+                type="text"
+                @click="dialogVisible"
+                style="
+                  padding: 0;
+                  line-height: 4vh;
+                  margin-right: 1vw;
+                  font-size: 2.5vh;
+                "
+                >新增术语
+              </el-button>
               <el-dialog title="新增术语" :visible.sync="dialogVisibleTag">
                 <el-tag
                   :key="tag"
                   v-for="tag in dynamicTags"
                   closable
                   :disable-transitions="false"
-                  @close="handleCloseTag(tag)">
+                  @close="handleCloseTag(tag)"
+                >
                   {{ tag }}
                 </el-tag>
                 <el-input
@@ -139,27 +181,48 @@
                   @blur="handleInputConfirm"
                 >
                 </el-input>
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
+                <el-button
+                  v-else
+                  class="button-new-tag"
+                  size="small"
+                  @click="showInput"
+                  >+ 单机新增标签术语</el-button
+                >
                 <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogVisibleTag=false">取 消</el-button>
+                  <el-button @click="dialogVisibleTag = false">取 消</el-button>
                   <el-button type="primary" @click="termTag">确 定</el-button>
                 </div>
               </el-dialog>
 
-                <el-button type="text" @click="Camera"
-                           style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语
-                </el-button>
+              <el-button
+                type="text"
+                @click="Camera"
+                style="
+                  padding: 0;
+                  line-height: 4vh;
+                  margin-right: 1vw;
+                  font-size: 2.5vh;
+                "
+                >常用术语
+              </el-button>
               <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-                <div v-for="(item) in items">
+                <div v-for="item in items">
                   <div>{{ item.name }}</div>
-                  <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
-                          v-for="itemc in item.label"
-                          :key="itemc"
-                          @click="putDown(itemc,$event)">{{ itemc }}
+                  <button
+                    class="commentLabelBtn"
+                    :class="{ selected: isSelected }"
+                    type="primary"
+                    v-for="itemc in item.label"
+                    :key="itemc"
+                    @click="putDown(itemc, $event)"
+                  >
+                    {{ itemc }}
                   </button>
                 </div>
                 <div slot="footer" class="dialog-footer">
-                  <el-button type="primary" @click="dialogForm">确 定</el-button>
+                  <el-button type="primary" @click="dialogForm"
+                    >确 定</el-button
+                  >
                 </div>
               </el-dialog>
               <div>
@@ -363,7 +426,10 @@ import {
   updateReport,
   reportEarlyWarningMsg,
 } from "@/api/report/report";
-import {listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
+import {
+  listDoc,
+  sendMsgToPatient,
+} from "@/api/patient_management/patient_management";
 // import child from './child.vue'
 // import CacheList from "@/views/monitor/cache/list.vue";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
@@ -380,9 +446,10 @@ import { listPatient_management } from "@/api/patient_management/patient_managem
 
 import { getVerify } from "@/api/verify/verify";
 import { createLogger } from "vuex";
-
+import { mixins } from "../../mixins/ecg.js";
 export default {
   name: "index",
+  mixins: [mixins],
   components: {
     // CacheList,
     child,
@@ -529,7 +596,7 @@ export default {
       isShowBtn: true,
       isDoctorUser: false,
       // 判断是不是管理员
-      isDoctor:false,
+      isDoctor: false,
     };
   },
   beforeDestroy() {
@@ -538,8 +605,8 @@ export default {
     window.removeEventListener("resize", this.resizeDraw);
   },
   created() {
-    if (!this.$auth.hasRole("admin")){
-      this.isDoctor = true
+    if (!this.$auth.hasRole("admin")) {
+      this.isDoctor = true;
     }
     this.queryParams = this.$route.query.queryParams;
     this.ecgType = this.$route.query.ecgType;
@@ -557,12 +624,12 @@ export default {
   methods: {
     // 新增术语
     dialogVisible() {
-      getTerm().then(r => {
+      getTerm().then((r) => {
         if (r.rows.length > 0) {
-          this.dynamicTags = JSON.parse(r.rows[0].termText)
+          this.dynamicTags = JSON.parse(r.rows[0].termText);
         }
-        this.dialogVisibleTag = true
-      })
+        this.dialogVisibleTag = true;
+      });
     },
     //常用术语
     Camera() {
@@ -583,14 +650,14 @@ export default {
       //console.log(event.currentTarget.classList.toggle('selected'))
       event.currentTarget.classList.toggle("selected");
       let index = this.arr.indexOf(key);
-      console.log(index)
+      console.log(index);
       if (index !== -1) {
         this.arr.splice(index, 1);
         this.data.resultByDoctor = this.arr.toString();
       } else {
         this.arr.push(key);
         this.data.resultByDoctor = this.arr.toString();
-        console.log(this.arr)
+        console.log(this.arr);
       }
     },
     dialogForm() {
@@ -767,6 +834,7 @@ export default {
       getReportByPId(this.pId).then((response) => {
         // console.log(response)
         this.data.result = response.data.intelligentDiagnosis;
+        this.aiResult = response.data.intelligentDiagnosis;
         this.data.resultByDoctor = response.data.diagnosisConclusion;
         this.data.doctorName = response.data.diagnosisDoctor;
         this.data.diagnosisData = response.data.reportTime;
@@ -794,9 +862,9 @@ export default {
       // selectDoctor().then((response) => {
       //   this.options = response;
       // });
-      listDoc().then(r => {
-        this.doctorList = r.data
-      })
+      listDoc().then((r) => {
+        this.doctorList = r.data;
+      });
       this.getyujingleixing();
     },
     //选择医生

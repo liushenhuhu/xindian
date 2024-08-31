@@ -36,7 +36,22 @@
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
-                        <td colspan="3">{{ data.result }}</td>
+                        <td colspan="3">
+                          <textarea
+                            type="area"
+                            v-model="aiResult"
+                            @blur="editAiResult"
+                            style="
+                              width: 100%;
+                              height: 100%;
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              border: 0;
+                            "
+                          />
+                          <!-- {{ data.result }} -->
+                        </td>
                         <!--                        <td colspan="3" class="wubiankuang"><el-input v-model="data.result" placeholder="请输入内容"></el-input></td>-->
                         <td>患者病史</td>
                         <td>{{ getMH(dict.type.medical_history) }}</td>
@@ -455,9 +470,10 @@ import { listPatient_management } from "@/api/patient_management/patient_managem
 
 import { getVerify } from "@/api/verify/verify";
 // import {checkPassword} from "@/utils/verify.js";
-
+import { mixins } from "../../../mixins/ecg.js";
 export default {
   name: "index",
+  mixins: [mixins],
   components: {
     CacheList,
     child,
@@ -964,6 +980,7 @@ export default {
     getPatientdetails() {
       getReportByPId(this.pId).then((response) => {
         this.data.result = response.data.intelligentDiagnosis;
+        this.aiResult = response.data.intelligentDiagnosis;
         this.data.resultByDoctor = response.data.diagnosisConclusion;
         this.data.doctorName = response.data.diagnosisDoctor;
         this.data.diagnosisData = response.data.reportTime;
