@@ -33,6 +33,7 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.relationship.domain.PatientRelationship;
 import com.ruoyi.xindian.relationship.domain.PatientRelationshipDto;
 import com.ruoyi.xindian.util.DateUtil;
+import com.ruoyi.xindian.util.RoleUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -93,8 +94,9 @@ public class PatientController extends BaseController {
         List<Patient> list = new ArrayList<>();
         Long userId = getUserId();
 
-        if (!SysUser.isAdmin(userId)) {
-            SysUser sysUser = userService.selectUserById(getUserId());
+        SysUser sysUser = userService.selectUserById(userId);
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (!SysUser.isAdmin(userId)&& !RoleUtils.isRoleListOne(getLoginUser(),sysDictData)){
             String userHospitalCode = sysUser.getHospitalCode();
             if (userHospitalCode != null) {
                 Hospital hospital = hospitalService.selectHospitalByHospitalCode(userHospitalCode);
@@ -111,7 +113,7 @@ public class PatientController extends BaseController {
                 AssociatedHospital associatedHospital = new AssociatedHospital();
                 associatedHospital.setHospitalId(patient.getHospitalId());
                 List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-                if (associatedHospitals != null && associatedHospitals.size() > 0) {
+                if (associatedHospitals != null && !associatedHospitals.isEmpty()) {
                     for (AssociatedHospital c : associatedHospitals) {
                         Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                         patient.getHospitalNameList().add(hospital1.getHospitalName());
@@ -120,7 +122,7 @@ public class PatientController extends BaseController {
             }
             if (patient.getPatientSource() != null && !"".equals(patient.getPatientSource())) {
                 List<String> patientList = patient.getHospitalNameList();
-                if (patientList != null && patientList.size() > 0) {
+                if (patientList != null && !patientList.isEmpty()) {
                     for (String c : patientList) {
                         if (c.equals(patient.getPatientSource())) {
                             patient.getHospitalNameList().clear();

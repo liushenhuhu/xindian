@@ -329,12 +329,13 @@ export default {
     },
 
     resetQuery(){
+      let date = new Date()
       this.queryParams= {
         doctorName: null,
         doctorPhone: null,
         month: null,
         reportType:null,
-        year:'2023',
+        year:date.getFullYear()+'',
         startTime:null,
         endTime:null,
       }

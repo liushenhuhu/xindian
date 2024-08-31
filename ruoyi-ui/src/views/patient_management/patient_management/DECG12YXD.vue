@@ -210,7 +210,7 @@
           </el-table-column>
 
 
-          <el-table-column label="医院代号" align="center" prop="hospitalCode" width="150"></el-table-column>
+<!--          <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"></el-table-column>-->
           <!--            <el-table-column label="患者身份证号" align="center" prop="patientCode" />
                       <el-table-column label="患者年龄" align="center" prop="patientAge"/>
                       <el-table-column label="患者性别" align="center" prop="patientSex">
@@ -237,7 +237,9 @@
           </el-table-column>
           <el-table-column label="心电种类" align="center" width="150" prop="ecgType">
             <template slot-scope="scope">
-              <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+              <el-tag>
+                {{ scope.row.ecgType }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="采集时长" align="center" prop="timeDuration"/>

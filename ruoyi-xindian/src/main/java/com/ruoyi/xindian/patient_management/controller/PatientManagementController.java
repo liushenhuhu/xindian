@@ -158,7 +158,7 @@ public class PatientManagementController extends BaseController {
             AssociatedHospital associatedHospital = new AssociatedHospital();
             associatedHospital.setHospitalId(hospital.getHospitalId());
             List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-            if (associatedHospitals != null && associatedHospitals.size() > 0) {
+            if (associatedHospitals != null && !associatedHospitals.isEmpty()) {
                 for (AssociatedHospital c : associatedHospitals) {
                     Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                     patientManagement.getHospitalCodeList().add(hospital1.getHospitalCode());
@@ -167,7 +167,7 @@ public class PatientManagementController extends BaseController {
             String code = patientManagement.getHospitalCode();
             if (code != null && !"".equals(code)) {
                 List<String> patientList = patientManagement.getHospitalCodeList();
-                if (patientList != null && patientList.size() > 0) {
+                if (patientList != null && !patientList.isEmpty()) {
                     for (String c : patientList) {
                         if (c.equals(patientManagement.getHospitalCode())) {
                             patientManagement.getHospitalCodeList().clear();
@@ -209,13 +209,14 @@ public class PatientManagementController extends BaseController {
                     patientManagement.getBindingDoctors().add(doctor1.getDoctorPhone());
                 }
             }
-        } else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 1106) {
-            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
-            if (hospital == null) {
-                return getTable(resList, 0);
-            }
-            patientManagement.getHospitalCodeList().add(hospital.getHospitalCode());
         }
+//        else if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 1106) {
+//            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+//            if (hospital == null) {
+//                return getTable(resList, 0);
+//            }
+//            patientManagement.getHospitalCodeList().add(hospital.getHospitalCode());
+//        }
         getEncryptManagement(patientManagement);
 
         startPage();
@@ -339,10 +340,10 @@ public class PatientManagementController extends BaseController {
             if (management.getPatientName() != null && !management.getPatientName().isEmpty()) {
                 management.setPatientName(aesUtils.decrypt(management.getPatientName()));
             }
-            if (management.getDiagnosisDoctor() != null && !"".equals(management.getDiagnosisDoctor())) {
+            if (management.getDiagnosisDoctor() != null && !management.getDiagnosisDoctor().isEmpty()) {
                 management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
             }
-            if (management.getFamilyPhone() != null && !"".equals(management.getFamilyPhone())) {
+            if (management.getFamilyPhone() != null && !management.getFamilyPhone().isEmpty()) {
                 management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
             }
             if (StringUtils.isNotEmpty(management.getDoctorPhone())) {
@@ -548,10 +549,12 @@ public class PatientManagementController extends BaseController {
             if (patientManagmentDept.getDoctorPhone() != null) {
                 doctor.setDoctorPhone(patientManagmentDept.getDoctorPhone());
                 List<Doctor> doctors = doctorService.selectDoctorList(doctor);
-                if (doctors.get(0).getDepartmentCode() != null) {
+                if (!doctors.isEmpty()&&doctors.get(0).getDepartmentCode() != null) {
                     department.setDepartmentCode(doctors.get(0).getDepartmentCode());
                     List<Department> departments = departmentService.selectDepartmentList(department);
-                    patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                    if (!departments.isEmpty()){
+                        patientManagmentDept.setDept(departments.get(0).getDepartmentName());
+                    }
                 }
             }
 

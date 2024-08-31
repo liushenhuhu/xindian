@@ -1,6 +1,10 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.domain.entity.SysDictData;
@@ -29,6 +33,25 @@ public class SysDictDataServiceImpl implements ISysDictDataService
     public List<SysDictData> selectDictDataList(SysDictData dictData)
     {
         return dictDataMapper.selectDictDataList(dictData);
+    }
+
+    @Override
+    public List<String> selectDictDataByType(String dictType) {
+
+        List<SysDictData> dictDatas = DictUtils.getDictCache(dictType);
+        if (StringUtils.isNotEmpty(dictDatas))
+        {
+            if (dictDatas != null) {
+                return dictDatas.stream().map(SysDictData::getDictValue).collect(Collectors.toList());
+            }
+        }
+        dictDatas = dictDataMapper.selectDictDataByType(dictType);
+        if (StringUtils.isNotEmpty(dictDatas))
+        {
+            DictUtils.setDictCache(dictType, dictDatas);
+            return dictDatas.stream().map(SysDictData::getDictValue).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     /**

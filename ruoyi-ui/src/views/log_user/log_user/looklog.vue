@@ -845,7 +845,7 @@ export default {
     qitazhi(data){
       // console.log(data);
      console.log(this.others);
-      
+
     },
     // 心肌炎选中的值
     zhong(data){
@@ -1060,6 +1060,9 @@ export default {
 
     //获取心电数据
     getMessage() {
+
+
+      console.log("开始获取数据")
       var Iy = [];
       var IIy = [];
       var IIIy = [];
@@ -1086,6 +1089,7 @@ export default {
       var chartaVL = echarts.init(document.getElementById("aVL"));
       var chartaVF = echarts.init(document.getElementById("aVF"));
       var _th = this;
+      console.log("asfddsafsdafsadfsadfds")
       $.ajax({
         type: "POST",
         url: "https://screen.mindyard.cn:84/getId",
@@ -1095,7 +1099,9 @@ export default {
           log_id: this.message.logid,
           user_id: this.message.user_id,
         }),
-        success: function (jsonResult) {
+        success: jsonResult => {
+          console.log("获取到数据")
+          console.log(jsonResult)
           _th.data = jsonResult.result;
           // console.log(jsonResult);
           _th.message.pid = jsonResult.result.patientid;
@@ -2521,7 +2527,8 @@ export default {
           // console.log(jsonResult.result);
         },
         error: function (data) {
-          // console.log(data);
+          console.log("获取数据失败")
+          console.log(data);
           _th.$modal.msgError("数据获取失败");
         },
       });
@@ -2757,7 +2764,7 @@ export default {
     },
     // 点击下一页触发事件
     async next() {
-      
+
       this.loading = true;
       this.myocarditiszhi =[]
       this.others =''

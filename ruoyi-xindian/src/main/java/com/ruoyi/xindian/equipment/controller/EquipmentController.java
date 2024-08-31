@@ -17,6 +17,7 @@ import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Department;
@@ -32,6 +33,7 @@ import com.ruoyi.xindian.lease.service.LeaseDetailsService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.util.DateUtil;
+import com.ruoyi.xindian.util.RoleUtils;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +87,10 @@ public class EquipmentController extends BaseController {
     private AesUtils aesUtils;
 
     @Resource
+    private ISysDictDataService dictDataService;
+
+
+    @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
     /**
      * 查询设备列表
@@ -104,7 +110,8 @@ public class EquipmentController extends BaseController {
             }
         }
         Long userId = getUserId();
-        if (!SysUser.isAdmin(userId)) {
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (!SysUser.isAdmin(userId)&& !RoleUtils.isRoleListOne(getLoginUser(),sysDictData)){
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalCode = sysUser.getHospitalCode();
             equipment.getHospitalCodeList().add(hospitalCode);
@@ -114,7 +121,7 @@ public class EquipmentController extends BaseController {
                     AssociatedHospital associatedHospital = new AssociatedHospital();
                     associatedHospital.setHospitalId(hospital.getHospitalId());
                     List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
-                    if (associatedHospitals!=null&&associatedHospitals.size()>0){
+                    if (associatedHospitals!=null&& !associatedHospitals.isEmpty()){
                         for (AssociatedHospital c:associatedHospitals){
                             Hospital hospital1 = hospitalService.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
                             equipment.getHospitalCodeList().add(hospital1.getHospitalCode());
@@ -125,7 +132,7 @@ public class EquipmentController extends BaseController {
             }
             if (equipment.getHospitalCode()!=null&&!"".equals(equipment.getHospitalCode())){
                 List<String> equipmentList = equipment.getHospitalCodeList();
-                if (equipmentList!=null&&equipmentList.size()>0){
+                if (equipmentList!=null&& !equipmentList.isEmpty()){
                     for (String c : equipmentList){
                         if (c.equals(equipment.getHospitalCode())){
 
@@ -333,9 +340,9 @@ public class EquipmentController extends BaseController {
     public AjaxResult onlineNum(){
         LoginUser loginUser = getLoginUser();
         SysUser user = loginUser.getUser();
-        boolean admin = SysUser.isAdmin(user.getUserId());
         List<String> hospitalIds = new ArrayList<>();
-        if(admin){
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (SysUser.isAdmin(loginUser.getUserId())|| RoleUtils.isRoleListOne(getLoginUser(),sysDictData)){
             int count = equipmentService.selectEquipmentOnlineNum(hospitalIds);
             return AjaxResult.success(count);
         }
@@ -389,7 +396,8 @@ public class EquipmentController extends BaseController {
             }
         }
         Long userId = getUserId();
-        if (!SysUser.isAdmin(userId)) {
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (!SysUser.isAdmin(userId)&& !RoleUtils.isRoleListOne(getLoginUser(),sysDictData)){
             SysUser sysUser = userService.selectUserById(getUserId());
             String hospitalCode = sysUser.getHospitalCode();
             equipment.getHospitalCodeList().add(hospitalCode);
