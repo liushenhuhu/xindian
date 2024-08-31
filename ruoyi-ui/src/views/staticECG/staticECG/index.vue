@@ -48,6 +48,7 @@
                               justify-content: center;
                               align-items: center;
                               border: 0;
+                              font-size: 16px;
                             "
                           />
                           <!-- {{ data.result }} -->
@@ -733,9 +734,9 @@ export default {
       this.dialogFormVisible = false;
     },
     getShowBnt() {
-      if (this.$route.query.typeStatus&&this.$route.query.typeStatus == '1'){
+      if (this.$route.query.typeStatus && this.$route.query.typeStatus == "1") {
         this.isShowBtn = false;
-        return
+        return;
       }
       if (this.$auth.hasRole("admin")) {
         this.isShowBtn = true;
@@ -2717,7 +2718,6 @@ export default {
       const minute = date.getMinutes().toString().padStart(2, "0");
       const second = date.getSeconds().toString().padStart(2, "0");
 
-
       var form = {
         pId: this.pId,
         diagnosisStatus: "1",
@@ -3334,7 +3334,7 @@ export default {
 }
 
 .touzuo {
-  width: 66%;
+  width: 56%;
 }
 
 .touzuo-top {
@@ -3434,7 +3434,7 @@ export default {
 }
 
 .touyou {
-  width: 32%;
+  width: 42%;
 }
 
 // ::v-deep .el-select-dropdown__list{
@@ -3519,7 +3519,7 @@ export default {
   }
 
   .el-tab-pane {
-    height: 100%;
+    height: 70%;
   }
 }
 
@@ -3588,7 +3588,7 @@ export default {
     /* 隐藏溢出部分 */
     text-overflow: ellipsis;
     /* 显示省略号 */
-    width: 62%;
+    width: 52%;
     padding: 0 10px;
     font-size: 0.9vw;
     color: #8c8c8e;
