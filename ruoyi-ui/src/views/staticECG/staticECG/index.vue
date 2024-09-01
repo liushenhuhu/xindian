@@ -36,7 +36,23 @@
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
-                        <td colspan="3">{{ data.result }}</td>
+                        <td colspan="3">
+                          <textarea
+                            type="area"
+                            v-model="aiResult"
+                            @blur="editAiResult"
+                            style="
+                              width: 100%;
+                              height: 100%;
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              border: 0;
+                              font-size: 16px;
+                            "
+                          />
+                          <!-- {{ data.result }} -->
+                        </td>
                         <!--                        <td colspan="3" class="wubiankuang"><el-input v-model="data.result" placeholder="请输入内容"></el-input></td>-->
                         <td>患者病史</td>
                         <td>{{ getMH(dict.type.medical_history) }}</td>
@@ -455,9 +471,10 @@ import { listPatient_management } from "@/api/patient_management/patient_managem
 
 import { getVerify } from "@/api/verify/verify";
 // import {checkPassword} from "@/utils/verify.js";
-
+import { mixins } from "../../../mixins/ecg.js";
 export default {
   name: "index",
+  mixins: [mixins],
   components: {
     CacheList,
     child,
@@ -717,9 +734,9 @@ export default {
       this.dialogFormVisible = false;
     },
     getShowBnt() {
-      if (this.$route.query.typeStatus&&this.$route.query.typeStatus == '1'){
+      if (this.$route.query.typeStatus && this.$route.query.typeStatus == "1") {
         this.isShowBtn = false;
-        return
+        return;
       }
       if (this.$auth.hasRole("admin")) {
         this.isShowBtn = true;
@@ -968,6 +985,7 @@ export default {
     getPatientdetails() {
       getReportByPId(this.pId).then((response) => {
         this.data.result = response.data.intelligentDiagnosis;
+        this.aiResult = response.data.intelligentDiagnosis;
         this.data.resultByDoctor = response.data.diagnosisConclusion;
         this.data.doctorName = response.data.dPhone;
         this.data.diagnosisData = response.data.reportTime;
@@ -2700,7 +2718,6 @@ export default {
       const minute = date.getMinutes().toString().padStart(2, "0");
       const second = date.getSeconds().toString().padStart(2, "0");
 
-
       var form = {
         pId: this.pId,
         diagnosisStatus: "1",
@@ -3317,7 +3334,7 @@ export default {
 }
 
 .touzuo {
-  width: 66%;
+  width: 56%;
 }
 
 .touzuo-top {
@@ -3417,7 +3434,7 @@ export default {
 }
 
 .touyou {
-  width: 32%;
+  width: 42%;
 }
 
 // ::v-deep .el-select-dropdown__list{
@@ -3502,7 +3519,7 @@ export default {
   }
 
   .el-tab-pane {
-    height: 100%;
+    height: 70%;
   }
 }
 
@@ -3571,7 +3588,7 @@ export default {
     /* 隐藏溢出部分 */
     text-overflow: ellipsis;
     /* 显示省略号 */
-    width: 62%;
+    width: 52%;
     padding: 0 10px;
     font-size: 0.9vw;
     color: #8c8c8e;

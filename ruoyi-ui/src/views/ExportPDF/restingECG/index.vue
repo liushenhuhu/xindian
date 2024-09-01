@@ -21,7 +21,7 @@
                             {{ data.name }}
                           </td>
                           <td v-else>{{ hideMiddleName(data.name) }}</td>
-                          <td>性别</td>
+                          <td style="width: 10%">性别</td>
                           <td>{{ data.gender }}</td>
                           <td>心率</td>
                           <td>{{ data.hr }}</td>
@@ -36,7 +36,23 @@
                         </tr>
                         <tr>
                           <td>AI分析结果</td>
-                          <td colspan="3">{{ data.result }}</td>
+                          <td colspan="3">
+                            <textarea
+                              type="area"
+                              v-model="aiResult"
+                              @blur="editAiResult"
+                              style="
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                border: 0;
+                                font-size: 16px;
+                              "
+                            />
+                            <!-- {{ data.result }} -->
+                          </td>
                           <td>患者病史</td>
                           <td>{{ getMH(dict.type.medical_history) }}</td>
                         </tr>
@@ -111,8 +127,16 @@
             <div class="touyou">
               <div class="touzuobiaoti">
                 <div>医师诊断</div>
-                <el-button type="text" @click="dialogVisible"
-                           style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">新增术语
+                <el-button
+                  type="text"
+                  @click="dialogVisible"
+                  style="
+                    padding: 0;
+                    line-height: 4vh;
+                    margin-right: 1vw;
+                    font-size: 2.5vh;
+                  "
+                  >新增术语
                 </el-button>
                 <el-dialog title="新增术语" :visible.sync="dialogVisibleTag">
                   <el-tag
@@ -120,7 +144,8 @@
                     v-for="tag in dynamicTags"
                     closable
                     :disable-transitions="false"
-                    @close="handleCloseTag(tag)">
+                    @close="handleCloseTag(tag)"
+                  >
                     {{ tag }}
                   </el-tag>
                   <el-input
@@ -133,27 +158,50 @@
                     @blur="handleInputConfirm"
                   >
                   </el-input>
-                  <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单击新增标签术语</el-button>
+                  <el-button
+                    v-else
+                    class="button-new-tag"
+                    size="small"
+                    @click="showInput"
+                    >+ 单击新增标签术语</el-button
+                  >
                   <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogVisibleTag=false">取 消</el-button>
+                    <el-button @click="dialogVisibleTag = false"
+                      >取 消</el-button
+                    >
                     <el-button type="primary" @click="termTag">确 定</el-button>
                   </div>
                 </el-dialog>
 
-                <el-button type="text" @click="Camera"
-                           style="padding:0;line-height: 4vh;margin-right: 1vw;font-size:2.5vh">常用术语
+                <el-button
+                  type="text"
+                  @click="Camera"
+                  style="
+                    padding: 0;
+                    line-height: 4vh;
+                    margin-right: 1vw;
+                    font-size: 2.5vh;
+                  "
+                  >常用术语
                 </el-button>
                 <el-dialog title="常用术语" :visible.sync="dialogFormVisible">
-                  <div v-for="(item) in items">
+                  <div v-for="item in items">
                     <div>{{ item.name }}</div>
-                    <button class="commentLabelBtn" :class="{ 'selected': isSelected}" type="primary"
-                            v-for="itemc in item.label"
-                            :key="itemc"
-                            @click="putDown(itemc,$event)">{{ itemc }}
+                    <button
+                      class="commentLabelBtn"
+                      :class="{ selected: isSelected }"
+                      type="primary"
+                      v-for="itemc in item.label"
+                      :key="itemc"
+                      @click="putDown(itemc, $event)"
+                    >
+                      {{ itemc }}
                     </button>
                   </div>
                   <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="dialogForm">确 定</el-button>
+                    <el-button type="primary" @click="dialogForm"
+                      >确 定</el-button
+                    >
                   </div>
                 </el-dialog>
                 <div>
@@ -434,7 +482,11 @@ import {
   updateReport,
   reportEarlyWarningMsg,
 } from "@/api/report/report";
-import {listDoc, sendMsgToPatient} from "@/api/patient_management/patient_management";
+import {
+  listDoc,
+  sendMsgToPatient,
+} from "@/api/patient_management/patient_management";
+import { mixins } from "../../../mixins/ecg.js";
 import html2canvas from "html2canvas";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
 // 发送信息时获取密码
@@ -456,6 +508,7 @@ import { getVerify } from "@/api/verify/verify";
 export default {
   name: "index",
   components: { child },
+  mixins: [mixins],
   dicts: ["medical_history"],
   data() {
     return {
@@ -700,7 +753,7 @@ export default {
       //   waveLabel:''
       // },
       // 判断是不是管理员
-      isDoctor:false,
+      isDoctor: false,
     };
   },
   created() {
@@ -717,8 +770,8 @@ export default {
     //   // console.log(luyou);
 
     // var getdata = JSON.parse(sessionStorage.getItem(luyou));
-    if (!this.$auth.hasRole("admin")){
-      this.isDoctor = true
+    if (!this.$auth.hasRole("admin")) {
+      this.isDoctor = true;
     }
     if (false) {
       let currentURL = window.location.href;
@@ -761,12 +814,12 @@ export default {
   methods: {
     // 新增术语
     dialogVisible() {
-      getTerm().then(r => {
+      getTerm().then((r) => {
         if (r.rows.length > 0) {
-          this.dynamicTags = JSON.parse(r.rows[0].termText)
+          this.dynamicTags = JSON.parse(r.rows[0].termText);
         }
-        this.dialogVisibleTag = true
-      })
+        this.dialogVisibleTag = true;
+      });
     },
     //常用术语
     Camera() {
@@ -787,14 +840,14 @@ export default {
       //console.log(event.currentTarget.classList.toggle('selected'))
       event.currentTarget.classList.toggle("selected");
       let index = this.arr.indexOf(key);
-      console.log(index)
+      console.log(index);
       if (index !== -1) {
         this.arr.splice(index, 1);
         this.data.resultByDoctor = this.arr.toString();
       } else {
         this.arr.push(key);
         this.data.resultByDoctor = this.arr.toString();
-        console.log(this.arr)
+        console.log(this.arr);
       }
     },
     dialogForm() {
@@ -802,9 +855,9 @@ export default {
       this.dialogFormVisible = false;
     },
     getShowBnt() {
-      if (this.$route.query.typeStatus&&this.$route.query.typeStatus == '1'){
+      if (this.$route.query.typeStatus && this.$route.query.typeStatus == "1") {
         this.isShowBtn = false;
-        return
+        return;
       }
       if (this.$auth.hasRole("admin")) {
         this.isShowBtn = true;
@@ -967,7 +1020,6 @@ export default {
           this.index = 0;
         }
       });
-
     },
     // 患者用户信息
     getPatientdetails() {
@@ -980,6 +1032,7 @@ export default {
         this.data.pphone = response.data.pphone;
         this.data.pId = response.data.pId;
         this.data.result = response.data.intelligentDiagnosis;
+        this.aiResult = response.data.intelligentDiagnosis;
         this.data.pastMedicalHistory = response.data.pastMedicalHistory;
         // 原先提交过的预警类型
         this.logDataType = response.data.logDataType;
@@ -1004,9 +1057,9 @@ export default {
       // selectDoctor().then((response) => {
       //   this.options = response;
       // });
-      listDoc().then(r => {
-        this.doctorList = r.data
-      })
+      listDoc().then((r) => {
+        this.doctorList = r.data;
+      });
       this.getyujingleixing();
     },
     //选择医生
@@ -1271,7 +1324,6 @@ export default {
         this.datalabel
       );
     },
-
 
     clickitem(e) {
       e === this.radio ? (this.radio = "") : (this.radio = e);
@@ -3345,9 +3397,9 @@ export default {
 .box {
   background-color: #ffffff;
 }
-
+// TODO:修改
 .touzuo {
-  width: 66%;
+  width: 56%;
 }
 
 .touzuo-top {
@@ -3442,9 +3494,9 @@ export default {
   color: #ffffff;
   font-size: 1vw;
 }
-
+// TODO:修改
 .touyou {
-  width: 32%;
+  width: 42%;
 }
 
 // ::v-deep .el-select-dropdown__list{
@@ -3525,9 +3577,9 @@ export default {
     // flex: 1;
     height: 300px;
   }
-
+  //TODO:修改
   .el-tab-pane {
-    height: 100%;
+    height: 70%;
   }
 }
 
@@ -3583,7 +3635,8 @@ export default {
     /* 隐藏溢出部分 */
     text-overflow: ellipsis;
     /* 显示省略号 */
-    width: 62%;
+    //TODO:修改
+    width: 52%;
     padding: 0 10px;
     font-size: 0.9vw;
     color: #8c8c8e;
