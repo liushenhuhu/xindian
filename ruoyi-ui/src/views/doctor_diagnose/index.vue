@@ -475,6 +475,9 @@
           </el-tab-pane>
         </el-tabs>
       </el-tab-pane>
+      <el-tab-pane label="诊断统计" name="three">
+        <DocDiagnose />
+      </el-tab-pane>
     </el-tabs>
 
 
@@ -500,16 +503,20 @@
 
 </template>
 <script>
+
+
 import {getWebList, getWeekReportList, listReport} from "@/api/report/report";
 import {docUpdate, getEcgType, listDoc, listPatient_management} from "@/api/patient_management/patient_management";
 import {listHospitalId} from "@/api/hospital/hospital";
 import {docList} from "@/api/doctor/doctor";
 import {updateOnlineAll} from "@/api/online/online";
+import DocDiagnose  from "@/views/statistics/statistics";
 
 export default {
   name: 'DoctorDiagnosis',
   dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list', 'if_status',"medical_history",'doctor_diagnosis_status'],
   components: {
+    DocDiagnose
   },
   data() {
     return {
@@ -715,7 +722,7 @@ export default {
       if (this.activeName=='first'){
         this.queryParams.diagnosisStatus = '2';
         this.getList()
-      }else {
+      }else if (this.activeName=='second'){
         getEcgType(this.ecgType).then(r => {
           this.ecgList = r.data
         })

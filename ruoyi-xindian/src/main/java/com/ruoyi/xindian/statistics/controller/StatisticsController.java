@@ -1,13 +1,17 @@
 package com.ruoyi.xindian.statistics.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.interfaces.Aes;
+import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
 import com.ruoyi.xindian.statistics.domain.Reportstic;
 import com.ruoyi.xindian.statistics.domain.Statistics;
 import com.ruoyi.xindian.statistics.service.IStatisticsService;
+import com.ruoyi.xindian.util.RoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +41,10 @@ public class StatisticsController extends BaseController {
 
     @Resource
     private AesUtils aesUtils;
+
+
+    @Resource
+    private ISysDictDataService dictDataService;
     /**
      * 医生统计
      * @return
@@ -65,6 +73,11 @@ public class StatisticsController extends BaseController {
         if (str.getDoctorPhone()!=null&&!"".equals(str.getDoctorPhone())){
             str.setDoctorPhone(aesUtils.encrypt(str.getDoctorPhone()));
         }
+        LoginUser loginUser = getLoginUser();
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (!SysUser.isAdmin(loginUser.getUserId())&& !RoleUtils.isRoleListOne(loginUser,sysDictData)){
+            str.setDoctorPhone(loginUser.getUser().getPhonenumber());
+        }
         List<Statistics> list = statisticsService.selectDoctorData(str);
         return getDataTable(list);
     }
@@ -77,22 +90,26 @@ public class StatisticsController extends BaseController {
      */
     @GetMapping("/countList")
     public TableDataInfo countList(Statistics statistics) throws Exception {
+        LoginUser loginUser = getLoginUser();
+        if (statistics.getDoctorPhone()!=null&&!"".equals(statistics.getDoctorPhone())){
+            statistics.setDoctorPhone(aesUtils.encrypt(statistics.getDoctorPhone()));
+        }
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (!SysUser.isAdmin(loginUser.getUserId())&& !RoleUtils.isRoleListOne(loginUser,sysDictData)){
+            statistics.setDoctorPhone(loginUser.getUser().getPhonenumber());
+        }
         startPage();
         List<Statistics> statistics1 = statisticsService.selectCountList(statistics);
         List<Statistics> statistics2 = statisticsService.selectDocDiagnose(statistics);
         for (Statistics c : statistics1){
-
             for (Statistics b:statistics2){
-
                 if (c.getDoctorPhone().equals(b.getDoctorPhone())){
-
                     c.setDiagnoseTypeZhuSUM(b.getDiagnoseTypeZhuSUM());
                     c.setDiagnoseStatusWEISUM(b.getDiagnoseStatusWEISUM());
                     c.setDiagnoseTypeBIESUM(b.getDiagnoseTypeBIESUM());
                     break;
                 }
             }
-
             if (c.getDoctorName()!=null&&!"".equals(c.getDoctorName())){
                 c.setDoctorName(aesUtils.decrypt(c.getDoctorName()));
             }

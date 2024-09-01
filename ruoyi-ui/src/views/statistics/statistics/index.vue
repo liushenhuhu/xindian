@@ -129,15 +129,23 @@ export default {
       tableData: []
     }
   },
+  activated() {
+    console.log(1111)
+    this.getList();
+    this.selectDoctor();
+  },
   created() {
+
+
     let date = new Date()
     this.queryParams.year=date.getFullYear()+''
 
     this.getList();
-
     this.selectDoctor();
   },
   mounted(){
+    console.log(1111)
+    this.getList();
     this.drawLine();
   },
   methods: {
@@ -217,10 +225,8 @@ export default {
         myChart.resize();
       });
       myChart.on('click', function (params) {
-
         status.queryParams.month = status.lowNumber(params.name)
         console.log(status.queryParams.year+'-'+status.queryParams.month)
-
         status.$router.push({path:'/Diagnostic_statistics',query:{countTime:status.queryParams.year+'-'+status.queryParams.month,doctorPhone:status.queryParams.doctorPhone,ecgtype:status.queryParams.reportType}})
       })
     },
