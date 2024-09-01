@@ -476,7 +476,7 @@
         </el-tabs>
       </el-tab-pane>
       <el-tab-pane label="诊断统计" name="three">
-        <DocDiagnose />
+        <DocDiagnose ref = "DocDiagnose" />
       </el-tab-pane>
     </el-tabs>
 
@@ -733,6 +733,8 @@ export default {
           this.option2 = q.data
         })
         this.getListEcg()
+      }else{
+        this.$refs.DocDiagnose.getList()
       }
     },
     /** 查询用户管理列表 */

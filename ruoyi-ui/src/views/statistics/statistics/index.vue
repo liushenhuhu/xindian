@@ -129,14 +129,9 @@ export default {
       tableData: []
     }
   },
-  activated() {
-    console.log(1111)
-    this.getList();
-    this.selectDoctor();
-  },
   created() {
 
-
+    console.log("触发created函数")
     let date = new Date()
     this.queryParams.year=date.getFullYear()+''
 
@@ -144,7 +139,7 @@ export default {
     this.selectDoctor();
   },
   mounted(){
-    console.log(1111)
+    console.log("组件触发")
     this.getList();
     this.drawLine();
   },
