@@ -67,7 +67,7 @@
                 @blur="handleInputConfirm"
               >
               </el-input>
-              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单机新增标签术语</el-button>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 单击新增标签术语</el-button>
               <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleTag=false">取 消</el-button>
                 <el-button type="primary" @click="termTag">确 定</el-button>
