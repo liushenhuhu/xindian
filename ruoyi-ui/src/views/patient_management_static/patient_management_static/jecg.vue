@@ -246,26 +246,26 @@
             <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" width="200"
                              show-overflow-tooltip/>
 
-            <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
+
             <el-table-column label="用户姓名" align="center" prop="patientName" min-width="100">
               <template slot-scope="scope">
                 <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
                 <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="年龄" align="center" prop="patientAge" min-width="50">
+<!--            <el-table-column label="年龄" align="center" prop="patientAge" min-width="50">-->
               <!-- <template slot-scope="scope">
                 <span v-if="isShowName.status===true">{{ scope.row.patientAge }}</span>
                 <span v-else>**</span>
               </template> -->
-            </el-table-column>
-            <el-table-column label="性别" align="center" prop="patientSex" min-width="50"></el-table-column>
-            <el-table-column label="医院" align="center" prop="hospitalName" min-width="200">
-              <template slot-scope="scope">
-                <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
-                <span v-else>***************</span>
-              </template>
-            </el-table-column>
+<!--            </el-table-column>-->
+<!--            <el-table-column label="性别" align="center" prop="patientSex" min-width="50"></el-table-column>-->
+<!--            <el-table-column label="医院" align="center" prop="hospitalName" min-width="200">-->
+<!--              <template slot-scope="scope">-->
+<!--                <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>-->
+<!--                <span v-else>***************</span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
             <!--      <el-table-column label="用户症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
             <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
             <!--      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >-->
@@ -285,11 +285,11 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="是否标注预警状态" width="150" align="center" prop="ecgIsLabel">
-              <template slot-scope="scope">
-                <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="是否标注预警状态" width="150" align="center" prop="ecgIsLabel">-->
+<!--              <template slot-scope="scope">-->
+<!--                <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
             <!--
             <el-table-column label="是否标注预警状态" align="center" prop="ecgIsLabel">
               <template slot-scope="scope">
@@ -302,6 +302,32 @@
                 <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
               </template>
             </el-table-column>
+            <el-table-column label="心率" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag>{{getEcgType(scope.row.ecgAnalysisData,"平均心率")}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="心梗几率" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_xingeng"))}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="肥厚型心肌病" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_FHXXJB"))}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="扩张型心肌病性" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_KZXXJB") )}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="高血钾" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie") )}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
             <el-table-column label="诊断医生" align="center" width="100" prop="diagnosisDoctor">
             </el-table-column>
             <el-table-column label="医生诊断" align="center"  prop="diagnosisConclusion" width="200"
@@ -313,19 +339,19 @@
                 <span v-else>***************</span>
               </template>
             </el-table-column>
-            <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">
-              <template slot-scope="scope">
-                <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>
-                <span v-else>***************</span>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">-->
+<!--              <template slot-scope="scope">-->
+<!--                <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>-->
+<!--                <span v-else>***************</span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
             <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
-            <el-table-column label="用户身份证号" align="center" prop="patientCode" min-width="200">
-              <template slot-scope="scope">
-                <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>
-                <span v-else>***************</span>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="用户身份证号" align="center" prop="patientCode" min-width="200">-->
+<!--              <template slot-scope="scope">-->
+<!--                <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>-->
+<!--                <span v-else>***************</span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
             <el-table-column label="用户过往病史" align="center" prop="patientCode" min-width="200">
               <template slot-scope="scope">
               <span v-if="isShowName.status===true">
@@ -778,6 +804,9 @@ export default {
       listPatient_management(this.queryParams).then(response => {
         console.log(response)
         this.patient_managementList = response.rows;
+
+
+
         // 原先提交过的预警类型response.rows[].logDataType
         this.total = response.total;
         this.loading = false;
@@ -1007,6 +1036,36 @@ export default {
     // 判断转换后的值是否为整数且不为NaN
     return Number.isInteger(parsedInt);
   },
+    getEcgType(text,type){
+      try {
+        console.log(text)
+        let jsonString = text.replace(/nan/g, '0');
+        console.log(jsonString)
+        jsonString = jsonString.replace(/'/g, '"');
+        let obj = JSON.parse(jsonString)
+        console.log(obj)
+        // 检查 obj 是否是对象，并获取指定类型的值
+        if (obj && typeof obj === 'object') {
+          // 如果 obj 对象中存在 type 属性，返回其值；否则返回 "--"
+          return obj.hasOwnProperty(type) ? obj[type] : "--";
+        } else {
+          return "--";
+        }
+      } catch (error) {
+        console.log(error)
+        // 捕获异常并处理
+        return "--"
+      }
+
+
+
+    },
+
+
+    getBai(text){
+     // re ( * 100).toFixed(1) + "%"
+      return !isNaN(Number(text)) && isFinite(Number(text)) ? (Number(text) * 100).toFixed(1) + "%" : "--"
+    },
     lookHistoryData30(row) {
       let data = {
         row: row,

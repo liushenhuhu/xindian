@@ -3,6 +3,7 @@ package com.ruoyi.xindian.patient_management.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -333,6 +334,30 @@ public class PatientManagementController extends BaseController {
                     System.out.println(1);
                 }
             }
+
+//            try {
+//                String ecgAnalysisData = management.getEcgAnalysisData();
+//                if (StringUtils.isNotEmpty(ecgAnalysisData)){
+//                    JSONObject jsonObject = JSONObject.parseObject(ecgAnalysisData);
+//
+//                    Object o = jsonObject.get("平均心率");
+//                    if (o!=null){
+//                        management.setXl(o.toString());
+//                    }else {
+//                        management.setXl("--");
+//                    }
+//                    Object o1 = jsonObject.get("p_xingeng");
+//                    if (o1!=null){
+//                        management.setXg(o1.toString());
+//                    }else {
+//                        management.setXg("--");
+//                    }
+//
+//                }
+//            }catch (Exception e){
+//
+//            }
+
 
             if (management.getPatientPhone() != null && !management.getPatientPhone().isEmpty()) {
                 management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
