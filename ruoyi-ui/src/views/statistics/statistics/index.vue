@@ -4,7 +4,7 @@
       <div id="appc" class="app-container">
         <el-form v-if="show" id="add1" :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
           <el-form-item label="医生名称" prop="doctor_name">
-            <el-select v-model="queryParams.doctorPhone" clearable placeholder="请选择" >
+            <el-select v-model="queryParams.doctorPhone" :disabled="idDoc" clearable placeholder="请选择" >
               <el-option
                 v-for="item in options"
                 :label="item.doctorName"
@@ -112,6 +112,7 @@ export default {
       options: [],
       countArr: [],
       show: true,
+      idDoc:false,
       // 总条数
       total: 0,
       daterangeConnectionTime: [],
@@ -131,7 +132,10 @@ export default {
   },
   created() {
 
-    console.log("触发created函数")
+    if (this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
+      this.idDoc = true
+      this.queryParams.doctorPhone = this.$store.state.user.name
+    }
     let date = new Date()
     this.queryParams.year=date.getFullYear()+''
 
@@ -234,8 +238,10 @@ export default {
     },
     selectDoctor() {
       selectDoctor().then(response => {
-        console.log(response)
         this.options = response;
+        if (this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
+          this.queryParams.doctorPhone = this.$store.state.user.name
+        }
       })
     },
     getListData(){
@@ -342,6 +348,9 @@ export default {
       }
       this.daterangeConnectionTime= [],
       this.queryParams.pageNum = 1;
+      if (this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
+        this.queryParams.doctorPhone = this.$store.state.user.name
+      }
       this.getList();
     },
   },

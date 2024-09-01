@@ -754,7 +754,23 @@ public class ReportController extends BaseController {
         critical_value = "心电图危急值".split(",");
         other = "预激综合症, 心室预激波, 早期复极".split(", ");
         ad = "建议到上级医院复查, 建议做动态心电图, 建议做12导联常规心电图, 信号存在干扰，请重新采集".split(", ");
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        DoctorTerm doctorTerm = new DoctorTerm();
+        doctorTerm.setDoctorPhone(loginUser.getUser().getUserName());
+        List<DoctorTerm> doctorTerms = doctorTermService.selectDoctorTermList(doctorTerm);
+        if (doctorTerms != null && !doctorTerms.isEmpty()) {
+            String text = doctorTerms.get(0).getTermText();
+            if (text.length() > 2) {
 
+                JSONArray objects = JSONArray.parseArray(text);
+                String[] stringArray = new String[objects.size()];
+                for (int i = 0; i < objects.size(); i++) {
+                    stringArray[i] = objects.getString(i);
+                }
+                resMap.put("医生术语", stringArray);
+            }
+        }
+        resMap.put("选择性建议", ad);
         resMap.put("正常", normal);
         resMap.put("心律", heart_rhythm);
         resMap.put("心律不齐", arrhythmia);
@@ -766,24 +782,8 @@ public class ReportController extends BaseController {
         resMap.put("传导阻滞", conduction_block);
         resMap.put("危急值", critical_value);
         resMap.put("其它", other);
-        resMap.put("选择性建议", ad);
-        LoginUser loginUser = tokenService.getLoginUser(request);
-        DoctorTerm doctorTerm = new DoctorTerm();
-        doctorTerm.setDoctorPhone(loginUser.getUser().getUserName());
-        List<DoctorTerm> doctorTerms = doctorTermService.selectDoctorTermList(doctorTerm);
-        if (doctorTerms != null && doctorTerms.size() > 0) {
-            String text = doctorTerms.get(0).getTermText();
-            if (text.length() > 2) {
 
-                JSONArray objects = JSONArray.parseArray(text);
-                String[] stringArray = new String[objects.size()];
-                for (int i = 0; i < objects.size(); i++) {
-                    stringArray[i] = objects.getString(i);
-                }
-                resMap.put("医生术语", stringArray);
-            }
 
-        }
         return AjaxResult.success(resMap);
     }
 
