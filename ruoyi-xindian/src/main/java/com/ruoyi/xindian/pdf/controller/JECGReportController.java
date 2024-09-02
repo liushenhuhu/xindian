@@ -310,38 +310,49 @@ public class JECGReportController extends BaseController {
         report.setPPhone(patientPhone);
         LocalDate now;
         LocalDate now_7;
+
+        LocalDate last;
+        LocalDate last_7;
+
         if (patientManagement.getReportTime() != null) {
             now = DateUtil.getLocalDate(patientManagement.getReportTime()).minusWeeks(1).with(DayOfWeek.SUNDAY);
             now_7 = DateUtil.getLocalDate(patientManagement.getReportTime()).minusWeeks(1).with(DayOfWeek.MONDAY);
+            last = DateUtil.getLocalDate(patientManagement.getReportTime()).minusWeeks(2).with(DayOfWeek.SUNDAY);
+            last_7 = DateUtil.getLocalDate(patientManagement.getReportTime()).minusWeeks(2).with(DayOfWeek.MONDAY);
             flag = 1;
         } else {
             now = LocalDate.now().minusWeeks(1).with(DayOfWeek.SUNDAY);
             now_7 = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
+            last = LocalDate.now().minusWeeks(2).with(DayOfWeek.SUNDAY);
+            last_7 = LocalDate.now().minusWeeks(2).with(DayOfWeek.MONDAY);
         }
         // 格式化日期输出
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String today = now.format(formatter);
         String startDay = now_7.format(formatter);
-
+        //本周
         report.setStartReportTime(startDay);
         report.setEndReportTime(today);
         report.setReportType("JECGsingleWL");
         List<Report> reports = reportService.selectReportList(report);
-//            List<String> pidList = reports.stream().map(Report::getpId).collect(Collectors.toList());
+        //上周
+        today = last.format(formatter);
+        startDay = last_7.format(formatter);
+        report.setStartReportTime(startDay);
+        report.setEndReportTime(today);
+        report.setReportType("JECGsingleWL");
+        List<Report> last_reports = reportService.selectReportList(report);
+
+
 
         PmEcgData pmEcgData;
         WeekPdfData weekPdfData;
-//        Date maxTime = null;
         float[] floats;
         LinkedList<WeekPdfData> weekPdfDataList = new LinkedList<>();
+        LinkedList<WeekPdfData> last_weekPdfDataList = new LinkedList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        if (reports != null) {
-//            maxTime = reports.get(0).getReportTime();
-//        }
+
         for (Report rp : reports) {
-//            if (rp.getReportTime() != null && maxTime.getTime() < rp.getReportTime().getTime()) {
-//                maxTime = rp.getReportTime();
-//            }
             JECGSingnalData jecgSingnalData = pdfDataService.getJECGSingnalByPid(rp.getpId());
             if (jecgSingnalData == null)
                 continue;
@@ -398,6 +409,22 @@ public class JECGReportController extends BaseController {
             weekPdfData.setSzList(linkedListSZ);
             weekPdfDataList.add(weekPdfData);
         }
+        //上周数据
+        for (Report last_report : last_reports) {
+            pmEcgData = pmEcgDataService.selectPmEcgDataByPId(last_report.getpId());
+            weekPdfData = new WeekPdfData();
+            weekPdfData.setAiConclusion(last_report.getIntelligentDiagnosis());
+            weekPdfData.setHr(pmEcgData.getHrMean());
+            weekPdfData.setP(pmEcgData.getpAmplitude());
+            weekPdfData.setQtc(pmEcgData.getQtc());
+            weekPdfData.setRr(pmEcgData.getrAmplitude());
+            weekPdfData.setHrv(pmEcgData.getRmssd());
+            weekPdfData.setQrs(pmEcgData.getQrsInterval());
+            weekPdfData.setDetectionTime(sdf.format(last_report.getReportTime()));
+            last_weekPdfDataList.add(weekPdfData);
+        }
+
+
         if (weekPdfDataList.isEmpty()) return new AjaxResult(202, "无检测数据！");
         //数据记录入库
         WeekReport weekReport = new WeekReport();
@@ -413,7 +440,7 @@ public class JECGReportController extends BaseController {
         File file = new File("/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone());
         if (!file.exists()) file.mkdirs();
 //        write_dir = "E:/test.pdf";
-        String conclusion = pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight);
+        String conclusion = pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight, last_weekPdfDataList);
         weekReport.setDiagnosisConclusion(conclusion);
         weekReportService.insertWeekReport(weekReport);
 
