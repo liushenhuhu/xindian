@@ -21,7 +21,7 @@
               <!--  </el-radio-group>-->
               <!--</el-form-item>-->
               <el-form-item label="用户性别" prop="patientSex">
-                <el-select placeholder="请选择性别" v-model="queryParams.patientSex">
+                <el-select placeholder="请选择性别" v-model="queryParams.patientSex" clearable>
                   <el-option label="男" value="男"></el-option>
                   <el-option label="女" value="女"></el-option>
                 </el-select>
@@ -43,7 +43,7 @@
                 />
               </el-form-item>
               <el-form-item label="医院名称" prop="hospitalName">
-                <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号">
+                <el-select v-model="queryParams.hospitalCode" placeholder="请选择医院代号" clearable>
                   <el-option
                     v-for="item in options"
                     :key="item.hospitalId"
@@ -309,7 +309,7 @@
             </el-table-column>
             <el-table-column label="心梗几率" align="center" prop="ecgAnalysisData" width="100">
               <template slot-scope="scope">
-                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_xingeng"))}}</el-tag>
+                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,scope.row.ecgType.indexOf("JECG4")!=-1?"p_xingeng":"p_xingeng_text"))}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="肥厚型心肌病" align="center" prop="ecgAnalysisData" width="100">
@@ -317,7 +317,7 @@
                 <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_FHXXJB"))}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="扩张型心肌病性" align="center" prop="ecgAnalysisData" width="100">
+            <el-table-column label="扩张型心肌病" align="center" prop="ecgAnalysisData" width="100">
               <template slot-scope="scope">
                 <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_KZXXJB") )}}</el-tag>
               </template>
@@ -1038,12 +1038,9 @@ export default {
   },
     getEcgType(text,type){
       try {
-        console.log(text)
         let jsonString = text.replace(/nan/g, '0');
-        console.log(jsonString)
         jsonString = jsonString.replace(/'/g, '"');
         let obj = JSON.parse(jsonString)
-        console.log(obj)
         // 检查 obj 是否是对象，并获取指定类型的值
         if (obj && typeof obj === 'object') {
           // 如果 obj 对象中存在 type 属性，返回其值；否则返回 "--"
