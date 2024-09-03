@@ -344,7 +344,6 @@ public class JECGReportController extends BaseController {
         List<Report> last_reports = reportService.selectReportList(report);
 
 
-
         PmEcgData pmEcgData;
         WeekPdfData weekPdfData;
         float[] floats;
@@ -395,7 +394,9 @@ public class JECGReportController extends BaseController {
             floats = btyeToFloatList(jecgSingnalData.getEcgData());
             pmEcgData = pmEcgDataService.selectPmEcgDataByPId(rp.getpId());
             weekPdfData = new WeekPdfData();
-            weekPdfData.setAiConclusion(rp.getIntelligentDiagnosis());
+            String intelligentDiagnosis = rp.getIntelligentDiagnosis();
+            String[] split = intelligentDiagnosis.split("\\(");
+            weekPdfData.setAiConclusion(split[0]);
             weekPdfData.setHr(pmEcgData.getHrMean());
             weekPdfData.setP(pmEcgData.getpAmplitude());
             weekPdfData.setQtc(pmEcgData.getQtc());
@@ -439,7 +440,7 @@ public class JECGReportController extends BaseController {
         String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + "/" + weekReport.getWeekid() + ".pdf";
         File file = new File("/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone());
         if (!file.exists()) file.mkdirs();
-//        write_dir = "E:/test.pdf";
+        write_dir = "E:/test.pdf";
         String conclusion = pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight, last_weekPdfDataList);
         weekReport.setDiagnosisConclusion(conclusion);
         weekReportService.insertWeekReport(weekReport);
