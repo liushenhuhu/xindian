@@ -50,8 +50,8 @@ public class PdfGenerator {
 //        Document doc = new Document(pdfDoc, PageSize.A4);
 
         // 设置字体  simhei.ttf黑体  SimSun宋体
-        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
-//        PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
+//        PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
+        PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
         //设置标题
         titleSet(doc, title, font);
         //基本信息
@@ -167,10 +167,10 @@ public class PdfGenerator {
             } catch (NumberFormatException ignored) {
             }
 
-            if (hrDouble > maxHr) {
+            if (hrDouble > last_maxHr) {
                 last_maxHr = hrDouble;
             }
-            if (hrDouble < minHr) {
+            if (hrDouble < last_minHr) {
                 last_minHr = hrDouble;
             }
             //房早

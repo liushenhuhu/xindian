@@ -440,7 +440,7 @@ public class JECGReportController extends BaseController {
         String write_dir = "/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone() + "/" + weekReport.getWeekid() + ".pdf";
         File file = new File("/home/chenpeng/workspace/system/xindian/data/weekpdf/" + patientManagement.getPatientPhone());
         if (!file.exists()) file.mkdirs();
-        write_dir = "E:/test.pdf";
+//        write_dir = "E:/test.pdf";
         String conclusion = pdfGenerator.createWeekPdf(write_dir, weekPdfDataList, patientName, gender, patientAge, height, weight, last_weekPdfDataList);
         weekReport.setDiagnosisConclusion(conclusion);
         weekReportService.insertWeekReport(weekReport);
