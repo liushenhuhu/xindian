@@ -372,7 +372,7 @@ import {
 import * as echarts from '../detail/echarts.min'
 import 'default-passive-events'
 import screenfull from 'screenfull'
-import {getUserInfo,getInfoId} from "@/api/patient_management/patient_management";
+import {getUserInfo, getInfoId, getInfoIdByHospital} from "@/api/patient_management/patient_management";
 import Cookies from "js-cookie";
 let hospName='所有'
 export default {
@@ -465,11 +465,12 @@ export default {
     let hospitalId =this.$route.query.hospitalId
     let token = this.$route.query.token
     if (token){
-      Cookies.remove("Admin-Token")
-      Cookies.set("Admin-Token", token);
+      this.$store.dispatch("UpdateToken", token).then(() => {
+      })
     }
     if(hospitalId&&hospitalId!==1){
-      await getInfoId(hospitalId).then(user => {
+      console.log(token)
+      await getInfoIdByHospital(hospitalId,token).then(user => {
         hospName=user.data.hospitalName
       })
     }
@@ -498,11 +499,12 @@ export default {
     console.log('activated')
     let token = this.$route.query.token
     if (token){
-      Cookies.remove("Admin-Token")
-      Cookies.set("Admin-Token", token);
+      this.$store.dispatch("UpdateToken", token).then(() => {
+      })
     }
     if(hospitalId&&hospitalId!==1){
-      await getInfoId(hospitalId).then(user => {
+      console.log(token)
+      await getInfoIdByHospital(hospitalId,token).then(user => {
         hospName=user.data.hospitalName
       })
     }

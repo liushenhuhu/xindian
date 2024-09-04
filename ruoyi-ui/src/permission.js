@@ -3,7 +3,7 @@ import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { getToken } from '@/utils/auth'
+import {getToken, setToken} from '@/utils/auth'
 import { isRelogin } from '@/utils/request'
 
 NProgress.configure({ showSpinner: false })
@@ -13,6 +13,10 @@ const whiteList = ['/login', '/auth-redirect', '/bind', '/register','/large_scre
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
+    if (to.path.indexOf('/large_screen')!==-1){
+      setToken(to.query.token)
+      next()
+    }
     to.meta.title && store.dispatch('settings/setTitle', to.meta.title)
     /* has token*/
     if (to.path === '/login') {
