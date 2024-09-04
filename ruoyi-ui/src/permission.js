@@ -17,8 +17,8 @@ router.beforeEach((to, from, next) => {
       setToken(to.query.token)
       next()
     }
-
     if (to.path.indexOf('/large_screen_detail')!==-1){
+      setToken(to.query.token)
       next()
     }
     to.meta.title && store.dispatch('settings/setTitle', to.meta.title)

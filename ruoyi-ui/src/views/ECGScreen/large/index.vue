@@ -374,6 +374,7 @@ import 'default-passive-events'
 import screenfull from 'screenfull'
 import {getUserInfo, getInfoId, getInfoIdByHospital} from "@/api/patient_management/patient_management";
 import Cookies from "js-cookie";
+import {getToken} from "@/utils/auth";
 let hospName='所有'
 export default {
   data() {
@@ -2089,7 +2090,7 @@ export default {
             //添加需要传值到那个页面的路径
             path:'/large_screen_detail',
             //携带需要传递的参数
-            query:{deviceSn:deviceSn}
+            query:{deviceSn:deviceSn,token : getToken()}
           })
       }
     },
