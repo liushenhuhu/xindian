@@ -15,6 +15,8 @@ public class WxLoginBody {
      */
     private String encryptedData;
 
+    private String phone;
+
 
     public WxLoginBody() {
     }
@@ -24,6 +26,7 @@ public class WxLoginBody {
         this.encryptedIv = encryptedIv;
         this.encryptedData = getEncryptedData;
     }
+
 
     /**
      * 获取
@@ -71,6 +74,15 @@ public class WxLoginBody {
      */
     public void setGetEncryptedData(String getEncryptedData) {
         this.encryptedData = getEncryptedData;
+    }
+
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String toString() {

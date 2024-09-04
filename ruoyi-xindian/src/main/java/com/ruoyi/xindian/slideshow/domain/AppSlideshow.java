@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.ruoyi.common.annotation.Excel;
 import lombok.Data;
 
 /**
@@ -53,6 +55,10 @@ public class AppSlideshow implements Serializable {
 
 
     private String type;
+
+    /** 封面 */
+    @Excel(name = "封面")
+    private String cover;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -24,7 +24,7 @@
                         <td>性别</td>
                         <td>{{ data.gender }}</td>
                         <td>心率</td>
-                        <td>{{ data.hr }}</td>
+                        <td>{{ data.hr }} bpm</td>
                       </tr>
                       <tr>
                         <td>报告编码</td>
@@ -32,7 +32,7 @@
                         <td>年龄</td>
                         <td>{{ data.age }}</td>
                         <td>患者症状</td>
-                        <td>{{ data.patientSymptom }}</td>
+                        <td>{{  data.patientSymptom!='' ? data.patientSymptom : "暂无症状" }}</td>
                       </tr>
                       <tr>
                         <td>AI分析结果</td>
@@ -60,15 +60,15 @@
 
                       <tr v-if="isDoctorUser">
                         <td>P波</td>
-                        <td>{{ data.p }}</td>
+                        <td>{{ data.p }} ms</td>
                         <td>QTc</td>
-                        <td>{{ data.qtc }}</td>
+                        <td>{{ data.qtc }} ms</td>
                         <td>HRV</td>
-                        <td>{{ data.hrv }}ms</td>
+                        <td>{{ data.hrv }} ms</td>
                       </tr>
                       <tr v-if="isDoctorUser">
-                        <td>QRS区间</td>
-                        <td>{{ data.qrs }}ms</td>
+                        <td>QRS波群</td>
+                        <td>{{ data.qrs }} ms</td>
                         <td>住院号</td>
                         <td>-</td>
                         <td>申请单号</td>
@@ -86,15 +86,15 @@
                     <table>
                       <tr>
                         <td>P波</td>
-                        <td>{{ data.p }}</td>
+                        <td>{{ data.p }} ms</td>
                         <td>QTc</td>
-                        <td>{{ data.qtc }}</td>
+                        <td>{{ data.qtc }} ms</td>
                         <td>HRV</td>
-                        <td>{{ data.hrv }}ms</td>
+                        <td>{{ data.hrv }} ms</td>
                       </tr>
                       <tr>
-                        <td>QRS区间</td>
-                        <td>{{ data.qrs }}ms</td>
+                        <td>QRS波群</td>
+                        <td>{{ data.qrs }} ms</td>
                         <td>住院号</td>
                         <td>-</td>
                         <td>申请单号</td>
