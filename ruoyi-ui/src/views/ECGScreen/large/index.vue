@@ -1,18 +1,18 @@
 <template>
   <div class="home" id="home" >
-      <div class="title">
-        <div class="button">
-<!--          <el-button size="mini" >院区数据</el-button>-->
-          <el-button size="mini" @click="inScreen" plain>全屏切换</el-button>
-<!--          <el-button size="mini" @click="inScreen" plain>退出全屏</el-button>-->
-        </div>
-        <span >动态心电智能实时监控</span>
-        <el-pagination
-          @current-change="handleCurrentChange"
-          layout="prev, pager, next"
-          :total="1000">
-        </el-pagination>
+    <div class="title">
+      <div class="button">
+        <!--          <el-button size="mini" >院区数据</el-button>-->
+        <el-button size="mini" @click="inScreen" plain>全屏切换</el-button>
+        <!--          <el-button size="mini" @click="inScreen" plain>退出全屏</el-button>-->
       </div>
+      <span >动态心电智能实时监控</span>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        layout="prev, pager, next"
+        :total="1000">
+      </el-pagination>
+    </div>
     <!-- <div class="name">所属医院:<span>{{data0.hospName && data0.hospName.includes('*') ? data0.hospName : '*'.repeat(Math.max(data0.hospName ? data0.hospName.length - 2 : 0, 0)) + (data0.hospName ? data0.hospName.slice(-2) : '')}}</span></div> -->
     <div class="mainbox" >
       <div class="container">
@@ -274,89 +274,89 @@
         <div class="panel-footer"></div>
       </div>
 
-<!--      <div class="container" >-->
-<!--        <div class="event"  v-if="data9!=null&&JSON.stringify(data9)!='{}'">-->
-<!--          <div class="son">心肌梗塞<span id="span9-1" :style="dotColor(data9.GengSi)"></span></div>-->
-<!--          <div class="son">房颤房扑<span id="span9-2" :style="dotColor(data9.FangChan)"></span></div>-->
-<!--          <div class="son">心室率过低<span id="span9-3" :style="dotColor(data9.XSL_pr)"></span></div>-->
-<!--          <div class="son">长RR间期<span id="span9-4" :style="dotColor(data9.RRGC_pr)"></span></div>-->
-<!--          <div class="son">室性心动过速<span id="span9-5"></span></div>-->
-<!--          <div class="son">室颤室扑<span id="span9-6" :style="dotColor(data9.ShiChan)"></span></div>-->
-<!--          <div class="son">窦室传导<span id="span9-7"></span></div>-->
-<!--          <div class="son">QTc间期过长<span id="span9-8"></span></div>-->
-<!--        </div>-->
-<!--        <div class="containcontent">-->
-<!--          <div class="chart chartEvent" ref="chart" id="child_9"></div>-->
-<!--          <div class="infleft" @click="jump(data9.deviceSn)">-->
-<!--            <div class="name">心率:</div>-->
-<!--            <div class="hart" ><span :style="color(data9.hr_mean)">{{data9.hr_mean}}</span></div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="containMsg" @click="jump(data9.deviceSn)" >-->
-<!--          <div class="name effect">姓名:<span>{{data9.patientName}}</span></div>-->
-<!--          <div class="name" >性别:<span>{{data9.gender}}</span></div>-->
-<!--          <div class="name" >年龄:<span>{{data9.age}}</span></div>-->
-<!--          <div class="name" >所属医院:<span>{{data9.hospName}}</span></div>-->
-<!--          <div class="name" >设备号:<span>{{data9.deviceSn}}</span></div>-->
-<!--        </div>-->
-<!--        <div class="panel-footer"></div>-->
-<!--      </div>-->
+      <!--      <div class="container" >-->
+      <!--        <div class="event"  v-if="data9!=null&&JSON.stringify(data9)!='{}'">-->
+      <!--          <div class="son">心肌梗塞<span id="span9-1" :style="dotColor(data9.GengSi)"></span></div>-->
+      <!--          <div class="son">房颤房扑<span id="span9-2" :style="dotColor(data9.FangChan)"></span></div>-->
+      <!--          <div class="son">心室率过低<span id="span9-3" :style="dotColor(data9.XSL_pr)"></span></div>-->
+      <!--          <div class="son">长RR间期<span id="span9-4" :style="dotColor(data9.RRGC_pr)"></span></div>-->
+      <!--          <div class="son">室性心动过速<span id="span9-5"></span></div>-->
+      <!--          <div class="son">室颤室扑<span id="span9-6" :style="dotColor(data9.ShiChan)"></span></div>-->
+      <!--          <div class="son">窦室传导<span id="span9-7"></span></div>-->
+      <!--          <div class="son">QTc间期过长<span id="span9-8"></span></div>-->
+      <!--        </div>-->
+      <!--        <div class="containcontent">-->
+      <!--          <div class="chart chartEvent" ref="chart" id="child_9"></div>-->
+      <!--          <div class="infleft" @click="jump(data9.deviceSn)">-->
+      <!--            <div class="name">心率:</div>-->
+      <!--            <div class="hart" ><span :style="color(data9.hr_mean)">{{data9.hr_mean}}</span></div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--        <div class="containMsg" @click="jump(data9.deviceSn)" >-->
+      <!--          <div class="name effect">姓名:<span>{{data9.patientName}}</span></div>-->
+      <!--          <div class="name" >性别:<span>{{data9.gender}}</span></div>-->
+      <!--          <div class="name" >年龄:<span>{{data9.age}}</span></div>-->
+      <!--          <div class="name" >所属医院:<span>{{data9.hospName}}</span></div>-->
+      <!--          <div class="name" >设备号:<span>{{data9.deviceSn}}</span></div>-->
+      <!--        </div>-->
+      <!--        <div class="panel-footer"></div>-->
+      <!--      </div>-->
 
-<!--      <div class="container" >-->
-<!--        <div class="event"  v-if="data10!=null&&JSON.stringify(data10)!='{}'">-->
-<!--          <div class="son">心肌梗塞<span id="span10-1" :style="dotColor(data10.GengSi)"></span></div>-->
-<!--          <div class="son">房颤房扑<span id="span10-2" :style="dotColor(data10.FangChan)"></span></div>-->
-<!--          <div class="son">心室率过低<span id="span10-3" :style="dotColor(data10.XSL_pr)"></span></div>-->
-<!--          <div class="son">长RR间期<span id="span10-4" :style="dotColor(data10.RRGC_pr)"></span></div>-->
-<!--          <div class="son">室性心动过速<span id="span10-5"></span></div>-->
-<!--          <div class="son">室颤室扑<span id="span10-6" :style="dotColor(data10.ShiChan)"></span></div>-->
-<!--          <div class="son">窦室传导<span id="span10-7"></span></div>-->
-<!--          <div class="son">QTc间期过长<span id="span10-8"></span></div>-->
-<!--        </div>-->
-<!--        <div class="containcontent">-->
-<!--          <div class="chart chartEvent" ref="chart" id="child_10"></div>-->
-<!--          <div class="infleft" @click="jump(data10.deviceSn)">-->
-<!--            <div class="name">心率:</div>-->
-<!--            <div class="hart" ><span :style="color(data10.hr_mean)">{{data10.hr_mean}}</span></div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="containMsg" @click="jump(data10.deviceSn)" >-->
-<!--          <div class="name effect">姓名:<span>{{data10.patientName}}</span></div>-->
-<!--          <div class="name" >性别:<span>{{data10.gender}}</span></div>-->
-<!--          <div class="name" >年龄:<span>{{data10.age}}</span></div>-->
-<!--          <div class="name" >所属医院:<span>{{data10.hospName}}</span></div>-->
-<!--          <div class="name" >设备号:<span>{{data10.deviceSn}}</span></div>-->
-<!--        </div>-->
-<!--        <div class="panel-footer"></div>-->
-<!--      </div>-->
+      <!--      <div class="container" >-->
+      <!--        <div class="event"  v-if="data10!=null&&JSON.stringify(data10)!='{}'">-->
+      <!--          <div class="son">心肌梗塞<span id="span10-1" :style="dotColor(data10.GengSi)"></span></div>-->
+      <!--          <div class="son">房颤房扑<span id="span10-2" :style="dotColor(data10.FangChan)"></span></div>-->
+      <!--          <div class="son">心室率过低<span id="span10-3" :style="dotColor(data10.XSL_pr)"></span></div>-->
+      <!--          <div class="son">长RR间期<span id="span10-4" :style="dotColor(data10.RRGC_pr)"></span></div>-->
+      <!--          <div class="son">室性心动过速<span id="span10-5"></span></div>-->
+      <!--          <div class="son">室颤室扑<span id="span10-6" :style="dotColor(data10.ShiChan)"></span></div>-->
+      <!--          <div class="son">窦室传导<span id="span10-7"></span></div>-->
+      <!--          <div class="son">QTc间期过长<span id="span10-8"></span></div>-->
+      <!--        </div>-->
+      <!--        <div class="containcontent">-->
+      <!--          <div class="chart chartEvent" ref="chart" id="child_10"></div>-->
+      <!--          <div class="infleft" @click="jump(data10.deviceSn)">-->
+      <!--            <div class="name">心率:</div>-->
+      <!--            <div class="hart" ><span :style="color(data10.hr_mean)">{{data10.hr_mean}}</span></div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--        <div class="containMsg" @click="jump(data10.deviceSn)" >-->
+      <!--          <div class="name effect">姓名:<span>{{data10.patientName}}</span></div>-->
+      <!--          <div class="name" >性别:<span>{{data10.gender}}</span></div>-->
+      <!--          <div class="name" >年龄:<span>{{data10.age}}</span></div>-->
+      <!--          <div class="name" >所属医院:<span>{{data10.hospName}}</span></div>-->
+      <!--          <div class="name" >设备号:<span>{{data10.deviceSn}}</span></div>-->
+      <!--        </div>-->
+      <!--        <div class="panel-footer"></div>-->
+      <!--      </div>-->
 
-<!--      <div class="container" >-->
-<!--        <div class="event"  v-if="data11!=null&&JSON.stringify(data11)!='{}'">-->
-<!--          <div class="son">心肌梗塞<span id="span11-1" :style="dotColor(data11.GengSi)"></span></div>-->
-<!--          <div class="son">房颤房扑<span id="span11-2" :style="dotColor(data11.FangChan)"></span></div>-->
-<!--          <div class="son">心室率过低<span id="span11-3" :style="dotColor(data11.XSL_pr)"></span></div>-->
-<!--          <div class="son">长RR间期<span id="span11-4" :style="dotColor(data11.RRGC_pr)"></span></div>-->
-<!--          <div class="son">室性心动过速<span id="span11-5"></span></div>-->
-<!--          <div class="son">室颤室扑<span id="span11-6" :style="dotColor(data11.ShiChan)"></span></div>-->
-<!--          <div class="son">窦室传导<span id="span11-7"></span></div>-->
-<!--          <div class="son">QTc间期过长<span id="span11-8"></span></div>-->
-<!--        </div>-->
-<!--        <div class="containcontent">-->
-<!--          <div class="chart chartEvent" ref="chart" id="child_11"></div>-->
-<!--          <div class="infleft" @click="jump(data11.deviceSn)">-->
-<!--            <div class="name">心率:</div>-->
-<!--            <div class="hart" ><span :style="color(data11.hr_mean)">{{data11.hr_mean}}</span></div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="containMsg" @click="jump(data11.deviceSn)" >-->
-<!--          <div class="name effect">姓名:<span>{{data11.patientName}}</span></div>-->
-<!--          <div class="name" >性别:<span>{{data11.gender}}</span></div>-->
-<!--          <div class="name" >年龄:<span>{{data11.age}}</span></div>-->
-<!--          <div class="name" >所属医院:<span>{{data11.hospName}}</span></div>-->
-<!--          <div class="name" >设备号:<span>{{data11.deviceSn}}</span></div>-->
-<!--        </div>-->
-<!--        <div class="panel-footer"></div>-->
-<!--      </div>-->
+      <!--      <div class="container" >-->
+      <!--        <div class="event"  v-if="data11!=null&&JSON.stringify(data11)!='{}'">-->
+      <!--          <div class="son">心肌梗塞<span id="span11-1" :style="dotColor(data11.GengSi)"></span></div>-->
+      <!--          <div class="son">房颤房扑<span id="span11-2" :style="dotColor(data11.FangChan)"></span></div>-->
+      <!--          <div class="son">心室率过低<span id="span11-3" :style="dotColor(data11.XSL_pr)"></span></div>-->
+      <!--          <div class="son">长RR间期<span id="span11-4" :style="dotColor(data11.RRGC_pr)"></span></div>-->
+      <!--          <div class="son">室性心动过速<span id="span11-5"></span></div>-->
+      <!--          <div class="son">室颤室扑<span id="span11-6" :style="dotColor(data11.ShiChan)"></span></div>-->
+      <!--          <div class="son">窦室传导<span id="span11-7"></span></div>-->
+      <!--          <div class="son">QTc间期过长<span id="span11-8"></span></div>-->
+      <!--        </div>-->
+      <!--        <div class="containcontent">-->
+      <!--          <div class="chart chartEvent" ref="chart" id="child_11"></div>-->
+      <!--          <div class="infleft" @click="jump(data11.deviceSn)">-->
+      <!--            <div class="name">心率:</div>-->
+      <!--            <div class="hart" ><span :style="color(data11.hr_mean)">{{data11.hr_mean}}</span></div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--        <div class="containMsg" @click="jump(data11.deviceSn)" >-->
+      <!--          <div class="name effect">姓名:<span>{{data11.patientName}}</span></div>-->
+      <!--          <div class="name" >性别:<span>{{data11.gender}}</span></div>-->
+      <!--          <div class="name" >年龄:<span>{{data11.age}}</span></div>-->
+      <!--          <div class="name" >所属医院:<span>{{data11.hospName}}</span></div>-->
+      <!--          <div class="name" >设备号:<span>{{data11.deviceSn}}</span></div>-->
+      <!--        </div>-->
+      <!--        <div class="panel-footer"></div>-->
+      <!--      </div>-->
 
     </div>
 
@@ -373,6 +373,7 @@ import * as echarts from '../detail/echarts.min'
 import 'default-passive-events'
 import screenfull from 'screenfull'
 import {getUserInfo,getInfoId} from "@/api/patient_management/patient_management";
+import Cookies from "js-cookie";
 let hospName='所有'
 export default {
   data() {
@@ -462,7 +463,11 @@ export default {
     this.openLoading();
 
     let hospitalId =this.$route.query.hospitalId
-    // console.log(hospitalId)
+    let token = this.$route.query.token
+    if (token){
+      Cookies.remove("Admin-Token")
+      Cookies.set("Admin-Token", token);
+    }
     if(hospitalId&&hospitalId!==1){
       await getInfoId(hospitalId).then(user => {
         hospName=user.data.hospitalName
@@ -473,15 +478,16 @@ export default {
     //请求设备列表
     this.get_device(hospName,this.tishi);
   },
-  // mounted() {
-  //   this.$store.dispatch('app/toggleSideBarHide', true);
-  //   document.querySelector('.navbar').style.display = "none";
-  //   document.querySelector('.tags-view-container').style.display = "none"
-  // },
+  mounted() {
+    this.$store.dispatch('app/toggleSideBarHide', true);
+    document.querySelector('.navbar').style.display = "none";
+    document.querySelector('.tags-view-container').style.display = "none"
+    document.querySelector('.app-main').style.paddingTop = "0";
+  },
 
   watch:{
     $route(to,from){
-      if(this.$route.path!=='/ECGscreen'){
+      if(this.$route.path!=='/large_screen'){
         this.clearIntervallist()
         // console.log("路由变化")
       }
@@ -490,6 +496,11 @@ export default {
   async activated() {
     let hospitalId =this.$route.query.hospitalId
     console.log('activated')
+    let token = this.$route.query.token
+    if (token){
+      Cookies.remove("Admin-Token")
+      Cookies.set("Admin-Token", token);
+    }
     if(hospitalId&&hospitalId!==1){
       await getInfoId(hospitalId).then(user => {
         hospName=user.data.hospitalName
@@ -503,7 +514,7 @@ export default {
   //   next()
   // },
   deactivated(){//keep-alive的隐藏的钩子函数
-   console.log("deactivated")
+    console.log("deactivated")
     this.index=0
     this.clearList();
     this.clearIntervallist()
@@ -546,19 +557,19 @@ export default {
     // 提示框方法
     tishi(length){
       this.$message.success({
-            message: '设备列表获取成功',
+        message: '设备列表获取成功',
+        type: 'success',
+        duration: 2500,
+        center:true,
+        onClose:()=> {
+          this.$message.success({
+            message: '共有' + length + "台设备链接",
             type: 'success',
-            duration: 2500,
-            center:true,
-            onClose:()=> {
-              this.$message.success({
-                message: '共有' + length + "台设备链接",
-                type: 'success',
-                duration: 4000,
-                center:true
-              })
-            }
+            duration: 4000,
+            center:true
           })
+        }
+      })
     },
     //请求设备列表
     async get_device(hospName,tishii){
@@ -569,47 +580,47 @@ export default {
         return
       }
       await this.$http.post('https://server.mindyard.cn:84/get_device',
-         JSON.stringify({
-           "ts": 0,
-           "hospName":hospName}),{
-           contentType: "application/json",
-           dataType: "json",
-           headers:{
-             "user":"zzu",
-             "password":"zzu123"
-           },
-         }
-       ).then(res=>{
-         this.arr=res.data.result.dev_list;
-         // console.log(this.arr)
+        JSON.stringify({
+          "ts": 0,
+          "hospName":hospName}),{
+          contentType: "application/json",
+          dataType: "json",
+          headers:{
+            "user":"zzu",
+            "password":"zzu123"
+          },
+        }
+      ).then(res=>{
+        this.arr=res.data.result.dev_list;
+        // console.log(this.arr)
         //分页
-         let length =  res.data.result.dev_list.length;//总设备个数
-         this.total=length;
-         this.pagenum = (length%9==0) ? (length/9) : length/9+1;//总页数
-           for (let i = 0; i < length; i+=9) {
-             this.currentpage.push(this.arr.slice(i,i+9))
-           }
-          // this.$message.success({
-          //   message: '设备列表获取成功',
-          //   type: 'success',
-          //   duration: 2500,
-          //   center:true,
-          //   onClose:()=> {
-          //     this.$message.success({
-          //       message: '共有' + length + "台设备链接",
-          //       type: 'success',
-          //       duration: 4000,
-          //       center:true
-          //     })
-          //   }
-          // })
-          if (tishii) {
-            this.tishi(length)
-          }
-        }).catch(err=>{
-         // console.log("请求错误"+err)
+        let length =  res.data.result.dev_list.length;//总设备个数
+        this.total=length;
+        this.pagenum = (length%9==0) ? (length/9) : length/9+1;//总页数
+        for (let i = 0; i < length; i+=9) {
+          this.currentpage.push(this.arr.slice(i,i+9))
+        }
+        // this.$message.success({
+        //   message: '设备列表获取成功',
+        //   type: 'success',
+        //   duration: 2500,
+        //   center:true,
+        //   onClose:()=> {
+        //     this.$message.success({
+        //       message: '共有' + length + "台设备链接",
+        //       type: 'success',
+        //       duration: 4000,
+        //       center:true
+        //     })
+        //   }
+        // })
+        if (tishii) {
+          this.tishi(length)
+        }
+      }).catch(err=>{
+        // console.log("请求错误"+err)
         this.closeFullScreen()
-       })
+      })
       //当前页小于总页数时请求数据
       if(this.pagenum>=this.pages){
         const num=this.currentpage[this.pages-1].length
@@ -665,15 +676,15 @@ export default {
         var child_8=echarts.init(document.getElementById('child_8'))
         var erd = elementResizeDetectorMaker()
         erd.listenTo(document.getElementById("containcontent"), (element)=>{
-            child_0.resize();
-            child_1.resize();
-            child_2.resize();
-            child_3.resize();
-            child_4.resize();
-            child_5.resize();
-            child_6.resize();
-            child_7.resize();
-            child_8.resize();
+          child_0.resize();
+          child_1.resize();
+          child_2.resize();
+          child_3.resize();
+          child_4.resize();
+          child_5.resize();
+          child_6.resize();
+          child_7.resize();
+          child_8.resize();
         })
       })
 
@@ -696,7 +707,6 @@ export default {
           }
         ).then(res => {
           if(p!==this.pages){
-            // console.log("之前页面的请求"+p)
             return
           }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
@@ -704,7 +714,6 @@ export default {
           this.p0Iy=res.data.result.data.II;
           this.p0V1y=res.data.result.data.V1;
           let chart =echarts.init(document.getElementById('child_0'))
-          //this.setColor(0)
           chart.clear();
           chart.setOption(this.chart(this.data0, 0,this.p0Iy,this.p0V1y))
 
@@ -718,12 +727,12 @@ export default {
           }
           this.timer0=window.setInterval(()=>{
             //离开路由定时器删除
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer0)
-                this.timer0=null
-              }
-              //自适应
-              chart.resize()
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer0)
+              this.timer0=null
+            }
+            //自适应
+            chart.resize()
             //第一次请求 请求下个时间段保存到newData
             if(tag===1){
               this.$http.post(this.url,
@@ -752,8 +761,8 @@ export default {
                 tag++
               }).catch(err=>{
                 this.newData0={}
-                  // console.log("请求错误"+err)
-                })
+                // console.log("请求错误"+err)
+              })
               //请求成功
               if(code!==201){
                 // console.log(tag)
@@ -801,8 +810,8 @@ export default {
         ).then(res => {
           if(p!==this.pages){
             // console.log("之前页面的请求"+p)
-          return
-        }
+            return
+          }
           res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
           this.data1 = res.data.result
           this.p1Iy=res.data.result.data.II;
@@ -819,53 +828,53 @@ export default {
             this.timer1=null
           }
           this.timer1 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer1)
-                this.timer1=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][1],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    this.newData1={}
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData1 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  chart.clear();
-                  chart.setOption(this.chart(this.data1, 0, this.p1Iy, this.p1V1y))
-                  //this.setColor(1)
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer1)
+              this.timer1=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][1],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-              } else {
-                this.data1 = this.newData1
-                this.p1Iy = this.newData1.data.II
-                this.p1V1y = this.newData1.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  this.newData1={}
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData1 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 chart.clear();
-                chart.setOption(this.chart(this.data1, 1250, this.p1Iy, this.p1V1y))
+                chart.setOption(this.chart(this.data1, 0, this.p1Iy, this.p1V1y))
                 //this.setColor(1)
               }
-            }, 5000)
+            } else {
+              this.data1 = this.newData1
+              this.p1Iy = this.newData1.data.II
+              this.p1V1y = this.newData1.data.V1
+              tag--
+              chart.clear();
+              chart.setOption(this.chart(this.data1, 1250, this.p1Iy, this.p1V1y))
+              //this.setColor(1)
+            }
+          }, 5000)
 
         }).catch(err=>{
           // console.log("请求错误"+err)
@@ -910,55 +919,55 @@ export default {
             this.timer2=null
           }
           this.timer2 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer2)
-                this.timer2=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][2],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    this.newData2
-                    code=201
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer2)
+              this.timer2=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][2],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
+                }
+              ).then(res => {
+                if(!res.data.result){
+                  this.newData2
+                  code=201
                   return
                 }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData2 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(2)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data2, 0, this.p2Iy, this.p2V1y))
-                }
-
-              } else {
-                this.data2 = this.newData2
-                this.p2Iy = this.newData2.data.II
-                this.p2V1y = this.newData2.data.V1
-                tag--
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData2 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(2)
                 chart.clear();
-                chart.setOption(this.chart(this.data2, 1250, this.p2Iy, this.p2V1y))
+                chart.setOption(this.chart(this.data2, 0, this.p2Iy, this.p2V1y))
               }
+
+            } else {
+              this.data2 = this.newData2
+              this.p2Iy = this.newData2.data.II
+              this.p2V1y = this.newData2.data.V1
+              tag--
+              //this.setColor(2)
+              chart.clear();
+              chart.setOption(this.chart(this.data2, 1250, this.p2Iy, this.p2V1y))
+            }
             //console.log(this.p2Iy)
-            }, 5000)
+          }, 5000)
         }).catch(err=>{
           // console.log("请求错误"+err)
           this.get_device(hospName);
@@ -1002,52 +1011,52 @@ export default {
             this.timer3=null
           }
           this.timer3 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer3)
-                this.timer3=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][3],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData3 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(3)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data3, 0, this.p3Iy, this.p3V1y))
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer3)
+              this.timer3=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][3],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-              } else {
-                this.data3 = this.newData3
-                this.p3Iy = this.newData3.data.II
-                this.p3V1y = this.newData3.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData3 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(3)
                 chart.clear();
-                chart.setOption(this.chart(this.data3, 1250, this.p3Iy, this.p3V1y))
+                chart.setOption(this.chart(this.data3, 0, this.p3Iy, this.p3V1y))
               }
-            }, 5000)
+            } else {
+              this.data3 = this.newData3
+              this.p3Iy = this.newData3.data.II
+              this.p3V1y = this.newData3.data.V1
+              tag--
+              //this.setColor(3)
+              chart.clear();
+              chart.setOption(this.chart(this.data3, 1250, this.p3Iy, this.p3V1y))
+            }
+          }, 5000)
 
         }).catch(err=>{
           // console.log("请求错误"+err)
@@ -1091,54 +1100,54 @@ export default {
             window.clearInterval(this.timer4)
             this.timer4=null
           }
-            this.timer4 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer4)
-                this.timer4=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][4],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData4 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(4)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data4, 0, this.p4Iy, this.p4V1y))
+          this.timer4 = window.setInterval(() => {
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer4)
+              this.timer4=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][4],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-
-              } else {
-                this.data4 = this.newData4
-                this.p4Iy = this.newData4.data.II
-                this.p4V1y = this.newData4.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData4 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(4)
                 chart.clear();
-                chart.setOption(this.chart(this.data4, 1250, this.p4Iy, this.p4V1y))
+                chart.setOption(this.chart(this.data4, 0, this.p4Iy, this.p4V1y))
               }
-            }, 5000)
+
+            } else {
+              this.data4 = this.newData4
+              this.p4Iy = this.newData4.data.II
+              this.p4V1y = this.newData4.data.V1
+              tag--
+              //this.setColor(4)
+              chart.clear();
+              chart.setOption(this.chart(this.data4, 1250, this.p4Iy, this.p4V1y))
+            }
+          }, 5000)
         }).catch(err=>{
           // console.log("请求错误"+err)
           this.get_device(hospName);
@@ -1181,53 +1190,53 @@ export default {
             window.clearInterval(this.timer5)
             this.timer5=null
           }
-            this.timer5 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer5)
-                this.timer5=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][5],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData5 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(5)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data5, 0, this.p5Iy, this.p5V1y))
+          this.timer5 = window.setInterval(() => {
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer5)
+              this.timer5=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][5],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-              } else {
-                this.data5 = this.newData5
-                this.p5Iy = this.newData5.data.II
-                this.p5V1y = this.newData5.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData5 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(5)
                 chart.clear();
-                chart.setOption(this.chart(this.data5, 1250, this.p5Iy, this.p5V1y))
+                chart.setOption(this.chart(this.data5, 0, this.p5Iy, this.p5V1y))
               }
-            }, 5000)
+            } else {
+              this.data5 = this.newData5
+              this.p5Iy = this.newData5.data.II
+              this.p5V1y = this.newData5.data.V1
+              tag--
+              //this.setColor(5)
+              chart.clear();
+              chart.setOption(this.chart(this.data5, 1250, this.p5Iy, this.p5V1y))
+            }
+          }, 5000)
         }).catch(err=>{
           // console.log("请求错误"+err)
           this.get_device(hospName);
@@ -1270,54 +1279,54 @@ export default {
             window.clearInterval(this.timer6)
             this.timer6=null
           }
-            this.timer6 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer6)
-                this.timer6=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][6],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData6 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(6)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data6, 0, this.p6Iy, this.p6V1y))
+          this.timer6 = window.setInterval(() => {
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer6)
+              this.timer6=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][6],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-
-              } else {
-                this.data6 = this.newData6
-                this.p6Iy = this.newData6.data.II
-                this.p6V1y = this.newData6.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData6 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(6)
                 chart.clear();
-                chart.setOption(this.chart(this.data6, 1250, this.p6Iy, this.p6V1y))
+                chart.setOption(this.chart(this.data6, 0, this.p6Iy, this.p6V1y))
               }
-            }, 5000)
+
+            } else {
+              this.data6 = this.newData6
+              this.p6Iy = this.newData6.data.II
+              this.p6V1y = this.newData6.data.V1
+              tag--
+              //this.setColor(6)
+              chart.clear();
+              chart.setOption(this.chart(this.data6, 1250, this.p6Iy, this.p6V1y))
+            }
+          }, 5000)
 
         }).catch(err=>{
           // console.log("请求错误"+err)
@@ -1360,54 +1369,54 @@ export default {
             window.clearInterval(this.timer7)
             this.timer7=null
           }
-            this.timer7 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer7)
-                this.timer7=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][7],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData7 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(7)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data7, 0, this.p7Iy, this.p7V1y))
+          this.timer7 = window.setInterval(() => {
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer7)
+              this.timer7=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][7],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-
-              } else {
-                this.data7 = this.newData7
-                this.p7Iy = this.newData7.data.II
-                this.p7V1y = this.newData7.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData7 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(7)
                 chart.clear();
-                chart.setOption(this.chart(this.data7, 1250, this.p7Iy, this.p7V1y))
+                chart.setOption(this.chart(this.data7, 0, this.p7Iy, this.p7V1y))
               }
-            }, 5000)
+
+            } else {
+              this.data7 = this.newData7
+              this.p7Iy = this.newData7.data.II
+              this.p7V1y = this.newData7.data.V1
+              tag--
+              //this.setColor(7)
+              chart.clear();
+              chart.setOption(this.chart(this.data7, 1250, this.p7Iy, this.p7V1y))
+            }
+          }, 5000)
 
         }).catch(err=>{
           // console.log("请求错误"+err)
@@ -1451,53 +1460,53 @@ export default {
             this.timer8=null
           }
           this.timer8 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer8)
-                this.timer8=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][8],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData8 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(8)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data8, 0, this.p8Iy, this.p8V1y))
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer8)
+              this.timer8=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][8],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-
-              } else {
-                this.data8 = this.newData8
-                this.p8Iy = this.newData8.data.II
-                this.p8V1y = this.newData8.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData8 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(8)
                 chart.clear();
-                chart.setOption(this.chart(this.data8, 1250, this.p8Iy, this.p8V1y))
+                chart.setOption(this.chart(this.data8, 0, this.p8Iy, this.p8V1y))
               }
-            }, 5000)
+
+            } else {
+              this.data8 = this.newData8
+              this.p8Iy = this.newData8.data.II
+              this.p8V1y = this.newData8.data.V1
+              tag--
+              //this.setColor(8)
+              chart.clear();
+              chart.setOption(this.chart(this.data8, 1250, this.p8Iy, this.p8V1y))
+            }
+          }, 5000)
 
         }).catch(err=>{
           // console.log("请求错误"+err)
@@ -1540,54 +1549,54 @@ export default {
             window.clearInterval(this.timer9)
             this.timer9=null
           }
-            this.timer9 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer9)
-                this.timer9=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][9],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData9 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(9)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data9, 0, this.p9Iy, this.p9V1y))
+          this.timer9 = window.setInterval(() => {
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer9)
+              this.timer9=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][9],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-
-              } else {
-                this.data9 = this.newData9
-                this.p9Iy = this.newData9.data.II
-                this.p9V1y = this.newData9.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData9 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(9)
                 chart.clear();
-                chart.setOption(this.chart(this.data9, 1250, this.p9Iy, this.p9V1y))
+                chart.setOption(this.chart(this.data9, 0, this.p9Iy, this.p9V1y))
               }
-            }, 5000)
+
+            } else {
+              this.data9 = this.newData9
+              this.p9Iy = this.newData9.data.II
+              this.p9V1y = this.newData9.data.V1
+              tag--
+              //this.setColor(9)
+              chart.clear();
+              chart.setOption(this.chart(this.data9, 1250, this.p9Iy, this.p9V1y))
+            }
+          }, 5000)
 
         }).catch(err=>{
           // console.log("请求错误"+err)
@@ -1630,54 +1639,54 @@ export default {
             window.clearInterval(this.timer10)
             this.timer10=null
           }
-            this.timer10 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer10)
-                this.timer10=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][10],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData10 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(10)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data10, 0, this.p1Iy, this.p1V1y))
+          this.timer10 = window.setInterval(() => {
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer10)
+              this.timer10=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][10],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-
-              } else {
-                this.data10 = this.newData10
-                this.p10Iy = this.newData10.data.II
-                this.p10V1y = this.newData10.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData10 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(10)
                 chart.clear();
-                chart.setOption(this.chart(this.data10, 1250, this.p10Iy, this.p10V1y))
+                chart.setOption(this.chart(this.data10, 0, this.p1Iy, this.p1V1y))
               }
-            }, 5000)
+
+            } else {
+              this.data10 = this.newData10
+              this.p10Iy = this.newData10.data.II
+              this.p10V1y = this.newData10.data.V1
+              tag--
+              //this.setColor(10)
+              chart.clear();
+              chart.setOption(this.chart(this.data10, 1250, this.p10Iy, this.p10V1y))
+            }
+          }, 5000)
         }).catch(err=>{
           // // console.log("请求错误"+err)
           this.get_device(hospName);
@@ -1719,53 +1728,53 @@ export default {
             window.clearInterval(this.timer11)
             this.timer11=null
           }
-            this.timer11 = window.setInterval(() => {
-              if(this.$route.path!=='/ECGscreen'){
-                window.clearInterval(this.timer11)
-                this.timer11=null
-              }
-              chart.resize()
-              if (tag === 1) {
-                this.$http.post(this.url,
-                  JSON.stringify({
-                    "deviceSn": this.currentpage[this.pages - 1][11],
-                    "ts": ts,
-                  }), {
-                    contentType: "application/json",
-                    dataType: "json",
-                    headers: {
-                      "user": "zzu",
-                      "password": "zzu123"
-                    },
-                  }
-                ).then(res => {
-                  if(!res.data.result){
-                    code=201
-                    return
-                  }
-                  code=200
-                  res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
-                  this.newData11 = res.data.result
-                  ts++
-                  tag++
-                }).catch(err => {
-                  // // console.log("请求错误" + err)
-                })
-                if(code!==201){
-                  //this.setColor(11)
-                  chart.clear();
-                  chart.setOption(this.chart(this.data11, 0, this.p11Iy, this.p11V1y))
+          this.timer11 = window.setInterval(() => {
+            if(this.$route.path!=='/large_screen'){
+              window.clearInterval(this.timer11)
+              this.timer11=null
+            }
+            chart.resize()
+            if (tag === 1) {
+              this.$http.post(this.url,
+                JSON.stringify({
+                  "deviceSn": this.currentpage[this.pages - 1][11],
+                  "ts": ts,
+                }), {
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers: {
+                    "user": "zzu",
+                    "password": "zzu123"
+                  },
                 }
-              } else {
-                this.data11 = this.newData11
-                this.p11Iy = this.newData11.data.II
-                this.p11V1y = this.newData11.data.V1
-                tag--
+              ).then(res => {
+                if(!res.data.result){
+                  code=201
+                  return
+                }
+                code=200
+                res.data.result.hr_mean = res.data.result.hr_mean.toFixed()
+                this.newData11 = res.data.result
+                ts++
+                tag++
+              }).catch(err => {
+                // // console.log("请求错误" + err)
+              })
+              if(code!==201){
                 //this.setColor(11)
                 chart.clear();
-                chart.setOption(this.chart(this.data11, 1250, this.p11Iy, this.p11V1y))
+                chart.setOption(this.chart(this.data11, 0, this.p11Iy, this.p11V1y))
               }
-            }, 5000)
+            } else {
+              this.data11 = this.newData11
+              this.p11Iy = this.newData11.data.II
+              this.p11V1y = this.newData11.data.V1
+              tag--
+              //this.setColor(11)
+              chart.clear();
+              chart.setOption(this.chart(this.data11, 1250, this.p11Iy, this.p11V1y))
+            }
+          }, 5000)
 
         }).catch(err=>{
           // // console.log("请求错误"+err)
@@ -1964,15 +1973,15 @@ export default {
         animationDelayUpdate: 0,
         animationThreshold: 5100,
         title: {
-        text: '电位（mV）',
+          text: '电位（mV）',
           textStyle: {
-          fontSize: 13,
+            fontSize: 13,
             color:"#66b3ff"
+          },
         },
-      },
         tooltip: {
           trigger: 'axis',
-            axisPointer: {
+          axisPointer: {
             type: 'cross'
           }
         },
@@ -1984,44 +1993,44 @@ export default {
         },
         legend: {
           data: ['II导联', 'V1导联'],
-            textStyle: {color: "#66b3ff"} /*图例(legend)说明文字的颜色*/ ,
+          textStyle: {color: "#66b3ff"} /*图例(legend)说明文字的颜色*/ ,
           left: "right",
         },
         xAxis: {
           boundaryGap: true,
-            data: this.time,
-            axisLabel: { //修改坐标系字体颜色
+          data: this.time,
+          axisLabel: { //修改坐标系字体颜色
             interval: 248,
-              show: true,
-              textStyle: {
+            show: true,
+            textStyle: {
               fontSize: 9,
-                color: "#92c2ff",
+              color: "#92c2ff",
             },
           },
           splitLine: {
             interval: 249,
-              show: true,
-              lineStyle: {opacity: 0.5,
-                //color: "#ff0000"
-              },
+            show: true,
+            lineStyle: {opacity: 0.5,
+              //color: "#ff0000"
+            },
           } /*网格线*/
         },
         yAxis: {
           min: 1,
-            max: -2,
-            boundaryGap: false,
-            splitNumber: 3,
-            axisLabel: { //修改坐标系字体颜色
+          max: -2,
+          boundaryGap: false,
+          splitNumber: 3,
+          axisLabel: { //修改坐标系字体颜色
             show: false,
-              textStyle: {
-                color: "#8DB6DB"
+            textStyle: {
+              color: "#8DB6DB"
             }
           },
           splitLine: {
             lineStyle: {
               opacity: 0.5,
               //color: "#ff0000"
-              },
+            },
             show: true
           } /*网格线*/
         },
@@ -2078,7 +2087,7 @@ export default {
         this.$router.push(
           {
             //添加需要传值到那个页面的路径
-            path:'/Screen/detail',
+            path:'/large_screen_detail',
             //携带需要传递的参数
             query:{deviceSn:deviceSn}
           })
@@ -2096,7 +2105,7 @@ export default {
         screenfull.request(element)
         return
       }
-        screenfull.toggle(element)
+      screenfull.toggle(element)
 
     },
 
@@ -2105,6 +2114,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+::v-deep .app-main{
+  padding-top: 0!important;
+}
+::v-deep section{
+  padding-top: 0!important;
+}
+
 ::v-deep .el-pagination{
   width: 400px;
 }

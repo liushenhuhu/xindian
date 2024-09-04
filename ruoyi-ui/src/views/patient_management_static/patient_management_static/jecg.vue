@@ -253,13 +253,13 @@
                 <span v-else>{{hideMiddleName(scope.row.patientName)}}</span>
               </template>
             </el-table-column>
-<!--            <el-table-column label="年龄" align="center" prop="patientAge" min-width="50">-->
+            <el-table-column label="年龄" align="center" prop="patientAge" min-width="50">
               <!-- <template slot-scope="scope">
                 <span v-if="isShowName.status===true">{{ scope.row.patientAge }}</span>
                 <span v-else>**</span>
               </template> -->
-<!--            </el-table-column>-->
-<!--            <el-table-column label="性别" align="center" prop="patientSex" min-width="50"></el-table-column>-->
+            </el-table-column>
+            <el-table-column label="性别" align="center" prop="patientSex" min-width="50"></el-table-column>
 <!--            <el-table-column label="医院" align="center" prop="hospitalName" min-width="200">-->
 <!--              <template slot-scope="scope">-->
 <!--                <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>-->
@@ -278,13 +278,7 @@
                 <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
               </template>
             </el-table-column>
-            <el-table-column label="心电种类" align="center" prop="ecgType" width="140">
-              <template slot-scope="scope">
-                <el-tag>
-                  {{ scope.row.ecgType }}
-                </el-tag>
-              </template>
-            </el-table-column>
+
 <!--            <el-table-column label="是否标注预警状态" width="150" align="center" prop="ecgIsLabel">-->
 <!--              <template slot-scope="scope">-->
 <!--                <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>-->
@@ -297,37 +291,62 @@
               </template>
             </el-table-column>-->
 
+
+            <el-table-column label="心率(bpm)" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag v-if="getAgeTypeSection(scope.row.patientAge,getEcgType(scope.row.ecgAnalysisData,'平均心率'))" type="danger">{{getEcgType(scope.row.ecgAnalysisData,"平均心率")}}</el-tag>
+                <el-tag v-if="!getAgeTypeSection(scope.row.patientAge,getEcgType(scope.row.ecgAnalysisData,'平均心率'))" >{{getEcgType(scope.row.ecgAnalysisData,"平均心率")}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="心肌梗塞" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
+                <el-tag v-else>--</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="肥厚型心肌病" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
+                <el-tag v-else>--</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="扩张型心肌病" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
+                <el-tag v-else>--</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="高血钾" align="center" prop="ecgAnalysisData" width="100">
+              <template slot-scope="scope">
+                <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
+                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
+                <el-tag v-else>--</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
+            <el-table-column label="心电种类" align="center" prop="ecgType" width="140">
+              <template slot-scope="scope">
+                <el-tag>
+                  {{ scope.row.ecgType }}
+                </el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="诊断状态" align="center" prop="diagnosisStatus" width="100">
               <template slot-scope="scope">
                 <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
               </template>
             </el-table-column>
-            <el-table-column label="心率" align="center" prop="ecgAnalysisData" width="100">
-              <template slot-scope="scope">
-                <el-tag>{{getEcgType(scope.row.ecgAnalysisData,"平均心率")}}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="心梗几率" align="center" prop="ecgAnalysisData" width="100">
-              <template slot-scope="scope">
-                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,scope.row.ecgType.indexOf("JECG4")!=-1?"p_xingeng":"p_xingeng_text"))}}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="肥厚型心肌病" align="center" prop="ecgAnalysisData" width="100">
-              <template slot-scope="scope">
-                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_FHXXJB"))}}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="扩张型心肌病" align="center" prop="ecgAnalysisData" width="100">
-              <template slot-scope="scope">
-                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_KZXXJB") )}}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="高血钾" align="center" prop="ecgAnalysisData" width="100">
-              <template slot-scope="scope">
-                <el-tag>{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie") )}}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
             <el-table-column label="诊断医生" align="center" width="100" prop="diagnosisDoctor">
             </el-table-column>
             <el-table-column label="医生诊断" align="center"  prop="diagnosisConclusion" width="200"
@@ -696,6 +715,18 @@ export default {
         return visibleChars; // 大于两个字的保留第一个字和最后一个字，中间用 * 代替
       }
     },
+
+    getAgeTypeSection(age,heart){
+      if(age<=1){
+        return heart < 110 || heart > 130
+      }else if (age<=3){
+        return heart < 100 || heart > 120
+      }else if (age<=7){
+        return heart < 80 || heart > 100
+      }else if (age>=8){
+        return heart < 60 || heart > 100
+      }
+    },
     //表格选中事件
     handleCurrentChange(val) {
       this.currentRow = val;
@@ -1053,15 +1084,12 @@ export default {
         // 捕获异常并处理
         return "--"
       }
-
-
-
     },
 
 
     getBai(text){
      // re ( * 100).toFixed(1) + "%"
-      return !isNaN(Number(text)) && isFinite(Number(text)) ? (Number(text) * 100).toFixed(1) + "%" : "--"
+      return !isNaN(Number(text)) && isFinite(Number(text)) ? (Number(text) * 100).toFixed(1): "--"
     },
     lookHistoryData30(row) {
       let data = {

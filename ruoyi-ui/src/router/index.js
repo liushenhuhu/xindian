@@ -193,6 +193,15 @@ export const constantRoutes = [
       }
     ]
   },
+  //大屏
+  {
+    path: '/large_screen',
+    component: () => import('@/views/ECGScreen/large/index'),
+  },
+  {
+    path: '/large_screen_detail',
+    component: () => import('@/views/ECGScreen/large_detail/index'),
+  },
 
 ]
 

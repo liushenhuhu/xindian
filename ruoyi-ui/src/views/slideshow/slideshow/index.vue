@@ -100,6 +100,11 @@
           <span v-else>{{scope.row.imagePath}}</span>
         </template>
       </el-table-column>
+      <el-table-column label="封面" align="center" prop="cover" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.cover" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="是否跳转" align="center" prop="isSkip">
         <template slot-scope="scope">
           <dict-tag  :options="dict.type.confirm_status" :value="scope.row.isSkip"/>
@@ -161,11 +166,15 @@
             <image-upload v-model="form.imagePath"/>
           </el-form-item>
         </div>
+
         <div v-else>
           <el-form-item label="图片路径">
             <el-input v-model="form.imagePath" placeholder="请输入图片路径"></el-input>
           </el-form-item>
         </div>
+        <el-form-item label="封面">
+          <image-upload v-model="form.cover"/>
+        </el-form-item>
         <el-form-item label="是否跳转">
           <el-radio-group v-model="form.isSkip">
             <el-radio

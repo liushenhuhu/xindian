@@ -48,12 +48,18 @@
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
-        <el-divider content-position="left"><span class="title-left"></span>医生每月诊断次数统计图</el-divider>
+        <el-divider content-position="left"><span class="title-left"></span>医生每月心电诊断次数统计图</el-divider>
         <el-card class="box-card">
           <div id="myChart" class="myChart" > </div>
         </el-card>
 
-<!--        <div id="table1" style="align-content: center;display: none">-->
+<!--        <el-divider content-position="left"><span class="title-left"></span>医生每月周报诊断次数统计图</el-divider>-->
+<!--        <el-card class="box-card">-->
+<!--          <div id="myChartByZhou" class="myChart" > </div>-->
+<!--        </el-card>-->
+
+
+        <!--        <div id="table1" style="align-content: center;display: none">-->
 <!--          <el-button type="primary" icon="el-icon-back" size="mini" @click="backQuery">返回</el-button>-->
 <!--          <el-table-->
 <!--            :data="tableData"-->
@@ -143,9 +149,8 @@ export default {
     this.selectDoctor();
   },
   mounted(){
-    console.log("组件触发")
-    this.getList();
     this.drawLine();
+    // this.drawLine1();
   },
   methods: {
     drawLine() {
@@ -229,6 +234,87 @@ export default {
         status.$router.push({path:'/Diagnostic_statistics',query:{countTime:status.queryParams.year+'-'+status.queryParams.month,doctorPhone:status.queryParams.doctorPhone,ecgtype:status.queryParams.reportType}})
       })
     },
+    drawLine1() {
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById('myChartByZhou'))
+      // 绘制图表
+      let status = this;
+      myChart.off('click');
+      myChart.setOption({
+        // title: {
+        //   text: '医生每月诊断次数统计图'
+        // },
+        tooltip: {},
+        xAxis: {
+          data: ["一月", "二月", "三月", "四月", "五月",
+            "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+          axisLabel:{
+            interval: 0,
+            //rotate : 40,
+          },
+          axisLine: {
+            show: true,
+            lineStyle:{
+              width:1,
+              type:"dotted"
+            }
+          },
+          axisTick: {
+            show: false
+          }
+        },
+        yAxis: {
+          axisLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            show: false
+          },
+          splitLine: {
+            show: false
+          },
+        },
+        series: [{
+          //name: '诊断次数',
+          type: 'bar',
+          data: this.countArr,
+          label: {//饼图文字的显示
+            show: true, //默认  显示文字
+            distance: 5.5,
+            position: 'top',
+            //verticalAlign: 'middle',
+            color: '#009ac7',
+            fontSize: 18
+          },
+          itemStyle:{
+            normal:{
+              color:'#73C0DE',
+              barBorderRadius: [10, 10, 10, 10],
+              shadowBlur: 8,
+              shadowOffsetX: 3,
+              shadowOffsetY: -2,
+              shadowColor: "#73C0DE"
+            }
+          }
+        }],
+
+      });
+      setTimeout(()=>{
+          myChart.resize()
+        }
+      )
+      window.addEventListener('resize', () => {
+        myChart.resize();
+      });
+      myChart.on('click', function (params) {
+        status.queryParams.month = status.lowNumber(params.name)
+        console.log(status.queryParams.year+'-'+status.queryParams.month)
+        status.$router.push({path:'/Diagnostic_statistics',query:{countTime:status.queryParams.year+'-'+status.queryParams.month,doctorPhone:status.queryParams.doctorPhone,ecgtype:status.queryParams.reportType}})
+      })
+    },
 
     immediUpdate(data, e) {
       if (e == null) {
@@ -299,7 +385,6 @@ export default {
     /** 查询 */
     getList() {
 
-      this.getListData()
       if (this.queryParams.year.length!==4){
         let dateYear = new Date(this.queryParams.year)
         this.queryParams.year= dateYear.getFullYear()+''
@@ -319,6 +404,7 @@ export default {
         console.log('response',response)
         this.countArr = countArr;
         this.drawLine();
+        // this.drawLine1()
         //console.log(countArr);
 
       });
