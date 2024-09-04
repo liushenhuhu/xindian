@@ -8,13 +8,17 @@ import { isRelogin } from '@/utils/request'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login', '/auth-redirect', '/bind', '/register','/large_screen']
+const whiteList = ['/login', '/auth-redirect', '/bind', '/register','/large_screen','/large_screen_detail']
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
     if (to.path.indexOf('/large_screen')!==-1){
       setToken(to.query.token)
+      next()
+    }
+
+    if (to.path.indexOf('/large_screen_detail')!==-1){
       next()
     }
     to.meta.title && store.dispatch('settings/setTitle', to.meta.title)

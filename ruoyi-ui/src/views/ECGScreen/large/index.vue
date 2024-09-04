@@ -469,7 +469,6 @@ export default {
       })
     }
     if(hospitalId&&hospitalId!==1){
-      console.log(token)
       await getInfoIdByHospital(hospitalId,token).then(user => {
         hospName=user.data.hospitalName
       })
@@ -503,7 +502,6 @@ export default {
       })
     }
     if(hospitalId&&hospitalId!==1){
-      console.log(token)
       await getInfoIdByHospital(hospitalId,token).then(user => {
         hospName=user.data.hospitalName
       })

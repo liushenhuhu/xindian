@@ -260,12 +260,7 @@
               </template> -->
             </el-table-column>
             <el-table-column label="性别" align="center" prop="patientSex" min-width="50"></el-table-column>
-<!--            <el-table-column label="医院" align="center" prop="hospitalName" min-width="200">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>-->
-<!--                <span v-else>***************</span>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
+
             <!--      <el-table-column label="用户症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
             <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
             <!--      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >-->
@@ -335,6 +330,12 @@
               </template>
             </el-table-column>
             <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
+            <el-table-column label="医院" align="center" prop="hospitalName" min-width="200">
+              <template slot-scope="scope">
+                <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
+                <span v-else>***************</span>
+              </template>
+            </el-table-column>
             <el-table-column label="心电种类" align="center" prop="ecgType" width="140">
               <template slot-scope="scope">
                 <el-tag>

@@ -197,10 +197,13 @@ export const constantRoutes = [
   {
     path: '/large_screen',
     component: () => import('@/views/ECGScreen/large/index'),
+    hidden: true
   },
   {
     path: '/large_screen_detail',
-    component: () => import('@/views/ECGScreen/large_detail/index'),
+    name: 'largeScreenDetail',
+    component: (resolve) => require(['@/views/ECGScreen/large_detail/index'],resolve),
+    hidden: true
   },
 
 ]
