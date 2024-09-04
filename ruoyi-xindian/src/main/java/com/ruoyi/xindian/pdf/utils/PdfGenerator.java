@@ -133,73 +133,71 @@ public class PdfGenerator {
                 rr++;
             }
         }
-        //统计上周
-        int last_sum = 0;
-        double last_sumHr = 0;
-        int last_sumHrv = 0;
-        double last_sumHrvs = 0;
-        int last_len = last_reports.size();
-        double last_meanHr = 0;
-        double last_maxHr = 0;
-        double last_minHr = 1000;
-        int last_fz = 0;
-        int last_sz = 0;
-        int last_fc = 0;
-        int last_rr = 0;
-        double last_meanHrv = 0;
-        for (WeekPdfData last_report : last_reports) {
-            double hrDouble = 0;
-            double Hrvs = 0;
-
-            String hr = last_report.getHr();
-            try {
-                hrDouble = Double.parseDouble(hr);
-                last_sumHr += hrDouble;
-                last_sum++;
-            } catch (NumberFormatException ignored) {
-            }
-
-            String hrvs = last_report.getHrv();
-            try {
-                Hrvs = Double.parseDouble(hrvs);
-                last_sumHrvs += Hrvs;
-                last_sumHrv++;
-            } catch (NumberFormatException ignored) {
-            }
-
-            if (hrDouble > last_maxHr) {
-                last_maxHr = hrDouble;
-            }
-            if (hrDouble < last_minHr) {
-                last_minHr = hrDouble;
-            }
-            //房早
-            if (last_report.getAiConclusion().contains("房性早搏")) {
-                last_fz++;
-            }
-            //室早
-            if (last_report.getAiConclusion().contains("室性早搏")) {
-                last_sz++;
-            }
-            //房颤
-            if (last_report.getAiConclusion().contains("心房颤动")) {
-                last_fc++;
-            }
-            //长rr
-            if (last_report.getAiConclusion().contains("长RR间期")) {
-                last_rr++;
-            }
-        }
-
         if (sum != 0)
             meanHr = sumHr / sum;
         if (sumHrv != 0)
             meanHrv = sumHrvs / sumHrv;
-
-        if (last_sum != 0)
-            last_meanHr = last_sumHr / last_sum;
-        if (sumHrv != 0)
-            last_meanHrv = last_sumHrvs / last_sumHrv;
+        //统计上周
+//        int last_sum = 0;
+//        double last_sumHr = 0;
+//        int last_sumHrv = 0;
+//        double last_sumHrvs = 0;
+//        int last_len = last_reports.size();
+//        double last_meanHr = 0;
+//        double last_maxHr = 0;
+//        double last_minHr = 1000;
+//        int last_fz = 0;
+//        int last_sz = 0;
+//        int last_fc = 0;
+//        int last_rr = 0;
+//        double last_meanHrv = 0;
+//        for (WeekPdfData last_report : last_reports) {
+//            double hrDouble = 0;
+//            double Hrvs = 0;
+//
+//            String hr = last_report.getHr();
+//            try {
+//                hrDouble = Double.parseDouble(hr);
+//                last_sumHr += hrDouble;
+//                last_sum++;
+//            } catch (NumberFormatException ignored) {
+//            }
+//
+//            String hrvs = last_report.getHrv();
+//            try {
+//                Hrvs = Double.parseDouble(hrvs);
+//                last_sumHrvs += Hrvs;
+//                last_sumHrv++;
+//            } catch (NumberFormatException ignored) {
+//            }
+//
+//            if (hrDouble > last_maxHr) {
+//                last_maxHr = hrDouble;
+//            }
+//            if (hrDouble < last_minHr) {
+//                last_minHr = hrDouble;
+//            }
+//            //房早
+//            if (last_report.getAiConclusion().contains("房性早搏")) {
+//                last_fz++;
+//            }
+//            //室早
+//            if (last_report.getAiConclusion().contains("室性早搏")) {
+//                last_sz++;
+//            }
+//            //房颤
+//            if (last_report.getAiConclusion().contains("心房颤动")) {
+//                last_fc++;
+//            }
+//            //长rr
+//            if (last_report.getAiConclusion().contains("长RR间期")) {
+//                last_rr++;
+//            }
+//        }
+//        if (last_sum != 0)
+//            last_meanHr = last_sumHr / last_sum;
+//        if (sumHrv != 0)
+//            last_meanHrv = last_sumHrvs / last_sumHrv;
 
 //        String conclusion = "一、本周总共测量" + len + "次，平均心率" + String.format("%.2f", meanHr) + "bpm，" +
 //                "最快心率" + maxHr + "bpm（发生于" + maxTime + "），" +
@@ -213,81 +211,81 @@ public class PdfGenerator {
                 "最慢心率" + minHr + "bpm（发生于" + minTime + "），心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms。\n\n" +
                 "二、诊断结论";
 
-        String conclusion_new = "";
-        //检测次数
-        conclusion_new += "一、本周总共测量" + len + "次，";
-        if (len > last_len) {
-            conclusion_new += "较上周增加" + (len - last_len) + "次，";
-        } else if (len < last_len) {
-            conclusion_new += "较上周减少" + (last_len - len) + "次，";
-        } else
-            conclusion_new += "与上周持平，";
-        //房早
-        conclusion_new += "房性早搏" + fz + "次，";
-        if (fz > last_fz) {
-            conclusion_new += "较上周增加" + (fz - last_fz) + "次，";
-        } else if (fz < last_fz)
-            conclusion_new += "较上周减少" + (last_fz - fz) + "次，";
-        else
-            conclusion_new += "与上周持平，";
-        //室早
-        conclusion_new += "室性早搏" + sz + "次，";
-        if (sz > last_sz)
-            conclusion_new += "较上周增加" + (sz - last_sz) + "次，";
-        else if (sz < last_sz)
-            conclusion_new += "较上周减少" + (last_sz - sz) + "次，";
-        else
-            conclusion_new += "与上周持平，";
-        //房颤
-        conclusion_new += "房性颤动" + fc + "次，";
-        if (fc > last_fc)
-            conclusion_new += "较上周增加" + (fc - last_fc) + "次，";
-        else if (fc < last_fc)
-            conclusion_new += "较上周减少" + (last_fc - fc) + "次，";
-        else
-            conclusion_new += "与上周持平，";
-        //长RR
-        conclusion_new += "长RR间期" + rr + "次，";
-        if (rr > last_rr)
-            conclusion_new += "较上周增加" + (rr - last_rr) + "次，";
-        else if (rr < last_rr)
-            conclusion_new += "较上周减少" + (last_rr - rr) + "次，";
-        else
-            conclusion_new += "与上周持平，";
-        //平均心率
-        conclusion_new += "平均心率" + String.format("%.2f", meanHr) + "bpm，";
-        if (meanHr > last_meanHr)
-            conclusion_new += "较上周增加" + String.format("%.2f", (meanHr - last_meanHr)) + "bpm，";
-        else if (meanHr < last_meanHr)
-            conclusion_new += "较上周减少" + String.format("%.2f", (last_meanHr - meanHr)) + "bpm，";
-        else
-            conclusion_new += "与上周持平，";
-        //最快心率
-        conclusion_new += "最快心率" + maxHr + "bpm(发生于" + maxTime + ")，";
-        if (maxHr > last_maxHr)
-            conclusion_new += "较上周增加" + (maxHr - last_maxHr) + "bpm，";
-        else if (maxHr < last_maxHr)
-            conclusion_new += "较上周减少" + (last_maxHr - maxHr) + "bpm，";
-        else
-            conclusion_new += "与上周持平，";
-        //最慢心率
-        conclusion_new += "最慢心率" + minHr + "bpm(发生于" + minTime + ")，";
-        if (minHr > last_minHr)
-            conclusion_new += "较上周增加" + (minHr - last_minHr) + "bpm，";
-        else if (minHr < last_minHr)
-            conclusion_new += "较上周减少" + (last_minHr - minHr) + "bpm，";
-        else
-            conclusion_new += "与上周持平，";
-        //心率变异性
-        conclusion_new += "心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms，";
-        if (meanHrv > last_meanHrv)
-            conclusion_new += "较上周增加" + String.format("%.2f", (meanHrv - last_meanHrv)) + "ms。";
-        else if (meanHrv < last_meanHrv)
-            conclusion_new += "较上周减少" + String.format("%.2f", (last_meanHrv - meanHrv)) + "ms。";
-        else
-            conclusion_new += "与上周持平。";
-
-        conclusion_new += "\n二、诊断结论";
+//        String conclusion_new = "";
+//        //检测次数
+//        conclusion_new += "一、本周总共测量" + len + "次，";
+//        if (len > last_len) {
+//            conclusion_new += "较上周增加" + (len - last_len) + "次，";
+//        } else if (len < last_len) {
+//            conclusion_new += "较上周减少" + (last_len - len) + "次，";
+//        } else
+//            conclusion_new += "与上周持平，";
+//        //房早
+//        conclusion_new += "房性早搏" + fz + "次，";
+//        if (fz > last_fz) {
+//            conclusion_new += "较上周增加" + (fz - last_fz) + "次，";
+//        } else if (fz < last_fz)
+//            conclusion_new += "较上周减少" + (last_fz - fz) + "次，";
+//        else
+//            conclusion_new += "与上周持平，";
+//        //室早
+//        conclusion_new += "室性早搏" + sz + "次，";
+//        if (sz > last_sz)
+//            conclusion_new += "较上周增加" + (sz - last_sz) + "次，";
+//        else if (sz < last_sz)
+//            conclusion_new += "较上周减少" + (last_sz - sz) + "次，";
+//        else
+//            conclusion_new += "与上周持平，";
+//        //房颤
+//        conclusion_new += "房性颤动" + fc + "次，";
+//        if (fc > last_fc)
+//            conclusion_new += "较上周增加" + (fc - last_fc) + "次，";
+//        else if (fc < last_fc)
+//            conclusion_new += "较上周减少" + (last_fc - fc) + "次，";
+//        else
+//            conclusion_new += "与上周持平，";
+//        //长RR
+//        conclusion_new += "长RR间期" + rr + "次，";
+//        if (rr > last_rr)
+//            conclusion_new += "较上周增加" + (rr - last_rr) + "次，";
+//        else if (rr < last_rr)
+//            conclusion_new += "较上周减少" + (last_rr - rr) + "次，";
+//        else
+//            conclusion_new += "与上周持平，";
+//        //平均心率
+//        conclusion_new += "平均心率" + String.format("%.2f", meanHr) + "bpm，";
+//        if (meanHr > last_meanHr)
+//            conclusion_new += "较上周增加" + String.format("%.2f", (meanHr - last_meanHr)) + "bpm，";
+//        else if (meanHr < last_meanHr)
+//            conclusion_new += "较上周减少" + String.format("%.2f", (last_meanHr - meanHr)) + "bpm，";
+//        else
+//            conclusion_new += "与上周持平，";
+//        //最快心率
+//        conclusion_new += "最快心率" + maxHr + "bpm(发生于" + maxTime + ")，";
+//        if (maxHr > last_maxHr)
+//            conclusion_new += "较上周增加" + (maxHr - last_maxHr) + "bpm，";
+//        else if (maxHr < last_maxHr)
+//            conclusion_new += "较上周减少" + (last_maxHr - maxHr) + "bpm，";
+//        else
+//            conclusion_new += "与上周持平，";
+//        //最慢心率
+//        conclusion_new += "最慢心率" + minHr + "bpm(发生于" + minTime + ")，";
+//        if (minHr > last_minHr)
+//            conclusion_new += "较上周增加" + (minHr - last_minHr) + "bpm，";
+//        else if (minHr < last_minHr)
+//            conclusion_new += "较上周减少" + (last_minHr - minHr) + "bpm，";
+//        else
+//            conclusion_new += "与上周持平，";
+//        //心率变异性
+//        conclusion_new += "心率变异性RMSSD平均" + String.format("%.2f", meanHrv) + "ms，";
+//        if (meanHrv > last_meanHrv)
+//            conclusion_new += "较上周增加" + String.format("%.2f", (meanHrv - last_meanHrv)) + "ms。";
+//        else if (meanHrv < last_meanHrv)
+//            conclusion_new += "较上周减少" + String.format("%.2f", (last_meanHrv - meanHrv)) + "ms。";
+//        else
+//            conclusion_new += "与上周持平。";
+//
+//        conclusion_new += "\n二、诊断结论";
 
 //                "二、诊断结论\n" +
 //                "本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.";
@@ -298,7 +296,7 @@ public class PdfGenerator {
         con.setBackgroundColor(new DeviceRgb(127, 127, 127), 0.5f);
         table1.addCell(con);
         Cell text = new Cell(4, 6).add(
-                new Paragraph(conclusion_new).setHeight(180).setPaddingLeft(10).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
+                new Paragraph(conclusion).setHeight(180).setPaddingLeft(10).setPaddingTop(5).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(10));
         table1.addCell(text);
         Cell name = new Cell(1, 3).add(new Paragraph("医生姓名：").setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(8));
         name.setBorderRight(Border.NO_BORDER);

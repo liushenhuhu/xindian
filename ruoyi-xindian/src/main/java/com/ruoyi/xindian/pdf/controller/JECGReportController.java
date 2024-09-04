@@ -410,20 +410,20 @@ public class JECGReportController extends BaseController {
             weekPdfData.setSzList(linkedListSZ);
             weekPdfDataList.add(weekPdfData);
         }
-        //上周数据
-        for (Report last_report : last_reports) {
-            pmEcgData = pmEcgDataService.selectPmEcgDataByPId(last_report.getpId());
-            weekPdfData = new WeekPdfData();
-            weekPdfData.setAiConclusion(last_report.getIntelligentDiagnosis());
-            weekPdfData.setHr(pmEcgData.getHrMean());
-            weekPdfData.setP(pmEcgData.getpAmplitude());
-            weekPdfData.setQtc(pmEcgData.getQtc());
-            weekPdfData.setRr(pmEcgData.getrAmplitude());
-            weekPdfData.setHrv(pmEcgData.getRmssd());
-            weekPdfData.setQrs(pmEcgData.getQrsInterval());
-            weekPdfData.setDetectionTime(sdf.format(last_report.getReportTime()));
-            last_weekPdfDataList.add(weekPdfData);
-        }
+//        //上周数据
+//        for (Report last_report : last_reports) {
+//            pmEcgData = pmEcgDataService.selectPmEcgDataByPId(last_report.getpId());
+//            weekPdfData = new WeekPdfData();
+//            weekPdfData.setAiConclusion(last_report.getIntelligentDiagnosis());
+//            weekPdfData.setHr(pmEcgData.getHrMean());
+//            weekPdfData.setP(pmEcgData.getpAmplitude());
+//            weekPdfData.setQtc(pmEcgData.getQtc());
+//            weekPdfData.setRr(pmEcgData.getrAmplitude());
+//            weekPdfData.setHrv(pmEcgData.getRmssd());
+//            weekPdfData.setQrs(pmEcgData.getQrsInterval());
+//            weekPdfData.setDetectionTime(sdf.format(last_report.getReportTime()));
+//            last_weekPdfDataList.add(weekPdfData);
+//        }
 
 
         if (weekPdfDataList.isEmpty()) return new AjaxResult(202, "无检测数据！");
