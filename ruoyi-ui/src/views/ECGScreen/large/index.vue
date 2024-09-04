@@ -373,6 +373,7 @@ import * as echarts from '../detail/echarts.min'
 import 'default-passive-events'
 import screenfull from 'screenfull'
 import {getUserInfo,getInfoId} from "@/api/patient_management/patient_management";
+import Cookies from "js-cookie";
 let hospName='所有'
 export default {
   data() {
@@ -462,6 +463,11 @@ export default {
     this.openLoading();
 
     let hospitalId =this.$route.query.hospitalId
+    let token = this.$route.query.token
+    if (token){
+      Cookies.remove("Admin-Token")
+      Cookies.set("Admin-Token", token);
+    }
     if(hospitalId&&hospitalId!==1){
       await getInfoId(hospitalId).then(user => {
         hospName=user.data.hospitalName
@@ -481,7 +487,7 @@ export default {
 
   watch:{
     $route(to,from){
-      if(this.$route.path!=='/ECGscreen'){
+      if(this.$route.path!=='/large_screen'){
         this.clearIntervallist()
         // console.log("路由变化")
       }
@@ -490,6 +496,11 @@ export default {
   async activated() {
     let hospitalId =this.$route.query.hospitalId
     console.log('activated')
+    let token = this.$route.query.token
+    if (token){
+      Cookies.remove("Admin-Token")
+      Cookies.set("Admin-Token", token);
+    }
     if(hospitalId&&hospitalId!==1){
       await getInfoId(hospitalId).then(user => {
         hospName=user.data.hospitalName
@@ -716,7 +727,7 @@ export default {
           }
           this.timer0=window.setInterval(()=>{
             //离开路由定时器删除
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer0)
               this.timer0=null
             }
@@ -817,7 +828,7 @@ export default {
             this.timer1=null
           }
           this.timer1 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer1)
               this.timer1=null
             }
@@ -908,7 +919,7 @@ export default {
             this.timer2=null
           }
           this.timer2 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer2)
               this.timer2=null
             }
@@ -1000,7 +1011,7 @@ export default {
             this.timer3=null
           }
           this.timer3 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer3)
               this.timer3=null
             }
@@ -1090,7 +1101,7 @@ export default {
             this.timer4=null
           }
           this.timer4 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer4)
               this.timer4=null
             }
@@ -1180,7 +1191,7 @@ export default {
             this.timer5=null
           }
           this.timer5 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer5)
               this.timer5=null
             }
@@ -1269,7 +1280,7 @@ export default {
             this.timer6=null
           }
           this.timer6 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer6)
               this.timer6=null
             }
@@ -1359,7 +1370,7 @@ export default {
             this.timer7=null
           }
           this.timer7 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer7)
               this.timer7=null
             }
@@ -1449,7 +1460,7 @@ export default {
             this.timer8=null
           }
           this.timer8 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer8)
               this.timer8=null
             }
@@ -1539,7 +1550,7 @@ export default {
             this.timer9=null
           }
           this.timer9 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer9)
               this.timer9=null
             }
@@ -1629,7 +1640,7 @@ export default {
             this.timer10=null
           }
           this.timer10 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer10)
               this.timer10=null
             }
@@ -1718,7 +1729,7 @@ export default {
             this.timer11=null
           }
           this.timer11 = window.setInterval(() => {
-            if(this.$route.path!=='/ECGscreen'){
+            if(this.$route.path!=='/large_screen'){
               window.clearInterval(this.timer11)
               this.timer11=null
             }
@@ -2076,7 +2087,7 @@ export default {
         this.$router.push(
           {
             //添加需要传值到那个页面的路径
-            path:'/Screen/detail',
+            path:'/large_screen_detail',
             //携带需要传递的参数
             query:{deviceSn:deviceSn}
           })
