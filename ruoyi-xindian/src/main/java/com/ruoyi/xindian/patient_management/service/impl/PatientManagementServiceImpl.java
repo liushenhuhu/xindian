@@ -430,6 +430,11 @@ public class PatientManagementServiceImpl implements IPatientManagementService {
         return patientManagementMapper.getDetectinCountToday(patientPhone);
     }
 
+    @Override
+    public int updatePatientManagementStatus(String pId) {
+        return patientManagementMapper.updatePatientManagementStatus(pId);
+    }
+
     private Double getDouble(String str) {
         try {
             return Double.parseDouble(str);

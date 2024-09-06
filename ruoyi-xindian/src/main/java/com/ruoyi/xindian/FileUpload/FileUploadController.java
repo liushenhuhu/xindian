@@ -43,4 +43,30 @@ public class FileUploadController {
             return AjaxResult.error(e.getMessage());
         }
     }
+
+    /**
+     * 通用上传请求（单个）
+     */
+    @PostMapping("/file")
+    public AjaxResult file(MultipartFile file) throws Exception
+    {
+        try
+        {
+            // 上传文件路径
+//            String filePath = RuoYiConfig.getUploadPath();
+//            // 上传并返回新文件名称
+//            String fileName = FileUploadUtils.upload(filePath, file);
+            String url = fileUploadUtils.uploadFileUrl(file, "file");
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("url", url);
+            ajax.put("fileName", file.getOriginalFilename());
+            ajax.put("newFileName", file.getOriginalFilename());
+            ajax.put("originalFilename", file.getOriginalFilename());
+            return ajax;
+        }
+        catch (Exception e)
+        {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
 }

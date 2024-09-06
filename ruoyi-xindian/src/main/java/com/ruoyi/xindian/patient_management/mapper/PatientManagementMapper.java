@@ -142,4 +142,6 @@ public interface PatientManagementMapper
     Long getDetectinCountAll(String patientPhone);
 
     Long getDetectinCountToday(String patientPhone);
+
+    int updatePatientManagementStatus(String pId);
 }

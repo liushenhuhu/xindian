@@ -91,4 +91,8 @@ public interface IEquipmentService
     List<String> batchSelect(String path,Integer sum) throws Exception;
 
     int selectEquipmentOnlineNum(List<String> hospitalIds);
+
+    Equipment getCodeByHospital(String equipmentCode);
+
+    int updateEquipmentStatusByEquipmentCode(String equipmentCode);
 }

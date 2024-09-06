@@ -1017,6 +1017,9 @@
     <update id="updateApBeatInt">
         update single_history_info set patient_phone_aes = #{patientPhone} where ecg_id = #{ecgId}
     </update>
+    <update id="updatePatientManagementStatus">
+        update patient_management set  online_status = 0 where p_id = #{pId}
+    </update>
 
     <delete id="deletePatientManagementByPId" parameterType="String">
         delete

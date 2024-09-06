@@ -196,4 +196,9 @@ public class PatientServiceImpl implements IPatientService
     public List<Patient> selectByDoc(DoctorRelationPatient doctorRelationPatient) {
         return null;
     }
+
+    @Override
+    public int updateStatusPhone(String phone) {
+        return patientMapper.updateStatusPhone(phone);
+    }
 }

@@ -102,4 +102,7 @@ public interface IPatientService
 
     List<Patient> selectByDoc(DoctorRelationPatient doctorRelationPatient);
 
+
+    int   updateStatusPhone(String phone);
+
 }

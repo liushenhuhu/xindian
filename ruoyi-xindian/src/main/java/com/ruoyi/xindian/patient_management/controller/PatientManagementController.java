@@ -712,7 +712,6 @@ public class PatientManagementController extends BaseController {
         patientService.updateMonitoringStatus();
         if (pIds.length != 0 && !pIds[0].isEmpty()) {
             patientManagementService.updateStatus(pIds);
-
             for (String pId : pIds) {
                 PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
                 if (patientManagement != null) {

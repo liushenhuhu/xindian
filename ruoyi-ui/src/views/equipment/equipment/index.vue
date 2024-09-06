@@ -61,7 +61,7 @@
                 </el-select>
               </el-form-item>
 
-              
+
           </div>
           <div class="form-right">
             <el-form-item>
@@ -395,9 +395,9 @@ export default {
     },
     refreshList() {
       console.log("refresh======")
-      updateOnlineAll().then(res => {
+      // updateOnlineAll().then(res => {
         this.getList();
-      })
+      // })
     },
     loadAll() {
       listDepartment(this.queryParams).then(response => {

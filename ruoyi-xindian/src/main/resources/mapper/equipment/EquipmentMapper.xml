@@ -109,6 +109,22 @@
 
 
     </select>
+    <select id="getCodeByHospital" resultType="com.ruoyi.xindian.equipment.domain.Equipment" resultMap="EquipmentResult">
+        SELECT
+            hospital.hospital_name as hospitalName,
+            equipment_id,
+            equipment_code,
+            equipment_version,
+            equipment_status,
+            equipment_type
+        FROM
+            equipment
+                INNER JOIN
+            hospital
+            ON
+                equipment.hospital_code = hospital.hospital_code
+        where equipment_code = #{equipmentCode} limit 1
+    </select>
 
 
     <insert id="insertEquipment" parameterType="Equipment">
@@ -164,6 +180,9 @@
     </update>
     <update id="updateStatusAndPatientPhoneNull">
         update equipment set equipment_status = #{equipmentStatus} ,patient_phone_aes = null where equipment_id = #{equipmentId}
+    </update>
+    <update id="updateEquipmentStatusByEquipmentCode">
+        update equipment set equipment_status = 'False' where equipment_code = #{equipmentCode}
     </update>
 
     <delete id="deleteEquipmentByEquipmentId" parameterType="Long">

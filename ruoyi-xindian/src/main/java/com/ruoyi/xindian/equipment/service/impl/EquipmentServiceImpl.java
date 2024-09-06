@@ -197,5 +197,15 @@ public class EquipmentServiceImpl implements IEquipmentService {
         return equipmentMapper.selectEquipmentOnlineNum(hospitalIds);
     }
 
+    @Override
+    public Equipment getCodeByHospital(String equipmentCode) {
+        return equipmentMapper.getCodeByHospital(equipmentCode);
+    }
+
+    @Override
+    public int updateEquipmentStatusByEquipmentCode(String equipmentCode) {
+        return equipmentMapper.updateEquipmentStatusByEquipmentCode(equipmentCode);
+    }
+
 
 }

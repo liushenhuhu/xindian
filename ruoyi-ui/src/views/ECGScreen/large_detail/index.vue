@@ -149,6 +149,7 @@
 import * as echarts from './echarts.min'
 import screenfull from 'screenfull'
 import request from '@/utils/request'
+import {getToken} from "@/utils/auth";
 let meanChart;
 let Anachart;
 let sdnnchart;
@@ -3056,7 +3057,7 @@ export default {
           this.timer=null
         }
         this.timer=window.setInterval(()=>{
-          if(this.$route.path!=='/Screen/detail'){
+          if(this.$route.path!=='/large_screen_detail'){
             window.clearInterval(this.timer)
             this.timer=null
           }
@@ -6714,7 +6715,13 @@ export default {
 
     },
     back(){
-      this.$router.go(-1)
+      this.$router.push(
+        {
+          //添加需要传值到那个页面的路径
+          path:'/large_screen',
+          //携带需要传递的参数
+          query:{hospitalId:1,token : getToken()}
+        })
     },
 
     closeShow(){

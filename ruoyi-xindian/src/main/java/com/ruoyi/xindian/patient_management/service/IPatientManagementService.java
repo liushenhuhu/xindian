@@ -128,4 +128,6 @@ public interface IPatientManagementService
     Long getDetectinCountAll(String patientPhone);
 
     Long getDetectinCountToday(String patientPhone);
+
+    int updatePatientManagementStatus(String pId);
 }
