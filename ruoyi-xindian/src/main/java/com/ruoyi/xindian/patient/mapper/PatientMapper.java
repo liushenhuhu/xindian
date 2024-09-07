@@ -106,4 +106,6 @@ public interface PatientMapper
 
 
     List<Patient> selectByDoc(DoctorRelationPatient doctorRelationPatient);
+
+    int updateStatusPhone(@Param("phone") String phone);
 }

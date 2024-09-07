@@ -112,4 +112,11 @@ public class SysNoticeController extends BaseController
     {
         return toAjax(noticeService.deleteNoticeByIds(noticeIds));
     }
+
+
+    @GetMapping("/getNotice")
+    public AjaxResult getNotice(SysNotice notice) throws Exception {
+        notice.setStatus("0");
+        return AjaxResult.success(noticeService.selectNoticeList(notice));
+    }
 }

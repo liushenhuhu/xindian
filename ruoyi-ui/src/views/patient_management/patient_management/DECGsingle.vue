@@ -646,9 +646,9 @@ export default {
     },
     refreshList() {
       console.log("refresh======")
-      updateOnlineAll().then(res => {
+      // updateOnlineAll().then(res => {
         this.getList();
-      })
+      // })
     },
 
     DRyujing(row) {

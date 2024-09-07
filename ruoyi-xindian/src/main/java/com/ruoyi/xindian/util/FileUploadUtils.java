@@ -32,7 +32,13 @@ public class FileUploadUtils {
         return url + fronts[1];
     }
 
-
+    public String uploadFileUrl(MultipartFile file, String location) {
+        LocalDate now = LocalDate.now();
+        String time = now.toString();
+        String front = saveFileAll(file, location, time);
+        String[] fronts = front.split("uploadPath");
+        return url + fronts[1];
+    }
 
     public String uploadImgUrl(MultipartFile file, String location) {
         LocalDate now = LocalDate.now();
@@ -98,9 +104,33 @@ public class FileUploadUtils {
         }
     }
 
+    private String saveFileAll(MultipartFile file, String location, String time) {
+
+        try {
+            String f = file.getOriginalFilename();
+            int dotIndex = f.lastIndexOf('.');
+            String extension = "";
+            if (dotIndex > 0 && dotIndex < f.length() - 1) {
+                extension = f.substring(dotIndex + 1).toLowerCase();
+            }
+            // Generate a unique file name based on the current time
+            String fileName = System.currentTimeMillis() + "-" + location;
+//            String mainDir="E:/saveImg/";
+            File dir = new File(proFile  + "/" + time + "/");
+            if (!dir.exists()) {
+                boolean mkdirs = dir.mkdirs();
+            }
+            Path path = Paths.get(proFile  + "/" + time + "/" + "/" + fileName + extension);
+            // Save the file to disk
+            Files.write(path, file.getBytes());
+            // Return the file path
+            return path.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save file: " + e.getMessage());
+        }
+    }
+
     private String saveFile(MultipartFile file, String location, String userId, String time) {
-
-
         try {
             String f = file.getOriginalFilename();
             int dotIndex = f.lastIndexOf('.');

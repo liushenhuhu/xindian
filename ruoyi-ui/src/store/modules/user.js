@@ -46,6 +46,15 @@ const user = {
       })
     },
 
+    // 登录
+    UpdateToken({commit}, token) {
+      return new Promise((resolve, reject) => {
+          setToken(token)
+          commit('SET_TOKEN', token)
+          resolve()
+      })
+    },
+
     // 短信登录
     SmsLogin({commit}, userInfo) {
       const mobile = userInfo.mobile.trim()

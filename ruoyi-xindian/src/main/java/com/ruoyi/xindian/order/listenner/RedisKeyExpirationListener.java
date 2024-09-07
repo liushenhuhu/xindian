@@ -1,11 +1,17 @@
 package com.ruoyi.xindian.order.listenner;
 
+import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.alert_log.domain.AlertLog;
 import com.ruoyi.xindian.alert_log.service.IAlertLogService;
 import com.ruoyi.xindian.ecgCount.controller.EcgCountController;
 import com.ruoyi.xindian.ecgCount.service.EcgCountService;
 import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
+import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.service.EquipmentHeadingCodeService;
+import com.ruoyi.xindian.equipment.service.IEquipmentService;
+import com.ruoyi.xindian.patient.service.IPatientService;
+import com.ruoyi.xindian.patient_management.domain.PatientManagement;
+import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.report.config.WxMsgRunConfig;
 import com.ruoyi.xindian.statistics.domain.AgeStatistics;
 import com.ruoyi.xindian.visitPay.VisitWxPayController;
@@ -64,6 +70,15 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
 
     @Resource
     private EcgCountController ecgCountController;
+    @Resource
+    private IPatientService patientService;
+    @Resource
+    private IPatientManagementService patientManagementService;
+    @Resource
+    private IEquipmentService equipmentService;
+
+    @Resource
+    private AesUtils aesUtils;
 
     private final Lock lock = new ReentrantLock();
 
@@ -84,10 +99,22 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             System.out.println("key失效：" + expiredKey);
             String[] split = expiredKey.split(":");
             String[] split1 = expiredKey.split("!");
+            String[] split2 = expiredKey.split("_");
             if (split[0].equals("order")){
                 System.out.println("订单创建15分钟，开始判断订单是否支付并进行数据删除-------------------");
                 orderInfoService.redisOrderKey(split[1]);
                 return;
+            }
+            if (split2[0].equals("OES")){
+                //修改设备状态未不在线
+                System.out.println("设备状态修改");
+                try {
+                    patientService.updateStatusPhone(aesUtils.encrypt(split2[1]));
+                    patientManagementService.updatePatientManagementStatus(split2[2]);
+                    equipmentService.updateEquipmentStatusByEquipmentCode(split2[3]);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
             }
             if (split[0].equals("orderQuery")){
                 wxPayController.orderQuery(split[1]);

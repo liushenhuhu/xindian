@@ -102,8 +102,8 @@ public class WeeklyServiceImpl implements IWeeklyService {
         HashOperations<String, String, WeeklyCount> hash = redisTemplate.opsForHash();
 
         //thisweek换到lastweek
-//        String lastWeekTime = info.getStartTime();
-//        lastWeekTime = DateUtil.subDay(lastWeekTime);
+        //String lastWeekTime = info.getStartTime();
+        //lastWeekTime = DateUtil.subDay(lastWeekTime);
         String thisWeekTime = info.getEndTime();
 
 //        Boolean exists_thisWeek = redisTemplate.hasKey("thisWeek");
@@ -195,6 +195,83 @@ public class WeeklyServiceImpl implements IWeeklyService {
         if (thisWeek == null) return res;
         WeeklyCount lastWeek = hash.get("week_" + lastDoubleSunday, patientPhone);
         Long allPerson = zSet.size("thisWeekCheckNum_" + lastSunday);
+        //健康统计占比
+        int thisWeekSum = thisWeek.getSignalCount();
+        int lastWeekSum = 0;
+        //房早
+        int thisWeekAPBeat = thisWeek.getApBeat();
+        int lastWeekAPBeat = 0;
+        //室早
+        int thisWeekPVBeat = thisWeek.getPvBeat();
+        int lastWeekPVBeat = 0;
+        //心房颤动
+        int thisWeekAF = thisWeek.getAtrialFibrillation();
+        int lastWeekAF = 0;
+        //心房扑动
+        int thisWeekAFp = thisWeek.getAtrialFlutter();
+        int lastWeekAFp = 0;
+        //心动过缓
+        int thisWeekB = thisWeek.getBradycardia();
+        int lastWeekB = 0;
+        //心动过速度
+        int thisWeekT = thisWeek.getTachycardia();
+        int lastWeekT = 0;
+        if (lastWeek != null) {
+            lastWeekSum = lastWeek.getSignalCount();
+            lastWeekAPBeat = lastWeek.getApBeat();
+            lastWeekPVBeat = lastWeek.getPvBeat();
+            lastWeekAF = lastWeek.getAtrialFibrillation();
+            lastWeekAFp = lastWeek.getAtrialFlutter();
+            lastWeekB = lastWeek.getBradycardia();
+            lastWeekT = lastWeek.getTachycardia();
+        }
+        if (thisWeekSum != 0) {
+            thisWeek.setApBeatPercentage(thisWeekAPBeat * 1.0 / thisWeekSum);
+            thisWeek.setPvBeatPercentage(thisWeekPVBeat * 1.0 / thisWeekSum);
+            thisWeek.setAtrialFibrillationPercentage(thisWeekAF * 1.0 / thisWeekSum);
+            thisWeek.setAtrialFlutterPercentage(thisWeekAFp * 1.0 / thisWeekSum);
+            thisWeek.setBradycardiaPercentage(thisWeekB * 1.0 / thisWeekSum);
+            thisWeek.setTachycardiaPercentage(thisWeekT * 1.0 / thisWeekSum);
+        } else {
+            thisWeek.setApBeatPercentage(0.0);
+            thisWeek.setPvBeatPercentage(0.0);
+            thisWeek.setAtrialFibrillationPercentage(0.0);
+            thisWeek.setAtrialFlutterPercentage(0.0);
+            thisWeek.setBradycardiaPercentage(0.0);
+            thisWeek.setTachycardiaPercentage(0.0);
+        }
+        if (lastWeekSum != 0) {
+            lastWeek.setApBeatPercentage(lastWeekAPBeat * 1.0 / lastWeekSum);
+            lastWeek.setPvBeatPercentage(lastWeekPVBeat * 1.0 / lastWeekSum);
+            lastWeek.setAtrialFibrillationPercentage(lastWeekAF * 1.0 / lastWeekSum);
+            lastWeek.setAtrialFlutterPercentage(lastWeekAFp * 1.0 / lastWeekSum);
+            lastWeek.setBradycardiaPercentage(lastWeekB * 1.0 / lastWeekSum);
+            lastWeek.setTachycardiaPercentage(lastWeekT * 1.0 / lastWeekSum);
+        } else if (lastWeek != null) {
+            lastWeek.setApBeatPercentage(0.0);
+            lastWeek.setPvBeatPercentage(0.0);
+            lastWeek.setAtrialFibrillationPercentage(0.0);
+            lastWeek.setAtrialFlutterPercentage(0.0);
+            lastWeek.setBradycardiaPercentage(0.0);
+            lastWeek.setTachycardiaPercentage(0.0);
+        }
+
+        if (lastWeek != null) {
+            thisWeek.setApBeatPercentageS(thisWeek.getApBeatPercentage() - lastWeek.getApBeatPercentage());
+            thisWeek.setPvBeatPercentageS(thisWeek.getPvBeatPercentage() - lastWeek.getPvBeatPercentage());
+            thisWeek.setAtrialFibrillationPercentageS(thisWeek.getAtrialFibrillationPercentage() - lastWeek.getAtrialFibrillationPercentage());
+            thisWeek.setAtrialFlutterPercentageS(thisWeek.getAtrialFlutterPercentage() - lastWeek.getAtrialFlutterPercentage());
+            thisWeek.setBradycardiaPercentageS(thisWeek.getBradycardiaPercentage() - lastWeek.getBradycardiaPercentage());
+            thisWeek.setTachycardiaPercentageS(thisWeek.getTachycardiaPercentage() - lastWeek.getTachycardiaPercentage());
+        } else {
+            thisWeek.setApBeatPercentageS(thisWeek.getApBeatPercentage());
+            thisWeek.setPvBeatPercentageS(thisWeek.getPvBeatPercentage());
+            thisWeek.setAtrialFibrillationPercentageS(thisWeek.getAtrialFibrillationPercentage());
+            thisWeek.setAtrialFlutterPercentageS(thisWeek.getAtrialFlutterPercentage());
+            thisWeek.setBradycardiaPercentageS(thisWeek.getBradycardiaPercentage());
+            thisWeek.setTachycardiaPercentageS(thisWeek.getTachycardiaPercentage());
+        }
+
         //检测次数排名
         double rankCheckNum = 0.0;
         double rankHealth = 0.0;

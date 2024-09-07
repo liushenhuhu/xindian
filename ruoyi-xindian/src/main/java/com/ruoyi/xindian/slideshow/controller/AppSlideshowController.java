@@ -54,7 +54,7 @@ public class AppSlideshowController extends BaseController
     @GetMapping("/getAppSlideshow")
     public AjaxResult getAppSlideshow() {
         AppSlideshow appSlideshow = new AppSlideshow();
-        appSlideshow.setStatus("1");
+        appSlideshow.setStatus("0");
         return AjaxResult.success(appSlideshowService.selectAppSlideshowList(appSlideshow));
     }
 

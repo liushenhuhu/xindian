@@ -52,6 +52,7 @@
         <result property="weight" column="weight"/>
         <result property="pastMedicalHistory" column="past_medical_history"/>
         <result property="livingHabit" column="living_habit"/>
+        <result property="ecgAnalysisData" column="ecg_analysis_data"/>
 
     </resultMap>
     <resultMap type="SingleHistoryInfo" id="SingleHistoryInfoResult">
@@ -111,7 +112,7 @@
 <!--    </where>-->
     <sql id="selectPatientManagementVo">
         select m.p_id, p.patient_code, m.hospital_code, m.equipment_code, m.longitude, m.latitude,m.log_data_type,m.ecg_is_label,
-            connection_time, bed_number, case_history_number,
+            connection_time, bed_number, case_history_number,pm.ecg_analysis_data,
                ecg_type, online_status, patient_name_aes, patient_age, patient_sex, patient_source,
                m.patient_phone_aes, family_phone,  monitoring_status,
                equipment_status, equipment_type, hospital_name, intelligent_diagnosis,
@@ -124,6 +125,7 @@
                  left join hospital h on m.hospital_code = h.hospital_code
                  left join report r on m.p_id = r.p_id
                 left join medical_history mh on m.patient_phone_aes = mh.patient_phone_aes
+                left join  pm_ecg_data pm on m.p_id = pm.p_id
     </sql>
 
     <sql id="selectPatientManagementCount">
@@ -1014,6 +1016,9 @@
     </update>
     <update id="updateApBeatInt">
         update single_history_info set patient_phone_aes = #{patientPhone} where ecg_id = #{ecgId}
+    </update>
+    <update id="updatePatientManagementStatus">
+        update patient_management set  online_status = 0 where p_id = #{pId}
     </update>
 
     <delete id="deletePatientManagementByPId" parameterType="String">

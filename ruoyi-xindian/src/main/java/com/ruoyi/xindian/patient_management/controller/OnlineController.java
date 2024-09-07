@@ -89,11 +89,11 @@ public class OnlineController extends BaseController {
 
     @GetMapping("/updateAll")
     public AjaxResult updateAll(HttpServletRequest request) throws Exception {
-        AjaxResult result1 = update1(request);
-        AjaxResult result2 = update2(request);
+//        AjaxResult result1 = update1(request);
+//        AjaxResult result2 = update2(request);
         Map<String, Object> map = new HashMap<>();
-        map.put("res1", result1);
-        map.put("res2", result2);
+        map.put("res1", null);
+        map.put("res2", null);
         return AjaxResult.success(map);
     }
     @GetMapping("/{patientPhone}")

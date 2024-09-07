@@ -85,6 +85,8 @@ public class Equipment extends BaseEntity
 
     private String count;
 
+    private String hospitalName;
+
     public Equipment() {
     }
 

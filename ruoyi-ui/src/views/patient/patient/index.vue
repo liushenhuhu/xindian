@@ -587,9 +587,9 @@ export default {
     // 刷新
     refreshList() {
       console.log("refresh======");
-      updateOnlineAll().then((res) => {
+      // updateOnlineAll().then((res) => {
         this.getList();
-      });
+      // });
     },
     // 展开
     unfoldSearchBox() {

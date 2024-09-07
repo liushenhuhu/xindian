@@ -72,6 +72,17 @@ export function getInfoId(id) {
   })
 }
 
+export function getInfoIdByHospital(id,token) {
+  return request({
+    url: '/patient_management/patient_management/getInfoId?hospitalId='+id,
+    method: 'get',
+    headers: {
+      isToken: false,
+      "Authorization":`Bearer ${token}`
+    },
+  })
+}
+
 //发送短信
 export function sendMsgToPatient(phone) {
   return request({

@@ -73,12 +73,12 @@
       </el-col>
       <div class="texta">总在线设备数：{{num}}</div>
 
-      
+
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="refresh"></right-toolbar>
-    
-      
-      
+
+
+
     </el-row>
     <el-table v-loading="loading" :data="hospitalList" @selection-change="handleSelectionChange">
       <el-table-column label="省份" align="center" prop="province" />
@@ -162,11 +162,6 @@ export default {
   data() {
     return {
       // 表单校验
-      rules: {
-        password: [
-          {required: true, message: "密码不能为空", trigger: "blur"}
-        ],
-      },
       verifyForm:{
         password:null,
         status:false
@@ -223,6 +218,9 @@ export default {
         ],
         hospitalCode: [
           { required: true, message: "医院代号不能为空", trigger: "blur" }
+        ],
+        password: [
+          {required: true, message: "密码不能为空", trigger: "blur"}
         ],
       },
       timer:null
@@ -290,7 +288,7 @@ export default {
     },
     //请求设备在线设备数量修改在线状态
     updateOnline(){
-      updateOnline1().then(res=>{
+      // updateOnline1().then(res=>{
         // console.log(res)
         onlineNum().then(res=>{
           console.log("在线设备数量",res)
@@ -301,7 +299,7 @@ export default {
             this.total = response.total;
           });
         })
-      })
+      // })
     },
     /** 查询医院列表 */
     getList() {

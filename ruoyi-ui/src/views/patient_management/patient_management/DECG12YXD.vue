@@ -640,9 +640,9 @@ export default {
     },
     refreshList() {
       console.log("refresh======")
-      updateOnlineAll().then(res => {
+      // updateOnlineAll().then(res => {
         this.getList();
-      })
+      // })
     },
     DRyujing(row) {
       this.$router.push({path: "/DRearly", query: {id: row.pId, type: '12'}});

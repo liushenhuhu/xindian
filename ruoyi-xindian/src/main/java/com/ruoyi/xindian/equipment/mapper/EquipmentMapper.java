@@ -86,4 +86,7 @@ public interface EquipmentMapper
     List<Equipment> selectALl(Limit limit);
 
     int selectEquipmentOnlineNum(@Param("hospitalIds")List<String> hospitalIds);
+
+    Equipment getCodeByHospital(@Param("equipmentCode") String equipmentCode);
+    int updateEquipmentStatusByEquipmentCode(@Param("equipmentCode") String equipmentCode);
 }

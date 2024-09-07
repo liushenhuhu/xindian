@@ -247,6 +247,9 @@
     <update id="updatePatientAes">
         update patient set  family_phone = #{familyPhone} where patient_id=#{patientId}
     </update>
+    <update id="updateStatusPhone">
+        update patient set monitoring_status = 0  where  patient_phone_aes = #{phone}
+    </update>
 
     <delete id="deletePatientByPatientId" parameterType="Long">
         delete

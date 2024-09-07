@@ -9,6 +9,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginBody;
+import com.ruoyi.common.core.domain.model.WebLoginBody;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.core.domain.model.WxOpenId;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -144,6 +145,59 @@ public class SysLoginController {
         }
     }
 
+
+    /**
+     * 微信登录方法
+     *
+     * @param wxloginBody 登录信息
+     * @return 结果
+     */
+    @PostMapping("/wxLoginSkip")
+    public AjaxResult wxLoginSkip(@RequestBody WxLoginBody wxloginBody) throws Exception {
+
+
+        if (com.ruoyi.common.utils.StringUtils.isEmpty(wxloginBody.getPhone())){
+            return AjaxResult.error("用户手机号不能为空");
+        }
+        logger.info("登录参数："+ JSON.toJSONString(wxloginBody));
+        String code=wxloginBody.getCode();
+
+        //向微信服务器发送请求获取用户信息
+        String url="https://api.weixin.qq.com/sns/jscode2session?appid="+wxAppConfig.getAppId()+"&secret="+wxAppConfig.getAppSecret()+"&js_code="+code+"&grant_type=authorization_code";
+        String res=restTemplate.getForObject(url,String.class);
+//        String tok=loginService.wxLogin(res,"124");
+        JSONObject jsonObject = JSONObject.parseObject(res);
+        logger.info("微信返回参数："+ jsonObject);
+
+        //获取session_key和openid
+        String session_key = jsonObject.getString("session_key");
+        String openid = jsonObject.getString("openid");
+        String unionid = jsonObject.getString("unionid");
+
+
+        String token=loginService.wxLoginSkip(wxloginBody.getPhone(),openid,unionid);
+        String numberPhone = wxloginBody.getPhone();
+        AjaxResult result = AjaxResult.success();
+        result.put(Constants.TOKEN,token);
+        result.put("phone",numberPhone);
+        String encrypt = aesUtils.encrypt(numberPhone);
+        AppData appData = appDataService.selectAppDataByPatientPhone(encrypt);
+        if (null == appData) {
+            result.put("BindingState", false);
+        } else {
+            result.put("BindingState", true);
+        }
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(encrypt);
+        if(null == doctor){
+            result.put("IsDoctor",false);
+        } else {
+            result.put("IsDoctor",true);
+        }
+        return result;
+
+    }
+
+
     /**
      * AES解密
      */
@@ -194,14 +248,13 @@ public class SysLoginController {
      * @return 结果
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginBody loginBody) throws Exception {
+    public AjaxResult login(@RequestBody WebLoginBody loginBody) throws Exception {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
         String encrypt = aesUtils.encrypt(loginBody.getUsername());
         String token = loginService.login(encrypt, loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
-
         AppData appData = new AppData();
         appData.setUserName(encrypt);
         List<AppData> appDataList = appDataService.selectAppDataList(appData);

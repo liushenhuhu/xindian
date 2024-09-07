@@ -3,6 +3,7 @@ package com.ruoyi.xindian.patient_management.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,6 +19,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.xindian.equipment.domain.Equipment;
 import com.ruoyi.xindian.equipment.service.IEquipmentService;
@@ -45,6 +47,7 @@ import com.ruoyi.xindian.pmEcgData.domain.PmEcgData;
 import com.ruoyi.xindian.pmEcgData.service.IPmEcgDataService;
 import com.ruoyi.xindian.util.DateUtil;
 import com.ruoyi.xindian.util.PhoneCheckUtils;
+import com.ruoyi.xindian.util.RoleUtils;
 import com.ruoyi.xindian.util.WxUtil;
 import com.ruoyi.xindian.verify.domain.SxReport;
 import com.ruoyi.xindian.verify.service.SxReportService;
@@ -333,6 +336,30 @@ public class PatientManagementController extends BaseController {
                     System.out.println(1);
                 }
             }
+
+//            try {
+//                String ecgAnalysisData = management.getEcgAnalysisData();
+//                if (StringUtils.isNotEmpty(ecgAnalysisData)){
+//                    JSONObject jsonObject = JSONObject.parseObject(ecgAnalysisData);
+//
+//                    Object o = jsonObject.get("平均心率");
+//                    if (o!=null){
+//                        management.setXl(o.toString());
+//                    }else {
+//                        management.setXl("--");
+//                    }
+//                    Object o1 = jsonObject.get("p_xingeng");
+//                    if (o1!=null){
+//                        management.setXg(o1.toString());
+//                    }else {
+//                        management.setXg("--");
+//                    }
+//
+//                }
+//            }catch (Exception e){
+//
+//            }
+
 
             if (management.getPatientPhone() != null && !management.getPatientPhone().isEmpty()) {
                 management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
@@ -685,7 +712,6 @@ public class PatientManagementController extends BaseController {
         patientService.updateMonitoringStatus();
         if (pIds.length != 0 && !pIds[0].isEmpty()) {
             patientManagementService.updateStatus(pIds);
-
             for (String pId : pIds) {
                 PatientManagement patientManagement = patientManagementService.selectPatientManagementByPId(pId);
                 if (patientManagement != null) {
@@ -717,6 +743,8 @@ public class PatientManagementController extends BaseController {
         return sysUser;
     }
 
+    @Resource
+    private ISysDictDataService dictDataService;
     /**
      * 心电大屏数据查找医院
      *
@@ -726,10 +754,9 @@ public class PatientManagementController extends BaseController {
      */
     @GetMapping(value = "/getInfoId")
     public AjaxResult getInfo(Long hospitalId, HttpServletRequest request) {
-
         LoginUser loginUser = tokenService.getLoginUser(request);
-
-        if (SecurityUtils.isAdmin(loginUser.getUser().getUserId())) {
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+       if (SysUser.isAdmin(loginUser.getUserId()) || RoleUtils.isRoleListOne(loginUser,sysDictData)){
             if (hospitalId.equals(1L)) {
                 Hospital hospital = new Hospital();
                 hospital.setHospitalName("所有");
@@ -741,7 +768,6 @@ public class PatientManagementController extends BaseController {
             Hospital hospital1 = hospitalService.selectId(loginUser.getUser().getUserId());
             return AjaxResult.success(hospital1);
         }
-
     }
 
     @GetMapping("getPatientManagementByPhone/{patientPhone}")
