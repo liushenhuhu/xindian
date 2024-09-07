@@ -754,62 +754,29 @@ export default {
       // },
       // 判断是不是管理员
       isDoctor: false,
+      shangxiakuzhiqi:null,
     };
   },
   created() {
-    //   let currentURL = window.location.href;
-    //   // console.log(currentURL);
-    //   // 使用URL对象解析URL
-    //   let urlObject = new URL(currentURL);
-
-    //   // 获取路径名部分
-    //   let pathName = urlObject.pathname;
-
-    //   // 提取/restingECG字符串并在前面加上斜杠
-    //   let luyou = '/' + pathName.split('/')[1];
-    //   // console.log(luyou);
-
-    // var getdata = JSON.parse(sessionStorage.getItem(luyou));
     if (!this.$auth.hasRole("admin")) {
       this.isDoctor = true;
     }
-    if (false) {
-      let currentURL = window.location.href;
-      console.log(currentURL);
-      // 使用URL对象解析URL
-      let urlObject = new URL(currentURL);
-
-      // 获取路径名部分
-      let pathName = urlObject.pathname;
-
-      // 提取/restingECG字符串并在前面加上斜杠
-      this.luyou = "/" + pathName.split("/")[1];
-      console.log(this.luyou);
-      let adf = JSON.parse(sessionStorage.getItem(this.luyou));
-      console.log(adf);
-      this.queryParams = adf.queryParams;
-      // this.ecgType = a.ecgType
-      this.pId = adf.pId;
-      var newUrl =
-        this.$route.path +
-        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
-      window.history.replaceState("", "", newUrl);
-    } else {
+    console.log("12导传来的值")
+    console.log(this.$route.query);
       this.queryParams = this.$route.query.queryParams;
       this.ecgType = this.$route.query.ecgType;
       this.pId = this.$route.query.pId;
-    }
-    this.getPatientdetails();
+    this.shangxiakuzhiqi  = this.$route.query.queryParams.indexzhi
     this.getList();
   },
   mounted() {
     // var show = sessionStorage.getItem(this.pId + "show");
     // if (show) {
-    this.get();
+    // this.get();
     // }
     //预警的类型
     // this.getyujingleixing()
-    this.getShowBnt();
+    // this.getShowBnt();
   },
   methods: {
     // 新增术语
@@ -990,42 +957,21 @@ export default {
     /** 查询用户管理列表 */
     async getList() {
       this.loading = true;
-      this.queryParams.params = {};
-      if (
-        null != this.daterangeConnectionTime &&
-        "" != this.daterangeConnectionTime
-      ) {
-        this.queryParams.params["beginConnectionTime"] =
-          this.daterangeConnectionTime[0];
-        this.queryParams.params["endConnectionTime"] =
-          this.daterangeConnectionTime[1];
-      }
-      if (this.queryParams.ecgType == null) {
-        this.queryParams.ecgType = this.ecgType;
-      }
       await listPatient_management(this.queryParams).then((response) => {
         // console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
-        if (this.queryParams.ecgType === "JECG12") {
-          this.queryParams.ecgType = null;
-        }
-        this.patient_managementList.forEach((item, index) => {
-          if (this.pId == item.pId) {
-            this.index = index;
-          }
-        });
-        if (this.index == this.patient_managementList.length) {
-          this.index = 0;
-        }
       });
+      this.getPatientdetails();
     },
     // 患者用户信息
     getPatientdetails() {
-      getReportByPId(this.pId).then((response) => {
-        // console.log(response.data);
-        // console.log("请求成功：", response.data)
+      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
+      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId
+      getReportByPId(this.patient_managementList[this.shangxiakuzhiqi].pId).then((response) => {
+        console.log(response.data);
+        console.log("请求成功：", response.data)
         this.data.resultByDoctor = response.data.diagnosisConclusion;
         this.data.doctorName = response.data.dPhone;
         this.data.diagnosisData = response.data.reportTime;
@@ -1050,17 +996,11 @@ export default {
           this.data.patientSymptom = response.data.patientSymptom;
         }
       });
-      var show = sessionStorage.getItem(this.pId + "show");
-      if (!show) {
-        this.get();
-      }
-      // selectDoctor().then((response) => {
-      //   this.options = response;
-      // });
       listDoc().then((r) => {
         this.doctorList = r.data;
       });
       this.getyujingleixing();
+      this.get();
     },
     //选择医生
     selectDoctorChange(e) {
@@ -1124,102 +1064,50 @@ export default {
         this.loading = false;
         return;
       }
-      this.index--;
-      if (this.index < 0) {
-        if (this.queryParams.pageNum > 1) {
-          this.queryParams.pageNum--;
-          // this.index = 9
-        }
+      // this.index--;
+      this.shangxiakuzhiqi--;
+      if (this.shangxiakuzhiqi == -1 && this.queryParams.pageNum > 1 ){
+        this.shangxiakuzhiqi = this.patient_managementList.length-1
+        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+        this.queryParams.pageNum--
+        this.queryParams.indexzhi = this.patient_managementList.length-1
         await this.getList();
-        this.index = this.queryParams.pageSize - 1;
+        // this.get();
+        this.loading = false;
+        return
       }
-      // console.log(this.logUserList[this.index]);
-      this.pId = this.patient_managementList[this.index].pId;
-
-      var newUrl =
-        this.$route.path +
-        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
-      window.history.replaceState("", "", newUrl);
-      this.get();
-      // await this.getLogUserList()
-      await this.getList();
-      //  let currentURL = window.location.href;
-      // // console.log(currentURL);
-      // // 使用URL对象解析URL
-      // let urlObject = new URL(currentURL);
-
-      // // 获取路径名部分
-      // let pathName = urlObject.pathname;
-
-      // // 提取/restingECG字符串并在前面加上斜杠
-      // this.luyou = '/' + pathName.split('/')[1];
-
-      // console.log("进入页面时将静态12导心电图的值存入本地");
-
-      // let huancunshuju = {
-      //   pId: this.pId,
-      //   state:this.$route.query.state,
-      //   queryParams:this.queryParams,
-      //   ecgType:this.queryParams.ecgType
-      // }
-      // let jsonString = JSON.stringify(huancunshuju);
-      // console.log(jsonString);
-      // sessionStorage.setItem(this.luyou,jsonString);
+      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+      this.getPatientdetails();
+      // this.get();
+      this.loading = false;
     },
     // 点击下一个触发事件
     async next() {
       this.loading = true;
-      this.index++;
+      this.shangxiakuzhiqi++;
 
-      if (this.index >= this.patient_managementList.length) {
-        if (
-          (this.queryParams.pageNum - 1) * this.queryParams.pageSize +
-            this.patient_managementList.length >=
-          this.total
-        ) {
-          this.$message.warning("已经是最后一页！！！");
-          this.index--;
-          this.loading = false;
-          return;
-        }
-        this.queryParams.pageNum++;
-        // this.index = 0;
-        await this.getList();
-        this.index = 0;
+      if ((this.queryParams.pageNum-1) * this.queryParams.pageSize +this.patient_managementList.length >= this.total
+        &&
+        this.shangxiakuzhiqi+1 ==  this.patient_managementList.length ){
+        this.$message.warning("已经是最后一页！！！");
+        this.loading = false;
+        return;
       }
-      this.pId = this.patient_managementList[this.index].pId;
-      // console.log(this.patient_managementList);
-      // this.queryParams.pId = this.patient_managementList[this.index].pId;
-      var newUrl =
-        this.$route.path +
-        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
-      window.history.replaceState("", "", newUrl);
-      this.get();
-      // await this.getLogUserList()
-      await this.getList();
-      // this.loading = false;
-      //   let currentURL = window.location.href;
-      // console.log(currentURL);
-      // // 使用URL对象解析URL
-      // let urlObject = new URL(currentURL);
 
-      // // 获取路径名部分
-      // let pathName = urlObject.pathname;
-
-      // // 提取/restingECG字符串并在前面加上斜杠
-      // this.luyou = '/' + pathName.split('/')[1];
-
-      // console.log("进入页面时将静态12导心电图的值存入本地");
-
-      // let huancunshuju = {
-      //   pId: this.pId,
-      //   state:this.$route.query.state,
-      //   queryParams:this.queryParams,
-      //   ecgType:this.queryParams.ecgType
-      // }
-      // let jsonString = JSON.stringify(huancunshuju);
-      // console.log(jsonString);
-      // sessionStorage.setItem(this.luyou,jsonString);
+      if (this.shangxiakuzhiqi>this.patient_managementList.length-1){
+        this.shangxiakuzhiqi = 0
+        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+        this.queryParams.pageNum++
+        this.queryParams.indexzhi = 0
+        await this.getList();
+        // this.get();
+        this.loading = false;
+      }else {
+        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+        this.getPatientdetails();
+        // this.get();
+        this.loading = false;
+      }
     },
     // 打印选中的值
     zhong(data) {
@@ -1338,16 +1226,18 @@ export default {
         target: document.querySelector("#table"), //loadin覆盖的dom元素节点
       });
       var _th = this;
+      this.data.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
       // console.log("请求数据了！")
       // console.log("pId", this.pId)
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
-        url: "https://screen.mindyard.cn:84/get_jecg_12",
+        url: "https://screen.mindyard.cn:84/get_jecg_12_web",
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pid: this.pId,
+          pid:  _th.patient_managementList[_th.shangxiakuzhiqi].pId,
         }),
         beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义

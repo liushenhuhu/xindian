@@ -498,29 +498,6 @@ export default {
       selectDoctor: [],
       tabsStatus: "userInfo",
       doctorList: [],
-      // 上下页需要的信息
-      // 查询参数
-      // queryParams: {
-      //   pageNum: 1,
-      //   pageSize: 10,
-      //   pId: null,
-      //   patientCode: null,
-      //   hospitalCode: null,
-      //   equipmentCode: null,
-      //   connectionTime: null,
-      //   patientName: null,
-      //   ecgType: null,
-      //   PatPhone: null,
-      //   diagnosisStatus: null,
-      //   intelligentDiagnosis: null,
-      //   diagnosisConclusion: null,
-      //   diagnosisDoctor: null,
-      //   reportTime: null,
-      //   ecgLevel: null,
-      //   doctorPhone: null,
-      //   patientSex:null,
-      //   isSelect:'2'
-      // },
       ecgType: "",
       pageNum: 1,
       anoStatus: null,
@@ -663,31 +640,31 @@ export default {
       arrList7: {},
       // 判断是不是管理员
       isDoctor: false,
+      shangxiakuzhiqi:null,
     };
   },
   created() {
     if (!this.$auth.hasRole("admin")) {
       this.isDoctor = true;
     }
-    // console.log(this.$route.query.queryParams);
+    console.log("单导传来的值")
+    console.log(this.$route.query);
     this.queryParams = this.$route.query.queryParams;
     this.ecgType = this.$route.query.ecgType;
     this.pId = this.$route.query.pId;
+    this.shangxiakuzhiqi  = this.$route.query.queryParams.indexzhi
+    // 获取十条数据
     this.getList();
-    // getPatient_management(this.pId).then(r=>{
-    //   this.data.result = r.data.intelligentDiagnosis
-    // })
-    this.getPatientdetails();
-    // this.getyujingleixing()
+
   },
   mounted() {
     // this.zidian()
     // 心电数据
-    this.get();
-
+    // this.get();
+    console.log("mounted函数")
     this.getShowBnt();
     // this.drawgrid();//canvas 画图
-    //预警的类型
+    // 预警的类型
     // this.getyujingleixing()
   },
   methods: {
@@ -883,114 +860,97 @@ export default {
       //checkPassword('abcd',this.yanzheng)
       console.log(value);
     },
-    /** 查询用户管理列表 */
+    /**
+     * 查询十条用户管理列表
+     * 其中嵌入了，查询患者用户信息列表 获取单个用户详细信息的getPatientdetails函数
+     * */
     async getList() {
-      console.log(1111);
       this.loading = true;
       await listPatient_management(this.queryParams).then((response) => {
+        console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
-        if (this.queryParams.ecgType === "JECGsingle") {
-          this.queryParams.ecgType = null;
-        }
-        this.patient_managementList.forEach((item, index) => {
-          if (this.pId == item.pId) {
-            this.index = index;
-          }
-        });
-        if (this.index == this.patient_managementList.length) {
-          this.index = 0;
-        }
       });
       this.getPatientdetails();
     },
     // 上一个
     async prev() {
       this.loading = true;
-      if (this.queryParams.pageNum == 1 && this.index == 0) {
+      if (this.queryParams.pageNum == 1 && this.shangxiakuzhiqi == 0) {
         this.$message.warning("已经是第一页！！！");
         this.loading = false;
         return;
       }
-      this.index--;
-      if (this.index < 0) {
-        if (this.queryParams.pageNum > 1) {
-          this.queryParams.pageNum--;
-          // this.index = 9
-        }
+      this.shangxiakuzhiqi--;
+      if (this.shangxiakuzhiqi == -1 && this.queryParams.pageNum > 1 ){
+        this.shangxiakuzhiqi = this.patient_managementList.length-1
+        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+        this.queryParams.pageNum--
+        this.queryParams.indexzhi = this.patient_managementList.length-1
         await this.getList();
-        this.index = this.queryParams.pageSize - 1;
+        // this.get();
+        this.loading = false;
+        return
       }
-      // console.log(this.logUserList[this.index]);
-      this.pId = this.patient_managementList[this.index].pId;
-      let anoStatus = "";
-      if (this.anoStatus != null) {
-        anoStatus = `&anoStatus=${this.anoStatus}`;
-      }
-      var newUrl =
-        this.$route.path +
-        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}` +
-        anoStatus +
-        `&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
-      window.history.replaceState("", "", newUrl);
-      this.get();
-      // await this.getLogUserList()
-      await this.getList();
+      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+      this.getPatientdetails();
+      // this.get();
+      this.loading = false;
     },
     // 点击下一个触发事件
     async next() {
       this.loading = true;
-      this.index++;
+      this.shangxiakuzhiqi++;
 
-      if (this.index >= this.patient_managementList.length) {
-        if (
-          (this.queryParams.pageNum - 1) * this.queryParams.pageSize +
-            this.patient_managementList.length >=
-          this.total
-        ) {
+      if ((this.queryParams.pageNum-1) * this.queryParams.pageSize +this.patient_managementList.length >= this.total
+        &&
+        this.shangxiakuzhiqi+1 ==  this.patient_managementList.length ){
           this.$message.warning("已经是最后一页！！！");
-          this.index--;
           this.loading = false;
           return;
-        }
-        this.queryParams.pageNum++;
-        // this.index = 0;
+      }
+
+      if (this.shangxiakuzhiqi>this.patient_managementList.length-1){
+        this.shangxiakuzhiqi = 0
+        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+        this.queryParams.pageNum++
+        this.queryParams.indexzhi = 0
         await this.getList();
-        this.index = 0;
+        // this.get();
+        this.loading = false;
+      }else {
+        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+        this.getPatientdetails();
+        // this.get();
+        this.loading = false;
       }
-      this.pId = this.patient_managementList[this.index].pId;
-      // console.log(this.patient_managementList);
-      // this.queryParams.pId = this.patient_managementList[this.index].pId;
-      let anoStatus = "";
-      if (this.anoStatus != null) {
-        anoStatus = `&anoStatus=${this.anoStatus}`;
-      }
-      var newUrl =
-        this.$route.path +
-        `?pId=${this.pId}&state=${this.$route.query.state}&pageNum=${this.queryParams.pageNum}&pageSize=${this.queryParams.pageSize}` +
-        anoStatus +
-        `&queryParams=${this.queryParams}&ecgType=${this.queryParams.ecgType}`;
-      window.history.replaceState("", "", newUrl);
-      this.get();
-      // await this.getLogUserList()
-      await this.getList();
-      // this.loading = false;
     },
+
+
     //选择医生
     selectDoctorChange(e) {
       this.data.doctorName = e[1];
     },
     // 患者用户信息
+    /**
+     * 获取单个用户详细信息
+     * 内置了获取预警类型getyujingleixing函数
+     * 内置了请求心电图函数
+     * 内置了获取医师
+     * */
     getPatientdetails() {
-      getReportByPId(this.pId).then((response) => {
+      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
+      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId
+      getReportByPId(this.patient_managementList[this.shangxiakuzhiqi].pId).then((response) => {
+        console.log(response)
         this.data.result = response.data.intelligentDiagnosis;
         this.aiResult = response.data.intelligentDiagnosis;
         this.data.resultByDoctor = response.data.diagnosisConclusion;
         this.data.doctorName = response.data.dPhone;
         this.data.diagnosisData = response.data.reportTime;
         this.data.pphone = response.data.pphone;
-        // this.data.pId = response.data.pId;
+        this.data.pId = response.data.pId;
         this.data.pastMedicalHistory = response.data.pastMedicalHistory;
         // 原先提交过的预警类型
         this.logDataType = response.data.logDataType;
@@ -1008,16 +968,12 @@ export default {
         if (response.data.patientSymptom != null) {
           this.data.patientSymptom = response.data.patientSymptom;
         }
-        // console.log(this.data)
       });
-      // 医生的信息
-      // selectDoctor().then((response) => {
-      //   this.options = response;
-      // });
       listDoc().then((r) => {
         this.doctorList = r.data;
       });
       this.getyujingleixing();
+      this.get();
     },
     //预警类型
     getyujingleixing() {
@@ -1421,9 +1377,14 @@ export default {
         _th.redraw3();
       });
     },
-    //请求数据
+
+    /**
+     *  请求心电图数据
+     * */
     get() {
-      // console.log("获得的是那个数据："+ this.pId);
+      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
+      console.log("获得的是那个数据："+ this.pId);
+      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
       // this.data =
       const loading = this.$loading({
         lock: true, //lock的修改符--默认是false
@@ -1432,18 +1393,18 @@ export default {
         background: "rgba(0, 0, 0, 0.7)", //遮罩层颜色
         target: document.querySelector("#table"), //loadin覆盖的dom元素节点
       });
-      this.data.pId = this.pId;
+      this.data.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
       var _th = this;
-      //console.log("pId:", this.pId)
+      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
+      console.log("pId:", this.pId)
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
         type: "post",
         url: "https://screen.mindyard.cn:84/get_jecg_single_web",
-        // asynsc: false,
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pid: this.pId,
+          pid: _th.patient_managementList[_th.shangxiakuzhiqi].pId,
         }),
         async: false,
         beforeSend: function (request) {
@@ -1452,7 +1413,7 @@ export default {
           request.setRequestHeader("password", "zzu123");
         },
         success: function (data) {
-          // console.log("请求成功：", data)
+          console.log("请求成功：", data)
           loading.close();
           _th.data.resultByDoctor = data.result.diagnosis_conclusion;
           _th.data.doctorName = data.result.diagnosis_doctor;
@@ -1907,496 +1868,7 @@ export default {
             _th.addtext();
             console.log(1111111);
           });
-          // var chart5 = echarts.init(document.getElementById("5"));
-          // chart5.clear()
-          // chart5.setOption({
-          //   title: {
-          //     text: "",
-          //     top: 5,
-          //     left: 5,
-          //   },
-          //   grid: {
-          //     left: '1',
-          //     right: '1',
-          //     top: '1',
-          //     bottom: '1',
-          //     containLabel: false
-          //   },
-          //   xAxis: {
-          //     type: 'category',
-          //     data: _th.x,
-          //     axisLabel: {
-          //       show: false,
-          //       interval: 3,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     }
-          //   },
-          //   yAxis: {
-          //     type: 'value',
-          //     axisLabel: {
-          //       show: false,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     //  splitNumber: 3, // 横线数
-          //     interval: 0.1, // 刻度间隔
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     },
-          //     max: 1,
-          //     min: -1
-          //   },
-          //   series: [
-          //     {
-          //       type: 'line',
-          //       smooth: true,
-          //       showSymbol: false,
-          //       data: _th.nArr[4],
-          //       z: 5,
-          //       lineStyle: {
-          //         normal: {
-          //           color: "#000000",
-          //           width: 1.5
-          //         }
-          //       },
-          //       markLine: {
-          //         z: 1,
-          //         symbol: "none",
-          //         silent: true,
-          //         lineStyle: {
-          //           type: "solid",
-          //           color: '#d77a7a',
-          //           width: 1,
-          //           //opacity: 0.5,
-          //         },
-          //         label: {
-          //           position: 'start', // 表现内容展示的位置
-          //           color: '#d77a7a'  // 展示内容颜色
-          //         },
-          //         data: _th.markdata
-          //       }
-          //     }
-          //   ],
-          // });
-          // $(window).resize(function () {
-          //   chart5.resize();
-          // });
-          // var chart6 = echarts.init(document.getElementById("6"));
-          // chart6.clear()
-          // chart6.setOption({
-          //   title: {
-          //     text: "",
-          //     top: 5,
-          //     left: 5,
-          //   },
-          //   grid: {
-          //     left: '1',
-          //     right: '1',
-          //     top: '1',
-          //     bottom: '1',
-          //     containLabel: false
-          //   },
-          //   xAxis: {
-          //     type: 'category',
-          //     data: _th.x,
-          //     axisLabel: {
-          //       show: false,
-          //       interval: 3,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     }
-          //   },
-          //   yAxis: {
-          //     type: 'value',
-          //     axisLabel: {
-          //       show: false,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     //  splitNumber: 3, // 横线数
-          //     interval: 0.1, // 刻度间隔
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     },
-          //     max: 1,
-          //     min: -1
-          //   },
-          //   series: [
-          //     {
-          //       type: 'line',
-          //       smooth: true,
-          //       showSymbol: false,
-          //       data: _th.nArr[5],
-          //       z: 5,
-          //       lineStyle: {
-          //         normal: {
-          //           color: "#000000",
-          //           width: 1.5,
-          //         }
-          //       },
-          //       markLine: {
-          //         z: 1,
-          //         symbol: "none",
-          //         silent: true,
-          //         lineStyle: {
-          //           type: "solid",
-          //           color: '#d77a7a',
-          //           width: 1,
-          //           //opacity: 0.5,
-          //         },
-          //         label: {
-          //           position: 'start', // 表现内容展示的位置
-          //           color: '#d77a7a'  // 展示内容颜色
-          //         },
-          //         data: _th.markdata
-          //       }
-          //     }
-          //   ],
-          // });
-          // $(window).resize(function () {
-          //   chart6.resize();
-          // });
-          // var chart7 = echarts.init(document.getElementById("7"));
-          // chart7.clear()
-          // chart7.setOption({
-          //   title: {
-          //     text: "",
-          //     top: 5,
-          //     left: 5,
-          //   },
-          //   grid: {
-          //     left: '1',
-          //     right: '1',
-          //     top: '1',
-          //     bottom: '1',
-          //     containLabel: false
-          //   },
-          //   xAxis: {
-          //     type: 'category',
-          //     data: _th.x,
-          //     axisLabel: {
-          //       show: false,
-          //       interval: 3,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     }
-          //   },
-          //   yAxis: {
-          //     type: 'value',
-          //     axisLabel: {
-          //       show: false,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     //  splitNumber: 3, // 横线数
-          //     interval: 0.1, // 刻度间隔
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     },
-          //     max: 1,
-          //     min: -1
-          //   },
-          //   series: [
-          //     {
-          //       type: 'line',
-          //       smooth: true,
-          //       showSymbol: false,
-          //       data: _th.nArr[6],
-          //       z: 5,
-          //       lineStyle: {
-          //         normal: {
-          //           color: "#000000",
-          //           width: 1.5,
-          //         }
-          //       },
-          //       markLine: {
-          //         z: 1,
-          //         symbol: "none",
-          //         silent: true,
-          //         lineStyle: {
-          //           type: "solid",
-          //           color: '#d77a7a',
-          //           width: 1,
-          //           //opacity: 0.5,
-          //         },
-          //         label: {
-          //           position: 'start', // 表现内容展示的位置
-          //           color: '#d77a7a'  // 展示内容颜色
-          //         },
-          //         data: _th.markdata
-          //       }
-          //     }
-          //   ],
-          // });
-          // $(window).resize(function () {
-          //   chart7.resize();
-          // });
-          // var chart8 = echarts.init(document.getElementById("8"));
-          // chart8.clear()
-          // chart8.setOption({
-          //   title: {
-          //     text: "",
-          //     top: 5,
-          //     left: 5,
-          //   },
-          //   grid: {
-          //     left: '1',
-          //     right: '1',
-          //     top: '1',
-          //     bottom: '1',
-          //     containLabel: false
-          //   },
-          //   xAxis: {
-          //     type: 'category',
-          //     data: _th.x,
-          //     axisLabel: {
-          //       show: false,
-          //       interval: 3,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     }
-          //   },
-          //   yAxis: {
-          //     type: 'value',
-          //     axisLabel: {
-          //       show: false,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     //  splitNumber: 3, // 横线数
-          //     interval: 0.1, // 刻度间隔
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     },
-          //     max: 1,
-          //     min: -1
-          //   },
-          //   series: [
-          //     {
-          //       type: 'line',
-          //       smooth: true,
-          //       showSymbol: false,
-          //       data: _th.nArr[7],
-          //       z: 5,
-          //       lineStyle: {
-          //         normal: {
-          //           color: "#000000",
-          //           width: 1.5,
-          //         }
-          //       },
-          //       markLine: {
-          //         z: 1,
-          //         symbol: "none",
-          //         silent: true,
-          //         lineStyle: {
-          //           type: "solid",
-          //           color: '#d77a7a',
-          //           width: 1,
-          //           //opacity: 0.5,
-          //         },
-          //         label: {
-          //           position: 'start', // 表现内容展示的位置
-          //           color: '#d77a7a'  // 展示内容颜色
-          //         },
-          //         data: _th.markdata
-          //       }
-          //     }
-          //   ],
-          // });
-          // $(window).resize(function () {
-          //   chart8.resize();
-          // });
-          // var chart9 = echarts.init(document.getElementById("9"));
-          // chart9.clear()
-          // chart9.setOption({
-          //   title: {
-          //     text: "",
-          //     top: 5,
-          //     left: 5,
-          //   },
-          //   grid: {
-          //     left: '1',
-          //     right: '1',
-          //     top: '1',
-          //     bottom: '1',
-          //     containLabel: false
-          //   },
-          //   xAxis: {
-          //     type: 'category',
-          //     data: _th.x,
-          //     axisLabel: {
-          //       show: false,
-          //       interval: 3,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     }
-          //   },
-          //   yAxis: {
-          //     type: 'value',
-          //     axisLabel: {
-          //       show: false,
-          //     },
-          //     axisTick: {
-          //       show: false
-          //     },
-          //     axisLine: {
-          //       show: false
-          //     },
-          //     //  splitNumber: 3, // 横线数
-          //     interval: 0.1, // 刻度间隔
-          //     splitLine: {
-          //       show: true, //让网格显示
-          //       lineStyle: {//网格样式
-          //         color: "#f8bfbf", //网格的颜色
-          //         width: 0.5, //网格的宽度
-          //         type: 'solid', //网格是实线，可以修改成虚线以及其他的类型
-          //         //opacity: 0.6,//透明度
-          //       }
-          //     },
-          //     max: 1,
-          //     min: -1
-          //   },
-          //   series: [
-          //     {
-          //       type: 'line',
-          //       smooth: true,
-          //       showSymbol: false,
-          //       data: _th.nArr[8],
-          //       z: 5,
-          //       lineStyle: {
-          //         normal: {
-          //           color: "#000000",
-          //           width: 1.5,
-          //         }
-          //       },
-          //       markLine: {
-          //         z: 1,
-          //         symbol: "none",
-          //         silent: true,
-          //         lineStyle: {
-          //           type: "solid",
-          //           color: '#d77a7a',
-          //           width: 1,
-          //           //opacity: 0.5,
-          //         },
-          //         label: {
-          //           position: 'start', // 表现内容展示的位置
-          //           color: '#d77a7a'  // 展示内容颜色
-          //         },
-          //         data: _th.markdata
-          //       }
-          //     }
-          //   ],
-          // });
-          // $(window).resize(function () {
-          //   chart9.resize();
-          // });
+
         },
         error: function (data) {
           alert("数据请求错误,请刷新页面或联系管理员");

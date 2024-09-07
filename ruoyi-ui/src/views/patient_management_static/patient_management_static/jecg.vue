@@ -150,7 +150,7 @@
       <div class="tablebox">
         <div class="table-hand">
           <div class="table-hand-left">
-            <el-select v-model="queryParams.ecgType" placeholder="请选择采集类型" clearable @change="getList"
+            <el-select v-model="queryParams.ecgType" placeholder="请选择采集类型" @change="getList"
                        class="table-hand-left-select table-hand-left-select-type">
               <el-option key="JECG" label="全部" value="JECG"></el-option>
               <el-option
@@ -340,7 +340,7 @@
                   size="mini"
                   type="text"
                   icon="el-icon-s-order"
-                  @click="lookECG(scope.row)"
+                  @click="lookECG(scope)"
                   v-hasPermi="['jecg:report:look']"
                 >查看报告
                 </el-button>
@@ -1018,24 +1018,35 @@ export default {
       this.$router.push({path: "/scatterPlot", query: {row: row, ecgType: 1}});
     },
     /** 查看心电图*/
-    lookECG(row) {
-      if(row.ecgType.includes('JECGsingle')){
+    lookECG(scope) {
+      let indexzhi = scope.$index
+      let row = scope.row
+      // let queryParams = this.queryParams
+      // queryParams.pageSize=1
+      // queryParams.pageNum = (scope.$index + 10 * (queryParams.pageNum - 1))+1
+      console.log("页面查询条件")
+      console.log( this.queryParams)
+      this.queryParams.indexzhi = indexzhi
+      console.log("index值为=", indexzhi)
+      // return
+      if (row.ecgType.includes('JECGsingle')) {
         this.$router.push({
           path: "/staticECG",
-          query: {pId: row.pId, state: 1, queryParams: this.queryParams, ecgType: "JECGsingle"}
+          query: {pId: row.pId, state: 1, queryParams:  this.queryParams, ecgType: "JECGsingle"}
         });
+      } else if (row.ecgType.includes('JECG4')) {
+        this.$router.push({
+          path: "/JECG4_ECG",
+          query: {pId: row.pId, state: 4, queryParams:  this.queryParams, ecgType: "JECG4"}
+        });
+      } else if (row.ecgType.includes('JECG12')) {
+        this.$router.push({
+          path: "/restingECG",
+          query: {pId: row.pId, state: 12, queryParams:  this.queryParams, ecgType: "JECG12"}
+        });
+      } else {
+        this.$message.warning('未知类型，请联系管理员')
       }
-      else if(row.ecgType.includes('JECG4')){
-        this.$router.push({path: "/JECG4_ECG", query: {pId: row.pId,state:4,queryParams:this.queryParams,ecgType:"JECG4"}});
-      }
-      else if(row.ecgType.includes('JECG12')){
-        this.$router.push({path: "/restingECG", query: {pId:row.pId,state:12,queryParams:this.queryParams,ecgType:"JECG12"}});}
-      else{this.$message.warning('未知类型，请联系管理员')}
-      return
-      this.$router.push({
-        path: "/staticECG",
-        query: {pId: row.pId, state: 1, queryParams: this.queryParams, ecgType: "JECGsingle"}
-      });
     },
     /** 生成报告*/
     handleInform(row) {
