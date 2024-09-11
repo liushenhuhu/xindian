@@ -25,6 +25,7 @@
 
 
     <repositories>
+
         <repository>
             <id>com.e-iceblue</id>
             <name>e-iceblue</name>
@@ -38,6 +39,12 @@
     </repositories>
 
     <dependencies>
+<!--        webSocket   start-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+<!--        webSocket   end-->
 
         <!--用于生成pdf-->
         <dependency>

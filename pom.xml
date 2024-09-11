@@ -32,12 +32,22 @@
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
         <jwt.version>0.9.1</jwt.version>
+        <netty.version>4.1.74.Final</netty.version>
 
     </properties>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
+
+            <!--        webSocket   start-->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <!--        webSocket   end-->
+
             <!--用于jfreechart生成图片  -->
             <dependency>
                 <groupId>org.jfree</groupId>

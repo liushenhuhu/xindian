@@ -198,6 +198,45 @@ public class SysLoginController {
     }
 
 
+
+
+    /**
+     * app登录方法
+     *
+     * @param loginBody 登录信息
+     * @return 结果
+     */
+    @PostMapping("/appLoginSkip")
+    public AjaxResult appLoginSkip(@RequestBody LoginBody loginBody) throws Exception {
+
+        String mobile = loginBody.getMobile();
+        String smsCode = loginBody.getSmsCode();
+        String uuid = loginBody.getUuid();
+        String token=loginService.appLoginSkip(mobile, smsCode, uuid);
+        String numberPhone = loginBody.getMobile();
+        AjaxResult result = AjaxResult.success();
+        result.put(Constants.TOKEN,token);
+        result.put("phone",numberPhone);
+        String encrypt = aesUtils.encrypt(numberPhone);
+        AppData appData = appDataService.selectAppDataByPatientPhone(encrypt);
+        if (null == appData) {
+            result.put("BindingState", false);
+        } else {
+            result.put("BindingState", true);
+        }
+        Doctor doctor = doctorService.selectDoctorByDoctorPhone(encrypt);
+        if(null == doctor){
+            result.put("IsDoctor",false);
+        } else {
+            result.put("IsDoctor",true);
+        }
+        return result;
+
+    }
+
+
+
+
     /**
      * AES解密
      */

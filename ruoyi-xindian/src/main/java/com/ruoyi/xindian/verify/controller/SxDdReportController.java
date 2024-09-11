@@ -10,7 +10,10 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
+import com.ruoyi.xindian.equipment.controller.EquipmentController;
 import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
+import com.ruoyi.xindian.equipment.domain.Equipment;
+import com.ruoyi.xindian.equipment.service.IEquipmentService;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
@@ -85,6 +88,10 @@ public class SxDdReportController {
     @Resource
     private IPatientManagementService patientManagementService;
 
+
+    @Resource
+    private IEquipmentService equipmentService;
+
     @PostMapping("/addDdReport")
     public AjaxResult getReport(@Validated @RequestBody SxDdReportVO sxReportVO) throws Exception{
 
@@ -144,9 +151,22 @@ public class SxDdReportController {
                     }
 
 
+                    Equipment equipment = equipmentService.selectEquipmentByEquipmentCode(sxDdReport.getSn());
+
+                    if (equipment==null){
+                         equipment = new Equipment();
+                         equipment.setEquipmentCode(sxDdReport.getSn());
+                         equipment.setEquipmentVersion("V1.0");
+                         equipment.setEquipmentStatus("False");
+                         equipment.setHospitalCode("29");
+                         equipment.setEquipmentType("DECGsingleSX");
+                        equipmentService.insertEquipment(equipment);
+
+                    }
+
                     PatientManagement patientManagement = new PatientManagement();
                     patientManagement.setpId(pId);
-                    patientManagement.setHospitalCode("29");
+                    patientManagement.setHospitalCode(equipment.getHospitalCode());
                     patientManagement.setEquipmentCode(sxDdReport.getSn());
 
                     SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:ss:mm");

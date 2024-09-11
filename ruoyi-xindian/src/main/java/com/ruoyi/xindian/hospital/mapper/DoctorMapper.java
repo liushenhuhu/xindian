@@ -71,7 +71,7 @@ public interface DoctorMapper
      */
     public int deleteDoctorByDoctorIds(Long[] doctorIds);
 
-    List<ListValueAndLabelVO> selectDoc();
+    List<ListValueAndLabelVO> selectDoc(Doctor doctor);
 
 
     /**

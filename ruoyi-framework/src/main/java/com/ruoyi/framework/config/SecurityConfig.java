@@ -118,6 +118,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/product/product/*").anonymous()
                 .antMatchers("/api/v1/callBack").anonymous()
                 .antMatchers("/visit/pay/callBack").anonymous()
+                .antMatchers("/chatting/noToken/*").anonymous()
                 .antMatchers("/survey/addWSurveyHistory").anonymous()
                 .antMatchers("/system/notice/getNotice").anonymous()
                 .antMatchers("/appData/appData/addQuestionnaireRegister").anonymous()
@@ -126,7 +127,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/slideshow/slideshow/getAppSlideshow").permitAll()
                 .antMatchers("/system/user/profile/updatePwdByPhoneT").anonymous()
                 .antMatchers("/actuator/prometheus").anonymous()
-                .antMatchers("/login", "/wxLogin","/wxLoginSkip", "/wxOpenId","/wxGZHOpenId","/loginDoc","/register","/ecg/report/addReport","/ecg/report/addDdReport","/system/notice/appList", "/register_doctor", "/captchaImage").anonymous()
+                .antMatchers("/login", "/wxLogin","/wxLoginSkip", "/appLoginSkip","/wxOpenId","/wxGZHOpenId","/loginDoc","/register","/ecg/report/addReport","/ecg/report/addDdReport","/system/notice/appList", "/register_doctor", "/captchaImage").anonymous()
 
                 .antMatchers("/websocket").anonymous()
 //                .antMatchers("/medicalData/**").anonymous()

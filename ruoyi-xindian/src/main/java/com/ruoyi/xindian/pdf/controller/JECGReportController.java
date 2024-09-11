@@ -1,12 +1,33 @@
 package com.ruoyi.xindian.pdf.controller;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.Rectangle;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Canvas;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.alert_log.domain.JecgSingle;
 import com.ruoyi.xindian.alert_log.service.JecgSingleService;
+import com.ruoyi.xindian.hospital.domain.Doctor;
+import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.medical.domain.MedicalHistory;
 import com.ruoyi.xindian.medical.service.IMedicalHistoryService;
 import com.ruoyi.xindian.patient.domain.Patient;
@@ -14,17 +35,16 @@ import com.ruoyi.xindian.patient.service.IPatientService;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.service.IPatientManagementService;
 import com.ruoyi.xindian.pdf.domain.JECGSingnalData;
+import com.ruoyi.xindian.pdf.domain.ReportData;
+import com.ruoyi.xindian.pdf.domain.WeekPdfData;
 import com.ruoyi.xindian.pdf.service.IPdfDataService;
 import com.ruoyi.xindian.pdf.utils.CreatePdf;
 import com.ruoyi.xindian.pdf.utils.PdfGenerator;
-import com.ruoyi.xindian.pdf.domain.ReportData;
-import com.ruoyi.xindian.pdf.domain.WeekPdfData;
 import com.ruoyi.xindian.pmEcgData.domain.PmEcgData;
 import com.ruoyi.xindian.pmEcgData.service.IPmEcgDataService;
 import com.ruoyi.xindian.report.domain.Report;
 import com.ruoyi.xindian.report.service.IReportService;
 import com.ruoyi.xindian.util.DateUtil;
-import com.ruoyi.xindian.weekDetectionTime.domain.WeekDetectionTime;
 import com.ruoyi.xindian.weekDetectionTime.service.IWeekDetectionTimeService;
 import com.ruoyi.xindian.weekReport.domain.WeekReport;
 import com.ruoyi.xindian.weekReport.service.IWeekReportService;
@@ -33,35 +53,31 @@ import com.spire.pdf.PdfDocument;
 import com.spire.pdf.PdfPageBase;
 import com.spire.pdf.graphics.PdfBlendMode;
 import com.spire.pdf.graphics.PdfTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.*;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pdf/jecgReport")
@@ -104,6 +120,9 @@ public class JECGReportController extends BaseController {
     @Resource
     private IWeekReportService weekReportService;
 
+    @Autowired
+    private IDoctorService doctorService;
+
     @Resource
     private IWeekDetectionTimeService weekDetectionTimeService;
 
@@ -117,6 +136,15 @@ public class JECGReportController extends BaseController {
         if (patientManagement1 == null) {
             throw new ServiceException("数据不存在");
         }
+        String pdfName = patientManagement.getpId() + "_ecg.pdf";
+        String pdfPath = path + "pdf/" + pdfName;
+        File file = new File(pdfPath);
+        // 检查文件是否存在
+        if (file.exists()) {
+            return AjaxResult.success(updateReport(patientManagement1));
+        }
+
+
         HttpHeaders headers = new HttpHeaders(); //构建请求头
         headers.setContentType(MediaType.APPLICATION_JSON);
         Map<String, Object> paramsMap = new HashMap<>();
@@ -136,6 +164,7 @@ public class JECGReportController extends BaseController {
             } else {
                 paramsMap.put("ecgType", "4");
                 analysis = "4导联+解析结果";
+                is = 4;
             }
             url = "https://screen.mindyard.cn:84/get_jecg_report_12";
         }
@@ -149,6 +178,7 @@ public class JECGReportController extends BaseController {
         try {
             sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ServiceException("pdf生成失败");
         }
         try {
@@ -167,23 +197,30 @@ public class JECGReportController extends BaseController {
 
                 PdfDocument pdf2 = new PdfDocument();
                 pdf2.loadFromBytes(decodedData);
+
+                String text1 = "(本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.)";
                 String outPath1 = "";
                 Map<String, String> dataMap = new HashMap<>();
                 dataMap.put("name", patientManagement1.getPatientName() != null && !patientManagement1.getPatientName().isEmpty() ? aesUtils.decrypt(patientManagement1.getPatientName()) : "");
-                dataMap.put("age", patientManagement1.getBirthDay() != null && !patientManagement1.getBirthDay().isEmpty() ? DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(patientManagement1.getBirthDay())) + "" : "0");
+                dataMap.put("tongzhi",patientManagement1.getDiagnosisStatus() != null && patientManagement1.getDiagnosisStatus()!=1L?text1 : "");
+                dataMap.put("age", patientManagement1.getBirthDay() != null && !patientManagement1.getBirthDay().isEmpty() ? DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(patientManagement1.getBirthDay())) + "" :patientManagement1.getPatientAge()!=null ? patientManagement1.getPatientAge(): "0");
                 dataMap.put("sex", patientManagement1.getPatientSex());
-                dataMap.put("conclusion", patientManagement1.getIntelligentDiagnosis() != null && !patientManagement1.getIntelligentDiagnosis().isEmpty() ? patientManagement1.getIntelligentDiagnosis() : patientManagement1.getDiagnosisConclusion());
+                dataMap.put("conclusion", patientManagement1.getDiagnosisConclusion() != null && !patientManagement1.getDiagnosisConclusion().isEmpty() ? patientManagement1.getDiagnosisConclusion() : patientManagement1.getIntelligentDiagnosis());
                 dataMap.put("heart", ecgAnalysisData.get("平均心率").toString());
                 dataMap.put("pId", patientManagement1.getpId());
                 dataMap.put("analysis", analysis);
+                dataMap.put("administrative", patientManagement1.getHospitalName());
                 dataMap.put("reportDate", sdf1.format(patientManagement1.getConnectionTime()));
                 dataMap.put("newDate", sdf.format(new Date()));
-                dataMap.put("doctor", patientManagement1.getDiagnosisDoctor() != null && !patientManagement1.getDiagnosisDoctor().isEmpty() ? aesUtils.decrypt(patientManagement1.getDiagnosisDoctor()) : "");
+//                dataMap.put("doctor", patientManagement1.getDiagnosisDoctor() != null && !patientManagement1.getDiagnosisDoctor().isEmpty() ? aesUtils.decrypt(patientManagement1.getDiagnosisDoctor()) : "");
                 dataMap.put("pr", ecgAnalysisData.get("PR间期").toString());
                 dataMap.put("qrs", ecgAnalysisData.get("QRS波时限").toString());
                 dataMap.put("qtqtc", ecgAnalysisData.get("QT间期").toString() + "/" + ecgAnalysisData.get("QTc").toString());
                 dataMap.put("pqrst", ecgAnalysisData.get("P波时限").toString() + "/" + ecgAnalysisData.get("QRS波时限") + "/" + ecgAnalysisData.get("T波时限").toString());
-//            dataMap.put("rv5sv1", ecgAnalysisData.get("P波时限").toString()+"/"+ecgAnalysisData.get("QRS波时限")+"/"+ecgAnalysisData.get("T波时限").toString());
+                if (is!=0){
+                    dataMap.put("RV_SV", ecgAnalysisData.get("RV5_SV1")!=null&&ecgAnalysisData.get("SV1_mv")!=null? subtractBigDecimals(ecgAnalysisData.get("RV5_SV1").toString(), ecgAnalysisData.get("SV1_mv").toString()) +"/" + ecgAnalysisData.get("SV1_mv").toString():"0/0");
+                    dataMap.put("RV+SV", ecgAnalysisData.get("RV5_SV1")!=null?ecgAnalysisData.get("RV5_SV1").toString():"0");
+                };
                 Map<String, Object> o = new HashMap<>();
                 o.put("tempPath", tempPath);
                 o.put("dataMap", dataMap);
@@ -193,6 +230,9 @@ public class JECGReportController extends BaseController {
                 String s = MergePages(pdfByTemplate, pdf2, response, patientManagement1.getpId(), is);
                 //生成完成后删除合并的pdf，保留合并后的pdf
                 deleteFile(outPath1);
+                if (patientManagement1.getDiagnosisStatus()!=null&&patientManagement1.getDiagnosisStatus()==1){
+                    addDoctor(patientManagement1);
+                }
                 return AjaxResult.success(s);
             }
             return AjaxResult.error("pdf数据解析异常");
@@ -202,6 +242,146 @@ public class JECGReportController extends BaseController {
 
 
     }
+
+
+    public static BigDecimal addBigDecimals(String num1, String num2) {
+        // 创建 BigDecimal 对象
+        BigDecimal bd1 = new BigDecimal(num1);
+        BigDecimal bd2 = new BigDecimal(num2);
+
+        // 执行加法操作
+        return bd1.add(bd2);
+    }
+
+    public static BigDecimal subtractBigDecimals(String num1, String num2) {
+        try {
+            // 创建 BigDecimal 对象并执行减法操作
+            BigDecimal bd1 = new BigDecimal(num1);
+            BigDecimal bd2 = new BigDecimal(num2);
+            return bd1.subtract(bd2);
+        }catch (Exception e){
+            return new BigDecimal("0");
+        }
+    }
+
+    /**
+     * 添加医生签名
+     * @param patientManagement
+     * @throws FileNotFoundException
+     */
+    public void addDoctor(PatientManagement patientManagement) throws FileNotFoundException {
+        String src = "/home/chenpeng/workspace/system/xindian/uploadPath/pdf/"+patientManagement.getpId()+"_ecg.pdf";
+        String dest = "/home/chenpeng/workspace/system/xindian/uploadPath/pdf/"+patientManagement.getpId()+"_md.pdf";
+        try {
+            PdfReader reader = new PdfReader(src);
+            PdfWriter writer = new PdfWriter(dest);
+            // 使用PdfDocument和Document来添加内容
+            com.itextpdf.kernel.pdf.PdfDocument pdfDoc = new com.itextpdf.kernel.pdf.PdfDocument(reader,writer);
+            Document document = new Document(pdfDoc);
+            Doctor doctor = doctorService.selectDoctorByDoctorPhone(patientManagement.getDPhone());
+            //添加电子签
+            if (doctor!=null&&doctor.getDzVisa() != null) {
+                String wdir = "/home/chenpeng/workspace/system/xindian/uploadPath" + doctor.getDzVisa();
+                ImageData imageData = ImageDataFactory.create(wdir);
+                if (patientManagement.getEcgType()!=null&&patientManagement.getEcgType().contains("JECG12")){
+                    Image image = new Image(imageData)
+                            .setFixedPosition(698, 30)
+                            .scaleToFit(100, 100)
+                            .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                            .setRotationAngle(Math.toRadians(90));
+                    document.add(image);
+                }else {
+                    Image image = new Image(imageData)
+                            .setFixedPosition(698, 60)
+                            .scaleToFit(100, 100)
+                            .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                            .setRotationAngle(Math.toRadians(90));
+                    document.add(image);
+                }
+            }
+            pdfDoc.close();
+            document.close();
+
+            pdfDoc = new com.itextpdf.kernel.pdf.PdfDocument(new PdfReader(dest), new PdfWriter(src));
+            pdfDoc.close();
+            Files.delete(Paths.get(dest));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private String updateReport(PatientManagement patientManagement1) throws IOException {
+
+        String src = "/home/chenpeng/workspace/system/xindian/uploadPath/pdf/"+patientManagement1.getpId()+"_ecg.pdf";
+        String dest = "/home/chenpeng/workspace/system/xindian/uploadPath/pdf/"+patientManagement1.getpId()+"_md.pdf";
+        String dests = "/home/chenpeng/workspace/system/xindian/uploadPath/pdf/"+patientManagement1.getpId()+"_mdt.pdf";
+        try  {
+            PdfReader reader = new PdfReader(src);
+            PdfWriter writer = new PdfWriter(dest);
+            // 使用PdfDocument和Document来添加内容
+            com.itextpdf.kernel.pdf.PdfDocument pdfDoc = new com.itextpdf.kernel.pdf.PdfDocument(reader, writer);
+            Document document = new Document(pdfDoc);
+//                PdfFont font = PdfFontFactory.createFont("./ruoyi-xindian/src/main/java/com/ruoyi/xindian/pdf/utils/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
+            PdfFont font = PdfFontFactory.createFont("/home/chenpeng/workspace/system/xindian/ttf/STXIHEI.TTF", PdfEncodings.IDENTITY_H, true);
+            PdfCanvas canvas = new PdfCanvas(pdfDoc.getFirstPage());
+            // 指定要覆盖的区域
+            Rectangle rect = new Rectangle(687,433, 120, 100);
+//            // 设置填充颜色为白色
+            canvas.setFillColor(ColorConstants.WHITE);
+            canvas.rectangle(rect.getLeft(), rect.getBottom(), rect.getWidth(), rect.getHeight());
+            canvas.fill();
+
+            if (patientManagement1.getDiagnosisStatus()!=null&&patientManagement1.getDiagnosisStatus()==1){
+                if (patientManagement1.getEcgType()!=null&&patientManagement1.getEcgType().contains("JECG12")){
+                    Rectangle rect1 = new Rectangle(75,68, 700, 20);
+                    canvas.setFillColor(ColorConstants.WHITE);
+                    canvas.rectangle(rect1.getLeft(), rect1.getBottom(), rect1.getWidth(), rect1.getHeight());
+                    canvas.fill();
+                }else {
+                    Rectangle rect1 = new Rectangle(75,95, 700, 20);
+                    canvas.setFillColor(ColorConstants.WHITE);
+                    canvas.rectangle(rect1.getLeft(), rect1.getBottom(), rect1.getWidth(), rect1.getHeight());
+                    canvas.fill();
+                }
+            }
+
+
+
+
+
+            pdfDoc.close();
+            document.close();
+
+            PdfReader reader1 = new PdfReader(dest);
+            PdfWriter writer1 = new PdfWriter(dests);
+
+            com.itextpdf.kernel.pdf.PdfDocument pdfDoc1 = new com.itextpdf.kernel.pdf.PdfDocument(reader1, writer1);
+            Canvas canvas1 = new Canvas(new PdfCanvas(pdfDoc1.getFirstPage()), pdfDoc, rect);
+            // 设置文本内容
+            String text = patientManagement1.getDiagnosisConclusion() != null && !patientManagement1.getDiagnosisConclusion().isEmpty() ? patientManagement1.getDiagnosisConclusion() : patientManagement1.getIntelligentDiagnosis();
+
+            Text title = new Text(text).setFont(font).setFontSize(9);
+
+            Paragraph p = new Paragraph().add(title);
+            canvas1.add(p);
+            canvas1.close();
+            pdfDoc1.close();
+            pdfDoc = new com.itextpdf.kernel.pdf.PdfDocument(new PdfReader(dests), new PdfWriter(src));
+            pdfDoc.close();
+
+            Files.delete(Paths.get(dests));
+            Files.delete(Paths.get(dest));
+            if (patientManagement1.getDiagnosisStatus()!=null&&patientManagement1.getDiagnosisStatus()==1){
+                addDoctor(patientManagement1);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String pdfName = patientManagement1.getpId() + "_ecg.pdf";
+        return url + "/pdf/" + pdfName;
+    }
+
 
     /**
      * 删除指定文件
@@ -231,12 +411,12 @@ public class JECGReportController extends BaseController {
         page2.getCanvas().setTransparency(1f, 1f, PdfBlendMode.Normal);
         //将pdf1的第一页内容写入pdf2的第二页中的指定位置
         if (type == 12) {
-            page2.getCanvas().drawTemplate(template, new Point2D.Float(60, 175));
+            page2.getCanvas().drawTemplate(template, new Point2D.Float(60, 170));
         } else {
-            page2.getCanvas().drawTemplate(template, new Point2D.Float(60, 200));
+            page2.getCanvas().drawTemplate(template, new Point2D.Float(60, 180));
         }
 
-        String pdfName = pId + ".pdf";
+        String pdfName = pId + "_ecg.pdf";
         String pdfPath = path + "pdf/" + pdfName;
         //保存pdf2
         pdf2.saveToFile(pdfPath, FileFormat.PDF);

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.report.mapper.HospRelaDoctorMapper">
+
+    <resultMap type="HospRelaDoctor" id="HospRelaDoctorResult">
+        <result property="id"    column="id"    />
+        <result property="hospCode"    column="hosp_code"    />
+        <result property="dPhoneAes"    column="d_phone_aes"    />
+        <result property="dNameAes"    column="d_name_aes"    />
+    </resultMap>
+
+    <sql id="selectHospRelaDoctorVo">
+        select id, hosp_code, d_phone_aes, d_name_aes from hosp_rela_doctor
+    </sql>
+
+    <select id="selectHospRelaDoctorList" parameterType="HospRelaDoctor" resultMap="HospRelaDoctorResult">
+        <include refid="selectHospRelaDoctorVo"/>
+        <where>
+            <if test="hospCode != null  and hospCode != ''"> and hosp_code = #{hospCode}</if>
+            <if test="dPhoneAes != null  and dPhoneAes != ''"> and d_phone_aes = #{dPhoneAes}</if>
+            <if test="dNameAes != null  and dNameAes != ''"> and d_name_aes = #{dNameAes}</if>
+        </where>
+    </select>
+
+    <select id="selectHospRelaDoctorById" parameterType="Long" resultMap="HospRelaDoctorResult">
+        <include refid="selectHospRelaDoctorVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHospRelaDoctor" parameterType="HospRelaDoctor">
+        insert into hosp_rela_doctor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="hospCode != null">hosp_code,</if>
+            <if test="dPhoneAes != null">d_phone_aes,</if>
+            <if test="dNameAes != null">d_name_aes,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="hospCode != null">#{hospCode},</if>
+            <if test="dPhoneAes != null">#{dPhoneAes},</if>
+            <if test="dNameAes != null">#{dNameAes},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHospRelaDoctor" parameterType="HospRelaDoctor">
+        update hosp_rela_doctor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hospCode != null">hosp_code = #{hospCode},</if>
+            <if test="dPhoneAes != null">d_phone_aes = #{dPhoneAes},</if>
+            <if test="dNameAes != null">d_name_aes = #{dNameAes},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHospRelaDoctorById" parameterType="Long">
+        delete from hosp_rela_doctor where id = #{id}
+    </delete>
+
+    <delete id="deleteHospRelaDoctorByIds" parameterType="String">
+        delete from hosp_rela_doctor where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

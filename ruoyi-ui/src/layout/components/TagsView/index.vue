@@ -160,6 +160,9 @@ export default {
       if(view.path == '/restingECG' || view.path == '/JECG4_ECG' || view.path == '/staticECG' ){
         sessionStorage.removeItem('SMSverification');
       }
+      if(view.path == '/doctor_diagnose'){
+        sessionStorage.removeItem('tag_doctor_diagnose');
+      }
       this.$cache.session.remove(view.path)
       this.$tab.closePage(view).then(({ visitedViews }) => {
         if (this.isActive(view)) {

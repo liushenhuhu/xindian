@@ -1,6 +1,7 @@
 package com.ruoyi.xindian.util;
 
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,7 +88,36 @@ public class RoleUtils {
 
     }
 
+    /**
+     * 判断是否拥有一些角色中的其中一个角色
+     */
+    public static boolean isRoleListOne(SysUser user, List<String> roleCodes) {
 
+        if (user == null){
+            return false;
+        }
+        Long[] roleIds = user.getRoleIds()!=null&&user.getRoleIds().length>0? user.getRoleIds():new Long[]{user.getRoleId()};
+        if (roleIds == null){
+            return false;
+        }
+        try {
+            for (Long roleId : roleIds) {
+                if (roleId == null){
+                    continue;
+                }
+                for (String roleCode : roleCodes) {
+                    if (roleId.equals(Long.valueOf(roleCode))){
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (Exception e){
+            return false;
+        }
+        return false;
+
+    }
 
 
 }

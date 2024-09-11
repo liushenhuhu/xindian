@@ -228,10 +228,40 @@
                     </template>
                   </el-table-column>
 
+                  <!--      <el-table-column label="用户管理id" align="center" prop="pId" show-overflow-tooltip/>
+                        <el-table-column label="用户姓名" align="center" prop="patientName"/>
+                        <el-table-column label="用户身份证号" align="center" prop="patientCode"/>
+                        <el-table-column label="用户年龄" align="center" prop="patientAge"/>
+                        <el-table-column label="用户性别" align="center" prop="patientSex">
+                          <template slot-scope="scope">
+                            <dict-tag :options="dict.type.sex" :value="scope.row.patientSex"/>
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="用户来源" align="center" prop="patientSource"/>
+                        <el-table-column label="用户电话" align="center" prop="patientPhone"/>
+                        <el-table-column label="家属电话" align="center" prop="familyPhone"/>
+                        <el-table-column label="监测状态" align="center" prop="monitoringStatus">
+                          <template slot-scope="scope">
+                            <dict-tag :options="dict.type.monitoring_status" :value="scope.row.monitoringStatus"/>
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="医院代号" align="center" prop="hospitalCode"/>
+                        <el-table-column label="医院名称" align="center" prop="hospitalName" width="150"/>
+                        <el-table-column label="设备号" align="center" prop="equipmentCode"/>
+                        <el-table-column label="在线状态" align="center" prop="onlineStatus">
+                          <template slot-scope="scope">
+                            <dict-tag :options="dict.type.monitoring_status" :value="scope.row.onlineStatus"/>
+                          </template>
+                        </el-table-column>
+                        <el-table-column label="心电种类" align="center" prop="ecgType">
+                          <template slot-scope="scope">
+                            <dict-tag :options="dict.type.ecg_type" :value="scope.row.ecgType"/>
+                          </template>
+                        </el-table-column>-->
                   <el-table-column label="智能诊断" align="center" prop="intelligentDiagnosis" width="200"
                                    show-overflow-tooltip/>
 
-                  <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
+
                   <el-table-column label="用户姓名" align="center" prop="patientName" min-width="100">
                     <template slot-scope="scope">
                       <span v-if="isShowName.status===true">{{ scope.row.patientName }}</span>
@@ -245,12 +275,7 @@
                     </template> -->
                   </el-table-column>
                   <el-table-column label="性别" align="center" prop="patientSex" min-width="50"></el-table-column>
-                  <el-table-column label="医院" align="center" prop="hospitalName" min-width="200">
-                    <template slot-scope="scope">
-                      <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
-                      <span v-else>***************</span>
-                    </template>
-                  </el-table-column>
+
                   <!--      <el-table-column label="用户症状" align="center" prop="patientSymptom" show-overflow-tooltip/>-->
                   <!--      <el-table-column label="医院名称" align="center" prop="hospitalName"/>-->
                   <!--      <el-table-column label="报告时间" align="center" prop="reportTime" width="100" >-->
@@ -263,18 +288,12 @@
                       <dict-tag :options="dict.type.ecg_level" :value="scope.row.ecgLevel"/>
                     </template>
                   </el-table-column>
-                  <el-table-column label="心电种类" align="center" prop="ecgType" width="140">
-                    <template slot-scope="scope">
-                      <el-tag>
-                        {{ scope.row.ecgType }}
-                      </el-tag>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="是否标注预警状态" width="150" align="center" prop="ecgIsLabel">
-                    <template slot-scope="scope">
-                      <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>
-                    </template>
-                  </el-table-column>
+
+                  <!--            <el-table-column label="是否标注预警状态" width="150" align="center" prop="ecgIsLabel">-->
+                  <!--              <template slot-scope="scope">-->
+                  <!--                <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>-->
+                  <!--              </template>-->
+                  <!--            </el-table-column>-->
                   <!--
                   <el-table-column label="是否标注预警状态" align="center" prop="ecgIsLabel">
                     <template slot-scope="scope">
@@ -282,6 +301,63 @@
                     </template>
                   </el-table-column>-->
 
+
+                  <el-table-column label="心率(bpm)" align="center" prop="ecgAnalysisData" width="100">
+                    <template slot-scope="scope">
+                      <el-tag v-if="getAgeTypeSection(scope.row.patientAge,getEcgType(scope.row.ecgAnalysisData,'平均心率'))" type="danger">{{getEcgType(scope.row.ecgAnalysisData,"平均心率")}}</el-tag>
+                      <el-tag v-if="!getAgeTypeSection(scope.row.patientAge,getEcgType(scope.row.ecgAnalysisData,'平均心率'))" >{{getEcgType(scope.row.ecgAnalysisData,"平均心率")}}</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="心肌梗塞" align="center" prop="ecgAnalysisData" width="100">
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
+                      <el-tag v-else>--</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="肥厚型心肌病" align="center" prop="ecgAnalysisData" width="100">
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
+                      <el-tag v-else>--</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="扩张型心肌病" align="center" prop="ecgAnalysisData" width="100">
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
+                      <el-tag v-else>--</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="高血钾" align="center" prop="ecgAnalysisData" width="100">
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
+                      <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
+                      <el-tag v-else>--</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
+                  <el-table-column label="医院" align="center" prop="hospitalName" min-width="200">
+                    <template slot-scope="scope">
+                      <span v-if="isShowName.status===true">{{ scope.row.hospitalName }}</span>
+                      <span v-else>***************</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="心电种类" align="center" prop="ecgType" width="140">
+                    <template slot-scope="scope">
+                      <el-tag>
+                        {{ scope.row.ecgType }}
+                      </el-tag>
+                    </template>
+                  </el-table-column>
                   <el-table-column label="诊断状态" align="center" prop="diagnosisStatus" width="100">
                     <template slot-scope="scope">
                       <dict-tag :options="dict.type.diagnosis_status" :value="scope.row.diagnosisStatus"/>
@@ -298,19 +374,19 @@
                       <span v-else>***************</span>
                     </template>
                   </el-table-column>
-                  <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">
-                    <template slot-scope="scope">
-                      <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>
-                      <span v-else>***************</span>
-                    </template>
-                  </el-table-column>
+                  <!--            <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">-->
+                  <!--              <template slot-scope="scope">-->
+                  <!--                <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>-->
+                  <!--                <span v-else>***************</span>-->
+                  <!--              </template>-->
+                  <!--            </el-table-column>-->
                   <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
-                  <el-table-column label="用户身份证号" align="center" prop="patientCode" min-width="200">
-                    <template slot-scope="scope">
-                      <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>
-                      <span v-else>***************</span>
-                    </template>
-                  </el-table-column>
+                  <!--            <el-table-column label="用户身份证号" align="center" prop="patientCode" min-width="200">-->
+                  <!--              <template slot-scope="scope">-->
+                  <!--                <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>-->
+                  <!--                <span v-else>***************</span>-->
+                  <!--              </template>-->
+                  <!--            </el-table-column>-->
                   <el-table-column label="用户过往病史" align="center" prop="patientCode" min-width="200">
                     <template slot-scope="scope">
               <span v-if="isShowName.status===true">
@@ -326,6 +402,7 @@
                         type="text"
                         icon="el-icon-s-order"
                         @click="lookECG(scope.row)"
+                        v-hasPermi="['jecg:report:look']"
                       >查看报告
                       </el-button>
                       <el-popover placement="left" width="50" trigger="click" style="margin-left:8px">
@@ -335,6 +412,7 @@
                           type="text"
                           icon="el-icon-s-operation"
                           @click="selectECG(scope.row)"
+                          v-hasPermi="['jecg:report:diagnose']"
                           v-if="scope.row.diagnosisStatus!=1"
                         >选择医生诊断
                         </el-button>
@@ -342,6 +420,7 @@
                           size="mini"
                           type="text"
                           icon="el-icon-star-off"
+                          v-hasPermi="['jecg:report:find']"
                           @click="findJEcgReport(scope.row)"
                         >查看静态报告
                         </el-button>
@@ -362,9 +441,33 @@
                         <el-button
                           size="mini"
                           type="text"
+                          icon="el-icon-download"
+                          @click="downloadData(scope.row)"
+                          v-hasPermi="['patient:patient:inform']"
+                        >下载数据
+                        </el-button>
+                        <el-button
+                          size="mini"
+                          type="text"
                           icon="el-icon-position"
                           @click="sendMsg(scope.row)"
                         >发送短信
+                        </el-button>
+                        <!--          <el-button-->
+                        <!--            size="mini"-->
+                        <!--            type="text"-->
+                        <!--            icon="el-icon-edit"-->
+                        <!--            @click="handleUpdate(scope.row)"-->
+                        <!--            v-hasPermi="['patient_management:patient_management:export']"-->
+                        <!--          >修改-->
+                        <!--          </el-button>-->
+                        <el-button
+                          size="mini"
+                          type="text"
+                          icon="el-icon-delete"
+                          @click="handleDelete(scope.row)"
+                          v-hasPermi="['jecg:report:del']"
+                        >删除
                         </el-button>
                         <el-button
                           slot="reference"
@@ -528,7 +631,7 @@ export default {
         dPhone: null,
         hospital: null,
       },
-      activeName: 'first',
+      activeName: sessionStorage.getItem('tag_doctor_diagnose')?sessionStorage.getItem('tag_doctor_diagnose') : 'first',
       activeNameTwo: 'first',
       queryParams: {
         pageNum: 1,
@@ -645,17 +748,23 @@ export default {
     document.documentElement.scrollTop = this.currentScrollPos || 0
   },
 
-  beforeRouteLeave(to, from, next) {
-    this.currentScrollPos = document.documentElement.scrollTop || 0
-    next()
+
+  mounted() {
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  },
+  beforeDestroy() {
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   },
 
   created() {
+    console.log('created')
     this.queryParams.diagnosisStatus = '2';
-    this.getList()
+    this.handleClick()
   },
   methods: {
-
+    handleBeforeUnload(event) {
+      console.log("页面被关闭")
+    },
     hideMiddleName(patientName) {
       if (patientName.length <= 1) {
         return "*"; // 一个字的则用一个 * 代替
@@ -719,6 +828,7 @@ export default {
     },
 
     handleClick(tab, event) {
+      sessionStorage.setItem('tag_doctor_diagnose',this.activeName)
       if (this.activeName=='first'){
         this.queryParams.diagnosisStatus = '2';
         this.getList()
@@ -749,7 +859,6 @@ export default {
         this.queryParamsEcg.ecgType = this.ecgType
       }
       listPatient_management(this.queryParamsEcg).then(response => {
-        console.log(response)
         this.patient_managementList = response.rows;
         // 原先提交过的预警类型response.rows[].logDataType
         this.total = response.total;
@@ -888,6 +997,17 @@ export default {
       }
       this.resetForm("queryFormWeek");
       this.handleQueryWeek();
+    },
+    getAgeTypeSection(age,heart){
+      if(age<=1){
+        return heart < 110 || heart > 130
+      }else if (age<=3){
+        return heart < 100 || heart > 120
+      }else if (age<=7){
+        return heart < 80 || heart > 100
+      }else if (age>=8){
+        return heart < 60 || heart > 100
+      }
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -1048,6 +1168,50 @@ export default {
       // 判断转换后的值是否为整数且不为NaN
       return Number.isInteger(parsedInt);
     },
+    getMH(zdList , ecgType){
+      let str = ''
+      if (ecgType){
+        ecgType.split(",").forEach(item => {
+          if (this.canConvertToInt(item)){
+            zdList.forEach(zd => {
+              if (zd.value == item) {
+                str += zd.label + ','
+              }
+            })
+          }else {
+            str += item + ','
+          }
+        })
+        if (str.endsWith(",")){
+          str = str.substring(0, str.length - 1)
+        }
+      }
+      return str;
+    },
+    getEcgType(text,type){
+      try {
+        let jsonString = text.replace(/nan/g, '0');
+        jsonString = jsonString.replace(/'/g, '"');
+        let obj = JSON.parse(jsonString)
+        // 检查 obj 是否是对象，并获取指定类型的值
+        if (obj && typeof obj === 'object') {
+          // 如果 obj 对象中存在 type 属性，返回其值；否则返回 "--"
+          return obj.hasOwnProperty(type) ? obj[type] : "--";
+        } else {
+          return "--";
+        }
+      } catch (error) {
+        console.log(error)
+        // 捕获异常并处理
+        return "--"
+      }
+    },
+
+
+    getBai(text){
+      // re ( * 100).toFixed(1) + "%"
+      return !isNaN(Number(text)) && isFinite(Number(text)) ? (Number(text) * 100).toFixed(1): "--"
+    },
     lookHistoryData30(row) {
       let data = {
         row: row,
@@ -1072,11 +1236,6 @@ export default {
       else if(row.ecgType.includes('JECG12')){
         this.$router.push({path: "/restingECG", query: {pId:row.pId,state:12,queryParams:this.queryParams,ecgType:"JECG12"}});}
       else{this.$message.warning('未知类型，请联系管理员')}
-      return
-      this.$router.push({
-        path: "/staticECG",
-        query: {pId: row.pId, state: 1, queryParams: this.queryParams, ecgType: "JECGsingle"}
-      });
     },
     /** 生成报告*/
     handleInform(row) {

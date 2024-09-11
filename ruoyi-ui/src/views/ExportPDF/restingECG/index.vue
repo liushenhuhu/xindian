@@ -57,51 +57,59 @@
                           <td>{{ getMH(dict.type.medical_history) }}</td>
                         </tr>
 
-                        <tr v-if="isDoctorUser">
-                          <td>P波</td>
-                          <td>{{ data.p }} ms</td>
-                          <td>QTc</td>
-                          <td>{{ data.qtc }} ms</td>
-                          <td>HRV</td>
-                          <td>{{ data.hrv }} ms</td>
-                        </tr>
-                        <tr v-if="isDoctorUser">
-                          <td>QRS波群</td>
-                          <td>{{ data.qrs }} ms</td>
-                          <td>住院号</td>
-                          <td>-</td>
-                          <td>申请单号</td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                  </el-tab-pane>
-                  <el-tab-pane
-                    v-if="!isDoctorUser"
-                    label="心电参数"
-                    name="ecgInfo"
-                  >
-                    <div class="tabBox">
-                      <table>
                         <tr>
                           <td>P波</td>
                           <td>{{ data.p }} ms</td>
-                          <td>QTc</td>
+                          <td>QTc间期</td>
                           <td>{{ data.qtc }} ms</td>
                           <td>HRV</td>
                           <td>{{ data.hrv }} ms</td>
                         </tr>
                         <tr>
-                          <td>QRS波群</td>
+                          <td>QRS时限</td>
                           <td>{{ data.qrs }} ms</td>
-                          <td>住院号</td>
-                          <td>-</td>
-                          <td>申请单号</td>
-                          <td></td>
+                          <td>QT间期</td>
+                          <td>{{data.qt}}ms</td>
+                          <td>PR间期</td>
+                          <td>{{data.pr}}ms</td>
                         </tr>
+<!--                        <tr>-->
+<!--                          <td>RV5</td>-->
+<!--                          <td>{{data.rv5_sv1- data.sv1 }} mV</td>-->
+<!--                          <td>SV1</td>-->
+<!--                          <td>{{data.sv1}}mV</td>-->
+<!--                          <td>申请单号</td>-->
+<!--                          <td>-</td>-->
+<!--                        </tr>-->
                       </table>
                     </div>
                   </el-tab-pane>
+<!--                  <el-tab-pane-->
+<!--                    v-if="!isDoctorUser"-->
+<!--                    label="心电参数"-->
+<!--                    name="ecgInfo"-->
+<!--                  >-->
+<!--                    <div class="tabBox">-->
+<!--                      <table>-->
+<!--                        <tr>-->
+<!--                          <td>P波</td>-->
+<!--                          <td>{{ data.p }} ms</td>-->
+<!--                          <td>QTc</td>-->
+<!--                          <td>{{ data.qtc }} ms</td>-->
+<!--                          <td>HRV</td>-->
+<!--                          <td>{{ data.hrv }} ms</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                          <td>QRS时限</td>-->
+<!--                          <td>{{ data.qrs }} ms</td>-->
+<!--                          <td>住院号</td>-->
+<!--                          <td>-</td>-->
+<!--                          <td>申请单号</td>-->
+<!--                          <td></td>-->
+<!--                        </tr>-->
+<!--                      </table>-->
+<!--                    </div>-->
+<!--                  </el-tab-pane>-->
                 </el-tabs>
               </div>
               <div class="touzuo-btm">
@@ -243,7 +251,7 @@
                     :options="doctorList"
                     @change="selectDoctorChange"
                     :show-all-levels="false"
-                    :disabled="isDoctor"
+
                   >
                   </el-cascader>
                 </div>
@@ -266,11 +274,10 @@
 
               <div class="oder">
                 <el-button
-                  v-if="isShowBtn"
                   type="success"
                   plain
                   class="anNiu"
-                  @click="sendWarnMsg()"
+                  @click="sendMsgWarning()"
                 >
                   <el-tooltip
                     content="请注意20个字数限制，每次用户授权，仅有一次发送的机会"
@@ -285,6 +292,9 @@
                 >
                 <el-button type="success" plain class="anNiu" @click="btnUpload"
                   >医生诊断</el-button
+                >
+                <el-button type="success" plain class="anNiu" @click="findPdfReport()"
+                >报告预览</el-button
                 >
 
                 <el-button
@@ -469,6 +479,39 @@
         <el-button type="primary" plain @click="queren">完成</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="pdf报告预览" :visible.sync="dpfFindReport" width="90%"
+               v-loading="loading1"
+    >
+      <div>
+        <iframe
+          width="100%"
+          :height="TableHeight"
+          allowfullscreen="true"
+          :src=src  ref="myFrame">
+        </iframe>
+      </div>
+      <div class="biaodananniu">
+        <el-button type="primary" plain @click="dpfFindReport=false">关闭</el-button>
+      </div>
+    </el-dialog>
+
+
+    <el-dialog title="预警消息" :visible.sync="Early_warning_message" width="40%">
+      <div>
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="textarea">
+        </el-input>
+      </div>
+      <div class="biaodananniu" style="margin-top: 10px">
+        <el-button plain @click="Early_warning_message = false">取消</el-button>
+        <el-button type="primary" plain @click="sendWarnMsg">发 送</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -483,6 +526,7 @@ import {
   reportEarlyWarningMsg,
 } from "@/api/report/report";
 import {
+  getPdf,
   listDoc,
   sendMsgToPatient,
 } from "@/api/patient_management/patient_management";
@@ -493,6 +537,7 @@ import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
 import { getlogin_password } from "@/api/jecg4_ecg/jecg4_ecg";
 import { addLabel } from "@/api/log_user/log_user";
 import child from "@/views/staticECG/staticECG/child.vue";
+import JecgPdf from "@/views/jecg/report/index.vue";
 import { selectDoctor, getDoctorList } from "@/api/statistics/statistics";
 var elementResizeDetectorMaker = require("element-resize-detector");
 
@@ -507,12 +552,21 @@ import { getVerify } from "@/api/verify/verify";
 
 export default {
   name: "index",
-  components: { child },
+  components: { child ,JecgPdf},
   mixins: [mixins],
   dicts: ["medical_history"],
   data() {
     return {
+      version: "3.8.3",
+      TableHeight: 100,
+      src: null,
+      flagCre:0,
+      num:1,
+      loading1:false,
       tanchuang: false,
+      dpfFindReport: false,
+      textarea: null,
+      Early_warning_message: false,
       name: null,
       isShowName: {
         status: false,
@@ -761,12 +815,38 @@ export default {
     if (!this.$auth.hasRole("admin")) {
       this.isDoctor = true;
     }
-    console.log("12导传来的值")
-    console.log(this.$route.query);
-      this.queryParams = this.$route.query.queryParams;
-      this.ecgType = this.$route.query.ecgType;
+    if (this.$route.query.findType){
+      let item =  localStorage.getItem('ecgItemData12')
+      if (item){
+        const itemData = JSON.parse(item);
+        if (itemData.pId!=this.$route.query.pId){
+          let data = {
+            queryParams: this.$route.query.queryParams,
+            pId: this.$route.query.pId,
+            ecgType: this.$route.query.ecgType,
+          }
+          localStorage.setItem('ecgItemData12',JSON.stringify(data))
+        }
+      }else {
+        let data = {
+          queryParams: this.$route.query.queryParams,
+          pId: this.$route.query.pId,
+          ecgType: this.$route.query.ecgType,
+        }
+        localStorage.setItem('ecgItemData12',JSON.stringify(data))
+      }
+      let ecgDate = JSON.parse(localStorage.getItem('ecgItemData12'))
+      this.queryParams = ecgDate.queryParams;
+      this.ecgType = ecgDate.ecgType;
+      this.pId = ecgDate.pId;
+      this.shangxiakuzhiqi  = ecgDate.queryParams.indexzhi
+    }else {
       this.pId = this.$route.query.pId;
-    this.shangxiakuzhiqi  = this.$route.query.queryParams.indexzhi
+      this.ecgType = this.$route.query.ecgType;
+      this.queryParams = this.$route.query.queryParams;
+      this.isShowBtn = false
+    }
+
     this.getList();
   },
   mounted() {
@@ -838,6 +918,9 @@ export default {
       if (this.$auth.hasRole("doctorUser") && !this.$auth.hasRole("admin")) {
         this.isDoctorUser = true;
       }
+      if (!this.$route.query.findType){
+        this.isShowBtn = false;
+      }
     },
     // 病史
     getMH(zdList, ecgType = this.data.pastMedicalHistory) {
@@ -858,7 +941,7 @@ export default {
           str = str.substring(0, str.length - 1);
         }
       }
-      return str;
+      return str&&str.length>0?str:'无';
     },
     canConvertToInt(value) {
       // 尝试将值转换为整数
@@ -955,21 +1038,22 @@ export default {
       });
     },
     /** 查询用户管理列表 */
-    async getList() {
+    async getList(val) {
       this.loading = true;
       await listPatient_management(this.queryParams).then((response) => {
-        // console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
+        if (val){
+         this.pId = this.patient_managementList[val].pId
+        }
       });
       this.getPatientdetails();
     },
     // 患者用户信息
     getPatientdetails() {
-      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
-      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId
-      getReportByPId(this.patient_managementList[this.shangxiakuzhiqi].pId).then((response) => {
+
+      getReportByPId(this.pId).then((response) => {
         console.log(response.data);
         console.log("请求成功：", response.data)
         this.data.resultByDoctor = response.data.diagnosisConclusion;
@@ -1071,7 +1155,7 @@ export default {
         this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
         this.queryParams.pageNum--
         this.queryParams.indexzhi = this.patient_managementList.length-1
-        await this.getList();
+        await this.getList(this.queryParams.indexzhi);
         // this.get();
         this.loading = false;
         return
@@ -1099,7 +1183,7 @@ export default {
         this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
         this.queryParams.pageNum++
         this.queryParams.indexzhi = 0
-        await this.getList();
+        await this.getList(this.queryParams.indexzhi);
         // this.get();
         this.loading = false;
       }else {
@@ -1226,8 +1310,7 @@ export default {
         target: document.querySelector("#table"), //loadin覆盖的dom元素节点
       });
       var _th = this;
-      this.data.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
-      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
+
       // console.log("请求数据了！")
       // console.log("pId", this.pId)
       this.data.dataTime = this.$options.methods.getData();
@@ -1237,7 +1320,7 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pid:  _th.patient_managementList[_th.shangxiakuzhiqi].pId,
+          pid:  _th.pId,
         }),
         beforeSend: function (request) {
           // 如果后台没有跨域处理，这个自定义
@@ -1257,16 +1340,12 @@ export default {
           _th.data.p = data.result.ecg_analysis_data["P波时限"];
           _th.data.pr = data.result.ecg_analysis_data["PR间期"];
           _th.data.qrs = data.result.ecg_analysis_data["QRS波时限"];
+          _th.data.qt = data.result.ecg_analysis_data["QT间期"];
           _th.data.qtc = data.result.ecg_analysis_data["QTc"];
           _th.data.hrv = data.result.ecg_analysis_data["RMSSD"];
           _th.data.hr = data.result.ecg_analysis_data["平均心率"];
-          _th.data.pr = data.result.ecg_analysis_data["PR_dis_avg"];
-          _th.data.qrs = data.result.ecg_analysis_data["QRS_dis_avg"];
-          _th.data.qt = data.result.ecg_analysis_data["QT_dis_avg"];
-          _th.data.qtc = data.result.ecg_analysis_data["QTc2"];
-          _th.data.p = data.result.ecg_analysis_data["P_deg"];
           _th.data.qrs_deg = data.result.ecg_analysis_data["QRS_deg"];
-          _th.data.t = data.result.ecg_analysis_data["T_deg"];
+          _th.data.t = data.result.ecg_analysis_data["T波时限"];
           _th.data.pv5 = data.result.ecg_analysis_data["PV5_mv"];
           _th.data.sv1 = data.result.ecg_analysis_data["SV1_mv"];
           _th.data.rv5_sv1 = data.result.ecg_analysis_data["RV5_SV1"];
@@ -2619,11 +2698,15 @@ export default {
         str.getSeconds();
       return nowTime;
     },
+    sendMsgWarning() {
+      this.textarea = ""
+      this.Early_warning_message = true
+    },
     sendWarnMsg() {
       if (
-        this.data.resultByDoctor == "" ||
-        this.data.resultByDoctor == null ||
-        this.data.resultByDoctor.length > 20
+        this.textarea == "" ||
+        this.textarea == null ||
+        this.textarea.length > 20
       ) {
         this.$message({
           type: "error",
@@ -2633,13 +2716,14 @@ export default {
       }
       let obj = {
         pId: this.data.pId,
-        warningText: this.data.resultByDoctor,
+        warningText: this.textarea,
       };
       reportEarlyWarningMsg(obj).then((r) => {
         this.$message({
           type: "success",
           message: "发送成功!",
         });
+        this.Early_warning_message = false
       });
     },
     //发送短信
@@ -2732,6 +2816,30 @@ export default {
         }
       });
     },
+
+    findPdfReport(){
+      console.log(this.data.pId)
+      this.dpfFindReport = true
+      this.loading1 = true
+      let pId= this.$route.query.pId ||this.dataId
+      this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
+      this.getPdf(pId)
+    },
+    getPdf(pId){
+      this.getJEcgPdf()
+    },
+    getJEcgPdf(){
+      let _this=this;
+      let obj = {
+        pId:this.$route.query.pId
+      }
+      getPdf(obj).then(res=>{
+        this.src = res.msg + '?t=' + new Date().getTime()
+        this.loading1= false;
+      }).catch(err=>{
+        this.loading1= false;
+      })
+    }
   },
 };
 </script>
@@ -2750,7 +2858,7 @@ export default {
 }
 
 ::v-deep .el-tabs__nav {
-  z-index: 1;
+  z-index: 0;
 }
 ::v-deep .el-tabs__content {
   overflow: visible;
@@ -2956,7 +3064,6 @@ export default {
   top: 54vh;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2000;
   background-color: rgb(255, 255, 255);
 
   span {
@@ -3581,4 +3688,5 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+
 </style>

@@ -58,51 +58,51 @@
                         <td>{{ getMH(dict.type.medical_history) }}</td>
                       </tr>
 
-                      <tr v-if="isDoctorUser">
+                      <tr >
                         <td>P波</td>
                         <td>{{ data.p }} ms</td>
-                        <td>QTc</td>
-                        <td>{{ data.qtc }} ms</td>
-                        <td>HRV</td>
-                        <td>{{ data.hrv }} ms</td>
-                      </tr>
-                      <tr v-if="isDoctorUser">
-                        <td>QRS波群</td>
-                        <td>{{ data.qrs }} ms</td>
-                        <td>住院号</td>
-                        <td>-</td>
-                        <td>申请单号</td>
-                        <td></td>
-                      </tr>
-                    </table>
-                  </div>
-                </el-tab-pane>
-                <el-tab-pane
-                  label="心电参数"
-                  name="ecgInfo"
-                  v-if="!isDoctorUser"
-                >
-                  <div class="tabBox">
-                    <table>
-                      <tr>
-                        <td>P波</td>
-                        <td>{{ data.p }} ms</td>
-                        <td>QTc</td>
+                        <td>QTc间期</td>
                         <td>{{ data.qtc }} ms</td>
                         <td>HRV</td>
                         <td>{{ data.hrv }} ms</td>
                       </tr>
                       <tr>
-                        <td>QRS波群</td>
+                        <td>QRS时限</td>
                         <td>{{ data.qrs }} ms</td>
-                        <td>住院号</td>
-                        <td>-</td>
-                        <td>申请单号</td>
-                        <td></td>
+                        <td>QT间期</td>
+                        <td>{{data.qt}}ms</td>
+                        <td>PR间期</td>
+                        <td>{{data.pr}}ms</td>
                       </tr>
                     </table>
                   </div>
                 </el-tab-pane>
+<!--                <el-tab-pane-->
+<!--                  label="心电参数"-->
+<!--                  name="ecgInfo"-->
+<!--                  v-if="!isDoctorUser"-->
+<!--                >-->
+<!--                  <div class="tabBox">-->
+<!--                    <table>-->
+<!--                      <tr>-->
+<!--                        <td>P波</td>-->
+<!--                        <td>{{ data.p }} ms</td>-->
+<!--                        <td>QTc</td>-->
+<!--                        <td>{{ data.qtc }} ms</td>-->
+<!--                        <td>HRV</td>-->
+<!--                        <td>{{ data.hrv }} ms</td>-->
+<!--                      </tr>-->
+<!--                      <tr>-->
+<!--                        <td>QRS时限</td>-->
+<!--                        <td>{{ data.qrs }} ms</td>-->
+<!--                        <td>住院号</td>-->
+<!--                        <td>-</td>-->
+<!--                        <td>申请单号</td>-->
+<!--                        <td></td>-->
+<!--                      </tr>-->
+<!--                    </table>-->
+<!--                  </div>-->
+<!--                </el-tab-pane>-->
               </el-tabs>
             </div>
             <div class="touzuo-btm">
@@ -246,7 +246,6 @@
                   :options="doctorList"
                   @change="selectDoctorChange"
                   :show-all-levels="false"
-                  :disabled="isDoctor"
                 >
                 </el-cascader>
               </div>
@@ -269,11 +268,10 @@
 
             <div class="oder">
               <el-button
-                v-if="isShowBtn"
                 type="success"
                 plain
                 class="anNiu"
-                @click="sendWarnMsg()"
+                @click="sendMsgWarning()"
               >
                 <el-tooltip
                   content="请注意20个字数限制，每次用户授权，仅有一次发送的机会"
@@ -288,6 +286,9 @@
               >
               <el-button type="success" plain class="anNiu" @click="btnUpload"
                 >医生诊断</el-button
+              >
+              <el-button type="success" plain class="anNiu" @click="findPdfReport()"
+              >报告预览</el-button
               >
               <el-button
                 v-if="isShowBtn"
@@ -438,6 +439,37 @@
         <el-button type="primary" plain @click="queren">完成</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="pdf报告预览" :visible.sync="dpfFindReport" width="90%"
+               v-loading="loading1"
+    >
+      <div>
+        <iframe
+          width="100%"
+          :height="TableHeight"
+          allowfullscreen="true"
+          :src=src  ref="myFrame">
+        </iframe>
+      </div>
+      <div class="biaodananniu">
+        <el-button type="primary" plain @click="dpfFindReport=false">关闭</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="预警消息" :visible.sync="Early_warning_message" width="40%"
+    >
+      <div>
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="textarea">
+        </el-input>
+      </div>
+      <div class="biaodananniu" style="margin-top: 10px">
+        <el-button plain @click="Early_warning_message = false">取消</el-button>
+        <el-button type="primary" plain @click="sendWarnMsg">发 送</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -452,7 +484,7 @@ import {
   reportEarlyWarningMsg,
 } from "@/api/report/report";
 import {
-  getPatient_management,
+  getPatient_management, getPdf,
   listDoc,
   sendMsgToPatient,
 } from "@/api/patient_management/patient_management";
@@ -482,8 +514,17 @@ export default {
   dicts: ["medical_history"],
   data() {
     return {
+      version: "3.8.3",
+      TableHeight: 100,
+      src: null,
+      flagCre:0,
+      num:1,
+      loading1:false,
       tanchuang: false,
+      Early_warning_message: false,
+      dpfFindReport: false,
       name: null,
+      textarea: null,
       isShowName: {
         status: false,
         name: "显示姓名",
@@ -648,11 +689,41 @@ export default {
       this.isDoctor = true;
     }
     console.log("单导传来的值")
-    console.log(this.$route.query);
-    this.queryParams = this.$route.query.queryParams;
-    this.ecgType = this.$route.query.ecgType;
-    this.pId = this.$route.query.pId;
-    this.shangxiakuzhiqi  = this.$route.query.queryParams.indexzhi
+    if (this.$route.query.findType){
+      let item =  localStorage.getItem('ecgItemDatasingle')
+      console.log(item)
+      if (item){
+
+        const itemData = JSON.parse(item);
+        console.log(itemData)
+        if (itemData.pId!=this.$route.query.pId){
+          let data = {
+            queryParams: this.$route.query.queryParams,
+            pId: this.$route.query.pId,
+            ecgType: this.$route.query.ecgType,
+          }
+          localStorage.setItem('ecgItemDatasingle',JSON.stringify(data))
+        }
+      }else {
+        let data = {
+          queryParams: this.$route.query.queryParams,
+          pId: this.$route.query.pId,
+          ecgType: this.$route.query.ecgType,
+        }
+        localStorage.setItem('ecgItemDatasingle',JSON.stringify(data))
+      }
+      let ecgDate = JSON.parse(localStorage.getItem('ecgItemDatasingle'))
+      this.queryParams = ecgDate.queryParams;
+      this.ecgType = ecgDate.ecgType;
+      this.pId = ecgDate.pId;
+      this.shangxiakuzhiqi  = ecgDate.queryParams.indexzhi
+    }else {
+      this.pId = this.$route.query.pId;
+      this.ecgType = this.$route.query.ecgType;
+      this.queryParams = this.$route.query.queryParams;
+      this.isShowBtn = false
+    }
+
     // 获取十条数据
     this.getList();
 
@@ -726,6 +797,9 @@ export default {
 
       if (this.$auth.hasRole("doctorUser") && !this.$auth.hasRole("admin")) {
         this.isDoctorUser = true;
+      }
+      if (!this.$route.query.findType) {
+        this.isShowBtn = false;
       }
     },
     // zidian() {
@@ -864,13 +938,16 @@ export default {
      * 查询十条用户管理列表
      * 其中嵌入了，查询患者用户信息列表 获取单个用户详细信息的getPatientdetails函数
      * */
-    async getList() {
+    /** 查询用户管理列表 */
+    async getList(val) {
       this.loading = true;
       await listPatient_management(this.queryParams).then((response) => {
-        console.log(response)
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
+        if (val){
+          this.pId = this.patient_managementList[val].pId
+        }
       });
       this.getPatientdetails();
     },
@@ -888,7 +965,7 @@ export default {
         this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
         this.queryParams.pageNum--
         this.queryParams.indexzhi = this.patient_managementList.length-1
-        await this.getList();
+        await this.getList(this.queryParams.indexzhi);
         // this.get();
         this.loading = false;
         return
@@ -916,7 +993,7 @@ export default {
         this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
         this.queryParams.pageNum++
         this.queryParams.indexzhi = 0
-        await this.getList();
+        await this.getList(this.queryParams.indexzhi);
         // this.get();
         this.loading = false;
       }else {
@@ -940,9 +1017,8 @@ export default {
      * 内置了获取医师
      * */
     getPatientdetails() {
-      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
-      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId
-      getReportByPId(this.patient_managementList[this.shangxiakuzhiqi].pId).then((response) => {
+
+      getReportByPId(this.pId).then((response) => {
         console.log(response)
         this.data.result = response.data.intelligentDiagnosis;
         this.aiResult = response.data.intelligentDiagnosis;
@@ -1382,9 +1458,6 @@ export default {
      *  请求心电图数据
      * */
     get() {
-      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
-      console.log("获得的是那个数据："+ this.pId);
-      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
       // this.data =
       const loading = this.$loading({
         lock: true, //lock的修改符--默认是false
@@ -1393,9 +1466,9 @@ export default {
         background: "rgba(0, 0, 0, 0.7)", //遮罩层颜色
         target: document.querySelector("#table"), //loadin覆盖的dom元素节点
       });
-      this.data.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+
       var _th = this;
-      console.log(this.patient_managementList[this.shangxiakuzhiqi].pId)
+
       console.log("pId:", this.pId)
       this.data.dataTime = this.$options.methods.getData();
       $.ajax({
@@ -1404,7 +1477,7 @@ export default {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify({
-          pid: _th.patient_managementList[_th.shangxiakuzhiqi].pId,
+          pid: _th.pId,
         }),
         async: false,
         beforeSend: function (request) {
@@ -1428,6 +1501,7 @@ export default {
           _th.data.qrs = data.result.ecg_analysis_data["QRS波时限"];
           _th.data.qtc = data.result.ecg_analysis_data["QTc"];
           _th.data.hrv = data.result.ecg_analysis_data["RMSSD"];
+          _th.data.qt = data.result.ecg_analysis_data["QT间期"];
           _th.data.datas = data.result.II;
           _th.datalabel.waveLabel = data.result.waveLabel;
           _th.datalabel.beatLabel = data.result.beatLabel;
@@ -2143,11 +2217,15 @@ export default {
         this.dialogFormVisibleVerifyAuthority = true;
       }
     },
+    sendMsgWarning() {
+      this.textarea = ""
+      this.Early_warning_message = true
+    },
     sendWarnMsg() {
       if (
-        this.data.resultByDoctor == "" ||
-        this.data.resultByDoctor == null ||
-        this.data.resultByDoctor.length > 20
+        this.textarea == "" ||
+        this.textarea == null ||
+        this.textarea.length > 20
       ) {
         this.$message({
           type: "error",
@@ -2157,13 +2235,14 @@ export default {
       }
       let obj = {
         pId: this.data.pId,
-        warningText: this.data.resultByDoctor,
+        warningText: this.textarea,
       };
       reportEarlyWarningMsg(obj).then((r) => {
         this.$message({
           type: "success",
           message: "发送成功!",
         });
+        this.Early_warning_message = false
       });
     },
     //医生诊断
@@ -2270,6 +2349,30 @@ export default {
         this.$modal.msgError("数据提交失败，请选择预警类型");
       }
     },
+    findPdfReport(){
+      this.dpfFindReport = true
+
+      this.loading1 = true
+      let pId= this.pId ||this.dataId
+      this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
+      this.getPdf(pId)
+    },
+    getPdf(pId){
+      this.getJEcgPdf()
+    },
+    getJEcgPdf(){
+      let _this=this;
+      let obj = {
+        pId:this.$route.query.pId
+      }
+
+      getPdf(obj).then(res=>{
+        this.src = res.msg + '?t=' + new Date().getTime()
+        this.loading1= false;
+      }).catch(err=>{
+        this.loading1= false;
+      })
+    }
   },
 };
 </script>

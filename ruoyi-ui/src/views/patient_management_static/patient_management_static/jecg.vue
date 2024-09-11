@@ -686,7 +686,7 @@ export default {
   },
 
   created() {
-    if (this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
+    if (!this.$auth.hasRole("hospitalUser")&&this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
       this.queryParams.diagnosisStatus = '2'
       this.isDoctor = true
     }
@@ -904,8 +904,9 @@ export default {
       }
       this.daterangeConnectionTime = []
       this.resetForm("queryForm");
-      if (this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
+      if (!this.$auth.hasRole("hospitalUser")&&this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
         this.queryParams.diagnosisStatus = '2'
+        this.isDoctor = true
       }
       this.handleQuery();
     },
@@ -1117,17 +1118,17 @@ export default {
       if (row.ecgType.includes('JECGsingle')) {
         this.$router.push({
           path: "/staticECG",
-          query: {pId: row.pId, state: 1, queryParams:  this.queryParams, ecgType: "JECGsingle"}
+          query: {pId: row.pId, state: 1, queryParams:  this.queryParams, ecgType: "JECGsingle",findType:1}
         });
       } else if (row.ecgType.includes('JECG4')) {
         this.$router.push({
           path: "/JECG4_ECG",
-          query: {pId: row.pId, state: 4, queryParams:  this.queryParams, ecgType: "JECG4"}
+          query: {pId: row.pId, state: 4, queryParams:  this.queryParams, ecgType: "JECG4",findType:1}
         });
       } else if (row.ecgType.includes('JECG12')) {
         this.$router.push({
           path: "/restingECG",
-          query: {pId: row.pId, state: 12, queryParams:  this.queryParams, ecgType: "JECG12"}
+          query: {pId: row.pId, state: 12, queryParams:  this.queryParams, ecgType: "JECG12",findType:1}
         });
       } else {
         this.$message.warning('未知类型，请联系管理员')

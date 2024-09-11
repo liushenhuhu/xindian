@@ -24,13 +24,13 @@ export default {
     };
   },
   created() {
-      this.src = 'http://localhost:83/ECGscreen?hospitalId=1'
+      this.src = 'http://localhost:83/large_screen?hospitalId=1&token=eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjA3M2M5NmY4LTZmOGEtNDZjMy1hNTZiLWNhMjBiMGUwZDlkYyJ9.ig4XNvONpr4sNq1ZhaJKb2HQ86KQqfqj0jzKbiCTiTDkrnCjSdTU5DaXuECMtFJUCvTxJ0I-Ia-sebcJ5iqi6g'
       //动态计算表格高度
       let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
       this.TableHeight = windowHeight + 180;
   },
   activated() {
-      this.src = 'http://localhost:83/ECGscreen?hospitalId=1'
+      this.src = 'http://localhost:83/large_screen?hospitalId=1&token=eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjA3M2M5NmY4LTZmOGEtNDZjMy1hNTZiLWNhMjBiMGUwZDlkYyJ9.ig4XNvONpr4sNq1ZhaJKb2HQ86KQqfqj0jzKbiCTiTDkrnCjSdTU5DaXuECMtFJUCvTxJ0I-Ia-sebcJ5iqi6g'
       console.log(this.src)
       //动态计算表格高度
       let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;

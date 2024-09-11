@@ -199,6 +199,65 @@ public class SysLoginService {
 
         return tokenService.createToken(loginUser);
     }
+
+    public String appLoginSkip(String mobile, String code, String uuid) throws Exception {
+
+        String nickName = "微信用户";
+        checkSmsCode(mobile, code, uuid);
+        String encrypt = aesUtils.encrypt(mobile);
+        SysUser wxUser = userService.selectUserByPhone(encrypt);
+        //如果没有新建
+        SysUser user = new SysUser();
+        if(wxUser==null){
+            user.setUserName(encrypt);
+            user.setNickName(nickName);
+            user.setPhonenumber(encrypt);
+
+            user.setCreateTime(DateUtils.getNowDate());
+
+//            user.setPassword(SecurityUtils.encryptPassword("123456"));
+            userService.insertUser(user);
+            Long userId = userService.selectUserByUserName(encrypt).getUserId();
+            userService.setUserRole(userId, 100L);
+//            //绑定用户
+//            userService.insertAppData(user);
+//            //创建用户
+//            userService.insertPatient(user);
+//            //新增病历
+//            userService.insertMedical(user);
+        }else{
+            user=wxUser;
+//            Long userId = userService.selectUserByUserName(numberPhone).getUserId();
+//            userService.setUserRole(userId, 100L);
+            user.setUpdateTime(DateUtils.getNowDate());
+            userService.updateUserProfile(user);
+        }
+//        组装token
+//        LoginUser loginUser = new LoginUser();
+//        loginUser.setOpenId(openId);
+//
+//        loginUser.setUser(user);
+//        loginUser.setUserId(user.getUserId());
+
+        // 用户验证
+        Authentication authentication = null;
+        try {
+
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            authentication = authenticationManager
+                    .authenticate(new SmsCodeAuthenticationToken(encrypt));
+        } catch (Exception e) {
+
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(encrypt, Constants.LOGIN_FAIL, e.getMessage()));
+            throw new ServiceException(e.getMessage());
+
+        }
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(encrypt, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        recordLoginInfo(loginUser.getUserId());
+
+        return tokenService.createToken(loginUser);
+    }
     /**
      * 登录验证
      *

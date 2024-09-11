@@ -111,6 +111,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectDoc" resultType="com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO">
         SELECT hospital as label ,hospital as value
         FROM doctor
+        <where>
+            <if test="hospitalNameList != null and hospitalNameList.size()>0">
+                and  hospital in
+                <foreach collection="hospitalNameList" index="index" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="doctorPhone != null  and doctorPhone != ''"> and doctor_phone_aes =  #{doctorPhone}</if>
+        </where>
         GROUP BY hospital
     </select>
     <select id="selectIsDoctors" resultType="com.ruoyi.xindian.hospital.domain.Doctor">

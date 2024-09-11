@@ -703,6 +703,8 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.queryParams = {
+        pageNum: 1,
+        pageSize: 10,
         pId: null,
         hospitalCode: null,
         equipmentCode: null,

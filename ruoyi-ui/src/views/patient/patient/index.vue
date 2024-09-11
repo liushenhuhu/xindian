@@ -191,6 +191,7 @@
             >刷新</el-button
           >
           <el-button
+
             size="mini"
             @click="handleExport"
             v-hasPermi="['patient_management:patient_management:export']"

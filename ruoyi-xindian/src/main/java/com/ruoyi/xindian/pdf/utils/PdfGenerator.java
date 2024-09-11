@@ -449,7 +449,6 @@ public class PdfGenerator {
             pdfCanvas.lineTo(i, y);
         }
         pdfCanvas.stroke();
-        //画线
         pdfCanvas.setLineWidth(0.1f);
 //        pdfCanvas.setStrokeColor(ColorConstants.DARK_GRAY);
         int index = 0;
@@ -466,7 +465,8 @@ public class PdfGenerator {
             }
 //            pdfCanvas.moveTo(x, i);
 //            pdfCanvas.lineTo(x + width, i);
-        }
+        }        //画线
+
 //        index = 0;
 //        for (double i = x + smallK; i < width + x; i += smallK) {
 //            index++;

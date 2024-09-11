@@ -5,6 +5,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.xindian.hospital.domain.AssociatedHospital;
 import com.ruoyi.xindian.hospital.domain.Doctor;
 import com.ruoyi.xindian.hospital.domain.Hospital;
@@ -14,11 +15,14 @@ import com.ruoyi.xindian.hospital.mapper.HospitalMapper;
 import com.ruoyi.xindian.hospital.service.IDoctorService;
 import com.ruoyi.xindian.patient_management.vo.DocVO;
 import com.ruoyi.xindian.patient_management.vo.ListValueAndLabelVO;
+import com.ruoyi.xindian.util.RoleUtils;
+import org.apache.avro.generic.GenericData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +49,11 @@ public class DoctorServiceImpl implements IDoctorService
 
     @Resource
     private AssociatedHospitalMapper associatedHospitalMapper;
+
+
+    @Resource
+    private ISysDictDataService dictDataService;
+
 
     /**
      * 查询医生
@@ -135,14 +144,42 @@ public class DoctorServiceImpl implements IDoctorService
     }
 
     @Override
-    public List<ListValueAndLabelVO> listDoc() throws Exception {
+    public List<ListValueAndLabelVO> listDoc(Long userId) throws Exception {
 
-        List<ListValueAndLabelVO> listDocVOS = doctorMapper.selectDoc();
+        SysUser sysUser = sysUserMapper.selectUserById(userId);
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        List<ListValueAndLabelVO> listDocVOS = new ArrayList<>();
+        Doctor doctor = new Doctor();
+        if (!SysUser.isAdmin(sysUser.getUserId())&& !RoleUtils.isRoleListOne(sysUser,sysDictData)){
 
+            if (sysUser.getRoleIds()!=null && !(sysUser.getRoleIds().length >0) && Arrays.asList(sysUser.getRoleIds()).contains(101L)){
+                Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
+                if (hospital != null) {
+
+                    doctor.getHospitalNameList().add(hospital.getHospitalName());
+                    AssociatedHospital associatedHospital = new AssociatedHospital();
+                    associatedHospital.setHospitalId(hospital.getHospitalId());
+                    List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+                    if (associatedHospitals != null && !associatedHospitals.isEmpty()) {
+                        for (AssociatedHospital c : associatedHospitals) {
+                            Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                            doctor.getHospitalNameList().add(hospital1.getHospitalName());
+                        }
+                    }
+                }else {
+                    doctor.setDoctorPhone(sysUser.getUserName());
+                }
+            }else {
+                doctor.setDoctorPhone(sysUser.getUserName());
+            }
+            listDocVOS =  doctorMapper.selectDoc(doctor);
+        }else {
+            listDocVOS =  doctorMapper.selectDoc(doctor);
+        }
         for (ListValueAndLabelVO c : listDocVOS){
-            Doctor doctor = new Doctor();
-            doctor.getHospitalNameList().add(c.getLabel());
-            List<Doctor> doctors = doctorMapper.selectDoctorListNot(doctor);
+            Doctor doctor1 = new Doctor();
+            doctor1.getHospitalNameList().add(c.getLabel());
+            List<Doctor> doctors = doctorMapper.selectDoctorListNot(doctor1);
             for (Doctor d : doctors){
                 DocVO listDocVO = new DocVO();
                 listDocVO.setLabel(aesUtils.decrypt(d.getDoctorName()));

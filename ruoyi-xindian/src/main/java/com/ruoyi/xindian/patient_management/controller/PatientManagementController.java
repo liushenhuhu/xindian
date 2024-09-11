@@ -260,6 +260,86 @@ public class PatientManagementController extends BaseController {
     }
 
 
+    @GetMapping("/getDoctorWorkbenchList")
+    public TableDataInfo getDoctorWorkbenchList(PatientManagement patientManagement, HttpServletRequest request, Integer pageNum, Integer pageSize) throws Exception {
+
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<PatientManagement> list = new ArrayList<>();
+        ArrayList<PatientManagmentDept> resList = new ArrayList<>();
+
+        if (patientManagement.getHospitalCode() != null && !"".equals(patientManagement.getHospitalCode())) {
+            patientManagement.getHospitalCodeList().add(patientManagement.getHospitalCode());
+        }
+
+        SysUser sysUser = userService.selectUserById(loginUser.getUser().getUserId());
+        if (sysUser != null && sysUser.getRoleId() != null && sysUser.getRoleId() == 101) {
+            //101---医院
+            String hospitalCode = sysUser.getHospitalCode();
+            patientManagement.getHospitalCodeList().clear();
+            patientManagement.getHospitalCodeList().add(hospitalCode);
+            Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(hospitalCode);
+            AssociatedHospital associatedHospital = new AssociatedHospital();
+            associatedHospital.setHospitalId(hospital.getHospitalId());
+            List<AssociatedHospital> associatedHospitals = associatedHospitalMapper.selectAssociatedHospitalList(associatedHospital);
+            if (associatedHospitals != null && !associatedHospitals.isEmpty()) {
+                for (AssociatedHospital c : associatedHospitals) {
+                    Hospital hospital1 = hospitalMapper.selectHospitalByHospitalId(c.getLowerLevelHospitalId());
+                    patientManagement.getHospitalCodeList().add(hospital1.getHospitalCode());
+                }
+            }
+            String code = patientManagement.getHospitalCode();
+            if (code != null && !"".equals(code)) {
+                List<String> patientList = patientManagement.getHospitalCodeList();
+                if (patientList != null && !patientList.isEmpty()) {
+                    for (String c : patientList) {
+                        if (c.equals(patientManagement.getHospitalCode())) {
+                            patientManagement.getHospitalCodeList().clear();
+                            patientManagement.getHospitalCodeList().add(patientManagement.getHospitalCode());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        getEncryptManagement(patientManagement);
+
+        startPage();
+        if (null == patientManagement.getEcgType()) {
+            list = patientManagementService.selectPatientManagementList(patientManagement);
+        } else if (patientManagement.getEcgType().equals("DECGsingle")) {
+            list = patientManagementService.selectPatientManagementListDECGsingle(patientManagement);
+        } else if (patientManagement.getEcgType().equals("JECG12")) {
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect()) && patientManagement.getIsSelect().equals("1") && SysUser.isAdmin(loginUser.getUserId()) && StringUtils.isNotEmpty(patientManagement.getPatientName())) {
+                return getRedisTable(patientManagement, resList, pageNum, pageSize);
+            } else {
+                list = patientManagementService.selectPatientManagementListJECG12(patientManagement);
+            }
+
+        } else if (patientManagement.getEcgType().equals("JECGsingle")) {
+
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect()) && patientManagement.getIsSelect().equals("1") && SysUser.isAdmin(loginUser.getUserId()) && StringUtils.isNotEmpty(patientManagement.getPatientName())) {
+                return getRedisTable(patientManagement, resList, pageNum, pageSize);
+
+            } else {
+                list = patientManagementService.selectPatientManagementJECGsingle(patientManagement);
+            }
+
+        } else if (patientManagement.getEcgType().equals("JECG4")) {
+
+            if (StringUtils.isNotEmpty(patientManagement.getIsSelect()) && patientManagement.getIsSelect().equals("1") && SysUser.isAdmin(loginUser.getUserId()) && StringUtils.isNotEmpty(patientManagement.getPatientName())) {
+                return getRedisTable(patientManagement, resList, pageNum, pageSize);
+            } else {
+                list = patientManagementService.selectPatientManagementJECG4(patientManagement);
+            }
+
+        } else if (patientManagement.getEcgType().equals("DECG12")) {
+            list = patientManagementService.selectPatientManagementListDECG12(patientManagement);
+        } else {
+            list = patientManagementService.selectPatientManagementList(patientManagement);
+        }
+        return getTableDataInfo(list, resList, 2);
+    }
+
     private TableDataInfo getRedisTable(PatientManagement patientManagement, ArrayList<PatientManagmentDept> resList, int pageNum, int pageSize) throws Exception {
         if (StringUtils.isNotEmpty(patientManagement.getPatientName())) {
             String patientName = aesUtils.decrypt(patientManagement.getPatientName());
@@ -859,7 +939,8 @@ public class PatientManagementController extends BaseController {
      */
     @GetMapping("/listDoc")
     public AjaxResult listDoc() throws Exception {
-        return AjaxResult.success(doctorService.listDoc());
+        Long userId = getUserId();
+        return AjaxResult.success(doctorService.listDoc(userId));
     }
 
 

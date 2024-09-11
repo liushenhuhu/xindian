@@ -7,7 +7,6 @@
       :src=src  ref="myFrame">
     </iframe>
   </div>
-
 </template>
 
 <script>
@@ -16,6 +15,9 @@ import {getPdf, getSX_PDFByPId} from "@/api/patient_management/patient_managemen
 
 export default {
   name: "lookPdf",
+  props: {
+    dataId:null,
+  },
   data() {
     return {
       // 版本号
@@ -24,17 +26,19 @@ export default {
       src: null,
       flagCre:0,
       num:1,
-      loading:null
+      loading:null,
     };
   },
   created() {
     this.loading = this.$loading({
       lock: true,
-      text: 'Loading',
+      text: '正在生成报告，请稍等',
       spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
+      background: 'rgba(0, 0, 0, 0.7)',
+      customClass: 'custom-loading'  // 添加自定义类名
     });
-    let pId=this.$route.query.pId
+    console.log("created:")
+    let pId= this.$route.query.pId ||this.dataId
     this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
     this.getPdf(pId)
     const iframe = this.$refs.myFrame;
@@ -43,18 +47,19 @@ export default {
   activated(){
     this.loading = this.$loading({
       lock: true,
-      text: 'Loading',
+      text: '正在生成报告，请稍等',
       spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
+      background: 'rgba(0, 0, 0, 0.7)',
+      customClass: 'custom-loading'  // 添加自定义类名
     });
+    console.log("activated")
     this.num +=1
     if(this.$route.query.pId!=null&&this.num>2){
       window.scrollTo(0, 0)
       this.src=null
-      let pId=this.$route.query.pId
+      let pId= this.$route.query.pId ||this.dataId
       this.TableHeight=document.documentElement.clientHeight || document.bodyclientHeight;
       this.getPdf(pId)
-
       const iframe = this.$refs.myFrame;
       iframe.contentWindow.scrollTo(0, 0);
     }
@@ -62,23 +67,7 @@ export default {
 
   methods: {
     getPdf(pId){
-      let _this=this;
-      $.ajax({
-        type: "get",
-        url: "https://ecg.mindyard.cn:84/uploadPath/pdf/"+pId+".pdf",
-        success: function () {
-          _this.src="https://ecg.mindyard.cn:84/uploadPath/pdf/"+pId+".pdf";
-          _this.loading.close();
-        },
-        error: function () {
-          _this.getJEcgPdf()
-          this.$message({
-            type: 'info',
-            message: '正在生成报告，请稍等'
-          });
-        }
-      })
-      this.src=_this.src
+      this.getJEcgPdf()
     },
     getJEcgPdf(){
       let _this=this;
