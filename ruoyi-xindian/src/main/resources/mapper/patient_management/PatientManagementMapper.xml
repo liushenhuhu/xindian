@@ -989,7 +989,9 @@
         hospital.hospital_name as countName,
         patient_management.connection_time as createTime,
         patient_management.p_id as pId,
-        pm_ecg_data.ecg_analysis_data as data
+        pm_ecg_data.ecg_analysis_data as data,
+        patient.patient_age as age,
+        patient.birth_day as birthDay
         FROM
         patient_management
         INNER JOIN report ON patient_management.p_id = report.p_id
@@ -1002,6 +1004,30 @@
             <if test="hospitalCode != null and hospitalCode != ''">and patient_management.hospital_code = #{hospitalCode}</if>
         </where>
 
+    </select>
+    <select id="selectScreenList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.ScreenVo">
+        SELECT h.city as name, COUNT(p.hospital_code) AS value
+        FROM hospital h
+        JOIN patient_management p ON h.hospital_code = p.hospital_code
+        <where>
+            and h.city IS NOT NULL AND h.city !=''
+            <if test="hospitalCode != null and hospitalCode != ''">and p.hospital_code = #{hospitalCode}</if>
+        </where>
+        GROUP BY h.city;
+
+    </select>
+    <select id="selectHrList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.CentreBottomVo">
+        SELECT patient.patient_age as age,pm_ecg_data.hr_mean as hr,patient.birth_day as birthDay
+        FROM patient_management
+                 INNER JOIN patient
+                            on patient.patient_phone_aes = patient_management.patient_phone_aes
+                 INNER JOIN pm_ecg_data
+                            ON patient_management.p_id = pm_ecg_data.p_id
+        <where>
+            patient_management.ecg_type like 'JECG%'
+            and pm_ecg_data.hr_mean is not null
+            <if test="hospitalCode != null and hospitalCode != ''">andpatient_management.hospital_code = #{hospitalCode}</if>
+        </where>
     </select>
 
 

@@ -15,9 +15,13 @@ public class RightBottomVo {
 
     private String terminalno;
 
+    private Integer age;
 
+    private Date birthDay;
 
     private String alertdetail;
+
+    private String alertValue;
 
     private String data;
 
@@ -33,6 +37,22 @@ public class RightBottomVo {
 
     public String getGatewayno() {
         return gatewayno;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
     }
 
     public void setGatewayno(String gatewayno) {
@@ -62,6 +82,14 @@ public class RightBottomVo {
 
     public void setAlertdetail(String alertdetail) {
         this.alertdetail = alertdetail;
+    }
+
+    public String getAlertValue() {
+        return alertValue;
+    }
+
+    public void setAlertValue(String alertValue) {
+        this.alertValue = alertValue;
     }
 
     public String getData() {
