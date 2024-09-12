@@ -226,7 +226,8 @@ public class LargeScreenController {
             try {
                 if (StringUtils.isNotEmpty(data)){
                     // 替换 'NaN' 为 '0'
-                    String jsonString = data.replace("NaN", "0");
+                    String jsonString = data.replace("nan", "0");
+                   jsonString = jsonString.replace("NaN", "0");
 
                     // 替换单引号 ' 为双引号 "
                     jsonString = jsonString.replace("'", "\"");
@@ -253,6 +254,7 @@ public class LargeScreenController {
                 }
 
             } catch (Exception e) {
+                System.out.println(rightBottomVo.getData());
                 rightBottomVo.setAlertValue("75");
             }
             rightBottomVo.setData("");
