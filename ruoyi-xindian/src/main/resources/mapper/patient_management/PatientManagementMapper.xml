@@ -942,7 +942,7 @@
             and  patient_management.ecg_type like 'JECG%'
             <if test="hospitalCode != null and hospitalCode != ''">and hospital_code = #{hospitalCode}</if>
         </where>
-
+        order by createTime desc
     </select>
     <select id="selectLevelList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.RightTopVo">
         SELECT
@@ -1003,7 +1003,7 @@
             and DATE(connection_time) = CURDATE()
             <if test="hospitalCode != null and hospitalCode != ''">and patient_management.hospital_code = #{hospitalCode}</if>
         </where>
-
+        order by createTime desc
     </select>
     <select id="selectScreenList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.ScreenVo">
         SELECT h.city as name, COUNT(p.hospital_code) AS value

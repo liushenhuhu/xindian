@@ -293,17 +293,10 @@ public class LargeScreenController {
         int[] heartRateBounds = {0, 60, 100, Integer.MAX_VALUE};
         String[] heartRateLabels = {"<60", "60-100", "100+"};
 
-
-        // 初始化四个数组，分别存储不同心率范围的计数
-        int[] countHeartRateBelow60 = new int[ageLabels.length];
-        int[] countHeartRate60To100 = new int[ageLabels.length];
-        int[] countHeartRateAbove100 = new int[ageLabels.length];
-
-
         // 初始化统计结果
-        Map<String, Map<String, Integer>> statistics = new TreeMap<>();
+        Map<String, Map<String, Integer>> statistics = new LinkedHashMap<>();
         for (String ageLabel : ageLabels) {
-            Map<String, Integer> heartRateStats = new TreeMap<>();
+            Map<String, Integer> heartRateStats = new LinkedHashMap<>();
             for (String heartRateLabel : heartRateLabels) {
                 heartRateStats.put(heartRateLabel, 0);
             }

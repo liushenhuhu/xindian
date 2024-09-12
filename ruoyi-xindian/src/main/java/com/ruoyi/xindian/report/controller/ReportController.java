@@ -716,44 +716,56 @@ public class ReportController extends BaseController {
      */
     @GetMapping("/getCommonTerms")
     public AjaxResult getCommonTerms(HttpServletRequest request) {
-        //正常
+        //总述
         String[] normal;
-        //心律
+        //技术条件
         String[] heart_rhythm;
-        //心律不齐
+        //窦性心律及心律失常
         String[] arrhythmia;
-        //早搏逸搏
+        //室上性心律失常
         String[] premature_escape;
-        //颤动扑动
+        //室上性快速性心律失常
         String[] flutter;
-        //ST、T改变
+        //室性心律失常
         String[] ST_T_change;
-        //房室肥大
+        //室性快速性心律失常
         String[] atrioventricular_hypertrophy;
-        //心肌梗死
+        //房室传导
         String[] myocardial_infarction;
-        //传导阻滞
+        //心室内及心房内传导
         String[] conduction_block;
-        //危急值
+        //电轴与电压
         String[] critical_value;
-        //其它
+        //心脏肥厚或增大
         String[] other;
         //选择性建议
         String[] ad;
+        //ST段、T波和U波
+        String[] st;
+        String[] tu;
+        String[] xg;
+        String[] qbq;
+
         //返回map
         LinkedHashMap<String, String[]> resMap = new LinkedHashMap<>();
-        normal = "正常心电图,大致正常心电图".split(",");
-        heart_rhythm = "窦性心律,异位心律,房性心律,室性心律,交界性心律,起搏心律".split(",");
-        arrhythmia = "窦性心律不齐, 心动过速, 心动过缓, 室性心动过速, 室上性心动过速, 交界性心动过速, 房性心动过速".split(", ");
-        premature_escape = "房性逸搏, 房性早搏, 房性停搏, 室性逸搏, 室性早搏, 交界性逸搏, 交界性早搏, 交界性停搏, 窦性停搏, 心室停搏, 全心停搏".split(", ");
-        flutter = "心房颤动, 心房扑动, 心室颤动, 心室扑动".split(", ");
-        ST_T_change = "ST改变, ST-T改变, T波异常, QT间期延长, QTc间期延长, 可见U波".split(", ");
-        atrioventricular_hypertrophy = "左心室肥大,左心房肥大,右心室肥大,右心房肥大,双心室肥大,双心房肥大".split(",");
-        myocardial_infarction = "亚急性,急性,陈旧性,前间壁心肌梗死,间壁心肌梗死,前侧壁心肌梗死,广泛前壁心肌梗死,前壁心肌梗死,下壁心肌梗死,下后壁心肌梗死,后壁心肌梗死,下侧壁心肌梗死,高侧壁心肌梗死,侧壁心肌梗死,心内膜下心肌梗死,右室心肌梗死,非ST抬高型心肌梗死,心尖部心肌梗死".split(",");
-        conduction_block = "I度房室传导阻滞，II度房室传导阻滞，II度I型房室传导阻滞，II度II型房室传导阻滞，III度房室传导阻滞，窦房传导阻滞，高度房室传导阻滞，左前分支传导阻滞，左后分支传导阻滞，完全性左束支传导阻滞，不完全性左束支传导阻滞，完全性右束支传导阻滞，不完全性右束支传导阻滞，非特异性室内传导阻滞，室内差异性传导".split("，");
-        critical_value = "心电图危急值".split(",");
-        other = "预激综合症, 心室预激波, 早期复极".split(", ");
-        ad = "建议到上级医院复查, 建议做动态心电图, 建议做12导联常规心电图, 信号存在干扰，请重新采集".split(", ");
+        normal = "正常心电图,余心电图正常,异常心电图,无法判读的心电图".split(",");
+        heart_rhythm = "肢体导联反接,胸导联错接,导联脱落,右胸导联,伪差,低质量数据,后壁导联".split(",");
+        arrhythmia = "窦性心律,窦性心动过速,窦性心动过缓,窦性心律不齐,游走性窦性心律,Ⅰ型窦房阻滞,Ⅱ型窦房阻滞,窦性停搏,不确定的室上性心律".split(",");
+        premature_escape = "房性期前收缩(早搏),逆传的心房激动,房性期前收缩(早搏)未下传,游走性房性心律,房性心律,多源性房性心律,交界性期前收缩 (早博),交界性逸搏,交界性心律,加速性交界性心律,室上性心律,室上性心搏,非窦性心动过缓".split(",");
+        flutter = "心房颤动,心房扑动,单源性房性心动过速,多源性房性心动过速,交界性心动过速,室上性心动过速,窄QRS心动过速".split(",");
+        ST_T_change = "室性期前收缩(早搏),室性融合波,室性逸搏,室性自主心律,加速性室性自主心律,分支性室性心律,室性并行心律,无脉性电活动,心脏停搏".split(",");
+        atrioventricular_hypertrophy = "室性心动过速,非持续性室性心动过速,双向性室性心动过速,多形性室性心动过速,尖端扭转型室性心动过速,心室颤动,分支性室性心动过速,宽QRS心动过速".split(",");
+        myocardial_infarction = "短PR间期,房室传导比N:D,PR间期延长,一度房室阻滞,二度I型房室阻滞,二度II型房室阻滞,2:1 房室阻滞,房室阻滞，不等比传导,高度房室阻滞,三度房室阻滞,房室分离".split(",");
+        conduction_block = "室上性搏动伴差异性传导,左前分支阻滞,左后分支阻滞,左束支阻滞,不完全性右束支阻滞,右束支阻滞,室内传导延迟,心室预激,右心房传导异常,左心房传导异常,Epsilon波".split("，");
+        critical_value = "电轴右偏,电轴左偏,电轴极度右偏,不确定电轴,电交替,低电压,肢体导联低电压,胸导联低电压,胸导联R波递增不良,P波电轴异常".split(",");
+        other = "左心房增大,右心房增大,左心室肥厚,右心室肥厚,双心室肥厚".split(",");
+        ad = "建议到上级医院复查, 建议做动态心电图, 建议做12导联常规心电图, 信号存在干扰，请重新采集".split(",");
+        st =  "ST改变,ST-T改变,T波异常,QT间期延长,短QT间期,U波增高,U波倒置".split(",");
+        tu =   "心室肥厚所致的ST-T改变,J波,早复极".split(",");
+        xg =   "前壁心肌梗死,下壁心肌梗死,后壁心肌梗死,侧壁心肌梗死,前间壁心肌梗死,广泛前壁心肌梗死,心肌梗死合并左束支阻滞,右心室心肌梗死,异常Q波".split(",");
+        qbq =   "心房起搏/心律,心室起搏/心律,非右心室心尖部心室起搏,心房感知心室起搏/心律,房室双腔起搏/心律,心房失夺获,心室失夺获,心房感知不良,心室感知不良,心房起搏不良,心室起搏不良".split(",");
+
+
         LoginUser loginUser = tokenService.getLoginUser(request);
         DoctorTerm doctorTerm = new DoctorTerm();
         doctorTerm.setDoctorPhone(loginUser.getUser().getUserName());
@@ -761,7 +773,6 @@ public class ReportController extends BaseController {
         if (doctorTerms != null && !doctorTerms.isEmpty()) {
             String text = doctorTerms.get(0).getTermText();
             if (text.length() > 2) {
-
                 JSONArray objects = JSONArray.parseArray(text);
                 String[] stringArray = new String[objects.size()];
                 for (int i = 0; i < objects.size(); i++) {
@@ -771,18 +782,21 @@ public class ReportController extends BaseController {
             }
         }
         resMap.put("选择性建议", ad);
-        resMap.put("正常", normal);
-        resMap.put("心律", heart_rhythm);
-        resMap.put("心律不齐", arrhythmia);
-        resMap.put("早搏逸搏", premature_escape);
-        resMap.put("颤动扑动", flutter);
-        resMap.put("ST、T改变", ST_T_change);
-        resMap.put("房室肥大", atrioventricular_hypertrophy);
-        resMap.put("心肌梗死", myocardial_infarction);
-        resMap.put("传导阻滞", conduction_block);
-        resMap.put("危急值", critical_value);
-        resMap.put("其它", other);
-
+        resMap.put("总述", normal);
+        resMap.put("技术条件", heart_rhythm);
+        resMap.put("窦性心律及心律失常", arrhythmia);
+        resMap.put("室上性心律失常", premature_escape);
+        resMap.put("室上性快速性心律失常", flutter);
+        resMap.put("室性心律失常", ST_T_change);
+        resMap.put("室性快速性心律失常", atrioventricular_hypertrophy);
+        resMap.put("房室传导", myocardial_infarction);
+        resMap.put("心室内及心房内传导", conduction_block);
+        resMap.put("电轴与电压", critical_value);
+        resMap.put("心脏肥厚或增大", other);
+        resMap.put("ST段、T波和U波", st);
+        resMap.put("TU融合", tu);
+        resMap.put("心肌梗死", xg);
+        resMap.put("起搏器", qbq);
 
         return AjaxResult.success(resMap);
     }
