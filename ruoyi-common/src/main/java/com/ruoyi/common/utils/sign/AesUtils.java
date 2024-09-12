@@ -1,6 +1,7 @@
 package com.ruoyi.common.utils.sign;
 
 
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +56,9 @@ public class AesUtils {
      */
     public  String encrypt(String needEncryptStr) throws Exception {
         try {
+            if (StringUtils.isEmpty(needEncryptStr)){
+                return "";
+            }
             byte[] raw = key.getBytes(UTF_8);
             //设置秘钥
             SecretKeySpec keySpec = new SecretKeySpec(raw, AES);
@@ -87,6 +91,9 @@ public class AesUtils {
      */
     public  String decrypt(String needDecryptStr) throws Exception {
         try {
+            if (StringUtils.isEmpty(needDecryptStr)){
+                return "";
+            }
             byte[] raw = key.getBytes(UTF_8);
             //设置秘钥
             SecretKeySpec keySpec = new SecretKeySpec(raw, AES);

@@ -1,5 +1,6 @@
 package com.ruoyi.xindian.patient.mapper;
 
+import com.ruoyi.system.domain.vo.SymCountVo;
 import com.ruoyi.xindian.patient.domain.DoctorRelationPatient;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient_management.vo.Limit;
@@ -108,4 +109,7 @@ public interface PatientMapper
     List<Patient> selectByDoc(DoctorRelationPatient doctorRelationPatient);
 
     int updateStatusPhone(@Param("phone") String phone);
+
+    List<SymCountVo> selectListByCount(@Param("hospitalCode")String hospitalCode);
+
 }

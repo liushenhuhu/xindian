@@ -913,6 +913,96 @@
         where patient_phone_aes = #{patientPhone}
           and DATE(connection_time) = CURDATE()
     </select>
+    <select id="selectCount" resultType="com.ruoyi.system.domain.vo.SymCountVo">
+        SELECT
+            ecg_type as ecgType
+        FROM
+            patient_management
+        <where>
+            and ecg_type like 'JECG%'
+            <if test="hospitalCode != null and hospitalCode != ''">and hospital_code = #{hospitalCode}</if>
+        </where>
+
+
+    </select>
+    <select id="selectAlertLogList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.AlertLogVO">
+        SELECT
+            alert_log.log_time as createTime,
+            alert_log.log_id as logId,
+            alert_log.log_type as onlineState,
+            patient.patient_name_aes as countName,
+            patient_management.equipment_code as gatewayno
+        FROM
+            alert_log
+                INNER JOIN patient_management ON alert_log.p_id = patient_management.p_id
+                INNER JOIN patient ON patient_management.patient_phone_aes = patient.patient_phone_aes
+        <where>
+            AND patient_management.connection_time &gt;= CURDATE() - INTERVAL 6 DAY
+            AND patient_management.connection_time &lt; CURDATE() + INTERVAL 1 DAY
+            and  patient_management.ecg_type like 'JECG%'
+            <if test="hospitalCode != null and hospitalCode != ''">and hospital_code = #{hospitalCode}</if>
+        </where>
+
+    </select>
+    <select id="selectLevelList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.RightTopVo">
+        SELECT
+        d.day as date,
+        COALESCE(SUM(CASE WHEN t.ecg_level = 3 THEN 1 ELSE 0 END), 0) AS count3,
+        COALESCE(SUM(CASE WHEN t.ecg_level = 2 THEN 1 ELSE 0 END), 0) AS count2
+        FROM
+        (
+        SELECT CURDATE() - INTERVAL i DAY AS day
+        FROM (
+        SELECT @rownum := @rownum + 1 AS i
+        FROM (SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7) AS t1,
+        (SELECT @rownum := -1) AS t2
+        ) AS nums
+        ) AS d
+        LEFT JOIN patient_management AS t ON DATE(t.connection_time) = d.day
+        AND t.connection_time &gt;= CURDATE() - INTERVAL 6 DAY
+        AND t.connection_time &lt; CURDATE() + INTERVAL 1 DAY
+        <if test="hospitalCode != null and hospitalCode != ''">and hospital_code = #{hospitalCode}</if>
+        GROUP BY
+        d.day
+        ORDER BY
+        d.day
+    </select>
+    <select id="selectIntelligentList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.AlertLogVO">
+        SELECT
+        intelligent_diagnosis as countName , diagnosis_conclusion as gatewayno
+        FROM
+        report
+        INNER JOIN
+        patient_management ON patient_management.p_id = report.p_id
+        <where>
+            and patient_management.ecg_type like 'JECG%'
+            AND patient_management.connection_time &gt;= CURDATE() - INTERVAL 6 DAY
+            AND patient_management.connection_time &lt; CURDATE() + INTERVAL 1 DAY
+            <if test="hospitalCode != null and hospitalCode != ''">and hospital_code = #{hospitalCode}</if>
+        </where>
+    </select>
+    <select id="selectReportList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.RightBottomVo">
+        SELECT
+        report.intelligent_diagnosis as alertdetail,
+        patient.patient_name_aes as gatewayno,
+        patient_management.ecg_type as terminalno,
+        hospital.hospital_name as countName,
+        patient_management.connection_time as createTime,
+        patient_management.p_id as pId,
+        pm_ecg_data.ecg_analysis_data as data
+        FROM
+        patient_management
+        INNER JOIN report ON patient_management.p_id = report.p_id
+        INNER JOIN patient ON patient.patient_phone_aes = patient_management.patient_phone_aes
+        INNER JOIN hospital ON hospital.hospital_code = patient_management.hospital_code
+        INNER JOIN pm_ecg_data ON pm_ecg_data.p_id = patient_management.p_id
+        <where>
+           and  patient_management.ecg_type LIKE 'JECG%'
+            and DATE(connection_time) = CURDATE()
+            <if test="hospitalCode != null and hospitalCode != ''">and patient_management.hospital_code = #{hospitalCode}</if>
+        </where>
+
+    </select>
 
 
     <insert id="insertPatientManagement" parameterType="PatientManagement">

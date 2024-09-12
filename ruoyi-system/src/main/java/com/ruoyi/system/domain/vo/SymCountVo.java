@@ -11,4 +11,6 @@ public class SymCountVo {
     private Long userId;
 
     private Date createTime;
+
+    private String ecgType;
 }

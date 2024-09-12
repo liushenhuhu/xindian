@@ -1,5 +1,9 @@
 package com.ruoyi.xindian.patient_management.mapper;
 
+import com.ruoyi.system.domain.vo.SymCountVo;
+import com.ruoyi.xindian.jecg_large_screen.vo.AlertLogVO;
+import com.ruoyi.xindian.jecg_large_screen.vo.RightBottomVo;
+import com.ruoyi.xindian.jecg_large_screen.vo.RightTopVo;
 import com.ruoyi.xindian.patient_management.domain.PatientManagement;
 import com.ruoyi.xindian.patient_management.domain.PhoneList;
 import com.ruoyi.xindian.patient_management.domain.SingleHistoryInfo;
@@ -144,4 +148,11 @@ public interface PatientManagementMapper
     Long getDetectinCountToday(String patientPhone);
 
     int updatePatientManagementStatus(String pId);
+
+
+    List<SymCountVo> selectCount(@Param("hospitalCode")String hospitalCode);
+    List<AlertLogVO> selectAlertLogList(@Param("hospitalCode")String hospitalCode);
+    List<RightTopVo> selectLevelList(@Param("hospitalCode")String hospitalCode);
+    List<AlertLogVO> selectIntelligentList(@Param("hospitalCode")String hospitalCode);
+    List<RightBottomVo> selectReportList(@Param("hospitalCode")String hospitalCode);
 }

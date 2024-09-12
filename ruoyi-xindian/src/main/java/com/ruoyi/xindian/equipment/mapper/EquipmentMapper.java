@@ -89,4 +89,7 @@ public interface EquipmentMapper
 
     Equipment getCodeByHospital(@Param("equipmentCode") String equipmentCode);
     int updateEquipmentStatusByEquipmentCode(@Param("equipmentCode") String equipmentCode);
+
+
+    int countByEquipmentCodeInt(@Param("hospitalCode") String hospitalCode);
 }

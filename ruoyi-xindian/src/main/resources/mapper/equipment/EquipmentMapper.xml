@@ -125,6 +125,14 @@
                 equipment.hospital_code = hospital.hospital_code
         where equipment_code = #{equipmentCode} limit 1
     </select>
+    <select id="countByEquipmentCodeInt" resultType="java.lang.Integer">
+        select count(*) from equipment
+                        <where>
+                            <if test="hospitalCode != null and hospitalCode != ''">
+                                and hospital_code =  #{hospitalCode}
+                            </if>
+                        </where>
+    </select>
 
 
     <insert id="insertEquipment" parameterType="Equipment">

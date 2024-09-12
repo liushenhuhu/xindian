@@ -573,9 +573,6 @@ export default {
     };
   },
 
-  beforeCreate() {
-    getPatientOnlineStatus();
-  },
 
   created() {
     listHospitalId(null).then((r) => {

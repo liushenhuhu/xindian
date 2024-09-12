@@ -168,6 +168,20 @@
         </where>
         order by doctor_relation_patient.create_time desc
     </select>
+    <select id="selectListByCount" resultType="com.ruoyi.system.domain.vo.SymCountVo">
+        SELECT
+        DISTINCT patient.patient_id AS userId,
+        patient.creat_time AS createTime
+        FROM
+        patient
+        left JOIN patient_management
+        on patient.patient_phone_aes = patient_management.patient_phone_aes
+        <where>
+            <if test="hospitalCode != null and hospitalCode != ''">
+                and patient_management.hospital_code = #{hospitalCode}
+            </if>
+        </where>
+    </select>
 
     <insert id="insertPatient" parameterType="Patient">
         insert into patient
