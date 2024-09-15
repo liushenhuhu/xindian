@@ -164,5 +164,15 @@ public class HospitalListController extends BaseController
         return AjaxResult.success(hospitalService.selectHospitalByHospitalId(hospitalId));
     }
 
+    @GetMapping("/getHospitalCode")
+    public AjaxResult getHospitalCode()
+    {
+        Long userId = getUserId();
+        if (SysUser.isAdmin(userId)){
+            return AjaxResult.success("All");
+        }
+        SysUser sysUser = sysUserMapper.selectUserById(userId);
+        return AjaxResult.success(sysUser.getHospitalCode());
+    }
 
 }

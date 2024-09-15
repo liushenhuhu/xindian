@@ -72,6 +72,8 @@ public class LargeScreenController {
         List<SymCountVo> symCountVos1 = patientMapper.selectListByCount(hospitalCode);
 
         int countByEquipmentCodeInt = equipmentMapper.countByEquipmentCodeInt(hospitalCode);
+        int countByEquipmentCodeTrue = equipmentMapper.countByEquipmentCodeTrue(hospitalCode);
+
         //设备数量
         map.put("onlineNum",countByEquipmentCodeInt);
 
@@ -89,6 +91,7 @@ public class LargeScreenController {
         //总用户量
         int size = symCountVos1.size();
         map.put("totalNum",size);
+        map.put("alarmNum",countByEquipmentCodeTrue);
 
         return AjaxResult.success(map);
     }
@@ -122,13 +125,20 @@ public class LargeScreenController {
      */
     @GetMapping("/getLeftBottom")
     public AjaxResult getLeftBottom(String hospitalCode){
+
+        List<String> dateList = new ArrayList<>();
+        dateList.add("干扰信号");
+        dateList.add("其它");
+
         List<AlertLogVO> alertLogVOS = patientManagementMapper.selectAlertLogList(hospitalCode).stream()
                 .peek(vo -> {
                     try {
                         vo.setCountName(aesUtils.decrypt(vo.getCountName()));
                     } catch (Exception e) {
                     }
-                }).collect(Collectors.toList());
+                })
+                .filter(vo -> !dateList.contains(vo.getOnlineState()))
+                .collect(Collectors.toList());
         return AjaxResult.success(alertLogVOS);
     }
 

@@ -18,7 +18,10 @@ import com.ruoyi.xindian.visitPay.VisitWxPayController;
 import com.ruoyi.xindian.wx_pay.controller.WXPayController;
 import com.ruoyi.xindian.wx_pay.service.OrderInfoService;
 import com.ruoyi.xindian.wx_pay.util.WXPublicRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -35,6 +39,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Component
 public class RedisKeyExpirationListener extends KeyExpirationEventMessageListener {
+    private static final Logger log = LoggerFactory.getLogger(RedisKeyExpirationListener.class);
+
     public RedisKeyExpirationListener(RedisMessageListenerContainer listenerContainer) {
         super(listenerContainer);
     }
@@ -78,6 +84,9 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     private IEquipmentService equipmentService;
 
     @Resource
+    private RedisTemplate<String,String> redisTemplate;
+
+    @Resource
     private AesUtils aesUtils;
 
     private final Lock lock = new ReentrantLock();
@@ -109,9 +118,33 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
                 //修改设备状态未不在线
                 System.out.println("设备状态修改");
                 try {
-                    patientService.updateStatusPhone(aesUtils.encrypt(split2[1]));
-                    patientManagementService.updatePatientManagementStatus(split2[2]);
-                    equipmentService.updateEquipmentStatusByEquipmentCode(split2[3]);
+                    String encrypt = aesUtils.encrypt(split2[1]);
+                    patientService.updateStatusPhone(encrypt);
+
+                    //使用redis  查询结尾为当前设备的是否还存在
+                    Set<String> keys = redisTemplate.keys("*_" + split2[3]);
+                    if (keys == null  || keys.isEmpty()) {
+                        equipmentService.updateEquipmentStatusByEquipmentCode(split2[3]);
+                        patientManagementService.updatePatientManagementStatus(split2[2]);
+                    }else {
+                        Boolean is = false;
+                        Boolean isReport = false;
+                        for (String key : keys) {
+                            if (key.contains("OES_")){
+                                is = true;
+                                String[] split3 = key.split("_");
+                                if (split3[2].equals(split2[2])){
+                                    isReport =true;
+                                }
+                            }
+                        }
+                        if (!is){
+                            equipmentService.updateEquipmentStatusByEquipmentCode(split2[3]);
+                        }
+                        if (!isReport){
+                            patientManagementService.updatePatientManagementStatus(split2[2]);
+                        }
+                    }
                 }catch (Exception e){
                     System.out.println(e);
                 }

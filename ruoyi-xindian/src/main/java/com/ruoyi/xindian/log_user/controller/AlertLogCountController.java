@@ -41,7 +41,7 @@ public class AlertLogCountController extends BaseController
     /**
      * 查询预警类型统计列表
      */
-    @PreAuthorize("@ss.hasPermi('alert_log_count:count:list')")
+//    @PreAuthorize("@ss.hasPermi('alert_log_count:count:list')")
     @GetMapping("/list")
     public TableDataInfo list(AlertLogCount alertLogCount)
     {
@@ -53,7 +53,7 @@ public class AlertLogCountController extends BaseController
     /**
      * 导出预警类型统计列表
      */
-    @PreAuthorize("@ss.hasPermi('alert_log_count:count:export')")
+//    @PreAuthorize("@ss.hasPermi('alert_log_count:count:export')")
     @Log(title = "预警类型统计", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AlertLogCount alertLogCount)
@@ -66,7 +66,7 @@ public class AlertLogCountController extends BaseController
     /**
      * 获取预警类型统计详细信息
      */
-    @PreAuthorize("@ss.hasPermi('alert_log_count:count:query')")
+//    @PreAuthorize("@ss.hasPermi('alert_log_count:count:query')")
     @GetMapping(value = "/{countId}")
     public AjaxResult getInfo(@PathVariable("countId") Long countId)
     {
@@ -76,7 +76,7 @@ public class AlertLogCountController extends BaseController
     /**
      * 新增预警类型统计
      */
-    @PreAuthorize("@ss.hasPermi('alert_log_count:count:add')")
+//    @PreAuthorize("@ss.hasPermi('alert_log_count:count:add')")
     @Log(title = "预警类型统计", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody AlertLogCount alertLogCount)
@@ -112,7 +112,7 @@ public class AlertLogCountController extends BaseController
     /**
      * 删除预警类型统计
      */
-    @PreAuthorize("@ss.hasPermi('alert_log_count:count:remove')")
+//    @PreAuthorize("@ss.hasPermi('alert_log_count:count:remove')")
     @Log(title = "预警类型统计", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{countIds}")
     public AjaxResult remove(@PathVariable Long[] countIds)

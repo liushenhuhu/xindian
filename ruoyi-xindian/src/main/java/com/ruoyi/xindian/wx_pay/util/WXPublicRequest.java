@@ -526,15 +526,15 @@ public class WXPublicRequest {
      *
      * @throws Exception
      */
-    public  boolean  reportEarlyWarning( String userOpenid, String serveName, String patientName,String msg,Date time) throws Exception {
+    public  boolean  reportEarlyWarning( SysUser userOpenid, String serveName, String patientName,String msg,Date time,Report report) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("yyyy-MM-dd HH:mm");
         String timeNow = sdf.format(time);
         MessageTemplateEntity messageTemplateEntity = new MessageTemplateEntity(new MessageValueEntity(serveName),new MessageValueEntity(patientName),new MessageValueEntity(msg),new MessageValueEntity(timeNow));
         Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("touser", userOpenid); //用户openid
+        paramsMap.put("touser", userOpenid.getOpenId()); //用户openid
         paramsMap.put("miniprogram_state", "fomal");
-        paramsMap.put("page", "pages/record/index");
+        paramsMap.put("page", "pagesRecord/pages/detail?id="+aesUtils.decrypt(userOpenid.getPhonenumber())+"&pid="+report.getpId()+"&type="+report.getReportType());
         paramsMap.put("template_id", "6T4B2LiB7B16AJstsR2SxTdXRio57pKS-ME04h_FLfI"); //推送消息模板id
         paramsMap.put("data", messageTemplateEntity); //消息体：{{"thing1":"项目名称"},{"time2":"2022-08-23"},{"thing3":"这是描述"}}
         String wxAccessToken = getWXAccessToken();

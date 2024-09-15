@@ -3,6 +3,7 @@ package com.ruoyi.xindian.wx_pay.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.xindian.order.vo.OrderVo;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.order.vo.UserAddressVo;
 import com.ruoyi.xindian.wx_pay.domain.OrderInfo;
@@ -66,12 +67,9 @@ public interface OrderInfoService extends IService<OrderInfo> {
     /**
      * 添加订单
      * @param request
-     * @param productId
-     * @param sum
-     * @param addressId
      * @return
      */
-    String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId,String remark,boolean isStatus) throws Exception;
+    String addOrder(HttpServletRequest request, OrderVo orderVo, boolean isStatus) throws Exception;
 
 
     /**

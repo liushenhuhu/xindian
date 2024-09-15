@@ -742,7 +742,6 @@ public class ReportController extends BaseController {
         String[] ad;
         //ST段、T波和U波
         String[] st;
-        String[] tu;
         String[] xg;
         String[] qbq;
 
@@ -756,12 +755,11 @@ public class ReportController extends BaseController {
         ST_T_change = "室性期前收缩(早搏),室性融合波,室性逸搏,室性自主心律,加速性室性自主心律,分支性室性心律,室性并行心律,无脉性电活动,心脏停搏".split(",");
         atrioventricular_hypertrophy = "室性心动过速,非持续性室性心动过速,双向性室性心动过速,多形性室性心动过速,尖端扭转型室性心动过速,心室颤动,分支性室性心动过速,宽QRS心动过速".split(",");
         myocardial_infarction = "短PR间期,房室传导比N:D,PR间期延长,一度房室阻滞,二度I型房室阻滞,二度II型房室阻滞,2:1 房室阻滞,房室阻滞，不等比传导,高度房室阻滞,三度房室阻滞,房室分离".split(",");
-        conduction_block = "室上性搏动伴差异性传导,左前分支阻滞,左后分支阻滞,左束支阻滞,不完全性右束支阻滞,右束支阻滞,室内传导延迟,心室预激,右心房传导异常,左心房传导异常,Epsilon波".split("，");
+        conduction_block = "室上性搏动伴差异性传导,左前分支阻滞,左后分支阻滞,左束支阻滞,不完全性右束支阻滞,右束支阻滞,室内传导延迟,心室预激,右心房传导异常,左心房传导异常,Epsilon波".split(",");
         critical_value = "电轴右偏,电轴左偏,电轴极度右偏,不确定电轴,电交替,低电压,肢体导联低电压,胸导联低电压,胸导联R波递增不良,P波电轴异常".split(",");
         other = "左心房增大,右心房增大,左心室肥厚,右心室肥厚,双心室肥厚".split(",");
         ad = "建议到上级医院复查, 建议做动态心电图, 建议做12导联常规心电图, 信号存在干扰，请重新采集".split(",");
-        st =  "ST改变,ST-T改变,T波异常,QT间期延长,短QT间期,U波增高,U波倒置".split(",");
-        tu =   "心室肥厚所致的ST-T改变,J波,早复极".split(",");
+        st =  "ST改变,ST-T改变,T波异常,QT间期延长,短QT间期,U波增高,U波倒置,心室肥厚所致的ST-T改变,J波,早复极".split(",");
         xg =   "前壁心肌梗死,下壁心肌梗死,后壁心肌梗死,侧壁心肌梗死,前间壁心肌梗死,广泛前壁心肌梗死,心肌梗死合并左束支阻滞,右心室心肌梗死,异常Q波".split(",");
         qbq =   "心房起搏/心律,心室起搏/心律,非右心室心尖部心室起搏,心房感知心室起搏/心律,房室双腔起搏/心律,心房失夺获,心室失夺获,心房感知不良,心室感知不良,心房起搏不良,心室起搏不良".split(",");
 
@@ -794,7 +792,6 @@ public class ReportController extends BaseController {
         resMap.put("电轴与电压", critical_value);
         resMap.put("心脏肥厚或增大", other);
         resMap.put("ST段、T波和U波", st);
-        resMap.put("TU融合", tu);
         resMap.put("心肌梗死", xg);
         resMap.put("起搏器", qbq);
 
@@ -1299,7 +1296,7 @@ public class ReportController extends BaseController {
 
         SysUser sysUser = sysUserMapper.selectUserByPhone(phone);
         if (sysUser != null) {
-            boolean isKeys = wxPublicRequest.reportEarlyWarning(sysUser.getOpenId(), "心电图检测", aesUtils.decrypt(patientManagement.getPatientName()), report.getWarningText(), patientManagement.getConnectionTime());
+            boolean isKeys = wxPublicRequest.reportEarlyWarning(sysUser, "心电图检测", aesUtils.decrypt(patientManagement.getPatientName()), report.getWarningText(), patientManagement.getConnectionTime(),report1);
             if (isKeys) {
                 return AjaxResult.success();
             }

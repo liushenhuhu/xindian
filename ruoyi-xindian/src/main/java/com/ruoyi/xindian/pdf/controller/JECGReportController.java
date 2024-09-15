@@ -189,7 +189,7 @@ public class JECGReportController extends BaseController {
                 // 使用Base64进行解码
                 byte[] decodedData = Base64.getDecoder().decode(reportDataPdf.toString());
                 String tempPath = "";
-                if (is == 12) {
+                if (is == 12||is ==4) {
                     tempPath = "/template/jecgReport_12.pdf";
                 } else {
                     tempPath = "/template/jecgReport.pdf";
@@ -410,7 +410,7 @@ public class JECGReportController extends BaseController {
         //设置透明度和重叠样式
         page2.getCanvas().setTransparency(1f, 1f, PdfBlendMode.Normal);
         //将pdf1的第一页内容写入pdf2的第二页中的指定位置
-        if (type == 12) {
+        if (type == 12||type == 4) {
             page2.getCanvas().drawTemplate(template, new Point2D.Float(60, 170));
         } else {
             page2.getCanvas().drawTemplate(template, new Point2D.Float(60, 180));

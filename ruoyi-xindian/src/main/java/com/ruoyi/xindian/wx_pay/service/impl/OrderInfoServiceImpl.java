@@ -9,13 +9,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.xindian.discount_code.domain.DiscountCode;
+import com.ruoyi.xindian.discount_code.domain.DiscountCodeLog;
+import com.ruoyi.xindian.discount_code.service.DiscountCodeLogService;
+import com.ruoyi.xindian.discount_code.service.DiscountCodeService;
 import com.ruoyi.xindian.equipment.controller.EquipmentHeadingCodeController;
 import com.ruoyi.xindian.fw_log.domain.FwLog;
 import com.ruoyi.xindian.fw_log.mapper.FwLogMapper;
 import com.ruoyi.xindian.lease.domain.LeaseDetails;
 import com.ruoyi.xindian.lease.mapper.LeaseDetailsMapper;
+import com.ruoyi.xindian.order.vo.OrderVo;
 import com.ruoyi.xindian.order.vo.ShipaddressVo;
 import com.ruoyi.xindian.patient.domain.Patient;
 import com.ruoyi.xindian.patient.service.IPatientService;
@@ -74,6 +80,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private IWSurveyService wSurveyService;
 
 
+    @Resource
+    private DiscountCodeLogService discountCodeLogService;
+
     @Autowired
     private IPatientService patientService;
     @Resource
@@ -113,6 +122,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     @Resource
     private LeaseDetailsMapper leaseDetailsMapper;
+
+    @Resource
+    private DiscountCodeService discountCodeService;
 
     @Resource
     private PurchaseLimitationService purchaseLimitationService;
@@ -646,21 +658,18 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     /**
      * 添加订单
      * @param request
-     * @param productId
-     * @param sum
-     * @param addressId
      * @return
      */
     @Transactional
     @Override
-    public String addOrder(HttpServletRequest request, Long productId, Integer sum, Long addressId,String remark,boolean isStatus) throws Exception {
-        Product product = productMapper.selectById(productId);
+    public String addOrder(HttpServletRequest request, OrderVo orderVo, boolean isStatus) throws Exception {
+        Product product = productMapper.selectById(orderVo.getProductId());
 
         if(product.getType().equals("服务")){
-            addressId = 11L;
+            orderVo.setAddressId(11L);
         }
 
-        ShipAddress shipAddress = shipAddressMapper.selectShipAddressById(addressId);
+        ShipAddress shipAddress = shipAddressMapper.selectShipAddressById(orderVo.getAddressId());
 
         if (shipAddress==null){
             throw new Exception("用户地址不存在");
@@ -689,31 +698,47 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         if (isStatus){
             BigDecimal bigDecimal = DiscountCalculator.calculateDiscount(product.getDiscount(), BigDecimal.valueOf(product.getDiscountPrice()));
-            orderInfo.setTotalFee(new BigDecimal(sum).multiply(bigDecimal));
+            orderInfo.setTotalFee(new BigDecimal(orderVo.getSum()).multiply(bigDecimal));
+        }else if (StringUtils.isNotEmpty(orderVo.getDiscountsCode())){
+            DiscountCode code = discountCodeService.getCode(orderVo.getDiscountsCode());
+            if (code!=null){
+                DiscountCodeLog discountCodeLog = new DiscountCodeLog();
+                discountCodeLog.setPromotionCode(code.getPromotionCode());
+                discountCodeLog.setPhone(code.getPhone());
+                discountCodeLog.setDiscount(code.getDiscount());
+                discountCodeLog.setOrderId(orderInfo.getId());
+                discountCodeLog.setCreateTime(new Date());
+
+                discountCodeLogService.save(discountCodeLog);
+
+                BigDecimal bigDecimal = DiscountCalculator.calculateDiscount(product.getDiscount(), BigDecimal.valueOf(code.getDiscount()));
+                orderInfo.setTotalFee(new BigDecimal(orderVo.getSum()).multiply(bigDecimal));
+            }
+
         }else {
-            orderInfo.setTotalFee(new BigDecimal(sum).multiply(product.getDiscount()));
+            orderInfo.setTotalFee(new BigDecimal(orderVo.getSum()).multiply(product.getDiscount()));
         }
 
         orderInfo.setOrderStatus(OrderStatus.NOTPAY.getType());
         orderInfo.setOpenId(sysUser.getOpenId());
         orderInfo.setCreateTime(new Date());
         orderInfo.setUpdateTime(new Date());
-        orderInfo.setRemark(remark);
+        orderInfo.setRemark(orderVo.getRemark());
         orderInfo.setOrderState(OrderStatus.NOTPAY.getType());
         orderInfo.setDelFlag(0);
         orderInfoMapper.insert(orderInfo);
 
         SuborderOrderInfo suborderOrderInfo = new SuborderOrderInfo();
         suborderOrderInfo.setOrderFather(orderInfo.getId());
-        suborderOrderInfo.setProductId(productId);
-        suborderOrderInfo.setSum(Long.valueOf(sum));
+        suborderOrderInfo.setProductId(orderVo.getProductId());
+        suborderOrderInfo.setSum(Long.valueOf(orderVo.getSum()));
         suborderOrderInfo.setCreateTime(new Date());
         suborderOrderInfo.setUpdateTime(new Date());
         suborderOrderInfo.setProductPrice(product.getDiscount());
         suborderOrderInfo.setProductName(product.getProductName());
         int insert = suborderOrderInfoMapper.insert(suborderOrderInfo);
         if(!product.getType().equals("服务")){
-            updateProductAdd(sum,productId);
+            updateProductAdd(orderVo.getSum(),orderVo.getProductId());
         }
 
 

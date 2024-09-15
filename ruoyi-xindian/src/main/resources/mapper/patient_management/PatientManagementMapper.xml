@@ -931,6 +931,7 @@
             alert_log.log_id as logId,
             alert_log.log_type as onlineState,
             patient.patient_name_aes as countName,
+            patient_management.ecg_type as type,
             patient_management.equipment_code as gatewayno
         FROM
             alert_log
@@ -943,6 +944,7 @@
             <if test="hospitalCode != null and hospitalCode != ''">and hospital_code = #{hospitalCode}</if>
         </where>
         order by createTime desc
+        limit 100
     </select>
     <select id="selectLevelList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.RightTopVo">
         SELECT
@@ -999,9 +1001,9 @@
         INNER JOIN hospital ON hospital.hospital_code = patient_management.hospital_code
         INNER JOIN pm_ecg_data ON pm_ecg_data.p_id = patient_management.p_id
         <where>
-           and  patient_management.ecg_type LIKE 'JECG%'
+            and  patient_management.ecg_type LIKE 'JECG%'
             and DATE(connection_time) = CURDATE()
-            <if test="hospitalCode != null and hospitalCode != ''">and patient_management.hospital_code = #{hospitalCode}</if>
+            <if test="hospitalCode != null and hospitalCode != ''">and  patient_management.hospital_code = #{hospitalCode}</if>
         </where>
         order by createTime desc
     </select>
@@ -1026,7 +1028,7 @@
         <where>
             patient_management.ecg_type like 'JECG%'
             and pm_ecg_data.hr_mean is not null
-            <if test="hospitalCode != null and hospitalCode != ''">andpatient_management.hospital_code = #{hospitalCode}</if>
+            <if test="hospitalCode != null and hospitalCode != ''">and patient_management.hospital_code = #{hospitalCode}</if>
         </where>
     </select>
 

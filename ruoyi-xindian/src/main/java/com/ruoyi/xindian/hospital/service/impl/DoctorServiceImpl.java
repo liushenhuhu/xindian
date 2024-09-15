@@ -152,7 +152,7 @@ public class DoctorServiceImpl implements IDoctorService
         Doctor doctor = new Doctor();
         if (!SysUser.isAdmin(sysUser.getUserId())&& !RoleUtils.isRoleListOne(sysUser,sysDictData)){
 
-            if (sysUser.getRoleIds()!=null && !(sysUser.getRoleIds().length >0) && Arrays.asList(sysUser.getRoleIds()).contains(101L)){
+            if ((sysUser.getRoleIds()!=null && !(sysUser.getRoleIds().length >0) && Arrays.asList(sysUser.getRoleIds()).contains(101L))||sysUser.getRoleId()==101L){
                 Hospital hospital = hospitalMapper.selectHospitalByHospitalCode(sysUser.getHospitalCode());
                 if (hospital != null) {
 

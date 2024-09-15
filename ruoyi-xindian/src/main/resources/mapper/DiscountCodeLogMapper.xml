@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.discount_code.mapper.DiscountCodeLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.discount_code.domain.DiscountCodeLog">
+            <id property="logId" column="log_id" jdbcType="INTEGER"/>
+            <result property="promotionCode" column="promotion_code" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="discount" column="discount" jdbcType="INTEGER"/>
+            <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        log_id,promotion_code,phone,
+        discount,order_id,create_time
+    </sql>
+</mapper>

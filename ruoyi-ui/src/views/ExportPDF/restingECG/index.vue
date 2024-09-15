@@ -426,6 +426,7 @@
         </div>
       </div>
       <child ref="drawShow" @closeMain="closeMain"></child>
+
     </div>
     <el-dialog
       title="密码验证"
@@ -512,6 +513,16 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="报告打印截取"  style="margin-top: 10px" :visible.sync="Report_printing" width="90%"  @open="open()">
+      <div class="canvas-div-parent">
+        <div class="canvas-div" id="chart" ref="chart"></div>
+      </div>
+      <div class="biaodananniu" style="margin-top: 10px">
+        <el-button plain @click="Report_printing = false">取消</el-button>
+        <el-button type="primary" plain @click="sendWarnMsg">发 送</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -537,6 +548,8 @@ import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
 import { getlogin_password } from "@/api/jecg4_ecg/jecg4_ecg";
 import { addLabel } from "@/api/log_user/log_user";
 import child from "@/views/staticECG/staticECG/child.vue";
+import childLabel from "@/views/ExportPDF/restingECG/childLabel.vue";
+import childLabelOne from "@/views/ExportPDF/restingECG/childLabel1.vue";
 import JecgPdf from "@/views/jecg/report/index.vue";
 import { selectDoctor, getDoctorList } from "@/api/statistics/statistics";
 var elementResizeDetectorMaker = require("element-resize-detector");
@@ -552,7 +565,7 @@ import { getVerify } from "@/api/verify/verify";
 
 export default {
   name: "index",
-  components: { child ,JecgPdf},
+  components: { child ,JecgPdf,childLabel,childLabelOne},
   mixins: [mixins],
   dicts: ["medical_history"],
   data() {
@@ -567,6 +580,7 @@ export default {
       dpfFindReport: false,
       textarea: null,
       Early_warning_message: false,
+      Report_printing: false,
       name: null,
       isShowName: {
         status: false,
@@ -771,7 +785,6 @@ export default {
         dataV5: [],
         dataV6: [],
       },
-      open: false,
       pphone: "",
       baseImage: "",
       arr: [],
@@ -779,6 +792,7 @@ export default {
         waveLabel: "",
         beatLabel: "",
       },
+      dataLabel:{},
       graphic2: [],
       chartII: null,
       // 表单校验
@@ -789,6 +803,21 @@ export default {
       },
       isShowBtn: true,
       isDoctorUser: false,
+      seriesdata: [
+        { yAxis: -2 },
+        { yAxis: -1.5 },
+        { yAxis: -1 },
+        { yAxis: -0.5 },
+        { yAxis: 0 },
+        { yAxis: 0.5 },
+        { yAxis: 1 },
+        { yAxis: 1.5 },
+        { yAxis: 2 },
+        { yAxis: -3 },
+        { yAxis: -2.5 },
+        { yAxis: 3 },
+        { yAxis: 2.5 },
+      ], //标线
       // lead:false,
       // radio:'',
       // xIndex:null,
@@ -809,6 +838,7 @@ export default {
       // 判断是不是管理员
       isDoctor: false,
       shangxiakuzhiqi:null,
+      myChart: null,
     };
   },
   created() {
@@ -856,7 +886,7 @@ export default {
     // }
     //预警的类型
     // this.getyujingleixing()
-    // this.getShowBnt();
+    this.getShowBnt();
   },
   methods: {
     // 新增术语
@@ -1351,6 +1381,7 @@ export default {
           _th.data.rv5_sv1 = data.result.ecg_analysis_data["RV5_SV1"];
           _th.data.p_xingeng = data.result.p_xingeng;
           _th.data12.dataI = data.result.I;
+          _th.dataLabel = data.result;
           _th.nArrI = _th.getNewArray(_th.data12.dataI, 1000);
           _th.data12.dataII = data.result.II;
           _th.nArrII = _th.getNewArray(_th.data12.dataII, 1000);
@@ -2817,6 +2848,200 @@ export default {
       });
     },
 
+
+    findLabel(){
+      this.Report_printing = true
+
+    },
+
+    open() {
+      this.$nextTick(() => {
+        this.initChart();
+      })
+    },
+
+    initChart(){
+      let data = this.dataLabel["I"]
+       this.myChart = echarts.init(this.$refs.chart)
+      let x = []
+      for (var i = 0; i <= this.dataLabel["I"].length; i++) {
+        x.push(i);
+      }
+      for (let i = 0; i < 1000; i += 20) {
+        this.seriesdata.push({ xAxis: i });
+      }
+      //标线
+      let seriesdata = this.seriesdata;
+      this.myChart.setOption(
+        {
+        title: {
+          text: "",
+          top: 10,
+          left: 50,
+        },
+
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
+          },
+        },
+        toolbox: {
+          show: false,
+        },
+        dataZoom: [
+          {
+            show: true, // 滑动条组件
+            type: "slider",
+            brushSelect: false,
+            // y: '90%',
+            startValue: 0,
+            endValue: 500,
+            maxValueSpan: 500,
+          },
+          {
+            show: true, // 滑动条组件
+            type: "slider",
+            orient: "vertical",
+            brushSelect: false,
+            start: 0,
+            end: 100,
+          },
+
+        ],
+        grid: {
+          left: "3%",
+          right: "3%",
+          top: "2%",
+          bottom: "13%",
+        },
+        legend: {
+          show: false,
+          data: ["当前电位"],
+          textStyle: { color: "#000000" } /*图例(legend)说明文字的颜色*/,
+          left: "right",
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: x,
+          axisTick: {
+            show: false,
+          },
+          axisLabel: {
+            //修改坐标系字体颜色
+            interval: 3,
+            show: false,
+            textStyle: {
+              color: "#000000",
+            },
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: "pink",
+              width: 1, //网格的宽度
+              type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+            },
+          } /*网格线*/,
+        },
+        yAxis: {
+          min: -3,
+          max: 3,
+          boundaryGap: false,
+          splitNumber: 51,
+          minInterval: 0.1,
+          axisLabel: {
+            //修改坐标系字体颜色
+            show: false,
+            textStyle: {
+              color: "#000000",
+            },
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: "pink",
+              width: 1, //网格的宽度
+              type: "solid", //网格是实实线，可以修改成虚线以及其他的类型
+            },
+          } /*网格线*/,
+        },
+        series: {
+          id: "series1",
+          markLine: {
+            animation: false,
+            symbol: "none",
+            silent: true,
+            lineStyle: {
+              type: "solid",
+              color: "#b33939",
+              width: 0.5,
+            },
+            label: {
+              show: true,
+              position: "start", // 表现内容展示的位置
+              color: "#b33939", // 展示内容颜色
+            },
+            data: seriesdata,
+          },
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                width: 1.5,
+                color: "#000000" /*折线的颜色*/,
+              },
+              color: "#000000" /*图例(legend)的颜色,不是图例说明文字的颜色*/,
+            },
+          },
+          symbol: "none",
+          name: "当前电位",
+          type: "line",
+          data: data,
+          zlevel: 9999,
+          smooth: true, //显示为平滑的曲线*/
+        },
+
+      }
+      )
+      let _th = this
+      window.addEventListener('resize', function() {
+        _th.myChart.resize();
+      });
+      this.myChart.on('dataZoom', function (params) {
+        // params 是包含了 dataZoom 相关信息的对象
+        const dataZooms = params.batch; // 可能有多个 dataZoom 组件
+        console.log(dataZooms)
+        console.log(params)
+
+      });
+      let markArea = [
+        {
+          coord: [10, 20]
+        },
+        {
+          coord: [20, 30]
+        }
+      ]
+      this.myChart.setOption({
+        series: [
+          {
+            id: "series1",
+            markArea: {
+              label: {
+                show: true,
+                position: "inside",
+              },
+              data: markArea,
+            },
+          },
+        ],
+      });
+
+
+    },
+
+
     findPdfReport(){
       console.log(this.data.pId)
       this.dpfFindReport = true
@@ -3688,5 +3913,14 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
-
+.canvas-div {
+  width:100%;
+  height: 100%;
+}
+.report_printing {
+  height: 800px;
+}
+.canvas-div-parent{
+  height: 75vh !important;
+}
 </style>

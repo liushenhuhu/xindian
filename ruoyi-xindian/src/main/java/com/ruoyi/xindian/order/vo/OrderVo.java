@@ -14,4 +14,10 @@ public class OrderVo {
     private String equipmentCode;
 
     private String pId;
+
+    private Long addressId;
+
+    private String remark;
+
+    private String discountsCode;
 }

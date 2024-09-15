@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <iframe
       width="100%"
       :height="TableHeight"
@@ -36,7 +35,6 @@ export default {
       let windowHeight = document.documentElement.clientHeight || document.bodyclientHeight;
       this.TableHeight = windowHeight + 180;
   },
-
   methods: {
     goTarget(href) {
       window.open(href, "_blank");

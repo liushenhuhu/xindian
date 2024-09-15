@@ -17,4 +17,6 @@ public class AlertLogVO {
 
     private String gatewayno;
 
+    private String type;
+
 }

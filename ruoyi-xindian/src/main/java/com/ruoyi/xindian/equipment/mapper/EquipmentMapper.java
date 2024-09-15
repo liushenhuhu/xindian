@@ -92,4 +92,6 @@ public interface EquipmentMapper
 
 
     int countByEquipmentCodeInt(@Param("hospitalCode") String hospitalCode);
+
+    int countByEquipmentCodeTrue(@Param("hospitalCode") String hospitalCode);
 }

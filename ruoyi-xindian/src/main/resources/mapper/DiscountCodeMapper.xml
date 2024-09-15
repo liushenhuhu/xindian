@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.discount_code.mapper.DiscountCodeMapper">
+
+    <resultMap type="DiscountCode" id="DiscountCodeResult">
+        <result property="promotionId"    column="promotion_id"    />
+        <result property="promotionCode"    column="promotion_code"    />
+        <result property="phone"    column="phone"    />
+        <result property="discount"    column="discount"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectDiscountCodeVo">
+        select promotion_id, promotion_code, phone, discount, create_time, status from discount_code
+    </sql>
+
+    <select id="selectDiscountCodeList" parameterType="DiscountCode" resultMap="DiscountCodeResult">
+        <include refid="selectDiscountCodeVo"/>
+        <where>
+            <if test="promotionCode != null  and promotionCode != ''"> and promotion_code = #{promotionCode}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="discount != null "> and discount = #{discount}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectDiscountCodeByPromotionId" parameterType="Long" resultMap="DiscountCodeResult">
+        <include refid="selectDiscountCodeVo"/>
+        where promotion_id = #{promotionId}
+    </select>
+
+    <insert id="insertDiscountCode" parameterType="DiscountCode">
+        insert into discount_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="promotionId != null">promotion_id,</if>
+            <if test="promotionCode != null and promotionCode != ''">promotion_code,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="discount != null">discount,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="promotionId != null">#{promotionId},</if>
+            <if test="promotionCode != null and promotionCode != ''">#{promotionCode},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="discount != null">#{discount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDiscountCode" parameterType="DiscountCode">
+        update discount_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="promotionCode != null and promotionCode != ''">promotion_code = #{promotionCode},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="discount != null">discount = #{discount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where promotion_id = #{promotionId}
+    </update>
+
+    <delete id="deleteDiscountCodeByPromotionId" parameterType="Long">
+        delete from discount_code where promotion_id = #{promotionId}
+    </delete>
+
+    <delete id="deleteDiscountCodeByPromotionIds" parameterType="String">
+        delete from discount_code where promotion_id in
+        <foreach item="promotionId" collection="array" open="(" separator="," close=")">
+            #{promotionId}
+        </foreach>
+    </delete>
+</mapper>

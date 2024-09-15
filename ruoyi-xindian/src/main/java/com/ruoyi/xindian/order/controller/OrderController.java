@@ -152,20 +152,17 @@ public class OrderController {
     /**
      * 添加商品订单
      * @param request
-     * @param productId
-     * @param sum
-     * @param addressId
      * @return
      */
     @PostMapping("/orderAdd")
-    public AjaxResult orderAdd(HttpServletRequest request,Long productId,Integer sum,String addressId,String remark){
+    public AjaxResult orderAdd(HttpServletRequest request,@RequestBody OrderVo orderVo){
 
 
         lock.lock();
         try {
             Long id = null;
             try {
-                id = Long.valueOf(addressId);
+                id = orderVo.getAddressId();
             }catch (Exception e){
                 return AjaxResult.error("地址错误，请重新选择地址");
             }
@@ -176,13 +173,13 @@ public class OrderController {
                 return AjaxResult.error("请勿重复支付");
             }
             redisTemplate.opsForValue().set("getOrderId"+userId, String.valueOf(userId),5, TimeUnit.SECONDS);
-            if (productId==null){
+            if (orderVo.getProductId()==null){
                 return AjaxResult.error("商品参数错误，请稍后再试");
             }
-            if (sum==null){
+            if (orderVo.getSum()==null){
                 return AjaxResult.error("商品购买数量错误，请稍后再试");
             }
-            Product product = productService.selectPId(productId);
+            Product product = productService.selectPId(orderVo.getProductId());
             if (product==null){
                 return AjaxResult.error("商品不存在");
             }
@@ -192,7 +189,7 @@ public class OrderController {
             if (product.getState().equals("3")){
                 return AjaxResult.error("商品库存不足");
             }
-            if (product.getProductNum().compareTo(sum) <0){
+            if (product.getProductNum().compareTo(orderVo.getSum()) <0){
                 return AjaxResult.error("商品库存不足");
             }
 
@@ -207,20 +204,20 @@ public class OrderController {
             if (wSurveyList!=null&&!wSurveyList.isEmpty()) {
 
                 PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
-                purchaseLimitation.setProductId(productId);
+                purchaseLimitation.setProductId(orderVo.getProductId());
                 purchaseLimitation.setPatientPhone(sysUser.getPhonenumber());
                 List<PurchaseLimitation> purchaseLimitations = purchaseLimitationService.selectPurchaseLimitationList(purchaseLimitation);
                 if (purchaseLimitations.isEmpty()){
                     isVip = true;
-                    if (sum>1) {
+                    if (orderVo.getSum()>1) {
                         return AjaxResult.error("打折商品限购一台");
                     }
                 }
             }
 
-            String stringBuilder = orderInfoService.addOrder(request, productId, sum, id, remark,isVip);
+            String stringBuilder = orderInfoService.addOrder(request, orderVo,isVip);
             if (isVip){
-                redisTemplate.opsForValue().set("purchase_limitation:"+userId+":"+productId,stringBuilder);
+                redisTemplate.opsForValue().set("purchase_limitation:"+userId+":"+orderVo.getProductId(),stringBuilder);
             }
 
             return AjaxResult.success("操作成功",stringBuilder);

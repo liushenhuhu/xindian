@@ -133,6 +133,15 @@
                             </if>
                         </where>
     </select>
+    <select id="countByEquipmentCodeTrue" resultType="java.lang.Integer">
+        select count(*) from equipment
+        <where>
+            <if test="hospitalCode != null and hospitalCode != ''">
+                and hospital_code =  #{hospitalCode}
+            </if>
+            and equipment_status='True'
+        </where>
+    </select>
 
 
     <insert id="insertEquipment" parameterType="Equipment">
