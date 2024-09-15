@@ -1331,20 +1331,39 @@ export default {
           _th.datalabel.beatLabel = data.result.beatLabel;
           //console.log("获取到的导联数据", _th.data.datas)
           // _th.nArr = _th.getNewArray(_th.data.datas, 500);
-          _th.nArrII = _th.getNewArray(_th.data4.dataII, 500);
-          _th.nArrV2 = _th.getNewArray(_th.data4.dataV2, 500);
-          _th.nArrV4 = _th.getNewArray(_th.data4.dataV4, 500);
-          _th.nArrV6 = _th.getNewArray(_th.data4.dataV6, 500);
-          _th.x = [];
-          for (var i = 0; i < 500; i++) {
-            _th.x.push(i);
+          console.log("_th.data4.dataII长度",_th.data4.dataII.length)
+          if (_th.data4.dataII.length > 500){
+            _th.nArrII = _th.getNewArray(_th.data4.dataII, 1000);
+            _th.nArrV2 = _th.getNewArray(_th.data4.dataV2, 1000);
+            _th.nArrV4 = _th.getNewArray(_th.data4.dataV4, 1000);
+            _th.nArrV6 = _th.getNewArray(_th.data4.dataV6, 1000);
+            _th.x = [];
+            for (var i = 0; i < 1000; i++) {
+              _th.x.push(i);
+            }
+            for (var i = 0; i < 1000; i += 25) {
+              _th.markdata.push({ xAxis: i });
+            }
+            $(".line").css({
+              height: $("#II").width() * 0.1 + "px",
+            });
+          }else {
+            _th.nArrII = _th.getNewArray(_th.data4.dataII, 500);
+            _th.nArrV2 = _th.getNewArray(_th.data4.dataV2, 500);
+            _th.nArrV4 = _th.getNewArray(_th.data4.dataV4, 500);
+            _th.nArrV6 = _th.getNewArray(_th.data4.dataV6, 500);
+            _th.x = [];
+            for (var i = 0; i < 500; i++) {
+              _th.x.push(i);
+            }
+            for (var i = 0; i < 1000; i += 20) {
+              _th.markdata.push({ xAxis: i });
+            }
+            $(".line").css({
+              height: $("#II").width() * 0.17 + "px",
+            });
           }
-          for (var i = 0; i < 1000; i += 20) {
-            _th.markdata.push({ xAxis: i });
-          }
-          $(".line").css({
-            height: $("#II").width() * 0.17 + "px",
-          });
+
           _th.chart1 = echarts.init(document.getElementById("II"));
           _th.chart2 = echarts.init(document.getElementById("V2"));
           _th.chart3 = echarts.init(document.getElementById("V4"));
