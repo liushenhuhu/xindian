@@ -940,7 +940,6 @@
         <where>
             AND patient_management.connection_time &gt;= CURDATE() - INTERVAL 6 DAY
             AND patient_management.connection_time &lt; CURDATE() + INTERVAL 1 DAY
-            and  patient_management.ecg_type like 'JECG%'
             <if test="hospitalCode != null and hospitalCode != ''">and hospital_code = #{hospitalCode}</if>
         </where>
         order by createTime desc
@@ -978,7 +977,7 @@
         patient_management ON patient_management.p_id = report.p_id
         <where>
             and patient_management.ecg_type like 'JECG%'
-            AND patient_management.connection_time &gt;= CURDATE() - INTERVAL 6 DAY
+            AND patient_management.connection_time &gt;= CURDATE() - INTERVAL 8 DAY
             AND patient_management.connection_time &lt; CURDATE() + INTERVAL 1 DAY
             <if test="hospitalCode != null and hospitalCode != ''">and hospital_code = #{hospitalCode}</if>
         </where>
@@ -1002,10 +1001,10 @@
         INNER JOIN pm_ecg_data ON pm_ecg_data.p_id = patient_management.p_id
         <where>
             and  patient_management.ecg_type LIKE 'JECG%'
-            and DATE(connection_time) = CURDATE()
             <if test="hospitalCode != null and hospitalCode != ''">and  patient_management.hospital_code = #{hospitalCode}</if>
         </where>
         order by createTime desc
+        limit 100
     </select>
     <select id="selectScreenList" resultType="com.ruoyi.xindian.jecg_large_screen.vo.ScreenVo">
         SELECT h.city as name, COUNT(p.hospital_code) AS value

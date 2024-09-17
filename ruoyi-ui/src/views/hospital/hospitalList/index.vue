@@ -86,7 +86,7 @@
 <!--      <el-table-column label="医院代号" align="center" prop="hospitalCode" />-->
       <el-table-column label="在线设备数量" align="center" prop="deviceOnlineNum" />
 
-      <el-table-column label="医院代号" align="center" prop="hospitalCode" />
+<!--      <el-table-column label="医院代号" align="center" prop="hospitalCode" />-->
       <!-- <el-table-column label="医院名称" align="center" prop="hospitalName" /> -->
 
       <el-table-column label="医院名称" align="center" prop="hospitalName">
