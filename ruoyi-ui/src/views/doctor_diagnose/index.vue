@@ -214,6 +214,7 @@
                     plain
                     icon="el-icon-view"
                     size="mini"
+                    v-hasPermi="['ecg:show:conceal']"
                     @click="isShowNameClick">{{isShowName.name}}</el-button>
                 </div>
               </div>
@@ -427,24 +428,9 @@
                         <el-button
                           size="mini"
                           type="text"
-                          icon="el-icon-s-order"
-                          @click="lookHistoryData(scope.row)"
-                        >查看历史数据
-                        </el-button>
-                        <el-button
-                          size="mini"
-                          type="text"
                           icon="el-icon-eleme"
                           @click="lookHistoryData30(scope.row)"
                         >30天趋势图
-                        </el-button>
-                        <el-button
-                          size="mini"
-                          type="text"
-                          icon="el-icon-download"
-                          @click="downloadData(scope.row)"
-                          v-hasPermi="['patient:patient:inform']"
-                        >下载数据
                         </el-button>
                         <el-button
                           size="mini"
@@ -461,14 +447,7 @@
                         <!--            v-hasPermi="['patient_management:patient_management:export']"-->
                         <!--          >修改-->
                         <!--          </el-button>-->
-                        <el-button
-                          size="mini"
-                          type="text"
-                          icon="el-icon-delete"
-                          @click="handleDelete(scope.row)"
-                          v-hasPermi="['jecg:report:del']"
-                        >删除
-                        </el-button>
+
                         <el-button
                           slot="reference"
                           size="small"
@@ -1070,8 +1049,7 @@ export default {
     },
 
     isShowNameClick() {
-      let isShowName = sessionStorage.getItem('isShowName')
-      if (this.verifyForm.status || isShowName) {
+
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示信息"
@@ -1080,10 +1058,7 @@ export default {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "隐藏信息"
         }
-      } else {
-        this.verifyForm.password = ''
-        this.dialogFormVisibleVerifyAuthority = true
-      }
+
 
     },
     /** 删除按钮操作 */

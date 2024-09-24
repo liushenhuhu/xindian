@@ -4,7 +4,7 @@
  * @LastEditors: WHL
  * @LastEditTime: 2024-08-06 09:34:45
  * @FilePath: /ruoyi-ui/src/views/labelEcg/labelEcg/index.vue
- * @Description: 
+ * @Description:
 -->
 <template>
   <div class="app-container">
@@ -264,6 +264,7 @@
             icon="el-icon-view"
             size="mini"
             @click="isShowNameClick"
+            v-hasPermi="['ecg:show:conceal']"
             >{{ isShowName.name }}</el-button
           >
         </div>
@@ -1090,8 +1091,7 @@ export default {
     },
 
     isShowNameClick() {
-      let isShowName = sessionStorage.getItem("isShowName");
-      if (this.verifyForm.status || isShowName) {
+
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示信息";
@@ -1099,10 +1099,7 @@ export default {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "隐藏信息";
         }
-      } else {
-        this.verifyForm.password = "";
-        this.dialogFormVisibleVerifyAuthority = true;
-      }
+
     },
     /** 删除按钮操作 */
     handleDelete(row) {

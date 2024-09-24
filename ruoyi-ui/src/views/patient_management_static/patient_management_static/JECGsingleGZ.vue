@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    
+
     <router-view v-if="isRouterAlive"></router-view>
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
@@ -213,6 +213,7 @@
           icon="el-icon-view"
           size="mini"
           @click="isShowNameClick"
+          v-hasPermi="['ecg:show:conceal']"
         >{{isShowName.name}}
         </el-button>
       </el-col>
@@ -511,7 +512,7 @@
         <el-button type="primary" @click="dialogFormVisibleVerify">确 定</el-button>
       </div>
     </el-dialog>
-    
+
   </div>
 </template>
 
@@ -888,8 +889,7 @@ export default {
     },
 
     isShowNameClick(){
-      let isShowName =  sessionStorage.getItem('isShowName')
-      if (this.verifyForm.status || isShowName){
+
         if (this.isShowName.status){
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示姓名"
@@ -898,10 +898,7 @@ export default {
           this.isShowName.status =!this.isShowName.status;
           this.isShowName.name = "隐藏姓名"
         }
-      }else {
-        this.verifyForm.password=''
-        this.dialogFormVisibleVerifyAuthority = true
-      }
+
 
     },
     /** 删除按钮操作 */

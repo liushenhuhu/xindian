@@ -49,13 +49,21 @@
 <!--      <el-button @click="back">动态检测大屏</el-button>-->
       <el-button @click="inScreen">全屏切换</el-button>
       <el-button @click="call">电话预警</el-button>
+      <el-button
+        type="success"
+        plain
+        icon="el-icon-view"
+        size="mini"
+        @click="isShowNameClick">{{isShowName.name}}</el-button>
       <!--      <el-button @click="outScreen">退出全屏</el-button>-->
       <div class="text">
-        <span >姓名:{{data.patientName}}</span>
+        <span >姓名: {{data?isShowName.status===true?data.patientName:data.patientName?data.patientName.charAt(0) + '*' + data.patientName.substring(2):'':''}}
+        </span>
         <span >性别:{{data.gender}}</span>
         <span >年龄:{{data.age}}</span>
         <span >设备号:{{data.deviceSn}}</span>
-        <span >所属医院:{{data.hospName}}</span>
+        <span >所属医院: {{data?isShowName.status===true?data.hospName:'***医院':''}}
+        </span>
       </div>
     </div>
 
@@ -178,6 +186,10 @@ export default {
       index:0,
       calldata:[],
       pid:null,
+      isShowName: {
+        status: false,
+        name: "显示信息"
+      },
     };
   },
   created() {
@@ -323,6 +335,19 @@ export default {
         }
       })
       ////console.log(this.value)
+    },
+    isShowNameClick() {
+
+      if (this.isShowName.status) {
+        this.isShowName.status = !this.isShowName.status;
+        this.isShowName.name = "显示信息"
+
+      } else {
+        this.isShowName.status = !this.isShowName.status;
+        this.isShowName.name = "隐藏信息"
+      }
+
+
     },
     callPhone(){
       // window.tccc.Call.startOutboundCall({
@@ -6937,7 +6962,7 @@ export default {
           justify-self: center;
           align-items: center;
           flex-wrap: wrap;
-          width: 50%;
+          width: 60%;
           span{
             font-weight:bold;
             text-align: center;

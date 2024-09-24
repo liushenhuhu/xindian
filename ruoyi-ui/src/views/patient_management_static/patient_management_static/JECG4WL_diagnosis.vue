@@ -218,6 +218,7 @@
             icon="el-icon-view"
             size="mini"
             @click="isShowNameClick"
+            v-hasPermi="['ecg:show:conceal']"
         >{{isShowName.name}}
         </el-button>
       </el-col>
@@ -818,8 +819,7 @@ export default {
     },
 
     isShowNameClick(){
-      let isShowName =  sessionStorage.getItem('isShowName')
-      if (this.verifyForm.status || isShowName){
+
         if (this.isShowName.status){
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示姓名"
@@ -828,10 +828,7 @@ export default {
           this.isShowName.status =!this.isShowName.status;
           this.isShowName.name = "隐藏姓名"
         }
-      }else {
-        this.verifyForm.password=''
-        this.dialogFormVisibleVerifyAuthority = true
-      }
+
 
     },
     lookHistoryData30(row){

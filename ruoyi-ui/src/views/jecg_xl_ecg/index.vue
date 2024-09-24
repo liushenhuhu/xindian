@@ -71,12 +71,45 @@
                         <td>{{ data.qrs }} ms</td>
                         <td>QT间期</td>
                         <td>{{data.qt}}ms</td>
-                        <td>PR间期</td>
-                        <td>{{data.pr}}ms</td>
+                        <td>放松指数  <el-tooltip
+                          :content="data.relax.dec"
+                          placement="top"
+                          effect="light"
+                        >
+                          <i class="el-icon-question"></i>
+                        </el-tooltip></td>
+                        <td>{{ data.relax.value }} </td>
+                      </tr>
+                      <tr>
+                        <td>身心能量<el-tooltip
+                          :content="data.ecg_power.dec"
+                          placement="top"
+                          effect="light"
+                        >
+                          <i class="el-icon-question"></i>
+                        </el-tooltip></td>
+                        <td>{{ data.ecg_power.value }} </td>
+                        <td>情绪压力指数 <el-tooltip
+                          :content="data.emo_stress.dec"
+                          placement="top"
+                          effect="light"
+                        >
+                          <i class="el-icon-question"></i>
+                        </el-tooltip></td>
+                        <td>{{data.emo_stress.value}}</td>
+                        <td>兴奋指数 <el-tooltip
+                          :content="data.excitement.dec"
+                          placement="top"
+                          effect="light"
+                        >
+                          <i class="el-icon-question"></i>
+                        </el-tooltip></td>
+                        <td>{{data.excitement.value}}</td>
                       </tr>
                     </table>
                   </div>
                 </el-tab-pane>
+<!--                <GradientProgress :value="currentValue" :max="maxValue" />-->
 <!--                <el-tab-pane-->
 <!--                  label="心电参数"-->
 <!--                  name="ecgInfo"-->
@@ -365,6 +398,12 @@
           <div>
             <div id="4" class="line" @dblclick="showChart4()"></div>
           </div>
+          <div>
+            <div id="5" class="line" @dblclick="showChart5()"></div>
+          </div>
+          <div>
+            <div id="6" class="line" @dblclick="showChart6()"></div>
+          </div>
           <!-- <div>-->
           <!--            <div id="5" class="line" @dblclick="showChart5()"></div>-->
           <!--          </div>-->
@@ -488,7 +527,8 @@ import {
   listDoc,
   sendMsgToPatient,
 } from "@/api/patient_management/patient_management";
-import child from "./child.vue";
+import child from "@/views/staticECG/staticECG/child.vue";
+import GradientProgress from "@/components/GradientProgress/GradientProgress.vue";
 import CacheList from "@/views/monitor/cache/list.vue";
 import { addOrUpdateTerm, getTerm } from "@/api/staticECG/staticECG";
 import { selectDoctor, getDoctorList } from "@/api/statistics/statistics";
@@ -503,18 +543,21 @@ import { listPatient_management } from "@/api/patient_management/patient_managem
 
 import { getVerify } from "@/api/verify/verify";
 // import {checkPassword} from "@/utils/verify.js";
-import { mixins } from "../../../mixins/ecg.js";
+import { mixins } from "../../mixins/ecg.js";
 export default {
   name: "index",
   mixins: [mixins],
   components: {
     CacheList,
     child,
+    GradientProgress,
   },
   dicts: ["medical_history"],
   data() {
     return {
       version: "3.8.3",
+      currentValue: 0, // 当前值
+      maxValue: 100 ,// 最大值
       TableHeight: 100,
       src: null,
       flagCre:0,
@@ -617,6 +660,26 @@ export default {
         patientSymptom: "暂无症状",
         p_xingeng: "", //心梗率
         logid: "",
+        relax:{
+          value:0,
+          text:"",
+          dec:"",
+        },
+        ecg_power:{
+          value:0,
+          text:"",
+          dec:"",
+        },
+        emo_stress:{
+          value:0,
+          text:"",
+          dec:"",
+        },
+        excitement:{
+          value:0,
+          text:"",
+          dec:"",
+        },
       },
       data12: {
         x: [],
@@ -652,9 +715,15 @@ export default {
       graphic1: [],
       graphic2: [],
       graphic3: [],
+      graphic4: [],
+      graphic5: [],
+      graphic6: [],
       chart1: null,
       chart2: null,
       chart3: null,
+      chart4: null,
+      chart5: null,
+      chart6: null,
       zidianzhi: [],
       // 表单校验
       rules: {
@@ -672,6 +741,9 @@ export default {
       pointdata1: [], //显示的
       pointdata2: [], //显示的
       pointdata3: [], //显示的
+      pointdata4: [], //显示的
+      pointdata5: [], //显示的
+      pointdata6: [], //显示的
       arrList1: {}, //心博标注 每一段
       arrList2: {},
       arrList3: {},
@@ -1135,11 +1207,6 @@ export default {
       var level = 1;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
       this.open1 = true;
-      console.log("下面是双击心电图后，弹出心电图的参数");
-      console.log(this.nArr[0]);
-      console.log(pId);
-      console.log(level);
-      console.log(this.datalabel);
       this.$refs.drawShow.getchart(
         this.nArr[0],
         pId,
@@ -1193,7 +1260,7 @@ export default {
       var base64 = canvas.toDataURL("image/png", 1);
       var level = 4;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
-
+      console.log(this.nArr[3])
       this.$refs.drawShow.getchart(
         this.nArr[3],
         pId,
@@ -1212,7 +1279,15 @@ export default {
       var level = 5;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[4], pId, level);
+      this.$refs.drawShow.getchart(
+        this.nArr[4],
+        pId,
+        level,
+        "II",
+        1,
+        this.datalabel,
+        "NO"
+      );
     },
     showChart6() {
       var pId = this.pId;
@@ -1222,7 +1297,16 @@ export default {
       var level = 6;
       //this.$refs.drawShow.openDrawShow(base64,pId,level);
 
-      this.$refs.drawShow.getchart(this.nArr[5], pId, level);
+      console.log(this.nArr[5])
+      this.$refs.drawShow.getchart(
+        this.nArr[5],
+        pId,
+        level,
+        "II",
+        1,
+        this.datalabel,
+        "NO"
+      );
     },
     showChart7() {
       var pId = this.pId;
@@ -1337,6 +1421,75 @@ export default {
       });
       //console.log(this.graphic)
     },
+    redraw4() {
+      // console.log("this.pointdata666: ", this.pointdata3);
+
+      var chartOption = this.chart4.getOption();
+      chartOption.graphic = this.graphic;
+      // this.chart1.setOption(chartOption, true);
+      // this.chart1.setOption({});
+      // console.log(this.graphic)
+      // this.chart.setOption({
+      //   graphic:this.graphic
+      // })
+      this.chart4.setOption({
+        series: {
+          markPoint: {
+            symbol: "pin",
+            symbolSize: 25,
+            animation: false,
+            data: this.pointdata4,
+          },
+        },
+      });
+      //console.log(this.graphic)
+    },
+    redraw5() {
+      // console.log("this.pointdata666: ", this.pointdata3);
+
+      var chartOption = this.chart5.getOption();
+      chartOption.graphic = this.graphic;
+      // this.chart1.setOption(chartOption, true);
+      // this.chart1.setOption({});
+      // console.log(this.graphic)
+      // this.chart.setOption({
+      //   graphic:this.graphic
+      // })
+      this.chart5.setOption({
+        series: {
+          markPoint: {
+            symbol: "pin",
+            symbolSize: 25,
+            animation: false,
+            data: this.pointdata5,
+          },
+        },
+      });
+      //console.log(this.graphic)
+    },
+    redraw6() {
+      // console.log("this.pointdata666: ", this.pointdata3);
+
+      var chartOption = this.chart6.getOption();
+      chartOption.graphic = this.graphic;
+      // this.chart1.setOption(chartOption, true);
+      // this.chart1.setOption({});
+      // console.log(this.graphic)
+      // this.chart.setOption({
+      //   graphic:this.graphic
+      // })
+      this.chart6.setOption({
+        series: {
+          markPoint: {
+            symbol: "pin",
+            symbolSize: 25,
+            animation: false,
+            data: this.pointdata6,
+          },
+        },
+      });
+      //console.log(this.graphic)
+    },
     getN1(num) {
       var _th = this;
       var level = num;
@@ -1446,6 +1599,9 @@ export default {
         _th.redraw1();
         _th.redraw2();
         _th.redraw3();
+        _th.redraw4();
+        _th.redraw5();
+        _th.redraw6();
       });
     },
 
@@ -1497,6 +1653,18 @@ export default {
           _th.data.qtc = data.result.ecg_analysis_data["QTc"];
           _th.data.hrv = data.result.ecg_analysis_data["RMSSD"];
           _th.data.qt = data.result.ecg_analysis_data["QT间期"];
+          _th.data.ecg_power.value = data.result.ecg_analysis_data["ecg_power"];
+          _th.data.ecg_power.text = data.result.ecg_analysis_data["ecg_power_text"];
+          _th.data.ecg_power.dec = data.result.ecg_analysis_data["ecg_power_dec"];
+          _th.data.emo_stress.value = data.result.ecg_analysis_data["emo_stress"];
+          _th.data.emo_stress.text = data.result.ecg_analysis_data["emo_stress_text"];
+          _th.data.emo_stress.dec = data.result.ecg_analysis_data["emo_stress_dec"];
+          _th.data.excitement.value = data.result.ecg_analysis_data["excitement"];
+          _th.data.excitement.text = data.result.ecg_analysis_data["excitement_text"];
+          _th.data.excitement.dec = data.result.ecg_analysis_data["excitement_dec"];
+          _th.data.relax.value = data.result.ecg_analysis_data["relax"];
+          _th.data.relax.text = data.result.ecg_analysis_data["relax_text"];
+          _th.data.relax.dec = data.result.ecg_analysis_data["relax_dec"];
           _th.data.datas = data.result.II;
           _th.datalabel.waveLabel = data.result.waveLabel;
           _th.datalabel.beatLabel = data.result.beatLabel;
@@ -1520,6 +1688,8 @@ export default {
           _th.chart2 = echarts.init(document.getElementById("2"));
           _th.chart3 = echarts.init(document.getElementById("3"));
           _th.chart4 = echarts.init(document.getElementById("4"));
+          _th.chart5 = echarts.init(document.getElementById("5"));
+          _th.chart6 = echarts.init(document.getElementById("6"));
           _th.arrList.beatLabel = JSON.parse(data.result.beatLabel);
           console.log("_th.arrList.beatLabel: ", _th.arrList.beatLabel);
           _th.chart1.clear();
@@ -1922,18 +2092,216 @@ export default {
           });
           //回显
           //分段
-          // setTimeout(() => {
-
-          // }, 1000);
+          _th.chart5.clear();
+          _th.chart5.setOption({
+            title: {
+              text: "",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: "1",
+              right: "1",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
+            },
+            xAxis: {
+              type: "category",
+              data: _th.x,
+              boundaryGap: false,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false,
+              },
+              axisLine: {
+                show: false,
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {
+                  //网格样式
+                  color: "#f8bfbf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: "solid", //网格是实线，可以修改成虚线以及其他的类型
+                  //opacity: 0.6,//透明度
+                },
+              },
+            },
+            yAxis: {
+              type: "value",
+              boundaryGap: true,
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              axisLine: {
+                show: false,
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {
+                  //网格样式
+                  color: "#f8bfbf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: "solid", //网格是实线，可以修改成虚线以及其他的类型
+                  //opacity: 0.6,//透明度
+                },
+              },
+              max: 0.8,
+              min: -1,
+            },
+            series: [
+              {
+                type: "line",
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[4],
+                z: 5,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1.5,
+                  },
+                },
+                markLine: {
+                  z: 1,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: "#d77a7a",
+                    width: 1,
+                    //opacity: 0.5,
+                  },
+                  label: {
+                    position: "start", // 表现内容展示的位置
+                    color: "#d77a7a", // 展示内容颜色
+                  },
+                  data: _th.markdata,
+                },
+              },
+            ],
+          });
+          _th.chart6.clear();
+          _th.chart6.setOption({
+            title: {
+              text: "",
+              top: 5,
+              left: 5,
+            },
+            grid: {
+              left: "1",
+              right: "1",
+              top: "1",
+              bottom: "1",
+              containLabel: false,
+            },
+            xAxis: {
+              type: "category",
+              data: _th.x,
+              boundaryGap: false,
+              axisLabel: {
+                show: false,
+                interval: 4,
+              },
+              axisTick: {
+                show: false,
+              },
+              axisLine: {
+                show: false,
+              },
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {
+                  //网格样式
+                  color: "#f8bfbf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: "solid", //网格是实线，可以修改成虚线以及其他的类型
+                  //opacity: 0.6,//透明度
+                },
+              },
+            },
+            yAxis: {
+              type: "value",
+              boundaryGap: true,
+              axisLabel: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              axisLine: {
+                show: false,
+              },
+              //  splitNumber: 3, // 横线数
+              interval: 0.1, // 刻度间隔
+              splitLine: {
+                show: true, //让网格显示
+                lineStyle: {
+                  //网格样式
+                  color: "#f8bfbf", //网格的颜色
+                  width: 0.5, //网格的宽度
+                  type: "solid", //网格是实线，可以修改成虚线以及其他的类型
+                  //opacity: 0.6,//透明度
+                },
+              },
+              max: 0.8,
+              min: -1,
+            },
+            series: [
+              {
+                type: "line",
+                smooth: true,
+                showSymbol: false,
+                data: _th.nArr[5],
+                z: 5,
+                lineStyle: {
+                  normal: {
+                    color: "#000000",
+                    width: 1.5,
+                  },
+                },
+                markLine: {
+                  z: 1,
+                  symbol: "none",
+                  silent: true,
+                  lineStyle: {
+                    type: "solid",
+                    color: "#d77a7a",
+                    width: 1,
+                    //opacity: 0.5,
+                  },
+                  label: {
+                    position: "start", // 表现内容展示的位置
+                    color: "#d77a7a", // 展示内容颜色
+                  },
+                  data: _th.markdata,
+                },
+              },
+            ],
+          });
           _th.getN1(1);
           _th.getN1(2);
           _th.getN1(3);
+          _th.getN1(4);
+          _th.getN1(5);
+          _th.getN1(6);
           _th.addtext();
           $(window).resize(function () {
             _th.chart1.resize();
             _th.chart2.resize();
             _th.chart3.resize();
             _th.chart4.resize();
+            _th.chart5.resize();
+            _th.chart6.resize();
             _th.addtext();
             console.log(1111111);
           });
@@ -1951,24 +2319,39 @@ export default {
       this.graphic1.length = 0;
       this.graphic2.length = 0;
       this.graphic3.length = 0;
+      this.graphic4.length = 0;
+      this.graphic5.length = 0;
+      this.graphic6.length = 0;
       let beatLabel = JSON.parse(this.datalabel.beatLabel);
       var arr1 = beatLabel["0"],
         arr2 = beatLabel["1"],
-        arr3 = beatLabel["2"];
+        arr3 = beatLabel["2"],
+        arr4 = beatLabel["3"],
+        arr5 = beatLabel["4"],
+        arr6 = beatLabel["5"];
       let beat1 = [],
         beat2 = [],
-        beat3 = [];
+        beat3 = [],
+        beat4 = [],
+        beat5 = [],
+        beat6 = [];
       // console.log(arr1,arr2,arr3)
       let keys = Object.keys(arr1);
       for (let i = 0; i < keys.length; i++) {
         beat1.push(...arr1[keys[i]]);
         beat2.push(...arr2[keys[i]]);
         beat3.push(...arr3[keys[i]]);
+        beat4.push(...arr4[keys[i]]);
+        beat5.push(...arr5[keys[i]]);
+        beat6.push(...arr6[keys[i]]);
       }
       // console.log(beat1,beat2,beat3)
       beat1.sort((a, b) => a - b);
       beat2.sort((a, b) => a - b);
       beat3.sort((a, b) => a - b);
+      beat4.sort((a, b) => a - b);
+      beat5.sort((a, b) => a - b);
+      beat6.sort((a, b) => a - b);
       var length1 = beat1.length;
       //刻度线
       for (let i = 0; i < length1; i++) {
@@ -2137,7 +2520,177 @@ export default {
       var chartOption3 = this.chart3.getOption();
       chartOption3.graphic = this.graphic3;
       this.chart3.setOption(chartOption3, true);
-      // console.log(this.graphic1,this.graphic2,this.graphic3)
+
+
+      var length4 = beat4.length;
+      //刻度线
+      for (let i = 0; i < length4; i++) {
+        var point1 = this.chart4.convertToPixel({ seriesIndex: 0 }, [
+          beat4[i],
+          3,
+        ]);
+        let text1 = {
+          type: "line",
+          style: {
+            stroke: "#333",
+            lineWidth: 1.5,
+            lineDash: [],
+          },
+          shape: {
+            x1: point1[0],
+            y1: 1,
+            x2: point1[0],
+            y2: 11,
+          },
+          z: 100,
+        };
+        // this.graphic3.push(text1);
+        if (i == length4 - 1) {
+          continue;
+        }
+        var x1 = beat4[i];
+        var x2 = beat4[i + 1];
+        // console.log(x1,x2)
+        var time = ((x2 - x1) / 25) * 0.25; //时间 s
+        var heart = (60 / time).toFixed(1); //心率
+        time = (time * 1000).toFixed(0);
+        //文本值
+        var point2 = this.chart4.convertToPixel({ seriesIndex: 0 }, [
+          (x2 - x1) / 2 + x1,
+          3,
+        ]);
+        // console.log(x)
+        let text2 = {
+          type: "text",
+          x: point2[0] - 15,
+          y: 3,
+          z: 999,
+          style: {
+            text: time + `\n${heart}`,
+            fill: "#000000",
+            fontWeight: 400,
+            fontSize: 13,
+          },
+        };
+        this.graphic4.push(text2);
+      }
+      var chartOption4 = this.chart4.getOption();
+      chartOption4.graphic = this.graphic4;
+      this.chart4.setOption(chartOption4, true);
+
+
+      var length5 = beat5.length;
+      //刻度线
+      for (let i = 0; i < length5; i++) {
+        var point1 = this.chart5.convertToPixel({ seriesIndex: 0 }, [
+          beat5[i],
+          3,
+        ]);
+        let text1 = {
+          type: "line",
+          style: {
+            stroke: "#333",
+            lineWidth: 1.5,
+            lineDash: [],
+          },
+          shape: {
+            x1: point1[0],
+            y1: 1,
+            x2: point1[0],
+            y2: 11,
+          },
+          z: 100,
+        };
+        // this.graphic3.push(text1);
+        if (i == length5 - 1) {
+          continue;
+        }
+        var x1 = beat5[i];
+        var x2 = beat5[i + 1];
+        // console.log(x1,x2)
+        var time = ((x2 - x1) / 25) * 0.25; //时间 s
+        var heart = (60 / time).toFixed(1); //心率
+        time = (time * 1000).toFixed(0);
+        //文本值
+        var point2 = this.chart5.convertToPixel({ seriesIndex: 0 }, [
+          (x2 - x1) / 2 + x1,
+          3,
+        ]);
+        // console.log(x)
+        let text2 = {
+          type: "text",
+          x: point2[0] - 15,
+          y: 3,
+          z: 999,
+          style: {
+            text: time + `\n${heart}`,
+            fill: "#000000",
+            fontWeight: 400,
+            fontSize: 13,
+          },
+        };
+        this.graphic5.push(text2);
+      }
+      var chartOption5 = this.chart5.getOption();
+      chartOption5.graphic = this.graphic5;
+      this.chart5.setOption(chartOption5, true);
+
+
+      var length6 = beat6.length;
+      //刻度线
+      for (let i = 0; i < length6; i++) {
+        var point1 = this.chart6.convertToPixel({ seriesIndex: 0 }, [
+          beat6[i],
+          3,
+        ]);
+        let text1 = {
+          type: "line",
+          style: {
+            stroke: "#333",
+            lineWidth: 1.5,
+            lineDash: [],
+          },
+          shape: {
+            x1: point1[0],
+            y1: 1,
+            x2: point1[0],
+            y2: 11,
+          },
+          z: 100,
+        };
+        // this.graphic3.push(text1);
+        if (i == length6 - 1) {
+          continue;
+        }
+        var x1 = beat6[i];
+        var x2 = beat6[i + 1];
+        // console.log(x1,x2)
+        var time = ((x2 - x1) / 25) * 0.25; //时间 s
+        var heart = (60 / time).toFixed(1); //心率
+        time = (time * 1000).toFixed(0);
+        //文本值
+        var point2 = this.chart6.convertToPixel({ seriesIndex: 0 }, [
+          (x2 - x1) / 2 + x1,
+          3,
+        ]);
+        // console.log(x)
+        let text2 = {
+          type: "text",
+          x: point2[0] - 15,
+          y: 3,
+          z: 999,
+          style: {
+            text: time + `\n${heart}`,
+            fill: "#000000",
+            fontWeight: 400,
+            fontSize: 13,
+          },
+        };
+        this.graphic6.push(text2);
+      }
+      var chartOption6 = this.chart6.getOption();
+      chartOption6.graphic = this.graphic6;
+      this.chart6.setOption(chartOption6, true);
     },
     //获取修改后的标注数据
     closeMain(val) {

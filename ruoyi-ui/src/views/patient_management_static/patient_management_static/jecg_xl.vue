@@ -14,12 +14,6 @@
                   clearable
                   @keyup.enter.native="handleQuery"/>
               </el-form-item>
-              <!--<el-form-item label="名称模糊查询" prop="isSelect">-->
-              <!--  <el-radio-group v-model="queryParams.isSelect">-->
-              <!--    <el-radio label="1">开启</el-radio>-->
-              <!--    <el-radio label="2">禁用</el-radio>-->
-              <!--  </el-radio-group>-->
-              <!--</el-form-item>-->
               <el-form-item label="用户性别" prop="patientSex">
                 <el-select placeholder="请选择性别" v-model="queryParams.patientSex" clearable>
                   <el-option label="男" value="男"></el-option>
@@ -71,16 +65,7 @@
                   end-placeholder="结束日期"
                 ></el-date-picker>
               </el-form-item>
-              <!--              <el-form-item label="在线状态" prop="onlineStatus">-->
-              <!--                <el-select v-model="queryParams.onlineStatus" placeholder="请选择在线状态" clearable>-->
-              <!--                  <el-option-->
-              <!--                    v-for="dict in dict.type.monitoring_status"-->
-              <!--                    :key="dict.value"-->
-              <!--                    :label="dict.label"-->
-              <!--                    :value="dict.value"-->
-              <!--                  />-->
-              <!--                </el-select>-->
-              <!--              </el-form-item>-->
+
               <el-form-item label="智能诊断" prop="intelligentDiagnosis">
                 <el-input
                   v-model="queryParams.intelligentDiagnosis"
@@ -97,24 +82,6 @@
                   @keyup.enter.native="handleQuery"
                 />
               </el-form-item>
-              <!--            <el-form-item label="诊断状态" prop="diagnosisStatus">-->
-              <!--              <el-select v-model="queryParams.diagnosisStatus" placeholder="请选择诊断状态" clearable>-->
-              <!--                <el-option-->
-              <!--                  v-for="dict in dict.type.diagnosis_status"-->
-              <!--                  :key="dict.value"-->
-              <!--                  :label="dict.label"-->
-              <!--                  :value="dict.value"-->
-              <!--                />-->
-              <!--              </el-select>-->
-              <!--            </el-form-item>-->
-              <!--            <el-form-item label="诊断结论" prop="diagnosisConclusion">-->
-              <!--              <el-input-->
-              <!--                v-model="queryParams.diagnosisConclusion"-->
-              <!--                placeholder="请输入诊断结论"-->
-              <!--                clearable-->
-              <!--                @keyup.enter.native="handleQuery"-->
-              <!--              />-->
-              <!--            </el-form-item>-->
               <el-form-item label="诊断医生" prop="diagnosisDoctor">
                 <el-input
                   v-model="queryParams.diagnosisDoctor"
@@ -152,7 +119,7 @@
           <div class="table-hand-left">
             <el-select v-model="queryParams.ecgType" placeholder="请选择采集类型" @change="getList"
                        class="table-hand-left-select table-hand-left-select-type">
-              <el-option key="JECG" label="全部" value="JECG"></el-option>
+              <el-option key="JECGXL" label="全部" value="JECGXL"></el-option>
               <el-option
                 v-for="item in ecgList"
                 :key="item.label"
@@ -275,11 +242,11 @@
               </template>
             </el-table-column>
 
-            <!--            <el-table-column label="是否标注预警状态" width="150" align="center" prop="ecgIsLabel">-->
-            <!--              <template slot-scope="scope">-->
-            <!--                <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>-->
-            <!--              </template>-->
-            <!--            </el-table-column>-->
+<!--            <el-table-column label="是否标注预警状态" width="150" align="center" prop="ecgIsLabel">-->
+<!--              <template slot-scope="scope">-->
+<!--                <dict-tag :options="dict.type.if_status" :value="scope.row.ecgIsLabel"/>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
             <!--
             <el-table-column label="是否标注预警状态" align="center" prop="ecgIsLabel">
               <template slot-scope="scope">
@@ -294,40 +261,30 @@
                 <el-tag v-if="!getAgeTypeSection(scope.row.patientAge,getEcgType(scope.row.ecgAnalysisData,'平均心率'))" >{{getEcgType(scope.row.ecgAnalysisData,"平均心率")}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="心肌梗塞" align="center" prop="ecgAnalysisData" width="100">
+            <el-table-column label="身心能量" align="center" prop="ecgAnalysisData" width="100">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_xingeng'))+'%'}}</el-tag>
-                <el-tag v-else>--</el-tag>
+                <el-tag v-if="getBai(getEcgType(scope.row.ecgAnalysisData,'ecg_power'))!='--'&&(getBai(getEcgType(scope.row.ecgAnalysisData,'ecg_power'))<25||  getBai(getEcgType(scope.row.ecgAnalysisData,'ecg_power'))>100)" type="danger" >{{getBai(getEcgType(scope.row.ecgAnalysisData,'ecg_power'))}}</el-tag>
+                <el-tag v-else>{{getBai(getEcgType(scope.row.ecgAnalysisData,'ecg_power'))}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="肥厚型心肌病" align="center" prop="ecgAnalysisData" width="100">
+            <el-table-column label="情绪压力指数" align="center" prop="ecgAnalysisData" width="100">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_FHXXJB'))+'%'}}</el-tag>
-                <el-tag v-else>--</el-tag>
+                <el-tag v-if="getBai(getEcgType(scope.row.ecgAnalysisData,'emo_stress'))!='--'&&(getBai(getEcgType(scope.row.ecgAnalysisData,'emo_stress'))<0.5||getBai(getEcgType(scope.row.ecgAnalysisData,'emo_stress'))>2.5)" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'emo_stress'))}}</el-tag>
+                <el-tag v-else>{{getBai(getEcgType(scope.row.ecgAnalysisData,'emo_stress'))}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="扩张型心肌病" align="center" prop="ecgAnalysisData" width="100">
+            <el-table-column label="兴奋指数" align="center" prop="ecgAnalysisData" width="100">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,'p_KZXXJB'))+'%'}}</el-tag>
-                <el-tag v-else>--</el-tag>
+
+                <el-tag v-if="getBai(getEcgType(scope.row.ecgAnalysisData,'excitement'))!='--'&&(getBai(getEcgType(scope.row.ecgAnalysisData,'excitement'))<45||getBai(getEcgType(scope.row.ecgAnalysisData,'excitement'))>70)" type="danger" >{{getBai(getEcgType(scope.row.ecgAnalysisData,'excitement'))}}</el-tag>
+                <el-tag v-else>{{getBai(getEcgType(scope.row.ecgAnalysisData,'excitement'))}}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="高血钾" align="center" prop="ecgAnalysisData" width="100">
+
+            <el-table-column label="放松指数" align="center" prop="ecgAnalysisData" width="100">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.ecgType.indexOf('JECG4')==-1">--</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<70">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<90" type="warning">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
-                <el-tag v-else-if="getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))!='--'&&getBai(getEcgType(scope.row.ecgAnalysisData,'p_GaoJiaXie'))<=100" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,"p_GaoJiaXie"))+'%'}}</el-tag>
-                <el-tag v-else>--</el-tag>
+                <el-tag v-if="getBai(getEcgType(scope.row.ecgAnalysisData,'relax'))!='--'&&(getBai(getEcgType(scope.row.ecgAnalysisData,'relax'))<30||getBai(getEcgType(scope.row.ecgAnalysisData,'relax'))>55)" type="danger">{{getBai(getEcgType(scope.row.ecgAnalysisData,"relax"))}}</el-tag>
+                <el-tag v-else>{{getBai(getEcgType(scope.row.ecgAnalysisData,"relax"))}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="用户管理ID" align="center" prop="pId" width="200"></el-table-column>
@@ -360,19 +317,19 @@
                 <span v-else>***************</span>
               </template>
             </el-table-column>
-            <!--            <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">-->
-            <!--              <template slot-scope="scope">-->
-            <!--                <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>-->
-            <!--                <span v-else>***************</span>-->
-            <!--              </template>-->
-            <!--            </el-table-column>-->
+<!--            <el-table-column label="家属电话" align="center" prop="familyPhone" min-width="150">-->
+<!--              <template slot-scope="scope">-->
+<!--                <span v-if="isShowName.status===true">{{ scope.row.familyPhone }}</span>-->
+<!--                <span v-else>***************</span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
             <el-table-column label="医生电话" align="center" prop="doctorPhone" min-width="150"></el-table-column>
-            <!--            <el-table-column label="用户身份证号" align="center" prop="patientCode" min-width="200">-->
-            <!--              <template slot-scope="scope">-->
-            <!--                <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>-->
-            <!--                <span v-else>***************</span>-->
-            <!--              </template>-->
-            <!--            </el-table-column>-->
+<!--            <el-table-column label="用户身份证号" align="center" prop="patientCode" min-width="200">-->
+<!--              <template slot-scope="scope">-->
+<!--                <span v-if="isShowName.status===true">{{ scope.row.patientCode }}</span>-->
+<!--                <span v-else>***************</span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
             <el-table-column label="用户过往病史" align="center" prop="patientCode" min-width="200">
               <template slot-scope="scope">
               <span v-if="isShowName.status===true">
@@ -383,107 +340,85 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
               <template slot-scope="scope">
-                <div v-if="scope.row.ecgType!=='JECGXL'">
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-s-order"
+                  @click="lookECG(scope)"
+                  v-hasPermi="['jecg:report:look']"
+                >查看报告
+                </el-button>
+                <el-popover placement="left" width="50" trigger="click" style="margin-left:8px">
+                  <el-button
+                    style="margin-left: 10px;"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-s-operation"
+                    @click="selectECG(scope.row)"
+                    v-hasPermi="['jecg:report:diagnose']"
+                    v-if="scope.row.diagnosisStatus!=1"
+                  >选择医生诊断
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-star-off"
+                    v-hasPermi="['jecg:report:find']"
+                    @click="findJEcgReport(scope.row)"
+                  >查看静态报告
+                  </el-button>
                   <el-button
                     size="mini"
                     type="text"
                     icon="el-icon-s-order"
-                    @click="lookECG(scope)"
-                    v-hasPermi="['jecg:report:look']"
-                  >查看报告
+                    @click="lookHistoryData(scope.row)"
+                  >查看历史数据
                   </el-button>
-                  <el-popover placement="left" width="50" trigger="click" style="margin-left:8px">
-                    <el-button
-                      style="margin-left: 10px;"
-                      size="mini"
-                      type="text"
-                      icon="el-icon-s-operation"
-                      @click="selectECG(scope.row)"
-                      v-hasPermi="['jecg:report:diagnose']"
-                      v-if="scope.row.diagnosisStatus!=1"
-                    >选择医生诊断
-                    </el-button>
-                    <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-star-off"
-                      v-hasPermi="['jecg:report:find']"
-                      @click="findJEcgReport(scope.row)"
-                    >查看静态报告
-                    </el-button>
-                    <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-eleme"
-                      @click="lookHistoryData30(scope.row)"
-                    >30天趋势图
-                    </el-button>
-                    <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-download"
-                      @click="downloadData(scope.row)"
-                      v-hasPermi="['patient:patient:inform']"
-                    >下载数据
-                    </el-button>
-                    <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-position"
-                      @click="sendMsg(scope.row)"
-                    >发送短信
-                    </el-button>
-                    <!--          <el-button-->
-                    <!--            size="mini"-->
-                    <!--            type="text"-->
-                    <!--            icon="el-icon-edit"-->
-                    <!--            @click="handleUpdate(scope.row)"-->
-                    <!--            v-hasPermi="['patient_management:patient_management:export']"-->
-                    <!--          >修改-->
-                    <!--          </el-button>-->
-                    <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-delete"
-                      @click="handleDelete(scope.row)"
-                      v-hasPermi="['jecg:report:del']"
-                    >删除
-                    </el-button>
-                    <el-button
-                      slot="reference"
-                      size="small"
-                      type="text">
-                      更多<i class="el-icon-arrow-down"/>
-                    </el-button>
-                  </el-popover>
-                </div>
-                <div v-else>
                   <el-button
                     size="mini"
                     type="text"
-                    icon="el-icon-s-order"
-                    @click="lookXLECG(scope)"
-                    v-hasPermi="['jecg:report:look']"
-                  >查看心力能量报告
+                    icon="el-icon-eleme"
+                    @click="lookHistoryData30(scope.row)"
+                  >30天趋势图
                   </el-button>
-                  <el-popover placement="left" width="50" trigger="click" style="margin-left:8px">
-                    <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-delete"
-                      @click="handleDelete(scope.row)"
-                      v-hasPermi="['jecg:report:del']"
-                    >删除
-                    </el-button>
-                    <el-button
-                      slot="reference"
-                      size="small"
-                      type="text">
-                      更多<i class="el-icon-arrow-down"/>
-                    </el-button>
-                  </el-popover>
-                </div>
-
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-download"
+                    @click="downloadData(scope.row)"
+                    v-hasPermi="['patient:patient:inform']"
+                  >下载数据
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-position"
+                    @click="sendMsg(scope.row)"
+                  >发送短信
+                  </el-button>
+                  <!--          <el-button-->
+                  <!--            size="mini"-->
+                  <!--            type="text"-->
+                  <!--            icon="el-icon-edit"-->
+                  <!--            @click="handleUpdate(scope.row)"-->
+                  <!--            v-hasPermi="['patient_management:patient_management:export']"-->
+                  <!--          >修改-->
+                  <!--          </el-button>-->
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click="handleDelete(scope.row)"
+                    v-hasPermi="['jecg:report:del']"
+                  >删除
+                  </el-button>
+                  <el-button
+                    slot="reference"
+                    size="small"
+                    type="text">
+                    更多<i class="el-icon-arrow-down"/>
+                  </el-button>
+                </el-popover>
 
               </template>
             </el-table-column>
@@ -598,16 +533,11 @@ import {getVerify} from "@/api/verify/verify";
 import {docList} from "@/api/doctor/doctor";
 
 export default {
-  name: "Patient_management_static/jecg",
-  provide() {    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
-    return {
-      reload: this.reload
-    }
-  },
-  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list', 'if_status', "medical_history", 'doctor_diagnosis_status'],
+  name: "JecgXL",
+  dicts: ['if', 'sex', 'monitoring_status', 'ecg_type', 'diagnosis_status', 'ecg_level', 'hospital_name_list', 'if_status',"medical_history",'doctor_diagnosis_status'],
   data() {
     return {
-      currentRow: null,
+      currentRow:null,
       currentScrollPos: 0,
       isRouterAlive: true,
       // 遮罩层
@@ -650,7 +580,7 @@ export default {
       // 时间范围
       daterangeConnectionTime: [],
       options: [],
-      ecgType: 'JECG',
+      ecgType: 'JECGXL',
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -661,7 +591,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: 'JECG',
+        ecgType: 'JECGXL',
         PatPhone: null,
         diagnosisStatus: null,
         intelligentDiagnosis: null,
@@ -690,7 +620,7 @@ export default {
           {required: true, message: "密码不能为空", trigger: "blur"}
         ],
       },
-      isDoctor: false
+      isDoctor:false
     };
   },
 
@@ -699,10 +629,9 @@ export default {
     console.log('beforeCreate')
   },
   activated() {
-    this.getList();
-    document.documentElement.scrollTop=this.currentScrollPos || 0
+    console.log('activated')
+    document.documentElement.scrollTop = this.currentScrollPos || 0
   },
-
 
   beforeRouteLeave(to, from, next) {
     this.currentScrollPos = document.documentElement.scrollTop || 0
@@ -710,7 +639,7 @@ export default {
   },
 
   created() {
-    if (!this.$auth.hasRole("hospitalUser") && this.$auth.hasRole("doctorUser") && !this.$auth.hasRole("admin")) {
+    if (!this.$auth.hasRole("hospitalUser")&&this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
       this.queryParams.diagnosisStatus = '2'
       this.isDoctor = true
     }
@@ -741,14 +670,14 @@ export default {
       }
     },
 
-    getAgeTypeSection(age, heart) {
-      if (age <= 1) {
+    getAgeTypeSection(age,heart){
+      if(age<=1){
         return heart < 110 || heart > 130
-      } else if (age <= 3) {
+      }else if (age<=3){
         return heart < 100 || heart > 120
-      } else if (age <= 7) {
+      }else if (age<=7){
         return heart < 80 || heart > 100
-      } else if (age >= 8) {
+      }else if (age>=8){
         return heart < 60 || heart > 100
       }
     },
@@ -772,16 +701,16 @@ export default {
       }
       return '';*/
     },
-    reload() {
-      this.isRouterAlive = false;            //先关闭，
-      this.$nextTick(function () {
-        this.isRouterAlive = true;         //再打开
-      })
-    },
+    // reload() {
+    //   this.isRouterAlive = false;            //先关闭，
+    //   this.$nextTick(function () {
+    //     this.isRouterAlive = true;         //再打开
+    //   })
+    // },
     refreshList() {
       console.log("refresh======")
       // updateOnlineAll().then(res => {
-      this.getList();
+        this.getList();
       // })
     },
     selectECG(row) {
@@ -854,13 +783,13 @@ export default {
         this.queryParams.params["beginConnectionTime"] = this.daterangeConnectionTime[0];
         this.queryParams.params["endConnectionTime"] = this.daterangeConnectionTime[1];
       }
-      this.queryParams.PatPhone = this.$route.query.patientPhone
       if (this.queryParams.ecgType == null) {
         this.queryParams.ecgType = this.ecgType
       }
       listPatient_management(this.queryParams).then(response => {
         console.log(response)
         this.patient_managementList = response.rows;
+
 
 
         // 原先提交过的预警类型response.rows[].logDataType
@@ -928,7 +857,7 @@ export default {
       }
       this.daterangeConnectionTime = []
       this.resetForm("queryForm");
-      if (!this.$auth.hasRole("hospitalUser") && this.$auth.hasRole("doctorUser") && !this.$auth.hasRole("admin")) {
+      if (!this.$auth.hasRole("hospitalUser")&&this.$auth.hasRole("doctorUser")&&!this.$auth.hasRole("admin")){
         this.queryParams.diagnosisStatus = '2'
         this.isDoctor = true
       }
@@ -999,13 +928,10 @@ export default {
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示信息"
-
         } else {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "隐藏信息"
         }
-
-
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -1044,52 +970,52 @@ export default {
     lookHistoryData(val) {
       console.log(val)
 
-      let daolian = val.ecgType.substring(0, 5)
+      let daolian = val.ecgType.substring(0,5)
       console.log(daolian)
       // return
-      if (daolian == 'JECGs') {
+      if (daolian == 'JECGs' ){
         this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECGsingle"}});
-      } else if (daolian == "JECG1") {
+      }else if (daolian == "JECG1"){
         this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECG12"}});
-      } else if (daolian == "JECG4") {
+      }else if(daolian == "JECG4"){
         this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECG4"}});
-      } else {
+      }else {
         // this.$modal.msgError("没有此类型");
         this.$modal.msgSuccess("没有此类型");
       }
       // this.$router.push({path: "/historyData", query: {patientPhone: val.patientPhone, ecgType: "JECGsingle"}});
     },
-    findJEcgReport(row) {
+    findJEcgReport(row){
       this.$router.push({path: "/jecg_report", query: {pId: row.pId}});
     },
 
-    getMH(zdList, ecgType) {
+    getMH(zdList , ecgType){
       let str = ''
-      if (ecgType) {
+      if (ecgType){
         ecgType.split(",").forEach(item => {
-          if (this.canConvertToInt(item)) {
+          if (this.canConvertToInt(item)){
             zdList.forEach(zd => {
               if (zd.value == item) {
                 str += zd.label + ','
               }
             })
-          } else {
+          }else {
             str += item + ','
           }
         })
-        if (str.endsWith(",")) {
+        if (str.endsWith(",")){
           str = str.substring(0, str.length - 1)
         }
       }
       return str;
     },
     canConvertToInt(value) {
-      // 尝试将值转换为整数
-      const parsedInt = Number(value);
-      // 判断转换后的值是否为整数且不为NaN
-      return Number.isInteger(parsedInt);
-    },
-    getEcgType(text, type) {
+    // 尝试将值转换为整数
+    const parsedInt = Number(value);
+    // 判断转换后的值是否为整数且不为NaN
+    return Number.isInteger(parsedInt);
+  },
+    getEcgType(text,type){
       try {
         let jsonString = text.replace(/nan/g, '0');
         jsonString = jsonString.replace(/'/g, '"');
@@ -1109,9 +1035,9 @@ export default {
     },
 
 
-    getBai(text) {
-      // re ( * 100).toFixed(1) + "%"
-      return !isNaN(Number(text)) && isFinite(Number(text)) ? (Number(text) * 100).toFixed(1) : "--"
+    getBai(text){
+     // re ( * 100).toFixed(1) + "%"
+      return text
     },
     lookHistoryData30(row) {
       let data = {
@@ -1131,26 +1057,31 @@ export default {
       // queryParams.pageSize=1
       // queryParams.pageNum = (scope.$index + 10 * (queryParams.pageNum - 1))+1
       console.log("页面查询条件")
-      console.log(this.queryParams)
+      console.log( this.queryParams)
       this.queryParams.indexzhi = indexzhi
       console.log("index值为=", indexzhi)
       // return
       if (row.ecgType.includes('JECGsingle')) {
         this.$router.push({
           path: "/staticECG",
-          query: {pId: row.pId, state: 1, queryParams: this.queryParams, ecgType: "JECGsingle"}
+          query: {pId: row.pId, state: 1, queryParams:  this.queryParams, ecgType: "JECGsingle",findType:1}
         });
       } else if (row.ecgType.includes('JECG4')) {
         this.$router.push({
           path: "/JECG4_ECG",
-          query: {pId: row.pId, state: 4, queryParams: this.queryParams, ecgType: "JECG4"}
+          query: {pId: row.pId, state: 4, queryParams:  this.queryParams, ecgType: "JECG4",findType:1}
         });
       } else if (row.ecgType.includes('JECG12')) {
         this.$router.push({
           path: "/restingECG",
-          query: {pId: row.pId, state: 12, queryParams: this.queryParams, ecgType: "JECG12"}
+          query: {pId: row.pId, state: 12, queryParams:  this.queryParams, ecgType: "JECG12",findType:1}
         });
-      } else {
+      } else if (row.ecgType.includes('JECGXL')) {
+        this.$router.push({
+          path: "/jecg_xl_ecg",
+          query: {pId: row.pId, state: 1, queryParams:  this.queryParams, ecgType: "JECGXL",findType:1}
+        });
+      }else {
         this.$message.warning('未知类型，请联系管理员')
       }
     },
@@ -1168,23 +1099,20 @@ export default {
     },
     downloadData(row) {
       console.log(row)
-      let dizhi = row.ecgType.substring(0, 5)
+      let dizhi = row.ecgType.substring(0,5)
       // console.log(dizhi)
       // return
-      if (dizhi == 'JECGs') {
+      if (dizhi == 'JECGs' ){
         window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG_single/save/${row.pId}.dat`)
-      } else if (dizhi == "JECG1") {
+      }else if (dizhi == "JECG1"){
         window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG/save/${row.pId}.dat`)
-      } else if (dizhi == "JECG4") {
+      }else if(dizhi == "JECG4"){
         window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG4Lead/save/${row.pId}.dat`)
-      } else {
+      }else {
         // this.$modal.msgError("没有此类型");
         this.$modal.msgSuccess("没有此类型");
       }
       // window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG/save/${row.pId}.dat`)
-    },
-    lookXLECG(row){
-      console.log(row)
     },
   }
 };

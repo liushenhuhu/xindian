@@ -45,6 +45,10 @@ public class DiscountCode implements Serializable {
      */
     private String status;
 
+
+    @Excel(name = "用户名称")
+    private String userName;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

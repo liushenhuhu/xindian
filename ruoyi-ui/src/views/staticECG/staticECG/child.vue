@@ -412,11 +412,11 @@ export default {
       for (var i = 0; i <= data.length; i++) {
         this.x.push(i);
       }
-      if (level == 4) {
-        for (var i = 0; i <= 1000; i++) {
-          this.x.push(i);
-        }
-      }
+      // if (level == 4) {
+      //   for (var i = 0; i <= 1000; i++) {
+      //     this.x.push(i);
+      //   }
+      // }
       for (let i = 0; i < 1000; i += 20) {
         this.seriesdata.push({ xAxis: i });
       }

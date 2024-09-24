@@ -63,6 +63,7 @@
             plain
             icon="el-icon-view"
             size="mini"
+            v-hasPermi="['ecg:show:conceal']"
             @click="isShowNameClick"
           >{{isShowName.name}}
         </el-button>
@@ -259,8 +260,7 @@ export default {
     },
     // 显示姓名
     isShowNameClick(){
-      let isShowName =  sessionStorage.getItem('isShowName')
-      if (this.verifyForm.status || isShowName){
+
         if (this.isShowName.status){
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示医院名称"
@@ -269,11 +269,6 @@ export default {
           this.isShowName.status =!this.isShowName.status;
           this.isShowName.name = "隐藏医院名称"
         }
-      }else {
-        this.verifyForm.password=''
-        this.dialogFormVisibleVerifyAuthority = true
-      }
-
     },
     findXD(){
       const hospitalId = '1'

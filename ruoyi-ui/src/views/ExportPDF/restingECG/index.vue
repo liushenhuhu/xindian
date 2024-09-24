@@ -219,7 +219,7 @@
                     icon="el-icon-view"
                     size="mini"
                     @click="isShowNameClick"
-                    v-if="true"
+                    v-hasPermi="['ecg:show:conceal']"
                     >{{ isShowName.name }}
                   </el-button>
                 </div>
@@ -1009,8 +1009,6 @@ export default {
       }
     },
     isShowNameClick() {
-      let isShowName = sessionStorage.getItem("isShowName");
-      if (isShowName) {
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示姓名";
@@ -1018,11 +1016,7 @@ export default {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "隐藏姓名";
         }
-      } else {
-        this.name = true;
-        this.verifyForm.password = "";
-        this.dialogFormVisibleVerifyAuthority = true;
-      }
+
     },
     /** 切换顶部tabs **/
     switchTabs(value) {

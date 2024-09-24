@@ -92,6 +92,7 @@
       <el-table-column label="id" align="center" prop="promotionId" />
       <el-table-column label="优惠码" align="center" prop="promotionCode" />
       <el-table-column label="手机号" align="center" prop="phone" />
+      <el-table-column label="名称" align="center" prop="userName" />
       <el-table-column label="优惠价" align="center" prop="discount" />
       <el-table-column label="停用状态" align="center" prop="status">
         <template slot-scope="scope">
@@ -134,6 +135,9 @@
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入手机号" />
+        </el-form-item>
+        <el-form-item label="名称" prop="phone">
+          <el-input v-model="form.userName" placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="优惠价" prop="discount">
           <el-input v-model="form.discount" placeholder="请输入优惠价" />

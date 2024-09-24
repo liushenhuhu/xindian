@@ -23,6 +23,7 @@ import com.itextpdf.layout.property.HorizontalAlignment;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.AesUtils;
 import com.ruoyi.xindian.alert_log.domain.JecgSingle;
 import com.ruoyi.xindian.alert_log.service.JecgSingleService;
@@ -39,6 +40,7 @@ import com.ruoyi.xindian.pdf.domain.ReportData;
 import com.ruoyi.xindian.pdf.domain.WeekPdfData;
 import com.ruoyi.xindian.pdf.service.IPdfDataService;
 import com.ruoyi.xindian.pdf.utils.CreatePdf;
+import com.ruoyi.xindian.pdf.utils.JecgPdfCreateUtil;
 import com.ruoyi.xindian.pdf.utils.PdfGenerator;
 import com.ruoyi.xindian.pmEcgData.domain.PmEcgData;
 import com.ruoyi.xindian.pmEcgData.service.IPmEcgDataService;
@@ -129,119 +131,272 @@ public class JECGReportController extends BaseController {
     @Resource
     private JecgSingleService jecgSingleService;
 
+    @Resource
+    private JecgPdfCreateUtil jecgPdfCreateUtil;
+
     @PostMapping("/getPdf")
     public AjaxResult getPdf(@RequestBody PatientManagement patientManagement, HttpServletResponse response) throws Exception {
 
-        PatientManagement patientManagement1 = patientManagementService.selectPatientManagementByPId(patientManagement.getpId());
-        if (patientManagement1 == null) {
-            throw new ServiceException("数据不存在");
-        }
         String pdfName = patientManagement.getpId() + "_ecg.pdf";
         String pdfPath = path + "pdf/" + pdfName;
-        File file = new File(pdfPath);
-        // 检查文件是否存在
-        if (file.exists()) {
-            return AjaxResult.success(updateReport(patientManagement1));
-        }
+        try {
+            PatientManagement patientManagement1 = patientManagementService.selectPatientManagementByPId(patientManagement.getpId());
+            if (patientManagement1 == null) {
+                throw new ServiceException("数据不存在");
+            }
 
 
-        HttpHeaders headers = new HttpHeaders(); //构建请求头
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("pid", patientManagement1.getpId());
-        String substring = patientManagement1.getEcgType().substring(0, 5);
-        String url = "";
-        String analysis = "";
-        int is = 0;
-        if (substring.equals("JECGs")) {
-            url = "https://screen.mindyard.cn:84/get_jecg_report";
-            analysis = "静态30秒II导联+解析结果";
-        } else {
-            if (substring.equals("JECG1")) {
-                paramsMap.put("ecgType", "12");
-                analysis = "12导联+解析结果";
-                is = 12;
+
+            HttpHeaders headers = new HttpHeaders(); //构建请求头
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("user","zzu");
+            headers.set("password","zzu123");
+            Map<String, Object> paramsMap = new HashMap<>();
+            paramsMap.put("pid", patientManagement1.getpId());
+            String substring = patientManagement1.getEcgType().substring(0, 5);
+            String url1 = "";
+            String analysis = "";
+            int is = 0;
+            if (substring.equals("JECGs")) {
+                url1 = "https://screen.mindyard.cn:84/get_jecg_single_web";
+                analysis = "静态30秒II导联+解析结果";
             } else {
-                paramsMap.put("ecgType", "4");
-                analysis = "4导联+解析结果";
-                is = 4;
-            }
-            url = "https://screen.mindyard.cn:84/get_jecg_report_12";
-        }
-
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap, headers);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-
-
-        HashMap<String, Map<String, Object>> sendMessageVo = null;
-        try {
-            sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceException("pdf生成失败");
-        }
-        try {
-            if (sendMessageVo != null) {
-                Map<String, Object> result = sendMessageVo.get("result");
-                Object reportDataPdf = result.get("reportDataPdf");
-                Map<String, Object> ecgAnalysisData = (Map<String, Object>) result.get("ecg_analysis_data");
-                // 使用Base64进行解码
-                byte[] decodedData = Base64.getDecoder().decode(reportDataPdf.toString());
-                String tempPath = "";
-                if (is == 12||is ==4) {
-                    tempPath = "/template/jecgReport_12.pdf";
+                if (substring.equals("JECG1")) {
+                    paramsMap.put("ecgType", "12");
+                    analysis = "12导联+解析结果";
+                    is = 12;
                 } else {
-                    tempPath = "/template/jecgReport.pdf";
+                    paramsMap.put("ecgType", "4");
+                    analysis = "4导联+解析结果";
+                    is = 4;
                 }
-
-                PdfDocument pdf2 = new PdfDocument();
-                pdf2.loadFromBytes(decodedData);
-
-                String text1 = "(本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.)";
-                String outPath1 = "";
-                Map<String, String> dataMap = new HashMap<>();
-                dataMap.put("name", patientManagement1.getPatientName() != null && !patientManagement1.getPatientName().isEmpty() ? aesUtils.decrypt(patientManagement1.getPatientName()) : "");
-                dataMap.put("tongzhi",patientManagement1.getDiagnosisStatus() != null && patientManagement1.getDiagnosisStatus()!=1L?text1 : "");
-                dataMap.put("age", patientManagement1.getBirthDay() != null && !patientManagement1.getBirthDay().isEmpty() ? DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(patientManagement1.getBirthDay())) + "" :patientManagement1.getPatientAge()!=null ? patientManagement1.getPatientAge(): "0");
-                dataMap.put("sex", patientManagement1.getPatientSex());
-                dataMap.put("conclusion", patientManagement1.getDiagnosisConclusion() != null && !patientManagement1.getDiagnosisConclusion().isEmpty() ? patientManagement1.getDiagnosisConclusion() : patientManagement1.getIntelligentDiagnosis());
-                dataMap.put("heart", ecgAnalysisData.get("平均心率").toString());
-                dataMap.put("pId", patientManagement1.getpId());
-                dataMap.put("analysis", analysis);
-                dataMap.put("administrative", patientManagement1.getHospitalName());
-                dataMap.put("reportDate", sdf1.format(patientManagement1.getConnectionTime()));
-                dataMap.put("newDate", sdf.format(new Date()));
-//                dataMap.put("doctor", patientManagement1.getDiagnosisDoctor() != null && !patientManagement1.getDiagnosisDoctor().isEmpty() ? aesUtils.decrypt(patientManagement1.getDiagnosisDoctor()) : "");
-                dataMap.put("pr", ecgAnalysisData.get("PR间期").toString());
-                dataMap.put("qrs", ecgAnalysisData.get("QRS波时限").toString());
-                dataMap.put("qtqtc", ecgAnalysisData.get("QT间期").toString() + "/" + ecgAnalysisData.get("QTc").toString());
-                dataMap.put("pqrst", ecgAnalysisData.get("P波时限").toString() + "/" + ecgAnalysisData.get("QRS波时限") + "/" + ecgAnalysisData.get("T波时限").toString());
-                if (is!=0){
-                    dataMap.put("RV_SV", ecgAnalysisData.get("RV5_SV1")!=null&&ecgAnalysisData.get("SV1_mv")!=null? subtractBigDecimals(ecgAnalysisData.get("RV5_SV1").toString(), ecgAnalysisData.get("SV1_mv").toString()) +"/" + ecgAnalysisData.get("SV1_mv").toString():"0/0");
-                    dataMap.put("RV+SV", ecgAnalysisData.get("RV5_SV1")!=null?ecgAnalysisData.get("RV5_SV1").toString():"0");
-                };
-                Map<String, Object> o = new HashMap<>();
-                o.put("tempPath", tempPath);
-                o.put("dataMap", dataMap);
-                outPath1 = path + new Date().getTime() + "tempfile1.pdf";
-                //生成模板1
-                byte[] pdfByTemplate = CreatePdf.createPdfByTemplate(o, tempPath, outPath1);
-                String s = MergePages(pdfByTemplate, pdf2, response, patientManagement1.getpId(), is);
-                //生成完成后删除合并的pdf，保留合并后的pdf
-                deleteFile(outPath1);
-                if (patientManagement1.getDiagnosisStatus()!=null&&patientManagement1.getDiagnosisStatus()==1){
-                    addDoctor(patientManagement1);
-                }
-                return AjaxResult.success(s);
+                url1 = "https://screen.mindyard.cn:84/get_jecg_12";
             }
-            return AjaxResult.error("pdf数据解析异常");
-        } catch (Exception e) {
-            throw new ServiceException("pdf数据解析失败");
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap, headers);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
+
+            HashMap<String, Map<String, Object>> sendMessageVo = null;
+            try {
+                sendMessageVo = restTemplate.postForObject(url1, request, HashMap.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServiceException("pdf生成失败");
+            }
+
+            Map<String, Object> map1 = sendMessageVo.get("result");
+            Object I = map1.get("I");
+            Object II = map1.get("II");
+            Object III = map1.get("III");
+            Object aVR = map1.get("aVR");
+            Object aVL = map1.get("aVL");
+            Object aVF = map1.get("aVF");
+            Object V1 = map1.get("V1");
+            Object V2 = map1.get("V2");
+            Object V3 = map1.get("V3");
+            Object v4 = map1.get("V4");
+            Object v5 = map1.get("V5");
+            Object v6 = map1.get("V6");
+
+
+
+            Map<String,Object> ecgAnalysisData = (Map<String, Object>) map1.get("ecg_analysis_data");
+
+            Map<String,Object> map = new HashMap<>();
+            map.put("patientName",patientManagement1.getPatientName() != null && !patientManagement1.getPatientName().isEmpty() ? aesUtils.decrypt(patientManagement1.getPatientName()) : "");
+            map.put("pId",patientManagement1.getpId());
+            map.put("sex",patientManagement1.getPatientSex());
+            map.put("age",patientManagement1.getBirthDay() != null && !patientManagement1.getBirthDay().isEmpty() ? DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(patientManagement1.getBirthDay())) + "" :patientManagement1.getPatientAge()!=null ? patientManagement1.getPatientAge(): "0");
+            map.put("source",patientManagement1.getHospitalName());
+            map.put("reportTime",sdf.format(patientManagement1.getConnectionTime()));
+            map.put("getDataTime",sdf2.format(patientManagement1.getReportTime()));
+            map.put("heart", ecgAnalysisData.get("平均心率").toString());
+            map.put("conclusion",patientManagement1.getDiagnosisConclusion() != null && !patientManagement1.getDiagnosisConclusion().isEmpty() ? patientManagement1.getDiagnosisConclusion() : patientManagement1.getIntelligentDiagnosis());
+            map.put("pr",ecgAnalysisData.get("PR间期").toString());
+            map.put("qtqtc",ecgAnalysisData.get("QT间期").toString() + "/" + ecgAnalysisData.get("QTc").toString());
+            map.put("ecgType",patientManagement1.getEcgType());
+            map.put("qrs",ecgAnalysisData.get("QRS波时限").toString());
+            map.put("status",patientManagement1.getDiagnosisStatus());
+            map.put("reportType",analysis);
+            if (patientManagement1.getDiagnosisStatus()!=null&&patientManagement1.getDiagnosisStatus()==1){
+                Doctor doctor = doctorService.selectDoctorByDoctorPhone(patientManagement1.getDPhone());
+                if (doctor!=null&& StringUtils.isNotEmpty(doctor.getDzVisa())){
+                    map.put("doctorPhoto",url+"/"+doctor.getDzVisa());
+                }
+            }
+            Map<String,Double[]> ecgDataMap = new HashMap<>();
+
+
+            if (substring.equals("JECGs")) {
+                ecgDataMap.put("II",getDouble(II));
+
+
+            } else {
+                if (substring.equals("JECG1")) {
+                    ecgDataMap.put("I",Arrays.copyOfRange(getDouble(I),0,250));
+                    ecgDataMap.put("II",Arrays.copyOfRange(getDouble(II),0,250));
+                    ecgDataMap.put("III",Arrays.copyOfRange(getDouble(III),0,250));
+                    ecgDataMap.put("aVR",Arrays.copyOfRange(getDouble(aVR),0,250));
+                    ecgDataMap.put("aVL",Arrays.copyOfRange(getDouble(aVL),0,250));
+                    ecgDataMap.put("aVF",Arrays.copyOfRange(getDouble(aVF),0,250));
+                    ecgDataMap.put("V1",Arrays.copyOfRange(getDouble(V1),0,250));
+                    ecgDataMap.put("V2",Arrays.copyOfRange(getDouble(V2),0,250));
+                    ecgDataMap.put("V3",Arrays.copyOfRange(getDouble(V3),0,250));
+                    ecgDataMap.put("V4",Arrays.copyOfRange(getDouble(v4),0,250));
+                    ecgDataMap.put("V5",Arrays.copyOfRange(getDouble(v5),0,250));
+                    ecgDataMap.put("V6",Arrays.copyOfRange(getDouble(v6),0,250));
+                    ecgDataMap.put("All_II",getDouble(II));
+                } else {
+                    ecgDataMap.put("II",getDouble(II));
+                    ecgDataMap.put("V2",getDouble(V2));
+                    ecgDataMap.put("V4",getDouble(v4));
+                    ecgDataMap.put("V6",getDouble(v6));
+                }
+            }
+            jecgPdfCreateUtil.createPdf(map,ecgDataMap,pdfPath);
+        }catch (Exception e){
+
+            e.printStackTrace();
+
         }
 
-
+        return AjaxResult.success(url+"/pdf/"+pdfName);
     }
+
+
+
+
+
+    public Double[] getDouble(Object o) {
+        if (o instanceof List<?>) { // 使用 instanceof 检查类型
+            try {
+                List<?> list = (List<?>) o; // 先进行通用类型转换
+                return list.stream()
+                        .filter(Double.class::isInstance) // 过滤出 Double 类型
+                        .map(Double.class::cast) // 转换为 Double
+                        .toArray(Double[]::new); // 转换为数组
+            } catch (Exception e) {
+                // 可以记录异常日志或处理
+            }
+        }
+        return null; // 如果不是 List 或发生异常，返回 null
+    }
+
+
+
+//    public AjaxResult getPdf(@RequestBody PatientManagement patientManagement, HttpServletResponse response) throws Exception {
+//
+//        PatientManagement patientManagement1 = patientManagementService.selectPatientManagementByPId(patientManagement.getpId());
+//        if (patientManagement1 == null) {
+//            throw new ServiceException("数据不存在");
+//        }
+//        String pdfName = patientManagement.getpId() + "_ecg.pdf";
+//        String pdfPath = path + "pdf/" + pdfName;
+//        File file = new File(pdfPath);
+//        // 检查文件是否存在
+//        if (file.exists()) {
+//            return AjaxResult.success(updateReport(patientManagement1));
+//        }
+//
+//
+//        HttpHeaders headers = new HttpHeaders(); //构建请求头
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        Map<String, Object> paramsMap = new HashMap<>();
+//        paramsMap.put("pid", patientManagement1.getpId());
+//        String substring = patientManagement1.getEcgType().substring(0, 5);
+//        String url = "";
+//        String analysis = "";
+//        int is = 0;
+//        if (substring.equals("JECGs")) {
+//            url = "https://screen.mindyard.cn:84/get_jecg_report";
+//            analysis = "静态30秒II导联+解析结果";
+//        } else {
+//            if (substring.equals("JECG1")) {
+//                paramsMap.put("ecgType", "12");
+//                analysis = "12导联+解析结果";
+//                is = 12;
+//            } else {
+//                paramsMap.put("ecgType", "4");
+//                analysis = "4导联+解析结果";
+//                is = 4;
+//            }
+//            url = "https://screen.mindyard.cn:84/get_jecg_report_12";
+//        }
+//
+//        HttpEntity<Map<String, Object>> request = new HttpEntity<>(paramsMap, headers);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+//
+//
+//        HashMap<String, Map<String, Object>> sendMessageVo = null;
+//        try {
+//            sendMessageVo = restTemplate.postForObject(url, request, HashMap.class);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new ServiceException("pdf生成失败");
+//        }
+//        try {
+//            if (sendMessageVo != null) {
+//                Map<String, Object> result = sendMessageVo.get("result");
+//                Object reportDataPdf = result.get("reportDataPdf");
+//                Map<String, Object> ecgAnalysisData = (Map<String, Object>) result.get("ecg_analysis_data");
+//                // 使用Base64进行解码
+//                byte[] decodedData = Base64.getDecoder().decode(reportDataPdf.toString());
+//                String tempPath = "";
+//                if (is == 12||is ==4) {
+//                    tempPath = "/template/jecgReport_12.pdf";
+//                } else {
+//                    tempPath = "/template/jecgReport.pdf";
+//                }
+//
+//                PdfDocument pdf2 = new PdfDocument();
+//                pdf2.loadFromBytes(decodedData);
+//
+//                String text1 = "(本报告由互联网医疗与健康服务河南省协同创新中心人工智能平台自动生成, 未经临床验证, 仅供参考, 请根据医生诊断进一步确认.)";
+//                String outPath1 = "";
+//                Map<String, String> dataMap = new HashMap<>();
+//                dataMap.put("name", patientManagement1.getPatientName() != null && !patientManagement1.getPatientName().isEmpty() ? aesUtils.decrypt(patientManagement1.getPatientName()) : "");
+//                dataMap.put("tongzhi",patientManagement1.getDiagnosisStatus() != null && patientManagement1.getDiagnosisStatus()!=1L?text1 : "");
+//                dataMap.put("age", patientManagement1.getBirthDay() != null && !patientManagement1.getBirthDay().isEmpty() ? DateUtil.getAge(new SimpleDateFormat("yyyy-MM-dd").parse(patientManagement1.getBirthDay())) + "" :patientManagement1.getPatientAge()!=null ? patientManagement1.getPatientAge(): "0");
+//                dataMap.put("sex", patientManagement1.getPatientSex());
+//                dataMap.put("conclusion", patientManagement1.getDiagnosisConclusion() != null && !patientManagement1.getDiagnosisConclusion().isEmpty() ? patientManagement1.getDiagnosisConclusion() : patientManagement1.getIntelligentDiagnosis());
+//                dataMap.put("heart", ecgAnalysisData.get("平均心率").toString());
+//                dataMap.put("pId", patientManagement1.getpId());
+//                dataMap.put("analysis", analysis);
+//                dataMap.put("administrative", patientManagement1.getHospitalName());
+//                dataMap.put("reportDate", sdf1.format(patientManagement1.getConnectionTime()));
+//                dataMap.put("newDate", sdf.format(new Date()));
+////                dataMap.put("doctor", patientManagement1.getDiagnosisDoctor() != null && !patientManagement1.getDiagnosisDoctor().isEmpty() ? aesUtils.decrypt(patientManagement1.getDiagnosisDoctor()) : "");
+//                dataMap.put("pr", ecgAnalysisData.get("PR间期").toString());
+//                dataMap.put("qrs", ecgAnalysisData.get("QRS波时限").toString());
+//                dataMap.put("qtqtc", ecgAnalysisData.get("QT间期").toString() + "/" + ecgAnalysisData.get("QTc").toString());
+//                dataMap.put("pqrst", ecgAnalysisData.get("P波时限").toString() + "/" + ecgAnalysisData.get("QRS波时限") + "/" + ecgAnalysisData.get("T波时限").toString());
+//                if (is!=0){
+//                    dataMap.put("RV_SV", ecgAnalysisData.get("RV5_SV1")!=null&&ecgAnalysisData.get("SV1_mv")!=null? subtractBigDecimals(ecgAnalysisData.get("RV5_SV1").toString(), ecgAnalysisData.get("SV1_mv").toString()) +"/" + ecgAnalysisData.get("SV1_mv").toString():"0/0");
+//                    dataMap.put("RV+SV", ecgAnalysisData.get("RV5_SV1")!=null?ecgAnalysisData.get("RV5_SV1").toString():"0");
+//                };
+//                Map<String, Object> o = new HashMap<>();
+//                o.put("tempPath", tempPath);
+//                o.put("dataMap", dataMap);
+//                outPath1 = path + new Date().getTime() + "tempfile1.pdf";
+//                //生成模板1
+//                byte[] pdfByTemplate = CreatePdf.createPdfByTemplate(o, tempPath, outPath1);
+//                String s = MergePages(pdfByTemplate, pdf2, response, patientManagement1.getpId(), is);
+//                //生成完成后删除合并的pdf，保留合并后的pdf
+//                deleteFile(outPath1);
+//                if (patientManagement1.getDiagnosisStatus()!=null&&patientManagement1.getDiagnosisStatus()==1){
+//                    addDoctor(patientManagement1);
+//                }
+//                return AjaxResult.success(s);
+//            }
+//            return AjaxResult.error("pdf数据解析异常");
+//        } catch (Exception e) {
+//            throw new ServiceException("pdf数据解析失败");
+//        }
+//
+//
+//    }
 
 
     public static BigDecimal addBigDecimals(String num1, String num2) {

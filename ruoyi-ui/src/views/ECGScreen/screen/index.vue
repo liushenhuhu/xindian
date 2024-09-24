@@ -4,7 +4,19 @@
         <div class="button">
 <!--          <el-button size="mini" >院区数据</el-button>-->
           <el-button size="mini" @click="inScreen" plain>全屏切换</el-button>
-<!--          <el-button size="mini" @click="inScreen" plain>退出全屏</el-button>-->
+          <el-button
+            size="mini"
+            @click="isShowNameClick">{{isShowName.name}}</el-button>
+
+          <el-select v-model="symptomType" clearable placeholder="请选择" @change="getSymptomTypeList" @clear="endSymptomTypeList" class="selectData">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+
         </div>
         <span >动态心电智能实时监控</span>
         <el-pagination
@@ -35,10 +47,23 @@
           </div>
         </div>
         <div class="containMsg" @click="jump(data0.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data0.patientName}}</span></div>
+          <div class="name effect">姓名:
+              <span v-if="data0!=null&&JSON.stringify(data0)!='{}'">
+                  <span v-if="isShowName.status===true">{{ data0.patientName }}</span>
+              <span v-else>{{data0.patientName?data0.patientName.charAt(0) + '*' + data0.patientName.substring(2):'****'}}</span>
+              </span>
+         </div>
+
           <div class="name" >性别:<span>{{data0.gender}}</span></div>
           <div class="name" >年龄:<span>{{data0.age}}</span></div>
-          <div class="name">所属医院:<span>{{data0.hospName && data0.hospName.includes('*') ? data0.hospName : '*'.repeat(Math.max(data0.hospName ? data0.hospName.length - 2 : 0, 0)) + (data0.hospName ? data0.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data0!=null&&JSON.stringify(data0)!='{}'">
+               <span v-if="isShowName.status===true">{{ data0.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+
+            </div>
           <!-- <div class="name" >所属医院:<span>{{data0.hospName}}</span></div> -->
           <div class="name" >设备号:<span>{{data0.deviceSn}}</span></div>
         </div>
@@ -64,10 +89,20 @@
           </div>
         </div>
         <div class="containMsg" @click="jump(data1.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data1.patientName}}</span></div>
+          <div class="name effect">姓名:
+            <span v-if="data1!=null&&JSON.stringify(data1)!='{}'">
+              <span v-if="isShowName.status===true">{{ data1.patientName }}</span><span v-else>{{data1.patientName?data1.patientName.charAt(0) + '*' + data1.patientName.substring(2):'****'}}</span>
+            </span>
+            </div>
           <div class="name" >性别:<span>{{data1.gender}}</span></div>
           <div class="name" >年龄:<span>{{data1.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data1.hospName && data1.hospName.includes('*') ? data1.hospName : '*'.repeat(Math.max(data1.hospName ? data1.hospName.length - 2 : 0, 0)) + (data1.hospName ? data1.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data1!=null&&JSON.stringify(data1)!='{}'">
+              <span v-if="isShowName.status===true">{{ data1.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+          </div>
           <div class="name" >设备号:<span>{{data1.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -93,10 +128,20 @@
           </div>
         </div>
         <div class="containMsg" @click="jump(data2.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data2.patientName}}</span></div>
+          <div class="name effect">姓名:
+            <span v-if="data2!=null&&JSON.stringify(data2)!='{}'">
+              <span v-if="isShowName.status===true">{{ data2.patientName }}</span><span v-else>{{data2.patientName?data2.patientName.charAt(0) + '*' + data2.patientName.substring(2):'****'}}</span>
+            </span>
+            </div>
           <div class="name" >性别:<span>{{data2.gender}}</span></div>
           <div class="name" >年龄:<span>{{data2.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data2.hospName && data2.hospName.includes('*') ? data2.hospName : '*'.repeat(Math.max(data2.hospName ? data2.hospName.length - 2 : 0, 0)) + (data2.hospName ? data2.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data2!=null&&JSON.stringify(data2)!='{}'">
+              <span v-if="isShowName.status===true">{{ data2.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+          </div>
           <div class="name" >设备号:<span>{{data2.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -122,10 +167,20 @@
           </div>
         </div>
         <div class="containMsg" @click="jump(data3.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data3.patientName}}</span></div>
+          <div class="name effect">姓名:
+            <span v-if="data3!=null&&JSON.stringify(data3)!='{}'">
+              <span v-if="isShowName.status===true">{{ data3.patientName }}</span><span v-else>{{data3.patientName?data3.patientName.charAt(0) + '*' + data3.patientName.substring(2):'****'}}</span>
+            </span>
+            </div>
           <div class="name" >性别:<span>{{data3.gender}}</span></div>
           <div class="name" >年龄:<span>{{data3.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data3.hospName && data3.hospName.includes('*') ? data3.hospName : '*'.repeat(Math.max(data3.hospName ? data3.hospName.length - 2 : 0, 0)) + (data3.hospName ? data3.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data3!=null&&JSON.stringify(data3)!='{}'">
+              <span v-if="isShowName.status===true">{{ data3.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+          </div>
           <div class="name" >设备号:<span>{{data3.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -151,10 +206,20 @@
           </div>
         </div>
         <div class="containMsg" @click="jump(data4.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data4.patientName}}</span></div>
+          <div class="name effect">姓名:
+            <span v-if="data4!=null&&JSON.stringify(data4)!='{}'">
+              <span v-if="isShowName.status===true">{{ data4.patientName }}</span><span v-else>{{data4.patientName?data4.patientName.charAt(0) + '*' + data4.patientName.substring(2):'****'}}</span>
+            </span>
+            </div>
           <div class="name" >性别:<span>{{data4.gender}}</span></div>
           <div class="name" >年龄:<span>{{data4.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data4.hospName && data4.hospName.includes('*') ? data4.hospName : '*'.repeat(Math.max(data4.hospName ? data4.hospName.length - 2 : 0, 0)) + (data4.hospName ? data4.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data4!=null&&JSON.stringify(data4)!='{}'">
+              <span v-if="isShowName.status===true">{{ data4.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+          </div>
           <div class="name" >设备号:<span>{{data4.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -179,10 +244,20 @@
           </div>
         </div>
         <div class="containMsg" @click="jump(data5.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data5.patientName}}</span></div>
+          <div class="name effect">姓名:
+            <span v-if="data5!=null&&JSON.stringify(data5)!='{}'">
+              <span v-if="isShowName.status===true">{{ data5.patientName }}</span><span v-else>{{data5.patientName?data5.patientName.charAt(0) + '*' + data5.patientName.substring(2):'****'}}</span>
+            </span>
+            </div>
           <div class="name" >性别:<span>{{data5.gender}}</span></div>
           <div class="name" >年龄:<span>{{data5.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data5.hospName && data5.hospName.includes('*') ? data5.hospName : '*'.repeat(Math.max(data5.hospName ? data5.hospName.length - 2 : 0, 0)) + (data5.hospName ? data5.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data5!=null&&JSON.stringify(data5)!='{}'">
+              <span v-if="isShowName.status===true">{{ data5.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+          </div>
           <div class="name" >设备号:<span>{{data5.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -207,10 +282,20 @@
           </div>
         </div>
         <div class="containMsg" @click="jump(data6.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data6.patientName}}</span></div>
+          <div class="name effect">姓名:
+            <span v-if="data6!=null&&JSON.stringify(data6)!='{}'">
+              <span v-if="isShowName.status===true">{{ data6.patientName }}</span><span v-else>{{data6.patientName?data6.patientName.charAt(0) + '*' + data6.patientName.substring(2):'****'}}</span>
+            </span>
+            </div>
           <div class="name" >性别:<span>{{data6.gender}}</span></div>
           <div class="name" >年龄:<span>{{data6.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data6.hospName && data6.hospName.includes('*') ? data6.hospName : '*'.repeat(Math.max(data6.hospName ? data6.hospName.length - 2 : 0, 0)) + (data6.hospName ? data6.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data6!=null&&JSON.stringify(data6)!='{}'">
+              <span v-if="isShowName.status===true">{{ data6.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+          </div>
           <div class="name" >设备号:<span>{{data6.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -229,17 +314,26 @@
         </div>
         <div class="containcontent">
           <div class="chart chartEvent" ref="chart" id="child_7"></div>
-          <!--          <div class="chart" id="chart_0"></div>-->
           <div class="infleft" @click="jump(data7.deviceSn)">
             <div class="name">心率:</div>
             <div class="hart" ><span :style="color(data7.hr_mean)">{{data7.hr_mean}}</span></div>
           </div>
         </div>
         <div class="containMsg" @click="jump(data7.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data7.patientName}}</span></div>
+          <div class="name effect">姓名:
+            <span v-if="data7!=null&&JSON.stringify(data7)!='{}'">
+              <span v-if="isShowName.status===true">{{ data7.patientName }}</span><span v-else>{{data7.patientName?data7.patientName.charAt(0) + '*' + data7.patientName.substring(2):'****'}}</span>
+            </span>
+            </div>
           <div class="name" >性别:<span>{{data7.gender}}</span></div>
           <div class="name" >年龄:<span>{{data7.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data7.hospName && data7.hospName.includes('*') ? data7.hospName : '*'.repeat(Math.max(data7.hospName ? data7.hospName.length - 2 : 0, 0)) + (data7.hospName ? data7.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data7!=null&&JSON.stringify(data7)!='{}'">
+              <span v-if="isShowName.status===true">{{ data7.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+          </div>
           <div class="name" >设备号:<span>{{data7.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -265,10 +359,20 @@
           </div>
         </div>
         <div class="containMsg" @click="jump(data8.deviceSn)" >
-          <div class="name effect">姓名:<span>{{data8.patientName}}</span></div>
+          <div class="name effect">姓名:
+            <span v-if="data8!=null&&JSON.stringify(data8)!='{}'">
+              <span v-if="isShowName.status===true">{{ data8.patientName }}</span><span v-else>{{data8.patientName?data8.patientName.charAt(0) + '*' + data8.patientName.substring(2):'****'}}</span>
+            </span>
+            </div>
           <div class="name" >性别:<span>{{data8.gender}}</span></div>
           <div class="name" >年龄:<span>{{data8.age}}</span></div>
-          <div class="name" >所属医院:<span>{{data8.hospName && data8.hospName.includes('*') ? data8.hospName : '*'.repeat(Math.max(data8.hospName ? data8.hospName.length - 2 : 0, 0)) + (data8.hospName ? data8.hospName.slice(-2) : '')}}</span></div>
+          <div class="name">所属医院:
+            <span v-if="data8!=null&&JSON.stringify(data8)!='{}'">
+              <span v-if="isShowName.status===true">{{ data8.hospName }}</span>
+              <span v-else>*医院</span>
+            </span>
+
+          </div>
           <div class="name" >设备号:<span>{{data8.deviceSn}}</span></div>
         </div>
         <div class="panel-footer"></div>
@@ -373,6 +477,7 @@ import * as echarts from '../detail/echarts.min'
 import 'default-passive-events'
 import screenfull from 'screenfull'
 import {getUserInfo,getInfoId} from "@/api/patient_management/patient_management";
+import elementResizeDetectorMaker from "element-resize-detector";
 let hospName='所有'
 export default {
   data() {
@@ -383,6 +488,50 @@ export default {
       // 提高心电大屏的显示速度
       url: 'https://server.mindyard.cn:84/detect_decg_bgScreen',
       test:1,
+      isShowName: {
+        status: false,
+        name: "显示信息"
+      },
+      symptomType:null,
+      options:[
+        {
+          value: 'ALL',
+          label: '异常数据'
+        },
+        {
+          value: 'gengSi',
+          label: '心肌梗塞'
+        },
+        {
+          value: 'af',
+          label: '房颤房扑'
+        },
+        {
+          value: 'lowHr',
+          label: '心室率过低'
+        },
+        {
+          value: 'fastHr',
+          label: '室性心动过速'
+        },
+        {
+          value: 'vf',
+          label: '室颤室扑'
+        },
+        {
+          value: 'cd',
+          label: '窦室传导'
+        },
+        {
+          value: 'longRR',
+          label: '长RR间期'
+        },
+        {
+          value: 'longQTc',
+          label: 'QTc间期过长'
+        },
+
+      ],
       // 版本号
       isFullFlag:false,
       total:null,//总设备数
@@ -455,7 +604,8 @@ export default {
       timer11:null,
       time:null,//时间 X轴
       index:0,
-      tishii:true
+      tishii:true,
+      hospName:null,
     };
   },
   async created() {
@@ -466,6 +616,7 @@ export default {
     if(hospitalId&&hospitalId!==1){
       await getInfoId(hospitalId).then(user => {
         hospName=user.data.hospitalName
+        this.hospName = user.data.hospitalName
       })
     }
     //清空数据
@@ -493,6 +644,7 @@ export default {
     if(hospitalId&&hospitalId!==1){
       await getInfoId(hospitalId).then(user => {
         hospName=user.data.hospitalName
+        this.hospName = user.data.hospitalName
       })
     }
     this.clearList()
@@ -543,6 +695,25 @@ export default {
   },
 
   methods: {
+
+
+    clearAllData(){
+      this.index=0
+      this.clearList();
+      this.clearIntervallist()
+    },
+
+    isShowNameClick() {
+
+      if (this.isShowName.status) {
+        this.isShowName.status = !this.isShowName.status;
+        this.isShowName.name = "显示信息"
+
+      } else {
+        this.isShowName.status = !this.isShowName.status;
+        this.isShowName.name = "隐藏信息"
+      }
+    },
     // 提示框方法
     tishi(length){
       this.$message.success({
@@ -562,8 +733,6 @@ export default {
     },
     //请求设备列表
     async get_device(hospName,tishii){
-      // console.log(this.timer0)
-      // console.log("医院名称:"+hospName)
       this.index++
       if(this.index!==1){
         return
@@ -2100,7 +2269,107 @@ export default {
 
     },
 
+    /**
+     * 通过疾病类型查询数据
+     */
+    getSymptomTypeList() {
+      console.log(this.symptomType)
+      if (!this.symptomType) {
+        this.index=0
+        this.endSymptomTypeList()
+        return
+      }
+
+      this.currentpage = [];
+      this.clearIntervallist();
+      this.clearList();
+      this.openLoading();
+
+      let _th = this;
+      let tishii = true;
+
+      this.$http.post('https://screen.mindyard.cn/test/get_symptom',
+        JSON.stringify({
+          "ts": 0,
+          "symptom": _th.symptomType,
+          "hospName": _th.hospName
+        }), {
+          contentType: "application/json",
+          dataType: "json",
+          headers: {
+            "user": "zzu",
+            "password": "zzu123"
+          },
+        }
+      ).then(res => {
+        this.arr = res.data.result;
+
+        // 分页
+        let length = res.data.result.length; // 总设备个数
+        this.total = length;
+        this.pagenum = (length % 9 === 0) ? (length / 9) : Math.floor(length / 9) + 1; // 总页数
+        for (let i = 0; i < length; i += 9) {
+          this.currentpage.push(this.arr.slice(i, i + 9));
+        }
+
+        if (tishii) {
+          this.tishi(length);
+        }
+
+        // 这里处理后续数据
+        if (this.pagenum >= this.pages) {
+          const num = this.currentpage[this.pages - 1].length;
+          if (num >= 1) this.list1();
+          if (num >= 2) this.list2();
+          if (num >= 3) this.list3();
+          if (num >= 4) this.list4();
+          if (num >= 5) this.list5();
+          if (num >= 6) this.list6();
+          if (num >= 7) this.list7();
+          if (num >= 8) this.list8();
+          if (num >= 9) this.list9();
+        }
+
+        // 设置 ECharts
+        setTimeout(() => {
+          const charts = [];
+          for (let i = 0; i < 9; i++) {
+            charts[i] = echarts.init(document.getElementById(`child_${i}`));
+          }
+          const erd = elementResizeDetectorMaker();
+          erd.listenTo(document.getElementById("containcontent"), () => {
+            charts.forEach(chart => chart.resize());
+          });
+        });
+
+        this.closeFullScreen();
+      }).catch(err => {
+        // console.log("请求错误" + err);
+        this.closeFullScreen();
+      });
+    },
+
+    async endSymptomTypeList(){
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      this.currentpage = [];
+      this.clearIntervallist();
+      this.clearList();
+
+      await this.get_device(this.hospName, this.index === 0); // 等待 get_device 完成
+
+      loading.close();
+
+
+    }
+
+
   },
+
 };
 </script>
 
@@ -2154,9 +2423,9 @@ export default {
       font-size: 45px;
       color: #6EDDF1;
       letter-spacing:6px;
-      padding-left: 16vw;
+      //padding-left: 16vw;
     }
-    .button{
+    .button  {
       display: inline-block;
       .el-button{
         width: 70px;
@@ -2168,6 +2437,17 @@ export default {
         color: #4cc9f0;
         border-color: #4cc9f0;
         background-color: rgba(0,0,0,0);
+      }
+      .el-select{
+        width: 140px;
+        height: 20px;
+        padding: 0;
+        margin-left: 3px;
+        margin-top: 3px;
+        text-align: center;
+        color: #4cc9f0;
+        border-color: #4cc9f0;
+        background: transparent;
       }
       .el-button:hover{
         color: white;
@@ -2336,6 +2616,19 @@ export default {
   }
 
 }
+
+.selectData {
+  background-color: transparent !important;
+  border: none; /* 可选，去掉边框 */
+  color: inherit; /* 确保文本颜色继承 */
+
+
+  ::v-deep.el-input__inner{
+    background-color: rgba(0, 0, 0, 0) !important;
+    height: 30px !important;
+  }
+}
+
 
 </style>
 

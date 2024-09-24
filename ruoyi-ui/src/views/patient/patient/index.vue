@@ -197,7 +197,7 @@
             v-hasPermi="['patient_management:patient_management:export']"
             >导出</el-button
           >
-          <el-button type="primary" size="mini" @click="isShowNameClick">{{
+          <el-button type="primary" size="mini" v-hasPermi="['ecg:show:conceal']" @click="isShowNameClick">{{
             isShowName.name
           }}</el-button>
         </div>
@@ -475,6 +475,7 @@ import {
 } from "@/api/patient/patient";
 import $ from "jquery";
 import {
+  delPatient_management,
   getUserInfo,
   updateStatus,
 } from "@/api/patient_management/patient_management";
@@ -609,8 +610,6 @@ export default {
       }
     },
     isShowNameClick() {
-      let isShowName = sessionStorage.getItem("isShowName");
-      if (isShowName) {
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示信息";
@@ -618,10 +617,6 @@ export default {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "隐藏信息";
         }
-      } else {
-        this.verifyForm.password = "";
-        this.dialogFormVisibleVerifyAuthority = true;
-      }
     },
     // 密码弹出框点击确认时
     dialogFormVisibleVerify() {
@@ -758,13 +753,19 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download(
-        "patient/patient/export",
-        {
-          ...this.queryParams,
-        },
-        `patient_${new Date().getTime()}.xlsx`
-      );
+      let isShowName = sessionStorage.getItem('isShowName')
+      if (this.verifyForm.status || isShowName) {
+        this.download(
+          "patient/patient/export",
+          {
+            ...this.queryParams,
+          },
+          `patient_${new Date().getTime()}.xlsx`
+        );
+      } else {
+        this.verifyForm.password = ''
+        this.dialogFormVisibleVerifyAuthority = true
+      }
     },
     /** 跳转到动态心电列表 */
     lookList(row) {

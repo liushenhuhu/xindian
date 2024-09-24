@@ -138,6 +138,7 @@
           plain
           icon="el-icon-view"
           size="mini"
+          v-hasPermi="['ecg:show:conceal']"
           @click="isShowNameClick">{{isShowName.name}}
         </el-button>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -395,8 +396,7 @@ export default {
     },
 
     isShowNameClick() {
-      let isShowName = sessionStorage.getItem('isShowName')
-      if (this.verifyForm.status || isShowName) {
+
         if (this.isShowName.status) {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "显示信息"
@@ -405,10 +405,7 @@ export default {
           this.isShowName.status = !this.isShowName.status;
           this.isShowName.name = "隐藏信息"
         }
-      } else {
-        this.verifyForm.password = ''
-        this.dialogFormVisibleVerifyAuthority = true
-      }
+
 
     },
     /** 查询预警日志列表 */
@@ -563,10 +560,10 @@ export default {
 
         //   logType: this.queryParams.logType,
         //   isSuspected:"",
-          
+
         //   pId: this.queryParams.pId,
         //   logTime:this.queryParams.logTime,
-          
+
         //   eventDescription:this.queryParams.eventDescription,
         //   eventName:this.queryParams.eventName,
         //   logTime:this.queryParams.logTime,

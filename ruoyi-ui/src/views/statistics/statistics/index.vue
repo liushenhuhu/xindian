@@ -406,7 +406,7 @@ export default {
         this.drawLine();
         // this.drawLine1()
         //console.log(countArr);
-
+        this.getListData()
       });
 
     },

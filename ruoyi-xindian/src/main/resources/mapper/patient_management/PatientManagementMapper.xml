@@ -225,7 +225,6 @@
                     #{item}
                 </foreach>
             </if>
-
         </where>
         order by online_status desc, connection_time desc
     </select>
@@ -278,7 +277,7 @@
                 </foreach>
             </if>
         </where>
-        order by report_time desc
+        order by connection_time desc
     </select>
 
 
@@ -449,7 +448,7 @@
                 </foreach>
             </if>
         </where>
-        order by online_status desc, report_time desc
+        order by connection_time desc
     </select>
 
     <select id="selectPatientManagementListDECG12" parameterType="PatientManagement" resultMap="PatientManagementResult">
@@ -833,7 +832,7 @@
                 </foreach>
             </if>
         </where>
-        order by report_time desc
+        order by connection_time desc
     </select>
     <select id="selectPatientManagementListJECGDUO"
             resultType="com.ruoyi.xindian.patient_management.domain.PatientManagement" resultMap="PatientManagementResult">

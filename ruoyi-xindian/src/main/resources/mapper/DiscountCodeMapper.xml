@@ -11,10 +11,11 @@
         <result property="discount"    column="discount"    />
         <result property="createTime"    column="create_time"    />
         <result property="status"    column="status"    />
+        <result property="userName"    column="user_name"    />
     </resultMap>
 
     <sql id="selectDiscountCodeVo">
-        select promotion_id, promotion_code, phone, discount, create_time, status from discount_code
+        select promotion_id, promotion_code, phone, discount, create_time, status, user_name from discount_code
     </sql>
 
     <select id="selectDiscountCodeList" parameterType="DiscountCode" resultMap="DiscountCodeResult">
@@ -24,6 +25,7 @@
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="discount != null "> and discount = #{discount}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
         </where>
     </select>
 
@@ -41,6 +43,7 @@
             <if test="discount != null">discount,</if>
             <if test="createTime != null">create_time,</if>
             <if test="status != null">status,</if>
+            <if test="userName != null">user_name,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="promotionId != null">#{promotionId},</if>
@@ -49,6 +52,7 @@
             <if test="discount != null">#{discount},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="status != null">#{status},</if>
+            <if test="userName != null">#{userName},</if>
         </trim>
     </insert>
 
@@ -60,6 +64,7 @@
             <if test="discount != null">discount = #{discount},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="userName != null">user_name = #{userName},</if>
         </trim>
         where promotion_id = #{promotionId}
     </update>

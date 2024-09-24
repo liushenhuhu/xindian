@@ -36,12 +36,18 @@
         from hospital
     </sql>
     <sql id="selectHospitalVo2">
-        select hospital_id, province, hospital_name, h.hospital_code, hospital_account,
-               hospital_password, equipment_number, patient_number, monitoring_patient_number,
-               account_number, first_ecg_time, if_statistics, img,hospital_info,et.num , city, district, city_id, district_id, province_id
-        from hospital h left join (select e.hospital_code,count(e.hospital_code) as num from equipment e
-                                   where e.equipment_status='True'
-                                   GROUP BY e.hospital_code) et on h.hospital_code = et.hospital_code
+        SELECT h.hospital_id, h.province, h.hospital_name, h.hospital_code, h.hospital_account,
+               h.hospital_password, h.equipment_number, h.patient_number, h.monitoring_patient_number,
+               h.account_number, h.first_ecg_time, h.if_statistics, h.img, h.hospital_info,
+               COALESCE(et.num, 0) AS num,
+               h.city, h.district, h.city_id, h.district_id, h.province_id
+        FROM hospital h
+                 LEFT JOIN (
+            SELECT e.hospital_code, COUNT(*) AS num
+            FROM equipment e
+            WHERE e.equipment_status = 'True'
+            GROUP BY e.hospital_code
+        ) et ON h.hospital_code = et.hospital_code
     </sql>
     <select id="selectHospitalList" parameterType="Hospital" resultMap="HospitalResult">
         <include refid="selectHospitalVo2"/>
@@ -68,8 +74,7 @@
                 </foreach>
             </if>
         </where>
-        GROUP BY h.hospital_id
-        order by  et.num desc
+        ORDER BY num DESC ,hospital_id desc
     </select>
 
     <select id="selectHospitalByHospitalId" parameterType="Long" resultMap="HospitalResult">

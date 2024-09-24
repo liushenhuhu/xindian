@@ -535,6 +535,10 @@ public class PatientManagementController extends BaseController {
     @GetMapping("/listP")
     public TableDataInfo listP(PatientManagement patientManagement, HttpServletRequest request) throws Exception {
 
+
+
+
+
         List<PatientManagement> list = new ArrayList<>();
         ArrayList<PatientManagmentDept> resList = new ArrayList<>();
         if (patientManagement.getPatientPhone() != null) {
@@ -546,6 +550,10 @@ public class PatientManagementController extends BaseController {
         if (patientManagement.getPatPhone() != null && !"".equals(patientManagement.getPatPhone())) {
             patientManagement.setPatPhone(aesUtils.encrypt(patientManagement.getPatPhone()));
         }
+        if (StringUtils.isEmpty(patientManagement.getPatientPhone())){
+            patientManagement.setPatientPhone(getUsername());
+        }
+
         startPage();
         if (null == patientManagement.getEcgType()) {
             list = patientManagementService.selectPatientManagementList(patientManagement);
@@ -723,18 +731,28 @@ public class PatientManagementController extends BaseController {
     /**
      * 获取患者管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('patient_management:patient_management:query')")
     @GetMapping(value = "/{pId}")
     public AjaxResult getInfo(@PathVariable("pId") String pId) throws Exception {
         PatientManagement management = patientManagementService.selectPatientManagementByPId(pId);
-        if (management.getPatientPhone() != null && !"".equals(management.getPatientPhone())) {
-            management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
-        }
-        if (management.getPatientName() != null && !"".equals(management.getPatientName())) {
-            management.setPatientName(aesUtils.decrypt(management.getPatientName()));
-        }
-        if (management.getDiagnosisDoctor() != null && !"".equals(management.getDiagnosisDoctor())) {
-            management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
+        if (management!=null){
+            if (management.getPatientPhone() != null && !management.getPatientPhone().isEmpty()) {
+                management.setPatientPhone(aesUtils.decrypt(management.getPatientPhone()));
+            }
+            if (management.getPatientName() != null && !management.getPatientName().isEmpty()) {
+                management.setPatientName(aesUtils.decrypt(management.getPatientName()));
+            }
+            if (management.getDiagnosisDoctor() != null && !management.getDiagnosisDoctor().isEmpty()) {
+                management.setDiagnosisDoctor(aesUtils.decrypt(management.getDiagnosisDoctor()));
+            }
+            if (management.getFamilyPhone() != null && !management.getFamilyPhone().isEmpty()) {
+                management.setFamilyPhone(aesUtils.decrypt(management.getFamilyPhone()));
+            }
+            if (StringUtils.isNotEmpty(management.getDoctorPhone())) {
+                management.setDoctorPhone(aesUtils.decrypt(management.getDoctorPhone()));
+            }
+            if (StringUtils.isNotEmpty(management.getDPhone())) {
+                management.setDPhone(aesUtils.decrypt(management.getDPhone()));
+            }
         }
         return AjaxResult.success(management);
     }

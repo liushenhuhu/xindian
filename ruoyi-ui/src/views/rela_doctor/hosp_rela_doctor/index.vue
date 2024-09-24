@@ -81,8 +81,8 @@
       <el-table-column type="selection" width="55" align="center" />
 <!--      <el-table-column label="${comment}" align="center" prop="id" />-->
       <el-table-column label="医院" align="center" prop="hospCode" />
-      <el-table-column label="医生电话" align="center" prop="dphoneAes" />
-      <el-table-column label="医生姓名" align="center" prop="dnameAes" />
+      <el-table-column label="医生电话" align="center" prop="dPhoneAes" />
+      <el-table-column label="医生姓名" align="center" prop="dNameAes" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

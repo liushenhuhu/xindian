@@ -605,15 +605,6 @@ public class ReportController extends BaseController {
             redisTemplate.delete("DocList" + report.getpId());
             return toAjax(reportService.updateReportNull(report));
         } else if (report.getDiagnosisStatus() == 1) {//医生诊断
-            if (!SysUser.isAdmin(loginUser1.getUserId()) && (report.getDiagnosisStatus() == 1 || report.getDiagnosisStatus() == 3) && report1.getdPhone() == null) {
-                Doctor doctor = doctorService.selectDoctorByDoctorPhone(loginUser.getUser().getPhonenumber());
-                if (doctor == null) {
-                    return AjaxResult.error("不是医师，无权限诊断");
-                }
-                report1.setStartTime(new Date());
-                report.setdPhone(doctor.getDoctorPhone());
-                report.setDiagnosisDoctor(doctor.getDoctorName());
-            }
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             //记录报告的的状态
             if (StringUtils.isNotEmpty(report.getStartDateTime())) {
