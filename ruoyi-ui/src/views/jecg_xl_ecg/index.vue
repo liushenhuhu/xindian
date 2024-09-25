@@ -451,17 +451,20 @@
                 </div>
                 <div class="jintutiao">
                   <div class="jintutiao_shuzi xinliwenzi" style="color: #BAC2CE;">
-                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;"><div style="color: #BAC2CE;">0</div><div style="color: #BAC2CE;">20</div></div>
-                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">45</div>
-                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">70</div>
-                    <div style="width: 10%;box-sizing: border-box;color: #BAC2CE;text-align: right;">80</div>
+                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;">
+                      <div style="color: #BAC2CE;">0</div>
+                      <div style="color: #BAC2CE;">20</div>
+                    </div>
+                    <div style="width: 10%;box-sizing: border-box;color: #BAC2CE;text-align: right;">30</div>
+                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">55</div>
+                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">80</div>
                     <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;">100</div>
                   </div>
                   <div class="jintutiao_sansetiao">
                     <div style="width: 20%;box-sizing: border-box;background-color: #E87659;color: #E87659;">20</div>
-                    <div style="width: 25%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">45</div>
-                    <div style="width: 25%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">70</div>
-                    <div style="width: 10%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">80</div>
+                    <div style="width: 10%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">30</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">55</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">80</div>
                     <div style="width: 20%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">100</div>
                   </div>
                   <div class="jintutiao_wenzi" v-if="data.relax.value<88">
@@ -1072,9 +1075,9 @@ export default {
     getBorderColor_fangsong(value){
       if (value < 20) {
         return '#E87659';
-      } else if (value < 45) {
+      } else if (value < 30) {
         return '#FFEB93';
-      } else if (value < 70) {
+      } else if (value < 55) {
         return '#DBF5FA';
       } else if (value < 80) {
         return '#85DBEC';
@@ -1086,9 +1089,9 @@ export default {
     getBordertext_fangsong(value){
       if (value < 20) {
         return '低';
-      } else if (value < 45) {
+      } else if (value < 30) {
         return '较低';
-      } else if (value < 70) {
+      } else if (value < 55) {
         return '正常';
       } else if(value < 80) {
         return '较高';
