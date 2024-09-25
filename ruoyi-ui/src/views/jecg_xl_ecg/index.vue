@@ -12,9 +12,9 @@
                 @tab-click="switchTabs"
                 @click="handleButtonClick"
               >
-                <el-tab-pane label="基本信息" name="userInfo">
+                <el-tab-pane label="基本信息" name="userInfo" class="qiehuan">
                   <div class="tabBox">
-                    <table>
+                    <table class="biaoge">
                       <tr>
                         <td>姓名</td>
                         <td v-if="isShowName.status === true">
@@ -109,37 +109,10 @@
                     </table>
                   </div>
                 </el-tab-pane>
-<!--                <GradientProgress :value="currentValue" :max="maxValue" />-->
-<!--                <el-tab-pane-->
-<!--                  label="心电参数"-->
-<!--                  name="ecgInfo"-->
-<!--                  v-if="!isDoctorUser"-->
-<!--                >-->
-<!--                  <div class="tabBox">-->
-<!--                    <table>-->
-<!--                      <tr>-->
-<!--                        <td>P波</td>-->
-<!--                        <td>{{ data.p }} ms</td>-->
-<!--                        <td>QTc</td>-->
-<!--                        <td>{{ data.qtc }} ms</td>-->
-<!--                        <td>HRV</td>-->
-<!--                        <td>{{ data.hrv }} ms</td>-->
-<!--                      </tr>-->
-<!--                      <tr>-->
-<!--                        <td>QRS时限</td>-->
-<!--                        <td>{{ data.qrs }} ms</td>-->
-<!--                        <td>住院号</td>-->
-<!--                        <td>-</td>-->
-<!--                        <td>申请单号</td>-->
-<!--                        <td></td>-->
-<!--                      </tr>-->
-<!--                    </table>-->
-<!--                  </div>-->
-<!--                </el-tab-pane>-->
               </el-tabs>
             </div>
-            <div class="touzuo-btm">
-              <div class="yujinclass">
+            <div class="touzuo-btm" v-if="false">
+              <div class="yujinclass" v-if="false">
                 <div class="yujinclass_tou" v-if="!isDoctorUser">预警类型:</div>
                 <div class="yujinclass_zhi">{{ xianshizifuchuan }}</div>
                 <div>
@@ -162,7 +135,7 @@
             </div>
           </div>
 
-          <div class="touyou">
+          <div class="touyou" v-if="false">
             <div class="touzuobiaoti">
               <div>医师诊断</div>
               <el-button
@@ -338,6 +311,178 @@
                 >下一个</el-button
               >
             </div>
+          </div>
+          <div class="touyou" >
+            <div style="display: flex;justify-content:flex-end;">
+                <el-button
+                  type="success"
+                  plain
+                  icon="el-icon-view"
+                  size="mini"
+                  @click="isShowNameClick"
+                  v-hasPermi="['ecg:show:conceal']"
+                >{{ isShowName.name }}
+                </el-button>
+              </div>
+
+            <div class="consult">
+              <div class="xinli">
+                <div class="tupian"></div>
+                <div class="xinli_top yellow">
+                  <div class="xinliwenzi">身心能量</div>
+                  <div class="xinliwenzi">{{data.ecg_power.value?data.ecg_power.value:''}} <text style="color: #999999;font-size: 15px;font-weight: 300;">ms</text></div>
+                </div>
+                <div class="jintutiao">
+                  <div class="jintutiao_shuzi xinliwenzi" style="color: #BAC2CE;">
+                    <div style="width: 9.9%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;">
+                      <div style="color: #BAC2CE;">0</div>
+                      <div style="color: #BAC2CE;">15</div>
+                    </div>
+                    <div style="width: 6.6%;box-sizing: border-box;color: #BAC2CE;text-align: right;">25</div>
+                    <div style="width: 49.5%;box-sizing: border-box;color: #BAC2CE;text-align: right;">100</div>
+                    <div style="width: 34%;box-sizing: border-box;color: #BAC2CE;text-align: right;">150</div>
+                  </div>
+                  <div class="jintutiao_sansetiao ">
+                    <div style="width: 9.9%;box-sizing: border-box;background-color: #E87659;color: #E87659;">1</div>
+                    <div style="width: 6.6%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">2</div>
+                    <div style="width: 49.5%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">3</div>
+                    <div style="width: 34%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">4</div>
+                  </div>
+                  <div class="jintutiao_wenzi" v-if="data.ecg_power.value*0.66<88">
+                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: data.ecg_power.value*0.66 + '%'}"></div>
+                    <div class="sanjiao " :style="{
+            'border-bottom-color': getBorderColor(data.ecg_power.value * 0.66)
+          }"></div>
+                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext(data.ecg_power.value * 0.66)}}</div>
+                  </div>
+                  <div  class="jintutiao_wenzi xinliwenzi"  :style="{ 'border-bottom-color': getBorderColor(data.ecg_power.value * 0.66),'justify-content': 'flex-end', 'width': data.ecg_power.value + '%'}"  v-else>
+                    <div class="sanjiao_wenzi">{{getBordertext(data.ecg_power.value * 0.66)}}</div>
+                    <div class="sanjiao" :style="{
+            'border-bottom-color': getBorderColor(data.ecg_power.value * 0.66)
+          }"></div>
+                  </div>
+                </div>
+                <div class="xinli_contan xinliwenzi">{{data.ecg_power.text}}</div>
+              </div>
+            </div>
+            <div class="consult">
+              <div class="xinli">
+                <div class="xinli_top blue" >
+                  <div class="xinliwenzi">情绪压力指数</div>
+                  <div class="xinliwenzi">{{data.emo_stress.value}}</div>
+                </div>
+                <div class="jintutiao">
+                  <div class="jintutiao_shuzi xinliwenzi" style="color: #BAC2CE;">
+                    <div style="width: 15%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;">
+                      <div style="color: #BAC2CE;">0</div>
+                      <div style="color: #BAC2CE;">0.3</div>
+                    </div>
+                    <div style="width: 10%;box-sizing: border-box;color: #BAC2CE;text-align: right;">0.5</div>
+                    <div style="width: 30%;box-sizing: border-box;color: #BAC2CE;text-align: right;">2.5</div>
+                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;">3</div>
+                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">4</div>
+                  </div>
+                  <div class="jintutiao_sansetiao">
+                    <div style="width: 15%;box-sizing: border-box;background-color: #E87659;color: #E87659;">0.3</div>
+                    <div style="width: 10%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">0.5</div>
+                    <div style="width: 30%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">2.5</div>
+                    <div style="width: 20%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">3</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">4</div>
+                  </div>
+                  <div class="jintutiao_wenzi" v-if="qingxuyalikuandu_yuce(data.emo_stress.value)">
+                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: qingxuyalikuandu(data.emo_stress.value)}"></div>
+                    <div class="sanjiao" :style="{'border-bottom-color': getBorderColor_qinxu(data.emo_stress.value)}"></div>
+                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_qinxu(data.emo_stress.value)}}</div>
+                  </div>
+
+                  <div  class="jintutiao_wenzi"  :style="{ 'border-bottom-color': getBorderColor_qinxu(data.emo_stress.value),'display':'flex','justify-content': 'flex-end', width: qingxuyalikuandu(data.emo_stress.value)}"  v-else>
+                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_qinxu(data.emo_stress.value)}}</div>
+                    <div class="sanjiao" :style="{'border-bottom-color': getBorderColor_qinxu(data.emo_stress.value)}"></div>
+                  </div>
+                </div>
+                <div class="xinli_contan xinliwenzi">{{data.emo_stress.text}}</div>
+              </div>
+            </div>
+
+
+            <div class="consult">
+              <div class="xinli">
+                <div class="xinli_top  red">
+                  <div class="xinliwenzi">兴奋指数</div>
+                  <div class="xinliwenzi">{{data.excitement.value}}</div>
+                </div>
+                <div class="jintutiao">
+                  <div class="jintutiao_shuzi xinliwenzi" style="color: #BAC2CE;">
+                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;"><div style="color: #BAC2CE;">0</div><div style="color: #BAC2CE;">20</div></div>
+                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">45</div>
+                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">70</div>
+                    <div style="width: 10%;box-sizing: border-box;color: #BAC2CE;text-align: right;">80</div>
+                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;">100</div>
+                  </div>
+                  <div class="jintutiao_sansetiao">
+                    <div style="width: 20%;box-sizing: border-box;background-color: #E87659;color: #E87659;">20</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">45</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">70</div>
+                    <div style="width: 10%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">80</div>
+                    <div style="width: 20%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">100</div>
+                  </div>
+                  <div class="jintutiao_wenzi" v-if="data.excitement.value<88">
+                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: data.excitement.value + '%'}"></div>
+                    <div class="sanjiao" :style="{
+            'border-bottom-color': getBorderColor_xinfen(data.excitement.value)
+          }"></div>
+                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_xinfen(data.excitement.value)}}</div>
+                  </div>
+                  <div  class="jintutiao_wenzi"  :style="{ 'border-bottom-color': getBorderColor_xinfen(data.excitement.value),'justify-content': 'flex-end', 'width': data.excitement.value + '%'}"  v-else>
+                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_xinfen(data.excitement.value)}}</div>
+                    <div class="sanjiao " :style="{
+           'border-bottom-color': getBorderColor_xinfen(data.excitement.value)
+         }"></div>
+                  </div>
+                </div>
+                <div class="xinli_contan xinliwenzi">{{data.excitement.text}}</div>
+              </div>
+            </div>
+            <div class="consult">
+              <div class="xinli">
+                <div class="xinli_top green">
+                  <div class="xinliwenzi">放松指数</div>
+                  <div class="xinliwenzi">{{data.relax.value}}</div>
+                </div>
+                <div class="jintutiao">
+                  <div class="jintutiao_shuzi xinliwenzi" style="color: #BAC2CE;">
+                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;"><div style="color: #BAC2CE;">0</div><div style="color: #BAC2CE;">20</div></div>
+                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">45</div>
+                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">70</div>
+                    <div style="width: 10%;box-sizing: border-box;color: #BAC2CE;text-align: right;">80</div>
+                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;">100</div>
+                  </div>
+                  <div class="jintutiao_sansetiao">
+                    <div style="width: 20%;box-sizing: border-box;background-color: #E87659;color: #E87659;">20</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">45</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">70</div>
+                    <div style="width: 10%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">80</div>
+                    <div style="width: 20%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">100</div>
+                  </div>
+                  <div class="jintutiao_wenzi" v-if="data.relax.value<88">
+                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: data.relax.value + '%'}"></div>
+                    <div class="sanjiao" :style="{
+            'border-bottom-color': getBorderColor_fangsong(data.relax.value)
+          }"></div>
+                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_fangsong(data.relax.value)}}</div>
+                  </div>
+                  <div  class="jintutiao_wenzi"  :style="{ 'border-bottom-color': getBorderColor_xinfen(data.relax.value),'justify-content': 'flex-end', 'width': data.relax.value + '%'}"  v-else>
+                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_fangsong(data.relax.value)}}</div>
+                    <div class="sanjiao " :style="{
+            'border-bottom-color': getBorderColor_fangsong(data.relax.value)
+          }"></div>
+                  </div>
+                </div>
+                <div class="xinli_contan xinliwenzi">{{data.relax.text}}</div>
+
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -811,6 +956,146 @@ export default {
     // this.getyujingleixing()
   },
   methods: {
+    // 心活力三角形颜色
+    getBorderColor(value) {
+      if (value < 9.9) {
+        return '#E87659';
+      } else if (value < 15) {
+        return '#FFEB93';
+      } else if (value < 66) {
+        return '#DBF5FA';
+      } else {
+        return '#85DBEC';
+      }
+    },
+    // 心活力三角型文字
+    getBordertext(value){
+      if (value < 9.9) {
+        return '低';
+      } else if (value < 15) {
+        return '较低';
+      } else if (value < 66) {
+        return '正常';
+      } else {
+        return '活跃';
+      }
+    },
+    // 情绪三角形颜色
+    getBorderColor_qinxu(value){
+      if (value < 0.3) {
+        return '#E87659';
+      } else if (value < 0.5) {
+        return '#FFEB93';
+      } else if (value < 2.5) {
+        return '#DBF5FA';
+      } else if (value < 3) {
+        return '#85DBEC';
+      } else {
+        return '#58A2CC';
+      }
+    },
+    // 情绪三角型文字
+    getBordertext_qinxu(value){
+      if (value < 0.3) {
+        return '低';
+      } else if (value < 0.5) {
+        return '较低';
+      } else if (value < 2.5) {
+        return '正常';
+      } else if(value < 3) {
+        return '较高';
+      } else {
+        return '高';
+      }
+    },
+    // 兴奋三角形颜色
+    getBorderColor_xinfen(value){
+      if (value < 20) {
+        return '#E87659';
+      } else if (value < 45) {
+        return '#FFEB93';
+      } else if (value < 70) {
+        return '#DBF5FA';
+      } else if (value < 80) {
+        return '#85DBEC';
+      } else {
+        return '#58A2CC';
+      }
+    },
+    // 宽度
+    qingxuyalikuandu(value) {
+      if (value < 0.3) {
+        return `${2.5 * ((0.3 - value) / 0.3) * 6}%`;
+      } else if (value >= 0.3 && value < 0.5) {
+        return `${(6 + ((0.5 - value) / 0.2) * 4) * 2.5}%`;
+      } else if (value >= 0.5 && value < 2.5) {
+        return `${(10 + ((2.5 - value) / 2) * 12) * 2.5}%`;
+      } else if (value >= 2.5 && value < 3) {
+        return `${(22 + ((3 - value) / 0.5) * 8) * 2.5}%`;
+      } else if (value >= 3 && value < 4) {
+        return `${(30 + ((4 - value) / 1) * 10) * 2.5}%`;
+      } else if (value >= 4) {
+        return '100%';
+      }
+    },
+    //提前预测箭头的宽度
+    qingxuyalikuandu_yuce(value){
+      if (value < 0.3) {
+        return (2.5 * ((0.3 - value) / 0.3) * 6)>88?false:true
+      } else if (value >= 0.3 && value < 0.5) {
+        return ((6 + ((0.5 - value) / 0.2) * 4) * 2.5) >88?false:true
+      } else if (value >= 0.5 && value < 2.5) {
+        return ((10 + ((2.5 - value) / 2) * 12) * 2.5)>88?false:true;
+      } else if (value >= 2.5 && value < 3) {
+        return ((22 + ((3 - value) / 0.5) * 8) * 2.5)>88?false:true;
+      } else if (value >= 3 && value < 4) {
+        return ((30 + ((4 - value) / 1) * 10) * 2.5)>88?false:true;
+      } else if (value >= 4) {
+        return false
+      }
+    },
+    // 兴奋三角型文字
+    getBordertext_xinfen(value){
+      if (value < 20) {
+        return '低';
+      } else if (value < 45) {
+        return '较低';
+      } else if (value < 70) {
+        return '正常';
+      } else if(value < 80) {
+        return '较高';
+      } else {
+        return '高';
+      }
+    },
+    // 放松三角形颜色
+    getBorderColor_fangsong(value){
+      if (value < 20) {
+        return '#E87659';
+      } else if (value < 45) {
+        return '#FFEB93';
+      } else if (value < 70) {
+        return '#DBF5FA';
+      } else if (value < 80) {
+        return '#85DBEC';
+      } else {
+        return '#58A2CC';
+      }
+    },
+    // 放松三角型文字
+    getBordertext_fangsong(value){
+      if (value < 20) {
+        return '低';
+      } else if (value < 45) {
+        return '较低';
+      } else if (value < 70) {
+        return '正常';
+      } else if(value < 80) {
+        return '较高';
+      } else {
+        return '高';
+      }
+    },
     // 新增术语
     dialogVisible() {
       getTerm().then((r) => {
@@ -2924,8 +3209,97 @@ export default {
   },
 };
 </script>
-
+<!--右边心力图-->
 <style lang="scss" scoped>
+.consult {
+  background: #ffffff;
+  border-radius: 15px;
+  //padding: 20px 15px;
+  margin: 10px 0;
+}
+
+.consult view {
+  color: #333333;
+}
+
+.consult view text {
+  color: rgba(0, 0, 0, 1);
+}
+
+.consult .font {
+  font-size: 28px;
+  margin-top: 20px;
+  color: #666666;
+}
+.xinli{
+  .xinli_top{
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    border-radius: 34px;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #EFEFF1;
+    font-weight: 700;
+    //font-size: 42px;
+  }
+  .xinli_bottom{
+    width: 35%;
+    margin-top: 20px;
+    margin-left: auto;
+    padding: 10px 20px;
+    background: #EFEFF1;
+    border-radius: 75px;
+    text-align: center;
+  }
+}
+.blue{
+  background-image: linear-gradient(to right, rgb(213, 238, 250), rgba(255, 255, 255,0));
+}
+.yellow{
+  background-image: linear-gradient(to right, rgb(247,237,199), rgba(255, 255, 255,0));
+}
+
+.green{background-image: linear-gradient(to right, rgb(23,208,107), rgba(255, 255, 255,0));}
+.red{background-image: linear-gradient(to right, rgb(232,118, 89), rgba(255, 255, 255,0));}
+.jintutiao{
+  .jintutiao_shuzi{
+    display: flex;
+    //margin-bottom: 10px;
+  }
+  .jintutiao_sansetiao{
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 10px;
+  }
+  .jintutiao_wenzi{
+
+    display: flex;
+    align-items:center;
+    //margin-top: 10px;
+    .sanjiao{
+      // border-right: 10rpx solid transparent;
+      // border-left: 10rpx solid transparent;
+      // border-bottom: 20rpx solid black;
+      width: 0;
+      height: 0;
+      border: 0 solid transparent;
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+      border-bottom: 10px solid black;
+    }
+    .sanjiao_wenzi{
+      color: #BAC2CE !important;
+    }
+  }
+}
+.xinliwenzi{
+  font-size: 1rem !important;
+}
+</style>
+<style lang="scss" scoped>
+
 ::v-deep .el-descriptions-item__content {
   background-color: #f8f8f8;
   // text-align: center;
@@ -3461,7 +3835,7 @@ export default {
 }
 
 .touzuo-top {
-  height: 73%;
+  height: 100%;
   width: 100%;
 }
 
@@ -3769,5 +4143,14 @@ export default {
 
 .wubiankuang ::v-deep .el-input__inner {
   border: 0 solid #dcdfe6;
+}
+.qiehuan{
+  height: 100% !important;
+}
+.biaoge{
+  height: 100% !important;
+}
+::v-deep .el-tabs__content{
+  height: 100% !important;
 }
 </style>
