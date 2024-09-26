@@ -194,31 +194,31 @@ public class OrderController {
             }
 
 
-            SysUser sysUser = sysUserService.selectUserById(userId);
+//            SysUser sysUser = sysUserService.selectUserById(userId);
 
-            WSurvey wSurvey = new WSurvey();
-            wSurvey.setPatientPhone(sysUser.getPhonenumber());
-            List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey);
+//            WSurvey wSurvey = new WSurvey();
+//            wSurvey.setPatientPhone(sysUser.getPhonenumber());
+//            List<WSurvey> wSurveyList = wSurveyService.selectWSurveyList(wSurvey);
 
             boolean isVip = false;
-            if (wSurveyList!=null&&!wSurveyList.isEmpty()) {
-
-                PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
-                purchaseLimitation.setProductId(orderVo.getProductId());
-                purchaseLimitation.setPatientPhone(sysUser.getPhonenumber());
-                List<PurchaseLimitation> purchaseLimitations = purchaseLimitationService.selectPurchaseLimitationList(purchaseLimitation);
-                if (purchaseLimitations.isEmpty()){
-                    isVip = true;
-                    if (orderVo.getSum()>1) {
-                        return AjaxResult.error("打折商品限购一台");
-                    }
-                }
-            }
+//            if (wSurveyList!=null&&!wSurveyList.isEmpty()) {
+//
+//                PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
+//                purchaseLimitation.setProductId(orderVo.getProductId());
+//                purchaseLimitation.setPatientPhone(sysUser.getPhonenumber());
+//                List<PurchaseLimitation> purchaseLimitations = purchaseLimitationService.selectPurchaseLimitationList(purchaseLimitation);
+//                if (purchaseLimitations.isEmpty()){
+//                    isVip = true;
+//                    if (orderVo.getSum()>1) {
+//                        return AjaxResult.error("打折商品限购一台");
+//                    }
+//                }
+//            }
 
             String stringBuilder = orderInfoService.addOrder(request, orderVo,isVip);
-            if (isVip){
-                redisTemplate.opsForValue().set("purchase_limitation:"+userId+":"+orderVo.getProductId(),stringBuilder);
-            }
+//            if (isVip){
+//                redisTemplate.opsForValue().set("purchase_limitation:"+userId+":"+orderVo.getProductId(),stringBuilder);
+//            }
 
             return AjaxResult.success("操作成功",stringBuilder);
         }catch (Exception e){

@@ -40,6 +40,7 @@
                             type="area"
                             v-model="aiResult"
                             @blur="editAiResult"
+                            @focus="recordAiResult(aiResult)"
                             style="
                               width: 100%;
                               height: 100%;

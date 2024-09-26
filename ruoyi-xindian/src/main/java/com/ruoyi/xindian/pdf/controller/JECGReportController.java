@@ -228,24 +228,34 @@ public class JECGReportController extends BaseController {
             Map<String,Double[]> ecgDataMap = new HashMap<>();
 
 
+
+
+            int startValue = 0;
+
+            int endValue = 250;
+
             if (substring.equals("JECGs")) {
                 ecgDataMap.put("II",getDouble(II));
 
 
             } else {
+                if (patientManagement.getEndValue()!=null&&patientManagement.getEndValue()>=250){
+                    endValue = patientManagement.getEndValue();
+                    startValue = patientManagement.getEndValue()-250;
+                }
                 if (substring.equals("JECG1")) {
-                    ecgDataMap.put("I",Arrays.copyOfRange(getDouble(I),0,250));
-                    ecgDataMap.put("II",Arrays.copyOfRange(getDouble(II),0,250));
-                    ecgDataMap.put("III",Arrays.copyOfRange(getDouble(III),0,250));
-                    ecgDataMap.put("aVR",Arrays.copyOfRange(getDouble(aVR),0,250));
-                    ecgDataMap.put("aVL",Arrays.copyOfRange(getDouble(aVL),0,250));
-                    ecgDataMap.put("aVF",Arrays.copyOfRange(getDouble(aVF),0,250));
-                    ecgDataMap.put("V1",Arrays.copyOfRange(getDouble(V1),0,250));
-                    ecgDataMap.put("V2",Arrays.copyOfRange(getDouble(V2),0,250));
-                    ecgDataMap.put("V3",Arrays.copyOfRange(getDouble(V3),0,250));
-                    ecgDataMap.put("V4",Arrays.copyOfRange(getDouble(v4),0,250));
-                    ecgDataMap.put("V5",Arrays.copyOfRange(getDouble(v5),0,250));
-                    ecgDataMap.put("V6",Arrays.copyOfRange(getDouble(v6),0,250));
+                    ecgDataMap.put("I",Arrays.copyOfRange(getDouble(I),startValue,endValue));
+                    ecgDataMap.put("II",Arrays.copyOfRange(getDouble(II),startValue,endValue));
+                    ecgDataMap.put("III",Arrays.copyOfRange(getDouble(III),startValue,endValue));
+                    ecgDataMap.put("aVR",Arrays.copyOfRange(getDouble(aVR),startValue,endValue));
+                    ecgDataMap.put("aVL",Arrays.copyOfRange(getDouble(aVL),startValue,endValue));
+                    ecgDataMap.put("aVF",Arrays.copyOfRange(getDouble(aVF),startValue,endValue));
+                    ecgDataMap.put("V1",Arrays.copyOfRange(getDouble(V1),startValue,endValue));
+                    ecgDataMap.put("V2",Arrays.copyOfRange(getDouble(V2),startValue,endValue));
+                    ecgDataMap.put("V3",Arrays.copyOfRange(getDouble(V3),startValue,endValue));
+                    ecgDataMap.put("V4",Arrays.copyOfRange(getDouble(v4),startValue,endValue));
+                    ecgDataMap.put("V5",Arrays.copyOfRange(getDouble(v5),startValue,endValue));
+                    ecgDataMap.put("V6",Arrays.copyOfRange(getDouble(v6),startValue,endValue));
                     ecgDataMap.put("All_II",getDouble(II));
                 } else {
                     ecgDataMap.put("II",getDouble(II));

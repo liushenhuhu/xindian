@@ -1150,7 +1150,12 @@ export default {
           path: "/restingECG",
           query: {pId: row.pId, state: 12, queryParams: this.queryParams, ecgType: "JECG12"}
         });
-      } else {
+      } else if (row.ecgType.includes('JECGXL')) {
+        this.$router.push({
+          path: "/jecg_xl_ecg",
+          query: {pId: row.pId, state: 1, queryParams:  this.queryParams, ecgType: "JECGXL",findType:1}
+        });
+      }else {
         this.$message.warning('未知类型，请联系管理员')
       }
     },
@@ -1183,8 +1188,12 @@ export default {
       }
       // window.open(`https://ecg.mindyard.cn:84/DECGReport/ECG/save/${row.pId}.dat`)
     },
-    lookXLECG(row){
-      console.log(row)
+    lookXLECG(scope){
+      let row = scope.row
+      this.$router.push({
+        path: "/jecg_xl_ecg",
+        query: {pId: row.pId, state: 1, queryParams:  this.queryParams, ecgType: "JECGXL",findType:1}
+      });
     },
   }
 };

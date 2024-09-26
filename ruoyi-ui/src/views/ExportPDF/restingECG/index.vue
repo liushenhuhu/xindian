@@ -41,6 +41,7 @@
                               type="area"
                               v-model="aiResult"
                               @blur="editAiResult"
+                              @focus="recordAiResult(aiResult)"
                               style="
                                 width: 100%;
                                 height: 100%;
@@ -287,16 +288,18 @@
                   </el-tooltip>
                   发送预警</el-button
                 >
-                <el-button type="success" plain class="anNiu" @click="sendMsg()"
-                  >发送短信</el-button
-                >
+<!--                <el-button type="success" plain class="anNiu" @click="sendMsg()"-->
+<!--                  >发送短信</el-button-->
+<!--                >-->
                 <el-button type="success" plain class="anNiu" @click="btnUpload"
                   >医生诊断</el-button
                 >
                 <el-button type="success" plain class="anNiu" @click="findPdfReport()"
                 >报告预览</el-button
                 >
-
+                <el-button type="success" plain class="anNiu" @click="findLabel()"
+                >报告截取预览</el-button
+                >
                 <el-button
                   class="next"
                   v-if="isShowBtn"
@@ -514,12 +517,22 @@
     </el-dialog>
 
     <el-dialog title="报告打印截取"  style="margin-top: 10px" :visible.sync="Report_printing" width="90%"  @open="open()">
+
+      <el-select v-model="report_printing_type" placeholder="请选择类型" @change="report_printing_init">
+        <el-option
+          v-for="item in report_printing_options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+
       <div class="canvas-div-parent">
         <div class="canvas-div" id="chart" ref="chart"></div>
       </div>
       <div class="biaodananniu" style="margin-top: 10px">
         <el-button plain @click="Report_printing = false">取消</el-button>
-        <el-button type="primary" plain @click="sendWarnMsg">发 送</el-button>
+        <el-button type="primary" plain @click="findPdfReport">预览</el-button>
       </div>
     </el-dialog>
 
@@ -574,6 +587,64 @@ export default {
       TableHeight: 100,
       src: null,
       flagCre:0,
+      report_printing_type:"II",
+      report_printing_options:[
+        {
+          value: 'I',
+          label: 'I'
+        },
+        {
+          value: 'II',
+          label: 'II'
+        },
+        {
+          value: 'III',
+          label: 'III'
+        },
+        {
+          value: 'aVR',
+          label: 'aVR'
+        },
+        {
+          value: 'aVL',
+          label: 'aVL'
+        },
+        {
+          value: 'aVF',
+          label: 'aVF'
+        },
+        {
+          value: 'V1',
+          label: 'V1'
+        },
+        {
+          value: 'V2',
+          label: 'V2'
+        },{
+          value: 'V3',
+          label: 'V3'
+        },
+        {
+          value: 'V4',
+          label: 'V4'
+        },
+        {
+          value: 'V5',
+          label: 'V5'
+        },
+        {
+          value: 'V6',
+          label: 'V6'
+        },
+
+      ],
+      dataZoomData:{
+        startValue:0, //开始位置
+        endValue:500, //结束位置
+        maxValueSpan:500, //长度
+        minValueSpan:500,
+        value:250,
+      },
       num:1,
       loading1:false,
       tanchuang: false,
@@ -2845,7 +2916,6 @@ export default {
 
     findLabel(){
       this.Report_printing = true
-
     },
 
     open() {
@@ -2855,10 +2925,10 @@ export default {
     },
 
     initChart(){
-      let data = this.dataLabel["I"]
+      let data = this.dataLabel[this.report_printing_type]
        this.myChart = echarts.init(this.$refs.chart)
       let x = []
-      for (var i = 0; i <= this.dataLabel["I"].length; i++) {
+      for (var i = 0; i <= this.dataLabel[this.report_printing_type].length; i++) {
         x.push(i);
       }
       for (let i = 0; i < 1000; i += 20) {
@@ -2889,19 +2959,11 @@ export default {
             type: "slider",
             brushSelect: false,
             // y: '90%',
-            startValue: 0,
-            endValue: 500,
-            maxValueSpan: 500,
-          },
-          {
-            show: true, // 滑动条组件
-            type: "slider",
-            orient: "vertical",
-            brushSelect: false,
-            start: 0,
-            end: 100,
-          },
-
+            startValue: this.dataZoomData.startValue,
+            endValue: this.dataZoomData.endValue,
+            maxValueSpan: this.dataZoomData.maxValueSpan,
+            minValueSpan:this.dataZoomData.minValueSpan
+          }
         ],
         grid: {
           left: "3%",
@@ -3003,38 +3065,37 @@ export default {
         _th.myChart.resize();
       });
       this.myChart.on('dataZoom', function (params) {
-        // params 是包含了 dataZoom 相关信息的对象
-        const dataZooms = params.batch; // 可能有多个 dataZoom 组件
-        console.log(dataZooms)
-        console.log(params)
-
+        let data =  _th.getSmallValue(params.end)
+        _th.dataZoomData.value = data
+        _th.dataZoomData.startValue = params.start*10
+        _th.dataZoomData.endValue = params.end*10
       });
-      let markArea = [
-        {
-          coord: [10, 20]
-        },
-        {
-          coord: [20, 30]
-        }
-      ]
-      this.myChart.setOption({
-        series: [
-          {
-            id: "series1",
-            markArea: {
-              label: {
-                show: true,
-                position: "inside",
-              },
-              data: markArea,
-            },
-          },
-        ],
-      });
-
 
     },
+    report_printing_init(){
+      console.log(this.report_printing_type)
+      this.initChart()
+    },
 
+    getSmallValue(largeValue) {
+      let data = Math.floor(largeValue*10)
+      console.log(data)
+      // 定义映射关系
+      const minLarge = 500;
+      const maxLarge = 1000;
+      const minSmall = 250;
+
+      // 检查大值是否在范围内
+      if (data < minLarge || data > maxLarge) {
+        return null; // 超出范围
+      }
+
+      // 线性插值公式
+      let ratio = data-minLarge;
+
+      let smallValue = (ratio*1.5)+minSmall
+      return Math.floor(smallValue);
+    },
 
     findPdfReport(){
       console.log(this.data.pId)
@@ -3047,10 +3108,11 @@ export default {
     getPdf(pId){
       this.getJEcgPdf()
     },
-    getJEcgPdf(){
+    getJEcgPdf(val){
       let _this=this;
       let obj = {
-        pId:this.$route.query.pId
+        pId:this.$route.query.pId,
+        endValue:this.dataZoomData.value
       }
       getPdf(obj).then(res=>{
         this.src = res.msg + '?t=' + new Date().getTime()

@@ -269,6 +269,8 @@ public class PatientManagement extends BaseEntity {
      */
     private String refuseText;
 
+    private Integer endValue;
+
     /** 身高 */
     @Excel(name = "身高")
     private Double height;

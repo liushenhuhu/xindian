@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.xindian.equipment.mapper.EquipmentActivateMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.equipment.domain.EquipmentActivate">
+            <id property="equipmentId" column="equipment_id" jdbcType="INTEGER"/>
+            <result property="equipmentCode" column="equipment_code" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="CHAR"/>
+            <result property="affiliation" column="affiliation" jdbcType="CHAR"/>
+            <result property="patientPhone" column="patient_phone" jdbcType="VARCHAR"/>
+            <result property="onlineStatus" column="online_status" jdbcType="CHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="activatePhone" column="activate_phone" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        equipment_id,equipment_code,status,
+        affiliation,patient_phone,online_status,
+        create_time,update_time,activate_phone
+    </sql>
+</mapper>

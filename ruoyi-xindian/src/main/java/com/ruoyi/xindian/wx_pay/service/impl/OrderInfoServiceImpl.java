@@ -192,20 +192,20 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         for(SuborderOrderInfo c: suborderOrderInfos){
 
 
-            if (Boolean.TRUE.equals(redisTemplate.hasKey("purchase_limitation:" + orderByOrderNo.getUserId() + ":" + c.getProductId()))){
-                SysUser sysUser = sysUserMapper.selectUserById(orderByOrderNo.getUserId());
-                try {
-                    PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
-                    purchaseLimitation.setPatientPhone(sysUser.getPhonenumber());
-                    purchaseLimitation.setProductId(c.getProductId());
-                    purchaseLimitation.setStatus(0);
-                    purchaseLimitation.setCreateTime(new Date());
-                    purchaseLimitationService.insertPurchaseLimitation(purchaseLimitation);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                redisTemplate.delete("purchase_limitation:" + orderByOrderNo.getUserId() + ":" + c.getProductId());
-            }
+//            if (Boolean.TRUE.equals(redisTemplate.hasKey("purchase_limitation:" + orderByOrderNo.getUserId() + ":" + c.getProductId()))){
+//                SysUser sysUser = sysUserMapper.selectUserById(orderByOrderNo.getUserId());
+//                try {
+//                    PurchaseLimitation purchaseLimitation = new PurchaseLimitation();
+//                    purchaseLimitation.setPatientPhone(sysUser.getPhonenumber());
+//                    purchaseLimitation.setProductId(c.getProductId());
+//                    purchaseLimitation.setStatus(0);
+//                    purchaseLimitation.setCreateTime(new Date());
+//                    purchaseLimitationService.insertPurchaseLimitation(purchaseLimitation);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//                redisTemplate.delete("purchase_limitation:" + orderByOrderNo.getUserId() + ":" + c.getProductId());
+//            }
             Product product = productMapper.selectById(c.getProductId());
             log.info("更新订单状态 ===> {}", orderStatus.getType());
             QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
@@ -696,10 +696,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setUserId(loginUser.getUser().getUserId());
 
 
-        if (isStatus){
-            BigDecimal bigDecimal = DiscountCalculator.calculateDiscount(product.getDiscount(), BigDecimal.valueOf(product.getDiscountPrice()));
-            orderInfo.setTotalFee(new BigDecimal(orderVo.getSum()).multiply(bigDecimal));
-        }else if (StringUtils.isNotEmpty(orderVo.getDiscountsCode())){
+//        if (isStatus){
+//            BigDecimal bigDecimal = DiscountCalculator.calculateDiscount(product.getDiscount(), BigDecimal.valueOf(product.getDiscountPrice()));
+//            orderInfo.setTotalFee(new BigDecimal(orderVo.getSum()).multiply(bigDecimal));
+//        }else
+        if (StringUtils.isNotEmpty(orderVo.getDiscountsCode())){
             DiscountCode code = discountCodeService.getCode(orderVo.getDiscountsCode());
             if (code!=null){
                 DiscountCodeLog discountCodeLog = new DiscountCodeLog();

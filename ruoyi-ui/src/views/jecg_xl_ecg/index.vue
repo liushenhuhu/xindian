@@ -390,7 +390,7 @@
                     <div style="width: 25%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">4</div>
                   </div>
                   <div class="jintutiao_wenzi" v-if="qingxuyalikuandu_yuce(data.emo_stress.value)">
-                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: qingxuyalikuandu(data.emo_stress.value)}"></div>
+                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: qingxuyalikuandu(data.emo_stress.value)}">1</div>
                     <div class="sanjiao" :style="{'border-bottom-color': getBorderColor_qinxu(data.emo_stress.value)}"></div>
                     <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_qinxu(data.emo_stress.value)}}</div>
                   </div>
@@ -1028,15 +1028,15 @@ export default {
     // 宽度
     qingxuyalikuandu(value) {
       if (value < 0.3) {
-        return `${2.5 * ((0.3 - value) / 0.3) * 6}%`;
+        return `${2.5 * ((value-0) / 0.3) * 6}%`;
       } else if (value >= 0.3 && value < 0.5) {
-        return `${(6 + ((0.5 - value) / 0.2) * 4) * 2.5}%`;
+        return `${(6 + ((value-0.3) / 0.2) * 4) * 2.5}%`;
       } else if (value >= 0.5 && value < 2.5) {
-        return `${(10 + ((2.5 - value) / 2) * 12) * 2.5}%`;
+        return `${(10 + ((value-0.5 ) / 2) * 12) * 2.5}%`;
       } else if (value >= 2.5 && value < 3) {
-        return `${(22 + ((3 - value) / 0.5) * 8) * 2.5}%`;
+        return `${(22 + ((value-2.5) / 0.5) * 8) * 2.5}%`;
       } else if (value >= 3 && value < 4) {
-        return `${(30 + ((4 - value) / 1) * 10) * 2.5}%`;
+        return `${(30 + ((value-3) / 1) * 10) * 2.5}%`;
       } else if (value >= 4) {
         return '100%';
       }
@@ -1044,15 +1044,15 @@ export default {
     //提前预测箭头的宽度
     qingxuyalikuandu_yuce(value){
       if (value < 0.3) {
-        return (2.5 * ((0.3 - value) / 0.3) * 6)>88?false:true
+        return (2.5 * ((value-0) / 0.3) * 6)>88?false:true
       } else if (value >= 0.3 && value < 0.5) {
-        return ((6 + ((0.5 - value) / 0.2) * 4) * 2.5) >88?false:true
+        return ((6 + ((value-0.3) / 0.2) * 4) * 2.5) >88?false:true
       } else if (value >= 0.5 && value < 2.5) {
-        return ((10 + ((2.5 - value) / 2) * 12) * 2.5)>88?false:true;
+        return ((10 + ((value-0.5) / 2) * 12) * 2.5)>88?false:true;
       } else if (value >= 2.5 && value < 3) {
-        return ((22 + ((3 - value) / 0.5) * 8) * 2.5)>88?false:true;
+        return ((22 + ((value-2.5) / 0.5) * 8) * 2.5)>88?false:true;
       } else if (value >= 3 && value < 4) {
-        return ((30 + ((4 - value) / 1) * 10) * 2.5)>88?false:true;
+        return ((30 + ((value-3) / 1) * 10) * 2.5)>88?false:true;
       } else if (value >= 4) {
         return false
       }

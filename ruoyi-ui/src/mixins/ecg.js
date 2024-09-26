@@ -11,6 +11,7 @@ export const mixins = {
   data() {
     return {
       aiResult: "",
+      recordAiResultText: null,
     };
   },
   computed: {},
@@ -20,15 +21,24 @@ export const mixins = {
   mounted() {},
   methods: {
     editAiResult() {
-      console.log("失去了焦点");
+      if (this.recordAiResultText==this.aiResult){
+        return
+      }
       updateAIReport({
         pId: this.pId,
         intelligentDiagnosis: this.aiResult,
       }).then((res) => {
         if (res.code == 200) {
-          this.$message.success("修改成功");
+          this.$message.success("AI分析结果修改成功");
         }
       });
+      this.recordAiResultText=null
     },
+    recordAiResult(text){
+      if (!this.recordAiResultText){
+        this.recordAiResultText = text
+      }
+
+    }
   },
 };

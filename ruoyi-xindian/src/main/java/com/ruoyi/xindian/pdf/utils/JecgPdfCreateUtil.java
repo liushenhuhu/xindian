@@ -82,7 +82,7 @@ public class JecgPdfCreateUtil {
             contextCell(table_info,"设备编号:",font,false);
 
 
-            contextCell(table_info,"年龄:"+map.get("age"),font,false);
+            contextCell(table_info,"年龄:"+map.get("age")+"  岁",font,false);
             contextCell(table_info,"床号:",font,false);
             contextCell(table_info,"数据来源:"+map.get("source"),font,false);
 
