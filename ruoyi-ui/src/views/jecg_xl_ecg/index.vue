@@ -348,14 +348,14 @@
                     <div style="width: 49.5%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">3</div>
                     <div style="width: 34%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">4</div>
                   </div>
-                  <div class="jintutiao_wenzi" v-if="data.ecg_power.value*0.66<88">
+                  <div class="jintutiao_wenzi" v-if="getBordertext_xuce(data.ecg_power.value)">
                     <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: data.ecg_power.value*0.66 + '%'}"></div>
                     <div class="sanjiao " :style="{
             'border-bottom-color': getBorderColor(data.ecg_power.value * 0.66)
           }"></div>
                     <div class="sanjiao_wenzi xinliwenzi">{{getBordertext(data.ecg_power.value * 0.66)}}</div>
                   </div>
-                  <div  class="jintutiao_wenzi xinliwenzi"  :style="{ 'border-bottom-color': getBorderColor(data.ecg_power.value * 0.66),'justify-content': 'flex-end', 'width': data.ecg_power.value + '%'}"  v-else>
+                  <div  class="jintutiao_wenzi xinliwenzi"  :style="{'justify-content': 'flex-end', 'width': calculateWidth(data.ecg_power.value)}"  v-else>
                     <div class="sanjiao_wenzi">{{getBordertext(data.ecg_power.value * 0.66)}}</div>
                     <div class="sanjiao" :style="{
             'border-bottom-color': getBorderColor(data.ecg_power.value * 0.66)
@@ -390,7 +390,7 @@
                     <div style="width: 25%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">4</div>
                   </div>
                   <div class="jintutiao_wenzi" v-if="qingxuyalikuandu_yuce(data.emo_stress.value)">
-                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: qingxuyalikuandu(data.emo_stress.value)}">1</div>
+                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: qingxuyalikuandu(data.emo_stress.value)}"></div>
                     <div class="sanjiao" :style="{'border-bottom-color': getBorderColor_qinxu(data.emo_stress.value)}"></div>
                     <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_qinxu(data.emo_stress.value)}}</div>
                   </div>
@@ -983,6 +983,23 @@ export default {
         return '活跃';
       }
     },
+    //预测心活力三角
+    getBordertext_xuce(value){
+      console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+      let shuzhi = value*0.66
+      console.log(shuzhi);
+      console.log(shuzhi<88);
+      if(shuzhi<88){
+        return true
+      }else{
+        return false
+      }
+    },
+    calculateWidth(value) {
+      // 计算宽度，并确保不超过100%
+      const calculatedWidth = value * 0.66;
+      return `${calculatedWidth > 100 ? 100 : calculatedWidth}%`;
+    },
     // 情绪三角形颜色
     getBorderColor_qinxu(value){
       if (value < 0.3) {
@@ -1032,7 +1049,7 @@ export default {
       } else if (value >= 0.3 && value < 0.5) {
         return `${(6 + ((value-0.3) / 0.2) * 4) * 2.5}%`;
       } else if (value >= 0.5 && value < 2.5) {
-        return `${(10 + ((value-0.5 ) / 2) * 12) * 2.5}%`;
+        return `${(10 + ((value-0.5) / 2) * 12) * 2.5}%`;
       } else if (value >= 2.5 && value < 3) {
         return `${(22 + ((value-2.5) / 0.5) * 8) * 2.5}%`;
       } else if (value >= 3 && value < 4) {
