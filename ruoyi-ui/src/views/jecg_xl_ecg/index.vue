@@ -334,31 +334,31 @@
                 </div>
                 <div class="jintutiao">
                   <div class="jintutiao_shuzi xinliwenzi" style="color: #BAC2CE;">
-                    <div style="width: 9.9%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;">
+                    <div style="width: 15%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;">
                       <div style="color: #BAC2CE;">0</div>
                       <div style="color: #BAC2CE;">15</div>
                     </div>
-                    <div style="width: 6.6%;box-sizing: border-box;color: #BAC2CE;text-align: right;">25</div>
-                    <div style="width: 49.5%;box-sizing: border-box;color: #BAC2CE;text-align: right;">100</div>
-                    <div style="width: 34%;box-sizing: border-box;color: #BAC2CE;text-align: right;">150</div>
+                    <div style="width: 10%;box-sizing: border-box;color: #BAC2CE;text-align: right;">25</div>
+                    <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">100</div>
+                    <div style="width: 50%;box-sizing: border-box;color: #BAC2CE;text-align: right;">200</div>
                   </div>
                   <div class="jintutiao_sansetiao ">
-                    <div style="width: 9.9%;box-sizing: border-box;background-color: #E87659;color: #E87659;">1</div>
-                    <div style="width: 6.6%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">2</div>
-                    <div style="width: 49.5%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">3</div>
-                    <div style="width: 34%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">4</div>
+                    <div style="width: 15%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">1</div>
+                    <div style="width: 10%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">2</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">3</div>
+                    <div style="width: 50%;box-sizing: border-box;background-color: #E87659;color: #E87659;">4</div>
                   </div>
                   <div class="jintutiao_wenzi" v-if="getBordertext_xuce(data.ecg_power.value)">
-                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: data.ecg_power.value*0.66 + '%'}"></div>
+                    <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: shenxinyalikuandu(data.ecg_power.value)}"></div>
                     <div class="sanjiao " :style="{
-            'border-bottom-color': getBorderColor(data.ecg_power.value * 0.66)
+            'border-bottom-color': getBorderColor(data.ecg_power.value)
           }"></div>
-                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext(data.ecg_power.value * 0.66)}}</div>
+                    <div class="sanjiao_wenzi xinliwenzi">{{getBordertext(data.ecg_power.value)}}</div>
                   </div>
-                  <div  class="jintutiao_wenzi xinliwenzi"  :style="{'justify-content': 'flex-end', 'width': calculateWidth(data.ecg_power.value)}"  v-else>
-                    <div class="sanjiao_wenzi">{{getBordertext(data.ecg_power.value * 0.66)}}</div>
+                  <div  class="jintutiao_wenzi xinliwenzi"  :style="{'justify-content': 'flex-end', 'width': shenxinyalikuandu(data.ecg_power.value)}"  v-else>
+                    <div class="sanjiao_wenzi">{{getBordertext(data.ecg_power.value)}}</div>
                     <div class="sanjiao" :style="{
-            'border-bottom-color': getBorderColor(data.ecg_power.value * 0.66)
+            'border-bottom-color': getBorderColor(data.ecg_power.value)
           }"></div>
                   </div>
                 </div>
@@ -383,11 +383,11 @@
                     <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">4</div>
                   </div>
                   <div class="jintutiao_sansetiao">
-                    <div style="width: 15%;box-sizing: border-box;background-color: #E87659;color: #E87659;">0.3</div>
-                    <div style="width: 10%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">0.5</div>
+                    <div style="width: 15%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">0.3</div>
+                    <div style="width: 10%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">0.5</div>
                     <div style="width: 30%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">2.5</div>
-                    <div style="width: 20%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">3</div>
-                    <div style="width: 25%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">4</div>
+                    <div style="width: 20%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">3</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #E87659;color: #E87659;">4</div>
                   </div>
                   <div class="jintutiao_wenzi" v-if="qingxuyalikuandu_yuce(data.emo_stress.value)">
                     <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: qingxuyalikuandu(data.emo_stress.value)}"></div>
@@ -413,18 +413,21 @@
                 </div>
                 <div class="jintutiao">
                   <div class="jintutiao_shuzi xinliwenzi" style="color: #BAC2CE;">
-                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;"><div style="color: #BAC2CE;">0</div><div style="color: #BAC2CE;">20</div></div>
+                    <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;display: flex;justify-content:space-between;">
+                      <div style="color: #BAC2CE;">0</div>
+                      <div style="color: #BAC2CE;">20</div>
+                    </div>
                     <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">45</div>
                     <div style="width: 25%;box-sizing: border-box;color: #BAC2CE;text-align: right;">70</div>
                     <div style="width: 10%;box-sizing: border-box;color: #BAC2CE;text-align: right;">80</div>
                     <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;">100</div>
                   </div>
                   <div class="jintutiao_sansetiao">
-                    <div style="width: 20%;box-sizing: border-box;background-color: #E87659;color: #E87659;">20</div>
-                    <div style="width: 25%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">45</div>
+                    <div style="width: 20%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">20</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">45</div>
                     <div style="width: 25%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">70</div>
-                    <div style="width: 10%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">80</div>
-                    <div style="width: 20%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">100</div>
+                    <div style="width: 10%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">80</div>
+                    <div style="width: 20%;box-sizing: border-box;background-color: #E87659;color: #E87659;">100</div>
                   </div>
                   <div class="jintutiao_wenzi" v-if="data.excitement.value<88">
                     <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: data.excitement.value + '%'}"></div>
@@ -461,11 +464,11 @@
                     <div style="width: 20%;box-sizing: border-box;color: #BAC2CE;text-align: right;">100</div>
                   </div>
                   <div class="jintutiao_sansetiao">
-                    <div style="width: 20%;box-sizing: border-box;background-color: #E87659;color: #E87659;">20</div>
-                    <div style="width: 10%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">30</div>
+                    <div style="width: 20%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">20</div>
+                    <div style="width: 10%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">30</div>
                     <div style="width: 25%;box-sizing: border-box;background-color: #DBF5FA;color: #DBF5FA;">55</div>
-                    <div style="width: 25%;box-sizing: border-box;background-color: #85DBEC;color: #85DBEC;">80</div>
-                    <div style="width: 20%;box-sizing: border-box;background-color: #58A2CC;color: #58A2CC;">100</div>
+                    <div style="width: 25%;box-sizing: border-box;background-color: #FFEB93;color: #FFEB93;">80</div>
+                    <div style="width: 20%;box-sizing: border-box;background-color: #E87659;color: #E87659;">100</div>
                   </div>
                   <div class="jintutiao_wenzi" v-if="data.relax.value<88">
                     <div :style="{'box-sizing': 'border-box','background-color': '#fff', color: '#fff', width: data.relax.value + '%'}"></div>
@@ -474,7 +477,7 @@
           }"></div>
                     <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_fangsong(data.relax.value)}}</div>
                   </div>
-                  <div  class="jintutiao_wenzi"  :style="{ 'border-bottom-color': getBorderColor_xinfen(data.relax.value),'justify-content': 'flex-end', 'width': data.relax.value + '%'}"  v-else>
+                  <div  class="jintutiao_wenzi"  :style="{ 'border-bottom-color': getBorderColor_fangsong(data.relax.value),'justify-content': 'flex-end', 'width': data.relax.value + '%'}"  v-else>
                     <div class="sanjiao_wenzi xinliwenzi">{{getBordertext_fangsong(data.relax.value)}}</div>
                     <div class="sanjiao " :style="{
             'border-bottom-color': getBorderColor_fangsong(data.relax.value)
@@ -961,37 +964,53 @@ export default {
   methods: {
     // 心活力三角形颜色
     getBorderColor(value) {
-      if (value < 9.9) {
-        return '#E87659';
-      } else if (value < 15) {
-        return '#FFEB93';
-      } else if (value < 66) {
-        return '#DBF5FA';
-      } else {
+      if (value < 15) {
         return '#85DBEC';
+      } else if (value < 25) {
+        return '#DBF5FA';
+      } else if (value < 100) {
+        return '#FFEB93';
+      } else  {
+        return '#E87659';
       }
     },
     // 心活力三角型文字
     getBordertext(value){
-      if (value < 9.9) {
-        return '低';
-      } else if (value < 15) {
-        return '较低';
-      } else if (value < 66) {
+      if (value < 15) {
+        return '很差';
+      } else if (value < 25) {
+        return '较差';
+      } else if (value < 100) {
         return '正常';
       } else {
         return '活跃';
       }
     },
-    //预测心活力三角
+    // 宽度
+    shenxinyalikuandu(value) {
+      if (value < 15) {
+        return `${5 * ((value-0) / 15) * 3}%`;
+      } else if (value >= 15 && value < 25) {
+        return `${(3 + ((value-15) / 10) * 2) * 5}%`;
+      } else if (value >= 25 && value < 100) {
+        return `${(5 + ((value-25) / 75) * 5) * 5}%`;
+      } else if (value >= 100 && value < 200) {
+        return `${(10 + ((value-100) / 100) * 10) * 5}%`;
+      } else if (value >= 200) {
+        return '100%';
+      }
+    },
+    //提前预测箭头的宽度
     getBordertext_xuce(value){
-      console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-      let shuzhi = value*0.66
-      console.log(shuzhi);
-      console.log(shuzhi<88);
-      if(shuzhi<88){
-        return true
-      }else{
+      if (value < 15) {
+        return (5 * ((value-0) / 15) * 3)>88?false:true
+      } else if (value >= 15 && value < 25) {
+        return ((3 + ((value-15) / 10) * 2) * 5) >88?false:true
+      } else if (value >= 25 && value < 100) {
+        return ((5 + ((value-25) / 75) * 5) * 5)>88?false:true;
+      } else if (value >= 100 && value < 200) {
+        return ((10 + ((value-100) / 100) * 10) * 5)>88?false:true;
+      } else if (value >= 200) {
         return false
       }
     },
@@ -1003,15 +1022,15 @@ export default {
     // 情绪三角形颜色
     getBorderColor_qinxu(value){
       if (value < 0.3) {
-        return '#E87659';
+        return '#58A2CC';
       } else if (value < 0.5) {
-        return '#FFEB93';
+        return '#85DBEC';
       } else if (value < 2.5) {
         return '#DBF5FA';
       } else if (value < 3) {
-        return '#85DBEC';
+        return '#FFEB93';
       } else {
-        return '#58A2CC';
+        return '#E87659';
       }
     },
     // 情绪三角型文字
@@ -1031,15 +1050,15 @@ export default {
     // 兴奋三角形颜色
     getBorderColor_xinfen(value){
       if (value < 20) {
-        return '#E87659';
+        return '#58A2CC';
       } else if (value < 45) {
-        return '#FFEB93';
+        return '#85DBEC';
       } else if (value < 70) {
         return '#DBF5FA';
       } else if (value < 80) {
-        return '#85DBEC';
+        return '#FFEB93';
       } else {
-        return '#58A2CC';
+        return '#E87659';
       }
     },
     // 宽度
@@ -1091,15 +1110,15 @@ export default {
     // 放松三角形颜色
     getBorderColor_fangsong(value){
       if (value < 20) {
-        return '#E87659';
+        return '#58A2CC';
       } else if (value < 30) {
-        return '#FFEB93';
+        return '#85DBEC';
       } else if (value < 55) {
         return '#DBF5FA';
       } else if (value < 80) {
-        return '#85DBEC';
+        return '#FFEB93';
       } else {
-        return '#58A2CC';
+        return '#E87659';
       }
     },
     // 放松三角型文字
@@ -3305,6 +3324,7 @@ export default {
       width: 0;
       height: 0;
       border: 0 solid transparent;
+      transform: translateX(-50%);
       border-right: 5px solid transparent;
       border-left: 5px solid transparent;
       border-bottom: 10px solid black;

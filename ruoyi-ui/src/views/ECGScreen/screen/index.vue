@@ -18,8 +18,9 @@
           </el-select>
 
         </div>
-        <span >动态心电智能实时监控</span>
+        <span>动态心电智能实时监控</span>
         <el-pagination
+          class="fenye"
           @current-change="handleCurrentChange"
           layout="prev, pager, next"
           :total="1000">
@@ -2420,15 +2421,17 @@ export default {
     background-color:rgb(3,4,74);
     margin-bottom: 0;
     span{
-      font-size: 45px;
+      width: 33%;
+      font-size: 2vw;
       color: #6EDDF1;
       letter-spacing:6px;
       //padding-left: 16vw;
     }
     .button  {
-      display: inline-block;
+      width: 33%;
+      display: flex;
       .el-button{
-        width: 70px;
+        width: 33%;
         height: 30px;
         padding: 0;
         margin-left: 3px;
@@ -2439,8 +2442,8 @@ export default {
         background-color: rgba(0,0,0,0);
       }
       .el-select{
-        width: 140px;
-        height: 20px;
+        //width: 33%;
+        //height: 30px;
         padding: 0;
         margin-left: 3px;
         margin-top: 3px;
@@ -2629,6 +2632,14 @@ export default {
   }
 }
 
-
+.fenye{
+  width: 33%;
+  ::v-deep .btn-prev{
+    min-width: 1.5vw;
+  }
+  ::v-deep .el-pager li{
+    min-width: 1.5vw;
+  }
+}
 </style>
 
