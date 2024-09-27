@@ -168,7 +168,8 @@ public class HospitalListController extends BaseController
     public AjaxResult getHospitalCode()
     {
         Long userId = getUserId();
-        if (SysUser.isAdmin(userId)){
+        List<String> sysDictData = dictDataService.selectDictDataByType("admin_select");
+        if (SysUser.isAdmin(userId)||RoleUtils.isRoleListOne(getLoginUser(),sysDictData)){
             return AjaxResult.success("All");
         }
         SysUser sysUser = sysUserMapper.selectUserById(userId);

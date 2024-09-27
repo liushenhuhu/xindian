@@ -843,9 +843,7 @@ export default {
         // 原先提交过的预警类型response.rows[].logDataType
         this.total = response.total;
         this.loading = false;
-        if (this.queryParams.ecgType === 'JECGsingle') {
-          this.queryParams.ecgType = null
-        }
+
       });
     },
     // 取消按钮
@@ -862,7 +860,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: null,
+        ecgType: 'JECG12',
         patientPhone: null,
         diagnosisStatus: null,
         diagnosisConclusion: null,
@@ -889,7 +887,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: null,
+        ecgType: 'JECG12',
         PatPhone: null,
         intelligentDiagnosis: null,
         diagnosisConclusion: null,

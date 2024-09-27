@@ -44,6 +44,19 @@ public class LoginBody
 
     private Long userId;
 
+    /**
+     * 设备编号
+     */
+    private String equipmentCode;
+
+    public String getEquipmentCode() {
+        return equipmentCode;
+    }
+
+    public void setEquipmentCode(String equipmentCode) {
+        this.equipmentCode = equipmentCode;
+    }
+
     public Long getUserId() {
         return userId;
     }

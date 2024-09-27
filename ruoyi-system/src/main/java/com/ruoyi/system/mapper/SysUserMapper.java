@@ -162,7 +162,7 @@ public interface SysUserMapper
 
     int updateWeeklyNewspaperNum(@Param("userId") Long userId,@Param("sum") long sum);
 
-    int updateNum(SysUser sysUser);
+    int updateNum(@Param("phone") String phone, @Param("sum") long sum);
 
 
 

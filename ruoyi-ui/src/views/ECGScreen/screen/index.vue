@@ -10,13 +10,12 @@
 
           <el-select v-model="symptomType" clearable placeholder="请选择" @change="getSymptomTypeList" @clear="endSymptomTypeList" class="selectData">
             <el-option
-              v-for="item in options"
+              v-for="item in combinedData"
               :key="item.value"
-              :label="item.label"
+              :label="`${item.label} (${item.count})`"
               :value="item.value">
             </el-option>
           </el-select>
-
         </div>
         <span>动态心电智能实时监控</span>
         <el-pagination
@@ -33,7 +32,7 @@
           <div class="son">心肌梗塞<span id="span0-1" :style="dotColor(data0.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span0-2" :style="dotColor(data0.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span0-3" :style="dotColor(data0.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span0-5"></span></div>
+          <div class="son">室性心动过速<span id="span0-5" :style="dotColor(data0.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span0-6" :style="dotColor(data0.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span0-7"></span></div>
           <div class="son">长RR间期<span id="span0-4" :style="dotColor(data0.RRGC_pr)"></span></div>
@@ -76,7 +75,7 @@
           <div class="son">心肌梗塞<span id="span1-1" :style="dotColor(data1.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span1-2" :style="dotColor(data1.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span1-3" :style="dotColor(data1.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span1-5"></span></div>
+          <div class="son">室性心动过速<span id="span1-5" :style="dotColor(data1.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span1-6" :style="dotColor(data1.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span1-7"></span></div>
           <div class="son">长RR间期<span id="span1-4" :style="dotColor(data1.RRGC_pr)"></span></div>
@@ -114,7 +113,7 @@
           <div class="son">心肌梗塞<span id="span2-1" :style="dotColor(data2.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span2-2" :style="dotColor(data2.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span2-3" :style="dotColor(data2.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span2-5"></span></div>
+          <div class="son">室性心动过速<span id="span2-5" :style="dotColor(data2.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span2-6" :style="dotColor(data2.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span2-7"></span></div>
           <div class="son">长RR间期<span id="span2-4" :style="dotColor(data2.RRGC_pr)"></span></div>
@@ -153,7 +152,7 @@
           <div class="son">心肌梗塞<span id="span3-1" :style="dotColor(data3.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span3-2" :style="dotColor(data3.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span3-3" :style="dotColor(data3.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span3-5"></span></div>
+          <div class="son">室性心动过速<span id="span3-5" :style="dotColor(data3.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span3-6" :style="dotColor(data3.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span3-7"></span></div>
           <div class="son">长RR间期<span id="span3-4" :style="dotColor(data3.RRGC_pr)"></span></div>
@@ -192,7 +191,7 @@
           <div class="son">心肌梗塞<span id="span4-1" :style="dotColor(data4.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span4-2" :style="dotColor(data4.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span4-3" :style="dotColor(data4.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span4-5"></span></div>
+          <div class="son">室性心动过速<span id="span4-5" :style="dotColor(data4.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span4-6" :style="dotColor(data4.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span4-7"></span></div>
           <div class="son">长RR间期<span id="span4-4" :style="dotColor(data4.RRGC_pr)"></span></div>
@@ -231,7 +230,7 @@
           <div class="son">心肌梗塞<span id="span5-1" :style="dotColor(data5.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span5-2" :style="dotColor(data5.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span5-3" :style="dotColor(data5.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span5-5"></span></div>
+          <div class="son">室性心动过速<span id="span5-5" :style="dotColor(data5.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span5-6" :style="dotColor(data5.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span5-7"></span></div>
           <div class="son">长RR间期<span id="span5-4" :style="dotColor(data5.RRGC_pr)"></span></div>
@@ -269,7 +268,7 @@
           <div class="son">心肌梗塞<span id="span6-1" :style="dotColor(data6.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span6-2" :style="dotColor(data6.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span6-3" :style="dotColor(data6.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span6-5"></span></div>
+          <div class="son">室性心动过速<span id="span6-5" :style="dotColor(data6.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span6-6" :style="dotColor(data6.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span6-7"></span></div>
           <div class="son">长RR间期<span id="span6-4" :style="dotColor(data6.RRGC_pr)"></span></div>
@@ -307,7 +306,7 @@
           <div class="son">心肌梗塞<span id="span7-1" :style="dotColor(data7.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span7-2" :style="dotColor(data7.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span7-3" :style="dotColor(data7.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span7-5"></span></div>
+          <div class="son">室性心动过速<span id="span7-5" :style="dotColor(data7.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span7-6" :style="dotColor(data7.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span7-7"></span></div>
           <div class="son">长RR间期<span id="span7-4" :style="dotColor(data7.RRGC_pr)"></span></div>
@@ -345,7 +344,7 @@
           <div class="son">心肌梗塞<span id="span8-1" :style="dotColor(data8.GengSi)"></span></div>
           <div class="son">房颤房扑<span id="span8-2" :style="dotColor(data8.FangChan)"></span></div>
           <div class="son">心室率过低<span id="span8-3" :style="dotColor(data8.XSL_pr)"></span></div>
-          <div class="son">室性心动过速<span id="span8-5"></span></div>
+          <div class="son">室性心动过速<span id="span8-5" :style="dotColor(data8.XDGS_pr)"></span></div>
           <div class="son">室颤室扑<span id="span8-6" :style="dotColor(data8.ShiChan)"></span></div>
           <div class="son">窦室传导<span id="span8-7"></span></div>
           <div class="son">长RR间期<span id="span8-4" :style="dotColor(data8.RRGC_pr)"></span></div>
@@ -496,6 +495,10 @@ export default {
       symptomType:null,
       options:[
         {
+          value: 'online_num',
+          label: '全部'
+        },
+        {
           value: 'ALL',
           label: '异常数据'
         },
@@ -509,7 +512,7 @@ export default {
         },
         {
           value: 'lowHr',
-          label: '心室率过低'
+          label: '室性心动过缓'
         },
         {
           value: 'fastHr',
@@ -607,6 +610,8 @@ export default {
       index:0,
       tishii:true,
       hospName:null,
+      intervalId:null,
+      counts:{},
     };
   },
   async created() {
@@ -622,14 +627,14 @@ export default {
     }
     //清空数据
     this.clearList()
+    this.get_symptom_num(hospName);
     //请求设备列表
     this.get_device(hospName,this.tishi);
   },
-  // mounted() {
-  //   this.$store.dispatch('app/toggleSideBarHide', true);
-  //   document.querySelector('.navbar').style.display = "none";
-  //   document.querySelector('.tags-view-container').style.display = "none"
-  // },
+  mounted() {
+    // 组件挂载后开始定时请求
+    this.intervalId = setInterval(this.get_symptom_num, 10000); // 每10秒请求一次
+  },
 
   watch:{
     $route(to,from){
@@ -650,6 +655,7 @@ export default {
     }
     this.clearList()
     this.get_device(hospName);
+    this.get_symptom_num(hospName);
   },
   // beforeRouteLeave(to,from,next){
   //   this.clearIntervallist()
@@ -666,6 +672,7 @@ export default {
     this.index=0
     this.clearList();
     this.clearIntervallist()
+    clearInterval(this.intervalId);
   },
   // beforeRouteEnter (to, from, next) {
   //   next(vm => {
@@ -691,7 +698,19 @@ export default {
         }
         return ;
       };
-    }
+    },
+    combinedData() {
+      return this.options
+        .map(option => {
+          const countKey = option.value === 'ALL' ? 'all' : option.value === 'online_num'? "online_num":  `num_${option.value}`;
+          return {
+            value: option.value,
+            label: option.label,
+            count: this.counts[countKey] || 0,
+          };
+        })
+        .sort((a, b) => b.count - a.count); // 按照 count 大小降序排序
+    },
 
   },
 
@@ -2275,7 +2294,7 @@ export default {
      */
     getSymptomTypeList() {
       console.log(this.symptomType)
-      if (!this.symptomType) {
+      if (!this.symptomType||this.symptomType=="online_num") {
         this.index=0
         this.endSymptomTypeList()
         return
@@ -2289,7 +2308,7 @@ export default {
       let _th = this;
       let tishii = true;
 
-      this.$http.post('https://screen.mindyard.cn/test/get_symptom',
+      this.$http.post('https://server.mindyard.cn:84/get_symptom',
         JSON.stringify({
           "ts": 0,
           "symptom": _th.symptomType,
@@ -2366,10 +2385,41 @@ export default {
       loading.close();
 
 
-    }
+    },
+
+    get_symptom_num(val){
+      //https://server.mindyard.cn:84/get_symptom_num
+      this.$http.post('https://server.mindyard.cn:84/get_symptom_num',
+        JSON.stringify({
+          "hospName": val||this.hospName
+        }), {
+          contentType: "application/json",
+          dataType: "json",
+          headers: {
+            "user": "zzu",
+            "password": "zzu123"
+          },
+        }
+      ).then(res => {
+        console.log(res)
+        this.counts = res.data.result;
+      })
+    },
 
 
   },
+
+  // combinedData() {
+  //   return this.options.map(option => {
+  //     // 生成对应计数的 key
+  //     const countKey = option.value === 'ALL' ? 'all' : `num_${option.value}`;
+  //     return {
+  //       value: option.value,
+  //       label: option.label,
+  //       count: this.counts[countKey] || 0, // 默认值为0
+  //     };
+  //   });
+  // },
 
 };
 </script>

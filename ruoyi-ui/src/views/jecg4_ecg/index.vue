@@ -681,14 +681,16 @@ export default {
       this.ecgType = ecgDate.ecgType;
       this.pId = ecgDate.pId;
       this.shangxiakuzhiqi  = ecgDate.queryParams.indexzhi
+      this.getList();
     }else {
       this.pId = this.$route.query.pId;
       this.ecgType = this.$route.query.ecgType;
       this.queryParams = this.$route.query.queryParams;
       this.isShowBtn = false
+      this.getList();
     }
 
-    this.getList();
+
     // this.getPatientdetails();
   },
   mounted() {
@@ -879,7 +881,7 @@ export default {
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
-        if (val){
+        if (val||val==0){
           this.pId = this.patient_managementList[val].pId
         }
       });
@@ -934,11 +936,9 @@ export default {
       }
       this.shangxiakuzhiqi--;
       if (this.shangxiakuzhiqi == -1 && this.queryParams.pageNum > 1 ){
-        this.shangxiakuzhiqi = 9
-        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+        this.shangxiakuzhiqi = this.patient_managementList.length-1
         this.queryParams.pageNum--
-        this.queryParams.indexzhi = this.patient_managementList.length-1
-        await this.getList(this.queryParams.indexzhi);
+        await this.getList(this.patient_managementList.length-1);
         // this.get();
         this.loading = false;
         return
@@ -967,10 +967,8 @@ export default {
       }
       if (this.shangxiakuzhiqi>this.patient_managementList.length-1){
         this.shangxiakuzhiqi = 0
-        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
         this.queryParams.pageNum++
-        this.queryParams.indexzhi = 0
-        await this.getList(this.queryParams.indexzhi);
+        await this.getList(this.shangxiakuzhiqi);
         // this.get();
         this.loading = false;
         // let newUrl =

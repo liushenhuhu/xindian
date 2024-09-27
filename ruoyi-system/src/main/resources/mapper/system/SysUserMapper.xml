@@ -417,7 +417,7 @@
         update sys_user set weekly_newspaper_num = COALESCE(weekly_newspaper_num, 0) + #{sum} where sys_user.user_id = #{userId}
     </update>
     <update id="updateNum">
-
+        update sys_user set detection_num = detection_num + #{sum} where phonenumber_aes = #{phone}
     </update>
 
 

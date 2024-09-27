@@ -694,7 +694,6 @@ export default {
       let item =  localStorage.getItem('ecgItemDatasingle')
       console.log(item)
       if (item){
-
         const itemData = JSON.parse(item);
         console.log(itemData)
         if (itemData.pId!=this.$route.query.pId){
@@ -718,15 +717,18 @@ export default {
       this.ecgType = ecgDate.ecgType;
       this.pId = ecgDate.pId;
       this.shangxiakuzhiqi  = ecgDate.queryParams.indexzhi
+      // 获取十条数据
+      this.getList();
     }else {
       this.pId = this.$route.query.pId;
       this.ecgType = this.$route.query.ecgType;
       this.queryParams = this.$route.query.queryParams;
       this.isShowBtn = false
+      // 获取十条数据
+      this.getList();
     }
 
-    // 获取十条数据
-    this.getList();
+
 
   },
   mounted() {
@@ -936,12 +938,13 @@ export default {
      * */
     /** 查询用户管理列表 */
     async getList(val) {
+      console.log(val)
       this.loading = true;
       await listPatient_management(this.queryParams).then((response) => {
         this.patient_managementList = response.rows;
         this.total = response.total;
         this.loading = false;
-        if (val){
+        if (val||val==0){
           this.pId = this.patient_managementList[val].pId
         }
       });
@@ -958,24 +961,25 @@ export default {
       this.shangxiakuzhiqi--;
       if (this.shangxiakuzhiqi == -1 && this.queryParams.pageNum > 1 ){
         this.shangxiakuzhiqi = this.patient_managementList.length-1
-        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
         this.queryParams.pageNum--
-        this.queryParams.indexzhi = this.patient_managementList.length-1
-        await this.getList(this.queryParams.indexzhi);
-        // this.get();
+        await this.getList(this.shangxiakuzhiqi);
         this.loading = false;
         return
+      }else {
+        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
+        this.getPatientdetails();
+        // this.get();
+        this.loading = false;
       }
-      this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
-      this.getPatientdetails();
-      // this.get();
-      this.loading = false;
+
     },
     // 点击下一个触发事件
     async next() {
       this.loading = true;
       this.shangxiakuzhiqi++;
 
+      console.log(this.shangxiakuzhiqi)
+      console.log(this.queryParams)
       if ((this.queryParams.pageNum-1) * this.queryParams.pageSize +this.patient_managementList.length >= this.total
         &&
         this.shangxiakuzhiqi+1 ==  this.patient_managementList.length ){
@@ -986,10 +990,9 @@ export default {
 
       if (this.shangxiakuzhiqi>this.patient_managementList.length-1){
         this.shangxiakuzhiqi = 0
-        this.pId = this.patient_managementList[this.shangxiakuzhiqi].pId;
         this.queryParams.pageNum++
         this.queryParams.indexzhi = 0
-        await this.getList(this.queryParams.indexzhi);
+        await this.getList(this.shangxiakuzhiqi);
         // this.get();
         this.loading = false;
       }else {

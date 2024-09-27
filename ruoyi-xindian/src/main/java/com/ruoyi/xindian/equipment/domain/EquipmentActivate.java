@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.ruoyi.common.annotation.Excel;
 import lombok.Data;
 
 /**
@@ -18,7 +20,7 @@ public class EquipmentActivate implements Serializable {
     /**
      * 设备id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer equipmentId;
 
     /**
@@ -60,6 +62,16 @@ public class EquipmentActivate implements Serializable {
      * 激活手机号
      */
     private String activatePhone;
+
+    /**
+     * 首次激活时间
+     */
+    private Date firstTime;
+
+    /**
+     * mac地址
+     * */
+    private String mac;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

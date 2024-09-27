@@ -81,7 +81,6 @@ public class WxUtil {
         headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         Map<String, String> querys = new HashMap<String, String>();
         Map<String, String> bodys = new HashMap<String, String>();
-        bodys.put("content", "code:1234");
         bodys.put("phone_number", telephone);
         bodys.put("template_id", "CST_lqgqs10283");
 

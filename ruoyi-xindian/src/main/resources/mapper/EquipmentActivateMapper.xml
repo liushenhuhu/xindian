@@ -4,21 +4,103 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.xindian.equipment.mapper.EquipmentActivateMapper">
 
-    <resultMap id="BaseResultMap" type="com.ruoyi.xindian.equipment.domain.EquipmentActivate">
-            <id property="equipmentId" column="equipment_id" jdbcType="INTEGER"/>
-            <result property="equipmentCode" column="equipment_code" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="CHAR"/>
-            <result property="affiliation" column="affiliation" jdbcType="CHAR"/>
-            <result property="patientPhone" column="patient_phone" jdbcType="VARCHAR"/>
-            <result property="onlineStatus" column="online_status" jdbcType="CHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="activatePhone" column="activate_phone" jdbcType="VARCHAR"/>
+    <resultMap type="EquipmentActivate" id="EquipmentActivateResult">
+        <result property="equipmentId"    column="equipment_id"    />
+        <result property="equipmentCode"    column="equipment_code"    />
+        <result property="status"    column="status"    />
+        <result property="affiliation"    column="affiliation"    />
+        <result property="patientPhone"    column="patient_phone"    />
+        <result property="onlineStatus"    column="online_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="activatePhone"    column="activate_phone"    />
+        <result property="firstTime"    column="first_time"    />
+        <result property="mac"    column="mac"    />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        equipment_id,equipment_code,status,
-        affiliation,patient_phone,online_status,
-        create_time,update_time,activate_phone
+    <sql id="selectEquipmentActivateVo">
+        select equipment_id, equipment_code, status, affiliation, patient_phone, online_status, create_time, update_time, activate_phone, first_time, mac from equipment_activate
     </sql>
+
+    <select id="selectEquipmentActivateList" parameterType="EquipmentActivate" resultMap="EquipmentActivateResult">
+        <include refid="selectEquipmentActivateVo"/>
+        <where>
+            <if test="equipmentCode != null  and equipmentCode != ''"> and equipment_code = #{equipmentCode}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="affiliation != null  and affiliation != ''"> and affiliation = #{affiliation}</if>
+            <if test="patientPhone != null  and patientPhone != ''"> and patient_phone = #{patientPhone}</if>
+            <if test="onlineStatus != null  and onlineStatus != ''"> and online_status = #{onlineStatus}</if>
+            <if test="activatePhone != null  and activatePhone != ''"> and activate_phone = #{activatePhone}</if>
+            <if test="firstTime != null "> and first_time = #{firstTime}</if>
+            <if test="mac != null  and mac != ''"> and mac = #{mac}</if>
+        </where>
+    </select>
+
+    <select id="selectEquipmentActivateByEquipmentId" parameterType="Long" resultMap="EquipmentActivateResult">
+        <include refid="selectEquipmentActivateVo"/>
+        where equipment_id = #{equipmentId}
+    </select>
+
+    <insert id="insertEquipmentActivate" parameterType="EquipmentActivate">
+        insert into equipment_activate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="equipmentId != null">equipment_id,</if>
+            <if test="equipmentCode != null">equipment_code,</if>
+            <if test="status != null">status,</if>
+            <if test="affiliation != null">affiliation,</if>
+            <if test="patientPhone != null">patient_phone,</if>
+            <if test="onlineStatus != null">online_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="activatePhone != null">activate_phone,</if>
+            <if test="firstTime != null">first_time,</if>
+            <if test="mac != null">mac,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="equipmentId != null">#{equipmentId},</if>
+            <if test="equipmentCode != null">#{equipmentCode},</if>
+            <if test="status != null">#{status},</if>
+            <if test="affiliation != null">#{affiliation},</if>
+            <if test="patientPhone != null">#{patientPhone},</if>
+            <if test="onlineStatus != null">#{onlineStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="activatePhone != null">#{activatePhone},</if>
+            <if test="firstTime != null">#{firstTime},</if>
+            <if test="mac != null">#{mac},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEquipmentActivate" parameterType="EquipmentActivate">
+        update equipment_activate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="equipmentCode != null">equipment_code = #{equipmentCode},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="affiliation != null">affiliation = #{affiliation},</if>
+            <if test="patientPhone != null">patient_phone = #{patientPhone},</if>
+            <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="activatePhone != null">activate_phone = #{activatePhone},</if>
+            <if test="firstTime != null">first_time = #{firstTime},</if>
+            <if test="mac != null">mac = #{mac},</if>
+        </trim>
+        where equipment_id = #{equipmentId}
+    </update>
+    <update id="updateEquipmentActivateByPhoneIsNull">
+        update equipment_activate
+        set patient_phone = null
+        where patient_phone = #{patientPhone} and equipment_code = #{equipmentCode}
+    </update>
+
+    <delete id="deleteEquipmentActivateByEquipmentId" parameterType="Long">
+        delete from equipment_activate where equipment_id = #{equipmentId}
+    </delete>
+
+    <delete id="deleteEquipmentActivateByEquipmentIds" parameterType="String">
+        delete from equipment_activate where equipment_id in
+        <foreach item="equipmentId" collection="array" open="(" separator="," close=")">
+            #{equipmentId}
+        </foreach>
+    </delete>
 </mapper>

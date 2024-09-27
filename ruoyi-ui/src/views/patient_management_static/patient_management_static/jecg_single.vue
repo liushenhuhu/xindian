@@ -837,15 +837,9 @@ export default {
       listPatient_management(this.queryParams).then(response => {
         console.log(response)
         this.patient_managementList = response.rows;
-
-
-
         // 原先提交过的预警类型response.rows[].logDataType
         this.total = response.total;
         this.loading = false;
-        if (this.queryParams.ecgType === 'JECGsingle') {
-          this.queryParams.ecgType = null
-        }
       });
     },
     // 取消按钮
@@ -889,7 +883,7 @@ export default {
         equipmentCode: null,
         connectionTime: null,
         patientName: null,
-        ecgType: null,
+        ecgType: 'JECGsingle',
         PatPhone: null,
         intelligentDiagnosis: null,
         diagnosisConclusion: null,
@@ -1112,6 +1106,7 @@ export default {
       this.queryParams.indexzhi = indexzhi
       console.log("index值为=", indexzhi)
       // return
+      console.log(this.queryParams)
       if (row.ecgType.includes('JECGsingle')) {
         this.$router.push({
           path: "/staticECG",

@@ -349,24 +349,24 @@
                 >查看报告
                 </el-button>
                 <el-popover placement="left" width="50" trigger="click" style="margin-left:8px">
-                  <el-button
-                    style="margin-left: 10px;"
-                    size="mini"
-                    type="text"
-                    icon="el-icon-s-operation"
-                    @click="selectECG(scope.row)"
-                    v-hasPermi="['jecg:report:diagnose']"
-                    v-if="scope.row.diagnosisStatus!=1"
-                  >选择医生诊断
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    type="text"
-                    icon="el-icon-star-off"
-                    v-hasPermi="['jecg:report:find']"
-                    @click="findJEcgReport(scope.row)"
-                  >查看静态报告
-                  </el-button>
+<!--                  <el-button-->
+<!--                    style="margin-left: 10px;"-->
+<!--                    size="mini"-->
+<!--                    type="text"-->
+<!--                    icon="el-icon-s-operation"-->
+<!--                    @click="selectECG(scope.row)"-->
+<!--                    v-hasPermi="['jecg:report:diagnose']"-->
+<!--                    v-if="scope.row.diagnosisStatus!=1"-->
+<!--                  >选择医生诊断-->
+<!--                  </el-button>-->
+<!--                  <el-button-->
+<!--                    size="mini"-->
+<!--                    type="text"-->
+<!--                    icon="el-icon-star-off"-->
+<!--                    v-hasPermi="['jecg:report:find']"-->
+<!--                    @click="findJEcgReport(scope.row)"-->
+<!--                  >查看心电报告-->
+<!--                  </el-button>-->
                   <el-button
                     size="mini"
                     type="text"
@@ -381,14 +381,14 @@
                     @click="lookHistoryData30(scope.row)"
                   >30天趋势图
                   </el-button>
-                  <el-button
-                    size="mini"
-                    type="text"
-                    icon="el-icon-download"
-                    @click="downloadData(scope.row)"
-                    v-hasPermi="['patient:patient:inform']"
-                  >下载数据
-                  </el-button>
+<!--                  <el-button-->
+<!--                    size="mini"-->
+<!--                    type="text"-->
+<!--                    icon="el-icon-download"-->
+<!--                    @click="downloadData(scope.row)"-->
+<!--                    v-hasPermi="['patient:patient:inform']"-->
+<!--                  >下载数据-->
+<!--                  </el-button>-->
                   <el-button
                     size="mini"
                     type="text"
