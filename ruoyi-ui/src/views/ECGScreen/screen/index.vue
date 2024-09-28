@@ -2462,7 +2462,7 @@ export default {
     justify-content: space-between;
     width: 100%;
     min-height:90px;
-    height: 6vh;
+    //height: 6vh;
     background-image: url("~@/assets/images/head.png");
     background-repeat: no-repeat;
     background-position: center center;
@@ -2471,14 +2471,14 @@ export default {
     background-color:rgb(3,4,74);
     margin-bottom: 0;
     span{
-      width: 33%;
-      font-size: 2vw;
+      width: 50%;
+      font-size: 3vw;
       color: #6EDDF1;
       letter-spacing:6px;
       //padding-left: 16vw;
     }
     .button  {
-      width: 33%;
+      width: 25%;
       display: flex;
       .el-button{
         width: 33%;
@@ -2602,6 +2602,7 @@ export default {
       display: flex;
       flex-direction: row;
       justify-content: space-around;
+      flex-wrap: wrap;
       .name{
         font-size: 0.8vw;
         color: #6EDDF1;
@@ -2683,7 +2684,7 @@ export default {
 }
 
 .fenye{
-  width: 33%;
+  width: 25%;
   ::v-deep .btn-prev{
     min-width: 1.5vw;
   }
