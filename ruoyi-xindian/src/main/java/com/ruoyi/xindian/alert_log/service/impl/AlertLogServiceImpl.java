@@ -187,7 +187,7 @@ public class AlertLogServiceImpl implements IAlertLogService
     }
 
     @Override
-    public Patient  select12List(AlertLog alertLog) {
+    public Patient select12List(AlertLog alertLog) {
 
         PatientManagement patientManagement = patientManagementMapper.selectPatientManagementByPId(alertLog.getpId());
 
