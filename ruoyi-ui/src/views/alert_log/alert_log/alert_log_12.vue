@@ -600,7 +600,9 @@ export default {
       //   params: {logId: row.logId, logType: row.logType, userId: 0}
       // });
       this.$router.push({
+        // path: "/alert_log_12",// name: "lookLog"
         path: "/lookLog1",// name: "lookLog"
+
         // query: {
         //   logId: row.logId,
         //   logType: row.logType,
@@ -612,7 +614,7 @@ export default {
           logId: row.logId,
           // userId: row.userId,
           userId: 0,
-           ecgType:this.queryParams.ecgType,
+          ecgType:this.queryParams.ecgType,
           pageNum: this.queryParams.pageNum,
           pageSize: this.queryParams.pageSize,
           isSuspected: this.queryParams.isSuspected,
