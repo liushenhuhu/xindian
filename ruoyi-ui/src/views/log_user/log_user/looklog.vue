@@ -593,7 +593,6 @@
 </template>
 
 <script>
-import { getReportByPId } from "@/api/report/report";
 import {
   PatientInformation,
   selectList,

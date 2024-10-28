@@ -343,7 +343,7 @@
 <script>
 import {getVerify} from "@/api/verify/verify";
 import {listAlert_log, getAlert_log, delAlert_log, addAlert_log, updateAlert_log} from "@/api/alert_log/alert_log";
-import {listHospitalId} from "@/api/hospital/hospital";
+// import {listHospitalId} from "@/api/hospital/hospital";
 
 export default {
   name: "Alert_log_12",
